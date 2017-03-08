@@ -1,5 +1,6 @@
 package it.infocert.eigor.model.core;
 
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BT006VatAccountingCurrencyCode;
 import it.infocert.eigor.model.core.model.BT01InvoiceNumber;
 import it.infocert.eigor.model.core.model.CoreInvoice;
@@ -18,7 +19,7 @@ public class Seed {
         Br002AnInvoiceShallHaveAnInvoiceNumberRule rule = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 
         CoreInvoice invoiceWithCoreInvoiceNumber = new CoreInvoice();
-        invoiceWithCoreInvoiceNumber.getBt01InvoiceNumbers().add(new BT01InvoiceNumber());
+        invoiceWithCoreInvoiceNumber.getBt01InvoiceNumbers().add(new BT01InvoiceNumber( new Identifier("1234") ));
 
         CoreInvoice invoiceWithoutCoreInvoiceNumber = new CoreInvoice();
 
@@ -39,7 +40,7 @@ public class Seed {
 
         // given
         CoreInvoice coreInvoice = new CoreInvoice();
-        BT01InvoiceNumber invoiceNumber = new BT01InvoiceNumber();
+        BT01InvoiceNumber invoiceNumber = new BT01InvoiceNumber( new Identifier("1234") );
 
         // when
         coreInvoice.getBt01InvoiceNumbers().add(invoiceNumber);
