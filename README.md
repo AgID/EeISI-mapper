@@ -17,4 +17,15 @@ with `develop` as the branch for the next version:
     ```shell
     git checkout -b feature/my-shiny-contribution develop
     ```
+    
+Other info:
+* Branch name for production releases: `master` 
+* Branch name for "next release" development: `develop` 
+* Feature branches? `feature/` 
+* Bugfix branches? `bugfix/` 
+* Release branches? `release/` 
+* Hotfix branches? `hotfix/` 
+* Support branches? `support/` 
+* Version tag prefix? : `eigor-` 
+
 
