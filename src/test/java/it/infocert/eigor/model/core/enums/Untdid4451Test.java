@@ -1,9 +1,8 @@
 package it.infocert.eigor.model.core.enums;
 
-import it.infocert.eigor.model.core.enums.Untdid4451;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class Untdid4451Test {
 

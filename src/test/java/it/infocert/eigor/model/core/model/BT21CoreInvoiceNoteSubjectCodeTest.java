@@ -1,6 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.model.BT21InvoiceNoteSubjectCode;
 import org.junit.Test;
 
 public class BT21CoreInvoiceNoteSubjectCodeTest {

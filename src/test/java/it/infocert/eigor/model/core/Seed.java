@@ -3,7 +3,7 @@ package it.infocert.eigor.model.core;
 import it.infocert.eigor.model.core.model.BT006VatAccountingCurrencyCode;
 import it.infocert.eigor.model.core.model.BT01InvoiceNumber;
 import it.infocert.eigor.model.core.model.CoreInvoice;
-import it.infocert.eigor.model.core.rules.AnInvoiceShallHaveAnInvoiceNumberRule;
+import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -15,7 +15,7 @@ public class Seed {
     public void shouldApplyRule() {
 
         // given
-        AnInvoiceShallHaveAnInvoiceNumberRule rule = new AnInvoiceShallHaveAnInvoiceNumberRule();
+        Br002AnInvoiceShallHaveAnInvoiceNumberRule rule = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 
         CoreInvoice invoiceWithCoreInvoiceNumber = new CoreInvoice();
         invoiceWithCoreInvoiceNumber.getBt01InvoiceNumbers().add(new BT01InvoiceNumber());
@@ -23,8 +23,8 @@ public class Seed {
         CoreInvoice invoiceWithoutCoreInvoiceNumber = new CoreInvoice();
 
         // when
-        boolean outcome1 = rule.satidfied(invoiceWithCoreInvoiceNumber);
-        boolean outcome2 = rule.satidfied(invoiceWithoutCoreInvoiceNumber);
+        boolean outcome1 = rule.issCompliant(invoiceWithCoreInvoiceNumber);
+        boolean outcome2 = rule.issCompliant(invoiceWithoutCoreInvoiceNumber);
 
         // then
         assertThat( outcome1, is(true) );
