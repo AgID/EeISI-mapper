@@ -1,14 +1,23 @@
 <project>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>1.4.1.RELEASE</version>
         </dependency>
     </dependencies>
+
 </project>
