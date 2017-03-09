@@ -2,7 +2,6 @@ package it.infocert.eigor.model.core.model;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.dump.Visitor;
 
 public class BT01InvoiceNumber implements BTBG {
 

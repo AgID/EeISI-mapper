@@ -1,6 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.dump.Visitor;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 
 public class BG21DocumentLevelCharges implements BTBG {

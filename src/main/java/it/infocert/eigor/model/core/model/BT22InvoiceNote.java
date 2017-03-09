@@ -1,7 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.dump.Visitor;
-
 public class BT22InvoiceNote implements BTBG {
 
     private final String note;

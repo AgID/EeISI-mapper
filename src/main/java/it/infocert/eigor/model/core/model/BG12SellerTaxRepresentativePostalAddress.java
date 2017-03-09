@@ -1,7 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.dump.Visitor;
-
 import java.util.ArrayList;
 import java.util.List;
 

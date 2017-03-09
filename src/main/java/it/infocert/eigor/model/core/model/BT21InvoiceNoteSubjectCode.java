@@ -1,6 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.dump.Visitor;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 
 import static com.google.common.base.Preconditions.checkNotNull;

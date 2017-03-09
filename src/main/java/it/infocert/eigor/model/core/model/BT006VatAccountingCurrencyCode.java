@@ -1,6 +1,5 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.dump.Visitor;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 
 public class BT006VatAccountingCurrencyCode implements BTBG {
