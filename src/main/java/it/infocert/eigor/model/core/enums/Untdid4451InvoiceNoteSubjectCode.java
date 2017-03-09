@@ -207,4 +207,8 @@ public enum Untdid4451InvoiceNoteSubjectCode {
         return String.format("%s%s|%s|%s", (this.hasPlusSign ? "+":""), toString(), shortDescritpion, longDescription);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " " + shortDescritpion;
+    }
 }

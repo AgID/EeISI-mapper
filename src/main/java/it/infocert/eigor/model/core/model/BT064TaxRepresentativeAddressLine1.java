@@ -1,16 +1,13 @@
 package it.infocert.eigor.model.core.model;
 
-public class BG02ProcessControl implements BTBG {
+import static java.util.Comparator.comparing;
 
-    public BG02ProcessControl() {
-    }
-
+public class BT064TaxRepresentativeAddressLine1 implements BTBG {
     @Override
     public int order() {
-        return 23;
+        return 77;
     }
 
-    @Override
     public void accept(Visitor v) {
         v.startBTBG(this);
         v.endBTBG(this);

@@ -1,18 +1,16 @@
 package it.infocert.eigor.model.core.model;
 
-public class BT22InvoiceNote implements BTBG {
+public class BG002ProcessControl implements BTBG {
 
-    private final String note;
-
-    public BT22InvoiceNote(String note) {
-        this.note = note;
+    public BG002ProcessControl() {
     }
 
     @Override
     public int order() {
-        return 22;
+        return 23;
     }
 
+    @Override
     public void accept(Visitor v) {
         v.startBTBG(this);
         v.endBTBG(this);

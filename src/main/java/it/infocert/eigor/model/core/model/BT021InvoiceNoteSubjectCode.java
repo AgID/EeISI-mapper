@@ -4,11 +4,11 @@ import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class BT21InvoiceNoteSubjectCode implements BTBG {
+public class BT021InvoiceNoteSubjectCode implements BTBG {
 
     private Untdid4451InvoiceNoteSubjectCode subjectCode;
 
-    public BT21InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode subjectCode) {
+    public BT021InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode subjectCode) {
         this.subjectCode = checkNotNull( subjectCode );
     }
 
@@ -20,5 +20,10 @@ public class BT21InvoiceNoteSubjectCode implements BTBG {
     public void accept(Visitor v) {
         v.startBTBG(this);
         v.endBTBG(this);
+    }
+
+    @Override
+    public String toString() {
+        return subjectCode.toString();
     }
 }

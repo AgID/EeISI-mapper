@@ -4,17 +4,53 @@ import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
-import org.junit.Test;
-import org.mockito.InOrder;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+public class DumpVisitor implements Visitor {
 
-public class DumpTest {
+    private final StringBuilder sb = new StringBuilder();
+    private boolean lineAlreadyPrinted = false;
 
-    @Test
-    public void dumpAnInvoice() {
+    @Override
+    public void startInvoice(CoreInvoice invoice) {
+        sb.append("========================================\n");
+        sb.append("INVOICE                                 \n");
+        sb.append("========================================\n");
+    }
+
+    @Override
+    public void startBTBG(BTBG btbg) {
+
+        String order = String.valueOf(btbg.order());
+        String name = String.valueOf(btbg.denomination());
+        String value = btbg.toString();
+
+        if(!lineAlreadyPrinted){
+            lineAlreadyPrinted = true;
+        }else{
+            sb.append("----------------------------------------\n");
+        }
+        sb.append(String.format("%3s |%6s | %-10s \n", order, name, value));
+    }
+
+    @Override
+    public void endBTBG(BTBG btbg) {
+
+    }
+
+    @Override
+    public void endInvoice(CoreInvoice invoice) {
+        sb.append("========================================\n");
+    }
+
+    @Override
+    public String toString() {
+        return sb.toString();
+    }
+
+
+    public static void main(String[] args) {
+
+        // JUST A DEMO
 
         // given
         CoreInvoice invoice = new CoreInvoice();
@@ -39,34 +75,8 @@ public class DumpTest {
         bgInvoiceNote.getBt022InvoiceNotes().add(btInvoiceNote);
         invoice.getBg001InvoiceNotes().add(bgInvoiceNote);
 
-
-        // when
-        Visitor v = mock(Visitor.class);
+        DumpVisitor v = new DumpVisitor();
         invoice.accept(v);
-
-
-        // then
-        InOrder inOrder = inOrder(v);
-        inOrder.verify(v).startInvoice(invoice);
-
-        inOrder.verify(v).startBTBG(invoiceNumber);
-        inOrder.verify(v).endBTBG(invoiceNumber);
-
-        inOrder.verify(v).startBTBG(currencyCode);
-        inOrder.verify(v).endBTBG(currencyCode);
-
-        inOrder.verify(v).startBTBG(bgInvoiceNote);
-
-        inOrder.verify(v).startBTBG(invoiceNoteSubjectCode);
-        inOrder.verify(v).endBTBG(invoiceNoteSubjectCode);
-
-        inOrder.verify(v).startBTBG(btInvoiceNote);
-        inOrder.verify(v).endBTBG(btInvoiceNote);
-
-        inOrder.verify(v).endBTBG(bgInvoiceNote);
-
-        inOrder.verify(v).endInvoice(invoice);
-
+        System.out.println(v.toString());
     }
-
 }

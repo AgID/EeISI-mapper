@@ -18,4 +18,9 @@ public class BT006VatAccountingCurrencyCode implements BTBG {
         v.startBTBG(this);
         v.endBTBG(this);
     }
+
+    @Override
+    public String toString() {
+        return currencyCode.toString();
+    }
 }

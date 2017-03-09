@@ -3,11 +3,11 @@ package it.infocert.eigor.model.core.model;
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 
-public class BT01InvoiceNumber implements BTBG {
+public class BT001InvoiceNumber implements BTBG {
 
     private final Identifier invoiceNumber;
 
-    public BT01InvoiceNumber(Identifier invoiceNumber) {
+    public BT001InvoiceNumber(Identifier invoiceNumber) {
         this.invoiceNumber = Preconditions.checkNotNull( invoiceNumber );
     }
 
