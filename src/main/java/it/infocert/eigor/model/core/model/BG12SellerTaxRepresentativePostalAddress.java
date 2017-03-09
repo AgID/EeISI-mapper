@@ -1,9 +1,13 @@
 package it.infocert.eigor.model.core.model;
 
+import it.infocert.eigor.model.core.dump.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class BG12SellerTaxRepresentativePostalAddress {
+import static java.util.Comparator.comparing;
+
+public class BG12SellerTaxRepresentativePostalAddress implements BTBG {
     private List<BT64TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines = new ArrayList<>(0);;
 
     public BG12SellerTaxRepresentativePostalAddress() {
@@ -15,5 +19,22 @@ public class BG12SellerTaxRepresentativePostalAddress {
 
     public void setBt64TaxRepresentativeAddressLines(List<BT64TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines) {
         this.bt64TaxRepresentativeAddressLines = bt64TaxRepresentativeAddressLines;
+    }
+
+    @Override
+    public int order() {
+        return 76;
+    }
+
+    public void accept(Visitor v) {
+        v.startBTBG(this);
+
+        List<BTBG> list = new ArrayList<>();
+        list.addAll(this.bt64TaxRepresentativeAddressLines);
+        list.sort( comparing( o -> o.order() ) );
+
+        list.forEach( o -> o.accept(v) );
+
+        v.endBTBG(this);
     }
 }

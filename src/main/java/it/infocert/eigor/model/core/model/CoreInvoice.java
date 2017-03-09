@@ -1,7 +1,13 @@
 package it.infocert.eigor.model.core.model;
 
+import it.infocert.eigor.model.core.dump.Visitor;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.util.Comparator.comparing;
 
 public class CoreInvoice {
 
@@ -50,5 +56,22 @@ public class CoreInvoice {
 
     public void setBt006VatAccountingCurrencyCodes(List<BT006VatAccountingCurrencyCode> bt006VatAccountingCurrencyCodes) {
         this.bt006VatAccountingCurrencyCodes = bt006VatAccountingCurrencyCodes;
+    }
+
+
+    public void accept(Visitor v) {
+        v.startInvoice(this);
+
+        List<BTBG> list = new ArrayList<>();
+        list.addAll(this.bg01InvoiceNotes);
+        list.addAll(this.bg02ProcessControls);
+        list.addAll(this.bg11SellerTaxRepresentativeParties);
+        list.addAll(this.bt01InvoiceNumbers);
+        list.addAll(this.bt006VatAccountingCurrencyCodes);
+        list.sort( comparing( o -> o.order() ) );
+
+        list.forEach( o -> o.accept(v) );
+
+        v.endInvoice(this);
     }
 }
