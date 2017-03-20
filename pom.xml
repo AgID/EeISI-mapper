@@ -27,6 +27,7 @@
 
     <build>
         <plugins>
+            <!-- Get and build from https://github.com/danidemi/template-generator-maven-plugin -->
             <plugin>
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
@@ -35,7 +36,9 @@
                     <execution>
                         <id>generate-country-codes</id>
                         <phase>generate-sources</phase>
-                        <goals><goal>generate</goal></goals>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/countrycodes.csv</pathToCsv>
                             <pathToTemplate>${project.basedir}/src/main/resources/CountryCodesTemplate.vm</pathToTemplate>
@@ -44,16 +47,23 @@
                             <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes.java</fileNameTemplate>
                         </configuration>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
                     <execution>
-                        <id>generate-country-codes-2</id>
+                        <id>generate-country-codes</id>
                         <phase>generate-sources</phase>
-                        <goals><goal>generate</goal></goals>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/countrycodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/CountryCodesTemplate.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes2.java</fileNameTemplate>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/fromcsv</source>
+                            </sources>
                         </configuration>
                     </execution>
                 </executions>
