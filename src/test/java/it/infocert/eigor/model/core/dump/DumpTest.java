@@ -3,7 +3,6 @@ package it.infocert.eigor.model.core.dump;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
-import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCodeSample;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Test;
 import org.mockito.InOrder;

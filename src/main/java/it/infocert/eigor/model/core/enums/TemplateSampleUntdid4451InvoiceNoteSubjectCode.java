@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core.enums;
 
-public enum Untdid4451InvoiceNoteSubjectCodeSample {
+public enum TemplateSampleUntdid4451InvoiceNoteSubjectCode {
 
     AAA(false,"Goods description", "[7002] Plain language description of the nature of the for banking, Customs, statistical or transport purposes, avoiding unnecessary detail (Generic term).");
 
@@ -8,7 +8,7 @@ public enum Untdid4451InvoiceNoteSubjectCodeSample {
     private String shortDescritpion;
     private String longDescription;
 
-    Untdid4451InvoiceNoteSubjectCodeSample(boolean hasPlusSign, String shortDescritpion, String longDescription) {
+    TemplateSampleUntdid4451InvoiceNoteSubjectCode(boolean hasPlusSign, String shortDescritpion, String longDescription) {
         this.hasPlusSign = hasPlusSign;
         this.shortDescritpion = shortDescritpion;
         this.longDescription = longDescription;

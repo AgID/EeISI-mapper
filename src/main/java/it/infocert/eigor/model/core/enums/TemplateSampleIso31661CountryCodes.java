@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core.enums;
 
-public enum Iso31661CountryCodesSample {
+public enum TemplateSampleIso31661CountryCodes {
 
     //1: EnglishName,
     //2: Alpha2Code
@@ -13,7 +13,7 @@ public enum Iso31661CountryCodesSample {
     private final String iso3charCode;
     private final int index;
 
-    Iso31661CountryCodesSample(String countryNameInEnglish, String iso2charCode, String iso3charCode, int index) {
+    TemplateSampleIso31661CountryCodes(String countryNameInEnglish, String iso2charCode, String iso3charCode, int index) {
         this.countryNameInEnglish = countryNameInEnglish;
         this.iso2charCode = iso2charCode;
         this.iso3charCode = iso3charCode;

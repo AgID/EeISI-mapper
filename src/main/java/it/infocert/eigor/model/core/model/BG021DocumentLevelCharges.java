@@ -1,9 +1,9 @@
 package it.infocert.eigor.model.core.model;
 
-import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCodeSample;
+import it.infocert.eigor.model.core.enums.TemplateSampleUntdid4451InvoiceNoteSubjectCode;
 
 public class BG021DocumentLevelCharges implements BTBG {
-    private Untdid4451InvoiceNoteSubjectCodeSample bt21InvoiceNoteSubjectCode;
+    private TemplateSampleUntdid4451InvoiceNoteSubjectCode bt21InvoiceNoteSubjectCode;
 
     @Override
     public int order() {
