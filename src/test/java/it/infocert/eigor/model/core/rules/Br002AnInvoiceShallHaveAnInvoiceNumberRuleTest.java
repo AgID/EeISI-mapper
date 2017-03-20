@@ -40,7 +40,7 @@ public class Br002AnInvoiceShallHaveAnInvoiceNumberRuleTest {
         RuleOutcome outcome = sut.isCompliant(coreInvoice);
 
         // then
-        assertThat( outcome.description(), is("An invoice shall have an invoice number, it has: 1234.") );
+        assertThat( outcome.description(), is("An invoice shall have an invoice number, it has: 4321.") );
         assertThat( outcome.outcome(), is(RuleOutcome.Outcome.SUCCESS) );
 
     }

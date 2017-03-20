@@ -3,6 +3,8 @@ package it.infocert.eigor.model.core.model;
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 
+import java.util.Objects;
+
 public class BT001InvoiceNumber implements BTBG {
 
     private final Identifier invoiceNumber;
@@ -13,7 +15,7 @@ public class BT001InvoiceNumber implements BTBG {
 
     @Override
     public String toString() {
-        return "1234";
+        return invoiceNumber.toString();
     }
 
     @Override
@@ -24,5 +26,18 @@ public class BT001InvoiceNumber implements BTBG {
     public void accept(Visitor v) {
         v.startBTBG(this);
         v.endBTBG(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BT001InvoiceNumber)) return false;
+        BT001InvoiceNumber that = (BT001InvoiceNumber) o;
+        return Objects.equals(invoiceNumber, that.invoiceNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invoiceNumber);
     }
 }
