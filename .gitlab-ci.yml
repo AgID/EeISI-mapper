@@ -38,20 +38,19 @@ cache:
 #  script:
 #    - 'mvn $MAVEN_CLI_OPTS test-compile'
 
-# For merge requests do not `deploy` but only run `verify`.
-# See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
-.verify: &verify
-  stage: test
-  script:
-#    - 'mvn $MAVEN_CLI_OPTS verify site site:stage'
-    - 'mvn clean test'
-  except:
-    - master
+stages:
+ - test
+
 
 # Verify merge requests using JDK8
 verify:jdk8:
-  <<: *verify
   image: maven:3.3.9-jdk-8
+  stage: test
+  script:
+    - 'mvn clean test'
+  except:
+    - master
+  
 
 
 # For `master` branch run `mvn deploy` automatically.
