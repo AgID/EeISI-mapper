@@ -44,7 +44,7 @@ cache:
   stage: test
   script:
 #    - 'mvn $MAVEN_CLI_OPTS verify site site:stage'
-    - 'mvn $MAVEN_CLI_OPTS verify
+    - 'mvn $MAVEN_CLI_OPTS verify'
   except:
     - master
 
