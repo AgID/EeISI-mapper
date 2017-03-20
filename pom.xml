@@ -47,6 +47,20 @@
                             <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes.java</fileNameTemplate>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>generate-untdid-4451</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/UNTDID-4451.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid4451InvoiceNoteSubjectCode.java.vm</pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4451InvoiceNoteSubjectCode.java</fileNameTemplate>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

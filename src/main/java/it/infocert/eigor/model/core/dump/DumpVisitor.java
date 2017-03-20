@@ -5,6 +5,8 @@ import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
 
+import static it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode.AAA;
+
 public class DumpVisitor implements Visitor {
 
     private final StringBuilder sb = new StringBuilder();
@@ -67,7 +69,7 @@ public class DumpVisitor implements Visitor {
         BG001InvoiceNote bgInvoiceNote = new BG001InvoiceNote();
 
         // nr. 21
-        BT021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT021InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode.ABE);
+        BT021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT021InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode.AAA);
         bgInvoiceNote.getBt021InvoiceNoteSubjectCodes().add(invoiceNoteSubjectCode);
 
         // nr. 22

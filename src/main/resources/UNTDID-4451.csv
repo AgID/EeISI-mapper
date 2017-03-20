@@ -1,0 +1,190 @@
+PlusSign,Code,ShortDesc,LongDesc
+,AAA,Goods description,"[7002] Plain language description of the nature of the for banking, Customs, statistical or transport purposes, avoiding unnecessary detail (Generic term)."
+,AAB,Terms of payments,[4276] Conditions of payment between the parties to a transaction (generic term).
+,AAC,Dangerous goods additional information,Additional information concerning dangerous goods.
+,AAD,"Dangerous goods, technical name","Proper shipping name, supplemented as necessary with the correct technical name, by which a dangerous substance or article may be correctly identified or which is sufficiently informative to permit identification by reference to generally available literature."
+,AAE,Acknowledgement description,The content of an acknowledgement.
+,AAF,Rate additional information,Specific details applying to rates.
+,AAG,Party instructions,Indicates that the segment contains instructions to be passed on to the identified party.
+,AAH,Customs information,[4034] Information entered by Customs on the CIM.
+,AAI,General information,Self explanatory.
+,AAJ,Additional conditions of sale/purchase,Additional conditions specific to this order or project.
+,AAK,Price conditions,Information on the price conditions that are expected or given.
+,AAL,Goods dimensions in characters,Expression of a number in characters as length of ten meters.
+,AAM,Equipment re-usage restrictions,Technical or commercial reasons why a piece of equipment may not be re-used after the current transport terminates.
+,AAN,Handling restriction,Restrictions in handling depending on the technical characteristics of the piece of equipment or on the nature of the goods.
+,AAO,Error description (free text),Error described by a free text.
+,AAP,Response (free text),Free text of the response to a communication.
+,AAQ,Package content's description,Self explanatory.
+,AAR,Terms of delivery,"(4053) Free text of the non Incoterms terms of delivery. For Incoterms, use: 4053."
+,AAS,Bill of lading remarks,Self explanatory.
+,AAT,Mode of settlement information,Free text information on an IATA Air Waybill to indicate means by which account is to be settled.
+,AAU,Consignment invoice information,Self explanatory.
+,AAV,Clearance invoice information,Self explanatory.
+,AAW,Letter of credit information,Self explanatory.
+,AAX,License information,Self explanatory.
+,AAY,Certification statements,Self explanatory.
+,AAZ,Additional export information,Self explanatory.
+,ABA,Tariff statements,Self explanatory.
+,ABC,Conditions of sale or purchase,Additional information regarding terms and conditions which apply to the transaction.
+,ABD,Nature of transaction,An indication for customs of the type of contract under which goods are supplied.
+,ABE,Additional terms and/or conditions (documentary credit),Additional terms and/or conditions to the documentary credit.
+,ABF,Instructions or information about standby documentary credit,Instruction or information about a standby documentary credit.
+,ABG,Instructions or information about partial shipment(s),Instructions or information about partial shipment(s).
+,ABH,Instructions or information about transhipment(s),Instructions or information about transhipment(s).
+,ABI,Additional handling instructions documentary credit,Additional handling instructions for a documentary credit.
+,ABJ,Domestic routing information,Self explanatory.
+,ABK,Chargeable category of equipment,Equipment types are coded by category for financial purposes.
+,ABL,Government information,Self explanatory.
+,ABM,Onward routing information,Self explanatory.
+,ABN,Accounting information,Self explanatory.
+,ABO,Discrepancy information,Free text or coded information to indicate a specific discrepancy.
+,ABP,Confirmation instructions,Documentary credit confirmation instructions.
+,ABQ,Method of issuance,Method of issuance of documentary credit.
+,ABR,Documents delivery instructions,Delivery instructions for documents required under a documentary credit.
+,ABS,Additional conditions,Additional conditions to the issuance of a documentary credit.
+,ABT,Information/instructions about additional amounts covered,Additional amounts information/instruction.
+,ABU,Deferred payment termed additional,Additional terms concerning deferred payment.
+,ABV,Acceptance terms additional,Additional terms concerning acceptance.
+,ABW,Negotiation terms additional,Additional terms concerning negotiation.
+,ABX,Document name and documentary requirements,Document name and documentary requirements.
+,ABY,Regulatory information,The free text contains information for regulatory authority.
+,ABZ,Instructions/information about revolving documentary credit,Instructions/information about a revolving documentary credit.
+,ACA,Documentary requirements,Specification of the documentary requirements.
+,ACB,Additional information,Self explanatory.
+,ACC,Factor assignment clause,Assignment based on an agreement between seller and factor.
+,ACD,Reason,Reason for a request or response.
+,ACE,Dispute,"A notice, usually from buyer to seller, that something was found wrong with goods delivered or the services rendered, or with the related invoice."
+,ACF,Additional attribute information,The text refers to information about an additional attribute not otherwise specified.
+,ACG,Absence declaration,A declaration on the reason of the absence.
+,ACH,Aggregation statement,A statement on the way a specific variable or set of variables has been aggregated.
+,ACI,Compilation statement,A statement on the compilation status of an array or other set of figures or calculations.
+,ACJ,Definitional exception,"An exception to the agreed definition of a term, concept, formula or other object."
+,ACK,Privacy statement,A statement on the privacy or confidential nature of an object.
+,ACL,Quality statement,A statement on the quality of an object.
+,ACM,Statistical description,"The description of a statistical object such as a value list, concept, or structure definition."
+,ACN,Statistical definition,"The definition of a statistical object such as a value list, concept, or structure definition."
+,ACO,Statistical name,"The name of a statistical object such as a value list, concept or structure definition."
+,ACP,Statistical title,"The title of a statistical object such as a value list, concept, or structure definition."
+,ACQ,Off-dimension information,Information relating to differences between the actual transport dimensions and the normally applicable dimensions.
+,ACR,Unexpected stops information,Information relating to unexpected stops during a conveyance.
+,ACS,Principles,Text subject is principles section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ACT,Terms and definition,Text subject is terms and definition section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ACU,Segment name,Text subject is segment name.
+,ACV,Simple data element name,Text subject is name of simple data element.
+,ACW,Scope,Text subject is scope section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ACX,Message type name,Text subject is name of message type.
+,ACY,Introduction,Text subject is introduction section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ACZ,Glossary,Text subject is glossary section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ADA,Functional definition,Text subject is functional definition section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ADB,Examples,Text subject is examples as given in the example(s) section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ADC,Cover page,Text subject is cover page of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ADE,Code value name,Text subject is name of code value.
+,ADF,Code list name,Text subject is name of code list.
+,ADG,Clarification of usage,Text subject is an explanation of the intended usage of a segment or segment group.
+,ADH,Composite data element name,Text subject is name of composite data element.
+,ADI,Field of application,Text subject is field of application of the UN/EDIFACT rules for presentation of standardized message and directories documentation.
+,ADJ,Type of assets and liabilities,Information describing the type of assets and liabilities.
+,ADK,Promotion information,The text contains information about a promotion.
+,ADL,Meter condition,Description of the condition of a meter.
+,ADM,Meter reading information,Information related to a particular reading of a meter.
+,ADN,Type of transaction reason,Information describing the type of the reason of transaction.
+,ADO,Type of survey question,Type of survey question.
++,ADP,Carrier's agent counter information,Information for use at the counter of the carrier's goods sufficient to identify them at the level required agent.
++,ADQ,Description of work item on equipment,Description or code for the operation to be executed on the equipment.
++,ADR,Message definition,Text subject is message definition.
++,ADS,Booked item information,Information pertaining to a booked item.
++,ADT,Source of document,Text subject is source of document.
++,ADU,Note,Text subject is note.
++,ADV,Fixed part of segment clarification text,Text subject is fixed part of segment clarification text.
++,ADW,Characteristics of goods,Description of the characteristics of goods in addition to the description of the goods [7002].
++,ADX,Additional discharge instructions,Special discharge instructions concerning the goods.
++,ADY,Container stripping instructions,Instructions regarding the stripping of container(s).
++,ADZ,CSC (Container Safety Convention) plate information,Information on the CSC (Container Safety Convention) plate that is attached to the container.
++,AEA,Cargo remarks,Additional remarks concerning the cargo.
++,AEB,Temperature control instructions,Instruction regarding the temperature control of the cargo.
++,AEC,Text refers to expected data,Remarks refer to data that was expected.
++,AED,Text refers to received data,Remarks refer to data that was received.
++,AEE,Section clarification text,Text subject is section clarification text.
+,ALC,Allowance/charge information,Information referring to allowance/charge.
+,ALL,All documents,The note implies to all documents.
+,ARR,Arrival conditions,Conditions under which arrival takes place.
+,AUT,Authentication,"Name, code, password etc. given for authentication purposes."
+,BLC,Bill of lading clause,Clause on the bill of lading regarding the cargo being shipped.
+,BLR,Transport document remarks,Remarks concerning the complete consignment to be printed on the bill of lading.
+,CCI,Customs clearance instructions,Any coded or clear instruction agreed by customer and carrier regarding the declaration of the goods.
+,CEX,Customs clearance instructions export,Any coded or clear instruction agreed by customer and carrier regarding the export declaration of the goods.
+,CHG,Change information,Note contains change information.
+,CIP,Customs clearance instruction import,Any coded or clear instruction agreed by customer and carrier regarding the import declaration of the goods.
+,CLP,Clearance place requested,Name of the place where Customs clearance is asked to be executed as requested by the consignee/consignor.
+,CLR,Loading remarks,Instructions concerning the loading of the container.
+,COI,Order information,Additional information related to an order.
+,CUR,Customer remarks,Remarks from or for a supplier of goods or services.
+,CUS,Customs declaration information,Note contains customs declaration information.
+,DAR,Damage remarks,Remarks concerning damage on the cargo.
+,DCL,Declaration,[4020] Text of a declaration made by the issuer of the document (CIM 12).
+,DEL,Delivery information,Information about delivery.
+,DIN,Delivery instructions,Instructions regarding the delivery of the cargo.
+,DOC,Documentation instructions,Self explanatory.
+,DUT,Duty declaration,Self explanatory.
+,EUR,Effective used routing,Physical route effectively used for the movement of the means of transport.
+,FBC,First block to be printed on the transport contract,Self explanatory.
+,GBL,Government bill of lading information,Free text information on a transport document to indicate payment information by Government Bill of Lading.
+,GEN,Entire transaction set,"Note is general in nature, applies to entire transaction segment."
+,GS7,Further information concerning GGVS par. 7,Special permission for road transport of certain goods in the German dangerous goods regulation for road transport.
+,HAN,Handling instructions,"[4078] Instructions on how specified goods, packages or containers should be handled."
+,HAZ,Hazard information,Self explanatory.
+,ICN,Information for consignee,[4070] Any remark given for the information of the consignee (CIM 21).
+,IIN,Insurance instructions,Instructions regarding the cargo insurance.
+,IMI,Invoice mailing instructions,Instructions as to which freight and charges components have to be mailed to whom.
+,IND,Commercial invoice item description,Free text describing goods on a commercial invoice line.
+,INS,Insurance information,Specific note contains insurance information.
+,INV,Invoice instruction,Note contains invoice instructions.
+,IRP,Information for railway purpose,"[4090] Date entered by railway stations when required, e.g. specified trains, additional sheets for freight calculations, special measures, etc.. (CIM 8)."
+,ITR,Inland transport details,Information concerning the pre-carriage to the port of discharge if by other means than a vessel.
+,ITS,Testing instructions,Instructions regarding the testing that is required to be carried out on the items in the transaction.
+,LIN,Line item,Note contains line item information.
+,LOI,Loading instruction,Instructions where specified packages or containers are to be loaded on a means of transport.
+,MCO,Miscellaneous charge order,Free text accounting information on an IATA Air Waybill to indicate payment information by Miscellaneous charge order.
+,MKS,Additional marks/numbers information,Self explanatory.
+,ORI,Order instruction,Free text contains order instructions.
+,OSI,Other service information,General information created by the sender of general or specific value.
+,PAC,Packing/marking information,Information regarding the packaging and/or marking of goods.
+,PAI,Payment instructions information,The free text contains payment instructions information relevant to the message.
+,PAY,Payables information,Note contains payables information.
+,PKG,Packaging information,Note contains packaging instructions.
+,PKT,Packaging terms information,Self explanatory.
+,PMD,Payment detail/remittance information,The free text contains payment details.
+,PMT,Payment information,Note contains payments information.
+,PRD,Product information,Self explanatory.
+,PRF,Price calculation formula,Additional information regarding the price formula used for calculating the item price.
+,PRI,Priority information,Note contains priority information.
+,PUR,Purchasing information,Note contains purchasing information.
+,QIN,Quarantine instructions,"Instructions regarding quarantine, i.e. the period during which an arriving vessel, including its equipment, cargo, crew or passengers, suspected to carry or carrying a contagious disease is detained in strict isolation to prevent the spread of such a disease."
+,QQD,Quality demands/requirements,Specification of the quality/performance expectations or standards to which the items must conform.
+,QUT,Quotation instruction/information,Note contains quotation information.
+,RAH,Risk and handling information,Information concerning risks induced by the goods and/or handling instruction.
+,REG,Regulatory information,The free text contains information for regulatory authority.
+,RET,Return to origin information,Free text information on an IATA Air Waybill to indicate consignment returned because of non delivery.
+,REV,Receivables,Description to be provided.
+,RQR,Requested routes/routing instructions,[3074] Names of places via which the consignor requests a consignment to be routed.
+,RQT,Tariffs and route requested,"[4120] Stipulation of the tariffs to be applied showing,where applicable, special-agreement numbers or references indication of routes by frontier points or by frontier stations and, when necessary, by transit stations between."
+,SAF,Safety information,Self explanatory.
+,SIC,Sender's instruction to carrier,"[4284] Instructions given and declarations made by the sender to the carrier concerning Customs, insurance, and other formalities."
+,SIN,Special instructions,"Special instructions like licence no, high value, handle with care, glass."
+,SLR,Ship line requested,Shipping line requested to be used for traffic between European continent and U.K. for Ireland.
+,SPA,"Special permission for transport, generally","Statement that a special permission has been obtained for the transport (and/or routing) in general, and reference to such permission."
+,SPG,Special permission concerning the goods to be transported,"Statement that a special permission has been obtained for the transport (and/or routing) of the goods specified, and reference to such permission."
+,SPH,Special handling,Note contains special handling information.
+,SPP,Special permission concerning package,"Statement that a special permission has been obtained for the packaging, and reference to such permission."
+,SPT,Special permission concerning transport means,"Statement that a special permission has been obtained for the use of the means transport, and reference to such permission."
+,SRN,Subsidiary risk number (IATA/DGR),"Number(s) of subsidiary risks, induced by the goods, according to the valid classification."
+,SSR,Special service request,Request for a special service concerning the transport of the goods.
+,SUR,Supplier remarks,Remarks from or for a supplier of goods or services.
+,TCA,Tariff and class applied,[5430] Specification of tariff applied (CIM 55).
+,TDT,Transport details remarks,Additional information related to transport details.
+,TRA,Transportation information,General information regarding the transport of the cargo.
+,TRR,Requested tariff,"Stipulation of the tariffs to be applied showing, where applicable, special agreement numbers or references."
+,TXD,Tax declaration,Description to be provided.
+,WHI,Warehouse instruction/information,Note contains warehouse information.
+,ZZZ,Mutually defined,Note contains information mutually defined by trading partners.
