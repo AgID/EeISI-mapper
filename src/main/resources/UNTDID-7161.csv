@@ -1,0 +1,257 @@
+PlusSign,Code,ShortDesc,LongDesc
+,AA,Advertising allowance,Description to be provided.
+,AAA,Telecommunication charges,Self-explanatory.
+,AAB,Returned goods charges,Self-explanatory.
+,AAC,Modification costs,Costs for technical modifications to a product.
+,AAD,Job-order production,Costs of job-order production only used in invoices.
+,AAE,Outlays,Outlays incurred in the company's interest for an installation order.
+,AAF,Off-premises surcharge,Expenses on top of service-rates for non-local activities.
+,AAG,Gold surcharge,Difference between current price and basic value contained in product price.
+,AAH,Processing surcharge,Charging for increased processing costs.
+,AAI,Attestation fee,Outlays incurred by official attestation (by public authorities).
+,AAJ,Copper surcharge,Difference between current price and basic value contained in product price.
+,AAK,Energy surcharge,Surcharge for energy costs.
+,AAL,Deduction for missing parts,Deduction for missing parts.
+,AAM,Rubber surcharge,Difference between current price and basic value contained in product price.
+,AAN,Brass surcharge,Difference between current price and basic value contained in product price.
+,AAO,Material surcharge/deduction,Percentage-based surcharge/deduction calculated for higher/ lower material's consumption.
+,AAP,Lead surcharge,Difference between current price and basic value contained in product price.
+,AAQ,Price index surcharge,Higher/lower price resulting from change in costs between the times of making offer and delivery.
+,AAR,Platinum surcharge,Difference between current price and basic value contained in product price.
+,AAS,Acceptance cost,Charge for testing.
+,AAT,Rush delivery,Charge for increased delivery speed.
+,AAU,Selenium surcharge,Difference between current price and basic value contained in product price.
+,AAV,Special construction charge,Charge for costs incurred as result of special constructions.
+,AAW,Deduction for delayed return,Deduction for delayed return of goods.
+,AAX,Wolfram surcharge,Difference between current price and basic value contained in product price.
+,AAY,Airport fee,Charge associated with usage of airport facilities.
+,AAZ,Concession fee,Fee imposed by an airport to allow used of that facility.
+,ABA,Compulsory storage fee,Fee levied to cover the cost of carrying a certain amount of compulsory inventory (set by regulatory agency).
+,ABB,Defuel,Remove or off-load fuel from vehicle vessel or craft.
+,ABC,Into plane fee,Charge associated with providing goods delivered to an aircraft from local storage.
+,ABD,Overtime,Fee charge for service rendered beyond the established limit of working hours.
+,ABE,Reservicing charge,Fee for services provided after initial service.
+,ABF,Tooling cost,Item or service relates to tooling not direct provision of goods.
+,ABG,Tooling charge,Item or service relates to tooling charges not direct provision of goods.
+,ABH,Throughput allowance,Allowance for reaching or exceeding an agreed throughput threshold.
+,ABI,Superfund fee,Fee imposed for superfund a US-government fund created for the clean-up or eradication of sites at which toxic waste hazardous to the environment has been dumped.
+,ABJ,Airport system fee,Fee associated with the use of the hydrant and storage system at an airport.
+,ABK,Miscellaneous,The service provided for the stated charge is not defined.
+,ABL,Packaging surcharge,Additional charge for packaging of items.
+,ABM,Scrap surcharge,Additional charge on an item's price for the cost of constituent scrap.
+,ABN,Dunnage charge,A charge incurred to cover the costs of the additional padding materials and labour required to secure and protect a cargo within a shipping container.
+,ABO,Air freight transportation,Additional charge on an item's price for air freight transportation.
+,ABP,Carriage charge,Additional charge on an item's price for the carriage.
+,ABQ,Tonnage rebate,Rebate based on the weight of the goods.
+,ABR,Containerisation,Additional charge on an item's price for containerisation.
+,ABS,Carton packing,Additional charge on an item's price for carton packing.
+,ABT,Hessian wrapped,Additional charge on an item's price for hessian wrapping.
+,ABU,Polyethylene wrap packing,Additional charge on an item's price for polyethylene wrap packing.
+,ABV,Miscellaneous customs charge,Non-defined customs charge.
+,ABW,Customs duty charge,Additional charge on an item's price for customs duty.
+,ABX,Miscellaneous special tooling charge,Non-defined additional charge on an item's price for special tooling.
+,ABY,Tooling amortisation,Additional charge on an item's price for tooling amortisation.
+,ABZ,Miscellaneous rebate or discount,Non-defined rebate or discount.
+,ACA,Allowance,Non-defined allowance.
+,ACB,Future discount off retail,Expected future discount off retail.
+,ACC,Miscellaneous setting costs (tooling),Non-defined additional charge on an item's price for tooling costs.
+,ACD,Minimum amount costs for quantity based surcharges,The minimum amount for surcharges that are related to the quantity referred to.
+,ACE,Below schedule quantity after quantity-based surcharge,An adjustment made since the quantity was below the quantity-based surcharge.
+,ACF,Miscellaneous treatment,Non-defined additional charge on an item's price for treatment.
+,ACG,Enamelling treatment,Additional charge on an item's price for enamelling treatment.
+,ACH,Heat treatment,Additional charge on an item's price for heat treatment.
+,ACI,Plating treatment,Additional charge on an item's price for plating treatment.
+,ACJ,Painting,Additional charge on an item's price for painting.
+,ACK,Polishing,Additional charge on an item's price for polishing.
+,ACL,Priming,Additional charge on an item's price for priming.
+,ACM,Preservation treatment,Additional charge on an item's price for preservation treatment.
+,ACN,Miscellaneous other surcharges,Non-defined surcharges.
+,ACO,Alloy surcharge,Additional charge on an item's price for alloy.
+,ACP,Coke surcharge,Additional charge on an item's price for coke.
+,ACQ,Royalty surcharge,Additional charge on an item's price for royalty.
+,ACR,Wheel handling charge,Additional charge on an item's price for wheel handling.
+,ACS,Fitting surcharge,Additional charge on an item's price for fitting.
+,ACT,Non-standard surcharge,The surcharge is a non-standard charge.
+,ACU,Standard surcharge,The surcharge is a standard charge.
+,ACV,Wheel surcharge,Additional charge on an item's price for wheels.
+,ACW,Washer surcharge,Additional charge on an item's price for washers.
+,ACX,Ocean freight charge,The transportation charge relating to the ocean segment of a international journey.
+,ACY,Container deposit charge,The charge relating to the packaging of a product in a container when the container is expected to be returned and has value when empty.
+,ACZ,Damaged merchandise,The charge or credit relating to the circumstance of product being damaged and not saleable.
+,ADA,Bopsheet charge,A charge relating to securing a stack of product on a bopsheet.
+,ADB,Drum deposit,Deposit paid on a returnable drum.
+,ADC,Consolidation,The charge relating to additional services for consolidating multiple consignments into one shipment.
+,ADD,Inland transportation,The transportation charge related to the inland segment of a journey.
+,ADE,Bill of lading charge,The charge relating to the service of providing bill of lading document.
+,ADF,Excise tax-destination,The excise tax applied to a product by the country of destination.
+,ADG,Customs bond charge,Place of destination Customs department charge for processing a request to have goods brought into the country without paying the appropriate duties and taxes upon entry.
+,ADH,Per pound charge,A charge that is directly related to the weight in pounds of the product being sold and/or delivered.
+,ADI,Royalties,A share of the sales charge reversed by the grantor.
+,ADJ,Airbag charge,A charge for surrounding a product with an air bag.
+,ADK,Transfer charge,A charge relating to the additional transfer of goods and services from one entity to another.
+,ADL,Slipsheet charge,A charge relating to securing a stack of product on a slipsheet.
+,ADM,Binding services,A code indicating binding services.
+,ADN,Repair or replacement of broken returnable package,The repair or replacement of a broken returnable package.
+,ADO,Efficient logistics,A code indicating efficient logistics services.
+,ADP,Merchandising,A code indicating that merchandising services are in operation.
+,ADQ,Product mix,A code indicating that product mixing services are in operation.
+,ADR,Other services,A code indicating that other non-specific services are in operation.
+,ADS,Full pallet ordering,Ordering of a full pallet of a product.
+,ADT,Pick-up,For the pick-up or collection of goods.
++,ADU,Handling by the 1st level sub-contractor,Charge for the handling of the item by the first level sub-contractor.
++,ADV,Handling by the 2nd level sub-contractor,Charge for the handling of the item by the second level sub-contractor.
++,ADW,Chamber of commerce charge,Identifies the charges from the chamber of commerce.
++,ADX,Handling by the contractor,Charge for the handling of the item by the contractor.
++,ADY,New product introduction,A service provided by a buyer when introducing a new product from a suppliers range to the range traded by the buyer.
+,AG,Silver surcharge,Difference between current price and basic value contained in product price.
+,AJ,Adjustments,Description to be provided.
+,AL,Aluminium surcharge,Difference between current price and basic value contained in product price.
+,AM,Additional material,Surcharge for material additionally needed in the production of the item.
+,AU,Authentication charge,Charge to cover authentication costs and fees.
+,CA,Cataloguing services,Description to be provided.
+,CAA,Cancellation charge,Charge incurring with cancellation.
+,CAB,Cartage,Self-explanatory.
+,CAC,Cash discount,Discount incurring with cash payment.
+,CAD,Certification fee,Fee raised for certification services.
+,CAE,Certificate of conformance,Description to be provided.
+,CAF,Certificate of origin,Charge concerning certificate of origin.
+,CAG,Competitive allowance,Price adjustment allowed for market conditions or factors.
+,CAH,Competitive auto allowance,Description to be provided.
+,CAI,Cutting charge,Description to be provided.
+,CAJ,Consular costs,Charge to cover consular costs.
+,CAK,Customer collection rebate,Description to be provided.
+,CB,Commission,Description to be provided.
+,CD,Car loading,Costs incurred with car loading.
+,CG,Cleaning charge,Charge for cleaning an item.
+,CK,COD charge,Description to be provided.
+,CL,Contract allowance,Description to be provided.
+,CO,Cents off,Description to be provided.
+,CP,Competitive price,Description to be provided.
+,CS,Cigarette stamping,Description to be provided.
+,CT,Count and recount,Description to be provided.
+,CW,Container allowance,Description to be provided.
+,DA,Defective allowance,Description to be provided.
+,DAA,Deficit freight,Description to be provided.
+,DAB,Layout/design,Description to be provided.
+,DAD,Driver assigned unloading,Charges to cover handling costs for unloading by driver.
+,DAE,Distributor discount/allowance,Specific discount/allowance for distributors.
+,DI,Discount,A reduction from a usual or list price.
+,DL,Delivery,Description to be provided.
+,DM,Demurrage,The compensation payable to a carrier or freight whose vehicle or vessel is delayed as by failure to load or unload the freight within the time allowed.
+,EAA,Early buy allowance,Allowance granted to customers buying early.
+,EAB,Early payment allowance,Allowance granted to customers paying early.
+,EG,Engraving,Description to be provided.
+,EP,Expediting premium,Description to be provided.
+,ER,Exchange rate guarantee charge,Description to be provided.
+,EX,Export shipping charge,Description to be provided.
+,FA,Freight allowance,Description to be provided.
+,FAA,Fabrication charge,Description to be provided.
+,FAB,Freight equalization,Description to be provided.
+,FAC,Freight surcharge,Charge on shipment for extraordinary handling.
+,FC,Freight charge,Amount to be paid for moving goods by whatever means from one place to another inclusive discounts allowances rebates adjustment factors and additional cost relating to freight costs (UN/ECE Recommendation no 23).
+,FG,Free goods,Allowance or rebate granted by delivery of goods free of charge.
+,FH,Filling/handling charge,Description to be provided.
+,FI,Finance charge,Description to be provided.
+,FN,Special finish charge,Description to be provided.
+,FR,Flat rate,Description to be provided.
+,GAA,Grinding,Description to be provided.
+,HAA,Hose charge,Description to be provided.
+,HD,Handling,Charge for handling of the item.
+,HH,Hoisting and hauling,Description to be provided.
+,IA,Invoice adjustment,Description to be provided.
+,IAA,Installation,Costs incurred for installation.
+,IAB,Installation and warranty,Description to be provided.
+,ID,Inside delivery charge,Description to be provided.
+,IF,Inspection fee,Fee raised for inspection.
+,IN,Insurance,Charge for insurance.
+,IR,Installation and training,Description to be provided.
+,IS,Invoice services,Description to be provided.
+,KO,Koshering,Description to be provided.
+,L1,Shipper load carrier count,Description to be provided.
+,LA,Labelling,Description to be provided.
+,LAA,Labour charge,Charge raised for labour services.
+,LAB,Labor (repair and return orders),Description to be provided.
+,LAC,License fee,Description to be provided.
+,LF,Legalisation fee,Self explanatory.
+,LS,Local sales tax,(All applicable sales taxes by authorities below the state level).
+,MA,Material allowance (special materials),Description to be provided.
+,MAA,Mileage or travel,Description to be provided.
+,MAB,Mileage fee (for repair and return),Description to be provided.
+,MAC,Minimum order/minimum billing charge,Description to be provided.
+,MAD,Monthly rental,Description to be provided.
+,MAE,Mounting,Description to be provided.
+,MC,Material surcharge (special materials),Description to be provided.
+,MI,Mail invoice,Description to be provided.
+,ML,Mail invoice to each location,Description to be provided.
+,NAA,Non-returnable containers,Description to be provided.
+,OA,Outside cable connectors,Description to be provided.
+,OAA,Overtime loading,Description to be provided.
+,PA,Pack invoice with shipment,Description to be provided.
+,PAA,Phosphatizing (steel treatment),Description to be provided.
+,PAB,Postage charge,Description to be provided.
+,PAC,Premium charge,Description to be provided.
+,PAD,Promotional allowance,Description to be provided.
+,PAE,Promotional discount,Description to be provided.
+,PC,Packing,Charge for packing.
+,PD,Palladium surcharge,Difference between current price and basic value contained in product price.
+,PI,Pick-up allowance,Description to be provided.
+,PL,Palletizing,Description to be provided.
+,PN,Pallet charge,Description to be provided.
+,PO,Per order charge,Description to be provided.
+,QAA,Quantity surcharge,Fee associated with providing goods outside \"normal\" quantity limits.
+,QD,Quantity discount,Description to be provided.
+,RAA,Rebate,Description to be provided.
+,RAB,Repack charge,Description to be provided.
+,RAC,Repair,Description to be provided.
+,RAD,Returnable container,Description to be provided.
+,RAE,Resellers discount,Description to be provided.
+,RAF,Restocking charge,Description to be provided.
+,RAG,Roll rebate,Description to be provided.
+,RAH,Road/rail tanker rebate,Description to be provided.
+,RE,Re-delivery charge,Description to be provided.
+,RF,Refurbishing charge,Description to be provided.
+,RH,Rail wagon hire,Description to be provided.
+,RO,Roe allowance/charge,Description to be provided.
+,RP,Repair charge,Description to be provided.
+,RV,Freight charge/costs of loading,Description to be provided.
+,SA,Salvage,Description to be provided.
+,SAA,Shipping and handling,Description to be provided.
+,SAB,Special allowance,Description to be provided.
+,SAC,Special credit,Description to be provided.
+,SAD,Special packaging,Description to be provided.
+,SAE,Stamping,Description to be provided.
+,SAF,Supplemental items,Description to be provided.
+,SAG,Surcharge (dollar value),An additional amount added to the usual charge expressed in a dollar or monetary value.
+,SAH,Surcharge (percentage),An additional amount added to the usual charge expressed in a percentage.
+,SAI,Shipper load consignee unload,Description to be provided.
+,SAJ,Small packages charge,Description to be provided.
+,SC,Surcharge,An additional amount added to the usual charge.
+,SD,Shrinkage allowance,Description to be provided.
+,SF,Special rebate,A return of part of an amount paid for goods or services serving as a reduction or discount.
+,SG,Shrink-wrap charge,Description to be provided.
+,SH,Special handling service,Description to be provided.
+,SM,Special finish,Description to be provided.
+,ST,Stamp duties,Self explanatory.
+,SU,Set-up,Description to be provided.
+,SZ,Steel surcharge,Description to be provided.
+,TAA,Telephone charge,Description to be provided.
+,TAB,Tank rental,Description to be provided.
+,TAC,Testing charge,Description to be provided.
+,TAD,Testing allowance,Description to be provided.
+,TAE,Truckload discount,Description to be provided.
+,TD,Trade discount,Description to be provided.
+,TS,State tax,All applicable taxes by authorities at the state or provincial level below national level.
+,TT,Transportation - third party billing,Description to be provided.
+,TV,Transportation - vendor provided,Description to be provided.
+,TX,Tax,Contribution levied by an authority.
+,TZ,Temporary allowance,Description to be provided.
+,UM,Unsaleable merchandise allowance,Description to be provided.
+,V1,Drop yard,Description to be provided.
+,V2,Drop dock,Description to be provided.
+,VAA,Vendor freight,Description to be provided.
+,VAB,Volume discount,Discount offered based on the amount of purchase.
+,VL,Vehicle load allowance,Description to be provided.
+,WH,Warehousing,Costs for storage and handling.
+,XAA,Combine all same day shipment,Description to be provided.
+,YY,Split pickup,Description to be provided.
+,ZZZ,Mutually defined,Self explanatory.
