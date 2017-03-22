@@ -11,6 +11,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -41,10 +42,13 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/countrycodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/CountryCodesTemplate.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/CountryCodesTemplate.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -55,10 +59,14 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-4451.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid4451InvoiceNoteSubjectCode.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid4451InvoiceNoteSubjectCode.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4451InvoiceNoteSubjectCode.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4451InvoiceNoteSubjectCode.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -69,10 +77,13 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-1001.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid1001InvoiceTypeCode.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid1001InvoiceTypeCode.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid1001InvoiceTypeCode.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid1001InvoiceTypeCode.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -83,10 +94,13 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-4461.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid4461PaymentMeansCode.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid4461PaymentMeansCode.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4461PaymentMeansCode.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4461PaymentMeansCode.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -97,10 +111,14 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-5305.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid5305DutyTaxFeeCategories.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid5305DutyTaxFeeCategories.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid5305DutyTaxFeeCategories.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid5305DutyTaxFeeCategories.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -111,10 +129,14 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-7161.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid7161SpecialServicesCodes.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid7161SpecialServicesCodes.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid7161SpecialServicesCodes.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid7161SpecialServicesCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -125,10 +147,13 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/VatExemptionReasonsCodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/VatExemptionReasonsCodes.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/VatExemptionReasonsCodes.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/VatExemptionReasonsCodes.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/VatExemptionReasonsCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -139,10 +164,15 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-5189.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid5189ChargeAllowanceDescriptionCodes.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid5189ChargeAllowanceDescriptionCodes.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid5189ChargeAllowanceDescriptionCodes.java</fileNameTemplate>
+                            <fileNameTemplate>
+                                it/infocert/eigor/model/core/enums/Untdid5189ChargeAllowanceDescriptionCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -153,10 +183,13 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/ISO4217CurrenciesFundsCodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Iso4217CurrenciesFundsCodes.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/Iso4217CurrenciesFundsCodes.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso4217CurrenciesFundsCodes.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso4217CurrenciesFundsCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -167,10 +200,32 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/UNTDID-2005.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid2005DateTimePeriodQualifiers.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid2005DateTimePeriodQualifiers.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid2005DateTimePeriodQualifiers.java</fileNameTemplate>
+                            <fileNameTemplate>
+                                it/infocert/eigor/model/core/enums/Untdid2005DateTimePeriodQualifiers.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-unit-of-measure</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/UnitsOfMeasureCodes.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/UnitOfMeasureCodes.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/UnitOfMeasureCodes.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                 </executions>
