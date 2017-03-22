@@ -173,6 +173,20 @@
                             <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid2005DateTimePeriodQualifiers.java</fileNameTemplate>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>generate-bts</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/BTs.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/BT.java.vm</pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BtOrBg}${Index}.java</fileNameTemplate>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
