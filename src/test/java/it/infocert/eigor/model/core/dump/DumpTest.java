@@ -35,7 +35,7 @@ public class DumpTest {
         // nr. 22
         BT0022InvoiceNote btInvoiceNote = new BT0022InvoiceNote("This is a test invoice.");
         bgInvoiceNote.getBt0022InvoiceNotes().add(btInvoiceNote);
-        invoice.getBg001InvoiceNotes().add(bgInvoiceNote);
+        invoice.getBg0001InvoiceNotes().add(bgInvoiceNote);
 
 
         // when

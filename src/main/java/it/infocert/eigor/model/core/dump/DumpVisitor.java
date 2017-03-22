@@ -56,24 +56,24 @@ public class DumpVisitor implements Visitor {
         CoreInvoice invoice = new CoreInvoice();
 
         // nr. 1
-        BT001InvoiceNumber invoiceNumber = new BT001InvoiceNumber(new Identifier("2017/01"));
-        invoice.getBt001InvoiceNumbers().add(invoiceNumber);
+        BT0001InvoiceNumber invoiceNumber = new BT0001InvoiceNumber("2017/01");
+        invoice.getBT0001InvoiceNumbers().add(invoiceNumber);
 
         // nr. 5
-        BT006VatAccountingCurrencyCode currencyCode = new BT006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
-        invoice.getBt006VatAccountingCurrencyCodes().add(currencyCode);
+        BT0006VatAccountingCurrencyCode currencyCode = new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
+        invoice.getBt0006VatAccountingCurrencyCodes().add(currencyCode);
 
         // nr. 20
         BG001InvoiceNote bgInvoiceNote = new BG001InvoiceNote();
 
         // nr. 21
-        BT021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT021InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode.AAA);
-        bgInvoiceNote.getBt021InvoiceNoteSubjectCodes().add(invoiceNoteSubjectCode);
+        BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT0021InvoiceNoteSubjectCode(Untdid4451InvoiceNoteSubjectCode.AAA.toDetailedString());
+        bgInvoiceNote.getBt0021InvoiceNoteSubjectCodes().add(invoiceNoteSubjectCode);
 
         // nr. 22
-        BT022InvoiceNote btInvoiceNote = new BT022InvoiceNote("This is a test invoice.");
-        bgInvoiceNote.getBt022InvoiceNotes().add(btInvoiceNote);
-        invoice.getBg001InvoiceNotes().add(bgInvoiceNote);
+        BT0022InvoiceNote btInvoiceNote = new BT0022InvoiceNote("This is a test invoice.");
+        bgInvoiceNote.getBt0022InvoiceNotes().add(btInvoiceNote);
+        invoice.getBg0001InvoiceNotes().add(bgInvoiceNote);
 
         DumpVisitor v = new DumpVisitor();
         invoice.accept(v);
