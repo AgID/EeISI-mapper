@@ -8,7 +8,7 @@ import static java.util.Comparator.comparing;
 public class BG001InvoiceNote implements BTBG {
 
     private List<BT0021InvoiceNoteSubjectCode> bt0021InvoiceNoteSubjectCodes = new ArrayList<>(0);;
-    private List<BT022InvoiceNote> bt022InvoiceNotes = new ArrayList<>(0);;
+    private List<BT0022InvoiceNote> bt0022InvoiceNotes = new ArrayList<>(0);;
 
     public BG001InvoiceNote() {
     }
@@ -21,12 +21,12 @@ public class BG001InvoiceNote implements BTBG {
         this.bt0021InvoiceNoteSubjectCodes = bt0021InvoiceNoteSubjectCodes;
     }
 
-    public List<BT022InvoiceNote> getBt022InvoiceNotes() {
-        return bt022InvoiceNotes;
+    public List<BT0022InvoiceNote> getBt0022InvoiceNotes() {
+        return bt0022InvoiceNotes;
     }
 
-    public void setBt022InvoiceNotes(List<BT022InvoiceNote> bt022InvoiceNotes) {
-        this.bt022InvoiceNotes = bt022InvoiceNotes;
+    public void setBt0022InvoiceNotes(List<BT0022InvoiceNote> bt0022InvoiceNotes) {
+        this.bt0022InvoiceNotes = bt0022InvoiceNotes;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BG001InvoiceNote implements BTBG {
 
         List<BTBG> list = new ArrayList<>();
         list.addAll(this.bt0021InvoiceNoteSubjectCodes);
-        list.addAll(this.bt022InvoiceNotes);
+        list.addAll(this.bt0022InvoiceNotes);
         list.sort( comparing( o -> o.order() ) );
 
         list.forEach( o -> o.accept(v) );

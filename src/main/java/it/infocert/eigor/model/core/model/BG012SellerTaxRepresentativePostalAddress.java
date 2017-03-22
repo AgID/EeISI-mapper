@@ -6,16 +6,16 @@ import java.util.List;
 import static java.util.Comparator.comparing;
 
 public class BG012SellerTaxRepresentativePostalAddress implements BTBG {
-    private List<BT064TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines = new ArrayList<>(0);;
+    private List<BT0064TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines = new ArrayList<>(0);;
 
     public BG012SellerTaxRepresentativePostalAddress() {
     }
 
-    public List<BT064TaxRepresentativeAddressLine1> getBt64TaxRepresentativeAddressLines() {
+    public List<BT0064TaxRepresentativeAddressLine1> getBt64TaxRepresentativeAddressLines() {
         return bt64TaxRepresentativeAddressLines;
     }
 
-    public void setBt64TaxRepresentativeAddressLines(List<BT064TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines) {
+    public void setBt64TaxRepresentativeAddressLines(List<BT0064TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines) {
         this.bt64TaxRepresentativeAddressLines = bt64TaxRepresentativeAddressLines;
     }
 

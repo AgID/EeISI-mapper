@@ -1,7 +1,6 @@
 package it.infocert.eigor.model.core.dump;
 
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
 
 public class DumpVisitor implements Visitor {
@@ -70,8 +69,8 @@ public class DumpVisitor implements Visitor {
         bgInvoiceNote.getBt0021InvoiceNoteSubjectCodes().add(invoiceNoteSubjectCode);
 
         // nr. 22
-        BT022InvoiceNote btInvoiceNote = new BT022InvoiceNote("This is a test invoice.");
-        bgInvoiceNote.getBt022InvoiceNotes().add(btInvoiceNote);
+        BT0022InvoiceNote btInvoiceNote = new BT0022InvoiceNote("This is a test invoice.");
+        bgInvoiceNote.getBt0022InvoiceNotes().add(btInvoiceNote);
         invoice.getBg001InvoiceNotes().add(bgInvoiceNote);
 
         DumpVisitor v = new DumpVisitor();
