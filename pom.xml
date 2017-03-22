@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
-                <version>0.0.2-SNAPSHOT</version>
+                <version>0.0.2</version>
                 <executions>
                     <execution>
                         <id>generate-country-codes</id>
@@ -157,6 +157,20 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
                             <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso4217CurrenciesFundsCodes.java</fileNameTemplate>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-untdid-2005</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/UNTDID-2005.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/Untdid2005DateTimePeriodQualifiers.java.vm</pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid2005DateTimePeriodQualifiers.java</fileNameTemplate>
                         </configuration>
                     </execution>
                 </executions>
