@@ -7,18 +7,18 @@ import static java.util.Comparator.comparing;
 
 public class BG001InvoiceNote implements BTBG {
 
-    private List<BT021InvoiceNoteSubjectCode> bt021InvoiceNoteSubjectCodes = new ArrayList<>(0);;
+    private List<BT0021InvoiceNoteSubjectCode> bt0021InvoiceNoteSubjectCodes = new ArrayList<>(0);;
     private List<BT022InvoiceNote> bt022InvoiceNotes = new ArrayList<>(0);;
 
     public BG001InvoiceNote() {
     }
 
-    public List<BT021InvoiceNoteSubjectCode> getBt021InvoiceNoteSubjectCodes() {
-        return bt021InvoiceNoteSubjectCodes;
+    public List<BT0021InvoiceNoteSubjectCode> getBt0021InvoiceNoteSubjectCodes() {
+        return bt0021InvoiceNoteSubjectCodes;
     }
 
-    public void setBt021InvoiceNoteSubjectCodes(List<BT021InvoiceNoteSubjectCode> bt021InvoiceNoteSubjectCodes) {
-        this.bt021InvoiceNoteSubjectCodes = bt021InvoiceNoteSubjectCodes;
+    public void setBt0021InvoiceNoteSubjectCodes(List<BT0021InvoiceNoteSubjectCode> bt0021InvoiceNoteSubjectCodes) {
+        this.bt0021InvoiceNoteSubjectCodes = bt0021InvoiceNoteSubjectCodes;
     }
 
     public List<BT022InvoiceNote> getBt022InvoiceNotes() {
@@ -39,7 +39,7 @@ public class BG001InvoiceNote implements BTBG {
         v.startBTBG(this);
 
         List<BTBG> list = new ArrayList<>();
-        list.addAll(this.bt021InvoiceNoteSubjectCodes);
+        list.addAll(this.bt0021InvoiceNoteSubjectCodes);
         list.addAll(this.bt022InvoiceNotes);
         list.sort( comparing( o -> o.order() ) );
 
