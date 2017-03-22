@@ -1,9 +1,9 @@
 package it.infocert.eigor.model.core;
 
-import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
-import it.infocert.eigor.model.core.model.BT006VatAccountingCurrencyCode;
+import it.infocert.eigor.model.core.model.BT0006VatAccountingCurrencyCode;
 
 import it.infocert.eigor.model.core.model.CoreInvoice;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
@@ -46,7 +46,7 @@ public class Seed {
 
         // when
         coreInvoice.getBt0001InvoiceNumbers().add(invoiceNumber);
-        coreInvoice.getBt006VatAccountingCurrencyCodes().add( new BT006VatAccountingCurrencyCode(Iso4217CurrencyCode.EUR) );
+        coreInvoice.getBt0006VatAccountingCurrencyCodes().add( new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR) );
 
         // then
         assertThat( coreInvoice.getBt0001InvoiceNumbers().get(0), is(invoiceNumber) );

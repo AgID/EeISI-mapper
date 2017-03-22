@@ -1,11 +1,9 @@
 package it.infocert.eigor.model.core.dump;
 
-import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
-
-import static it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode.AAA;
 
 public class DumpVisitor implements Visitor {
 
@@ -62,8 +60,8 @@ public class DumpVisitor implements Visitor {
         invoice.getBt0001InvoiceNumbers().add(invoiceNumber);
 
         // nr. 5
-        BT006VatAccountingCurrencyCode currencyCode = new BT006VatAccountingCurrencyCode(Iso4217CurrencyCode.EUR);
-        invoice.getBt006VatAccountingCurrencyCodes().add(currencyCode);
+        BT0006VatAccountingCurrencyCode currencyCode = new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.AED);
+        invoice.getBt0006VatAccountingCurrencyCodes().add(currencyCode);
 
         // nr. 20
         BG001InvoiceNote bgInvoiceNote = new BG001InvoiceNote();

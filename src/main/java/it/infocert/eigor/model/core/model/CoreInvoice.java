@@ -12,7 +12,7 @@ public class CoreInvoice {
     private List<BG011SellerTaxRepresentativeParty> bg11SellerTaxRepresentativeParties = new ArrayList<>(0);
 
     private List<BT0001InvoiceNumber> bt001InvoiceNumbers = new ArrayList<>(0);
-    private List<BT006VatAccountingCurrencyCode> bt006VatAccountingCurrencyCodes = new ArrayList<>(0);
+    private List<BT0006VatAccountingCurrencyCode> bt0006VatAccountingCurrencyCodes = new ArrayList<>(0);
 
     public List<BG001InvoiceNote> getBg001InvoiceNotes() {
         return bg001InvoiceNotes;
@@ -46,12 +46,12 @@ public class CoreInvoice {
         this.bt001InvoiceNumbers = bt001InvoiceNumbers;
     }
 
-    public List<BT006VatAccountingCurrencyCode> getBt006VatAccountingCurrencyCodes() {
-        return bt006VatAccountingCurrencyCodes;
+    public List<BT0006VatAccountingCurrencyCode> getBt0006VatAccountingCurrencyCodes() {
+        return bt0006VatAccountingCurrencyCodes;
     }
 
-    public void setBt006VatAccountingCurrencyCodes(List<BT006VatAccountingCurrencyCode> bt006VatAccountingCurrencyCodes) {
-        this.bt006VatAccountingCurrencyCodes = bt006VatAccountingCurrencyCodes;
+    public void setBt0006VatAccountingCurrencyCodes(List<BT0006VatAccountingCurrencyCode> bt0006VatAccountingCurrencyCodes) {
+        this.bt0006VatAccountingCurrencyCodes = bt0006VatAccountingCurrencyCodes;
     }
 
 
@@ -65,7 +65,7 @@ public class CoreInvoice {
         list.addAll(this.bg002ProcessControls);
         list.addAll(this.bg11SellerTaxRepresentativeParties);
         list.addAll(this.bt001InvoiceNumbers);
-        list.addAll(this.bt006VatAccountingCurrencyCodes);
+        list.addAll(this.bt0006VatAccountingCurrencyCodes);
         list.sort( comparing( o -> o.order() ) );
 
         list.forEach( o -> o.accept(v) );

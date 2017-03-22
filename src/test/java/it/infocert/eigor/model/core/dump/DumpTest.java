@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core.dump;
 
-import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
@@ -24,8 +24,8 @@ public class DumpTest {
         invoice.getBT0001InvoiceNumbers().add(invoiceNumber);
 
         // nr. 5
-        BT006VatAccountingCurrencyCode currencyCode = new BT006VatAccountingCurrencyCode(Iso4217CurrencyCode.EUR);
-        invoice.getBt006VatAccountingCurrencyCodes().add(currencyCode);
+        BT0006VatAccountingCurrencyCode currencyCode = new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
+        invoice.getBt0006VatAccountingCurrencyCodes().add(currencyCode);
 
         // nr. 20
         BG001InvoiceNote bgInvoiceNote = new BG001InvoiceNote();
