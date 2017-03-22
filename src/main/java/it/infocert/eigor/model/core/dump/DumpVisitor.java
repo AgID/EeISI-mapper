@@ -58,8 +58,8 @@ public class DumpVisitor implements Visitor {
         CoreInvoice invoice = new CoreInvoice();
 
         // nr. 1
-        BT001InvoiceNumber invoiceNumber = new BT001InvoiceNumber(new Identifier("2017/01"));
-        invoice.getBt001InvoiceNumbers().add(invoiceNumber);
+        BT0001InvoiceNumber invoiceNumber = new BT0001InvoiceNumber("2017/01");
+        invoice.getBt0001InvoiceNumbers().add(invoiceNumber);
 
         // nr. 5
         BT006VatAccountingCurrencyCode currencyCode = new BT006VatAccountingCurrencyCode(Iso4217CurrencyCode.EUR);

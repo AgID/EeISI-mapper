@@ -2,8 +2,9 @@ package it.infocert.eigor.model.core;
 
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrencyCode;
+import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT006VatAccountingCurrencyCode;
-import it.infocert.eigor.model.core.model.BT001InvoiceNumber;
+
 import it.infocert.eigor.model.core.model.CoreInvoice;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class Seed {
         Br002AnInvoiceShallHaveAnInvoiceNumberRule rule = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 
         CoreInvoice invoiceWithCoreInvoiceNumber = new CoreInvoice();
-        invoiceWithCoreInvoiceNumber.getBt001InvoiceNumbers().add(new BT001InvoiceNumber( new Identifier("1234") ));
+        invoiceWithCoreInvoiceNumber.getBt0001InvoiceNumbers().add(new BT0001InvoiceNumber( "1234" ));
 
         CoreInvoice invoiceWithoutCoreInvoiceNumber = new CoreInvoice();
 
@@ -41,14 +42,14 @@ public class Seed {
 
         // given
         CoreInvoice coreInvoice = new CoreInvoice();
-        BT001InvoiceNumber invoiceNumber = new BT001InvoiceNumber( new Identifier("1234") );
+        BT0001InvoiceNumber invoiceNumber = new BT0001InvoiceNumber( "1234" );
 
         // when
-        coreInvoice.getBt001InvoiceNumbers().add(invoiceNumber);
+        coreInvoice.getBt0001InvoiceNumbers().add(invoiceNumber);
         coreInvoice.getBt006VatAccountingCurrencyCodes().add( new BT006VatAccountingCurrencyCode(Iso4217CurrencyCode.EUR) );
 
         // then
-        assertThat( coreInvoice.getBt001InvoiceNumbers().get(0), is(invoiceNumber) );
+        assertThat( coreInvoice.getBt0001InvoiceNumbers().get(0), is(invoiceNumber) );
 
     }
 

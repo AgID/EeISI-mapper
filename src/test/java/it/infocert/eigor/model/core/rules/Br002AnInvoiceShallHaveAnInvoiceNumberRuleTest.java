@@ -1,7 +1,7 @@
 package it.infocert.eigor.model.core.rules;
 
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BT001InvoiceNumber;
+import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.CoreInvoice;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class Br002AnInvoiceShallHaveAnInvoiceNumberRuleTest {
 
         // given
         CoreInvoice coreInvoice = new CoreInvoice();
-        coreInvoice.getBt001InvoiceNumbers().add(new BT001InvoiceNumber( new Identifier("4321") ));
+        coreInvoice.getBT0001InvoiceNumbers().add(new BT0001InvoiceNumber( "4321" ));
 
         Br002AnInvoiceShallHaveAnInvoiceNumberRule sut = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 

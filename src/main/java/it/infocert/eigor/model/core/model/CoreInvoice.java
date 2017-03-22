@@ -11,7 +11,7 @@ public class CoreInvoice {
     private List<BG002ProcessControl> bg002ProcessControls = new ArrayList<>(0);
     private List<BG011SellerTaxRepresentativeParty> bg11SellerTaxRepresentativeParties = new ArrayList<>(0);
 
-    private List<BT001InvoiceNumber> bt001InvoiceNumbers = new ArrayList<>(0);
+    private List<BT0001InvoiceNumber> bt001InvoiceNumbers = new ArrayList<>(0);
     private List<BT006VatAccountingCurrencyCode> bt006VatAccountingCurrencyCodes = new ArrayList<>(0);
 
     public List<BG001InvoiceNote> getBg001InvoiceNotes() {
@@ -38,11 +38,11 @@ public class CoreInvoice {
         this.bg11SellerTaxRepresentativeParties = bg11SellerTaxRepresentativeParties;
     }
 
-    public List<BT001InvoiceNumber> getBt001InvoiceNumbers() {
+    public List<BT0001InvoiceNumber> getBt0001InvoiceNumbers() {
         return bt001InvoiceNumbers;
     }
 
-    public void setBt001InvoiceNumbers(List<BT001InvoiceNumber> bt001InvoiceNumbers) {
+    public void setBt001InvoiceNumbers(List<BT0001InvoiceNumber> bt001InvoiceNumbers) {
         this.bt001InvoiceNumbers = bt001InvoiceNumbers;
     }
 
@@ -71,5 +71,9 @@ public class CoreInvoice {
         list.forEach( o -> o.accept(v) );
 
         v.endInvoice(this);
+    }
+
+    public List getBT0001InvoiceNumbers() {
+        return this.bt001InvoiceNumbers;
     }
 }
