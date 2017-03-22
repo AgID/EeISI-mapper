@@ -11,6 +11,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -184,7 +185,7 @@
                             <pathToTemplate>${project.basedir}/src/main/resources/BT.java.vm</pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BtOrBg}${Index}.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java</fileNameTemplate>
                         </configuration>
                     </execution>
                 </executions>

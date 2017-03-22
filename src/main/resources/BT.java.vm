@@ -1,19 +1,23 @@
+## ============================
+#set( $ClassName = ${BTBGClassName} )
+## ============================
 package it.infocert.eigor.model.core.model;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.model.core.datatypes.*;
+import it.infocert.eigor.model.core.enums.*;
 
 import java.util.Objects;
 
 /**
-* ${BusinessTerm} (${BtOrBg}${Index})
+* ${BusinessTerm} (${ClassName})
 * <p>${Description}</p>
 */
-public class ${BtOrBg}${Index} implements BTBG {
+public class ${ClassName} implements BTBG {
 
     private final ${AttributeFQN} attribute;
 
-    public ${BtOrBg}${Index}(final ${AttributeFQN} attribute) {
+    public ${ClassName}(final ${AttributeFQN} attribute) {
         this.attribute = Preconditions.checkNotNull( attribute );
     }
 
@@ -35,8 +39,8 @@ public class ${BtOrBg}${Index} implements BTBG {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ${BtOrBg}${Index})) return false;
-        ${BtOrBg}${Index} that = (${BtOrBg}${Index}) o;
+        if (!(o instanceof ${ClassName})) return false;
+        ${ClassName} that = (${ClassName}) o;
         return Objects.equals(attribute, that.attribute);
     }
 
