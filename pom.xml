@@ -237,9 +237,29 @@
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/BTs.csv</pathToCsv>
                             <pathToTemplate>${project.basedir}/src/main/resources/BT.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java</fileNameTemplate>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-untdid-1153</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/UNTDID-1153.csv</pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/Untdid1153ReferenceQualifierCode.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid1153ReferenceQualifierCode.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
                 </executions>
