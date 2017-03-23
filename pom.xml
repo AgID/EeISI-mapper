@@ -32,6 +32,9 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>1.1.11</version>
+                <configuration>
+                    <goal>site</goal>
+                </configuration>
             </plugin>
             <!-- Get and build from https://github.com/danidemi/template-generator-maven-plugin -->
             <plugin>
@@ -290,5 +293,14 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.11</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
