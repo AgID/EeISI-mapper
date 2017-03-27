@@ -5,12 +5,12 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-public class BG001InvoiceNote implements BTBG {
+public class BG0001InvoiceNote implements BTBG {
 
     private List<BT0021InvoiceNoteSubjectCode> bt0021InvoiceNoteSubjectCodes = new ArrayList<>(0);;
     private List<BT0022InvoiceNote> bt0022InvoiceNotes = new ArrayList<>(0);;
 
-    public BG001InvoiceNote() {
+    public BG0001InvoiceNote() {
     }
 
     public List<BT0021InvoiceNoteSubjectCode> getBt0021InvoiceNoteSubjectCodes() {

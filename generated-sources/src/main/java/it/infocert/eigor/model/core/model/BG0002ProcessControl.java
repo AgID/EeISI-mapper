@@ -1,8 +1,8 @@
 package it.infocert.eigor.model.core.model;
 
-public class BG002ProcessControl implements BTBG {
+public class BG0002ProcessControl implements BTBG {
 
-    public BG002ProcessControl() {
+    public BG0002ProcessControl() {
     }
 
     @Override

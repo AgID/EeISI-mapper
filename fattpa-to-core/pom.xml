@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fattPAtoCore</artifactId>
+    <artifactId>fattpa-to-core</artifactId>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -25,7 +25,7 @@ public class DumpTest {
         invoice.getBt0006VatAccountingCurrencyCodes().add(currencyCode);
 
         // nr. 20
-        BG001InvoiceNote bgInvoiceNote = new BG001InvoiceNote();
+        BG0001InvoiceNote bgInvoiceNote = new BG0001InvoiceNote();
 
         // nr. 21
         BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT0021InvoiceNoteSubjectCode("ABE");

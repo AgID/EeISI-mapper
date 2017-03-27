@@ -5,10 +5,10 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-public class BG012SellerTaxRepresentativePostalAddress implements BTBG {
+public class BG0012SellerTaxRepresentativePostalAddress implements BTBG {
     private List<BT0064TaxRepresentativeAddressLine1> bt64TaxRepresentativeAddressLines = new ArrayList<>(0);;
 
-    public BG012SellerTaxRepresentativePostalAddress() {
+    public BG0012SellerTaxRepresentativePostalAddress() {
     }
 
     public List<BT0064TaxRepresentativeAddressLine1> getBt64TaxRepresentativeAddressLines() {

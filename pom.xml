@@ -11,7 +11,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>generated-sources</module>
-        <module>fattPAtoCore</module>
+        <module>fattpa-to-core</module>
     </modules>
 
     <properties>
