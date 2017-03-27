@@ -1,0 +1,47 @@
+#{set row0=File.get(0)}
+#{set rows=File.sublist(1,File.size())}
+package it.infocert.eigor.model.core.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Comparator.comparing;
+
+public class ${row0.BTBGClassName} implements BTBG {
+
+    #foreach( $row in $rows )
+    private List<${row.BTBGClassName}> ${BTBGClassName} = new ArrayList<>(0);;
+    #end
+
+    public ${row0.BTBGClassName}() {
+    }
+
+    #foreach( $row in $rows )
+    public List<${row.BTBGClassName}> get${row.BTBGClassName}() {
+        return ${BTBGClassName};
+    }
+    #end
+
+    @Override
+    public int order() {
+        return ${row.OrderInCEN};
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.startBTBG(this);
+
+        List<BTBG> list = new ArrayList<>();
+        #foreach( $row in $rows )
+        list.addAll(this.${BTBGClassName});
+        #end
+        list.sort( comparing( o -> o.order() ) );
+        list.forEach( o -> o.accept(v) );
+        v.endBTBG(this);
+    }
+
+    @Override
+    public String toString() {
+        return "${row0.IdNormalized}";
+    }
+}
