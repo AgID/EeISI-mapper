@@ -1,5 +1,5 @@
-#{set row0=File.get(0)}
-#{set rows=File.sublist(1,File.size())}
+#set( $row0 = $File[0] )
+#set( $rows = $File.sublist(1,$File.size()) )
 package it.infocert.eigor.model.core.model;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import static java.util.Comparator.comparing;
 public class ${row0.BTBGClassName} implements BTBG {
 
     #foreach( $row in $rows )
-    private List<${row.BTBGClassName}> ${BTBGClassName} = new ArrayList<>(0);;
+    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);;
     #end
 
     public ${row0.BTBGClassName}() {
@@ -24,7 +24,7 @@ public class ${row0.BTBGClassName} implements BTBG {
 
     @Override
     public int order() {
-        return ${row.OrderInCEN};
+        return ${row0.OrderInCEN};
     }
 
     @Override
