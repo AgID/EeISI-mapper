@@ -11,6 +11,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>generatedsources</module>
+        <module>fattPAtoCore</module>
     </modules>
 
     <properties>
@@ -32,6 +33,20 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
