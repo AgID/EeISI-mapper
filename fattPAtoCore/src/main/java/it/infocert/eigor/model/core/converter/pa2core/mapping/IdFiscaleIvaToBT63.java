@@ -1,7 +1,7 @@
 package it.infocert.eigor.model.core.converter.pa2core.mapping;
 
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BT63SellerTaxRepresentativeVatIdentifier;
+import it.infocert.eigor.model.core.model.BT0063SellerTaxRepresentativeVatIdentifier;
 import it.infocert.eigor.model.core.model.CoreInvoice;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -18,8 +18,8 @@ public class IdFiscaleIvaToBT63 {
         NodeList codeNodes = CommonConversionModule.evaluateXpath(doc, XPATHEXPRESSIONCODE);
         String countryCode = countryNodes.item(0).getTextContent();
         String vatCode = codeNodes.item(0).getTextContent();
-        List<BT63SellerTaxRepresentativeVatIdentifier> identifiers = new ArrayList<>(1);
-        identifiers.add(new BT63SellerTaxRepresentativeVatIdentifier(new Identifier(countryCode + vatCode)));
+        List<BT0063SellerTaxRepresentativeVatIdentifier> identifiers = new ArrayList<>(1);
+        identifiers.add(new BT0063SellerTaxRepresentativeVatIdentifier(new Identifier(countryCode + vatCode)));
         coreInvoice.getBg11SellerTaxRepresentativeParties().get(0).setBt63SellerTaxRepresentativeVatIdentifiers(identifiers);
     }
 

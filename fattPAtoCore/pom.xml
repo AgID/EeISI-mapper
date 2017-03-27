@@ -12,9 +12,9 @@
     <artifactId>fattPAtoCore</artifactId>
     <dependencies>
         <dependency>
-            <groupId>it.infocert.eigor</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>generated-sources</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
