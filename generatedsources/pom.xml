@@ -26,12 +26,12 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/CountryCodes/countrycodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/CountryCodes/CountryCodesTemplate.vm
+                            <pathToTemplate>${project.basedir}/src/main/resources/CountryCodes/CountryCodesTemplate.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Iso31661CountryCodes.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso31661CountryCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -49,7 +49,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid4451InvoiceNoteSubjectCode.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4451InvoiceNoteSubjectCode.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -66,7 +66,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid1001InvoiceTypeCode.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid1001InvoiceTypeCode.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -83,7 +83,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid4461PaymentMeansCode.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid4461PaymentMeansCode.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -101,7 +101,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid5305DutyTaxFeeCategories.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid5305DutyTaxFeeCategories.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -119,7 +119,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid7161SpecialServicesCodes.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid7161SpecialServicesCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -136,7 +136,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/VatExemptionReasonsCodes.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/VatExemptionReasonsCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -155,7 +155,7 @@
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
                             <fileNameTemplate>
-                                it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid5189ChargeAllowanceDescriptionCodes.java
+                                it/infocert/eigor/model/core/enums/Untdid5189ChargeAllowanceDescriptionCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -172,7 +172,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Iso4217CurrenciesFundsCodes.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Iso4217CurrenciesFundsCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -191,7 +191,7 @@
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
                             <fileNameTemplate>
-                                it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid2005DateTimePeriodQualifiers.java
+                                it/infocert/eigor/model/core/enums/Untdid2005DateTimePeriodQualifiers.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -208,7 +208,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/UnitOfMeasureCodes.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/UnitOfMeasureCodes.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -224,7 +224,7 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/model/${BTBGClassName}.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>
@@ -242,8 +242,27 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/it.infocert.eigor.model.core/enums/Untdid1153ReferenceQualifierCode.java
+                            <fileNameTemplate>it/infocert/eigor/model/core/enums/Untdid1153ReferenceQualifierCode.java
                             </fileNameTemplate>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-country-codes</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/fromcsv</source>
+                            </sources>
                         </configuration>
                     </execution>
                 </executions>

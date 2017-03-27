@@ -1,4 +1,4 @@
-package it.infocert.eigor.model.it.infocert.eigor.model.core.enums;
+package it.infocert.eigor.model.core.enums;
 
 public enum Iso4217CurrenciesFundsCodes {
 

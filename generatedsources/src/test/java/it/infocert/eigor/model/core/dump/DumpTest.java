@@ -1,11 +1,11 @@
 package it.infocert.eigor.model.core.dump;
 
-import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.enums.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class DumpTest {
 
@@ -16,6 +16,7 @@ public class DumpTest {
         CoreInvoice invoice = new CoreInvoice();
 
         // nr. 1
+
         BT0001InvoiceNumber invoiceNumber = new BT0001InvoiceNumber("2017/01");
         invoice.getBT0001InvoiceNumbers().add(invoiceNumber);
 

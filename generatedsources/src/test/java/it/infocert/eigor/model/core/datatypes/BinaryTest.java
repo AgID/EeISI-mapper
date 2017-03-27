@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import javax.activation.MimeType;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 public class BinaryTest {
 
     @Test public void createABinary() {

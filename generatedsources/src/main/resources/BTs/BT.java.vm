@@ -1,11 +1,11 @@
 ## ============================
 #set( $ClassName = ${BTBGClassName} )
 ## ============================
-package it.infocert.eigor.model.it.infocert.eigor.model.core.model;
+package it.infocert.eigor.model.core.model;
 
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.model.it.infocert.eigor.model.core.datatypes.*;
-import it.infocert.eigor.model.it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.model.core.datatypes.*;
+import it.infocert.eigor.model.core.enums.*;
 
 import java.util.Objects;
 
