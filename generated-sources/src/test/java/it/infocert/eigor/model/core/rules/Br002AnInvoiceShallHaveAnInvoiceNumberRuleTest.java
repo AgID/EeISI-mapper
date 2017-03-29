@@ -1,7 +1,8 @@
 package it.infocert.eigor.model.core.rules;
 
+import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
-import it.infocert.eigor.model.core.model.CoreInvoice;
+
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -13,7 +14,7 @@ public class Br002AnInvoiceShallHaveAnInvoiceNumberRuleTest {
     public void shouldRefuseAnInvoiceWithoutNumber(){
 
         // given
-        CoreInvoice coreInvoice = new CoreInvoice();
+        BG0000Invoice coreInvoice = new BG0000Invoice();
 
         Br002AnInvoiceShallHaveAnInvoiceNumberRule sut = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 
@@ -30,8 +31,8 @@ public class Br002AnInvoiceShallHaveAnInvoiceNumberRuleTest {
     public void shouldAcceptAnInvoiceWithNumber(){
 
         // given
-        CoreInvoice coreInvoice = new CoreInvoice();
-        coreInvoice.getBT0001InvoiceNumbers().add(new BT0001InvoiceNumber( "4321" ));
+        BG0000Invoice coreInvoice = new BG0000Invoice();
+        coreInvoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber( "4321" ));
 
         Br002AnInvoiceShallHaveAnInvoiceNumberRule sut = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();
 

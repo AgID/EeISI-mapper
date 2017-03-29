@@ -1,0 +1,57 @@
+#set( $row0 = $File[0] )
+#set( $rows = $File.sublist(1,$File.size()) )
+package it.infocert.eigor.model.core.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Comparator.comparing;
+
+public class ${row0.BTBGClassName} implements BTBG {
+
+    #foreach( $row in $File )
+    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);;
+    #end
+
+    public ${row0.BTBGClassName}() {
+    }
+
+    #foreach( $row in $File )
+    public List<${row.BTBGClassName}> get${row.BTBGClassName}() {
+        return ${row.BTBGClassName};
+    }
+    #end
+
+    @Override
+    public int order() {
+        return ${row0.OrderInCEN};
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        v.startInvoice(this);
+        #else
+        v.startBTBG(this);
+        #end
+
+        List<BTBG> list = new ArrayList<>();
+        #foreach( $row in $File )
+        list.addAll(this.${row.BTBGClassName});
+        #end
+        list.sort( comparing( o -> o.order() ) );
+        list.forEach( o -> o.accept(v) );
+
+        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        v.endInvoice(this);
+        #else
+        v.endBTBG(this);
+        #end
+
+    }
+
+    @Override
+    public String toString() {
+        return "${row0.IdNormalized}";
+    }
+}
