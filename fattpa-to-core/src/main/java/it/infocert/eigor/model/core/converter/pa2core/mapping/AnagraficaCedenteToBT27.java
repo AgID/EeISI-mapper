@@ -1,8 +1,7 @@
 package it.infocert.eigor.model.core.converter.pa2core.mapping;
 
-import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BT0027SellerName;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0027SellerName;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -21,7 +20,7 @@ public class AnagraficaCedenteToBT27 {
             String textContent = nodes.item(0).getTextContent();
             List<BT0027SellerName> sellerNames = new ArrayList<>();
             sellerNames.add(new BT0027SellerName(textContent));
-            coreInvoice.getBG0004Sellers().get(0).setBt0027SellerNames(sellerNames);
+            coreInvoice.getBG0004Seller().get(0).getBT0027SellerName().addAll(sellerNames);
         } else if (CommonConversionModule.hasNode(doc, XPATHEXPRESSIONNOME) && CommonConversionModule.hasNode(doc, XPATHEXPRESSIONCOGNOME)) {
             NodeList nameNodes = CommonConversionModule.evaluateXpath(doc, XPATHEXPRESSIONNOME);
             String name = nameNodes.item(0).getTextContent();
@@ -29,7 +28,7 @@ public class AnagraficaCedenteToBT27 {
             String surname = surnameNodes.item(0).getTextContent();
             List<BT0027SellerName> sellerNames = new ArrayList<>();
             sellerNames.add(new BT0027SellerName(name + " " + surname));
-            coreInvoice.getBg0004Sellers().get(0).setBt0027SellerNames(sellerNames);
+            coreInvoice.getBG0004Seller().get(0).getBT0027SellerName().addAll(sellerNames);
         }
     }
 }

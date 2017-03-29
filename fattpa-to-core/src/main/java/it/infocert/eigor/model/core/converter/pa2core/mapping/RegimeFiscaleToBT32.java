@@ -1,8 +1,7 @@
 package it.infocert.eigor.model.core.converter.pa2core.mapping;
 
-import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -17,6 +16,7 @@ public class RegimeFiscaleToBT32 {
         String fiscalCode = nodes.item(0).getTextContent();
         List<BT0032SellerTaxRegistrationIdentifier> identifiers = new ArrayList<>(1);
         identifiers.add(new BT0032SellerTaxRegistrationIdentifier(fiscalCode));
-        coreInvoice.getBg0004Sellers().get(0).setBt0032SellerTaxRegistrationIdentifiers(identifiers);
+        coreInvoice.getBG0004Seller().get(0)
+                .getBT0032SellerTaxRegistrationIdentifier().addAll(identifiers);
     }
 }

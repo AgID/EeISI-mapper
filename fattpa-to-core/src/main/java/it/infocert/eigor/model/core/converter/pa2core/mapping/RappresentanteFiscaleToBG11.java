@@ -8,7 +8,7 @@ public class RappresentanteFiscaleToBG11{
 
     public static void convertTo(Document doc, BG0000Invoice coreInvoice) {
         BG0011SellerTaxRepresentativeParty e = new BG0011SellerTaxRepresentativeParty();
-        coreInvoice.getBg0011SellerTaxRepresentativeParties().add(e);
+        coreInvoice.getBG0011SellerTaxRepresentativeParty().add(e);
         NomeRappresentanteFiscaleToBT62.convertTo(doc, coreInvoice);
     }
 }

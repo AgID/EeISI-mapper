@@ -19,7 +19,7 @@ public class IdFiscaleIvaToBT63 {
         String vatCode = codeNodes.item(0).getTextContent();
         List<BT0063SellerTaxRepresentativeVatIdentifier> identifiers = new ArrayList<>(1);
         identifiers.add(new BT0063SellerTaxRepresentativeVatIdentifier(countryCode + vatCode));
-        coreInvoice.getBg0011SellerTaxRepresentativeParties().get(0).setBt0063SellerTaxRepresentativeVatIdentifiers(identifiers);
+        coreInvoice.getBG0011SellerTaxRepresentativeParty().get(0).getBT0063SellerTaxRepresentativeVatIdentifier().addAll(identifiers);
     }
 
 }
