@@ -11,7 +11,7 @@ import java.util.List;
 public class CodiceFiscaleCedenteToBT29 {
     private final static String XPATHEXPRESSION = "//CedentePrestatore/DatiAnagrafici/CodiceFiscale";
 
-    public static void convertTo(Document doc, CoreInvoice coreInvoice) {
+    public static void convertTo(Document doc, BG0000Invoice coreInvoice) {
         NodeList nodeList = CommonConversionModule.evaluateXpath(doc, XPATHEXPRESSION);
         String textContent = nodeList.item(0).getTextContent();
         List<BT0029SellerIdentifier> sellerIdentifiers = new ArrayList<>();

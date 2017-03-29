@@ -9,16 +9,16 @@ import static java.util.Comparator.comparing;
 
 public class ${row0.BTBGClassName} implements BTBG {
 
-    #foreach( $row in $rows )
+    #foreach( $row in $File )
     private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);;
     #end
 
     public ${row0.BTBGClassName}() {
     }
 
-    #foreach( $row in $rows )
+    #foreach( $row in $File )
     public List<${row.BTBGClassName}> get${row.BTBGClassName}() {
-        return ${BTBGClassName};
+        return ${row.BTBGClassName};
     }
     #end
 
@@ -29,15 +29,25 @@ public class ${row0.BTBGClassName} implements BTBG {
 
     @Override
     public void accept(Visitor v) {
+        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        v.startInvoice(this);
+        #else
         v.startBTBG(this);
+        #end
 
         List<BTBG> list = new ArrayList<>();
-        #foreach( $row in $rows )
-        list.addAll(this.${BTBGClassName});
+        #foreach( $row in $File )
+        list.addAll(this.${row.BTBGClassName});
         #end
         list.sort( comparing( o -> o.order() ) );
         list.forEach( o -> o.accept(v) );
+
+        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        v.endInvoice(this);
+        #else
         v.endBTBG(this);
+        #end
+
     }
 
     @Override

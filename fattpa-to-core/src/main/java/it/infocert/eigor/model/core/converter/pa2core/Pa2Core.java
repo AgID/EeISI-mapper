@@ -4,7 +4,7 @@ import it.infocert.eigor.model.core.converter.pa2core.mapping.CedentePrestatoreT
 import it.infocert.eigor.model.core.converter.pa2core.mapping.IdFiscaleIvaToBT63;
 import it.infocert.eigor.model.core.converter.pa2core.mapping.NumeroFatturaToBT01;
 import it.infocert.eigor.model.core.converter.pa2core.mapping.RappresentanteFiscaleToBG11;
-import it.infocert.eigor.model.core.model.CoreInvoice;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -15,8 +15,8 @@ import java.io.IOException;
 
 public class Pa2Core {
 
-    public CoreInvoice convert(String uri) {
-        CoreInvoice coreInvoice = new CoreInvoice();
+    public BG0000Invoice convert(String uri) {
+        BG0000Invoice coreInvoice = new BG0000Invoice();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {
@@ -35,8 +35,8 @@ public class Pa2Core {
         return coreInvoice;
     }
 
-//    public CoreInvoice convert(String uri) {
-//        CoreInvoice coreInvoice = new CoreInvoice();
+//    public BG0000Invoice convert(String uri) {
+//        BG0000Invoice coreInvoice = new BG0000Invoice();
 //        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 //        Document doc = null;
 //        try {
@@ -54,14 +54,14 @@ public class Pa2Core {
 //        if (item.getNodeType() == Node.ELEMENT_NODE) {
 //            Element eElement = (Element) item;
 //            NodeList numero = eElement.getElementsByTagName("Numero");
-//            coreInvoice.getBt01InvoiceNumbers().add(new BT01InvoiceNumber(new Identifier(numero.item(0).getTextContent())));
+//            coreInvoice.getBT01InvoiceNumbers().add(new BT01InvoiceNumber(new Identifier(numero.item(0).getTextContent())));
 //        }
 //
 //        return coreInvoice;
 //    }
 //
-//    public CoreInvoice convertXPath(String uri) {
-//        CoreInvoice coreInvoice = new CoreInvoice();
+//    public BG0000Invoice convertXPath(String uri) {
+//        BG0000Invoice coreInvoice = new BG0000Invoice();
 //        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 //        factory.setNamespaceAware(true);
 //        Document doc = null;
@@ -87,7 +87,7 @@ public class Pa2Core {
 //        }
 //        NodeList nodes = (NodeList) result;
 //        assert nodes != null;
-//        coreInvoice.getBt01InvoiceNumbers().add(new BT01InvoiceNumber(new Identifier(nodes.item(0).getTextContent())));
+//        coreInvoice.getBT01InvoiceNumbers().add(new BT01InvoiceNumber(new Identifier(nodes.item(0).getTextContent())));
 //
 //        return coreInvoice;
 //    }

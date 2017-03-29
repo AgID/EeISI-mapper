@@ -13,28 +13,28 @@ public class DumpTest {
     public void dumpAnInvoice() {
 
         // given
-        CoreInvoice invoice = new CoreInvoice();
+        BG0000Invoice invoice = new BG0000Invoice();
 
         // nr. 1
 
         BT0001InvoiceNumber invoiceNumber = new BT0001InvoiceNumber("2017/01");
-        invoice.getBT0001InvoiceNumbers().add(invoiceNumber);
+        invoice.getBT0001InvoiceNumber().add(invoiceNumber);
 
         // nr. 5
         BT0006VatAccountingCurrencyCode currencyCode = new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
-        invoice.getBt0006VatAccountingCurrencyCodes().add(currencyCode);
+        invoice.getBT0006VatAccountingCurrencyCode().add(currencyCode);
 
         // nr. 20
         BG0001InvoiceNote bgInvoiceNote = new BG0001InvoiceNote();
 
         // nr. 21
         BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = new BT0021InvoiceNoteSubjectCode("ABE");
-        bgInvoiceNote.getBt0021InvoiceNoteSubjectCodes().add(invoiceNoteSubjectCode);
+        bgInvoiceNote.getBT0021InvoiceNoteSubjectCode().add(invoiceNoteSubjectCode);
 
         // nr. 22
         BT0022InvoiceNote btInvoiceNote = new BT0022InvoiceNote("This is a test invoice.");
-        bgInvoiceNote.getBt0022InvoiceNotes().add(btInvoiceNote);
-        invoice.getBg0001InvoiceNotes().add(bgInvoiceNote);
+        bgInvoiceNote.getBT0022InvoiceNote().add(btInvoiceNote);
+        invoice.getBG0001InvoiceNote().add(bgInvoiceNote);
 
 
         // when

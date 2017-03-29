@@ -2,7 +2,7 @@ package it.infocert.eigor.model.core.converter.pa2core.mapping;
 
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
-import it.infocert.eigor.model.core.model.CoreInvoice;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -13,7 +13,7 @@ public class IdFiscaleIvaToBT31 {
     private final static String XPATHEXPRESSIONCOUNTRY = "//CedentePrestatore/DatiAnagrafici/IdFiscaleIVA/IdPaese";
     private final static String XPATHEXPRESSIONCODE = "//CedentePrestatore/DatiAnagrafici/IdFiscaleIVA/IdCodice";
 
-    public static void convertTo(Document doc, CoreInvoice coreInvoice) {
+    public static void convertTo(Document doc, BG0000Invoice coreInvoice) {
         NodeList countryNodes = CommonConversionModule.evaluateXpath(doc, XPATHEXPRESSIONCOUNTRY);
         NodeList codeNodes = CommonConversionModule.evaluateXpath(doc, XPATHEXPRESSIONCODE);
         String countryCode = countryNodes.item(0).getTextContent();

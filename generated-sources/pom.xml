@@ -11,16 +11,28 @@
 
     <artifactId>generated-sources</artifactId>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Sonatype Snapshot</name>
+            <layout>default</layout>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <version>0.0.4-SNAPSHOT</version>
                 <executions>
 
                     <execution>
-                        <id>generate-bg-0000</id>
+                        <id>generate-bgs</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
@@ -29,13 +41,16 @@
                             <pathToCsv>${project.basedir}/src/main/resources/BTs/BTsAndBGs.csv</pathToCsv>
                             <pathToTemplate>${project.basedir}/src/main/resources/BTs/BG.java.vm</pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <includeRowExpression>@{BTBGClassName.startsWith("BG0000") || ParentClass.startWith("BG0000")}</includeRowExpression>
+                            <contextMode>ONE_CONTEXT_PER_TAG</contextMode>
+                            <tagExpressions>
+                                <param>@{ParentClass}</param>
+                                <param>@{BTBGClassName}</param>
+                            </tagExpressions>
+                            <includeContextExpression>@{File[0].BTBGClassName.startsWith("BG")}</includeContextExpression>
                             <fileNameTemplate>it/infocert/eigor/model/core/model/${File[0].BTBGClassName}.java</fileNameTemplate>
                         </configuration>
                     </execution>
 
-                    <!--
                     <execution>
                         <id>generate-bts</id>
                         <phase>generate-sources</phase>
@@ -43,13 +58,14 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/BTs/BTs.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/BTs/BTsAndBGs.csv</pathToCsv>
                             <pathToTemplate>${project.basedir}/src/main/resources/BTs/BT.java.vm</pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
                             <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java
                             </fileNameTemplate>
+                            <includeContextExpression>@{BTBGClassName.startsWith("BT")}</includeContextExpression>
                         </configuration>
                     </execution>
 
@@ -266,7 +282,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
-            -->
+
                 </executions>
             </plugin>
             <plugin>
