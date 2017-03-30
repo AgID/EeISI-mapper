@@ -1,6 +1,6 @@
 * Per
-  * <ottenere qualche valore di business>
+  * {ottenere qualche valore di business}
 * In quanto
-  * <aggettivi> <stakeholed>
+  * {aggettivi} {stakeholed}
 * Voglio che
-  * <nuova feature>
+  * {nuova feature}
