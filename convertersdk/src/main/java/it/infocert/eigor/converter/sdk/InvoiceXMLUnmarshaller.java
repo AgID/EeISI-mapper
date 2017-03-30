@@ -17,7 +17,8 @@ public class InvoiceXMLUnmarshaller<T> {
     public JAXBElement<T> unmarshalInvoiceFile(File xmlFile) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(this.packageName);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        return (JAXBElement<T>) unmarshaller.unmarshal(xmlFile);
+        Object unmarshal = unmarshaller.unmarshal(xmlFile);
+        return (JAXBElement<T>) unmarshal;
     }
 
 

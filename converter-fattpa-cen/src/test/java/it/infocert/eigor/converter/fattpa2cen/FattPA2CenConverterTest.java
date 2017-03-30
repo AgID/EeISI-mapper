@@ -4,15 +4,12 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URL;
 
-import static org.junit.Assert.*;
-
-public class FattPA2CenTest {
+public class FattPA2CenConverterTest {
 
     @Test
     public void test() throws Exception {
-        FattPA2Cen converter = new FattPA2Cen();
+        FattPA2CenConverter converter = new FattPA2CenConverter();
         final File xmlFile = new File("target/test-classes/example-fattPa.xml");
 //        C:\Users\Matteo\Software\eigor\converter-fattpa-cen\converter-fattpa-cen\target\test-classes\example-fattPa.xml
 //        C:\Users\Matteo\Software\eigor\converter-fattpa-cen\target\test-classes\example-fattPa.xml

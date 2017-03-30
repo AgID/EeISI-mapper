@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 
-public class FattPA2Cen implements Converter{
+public class FattPA2CenConverter implements Converter{
 
     public BG0000Invoice convert(File xmlFile) {
         InvoiceXMLUnmarshaller<FatturaElettronicaType> unmarshaller = new InvoiceXMLUnmarshaller<>("it.infocert.eigor.converter.fattpa2cen.models");
@@ -23,11 +23,7 @@ public class FattPA2Cen implements Converter{
 
         FatturaElettronicaType fattura = element.getValue();
 
-        return mapToCoreInvoice(fattura);
-    }
-
-    private BG0000Invoice mapToCoreInvoice(FatturaElettronicaType fattura) {
-        return null;
+        return FattPA2CenMapper.mapToCoreInvoice(fattura);
     }
 
     @Override
