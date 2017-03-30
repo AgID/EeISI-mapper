@@ -1,4 +1,4 @@
-package it.infocert.eigor.model.core.converter.pa2core.mapping;
+package it.infocert.eigor.model.core.converter.fattpa2core.mapping;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

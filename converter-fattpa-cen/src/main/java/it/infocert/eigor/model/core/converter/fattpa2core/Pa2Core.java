@@ -1,9 +1,9 @@
-package it.infocert.eigor.model.core.converter.pa2core;
+package it.infocert.eigor.model.core.converter.fattpa2core;
 
-import it.infocert.eigor.model.core.converter.pa2core.mapping.CedentePrestatoreToBG04;
-import it.infocert.eigor.model.core.converter.pa2core.mapping.IdFiscaleIvaToBT63;
-import it.infocert.eigor.model.core.converter.pa2core.mapping.NumeroFatturaToBT01;
-import it.infocert.eigor.model.core.converter.pa2core.mapping.RappresentanteFiscaleToBG11;
+import it.infocert.eigor.model.core.converter.fattpa2core.mapping.CedentePrestatoreToBG04;
+import it.infocert.eigor.model.core.converter.fattpa2core.mapping.IdFiscaleIvaToBT63;
+import it.infocert.eigor.model.core.converter.fattpa2core.mapping.NumeroFatturaToBT01;
+import it.infocert.eigor.model.core.converter.fattpa2core.mapping.RappresentanteFiscaleToBG11;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

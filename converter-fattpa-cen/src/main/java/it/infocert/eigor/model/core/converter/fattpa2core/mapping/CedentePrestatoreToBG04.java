@@ -1,6 +1,5 @@
-package it.infocert.eigor.model.core.converter.pa2core.mapping;
+package it.infocert.eigor.model.core.converter.fattpa2core.mapping;
 
-import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.w3c.dom.Document;

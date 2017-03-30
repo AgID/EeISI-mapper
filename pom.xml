@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>generated-sources</module>
-        <module>fattpa-to-core</module>
+        <module>cen-core</module>
+        <module>converter-fattpa-cen</module>
     </modules>
 
     <properties>
