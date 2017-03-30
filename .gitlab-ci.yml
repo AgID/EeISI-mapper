@@ -1,9 +1,3 @@
-before_script:
- - git clone https://github.com/danidemi/template-generator-maven-plugin gen-plugin
- - cd gen-plugin
- - mvn clean install
-
-
 stages:
  - test
 
