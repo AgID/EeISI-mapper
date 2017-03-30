@@ -22,14 +22,25 @@ class BG07BuyerMapper {
         buyer.getBT0044BuyerName()
                 .add(new BT0044BuyerName(mapBT44()));
 
-        buyer.getBT0046BuyerIdentifierAndSchemeIdentifier()
-                .add(new BT0046BuyerIdentifierAndSchemeIdentifier(mapBT46()));
 
-        buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier()
-                .add(new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(mapBT47()));
+        String id = mapBT46();
+        if (id != null) {
+            buyer.getBT0046BuyerIdentifierAndSchemeIdentifier()
+                    .add(new BT0046BuyerIdentifierAndSchemeIdentifier(id));
+        }
 
-        buyer.getBT0048BuyerVatIdentifier()
-                .add(new BT0048BuyerVatIdentifier(mapBT48()));
+
+        String legalRegId = mapBT47();
+        if (legalRegId != null) {
+            buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier()
+                    .add(new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(legalRegId));
+        }
+
+        String vatId = mapBT48();
+        if (vatId != null) {
+            buyer.getBT0048BuyerVatIdentifier()
+                    .add(new BT0048BuyerVatIdentifier(vatId));
+        }
 
         return buyer;
     }
@@ -54,7 +65,18 @@ class BG07BuyerMapper {
     private static String mapBT48() {
         IdFiscaleType idFiscaleIVA = datiAnagrafici.getIdFiscaleIVA();
 
-        return Iso31661CountryCodes.valueOf(idFiscaleIVA.getIdPaese()).toString() +
-                idFiscaleIVA.getIdCodice();
+        if (idFiscaleIVA == null) {
+            return null;
+        } else {
+            String idPaese = idFiscaleIVA.getIdPaese();
+            String idCodice = idFiscaleIVA.getIdCodice();
+
+            if (idCodice == null || idPaese == null) {
+                return null;
+            } else {
+                return Iso31661CountryCodes.valueOf(idPaese).toString() +
+                        idCodice;
+            }
+        }
     }
 }

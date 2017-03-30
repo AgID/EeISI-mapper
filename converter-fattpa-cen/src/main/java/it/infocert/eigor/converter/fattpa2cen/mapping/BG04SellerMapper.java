@@ -19,28 +19,52 @@ class BG04SellerMapper {
         seller.getBG0005SellerPostalAddress()
                 .add(BG05SellerPostalAddressMapper.mapSellerPostalAddress(cedente));
 
-        seller.getBG0006SellerContact()
-                .add(BG06SellerContactMapper.mapSellerContact(cedente));
-
+        BG0006SellerContact sellerContact = BG06SellerContactMapper.mapSellerContact(cedente);
+        if (sellerContact != null) {
+            seller.getBG0006SellerContact()
+                    .add(sellerContact);
+        }
         seller.getBT0027SellerName()
                 .add(new BT0027SellerName(mapBT27()));
 
-        seller.getBT0029SellerIdentifierAndSchemeIdentifier()
-                .add(new BT0029SellerIdentifierAndSchemeIdentifier(mapBT29FiscalCode()));
-        seller.getBT0029SellerIdentifierAndSchemeIdentifier()
-                .add(new BT0029SellerIdentifierAndSchemeIdentifier(mapBT29REANumber()));
 
-        seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier()
-                .add(new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(mapBT30()));
+        String fiscalCode = mapBT29FiscalCode();
+        if (fiscalCode != null) {
+            seller.getBT0029SellerIdentifierAndSchemeIdentifier()
+                    .add(new BT0029SellerIdentifierAndSchemeIdentifier(fiscalCode));
+        }
 
-        seller.getBT0031SellerVatIdentifier()
-                .add(new BT0031SellerVatIdentifier(mapBT31()));
 
-        seller.getBT0032SellerTaxRegistrationIdentifier()
-                .add(new BT0032SellerTaxRegistrationIdentifier(mapBT32()));
+        String reaNumber = mapBT29REANumber();
+        if (reaNumber != null) {
+            seller.getBT0029SellerIdentifierAndSchemeIdentifier()
+                    .add(new BT0029SellerIdentifierAndSchemeIdentifier(reaNumber));
+        }
 
-        seller.getBT0033SellerAdditionalLegalInformation()
-                .add(new BT0033SellerAdditionalLegalInformation(mapBT33()));
+
+        String codEori = mapBT30();
+        if (codEori != null) {
+            seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier()
+                    .add(new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(codEori));
+        }
+
+        String vatIdentifier = mapBT31();
+        if (vatIdentifier != null) {
+            seller.getBT0031SellerVatIdentifier()
+                    .add(new BT0031SellerVatIdentifier(vatIdentifier));
+        }
+
+        String taxId = mapBT32();
+        if (taxId != null) {
+            seller.getBT0032SellerTaxRegistrationIdentifier()
+                    .add(new BT0032SellerTaxRegistrationIdentifier(taxId));
+        }
+
+        String legalInfos = mapBT33();
+        if (legalInfos != null) {
+            seller.getBT0033SellerAdditionalLegalInformation()
+                    .add(new BT0033SellerAdditionalLegalInformation(legalInfos));
+        }
 
         return seller;
     }
@@ -69,10 +93,17 @@ class BG04SellerMapper {
     private static String mapBT31() {
         StringBuilder sb = new StringBuilder();
         IdFiscaleType idFiscaleIVA = datiAnagrafici.getIdFiscaleIVA();
-        sb.append(idFiscaleIVA.getIdPaese());
-        sb.append(idFiscaleIVA.getIdCodice());
 
-        return sb.toString();
+        String idPaese = idFiscaleIVA.getIdPaese();
+        String idCodice = idFiscaleIVA.getIdCodice();
+
+        if (idCodice == null || idPaese == null) {
+            return null;
+        } else {
+            sb.append(idPaese);
+            sb.append(idCodice);
+            return sb.toString();
+        }
     }
 
     private static String mapBT32() {

@@ -14,24 +14,42 @@ class BG08BuyerPostalAddressMapper {
         BG0008BuyerPostalAddress buyerPostalAddress = new BG0008BuyerPostalAddress();
         sede = cessionarioCommittente.getSede();
 
-        buyerPostalAddress.getBT0050BuyerAddressLine1()
-                .add(new BT0050BuyerAddressLine1(mapBT50()));
+        String address = mapBT50();
+        if (address != null) {
+            buyerPostalAddress.getBT0050BuyerAddressLine1()
+                    .add(new BT0050BuyerAddressLine1(address));
+        }
 
-        buyerPostalAddress.getBT0051BuyerAddressLine2()
-                .add(new BT0051BuyerAddressLine2(mapBT51()));
+        String civicNumber = mapBT51();
+        if (civicNumber != null) {
+            buyerPostalAddress.getBT0051BuyerAddressLine2()
+                    .add(new BT0051BuyerAddressLine2(civicNumber));
+        }
 
-        buyerPostalAddress.getBT0052BuyerCity()
-                .add(new BT0052BuyerCity(mapBT52()));
+        String city = mapBT52();
+        if (city != null) {
+            buyerPostalAddress.getBT0052BuyerCity()
+                    .add(new BT0052BuyerCity(city));
+        }
 
-        buyerPostalAddress.getBT0053BuyerPostCode()
-                .add(new BT0053BuyerPostCode(mapBT53()));
+        String postCode = mapBT53();
+        if (postCode != null) {
+            buyerPostalAddress.getBT0053BuyerPostCode()
+                    .add(new BT0053BuyerPostCode(postCode));
+        }
 
-        buyerPostalAddress.getBT0054BuyerCountrySubdivision()
-                .add(new BT0054BuyerCountrySubdivision(mapBT54()));
+        String subdiv = mapBT54();
+        if (subdiv != null) {
+            buyerPostalAddress.getBT0054BuyerCountrySubdivision()
+                    .add(new BT0054BuyerCountrySubdivision(subdiv));
+        }
 
-        buyerPostalAddress.getBT0055BuyerCountryCode()
-                .add(new BT0055BuyerCountryCode(Iso31661CountryCodes.valueOf(mapBT55())));
-
+        String countryCode = mapBT55();
+        if (countryCode != null) {
+            buyerPostalAddress.getBT0055BuyerCountryCode()
+                    .add(new BT0055BuyerCountryCode(Iso31661CountryCodes.valueOf(countryCode)));
+        }
+ 
         return buyerPostalAddress;
     }
 

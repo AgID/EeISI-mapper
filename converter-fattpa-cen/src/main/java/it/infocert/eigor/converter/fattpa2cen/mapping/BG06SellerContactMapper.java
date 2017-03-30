@@ -15,13 +15,23 @@ public class BG06SellerContactMapper {
 
         contatti = cedentePrestatore.getContatti();
 
-        sellerContact.getBT0042SellerContactTelephoneNumber()
-                .add(new BT0042SellerContactTelephoneNumber(mapBT42()));
+        if (contatti == null) {
+            return null;
+        } else {
+            String telephone = mapBT42();
+            if (telephone != null) {
+                sellerContact.getBT0042SellerContactTelephoneNumber()
+                        .add(new BT0042SellerContactTelephoneNumber(telephone));
+            }
 
-        sellerContact.getBT0043SellerContactEmailAddress()
-                .add(new BT0043SellerContactEmailAddress(mapBT43()));
+            String email = mapBT43();
+            if (email != null) {
+                sellerContact.getBT0043SellerContactEmailAddress()
+                        .add(new BT0043SellerContactEmailAddress(email));
+            }
 
-        return sellerContact;
+            return sellerContact;
+        }
     }
 
     private static String mapBT42() {
