@@ -23,11 +23,13 @@
                 <CodiceFiscale>07945211006</CodiceFiscale>
                 <Anagrafica>
                     <Denominazione>AZIENDA TEST S.p.A.</Denominazione>
+                    <CodEORI>IT000000000000</CodEORI>
                 </Anagrafica>
                 <RegimeFiscale>RF01</RegimeFiscale>
             </DatiAnagrafici>
             <Sede>
-                <Indirizzo>Via Russoli 5</Indirizzo>
+                <Indirizzo>Via Russoli</Indirizzo>
+                <NumeroCivico>5</NumeroCivico>
                 <CAP>20100</CAP>
                 <Comune>Milano</Comune>
                 <Provincia>MI</Provincia>
@@ -43,6 +45,7 @@
             <Contatti>
                 <Telefono>021111.1</Telefono>
                 <Fax>021111.2</Fax>
+                <Email>mario@example.com</Email>
             </Contatti>
         </CedentePrestatore>
         <RappresentanteFiscale>

@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.FattPA2CenMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.sdk.Converter;
 import it.infocert.eigor.converter.sdk.ConverterType;
