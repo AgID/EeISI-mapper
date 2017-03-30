@@ -12,6 +12,7 @@
     <modules>
         <module>cen-core</module>
         <module>converter-fattpa-cen</module>
+        <module>convertersdk</module>
     </modules>
 
     <properties>
