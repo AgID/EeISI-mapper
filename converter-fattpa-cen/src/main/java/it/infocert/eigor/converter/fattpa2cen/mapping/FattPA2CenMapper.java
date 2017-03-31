@@ -61,7 +61,10 @@ public class FattPA2CenMapper {
 //            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Ma sta roba non corrisponde, il TipoDocumento
 //            invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(attribute));       //TODO: non è mappabile a Untdid1001
 
-
+            if (datiGenerali.getDatiGeneraliDocumento().getDatiCassaPrevidenziale().isEmpty()) {
+                invoice.getBG0021DocumentLevelCharges()
+                        .add(BG21DocumentLevelChargesMapper.mapDocumentLevelCharges(datiGenerali.getDatiGeneraliDocumento()));
+            }
         }
     }
 
