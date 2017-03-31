@@ -21,15 +21,31 @@ public class RuleOutcome {
         this.description = Preconditions.checkNotNull( description );
     }
 
-    /**
-     * @param outcome
-     * @param stringFormat
-     * @param params
-     */
     public static RuleOutcome newOutcome(Outcome outcome, String stringFormat, Object... params) {
         return new RuleOutcome(
                 outcome, String.format(stringFormat, params)
         );
+    }
+
+    /**
+     * @see Outcome#FAILED
+     */
+    public static RuleOutcome newFailedOutcome(String stringFormat, Object... params) {
+        return newOutcome(Outcome.FAILED, stringFormat, params);
+    }
+
+    /**
+     * @see Outcome#SUCCESS
+     */
+    public static RuleOutcome newSuccessOutcome(String stringFormat, Object... params) {
+        return newOutcome(Outcome.SUCCESS, stringFormat, params);
+    }
+
+    /**
+     * @see Outcome#UNAPPLICABLE
+     */
+    public static RuleOutcome newUnapplicableOutcome(String stringFormat, Object... params) {
+        return newOutcome(Outcome.UNAPPLICABLE, stringFormat, params);
     }
 
     public Outcome outcome() {
