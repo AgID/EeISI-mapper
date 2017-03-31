@@ -2,10 +2,10 @@ package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.converter.fattpa2cen.models.*;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0003InvoiceTypeCode;
-import it.infocert.eigor.model.core.model.BT0019BuyerAccountingReference;
+import it.infocert.eigor.model.core.model.*;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 import static it.infocert.eigor.converter.fattpa2cen.mapping.BG04SellerMapper.mapSeller;
@@ -36,17 +36,42 @@ public class FattPA2CenMapper {
         if (riferimentoAmministrazione != null) {
             invoice.getBT0019BuyerAccountingReference().add(new BT0019BuyerAccountingReference(riferimentoAmministrazione));
         }
+
+        String buyerCode = mapBT49(header.getDatiTrasmissione());
+        if (buyerCode != null) {
+            invoice.getBG0007Buyer().get(0)
+                    .getBT0049BuyerElectronicAddressAndSchemeIdentifier()
+                    .add(new BT0049BuyerElectronicAddressAndSchemeIdentifier(buyerCode));
+        }
     }
 
     private static void mapBody(List<FatturaElettronicaBodyType> bodyList, BG0000Invoice invoice) {
         for (FatturaElettronicaBodyType body : bodyList) {
             DatiGeneraliType datiGenerali = body.getDatiGenerali();
 
+            invoice.getBT0001InvoiceNumber()
+                    .add(new BT0001InvoiceNumber(mapBT01(datiGenerali)));
+
+            invoice.getBT0002InvoiceIssueDate()
+                    .add(new BT0002InvoiceIssueDate(mapBT02(datiGenerali)));
+
+
             String documentType = mapBT03(datiGenerali);
             String substring = documentType.substring(documentType.length() - 2);
-            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Ma sta roba non corrisponde, il TipoDocumento
-            invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(attribute));       //TODO: non è mappabile a Untdid1001
+//            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Ma sta roba non corrisponde, il TipoDocumento
+//            invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(attribute));       //TODO: non è mappabile a Untdid1001
+
+
         }
+    }
+
+    private static String mapBT01(DatiGeneraliType dati) {
+        return dati.getDatiGeneraliDocumento().getNumero();
+    }
+
+    private static LocalDate mapBT02(DatiGeneraliType dati) {
+        XMLGregorianCalendar data = dati.getDatiGeneraliDocumento().getData();
+        return data.toGregorianCalendar().toZonedDateTime().toLocalDate();
     }
 
     private static String mapBT03(DatiGeneraliType dati) {
@@ -55,6 +80,16 @@ public class FattPA2CenMapper {
 
     private static String mapBT19(CedentePrestatoreType cedentePrestatore) {
         return cedentePrestatore.getRiferimentoAmministrazione();
+    }
+
+    private static String mapBT49(DatiTrasmissioneType datiTrasmissione) {
+        String codiceDestinatario = datiTrasmissione.getCodiceDestinatario();
+        if (codiceDestinatario.equals("0000000")) {
+            return datiTrasmissione.getPECDestinatario();
+        } else {
+            return codiceDestinatario;
+        }
+
     }
 
 }

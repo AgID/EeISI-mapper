@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.converter.fattpa2cen.mapping.FattPA2CenMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.sdk.Converter;
@@ -22,6 +23,7 @@ public class FattPA2CenConverter implements Converter{
             e.printStackTrace();
         }
 
+        Preconditions.checkNotNull(element);
         FatturaElettronicaType fattura = element.getValue();
 
         return FattPA2CenMapper.mapToCoreInvoice(fattura);
