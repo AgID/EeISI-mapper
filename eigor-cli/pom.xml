@@ -28,6 +28,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-api</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 </project>

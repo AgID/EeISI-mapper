@@ -13,9 +13,13 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class EigorTest {
@@ -51,19 +55,26 @@ public class EigorTest {
 
     @Test public void doSomething() throws IOException {
 
-        // given
-
-
-
         // when
         new Eigor().run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fattpa1.2",
-                "--target", "ubl",
+                "--source", "fake",
+                "--target", "fake",
                 "--output", outputDir.getAbsolutePath()
         } );
 
-        // then ?
+        // then
+        List<File> files = asList( outputDir.listFiles() );
+        assertThat( "converted invoice, cen invoice, rule report expected.", files, hasSize(3) );
+
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
+
+    }
+
+    private File findFirstFile(File outputDir, Predicate<File> col) {
+        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
 
     @Test public void failWhenInputDoesNotExist() throws IOException {

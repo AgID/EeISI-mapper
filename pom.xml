@@ -76,6 +76,11 @@
                 <artifactId>cen-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
