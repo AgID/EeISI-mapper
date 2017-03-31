@@ -1,15 +1,15 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.impl;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class FakeFromCenConverterTest {
+public class FakeFromCenConversionTest {
 
     @Test public void shouldSupportTheFakeFormatOnly() {
 
-        FakeFromCenConverter sut = new FakeFromCenConverter();
+        FakeFromCenConversion sut = new FakeFromCenConversion();
 
         assertTrue( sut.support("fake") );
         assertFalse( sut.support("FAKE") );

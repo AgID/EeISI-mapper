@@ -1,4 +1,4 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.model.core.rules.Rule;
 import org.junit.Test;

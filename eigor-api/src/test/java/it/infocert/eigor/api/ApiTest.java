@@ -1,5 +1,7 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.impl.InMemoryRuleReport;
+import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.junit.Test;
@@ -9,11 +11,11 @@ import java.io.InputStream;
 
 public class ApiTest {
 
-    @Test public void exampleOfAConversion() throws SyntaxInvoiceException {
+    @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
         ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository();
-        CenRuleRepository ruleRepository = reflectionBasedRepository;
+        RuleRepository ruleRepository = reflectionBasedRepository;
         ToCenConversionRepository conversionRepository = reflectionBasedRepository;
         FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;
 
@@ -23,8 +25,8 @@ public class ApiTest {
         InputStream invoiceInSourceFormat = new ByteArrayInputStream( "<invoice>this is an invoice</invoice>".getBytes() );
 
         // preconditions
-        ToCENConversion toCen = conversionRepository.findConversionToCen(soureFormat);
-        FromCENConverter fromCen = fromCenConversionRepository.findConversionFromCen(targetFormat);
+        ToCenConversion toCen = conversionRepository.findConversionToCen(soureFormat);
+        FromCenConversion fromCen = fromCenConversionRepository.findConversionFromCen(targetFormat);
         RuleReport ruleReport = new InMemoryRuleReport();
 
         // business logic

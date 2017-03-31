@@ -1,5 +1,6 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import javafx.util.Pair;

@@ -1,5 +1,7 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.FromCenConversion;
+import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.hamcrest.Matchers;
@@ -34,10 +36,10 @@ public class ReflectionBasedRepositoryTest {
 
         // given
         ReflectionBasedRepository sut = new ReflectionBasedRepository();
-        Class<? extends ToCENConversion> aConversionThatShouldBeFound = FakeToCENConversion.class;
+        Class<? extends ToCenConversion> aConversionThatShouldBeFound = FakeToCenConversion.class;
 
         // when
-        ToCENConversion conversion = sut.findConversionToCen("fake");
+        ToCenConversion conversion = sut.findConversionToCen("fake");
 
         // then
         assertThat( conversion, notNullValue() );
@@ -49,10 +51,10 @@ public class ReflectionBasedRepositoryTest {
 
         // given
         ReflectionBasedRepository sut = new ReflectionBasedRepository();
-        Class<? extends FromCENConverter> aConversionThatShouldBeFound = FakeFromCenConverter.class;
+        Class<? extends FromCenConversion> aConversionThatShouldBeFound = FakeFromCenConversion.class;
 
         // when
-        FromCENConverter conversion = sut.findConversionFromCen("fake");
+        FromCenConversion conversion = sut.findConversionFromCen("fake");
 
         // then
         assertThat( conversion, notNullValue() );

@@ -1,14 +1,15 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 /**
  * A fake conversion used to lay out the API general structure.
- * @see FakeToCENConversion
+ * @see FakeToCenConversion
  */
-public class FakeFromCenConverter implements FromCENConverter {
+public class FakeFromCenConversion implements FromCenConversion {
 
-    @Override public byte[] convert(BG0000Invoice cenInvoice) {
+    @Override public byte[] convert(BG0000Invoice invoice) {
         return "this is a fake invoice".getBytes();
     }
 

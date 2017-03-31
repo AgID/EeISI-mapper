@@ -5,8 +5,8 @@ import it.infocert.eigor.model.core.rules.Rule;
 import java.util.List;
 
 /**
- * A {@link CenRuleRepository} gives access to all the validation rules.
+ * A {@link RuleRepository} gives access to all the rules that can be used to validate a CEN invoice.
  */
-public interface CenRuleRepository {
+public interface RuleRepository {
     List<Rule> rules();
 }

@@ -9,23 +9,23 @@ import java.io.InputStream;
  * <h2>General Contract</h2>
  * <p>
  *     Implementations are required to perform syntax validation of the source invoice.
- *     In case a syntax error occurs, implementations are required to throw a SyntaxInvoiceException.
+ *     In case a syntax error occurs, implementations are required to throw a SyntaxErrorInInvoiceFormatException.
  * </p>
  * <p>
  *     Implementations are not required to perform any validation on the obtained
  *     {@link BG0000Invoice CEN invoice}.
  * </p>
  */
-public interface ToCENConversion {
+public interface ToCenConversion {
 
     /**
      * Convert the given invoice in a {@link BG0000Invoice CEN invoice}.
      * @param sourceInvoiceStream The stream containing the representation of the invoice to be converted.
      * @return The {@link BG0000Invoice CEN invoice}.
-     * @throws SyntaxInvoiceException   When a syntax error that makes impossible
+     * @throws SyntaxErrorInInvoiceFormatException   When a syntax error that makes impossible
      *                                  to convert the source invoice in the CEN format is found.
      */
-    BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxInvoiceException;
+    BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
 
     boolean support(String format);
 }
