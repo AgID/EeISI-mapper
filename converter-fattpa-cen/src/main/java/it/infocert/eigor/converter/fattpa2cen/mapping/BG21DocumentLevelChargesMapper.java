@@ -7,11 +7,11 @@ import it.infocert.eigor.model.core.model.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class BG21DocumentLevelChargesMapper {
+class BG21DocumentLevelChargesMapper {
 
     private static DatiGeneraliDocumentoType datiDocumento;
 
-    public static BG0021DocumentLevelCharges mapDocumentLevelCharges(DatiGeneraliDocumentoType datiGeneraliDocumento) {
+    static BG0021DocumentLevelCharges mapDocumentLevelCharges(DatiGeneraliDocumentoType datiGeneraliDocumento) {
         BG0021DocumentLevelCharges documentLevelCharges = new BG0021DocumentLevelCharges();
 
         datiDocumento = datiGeneraliDocumento;

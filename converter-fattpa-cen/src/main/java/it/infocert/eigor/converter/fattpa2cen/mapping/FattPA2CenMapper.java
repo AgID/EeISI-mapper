@@ -49,6 +49,9 @@ public class FattPA2CenMapper {
         for (FatturaElettronicaBodyType body : bodyList) {
             DatiGeneraliType datiGenerali = body.getDatiGenerali();
 
+            invoice.getBG0003PrecedingInvoiceReference()
+                    .add(BG03PrecedingInvoiceReferenceMapper.mapPrecedingInvoiceReferenceMapper(datiGenerali));
+
             invoice.getBT0001InvoiceNumber()
                     .add(new BT0001InvoiceNumber(mapBT01(datiGenerali)));
 
@@ -57,9 +60,49 @@ public class FattPA2CenMapper {
 
 
             String documentType = mapBT03(datiGenerali);
+
+            List<DatiDocumentiCorrelatiType> datiContratto = datiGenerali.getDatiContratto();
+            if (!datiContratto.isEmpty()) {
+                for (DatiDocumentiCorrelatiType datiCorrelati : datiContratto) {
+                    invoice.getBT0012ContractReference()
+                            .add(new BT0012ContractReference(mapBT12(datiCorrelati)));
+
+                    invoice.getBT0011ProjectReference()
+                            .add(new BT0011ProjectReference(mapBT11(datiCorrelati)));
+
+                    invoice.getBT0017TenderOrLotReference()
+                            .add(new BT0017TenderOrLotReference(mapBT17(datiCorrelati)));
+                }
+            }
+
+            List<DatiDocumentiCorrelatiType> datiOrdineAcquisto = datiGenerali.getDatiOrdineAcquisto();
+            if (!datiOrdineAcquisto.isEmpty()) {
+                for (DatiDocumentiCorrelatiType datiCorrelati : datiOrdineAcquisto) {
+                    invoice.getBT0013PurchaseOrderReference()
+                            .add(new BT0013PurchaseOrderReference(mapBT13(datiCorrelati)));
+                }
+            }
+
+            List<DatiDocumentiCorrelatiType> datiRicezione = datiGenerali.getDatiRicezione();
+            if (!datiRicezione.isEmpty()) {
+                for (DatiDocumentiCorrelatiType datiCorrelati : datiRicezione) {
+                    invoice.getBT0015ReceivingAdviceReference()
+                            .add(new BT0015ReceivingAdviceReference(mapBT15(datiCorrelati)));
+                }
+            }
+
+            List<DatiDDTType> datiDDT = datiGenerali.getDatiDDT();
+            if (!datiDDT.isEmpty()) {
+                for (DatiDDTType dati : datiDDT) {
+                    invoice.getBT0016DespatchAdviceReference()
+                            .add(new BT0016DespatchAdviceReference(mapBT16(dati)));
+                }
+            }
+
+
             String substring = documentType.substring(documentType.length() - 2);
-//            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Ma sta roba non corrisponde, il TipoDocumento
-//            invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(attribute));       //TODO: non è mappabile a Untdid1001
+//            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Sta roba non corrisponde, il TipoDocumento non è mappabile a Untdid1001
+//            invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(attribute));
 
             if (datiGenerali.getDatiGeneraliDocumento().getDatiCassaPrevidenziale().isEmpty()) {
                 invoice.getBG0021DocumentLevelCharges()
@@ -79,6 +122,33 @@ public class FattPA2CenMapper {
 
     private static String mapBT03(DatiGeneraliType dati) {
         return dati.getDatiGeneraliDocumento().getTipoDocumento().value();
+    }
+
+    private static String mapBT11(DatiDocumentiCorrelatiType dati) {
+        return dati.getCodiceCUP();
+    }
+
+    private static String mapBT12(DatiDocumentiCorrelatiType dati) {
+        return dati.getIdDocumento();
+    }
+
+    private static String mapBT13(DatiDocumentiCorrelatiType dati) {
+        return dati.getIdDocumento();
+    }
+
+    private static String mapBT15(DatiDocumentiCorrelatiType dati) {
+        return dati.getIdDocumento();
+    }
+
+    private static String mapBT16(DatiDDTType dati) {
+        String numeroDDT = dati.getNumeroDDT();
+        String dataDDT = dati.getDataDDT().toString();
+
+        return numeroDDT + " " + dataDDT;
+    }
+
+    private static String mapBT17(DatiDocumentiCorrelatiType dati) {
+        return dati.getCodiceCIG();
     }
 
     private static String mapBT19(CedentePrestatoreType cedentePrestatore) {
