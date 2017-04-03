@@ -11,20 +11,14 @@
 
     <artifactId>cen-core</artifactId>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central-snapshot</id>
-            <name>Sonatype Snapshot</name>
-            <layout>default</layout>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+    </dependencies>
+
 
     <build>
         <plugins>
@@ -318,5 +312,6 @@
             </resource>
         </resources>
     </build>
+
 
 </project>

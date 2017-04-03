@@ -8,5 +8,5 @@ test-jdk8:
   stage: test
   script: "mvn clean test"
   only:
-      - develop
+    - develop
   
