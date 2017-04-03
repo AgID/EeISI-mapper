@@ -53,6 +53,7 @@
                 </IdFiscaleIVA>
                 <Anagrafica>
                     <Nome>Nome di Test</Nome>
+                    <Cognome>Cognome di Test</Cognome>
                 </Anagrafica>
             </DatiAnagrafici>
         </RappresentanteFiscale>
