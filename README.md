@@ -5,6 +5,12 @@ Progetto EIGoR
 Java 8 is needed. To build the project:
 
     mvn clean install
+    
+It it completes correctly, you'll find the CLI executable jar here...
+    
+    eigor-cli/target/eigor.jar
+    
+Execute it with `java -jar eigor.jar` to run it.
    
 ## Contributing
 * Make your changes in a new git branch. 

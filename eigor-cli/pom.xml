@@ -11,6 +11,12 @@
 
     <artifactId>eigor-cli</artifactId>
 
+    <properties>
+        <cli.main.class>it.infocert.eigor.cli.Eigor</cli.main.class>
+        <cli.main.jar>eigor</cli.main.jar>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
@@ -25,7 +31,7 @@
             <artifactId>eigor-test-invoices</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
@@ -37,21 +43,53 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <resources>
+                        <resource>
+                            <directory>src/main/resources</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </resources>
+
+                </configuration>
+            </plugin>
+
+            <!--
+            Generates the executable jar.
+            Not using 'maven-shade-plugin' because I get an error about a missing "resource".
+            Feel free to set up 'maven-shade-plugin' if you prefer.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.0.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>it.infocert.eigor.cli.Eigor</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${cli.main.jar}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

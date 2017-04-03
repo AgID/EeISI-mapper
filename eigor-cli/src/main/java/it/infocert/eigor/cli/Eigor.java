@@ -9,7 +9,9 @@ import it.infocert.eigor.model.core.model.Visitor;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,8 @@ import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 import static java.nio.file.StandardOpenOption.READ;
 
@@ -55,8 +59,24 @@ public class Eigor {
         // Validates all params
         // ===================================================
 
+        // if all params are missing the print the help
+        if(!options.hasOptions()){
+            try {
+                String help = IOUtils.toString(getClass().getResourceAsStream("/help.txt"));
+                System.out.println(help);
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
+        }
+
         // input: path to input invoice
         {
+
+            if(!options.has("input")){
+                System.err.println(String.format("Input file missing, please specify the path of the invoice to trasform with the --input parameter.", inputInvoice));
+                return;
+            }
+
             inputInvoice = FileSystems.getDefault().getPath((String) options.valueOf("input"));
             if (Files.notExists(inputInvoice)) {
                 System.err.println(String.format("Input invoice '%s' does not exist.", inputInvoice));
@@ -66,6 +86,12 @@ public class Eigor {
 
         // output: path to output folder
         {
+
+            if(!options.has("output")){
+                System.err.println(String.format("Output folder missing, please specify the output path with the --output parameter.", inputInvoice));
+                return;
+            }
+
             outputFolder = FileSystems.getDefault().getPath((String) options.valueOf("output"));
             if (Files.notExists(outputFolder)) {
                 System.err.println(String.format("Output folder '%s' does not exist.", outputFolder));
@@ -75,6 +101,12 @@ public class Eigor {
 
         // source format: should be supported
         {
+
+            if(!options.has("source")){
+                System.err.println(String.format("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice));
+                return;
+            }
+
             String source = (String) options.valueOf("source");
             toCen = reflectionBasedRepository.findConversionToCen(source);
             if (toCen == null) {
@@ -84,6 +116,12 @@ public class Eigor {
 
         // target format: should be supported
         {
+
+            if(!options.has("target")){
+                System.err.println(String.format("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice));
+                return;
+            }
+
             String target = (String) options.valueOf("target");
             fromCen = reflectionBasedRepository.findConversionFromCen(target);
             if (fromCen == null) {

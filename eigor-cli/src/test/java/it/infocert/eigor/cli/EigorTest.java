@@ -53,7 +53,95 @@ public class EigorTest {
 
     }
 
-    @Test public void doSomething() throws IOException {
+
+    @Test public void printHelpWhenLaunchedWithoutArguments() throws IOException {
+
+        // when
+        new Eigor().run(new String[]{} );
+
+        // then
+        assertThat(out().toLowerCase(), allOf(
+                containsString("--target"),
+                containsString("--source"),
+                containsString("--input"),
+                containsString("--output")
+        ));
+
+    }
+
+
+    @Test public void failWhenTargetIsMissing() throws IOException {
+
+        // when
+        new Eigor().run(new String[]{
+                "--input", plainFattPa.getAbsolutePath(),
+                "--output", outputDir.getAbsolutePath(),
+                "--source", "source"
+        } );
+
+        // then
+        assertThat(err().toLowerCase(), allOf(
+                containsString("target"),
+                containsString("missing")
+        ));
+
+    }
+
+
+    @Test public void failWhenSourceIsMissing() throws IOException {
+
+        // when
+        new Eigor().run(new String[]{
+                "--input", plainFattPa.getAbsolutePath(),
+                "--output", outputDir.getAbsolutePath(),
+                "--target", "fake"
+        } );
+
+        // then
+        assertThat(err().toLowerCase(), allOf(
+                containsString("source"),
+                containsString("missing")
+        ));
+
+    }
+
+    @Test public void failWhenOutputIsMissing() throws IOException {
+
+        // when
+        new Eigor().run(new String[]{
+                "--input", plainFattPa.getAbsolutePath(),
+                "--source", "fake",
+                "--target", "fake"
+        } );
+
+        // then
+        // then
+        assertThat(err().toLowerCase(), allOf(
+                containsString("output"),
+                containsString("missing")
+        ));
+
+    }
+
+    @Test public void failWhenInputIsMissing() throws IOException {
+
+        // when
+        new Eigor().run(new String[]{
+                "--source", "fake",
+                "--target", "fake",
+                "--output", outputDir.getAbsolutePath()
+        } );
+
+        // then
+        // then
+        assertThat(err().toLowerCase(), allOf(
+                containsString("input"),
+                containsString("missing")
+        ));
+
+    }
+
+    @Test public void executeWithFakeTransformations() throws IOException {
 
         // when
         new Eigor().run(new String[]{
