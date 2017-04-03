@@ -10,16 +10,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>converter-fattpa-cen</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cen-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>converter-sdk</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>eigor-api</artifactId>
         </dependency>
     </dependencies>
 
