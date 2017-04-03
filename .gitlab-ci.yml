@@ -9,3 +9,4 @@ test-jdk8:
   script: "mvn clean test"
   only:
     - develop
+  
