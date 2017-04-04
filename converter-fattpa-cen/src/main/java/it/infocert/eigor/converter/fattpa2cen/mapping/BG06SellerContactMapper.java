@@ -6,7 +6,7 @@ import it.infocert.eigor.model.core.model.BG0006SellerContact;
 import it.infocert.eigor.model.core.model.BT0042SellerContactTelephoneNumber;
 import it.infocert.eigor.model.core.model.BT0043SellerContactEmailAddress;
 
-public class BG06SellerContactMapper {
+class BG06SellerContactMapper {
 
     private static ContattiType contatti;
 

@@ -4,8 +4,7 @@ import it.infocert.eigor.converter.fattpa2cen.models.CedentePrestatoreType;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
-
-public class BG05SellerPostalAddressMapper {
+ class BG05SellerPostalAddressMapper {
 
     private static IndirizzoType sede;
 

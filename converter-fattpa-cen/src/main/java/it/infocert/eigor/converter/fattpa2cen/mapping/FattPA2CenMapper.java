@@ -108,6 +108,14 @@ public class FattPA2CenMapper {
                 invoice.getBG0021DocumentLevelCharges()
                         .add(BG21DocumentLevelChargesMapper.mapDocumentLevelCharges(datiGenerali.getDatiGeneraliDocumento()));
             }
+
+            List<DettaglioLineeType> dettaglioLinee = body.getDatiBeniServizi().getDettaglioLinee();
+            if (!dettaglioLinee.isEmpty()) {
+                for (DettaglioLineeType dettaglio : dettaglioLinee) {
+                    invoice.getBG0025InvoiceLine()
+                            .add(BG25InvoiceLineMapper.mapInvoiceLine(dettaglio));
+                }
+            }
         }
     }
 

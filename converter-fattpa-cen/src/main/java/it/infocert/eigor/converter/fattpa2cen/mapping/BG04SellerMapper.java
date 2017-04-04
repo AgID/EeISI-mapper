@@ -24,6 +24,7 @@ class BG04SellerMapper {
             seller.getBG0006SellerContact()
                     .add(sellerContact);
         }
+
         seller.getBT0027SellerName()
                 .add(new BT0027SellerName(mapBT27()));
 

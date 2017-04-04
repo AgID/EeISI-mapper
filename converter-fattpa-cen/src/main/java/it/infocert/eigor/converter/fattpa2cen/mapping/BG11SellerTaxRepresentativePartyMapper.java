@@ -38,7 +38,7 @@ class BG11SellerTaxRepresentativePartyMapper {
     private static String mapBT63() {
         IdFiscaleType idFiscaleIVA = datiAnagrafici.getIdFiscaleIVA();
 
-        return Iso31661CountryCodes.valueOf(idFiscaleIVA.getIdPaese()).toString() +
+        return Iso31661CountryCodes.valueOf(idFiscaleIVA.getIdPaese()) +
                 idFiscaleIVA.getIdCodice();
     }
 }
