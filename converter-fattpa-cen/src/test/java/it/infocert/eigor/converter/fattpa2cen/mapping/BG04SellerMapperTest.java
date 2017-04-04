@@ -2,15 +2,24 @@ package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.converter.fattpa2cen.models.*;
 import it.infocert.eigor.model.core.model.BG0004Seller;
+import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
+import it.infocert.eigor.model.core.model.BG0006SellerContact;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({BG05SellerPostalAddressMapper.class, BG06SellerContactMapper.class})
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class BG04SellerMapperTest {
 
@@ -20,7 +29,6 @@ public class BG04SellerMapperTest {
     private BG0004Seller seller;
     private IscrizioneREAType iscrizioneREA;
     private IdFiscaleType idFiscale;
-    private IndirizzoType sede;
 
 
     @Before
@@ -30,23 +38,20 @@ public class BG04SellerMapperTest {
         anagrafica = mock(AnagraficaType.class);
         iscrizioneREA = mock(IscrizioneREAType.class);
         idFiscale = mock(IdFiscaleType.class);
-        sede = mock(IndirizzoType.class);
+        mockStatic(BG05SellerPostalAddressMapper.class);
+        mockStatic(BG06SellerContactMapper.class);
+
+        when(BG05SellerPostalAddressMapper.mapSellerPostalAddress(cedente)).thenReturn(mock(BG0005SellerPostalAddress.class));
+        when(BG06SellerContactMapper.mapSellerContact(cedente)).thenReturn(mock(BG0006SellerContact.class));
 
         when(anagrafica.getDenominazione()).thenReturn("Denominazione");
         when(anagrafica.getCodEORI()).thenReturn("EORICode");
         when(datiAnagrafici.getCodiceFiscale()).thenReturn("XXXZZZ000111");
         when(iscrizioneREA.getNumeroREA()).thenReturn("REANumber");
         when(iscrizioneREA.getCapitaleSociale()).thenReturn(new BigDecimal(5.0d));
-        when(sede.getIndirizzo()).thenReturn("Indirizzo");
-        when(sede.getNumeroCivico()).thenReturn("5");
-        when(sede.getComune()).thenReturn("Comune");
-        when(sede.getCAP()).thenReturn("CAP");
-        when(sede.getProvincia()).thenReturn("Provincia");
-        when(sede.getNazione()).thenReturn("IT");
         when(idFiscale.getIdCodice()).thenReturn("Code");
         when(idFiscale.getIdPaese()).thenReturn("IT");
 
-        when(cedente.getSede()).thenReturn(sede);
         when(cedente.getDatiAnagrafici()).thenReturn(datiAnagrafici);
         when(cedente.getIscrizioneREA()).thenReturn(iscrizioneREA);
         when(datiAnagrafici.getAnagrafica()).thenReturn(anagrafica);
