@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 
 public class FattPA2CenConverterTest {
 
-    @Test
+//    @Test
     public void test() throws Exception {
         FattPA2CenConverter converter = new FattPA2CenConverter();
         final FileInputStream xmlFile = new FileInputStream("target/test-classes/example-fattPa.xml");
