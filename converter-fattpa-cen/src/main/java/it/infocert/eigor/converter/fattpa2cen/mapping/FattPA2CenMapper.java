@@ -175,7 +175,7 @@ public class FattPA2CenMapper {
 
     private static String mapBT49(DatiTrasmissioneType datiTrasmissione) {
         String codiceDestinatario = datiTrasmissione.getCodiceDestinatario();
-        if (codiceDestinatario.equals("0000000")) {
+        if ("0000000".equals(codiceDestinatario)) {
             return datiTrasmissione.getPECDestinatario();
         } else {
             return codiceDestinatario;
