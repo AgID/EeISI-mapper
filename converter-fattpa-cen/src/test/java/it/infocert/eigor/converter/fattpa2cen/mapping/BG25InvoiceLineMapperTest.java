@@ -27,7 +27,7 @@ public class BG25InvoiceLineMapperTest {
         when(dettaglioLinee.getNumeroLinea()).thenReturn(1);
         when(dettaglioLinee.getDescrizione()).thenReturn("Descrizione");
         when(dettaglioLinee.getQuantita()).thenReturn(new BigDecimal(5.0d));
-        when(dettaglioLinee.getUnitaMisura()).thenReturn("ZONE_E57"); //TODO: fix this and implement access by name, common name and symbol
+        when(dettaglioLinee.getUnitaMisura()).thenReturn("ZONE_E57"); //TODO: fix this and implement access by bt118Test, common bt118Test and symbol
 
         invoiceLine = BG25InvoiceLineMapper.mapInvoiceLine(dettaglioLinee);
     }

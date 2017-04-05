@@ -109,6 +109,15 @@ public class FattPA2CenMapper {
                         .add(BG21DocumentLevelChargesMapper.mapDocumentLevelCharges(datiGenerali.getDatiGeneraliDocumento()));
             }
 
+            List<DatiRiepilogoType> datiRiepilogoList = body.getDatiBeniServizi().getDatiRiepilogo();
+            if (!datiRiepilogoList.isEmpty()) {
+                for (DatiRiepilogoType datiRiepilogo : datiRiepilogoList) {
+                    invoice.getBG0023VatBreakdown()
+                            .add(BG23VatBreakdownMapper.mapVatBreakdown(datiRiepilogo));
+                }
+
+            }
+
             List<DettaglioLineeType> dettaglioLinee = body.getDatiBeniServizi().getDettaglioLinee();
             if (!dettaglioLinee.isEmpty()) {
                 for (DettaglioLineeType dettaglio : dettaglioLinee) {
@@ -116,6 +125,7 @@ public class FattPA2CenMapper {
                             .add(BG25InvoiceLineMapper.mapInvoiceLine(dettaglio));
                 }
             }
+
         }
     }
 
