@@ -11,6 +11,8 @@
 
     <artifactId>converter-fattpa-cen</artifactId>
 
+    <name>Eigor :: Converter :: FattPA - CEN </name>
+
     <properties>
         <powermock.version>1.6.6</powermock.version>
     </properties>

@@ -99,6 +99,24 @@ public class FattPA2CenMapper {
                 }
             }
 
+            List<DatiPagamentoType> datiPagamentoList = body.getDatiPagamento();
+            if (!datiPagamentoList.isEmpty()) {
+                for (DatiPagamentoType datiPagamento : datiPagamentoList) {
+                    List<DettaglioPagamentoType> dettaglioPagamentoList = datiPagamento.getDettaglioPagamento();
+                    if (!dettaglioPagamentoList.isEmpty()) {
+                        for (DettaglioPagamentoType dettaglioPagamento : dettaglioPagamentoList) {
+                            invoice.getBG0010Payee()
+                                    .add(BG10PayeeMapper.mapPayee(dettaglioPagamento));
+                        }
+                    }
+                }
+            }
+
+            DatiTrasportoType datiTrasporto = datiGenerali.getDatiTrasporto();
+            if (datiTrasporto != null) {
+                invoice.getBG0013DeliveryInformation()
+                        .add(BG13DeliveryInformationMapper.mapDeliveryInformation(datiTrasporto));
+            }
 
             String substring = documentType.substring(documentType.length() - 2);
 //            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Sta roba non corrisponde, il TipoDocumento non è mappabile a Untdid1001
