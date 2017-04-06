@@ -28,6 +28,11 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test-invoices</artifactId>
+        </dependency>
+
 
         <!--TESTING DEPENDENCIES-->
         <dependency>

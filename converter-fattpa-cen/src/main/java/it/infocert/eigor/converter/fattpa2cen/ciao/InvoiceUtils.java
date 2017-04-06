@@ -30,33 +30,17 @@ public class InvoiceUtils {
 
         try {
             for (String name : namesOfBGs) {
-                Method getterMethod = Arrays.stream(current.getClass()
-                        .getMethods())
-                        .filter(method ->
-                                method.getName()
-                                        .startsWith("get" + name))
-                        .findFirst()
-                        .orElse(null);
-                if (getterMethod == null) {
-                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
-                }
-                List<BTBG> children = (List<BTBG>) getterMethod.invoke(current);
+                List<BTBG> children = getChildrenAsList(current, name);
 
 
                 if (children.size() < 1) {
-                    Class<? extends BTBG> childType = reflections.getSubTypesOf(BTBG.class)
-                            .stream()
-                            .filter(c ->
-                                    c.getSimpleName()
-                                            .startsWith(name)
-                            )
-                            .findFirst()
-                            .orElse(null);
+                    Class<? extends BTBG> childType = getBtBgByName(name);
 
-                    children.add(childType.newInstance());
+                    BTBG bg = childType.newInstance();
+                    children.add(bg);
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
-                            format("'%s' is wrong, too many '%s' childs found.",
+                            format("'%s' is wrong, too many '%s' children found.",
                             path, current.denomination())
                     );
                 }
@@ -69,4 +53,68 @@ public class InvoiceUtils {
 
         return invoice;
     }
+
+    public List<BTBG> getChildrenAsList(BTBG parent, String childName) throws IllegalAccessException, InvocationTargetException {
+        Method getterMethod = Arrays.stream(parent.getClass()
+                .getMethods())
+                .filter(method ->
+                        method.getName()
+                                .startsWith("get" + childName))
+                .findFirst()
+                .orElse(null);
+        if (getterMethod == null) {
+            return null;
+        }
+
+        return (List<BTBG>) getterMethod.invoke(parent);
+    }
+
+    public Class<? extends BTBG> getBtBgByName(String name) {
+        return reflections.getSubTypesOf(BTBG.class)
+                                .stream()
+                                .filter(c ->
+                                        c.getSimpleName()
+                                                .startsWith(name)
+                                )
+                                .findFirst()
+                                .orElse(null);
+    }
+
+    public BTBG getChild(String path, BG0000Invoice invoice) {
+
+        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
+        namesOfBGs.remove(0);
+
+        BTBG current = invoice;
+
+        try {
+            for (String name : namesOfBGs) {
+                List<BTBG> children = getChildrenAsList(current, name);
+
+                if (children == null) {
+                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
+                }
+
+               if (children.size() != 1) {
+                    throw new IllegalArgumentException(
+                            format("'%s' is wrong, wrong number of '%s' found.",
+                            path, current.denomination())
+                    );
+                }
+                current = children.get(0);
+
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return current;
+    }
+
+    public void addChild(BTBG bg, BTBG bt) throws IllegalAccessException, InvocationTargetException {
+        List<BTBG> childrenAsList = getChildrenAsList(bg, bt.denomination());
+        childrenAsList.add(bt);
+    }
+
+
 }
