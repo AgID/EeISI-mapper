@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.mapping;
+package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG03PrecedingInvoiceReferenceMapper;

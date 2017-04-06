@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.mapping;
+package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
 import static org.junit.Assert.*;
 

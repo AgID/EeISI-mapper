@@ -32,6 +32,9 @@ public class InvoiceUtils {
             for (String name : namesOfBGs) {
                 List<BTBG> children = getChildrenAsList(current, name);
 
+                if (children == null) {
+                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
+                }
 
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);

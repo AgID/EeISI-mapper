@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.ciao;
+package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import com.google.common.io.Resources;
 import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformation;
