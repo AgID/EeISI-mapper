@@ -4,28 +4,51 @@ import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.FattPA2CenMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import java.io.InputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 
 public class FattPA2CenConverter implements ToCenConversion {
 
     public BG0000Invoice convert(InputStream input) {
-        InvoiceXMLUnmarshaller<FatturaElettronicaType> unmarshaller = new InvoiceXMLUnmarshaller<>("it.infocert.eigor.converter.fattpa2cen.models");
-        JAXBElement<FatturaElettronicaType> element = null;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Document doc = null;
         try {
-            element = unmarshaller.unmarshalInvoiceFile(input);
-        } catch (JAXBException e) {
+            DocumentBuilder dBuilder = factory.newDocumentBuilder();
+            doc = dBuilder.parse(input);
+        } catch ( IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
+        assert doc != null;
+        doc.getDocumentElement().normalize();
 
-        Preconditions.checkNotNull(element);
-        FatturaElettronicaType fattura = element.getValue();
 
-        return FattPA2CenMapper.mapToCoreInvoice(fattura);
+
     }
+
+    public BG0000Invoice convert(String fileName) {
+        return convert(new File(fileName));
+    }
+
+    public BG0000Invoice convert(File file) {
+        BG0000Invoice converted = null;
+        try {
+             converted = convert(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        return converted;
+    }
+
 
     @Override
     public boolean support(String format) {

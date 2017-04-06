@@ -1,0 +1,172 @@
+package it.infocert.eigor.converter.fattpa2cen.mapping;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class FattPaXpathList {
+    private final List<String> xPaths = new ArrayList<>(Arrays.asList(
+            "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Data" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/TipoDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Divisa" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/EsigibilitaIVA" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiContratto/CodiceCUP" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiContratto/IdDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiOrdineAcquisto/IdDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiRicezione/IdDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiDDT/NumeroDDT" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiContratto/CodiceCIG" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/RiferimentoAmministrazione" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Causale" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiFattureCollegate" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiFattureCollegate/IdDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiFattureCollegate/Data" +
+                    "//FatturaElettronicaHeader/CedentePrestatore" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/CodiceFiscale" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/DatiAnagrafici/Anagrafica/CodEORI" +
+//                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/IdPaese + //FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/IdCodice" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/RegimeFiscale" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/iscrizioneREA/CapitaleSociale" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/Indirizzo" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/NumeroCivico" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/Comune" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/CAP" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/Provincia" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Sede/Nazione" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Contatti" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Contatti/Telefono" +
+                    "//FatturaElettronicaHeader/CedentePrestatore/Contatti/Email" +
+                    "//FatturaElettronicaHeader/FatturaCessionarioCommittente" +
+                    "//FatturaElettronicaHeader/FatturaCessionarioCommittente/DatiAnagrafici/Anagrafica/Denominazione" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/DatiAnagrafici/CodiceFiscale" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/DatiAnagrafici/Anagrafica/CodEORI" +
+//                    "//FatturaElettronicaHeader/CessionarioCommittente/DatiAnagrafici/IdPaese + //FatturaElettronicaHeader/CessionarioCommittente/DatiAnagrafici/IdCodice" +
+                    "//FatturaElettronicaHeader/DatiTrasmissione/PECDestinatario" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/Indirizzo" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/NumeroCivico" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/Comune" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/CAP" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/Provincia" +
+                    "//FatturaElettronicaHeader/CessionarioCommittente/Sede/Nazione" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/Beneficiario" +
+                    "//FatturaElettronicaHeader/RappresentanteFiscale" +
+                    "//FatturaElettronicaHeader/RappresentanteFiscale/DatiAnagrafici/Anagrafica/Denominazione" +
+//                    "//FatturaElettronicaHeader/RappresentanteFiscale/DatiAnagrafici/IdPaese + //FatturaElettronicaHeader/RappresentanteFiscale/DatiAnagrafici/IdCodice" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/DataOraConsegna" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/Indirizzo" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/NumeroCivico" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/Comune" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/CAP" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/Provincia" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiTrasporto/IndirizzoResa/Nazione" +
+                    "//FatturaElettronicaBody/DatiPagamento" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/ModalitaPagamento" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/CodicePagamento" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/IBAN" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/BIC" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/TipoCessionePrestazione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoUnitario" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoTotale" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Quantita" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Natura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AliquotaIVA" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Descrizione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Descrizione" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiRitenuta" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiRitenuta/ImportoRitenuta" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiRitenuta/AliquotaRitenuta" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiRitenuta/TipoRitenuta" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiRitenuta/CausalePagamento" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/TipoCessionePrestazione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoUnitario" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoTotale" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Quantita" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Natura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AliquotaIVA" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Descrizione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Descrizione" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiBollo" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiBollo/ImportoBollo" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/ImportoContributoCassa" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/ImponibileCassa" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/AlCassa" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/Natura" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/AliquotaIVA" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/TipoCassa" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/ImportoTotaleDocumento" +
+                    "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Arrotondamento" +
+                    "//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/ImportoPagamento" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/ImponibileImporto" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/Imposta" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/Natura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/AliquotaIVA" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DatiRiepilogo/RiferimentoNormativo" +
+                    "//FatturaElettronicaBody/Allegati" +
+                    "//FatturaElettronicaBody/Allegati/NomeAttachment" +
+                    "//FatturaElettronicaBody/Allegati/DescrizioneAttachment" +
+                    "//FatturaElettronicaBody/Allegati/Attachment" +
+                    "//FatturaElettronicaBody/Allegati/FormatoAttachment" +
+                    "//FatturaElettronicaBody/Allegati/NomeAttachment" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/NumeroLinea" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Descrizione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Quantita" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/UnitaMisura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoTotale" +
+                    "//FatturaElettronicaBody/DatiRiepilogo/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiRiepilogo/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiRiepilogo/DettaglioLinee/RiferimentoAmministrazione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/DataInizioPeriodo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/DataFinePeriodo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione/Importo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione/Percentuale" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoTesto" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoTesto" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione/Importo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoNumero" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/ScontoMaggiorazione/Percentuale" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoTesto" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoTesto" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/PrezzoUnitario" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/UnitaMisura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/UnitaMisura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Natura" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AliquotaIVA" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/CodiceArticolo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/CodiceArticolo/CodiceValore" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/CodiceArticolo/CodiceTipo" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/TipoDato" +
+                    "//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/AltriDatiGestionali/RiferimentoTesto"
+    ));
+
+
+}
