@@ -10,18 +10,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Dodo {
+import static java.lang.String.format;
+
+public class InvoiceUtils {
 
     private final Reflections reflections;
 
-    public Dodo(Reflections reflections) {
+    public InvoiceUtils(Reflections reflections) {
         this.reflections = reflections;
     }
 
 
-    public BG0000Invoice stuff(String s, BG0000Invoice invoice) {
+    public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
 
-        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(s.split("/")));
+        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
         namesOfBGs.remove(0);
 
         BTBG current = invoice;
@@ -35,10 +37,13 @@ public class Dodo {
                                         .startsWith("get" + name))
                         .findFirst()
                         .orElse(null);
-
+                if (getterMethod == null) {
+                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
+                }
                 List<BTBG> children = (List<BTBG>) getterMethod.invoke(current);
 
-                if (children.size() != 1) {
+
+                if (children.size() < 1) {
                     Class<? extends BTBG> childType = reflections.getSubTypesOf(BTBG.class)
                             .stream()
                             .filter(c ->
@@ -49,6 +54,11 @@ public class Dodo {
                             .orElse(null);
 
                     children.add(childType.newInstance());
+                } else if (children.size() > 1) {
+                    throw new IllegalArgumentException(
+                            format("'%s' is wrong, too many '%s' childs found.",
+                            path, current.denomination())
+                    );
                 }
                 current = children.get(0);
 
