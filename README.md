@@ -1,4 +1,4 @@
-Progetto EIGoR
+Progetto EIGoR ![coverage](https://gitlab.com/tgi-infocert-eigor/eigor/badges/develop/build.svg)
 ==============
 
 ## Build
@@ -6,7 +6,7 @@ Java 8 is needed. To build the project:
 
     mvn clean install
     
-It it completes correctly, you'll find the CLI executable jar here...
+If it completes correctly, you'll find the CLI executable jar here...
     
     eigor-cli/target/eigor.jar
     
