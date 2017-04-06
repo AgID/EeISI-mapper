@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ToCenConversion;
-import it.infocert.eigor.converter.fattpa2cen.mapping.FattPA2CenMapper;
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.FattPA2CenMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 

@@ -1,16 +1,11 @@
-package it.infocert.eigor.converter.fattpa2cen.mapping;
+package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
 import it.infocert.eigor.converter.fattpa2cen.models.*;
-import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.*;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
 import java.util.List;
-
-import static it.infocert.eigor.converter.fattpa2cen.mapping.BG04SellerMapper.mapSeller;
-import static it.infocert.eigor.converter.fattpa2cen.mapping.BG07BuyerMapper.mapBuyer;
-import static it.infocert.eigor.converter.fattpa2cen.mapping.BG11SellerTaxRepresentativePartyMapper.mapSellerTaxRepresentativeParty;
 
 public class FattPA2CenMapper {
 
@@ -24,12 +19,12 @@ public class FattPA2CenMapper {
 
     private static void mapHeader(FatturaElettronicaHeaderType header, BG0000Invoice invoice) {
         CedentePrestatoreType cedentePrestatore = header.getCedentePrestatore();
-        invoice.getBG0004Seller().add(mapSeller(cedentePrestatore));
-        invoice.getBG0007Buyer().add(mapBuyer(header.getCessionarioCommittente()));
+        invoice.getBG0004Seller().add(BG04SellerMapper.mapSeller(cedentePrestatore));
+        invoice.getBG0007Buyer().add(BG07BuyerMapper.mapBuyer(header.getCessionarioCommittente()));
 
         RappresentanteFiscaleType rappresentanteFiscale = header.getRappresentanteFiscale();
         if (rappresentanteFiscale != null) {
-            invoice.getBG0011SellerTaxRepresentativeParty().add(mapSellerTaxRepresentativeParty(rappresentanteFiscale));
+            invoice.getBG0011SellerTaxRepresentativeParty().add(BG11SellerTaxRepresentativePartyMapper.mapSellerTaxRepresentativeParty(rappresentanteFiscale));
         }
 
         String riferimentoAmministrazione = mapBT19(cedentePrestatore);

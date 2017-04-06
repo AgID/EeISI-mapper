@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG08BuyerPostalAddressMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.CessionarioCommittenteType;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.model.BG0008BuyerPostalAddress;

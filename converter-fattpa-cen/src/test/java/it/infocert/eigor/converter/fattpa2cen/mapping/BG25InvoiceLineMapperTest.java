@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG25InvoiceLineMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.DettaglioLineeType;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;

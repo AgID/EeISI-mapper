@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.ciao;
+package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class GenericOneToOneTransformation {
 

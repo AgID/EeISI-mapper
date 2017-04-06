@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG15DeliverToAddressMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.model.BG0015DeliverToAddress;
 import org.junit.Before;

@@ -1,5 +1,8 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG04SellerMapper;
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG05SellerPostalAddressMapper;
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG06SellerContactMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.*;
 import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;

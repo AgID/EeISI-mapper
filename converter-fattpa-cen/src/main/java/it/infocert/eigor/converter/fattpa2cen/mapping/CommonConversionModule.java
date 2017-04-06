@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.ciao;
+package it.infocert.eigor.converter.fattpa2cen.mapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;

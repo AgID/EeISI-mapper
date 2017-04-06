@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG23VatBreakdownMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.DatiRiepilogoType;
-import it.infocert.eigor.converter.fattpa2cen.models.NaturaType;
 import it.infocert.eigor.model.core.model.BG0023VatBreakdown;
 import org.junit.Before;
 import org.junit.Test;

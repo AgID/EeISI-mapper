@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG21DocumentLevelChargesMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.*;
 import it.infocert.eigor.model.core.model.BG0021DocumentLevelCharges;
 import org.junit.Before;

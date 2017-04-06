@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG11SellerTaxRepresentativePartyMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.AnagraficaType;
 import it.infocert.eigor.converter.fattpa2cen.models.DatiAnagraficiRappresentanteType;
 import it.infocert.eigor.converter.fattpa2cen.models.IdFiscaleType;

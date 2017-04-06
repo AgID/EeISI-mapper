@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG13DeliveryInformationMapper;
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG15DeliverToAddressMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.DatiTrasportoType;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;

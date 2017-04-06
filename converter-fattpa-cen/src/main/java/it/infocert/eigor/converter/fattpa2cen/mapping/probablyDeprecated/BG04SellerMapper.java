@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.mapping;
+package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
 import it.infocert.eigor.converter.fattpa2cen.models.AnagraficaType;
 import it.infocert.eigor.converter.fattpa2cen.models.CedentePrestatoreType;

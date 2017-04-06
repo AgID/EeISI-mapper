@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.ciao;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;

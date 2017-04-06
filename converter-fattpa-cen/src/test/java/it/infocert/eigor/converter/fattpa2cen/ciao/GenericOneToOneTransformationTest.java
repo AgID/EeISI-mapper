@@ -1,11 +1,9 @@
 package it.infocert.eigor.converter.fattpa2cen.ciao;
 
 import com.google.common.io.Resources;
+import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformation;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0027SellerName;
-import it.infocert.eigor.model.core.model.BT0138InvoiceLineAllowancePercentage;
-import it.infocert.eigor.model.core.model.BTBG;
-import jdk.internal.org.xml.sax.SAXException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 

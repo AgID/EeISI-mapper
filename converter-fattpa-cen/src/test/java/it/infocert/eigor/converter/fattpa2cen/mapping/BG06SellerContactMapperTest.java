@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.BG06SellerContactMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.CedentePrestatoreType;
 import it.infocert.eigor.converter.fattpa2cen.models.ContattiType;
 import it.infocert.eigor.model.core.model.BG0006SellerContact;
