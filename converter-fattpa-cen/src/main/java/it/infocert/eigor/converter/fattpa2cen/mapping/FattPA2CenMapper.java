@@ -99,6 +99,24 @@ public class FattPA2CenMapper {
                 }
             }
 
+            List<DatiPagamentoType> datiPagamentoList = body.getDatiPagamento();
+            if (!datiPagamentoList.isEmpty()) {
+                for (DatiPagamentoType datiPagamento : datiPagamentoList) {
+                    List<DettaglioPagamentoType> dettaglioPagamentoList = datiPagamento.getDettaglioPagamento();
+                    if (!dettaglioPagamentoList.isEmpty()) {
+                        for (DettaglioPagamentoType dettaglioPagamento : dettaglioPagamentoList) {
+                            invoice.getBG0010Payee()
+                                    .add(BG10PayeeMapper.mapPayee(dettaglioPagamento));
+                        }
+                    }
+                }
+            }
+
+            DatiTrasportoType datiTrasporto = datiGenerali.getDatiTrasporto();
+            if (datiTrasporto != null) {
+                invoice.getBG0013DeliveryInformation()
+                        .add(BG13DeliveryInformationMapper.mapDeliveryInformation(datiTrasporto));
+            }
 
             String substring = documentType.substring(documentType.length() - 2);
 //            Untdid1001InvoiceTypeCode attribute = Untdid1001InvoiceTypeCode.valueOf(substring); //TODO: Sta roba non corrisponde, il TipoDocumento non è mappabile a Untdid1001
@@ -109,6 +127,15 @@ public class FattPA2CenMapper {
                         .add(BG21DocumentLevelChargesMapper.mapDocumentLevelCharges(datiGenerali.getDatiGeneraliDocumento()));
             }
 
+            List<DatiRiepilogoType> datiRiepilogoList = body.getDatiBeniServizi().getDatiRiepilogo();
+            if (!datiRiepilogoList.isEmpty()) {
+                for (DatiRiepilogoType datiRiepilogo : datiRiepilogoList) {
+                    invoice.getBG0023VatBreakdown()
+                            .add(BG23VatBreakdownMapper.mapVatBreakdown(datiRiepilogo));
+                }
+
+            }
+
             List<DettaglioLineeType> dettaglioLinee = body.getDatiBeniServizi().getDettaglioLinee();
             if (!dettaglioLinee.isEmpty()) {
                 for (DettaglioLineeType dettaglio : dettaglioLinee) {
@@ -116,6 +143,7 @@ public class FattPA2CenMapper {
                             .add(BG25InvoiceLineMapper.mapInvoiceLine(dettaglio));
                 }
             }
+
         }
     }
 
@@ -165,7 +193,7 @@ public class FattPA2CenMapper {
 
     private static String mapBT49(DatiTrasmissioneType datiTrasmissione) {
         String codiceDestinatario = datiTrasmissione.getCodiceDestinatario();
-        if (codiceDestinatario.equals("0000000")) {
+        if ("0000000".equals(codiceDestinatario)) {
             return datiTrasmissione.getPECDestinatario();
         } else {
             return codiceDestinatario;

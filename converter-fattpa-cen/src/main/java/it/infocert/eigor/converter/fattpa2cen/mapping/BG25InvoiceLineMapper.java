@@ -1,10 +1,12 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.converter.fattpa2cen.models.DettaglioLineeType;
+import it.infocert.eigor.converter.fattpa2cen.models.ScontoMaggiorazioneType;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 class BG25InvoiceLineMapper {
 
@@ -34,6 +36,14 @@ class BG25InvoiceLineMapper {
         if (unitOfMeasure != null) {
             invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode()
                     .add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.valueOf(unitOfMeasure)));
+        }
+
+        List<ScontoMaggiorazioneType> scontoMaggiorazione = dettaglioLinee.getScontoMaggiorazione();
+        if (!scontoMaggiorazione.isEmpty()) {
+            for (ScontoMaggiorazioneType sconto : scontoMaggiorazione) {
+                invoiceLine.getBG0027InvoiceLineAllowances()
+                        .add(BG27InvoiceLineAllowanceMapper.mapInvoiceLineAllowance(sconto));
+            }
         }
 
         return invoiceLine;
