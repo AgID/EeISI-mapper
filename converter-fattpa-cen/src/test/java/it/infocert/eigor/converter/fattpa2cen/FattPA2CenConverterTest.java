@@ -43,13 +43,6 @@ public class FattPA2CenConverterTest {
 
         Multimap<String, String> mapping = mapper.getMapping();
 
-        String btPath = "/BG0007/BG0008/BT0052";
-        Collection<String> strings = mapping.get(btPath);
-
-        InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
-
-        String name = BT0161ItemAttributeValue.class.getName();
-
         BG0000Invoice invoice = new BG0000Invoice();
 
         for (Map.Entry<String, String> entry : mapping.entries()) {
