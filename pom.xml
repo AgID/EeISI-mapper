@@ -15,6 +15,7 @@
         <module>eigor-cli</module>
         <module>eigor-test-invoices</module>
         <module>eigor-api</module>
+        <module>eigor-rules</module>
     </modules>
 
     <properties>

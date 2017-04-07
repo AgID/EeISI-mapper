@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
-import it.infocert.eigor.converter.fattpa2cen.mapping.InvoiceUtils;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class InvoiceUtilsTest {
 
     @Test
-    public void dodo() throws Exception {
+    public void ensuringPath() throws Exception {
         String s = "/BG0025/BG0026";
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
         BG0000Invoice invoice = invoiceUtils.ensurePathExists(s, new BG0000Invoice());
@@ -23,16 +23,7 @@ public class InvoiceUtilsTest {
     }
 
     @Test
-    public void dodo2() throws Exception {
-        String s = "/BG0025/BG0027";
-        InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
-        BG0000Invoice invoice = invoiceUtils.ensurePathExists(s, new BG0000Invoice());
-        assertThat(invoice.getBG0025InvoiceLine(), hasSize(1));
-        assertThat(invoice.getBG0025InvoiceLine().get(0).getBG0027InvoiceLineAllowances(), hasSize(1));
-    }
-
-    @Test
-    public void failingDodo() throws Exception {
+    public void ensuringPathShouldFail() throws Exception {
         String s = "/BG0025/BG0027/BG0026";
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
         try {
@@ -47,7 +38,7 @@ public class InvoiceUtilsTest {
     }
 
     @Test
-    public void doubleBG() throws Exception {
+    public void tooManyBGs() throws Exception {
         String s = "/BG0025";
 
         BG0000Invoice inv = new BG0000Invoice();

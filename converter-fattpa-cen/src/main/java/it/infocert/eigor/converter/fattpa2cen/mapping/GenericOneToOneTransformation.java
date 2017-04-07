@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;

@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.fattpa2cen.mapping;
+package it.infocert.eigor.model.core;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;

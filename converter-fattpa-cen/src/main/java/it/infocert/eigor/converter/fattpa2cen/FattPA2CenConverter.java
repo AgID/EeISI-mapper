@@ -40,12 +40,13 @@ public class FattPA2CenConverter implements ToCenConversion {
 
     public BG0000Invoice convert(File file) {
         BG0000Invoice converted = null;
-        try {
-             converted = convert(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
+
+        try(FileInputStream input = new FileInputStream(file)) {
+            converted = convert(input);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return converted;
     }
 
