@@ -31,7 +31,7 @@ public class FattPA2CenConverter implements ToCenConversion {
         doc.getDocumentElement().normalize();
 
 
-
+        return null;
     }
 
     public BG0000Invoice convert(String fileName) {

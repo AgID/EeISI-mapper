@@ -34,11 +34,9 @@ public class GenericOneToOneTransformationTest {
         doc.getDocumentElement().normalize();
 
         String xPathExpression = "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione";
-        String className = BT0027SellerName.class.getName();
         String cenPath = "/BG0004/BT0027";
 
-        GenericOneToOneTransformation transformator = new GenericOneToOneTransformation(xPathExpression,
-                className, cenPath);
+        GenericOneToOneTransformation transformator = new GenericOneToOneTransformation(xPathExpression, cenPath);
 
         BG0000Invoice invoice = new BG0000Invoice();
 

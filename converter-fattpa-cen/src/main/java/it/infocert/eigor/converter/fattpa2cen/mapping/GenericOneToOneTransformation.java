@@ -15,24 +15,12 @@ public class GenericOneToOneTransformation {
 
 
     private final String xPathExpression;
-    private final Class<? extends BTBG> btbgClass;
     private final String btPath;
 
 
-    public GenericOneToOneTransformation(String xPathExpression, Class<? extends BTBG> btbgClass, String invoicePath) {
-        this.xPathExpression = xPathExpression;
-        this.btbgClass = btbgClass;
-        this.btPath = invoicePath;
-    }
-
-    public GenericOneToOneTransformation(String xPathExpression, String btbgClass, String btPath) {
+    public GenericOneToOneTransformation(String xPathExpression, String btPath) {
         this.xPathExpression = xPathExpression;
         this.btPath = btPath;
-        try {
-            this.btbgClass = (Class<? extends BTBG>) Class.forName(btbgClass);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void transform(Document document, FatturaElettronicaType fattura, BG0000Invoice invoice) {
@@ -59,7 +47,5 @@ public class GenericOneToOneTransformation {
 
         }
     }
-
-
 
 }
