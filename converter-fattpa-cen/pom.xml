@@ -11,7 +11,7 @@
 
     <artifactId>converter-fattpa-cen</artifactId>
 
-    <name>Eigor :: Converter :: FattPA - CEN </name>
+    <name>Eigor :: Converter :: FattPA - CEN</name>
 
     <dependencies>
         <dependency>
@@ -19,7 +19,6 @@
             <artifactId>cen-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-api</artifactId>
@@ -29,8 +28,17 @@
             <artifactId>eigor-test-invoices</artifactId>
         </dependency>
         <dependency>
-        <groupId>org.reflections</groupId>
-        <artifactId>reflections</artifactId>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
         </dependency>
     </dependencies>
 
