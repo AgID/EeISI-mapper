@@ -5,6 +5,8 @@ import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GenericOneToOneTransformation {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
 
     private final String xPathExpression;
     private final String btPath;
@@ -43,7 +46,7 @@ public class GenericOneToOneTransformation {
                 invoiceUtils.addChild(bg, bt);
 
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
 
         }

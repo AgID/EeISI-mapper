@@ -12,6 +12,8 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +27,8 @@ import java.util.Map;
 import static java.nio.file.StandardOpenOption.READ;
 
 public class Eigor {
+
+    public static Logger LOGGER = LoggerFactory.getLogger(Eigor.class);
 
     public static void main(String[] args) {
         new Eigor().run(args);
@@ -65,7 +69,7 @@ public class Eigor {
                 String help = IOUtils.toString(getClass().getResourceAsStream("/help.txt"));
                 System.out.println(help);
             } catch (IOException e) {
-                e.printStackTrace(System.err);
+
             }
         }
 
@@ -132,7 +136,7 @@ public class Eigor {
         try {
             invoiceInSourceFormat = Files.newInputStream(inputInvoice, READ);
         } catch (IOException e) {
-            e.printStackTrace(System.err);
+            LOGGER.error(e.getMessage(), e);
         }
 
 

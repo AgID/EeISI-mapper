@@ -1,14 +1,19 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import javax.xml.xpath.*;
 class CommonConversionModule {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(CommonConversionModule.class);
+    
     static NodeList evaluateXpath(Document doc, String xPathExpression) {
         Object result = null;
         try {
             result = compile(xPathExpression).evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return (NodeList) result;
     }
@@ -18,7 +23,7 @@ class CommonConversionModule {
         try {
             result = compile(booleanExpression).evaluate(doc, XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return (Boolean) result;
     }

@@ -3,6 +3,8 @@ package it.infocert.eigor.model.core;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +15,8 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class InvoiceUtils {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(InvoiceUtils.class);
 
     private final Reflections reflections;
 
@@ -51,7 +55,7 @@ public class InvoiceUtils {
 
             }
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         return invoice;
@@ -108,7 +112,7 @@ public class InvoiceUtils {
 
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         return current;

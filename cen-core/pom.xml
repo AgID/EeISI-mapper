@@ -11,16 +11,10 @@
 
     <artifactId>cen-core</artifactId>
 
-
     <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
         </dependency>
     </dependencies>
 
@@ -41,15 +35,20 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BG.java.vm</pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv</pathToOutputFolder>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BG.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_TAG</contextMode>
                             <tagExpressions>
                                 <param>@{ParentClass}</param>
                                 <param>@{BTBGClassName}</param>
                             </tagExpressions>
-                            <includeContextExpression>@{File[0].BTBGClassName.startsWith("BG")}</includeContextExpression>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/${File[0].BTBGClassName}.java</fileNameTemplate>
+                            <includeContextExpression>@{File[0].BTBGClassName.startsWith("BG")}
+                            </includeContextExpression>
+                            <!--suppress MavenModelInspection -->
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${File[0].BTBGClassName}.java
+                            </fileNameTemplate>
                         </configuration>
                     </execution>
 
@@ -61,10 +60,12 @@
                         </goals>
                         <configuration>
                             <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BT.java.vm</pathToTemplate>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BT.java.vm
+                            </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
+                            <!--suppress MavenModelInspection -->
                             <fileNameTemplate>it/infocert/eigor/model/core/model/${BTBGClassName}.java
                             </fileNameTemplate>
                             <includeContextExpression>@{BTBGClassName.startsWith("BT")}</includeContextExpression>
@@ -78,8 +79,11 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/CountryCodes/countrycodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/CountryCodes/CountryCodesTemplate.java.vm
+                            <pathToCsv>
+                                ${project.basedir}/src/main/resources/TemplateFiles/CountryCodes/countrycodes.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/CountryCodes/CountryCodesTemplate.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -95,7 +99,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID4451/UNTDID-4451.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID4451/UNTDID-4451.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID4451/Untdid4451InvoiceNoteSubjectCode.java.vm
                             </pathToTemplate>
@@ -113,8 +118,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID1001/UNTDID-1001.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/UNTDID1001/Untdid1001InvoiceTypeCode.java.vm
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID1001/UNTDID-1001.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/UNTDID1001/Untdid1001InvoiceTypeCode.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -130,8 +137,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID4461/UNTDID-4461.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/UNTDID4461/Untdid4461PaymentMeansCode.java.vm
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID4461/UNTDID-4461.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/UNTDID4461/Untdid4461PaymentMeansCode.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -147,7 +156,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID5305/UNTDID-5305.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID5305/UNTDID-5305.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID5305/Untdid5305DutyTaxFeeCategories.java.vm
                             </pathToTemplate>
@@ -165,7 +175,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID7161/UNTDID-7161.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID7161/UNTDID-7161.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID7161/Untdid7161SpecialServicesCodes.java.vm
                             </pathToTemplate>
@@ -183,8 +194,11 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/VatExemptionReasons/VatExemptionReasonsCodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/VatExemptionReasons/VatExemptionReasonsCodes.java.vm
+                            <pathToCsv>
+                                ${project.basedir}/src/main/resources/TemplateFiles/VatExemptionReasons/VatExemptionReasonsCodes.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/VatExemptionReasons/VatExemptionReasonsCodes.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -200,7 +214,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID5189/UNTDID-5189.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID5189/UNTDID-5189.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID5189/Untdid5189ChargeAllowanceDescriptionCodes.java.vm
                             </pathToTemplate>
@@ -219,8 +234,11 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/ISO4217/ISO4217CurrenciesFundsCodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/ISO4217/Iso4217CurrenciesFundsCodes.java.vm
+                            <pathToCsv>
+                                ${project.basedir}/src/main/resources/TemplateFiles/ISO4217/ISO4217CurrenciesFundsCodes.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/ISO4217/Iso4217CurrenciesFundsCodes.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -236,7 +254,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID2005/UNTDID-2005.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID2005/UNTDID-2005.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID2005/Untdid2005DateTimePeriodQualifiers.java.vm
                             </pathToTemplate>
@@ -255,8 +274,11 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UnitsOfMeasure/UnitsOfMeasureCodes.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/UnitsOfMeasure/UnitsOfMeasureCodes.java.vm
+                            <pathToCsv>
+                                ${project.basedir}/src/main/resources/TemplateFiles/UnitsOfMeasure/UnitsOfMeasureCodes.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/UnitsOfMeasure/UnitsOfMeasureCodes.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
@@ -273,7 +295,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID1153/UNTDID-1153.csv</pathToCsv>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID1153/UNTDID-1153.csv
+                            </pathToCsv>
                             <pathToTemplate>
                                 ${project.basedir}/src/main/resources/TemplateFiles/UNTDID1153/Untdid1153ReferenceQualifierCode.java.vm
                             </pathToTemplate>

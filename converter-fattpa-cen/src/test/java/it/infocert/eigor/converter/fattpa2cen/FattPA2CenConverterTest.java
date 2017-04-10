@@ -6,6 +6,8 @@ import it.infocert.eigor.converter.fattpa2cen.mapping.FattPaXpathMap;
 import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformation;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,6 +21,8 @@ import static junit.framework.TestCase.assertFalse;
 
 public class FattPA2CenConverterTest {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(FattPA2CenConverter.class);
+
     @Test
     public void test() throws Exception {
         URL italianInvoiceUrl = Resources.getResource("fatt-pa-plain-vanilla.xml");
@@ -28,7 +32,7 @@ public class FattPA2CenConverterTest {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(italianInvoiceUrl.toURI().toString());
         } catch ( IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();

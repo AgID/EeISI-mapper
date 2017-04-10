@@ -5,6 +5,8 @@ import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformat
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0027SellerName;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,6 +21,8 @@ import static org.junit.Assert.*;
 
 public class GenericOneToOneTransformationTest {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
+
     @Test
     public void mappingTest() throws Exception {
         URL italianInvoiceUrl = Resources.getResource("fatt-pa-plain-vanilla.xml");
@@ -28,7 +32,7 @@ public class GenericOneToOneTransformationTest {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(italianInvoiceUrl.toURI().toString());
         } catch ( IOException | ParserConfigurationException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();

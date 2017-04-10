@@ -6,6 +6,8 @@ import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.FattPA2
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -18,6 +20,8 @@ import java.io.*;
 
 public class FattPA2CenConverter implements ToCenConversion {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FattPA2CenConverter.class);
+
     public BG0000Invoice convert(InputStream input) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document doc = null;
@@ -25,7 +29,7 @@ public class FattPA2CenConverter implements ToCenConversion {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(input);
         } catch ( IOException | ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();
@@ -44,7 +48,7 @@ public class FattPA2CenConverter implements ToCenConversion {
         try(FileInputStream input = new FileInputStream(file)) {
             converted = convert(input);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         return converted;

@@ -1,17 +1,22 @@
 package it.infocert.eigor.rules;
 
+import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformation;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 
 public class CardinalityRule implements Rule {
+    
+    private static Logger LOGGER = LoggerFactory.getLogger(CardinalityRule.class);
 
     private String pathToBT;
     private Integer minimum;
@@ -51,7 +56,7 @@ public class CardinalityRule implements Rule {
             }
 
         } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
