@@ -123,5 +123,26 @@ public class InvoiceUtils {
         childrenAsList.add(bt);
     }
 
+    //TODO Try to simplify duplicate code between this and getChild()
+    public boolean hasChild(String invoicePath, BG0000Invoice invoice) {
+        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(invoicePath.split("/")));
+        namesOfBGs.remove(0);
 
+        BTBG current = invoice;
+
+        try {
+            for (String name : namesOfBGs) {
+                List<BTBG> children = getChildrenAsList(current, name);
+                if (children != null && children.size() != 0) {
+                    current = children.get(0);
+                }
+                if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1 ))) {
+                    return true;
+                }
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
