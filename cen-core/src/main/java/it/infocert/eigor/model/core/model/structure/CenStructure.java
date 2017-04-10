@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toSet;
  */
 public class CenStructure extends CenStructureSource {
 
-    CenStructure() {
+    public CenStructure() {
         super();
     }
 
@@ -120,6 +120,14 @@ public class CenStructure extends CenStructureSource {
 
         @Override public int hashCode() {
             return btBgName.hashCode();
+        }
+
+        public boolean isBg() {
+            return "BG".equalsIgnoreCase(btBgName.bgOrBt());
+        }
+
+        public boolean isBt() {
+            return !isBg();
         }
     }
 

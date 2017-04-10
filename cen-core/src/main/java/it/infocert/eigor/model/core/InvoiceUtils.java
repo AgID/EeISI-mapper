@@ -24,7 +24,10 @@ public class InvoiceUtils {
         this.reflections = reflections;
     }
 
-
+    /**
+     * @param path A path like "/BG0025/BG0026".
+     * @param invoice The invoice where the path should be guaranteed.
+     */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
