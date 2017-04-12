@@ -9,11 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.lang.reflect.Modifier.isAbstract;
 
 public class InvoiceUtils {
 
@@ -94,6 +96,7 @@ public class InvoiceUtils {
     public Class<? extends BTBG> getBtBgByName(BtBgName name) {
         return reflections.getSubTypesOf(BTBG.class)
                 .stream()
+                .filter(c-> !isAbstract(c.getModifiers()) )
                 .filter(c -> {
                     String substring = c.getSimpleName().substring(0, 6);
                     BtBgName parse = BtBgName.parse(substring);
