@@ -13,7 +13,7 @@ import java.util.Objects;
 * ${BusinessTerm} (${ClassName})
 * <p>${Description}</p>
 */
-public class ${ClassName} implements BTBG {
+public class ${ClassName} extends AbstractBTBG {
 
     private final ${AttributeFQN} attribute;
 

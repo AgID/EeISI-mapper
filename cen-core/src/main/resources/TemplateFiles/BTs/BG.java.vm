@@ -7,10 +7,10 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-public class ${row0.BTBGClassName} implements BTBG {
+public class ${row0.BTBGClassName} extends AbstractBTBG {
 
     #foreach( $row in $File )
-    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);;
+    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ParentAwareList<>(0, this);;
     #end
 
     public ${row0.BTBGClassName}() {

@@ -27,6 +27,8 @@ public class GenericOneToOneTransformation {
         this.btPath = btPath;
     }
 
+
+
     public void transform(Document document, FatturaElettronicaType fattura, BG0000Invoice invoice) {
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
 
