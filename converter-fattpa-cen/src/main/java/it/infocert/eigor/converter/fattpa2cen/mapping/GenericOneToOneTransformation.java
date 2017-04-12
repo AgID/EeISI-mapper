@@ -39,7 +39,7 @@ public class GenericOneToOneTransformation {
             String bgPath = btPath.substring(0, btPath.lastIndexOf("/"));
             String btName = btPath.substring(btPath.lastIndexOf("/") + 1);
             invoiceUtils.ensurePathExists(bgPath, invoice);
-            BTBG bg = invoiceUtils.getChild(bgPath, invoice);
+            BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
             Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
             try {
                 Constructor<? extends BTBG> btConstructor = btClass.getConstructor(String.class);

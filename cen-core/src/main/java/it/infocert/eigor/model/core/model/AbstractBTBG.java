@@ -1,14 +1,14 @@
 package it.infocert.eigor.model.core.model;
 
-abstract class AbstractBTBG implements BTBG{
+public abstract class AbstractBTBG implements BTBG{
 
-    private BTBG parent;
+    private AbstractBTBG parent;
 
-    public BTBG getParent() {
+    public AbstractBTBG getParent() {
         return parent;
     }
 
-    void setParent(BTBG parent) {
+    void setParent(AbstractBTBG parent) {
         if (this.parent != null) {
             throw new IllegalStateException("Parent already set");
         } else {

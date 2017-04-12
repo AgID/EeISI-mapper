@@ -126,6 +126,9 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>1.1.11</version>
+                <configuration>
+                    <threads>5</threads>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

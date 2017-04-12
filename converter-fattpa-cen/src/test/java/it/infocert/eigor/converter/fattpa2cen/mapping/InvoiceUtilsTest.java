@@ -66,7 +66,7 @@ public class InvoiceUtilsTest {
         BG0025InvoiceLine bg25 = new BG0025InvoiceLine();
         bg25.getBG0027InvoiceLineAllowances().add(new BG0027InvoiceLineAllowances());
         invoice.getBG0025InvoiceLine().add(bg25);
-        BTBG child = invoiceUtils.getChild(s, invoice);
+        BTBG child = invoiceUtils.getFirstChild(s, invoice);
         assertTrue(child instanceof BG0027InvoiceLineAllowances);
     }
 }
