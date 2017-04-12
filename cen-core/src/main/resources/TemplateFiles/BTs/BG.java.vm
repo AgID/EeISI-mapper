@@ -1,5 +1,6 @@
 #set( $row0 = $File[0] )
 #set( $rows = $File.sublist(1,$File.size()) )
+#set( $clzName = ${row0.BTBGClassName} )
 package it.infocert.eigor.model.core.model;
 
 import java.util.ArrayList;
@@ -7,19 +8,23 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-public class ${row0.BTBGClassName} implements BTBG {
+public class ${clzName} implements BTBG {
 
     #foreach( $row in $File )
-    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);;
+    #if( !$clzName.equals( $row.BTBGClassName ) )
+    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);
+    #end
     #end
 
     public ${row0.BTBGClassName}() {
     }
 
     #foreach( $row in $File )
+    #if( !$clzName.equals( $row.BTBGClassName ) )
     public List<${row.BTBGClassName}> get${row.BTBGClassName}() {
         return ${row.BTBGClassName};
     }
+    #end
     #end
 
     @Override
@@ -37,7 +42,9 @@ public class ${row0.BTBGClassName} implements BTBG {
 
         List<BTBG> list = new ArrayList<>();
         #foreach( $row in $File )
+        #if( !$clzName.equals( $row.BTBGClassName ) )
         list.addAll(this.${row.BTBGClassName});
+        #end
         #end
         list.sort( comparing( o -> o.order() ) );
         list.forEach( o -> o.accept(v) );

@@ -2,14 +2,17 @@ package it.infocert.eigor.converter.csvcen2cen;
 
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 public class CsvCen2CenTest {
@@ -27,26 +30,24 @@ public class CsvCen2CenTest {
         // given
         InputStream inputStream = asStream(
                 "BG/BT,Business Term Name,Value,Remarks,Calculations",
-                "BG-25,INVOICE LINE 1,,,",
-                "BT-129,Invoiced quantity:,5,,",
-                "BT-130,Invoiced quantity unit of measure:,Bottle,,",
-                "BT-146,Item net price:,12,EUR,",
-                "BT-149,Item price base quantity:,1,,",
-                "BT-131,Invoice line net amount:,60,EUR,\"Invoiced quantity x (Item net price/Item price base quantity)\"",
-                "BT-151,Invoiced item VAT category code:,Standard rate,,",
-                "BT-152 ,Invoiced item VAT rate:,25,%,");
+                "BT-01,Invoice Number,2017/123,,",
+                "BG-01,Invoice Note,,,",
+                "BT-021,Invoice Note Subject Code,Code#1,,",
+                "BT-022,Invoice Note,This is note #1,,",
+                "BG-01,Invoice Note,,,",
+                "BT-021,Invoice Note Subject Code,Code#2,,",
+                "BT-022,Invoice Note,This is note #2,,");
 
         // when
         BG0000Invoice invoice = sut.convert(inputStream);
 
         // then
-        assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0129InvoicedQuantity().get(0), is(5) );
-        assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0130InvoicedQuantityUnitOfMeasureCode().get(0), is(3) );
-        // ??? assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0146
-        // ??? assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0149
-        assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0131InvoiceLineNetAmount().get(0), is(60));
-        // ??? assertThat( invoice.getBG0025InvoiceLine().get(0).getBT01 31InvoiceLineNetAmount().get(0), is(60);
-        // ??? assertThat( invoice.getBG0025InvoiceLine().get(0).getBT0152
+        List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
+        assertThat( notes.get(0).getBT0021InvoiceNoteSubjectCode().get(0).toString(), is("Code#1") );
+        assertThat( notes.get(0).getBT0022InvoiceNote().get(0).toString(), is("This is note #1") );
+        assertThat( notes.get(1).getBT0021InvoiceNoteSubjectCode().get(0).toString(), is("Code#2") );
+        assertThat( notes.get(1).getBT0022InvoiceNote().get(0).toString(), is("This is note #2") );
+        assertThat( notes, hasSize(2));
 
     }
 

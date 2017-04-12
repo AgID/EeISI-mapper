@@ -2,6 +2,7 @@ package it.infocert.eigor.model.core;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
+import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,19 @@ public class InvoiceUtils {
                                 .orElse(null);
     }
 
+    public Class<? extends BTBG> getBtBgByName(BtBgName name) {
+        return reflections.getSubTypesOf(BTBG.class)
+                .stream()
+                .filter(c -> {
+                    String substring = c.getSimpleName().substring(0, 6);
+                    BtBgName parse = BtBgName.parse(substring);
+                    return parse.equals(name);
+                        }
+                )
+                .findFirst()
+                .orElse(null);
+    }
+
     public BTBG getChild(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
@@ -121,9 +135,19 @@ public class InvoiceUtils {
         return current;
     }
 
-    public void addChild(BTBG bg, BTBG bt) throws IllegalAccessException, InvocationTargetException {
-        List<BTBG> childrenAsList = getChildrenAsList(bg, bt.denomination());
-        childrenAsList.add(bt);
+    /**
+     * Tries to add the given child to the given parent if it is possible.
+     * @throws IllegalAccessException If something goes wrong.
+     * @throws InvocationTargetException If something goes wrong.
+     * @return {@literal true} if the child has been added, {@literal false} otherwise.
+     */
+    public boolean addChild(BTBG parentBg, BTBG childBt) throws IllegalAccessException, InvocationTargetException {
+        List<BTBG> childrenAsList = getChildrenAsList(parentBg, childBt.denomination());
+        if(childrenAsList != null) {
+            childrenAsList.add(childBt);
+            return true;
+        }
+        return false;
     }
 
 
