@@ -1,10 +1,15 @@
 package it.infocert.eigor.rules.business;
 
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.model.AbstractBTBG;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.reflections.Reflections;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class ShallContainBusinessRule implements Rule {
 

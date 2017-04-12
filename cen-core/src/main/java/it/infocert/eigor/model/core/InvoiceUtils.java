@@ -87,7 +87,7 @@ public class InvoiceUtils {
                                 .orElse(null);
     }
 
-    public BTBG getChild(String path, BG0000Invoice invoice) {
+    public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
         namesOfBGs.remove(0);
@@ -102,12 +102,9 @@ public class InvoiceUtils {
                     throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
                 }
 
-               if (children.size() != 1) {
-                    throw new IllegalArgumentException(
-                            format("'%s' is wrong, wrong number of '%s' found.",
-                            path, current.denomination())
-                    );
-                }
+               if (children.isEmpty()) {
+                   return null;
+               }
                 current = children.get(0);
 
             }
@@ -123,7 +120,7 @@ public class InvoiceUtils {
         childrenAsList.add(bt);
     }
 
-    //TODO Try to simplify duplicate code between this and getChild()
+    //TODO Try to simplify duplicate code between this and getFirstChild()
     public boolean hasChild(String invoicePath, BG0000Invoice invoice) {
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(invoicePath.split("/")));
         namesOfBGs.remove(0);

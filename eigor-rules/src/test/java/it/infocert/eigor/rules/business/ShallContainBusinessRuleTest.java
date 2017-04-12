@@ -57,23 +57,4 @@ public class ShallContainBusinessRuleTest {
 
         assertEquals(RuleOutcome.Outcome.FAILED, outcome);
     }
-
-//    @Test
-    public void name() throws Exception {
-        BG0025InvoiceLine invoiceLine1 = new BG0025InvoiceLine();
-        invoiceLine1.getBG0029PriceDetails().add(new BG0029PriceDetails());
-        BG0025InvoiceLine invoiceLine2 = new BG0025InvoiceLine();
-        invoiceLine2.getBG0029PriceDetails().add(new BG0029PriceDetails());
-        BG0025InvoiceLine invoiceLine3 = new BG0025InvoiceLine();
-        invoiceLine3.getBG0029PriceDetails().add(new BG0029PriceDetails());
-        invoice.getBG0025InvoiceLine().add(invoiceLine1);
-        invoice.getBG0025InvoiceLine().add(invoiceLine2);
-        invoice.getBG0025InvoiceLine().add(invoiceLine3);
-
-        CardinalityRule rule = new CardinalityRule("/BG0025/BG0029/BT", 1, 1);
-        RuleOutcome compliant = rule.isCompliant(invoice);
-        RuleOutcome.Outcome outcome = compliant.outcome();
-
-        assertEquals(RuleOutcome.Outcome.SUCCESS, outcome);
-    }
 }
