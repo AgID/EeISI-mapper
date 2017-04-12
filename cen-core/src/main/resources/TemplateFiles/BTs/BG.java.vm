@@ -8,11 +8,11 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-public class ${clzName} implements BTBG {
+public class ${clzName} extends AbstractBTBG {
 
     #foreach( $row in $File )
     #if( !$clzName.equals( $row.BTBGClassName ) )
-    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ArrayList<>(0);
+    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ParentAwareList<>(0, this);
     #end
     #end
 

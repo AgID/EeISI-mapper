@@ -4,6 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface BTBG {
+
+    BTBG getParent();
+
     int order();
 
     void accept(Visitor v);
