@@ -107,7 +107,6 @@ public class InvoiceUtils {
                 .orElse(null);
     }
 
-
     public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
