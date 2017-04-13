@@ -16,6 +16,7 @@
         <module>eigor-test-invoices</module>
         <module>eigor-api</module>
         <module>eigor-rules</module>
+        <module>converter-csvcen-cen</module>
     </modules>
 
     <properties>
@@ -79,6 +80,11 @@
                 <version>1.2.3</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>1.4</version>
+            </dependency>
 
             <!-- Eigor modules -->
             <dependency>
