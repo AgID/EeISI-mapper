@@ -28,7 +28,7 @@ import static java.nio.file.StandardOpenOption.READ;
 
 public class Eigor {
 
-    public static Logger LOGGER = LoggerFactory.getLogger(Eigor.class);
+    public static Logger log = LoggerFactory.getLogger(Eigor.class);
 
     public static void main(String[] args) {
         new Eigor().run(args);
@@ -136,7 +136,7 @@ public class Eigor {
         try {
             invoiceInSourceFormat = Files.newInputStream(inputInvoice, READ);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
 

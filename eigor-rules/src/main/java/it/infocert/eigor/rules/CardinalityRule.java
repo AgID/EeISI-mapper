@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class CardinalityRule implements Rule {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(CardinalityRule.class);
+    private static Logger log = LoggerFactory.getLogger(CardinalityRule.class);
 
     private String pathToBT;
     private Integer minimum;
@@ -51,14 +51,14 @@ public class CardinalityRule implements Rule {
                     }
                     return result;
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             } else {
                 try {
                     List<BTBG> childList = invoiceUtils.getChildrenAsList(parent, child.denomination());
                     return getRuleOutcome(btName, childList);
                 } catch (InvocationTargetException | IllegalAccessException e) {
-                    LOGGER.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
         }

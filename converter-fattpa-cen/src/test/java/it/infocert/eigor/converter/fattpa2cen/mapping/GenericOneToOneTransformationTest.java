@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 public class GenericOneToOneTransformationTest {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
+    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
 
     @Test
     public void mappingTest() throws Exception {
@@ -32,7 +32,7 @@ public class GenericOneToOneTransformationTest {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(italianInvoiceUrl.toURI().toString());
         } catch ( IOException | ParserConfigurationException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();

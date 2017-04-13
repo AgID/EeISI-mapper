@@ -20,7 +20,7 @@ import java.io.*;
 
 public class FattPA2CenConverter implements ToCenConversion {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FattPA2CenConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
 
     public BG0000Invoice convert(InputStream input) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -29,7 +29,7 @@ public class FattPA2CenConverter implements ToCenConversion {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(input);
         } catch ( IOException | ParserConfigurationException | SAXException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();
@@ -48,7 +48,7 @@ public class FattPA2CenConverter implements ToCenConversion {
         try(FileInputStream input = new FileInputStream(file)) {
             converted = convert(input);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return converted;
