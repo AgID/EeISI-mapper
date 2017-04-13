@@ -1,8 +1,13 @@
 package it.infocert.eigor.model.core;
 
 import it.infocert.eigor.model.core.model.*;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 
 public class ParentAwareListTest {
@@ -13,6 +18,28 @@ public class ParentAwareListTest {
         invoice.getBG0025InvoiceLine().add(new BG0025InvoiceLine());
         BG0000Invoice parent = (BG0000Invoice) invoice.getBG0025InvoiceLine().get(0).getParent();
         assertEquals(invoice, parent);
+    }
+
+    @Test
+    public void shouldSetTheParentAlsoWhenUsingPlainSetters() {
+
+        // given
+        BG0000Invoice invoice = new BG0000Invoice();
+
+        // ...let's just create a bg25 at position 0.
+        invoice.getBG0025InvoiceLine().add(new BG0025InvoiceLine());
+
+        // when
+
+        // ...the item is reset through the index...
+        BG0025InvoiceLine toAdd = new BG0025InvoiceLine();
+        List<BG0025InvoiceLine> bg0025InvoiceLine = invoice.getBG0025InvoiceLine();
+        bg0025InvoiceLine.set(0, toAdd);
+
+        // then
+        // ...it should reference the parent
+        Assert.assertThat(toAdd.getParent(), is(invoice));
+
     }
 
     @Test
