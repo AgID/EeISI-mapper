@@ -22,9 +22,9 @@ public class ParentAwareList<E extends AbstractBTBG> extends ArrayList<E> {
         this.parent = parent;
     }
     
-    public boolean add(E btbg) {
-        btbg.setParent(parent);
-        return super.add(btbg);
+    public boolean add(E element) {
+        element.setParent(parent);
+        return super.add(element);
     }
     
     public void add(int index, E element) {
@@ -34,17 +34,23 @@ public class ParentAwareList<E extends AbstractBTBG> extends ArrayList<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        for (AbstractBTBG btbg: c) {
-            btbg.setParent(parent);
+        for (AbstractBTBG element: c) {
+            element.setParent(parent);
         }
         return super.addAll(c);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        for (AbstractBTBG btbg: c) {
-            btbg.setParent(parent);
+        for (AbstractBTBG element: c) {
+            element.setParent(parent);
         }
         return super.addAll(index, c);
+    }
+
+    @Override
+    public E set(int index, E element) {
+        element.setParent(parent);
+        return super.set(index, element);
     }
 }

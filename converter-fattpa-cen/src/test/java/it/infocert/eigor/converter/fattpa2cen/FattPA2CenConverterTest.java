@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertFalse;
 
 public class FattPA2CenConverterTest {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(FattPA2CenConverter.class);
+    private static Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
 
     @Test
     public void test() throws Exception {
@@ -32,7 +32,7 @@ public class FattPA2CenConverterTest {
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             doc = dBuilder.parse(italianInvoiceUrl.toURI().toString());
         } catch ( IOException | ParserConfigurationException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         assert doc != null;
         doc.getDocumentElement().normalize();

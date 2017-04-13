@@ -69,6 +69,16 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.25</version>
             </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>1.2.3</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -118,6 +128,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -126,6 +144,9 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <version>1.1.11</version>
+                <configuration>
+                    <threads>5</threads>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

@@ -19,7 +19,7 @@ import static java.lang.reflect.Modifier.isAbstract;
 
 public class InvoiceUtils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(InvoiceUtils.class);
+    private static Logger log = LoggerFactory.getLogger(InvoiceUtils.class);
 
     private final Reflections reflections;
 
@@ -61,7 +61,7 @@ public class InvoiceUtils {
 
             }
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return invoice;
@@ -98,16 +98,16 @@ public class InvoiceUtils {
                 .stream()
                 .filter(c-> !isAbstract(c.getModifiers()) )
                 .filter(c -> {
-                    String substring = c.getSimpleName().substring(0, 6);
-                    BtBgName parse = BtBgName.parse(substring);
-                    return parse.equals(name);
+                            String substring = c.getSimpleName().substring(0, 6);
+                            BtBgName parse = BtBgName.parse(substring);
+                            return parse.equals(name);
                         }
                 )
                 .findFirst()
                 .orElse(null);
     }
 
-    public BTBG getChild(String path, BG0000Invoice invoice) {
+    public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
         namesOfBGs.remove(0);
@@ -122,17 +122,14 @@ public class InvoiceUtils {
                     throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
                 }
 
-               if (children.size() != 1) {
-                    throw new IllegalArgumentException(
-                            format("'%s' is wrong, wrong number of '%s' found.",
-                            path, current.denomination())
-                    );
-                }
+               if (children.isEmpty()) {
+                   return null;
+               }
                 current = children.get(0);
 
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return current;
@@ -153,7 +150,7 @@ public class InvoiceUtils {
         return false;
     }
 
-    //TODO Try to simplify duplicate code between this and getChild()
+    //TODO Try to simplify duplicate code between this and getFirstChild()
     public boolean hasChild(String invoicePath, BG0000Invoice invoice) {
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(invoicePath.split("/")));
         namesOfBGs.remove(0);

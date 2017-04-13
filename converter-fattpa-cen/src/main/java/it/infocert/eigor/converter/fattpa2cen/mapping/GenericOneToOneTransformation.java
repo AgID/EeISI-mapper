@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GenericOneToOneTransformation {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
+    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
 
     private final String xPathExpression;
     private final String btPath;
@@ -39,7 +39,7 @@ public class GenericOneToOneTransformation {
             String bgPath = btPath.substring(0, btPath.lastIndexOf("/"));
             String btName = btPath.substring(btPath.lastIndexOf("/") + 1);
             invoiceUtils.ensurePathExists(bgPath, invoice);
-            BTBG bg = invoiceUtils.getChild(bgPath, invoice);
+            BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
             Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
             try {
                 Constructor<? extends BTBG> btConstructor = btClass.getConstructor(String.class);
@@ -48,7 +48,7 @@ public class GenericOneToOneTransformation {
                 invoiceUtils.addChild(bg, bt);
 
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                LOGGER.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
 
         }
