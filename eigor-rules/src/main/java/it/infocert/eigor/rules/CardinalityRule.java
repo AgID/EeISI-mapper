@@ -20,7 +20,6 @@ public class CardinalityRule implements Rule {
     private String pathToBT;
     private Integer minimum;
     private Integer maximum;
-    private BG0000Invoice invoice;
 
     public CardinalityRule(String pathToBT, Integer minimum, Integer maximum) {
         this.pathToBT = pathToBT;
@@ -29,17 +28,11 @@ public class CardinalityRule implements Rule {
     }
 
     @Override
-    public RuleOutcome isCompliant(BG0000Invoice coreInvoice) {
-        this.invoice = coreInvoice;
+    public RuleOutcome isCompliant(BG0000Invoice invoice) {
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
-        String bgPath = pathToBT.substring(0, pathToBT.lastIndexOf("/"));
-
-        if ("".equals(bgPath)) {
-            bgPath = "BG0000";
-        }
         String btName = pathToBT.substring(pathToBT.lastIndexOf("/") + 1);
 
-        BTBG child = invoiceUtils.getFirstChild(pathToBT, coreInvoice);
+        BTBG child = invoiceUtils.getFirstChild(pathToBT, invoice);
         if (child == null && minimum != 0) {
             return failure(btName, 0);
         } else {
@@ -50,11 +43,13 @@ public class CardinalityRule implements Rule {
 
                 try {
 
+                    RuleOutcome result = null;
                     List<BTBG> parentList = invoiceUtils.getChildrenAsList(parentParent, parent.denomination());
                     for (BTBG foundParent : parentList) {
                         List<BTBG> childList = invoiceUtils.getChildrenAsList(foundParent, btName);
-                        return getRuleOutcome(btName, childList);
+                        result = getRuleOutcome(btName, childList);
                     }
+                    return result;
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     LOGGER.error(e.getMessage(), e);
                 }

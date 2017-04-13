@@ -14,17 +14,15 @@ import java.util.List;
 public class ShallContainBusinessRule implements Rule {
 
     private String invoicePath;
-    private BG0000Invoice invoice;
 
-    public ShallContainBusinessRule(String invoicePath, BG0000Invoice invoice) {
+    public ShallContainBusinessRule(String invoicePath) {
         this.invoicePath = invoicePath;
-        this.invoice = invoice;
     }
 
 
     @Override
-    public RuleOutcome isCompliant(BG0000Invoice coreInvoice) {
-        if (contains()) {
+    public RuleOutcome isCompliant(BG0000Invoice invoice) {
+        if (contains(invoice)) {
             return RuleOutcome.newSuccessOutcome("Invoice contains %s", invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
         } else {
             return RuleOutcome.newFailedOutcome("Invoice doesn't contains %s", invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
@@ -32,7 +30,7 @@ public class ShallContainBusinessRule implements Rule {
 
     }
 
-    private boolean contains() {
+    private boolean contains(BG0000Invoice invoice) {
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
         return invoiceUtils.hasChild(invoicePath, invoice);
     }
