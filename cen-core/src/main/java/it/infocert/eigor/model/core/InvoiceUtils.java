@@ -93,6 +93,21 @@ public class InvoiceUtils {
                                 .orElse(null);
     }
 
+    public Class<? extends BTBG> getBtBgByName(BtBgName name) {
+        return reflections.getSubTypesOf(BTBG.class)
+                .stream()
+                .filter(c-> !isAbstract(c.getModifiers()) )
+                .filter(c -> {
+                            String substring = c.getSimpleName().substring(0, 6);
+                            BtBgName parse = BtBgName.parse(substring);
+                            return parse.equals(name);
+                        }
+                )
+                .findFirst()
+                .orElse(null);
+    }
+
+
     public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
         List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
