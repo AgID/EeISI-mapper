@@ -19,7 +19,7 @@ import static java.lang.reflect.Modifier.isAbstract;
 
 public class InvoiceUtils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(InvoiceUtils.class);
+    private static Logger log = LoggerFactory.getLogger(InvoiceUtils.class);
 
     private final Reflections reflections;
 
@@ -61,7 +61,7 @@ public class InvoiceUtils {
 
             }
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return invoice;
@@ -132,7 +132,7 @@ public class InvoiceUtils {
 
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return current;

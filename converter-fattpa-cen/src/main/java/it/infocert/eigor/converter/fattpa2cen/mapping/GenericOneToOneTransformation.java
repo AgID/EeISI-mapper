@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GenericOneToOneTransformation {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
+    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
 
     private final String xPathExpression;
     private final String btPath;
@@ -48,7 +48,7 @@ public class GenericOneToOneTransformation {
                 invoiceUtils.addChild(bg, bt);
 
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                LOGGER.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
 
         }
