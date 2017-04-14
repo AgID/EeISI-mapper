@@ -21,6 +21,12 @@
             <artifactId>commons-csv</artifactId>
         </dependency>
 
+        <!-- TEST -->
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test-invoices</artifactId>
+        </dependency>
+
     </dependencies>
 
 

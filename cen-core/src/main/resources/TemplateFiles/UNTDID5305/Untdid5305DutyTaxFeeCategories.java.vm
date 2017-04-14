@@ -29,4 +29,28 @@ public enum Untdid5305DutyTaxFeeCategories {
     public String toString() {
         return super.toString() + " " + shortDescritpion;
     }
+
+    public boolean isHasPlusSign() {
+        return hasPlusSign;
+    }
+
+    public void setHasPlusSign(boolean hasPlusSign) {
+        this.hasPlusSign = hasPlusSign;
+    }
+
+    public String getShortDescritpion() {
+        return shortDescritpion;
+    }
+
+    public void setShortDescritpion(String shortDescritpion) {
+        this.shortDescritpion = shortDescritpion;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
 }

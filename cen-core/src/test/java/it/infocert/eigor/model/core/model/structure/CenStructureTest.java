@@ -17,6 +17,21 @@ public class CenStructureTest {
         sut = new CenStructure();
     }
 
+
+    @Test
+    public void shouldKnowThePath() {
+
+        // given
+        CenStructure.BtBgNode bg32 = sut.findByName("BG32");
+
+        // when
+        String path = bg32.path();
+
+        // then
+        assertThat( path, is("/BG-25/BG-31/BG-32") );
+
+    }
+
     @Test
     public void shouldKnowTheChildren() {
 

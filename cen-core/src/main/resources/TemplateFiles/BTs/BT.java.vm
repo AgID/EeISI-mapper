@@ -26,6 +26,10 @@ public class ${ClassName} extends AbstractBTBG {
         return attribute.toString();
     }
 
+    public ${AttributeFQN} getValue() {
+        return this.attribute;
+    }
+
     @Override
     public int order() {
         return ${OrderInCEN};

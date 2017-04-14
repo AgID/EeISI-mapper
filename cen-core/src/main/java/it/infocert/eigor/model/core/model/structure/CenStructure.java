@@ -29,6 +29,26 @@ public class CenStructure extends CenStructureSource {
                 Integer.parseInt( item.getNumber() ), this);
     }
 
+    /**
+     * @param name "BT-002", "BG01", "bt 001".
+     * @throws IllegalArgumentException When the node cannot be found in the CEN structure.
+     */
+    public BtBgNode findByName(BtBgName name) {
+        Item item = findItemByBgBtName(name).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + name + "'."));
+        return new BtBgNode(
+                item.getBtBg(),
+                Integer.parseInt( item.getNumber() ), this);
+    }
+
+    private Optional<Item> findItemByBgBtName(BtBgName name) {
+        return Arrays.stream(items).filter(i -> i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals( String.valueOf(name.number()) ) ).findFirst();
+    }
+
+    private Item findItemByName(String btBgNumberName) {
+        BtBgName name = BtBgName.parse(btBgNumberName);
+        return findItemByBgBtName(name).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + btBgNumberName + "'."));
+    }
+
     private BtBgNode parentOf(BtBgNode btBgNode) {
         Item item = findItemByBgBtName(btBgNode.getName()).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + btBgNode + "'."));
 
@@ -56,14 +76,6 @@ public class CenStructure extends CenStructureSource {
                 .collect(toSet());
     }
 
-    private Item findItemByName(String btBgNumberName) {
-        BtBgName name = BtBgName.parse(btBgNumberName);
-        return findItemByBgBtName(name).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + btBgNumberName + "'."));
-    }
-
-    private Optional<Item> findItemByBgBtName(BtBgName name) {
-        return Arrays.stream(items).filter(i -> i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals( String.valueOf(name.number()) ) ).findFirst();
-    }
 
     /**
      * A node in the tree-like CEN structure.
@@ -128,6 +140,18 @@ public class CenStructure extends CenStructureSource {
 
         public boolean isBt() {
             return !isBg();
+        }
+
+        public String path() {
+            String path = "";
+            BtBgNode btBgNode = this;
+            do {
+                if(btBgNode.getParent()!=null) {
+                    path = btBgNode.toString() + (path.isEmpty() ? "" : "/") + path;
+                }
+                btBgNode = btBgNode.getParent();
+            }while(btBgNode!=null);
+            return "/" + path;
         }
     }
 
