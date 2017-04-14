@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.google.common.base.Charsets;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -17,8 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -27,101 +30,162 @@ public class CsvCen2Cen implements ToCenConversion {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
+    private final ConversionRegistry conversionRegistry;
 
     public CsvCen2Cen() {
+
         cenStructure = new CenStructure();
         utils = new InvoiceUtils(new Reflections("it.infocert"));
+        conversionRegistry = new ConversionRegistry(
+                new StringToIso31661CountryCodesConverter(),
+                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),
+                new StringToUntdid1001InvoiceTypeCodeConverter(),
+                new StringToIso4217CurrenciesFundsCodesConverter(),
+                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+                new StringToUnitOfMeasureConverter(),
+                new StringToDoublePercentageConverter(),
+                new StringToDoubleConverter(),
+                new StringToStringConverter()
+        );
     }
 
     @Override
     public BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
-        Iterable<CSVRecord> records = null;
+        Iterable<CSVRecord> cenRecordsFromCsv = null;
+
+        // try to parse the CEN CSV file.
         try {
-            records = CSVFormat.RFC4180
-                    .withHeader(Headers.class)
+            cenRecordsFromCsv = CSVFormat.RFC4180
+                    .withFirstRecordAsHeader()
+                    .withIgnoreHeaderCase(true)
                     .parse(new InputStreamReader(sourceInvoiceStream, Charsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        Stack<BTBG> elements = new Stack<>();
-        elements.push(new BG0000Invoice());
+        Stack<BTBG> stack = new Stack<>();
+        stack.push(new BG0000Invoice());
 
-        boolean firstLine = false;
-        for (CSVRecord record : records) {
 
-            if(!firstLine){
-                firstLine = true;
-                continue;
-            }
+        String bgbtIdFromCsv;
+        String bgbtValueFromCsv;
+        BtBgName btbgName;
+        Class<? extends BTBG> btBgClass;
+        for (CSVRecord cenRecord : cenRecordsFromCsv) {
 
-            String bgbtName = record.get(Headers.BGBT);
-            String bgbtValue = record.get(Headers.Value);
+            bgbtIdFromCsv = cenRecord.get("BG/BT");
+            bgbtValueFromCsv = cenRecord.get("Value");
 
-            BtBgName btbgNnaammee = BtBgName.parse(bgbtName);
 
-            Class<? extends BTBG> btBgClass = utils.getBtBgByName(btbgNnaammee);
 
-            if(btBgClass == null) throw
-                    new SyntaxErrorInInvoiceFormatException("Unable to retrieve class for '" + bgbtName + "'");
-
-            BTBG btbgToAdd = null;
+            // verifies that the name of the bgbt read from csv is a well formed name and that it is actually
+            // a BG BT node in the CEN structure.
             try {
+                btbgName = BtBgName.parse(bgbtIdFromCsv);
+            } catch (Exception e) {
+                throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d refers to the mispelled CEN element '%s'.",
+                        cenRecord.getRecordNumber(),
+                        bgbtIdFromCsv
+                ));
+            }
+            btBgClass = utils.getBtBgByName(btbgName);
+            if(btBgClass == null) throw
+                    new SyntaxErrorInInvoiceFormatException("Unable to retrieve class for '" + bgbtIdFromCsv + "'");
+
+
+
+            // Instantiate the BTBG corresponding to the current CSV record.
+            BTBG btbg = null;
+            try {
+
+                // A BG-XX can be instantiated...
                 if (btBgClass.getSimpleName().toLowerCase().startsWith("bg")) {
                     // BGs can be instantiated.
-                    btbgToAdd = btBgClass.newInstance();
+                    btbg = btBgClass.newInstance();
+
+                // A BT-XX should be instantiated through its constructor...
                 } else {
-                    // BTs should be instantiated with a value.
 
-
+                    // double chacks BT has only one single arg constructor
                     List<Constructor<?>> constructors = Arrays.stream(btBgClass.getConstructors()).filter(c -> c.getParameterCount() == 1).collect(Collectors.toList());
                     if (constructors.size() != 1) {
                         throw new IllegalArgumentException("Just one constructor with one argument expected, " + constructors.size() + " found instead.");
                     }
-
                     Constructor<?> constructor = constructors.get(0);
 
-                    btbgToAdd = (BTBG) constructor.newInstance(bgbtValue);
+                    // tries to convert the String value read from the file in the type expected by the constructor
+                    Class<?> constructorParamType = constructor.getParameterTypes()[0];
+                    Object convert = null;
+                    try {
+                        convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
+                    } catch (Exception e) {
+                        throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
+                                cenRecord.getRecordNumber(),
+                                bgbtIdFromCsv,
+                                bgbtValueFromCsv,
+                                constructorParamType.getSimpleName()
+                        ));
+                    }
+
+                    // instantiate the BT
+                    btbg = (BTBG) constructor.newInstance(convert);
                 }
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
+            if(btbg == null) throw new IllegalStateException("It was not possible to instantiate a BT/BG");
 
-            if(btbgToAdd == null) throw new IllegalStateException("It was not possible to instantiate a BT/BG");
 
-            boolean done = false;
+            // Calculate the path of the BG where we're trying to add the newly created BT/BG.
+            // This is done because this information is in the stack and if we're not doing that now,
+            // we'll loose that info.
+            String pathWhereYouAreTryingToPlaceTheBtBg = "";
+            for(int i=stack.size() - 1; i>=0; i--){
+                pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg + "/" + stack.get(i);
+            }
+            pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0000", "/") + btbgName.toString();
+
+
+            // It search in the stack a BG that will accept the current BG/BT.
+            boolean found = false;
             do {
-                BTBG parentBg = elements.pop();
+                BTBG parentBg = stack.pop();
                 try {
-                    boolean added = utils.addChild(parentBg, btbgToAdd);
+                    boolean added = utils.addChild(parentBg, btbg);
                     if(added) {
-                        elements.push(parentBg);
-                        if (btbgToAdd.denomination().toLowerCase().startsWith("bg")) {
-                            elements.push(btbgToAdd);
+                        stack.push(parentBg);
+                        if (btbg.denomination().toLowerCase().startsWith("bg")) {
+                            stack.push(btbg);
                         }
-                        done = true;
+                        found = true;
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    done = false;
+                    found = false;
                 }
-            } while (!done && !elements.empty());
+            } while (!found && !stack.empty());
+
+
+            // if we browsed the full stack withouth being able to add
+            // the current BT, then that BT was in the wrong position in the file.
+            if(stack.empty()){
+                String pathWhereTheBtBgBelongs = cenStructure.findByName( btbgName ).path();
+                String umh = btbgName.toString();
+
+                throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d tries to place a '%s' at '%s', but this element should be placed at '%s' instead.",
+                        cenRecord.getRecordNumber(),
+                        umh,
+                        pathWhereYouAreTryingToPlaceTheBtBg,
+                        pathWhereTheBtBgBelongs
+                ));
+            }
 
 
         }
-        return (BG0000Invoice) elements.get(0);
 
-
-    }
-
-    private String toPath(CenStructure.BtBgNode node) {
-        String result = "";
-        while (node != null) {
-            result = "/" + node.getBtOrBg() + node.getNumber() + result;
-            node = node.getParent();
-        }
-        return result;
+        // the topmost element in the stack is always the invoice.
+        return (BG0000Invoice) stack.get(0);
     }
 
     @Override
@@ -129,8 +193,4 @@ public class CsvCen2Cen implements ToCenConversion {
         return "csvcen".equals(format.toLowerCase().trim());
     }
 
-
-    public enum Headers {
-        BGBT, BusinessTermName, Value, Remarks, Calculations
-    }
 }

@@ -40,4 +40,20 @@ public enum Iso4217CurrenciesFundsCodes {
                 ", currency='" + currency + '\'' +
                 '}';
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public int getNumberOfDecimalDigits() {
+        return numberOfDecimalDigits;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
 }

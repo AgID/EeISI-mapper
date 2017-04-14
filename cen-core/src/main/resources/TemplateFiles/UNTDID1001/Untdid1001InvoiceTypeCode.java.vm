@@ -27,6 +27,22 @@ public enum Untdid1001InvoiceTypeCode {
         this.longDescription = longDescription;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public String getShortDescritpion() {
+        return shortDescritpion;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " " + shortDescritpion;

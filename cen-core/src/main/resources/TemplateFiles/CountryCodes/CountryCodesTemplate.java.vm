@@ -23,4 +23,20 @@ public enum Iso31661CountryCodes {
         this.iso3charCode = iso3charCode;
         this.index = index;
     }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getCountryNameInEnglish() {
+        return countryNameInEnglish;
+    }
+
+    public String getIso2charCode() {
+        return iso2charCode;
+    }
+
+    public String getIso3charCode() {
+        return iso3charCode;
+    }
 }

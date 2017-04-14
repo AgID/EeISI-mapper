@@ -40,4 +40,24 @@ public enum UnitOfMeasureCodes {
                 ", annex=" + annex +
                 '}';
     }
+
+    public String getCommonCode() {
+        return commonCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public int getAnnex() {
+        return annex;
+    }
 }
