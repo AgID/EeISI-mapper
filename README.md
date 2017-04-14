@@ -30,7 +30,14 @@ with `develop` as the branch for the next version:
   * Hotfix branches? `hotfix/` 
   * Support branches? `support/` 
   * Version tag prefix? : `eigor-` 
-
+  
 * [git flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)
+##WARNING
+Since `develop` is now a protected branch, all merges to it must be done through GitLab by opening a 
+[merge request](https://gitlab.com/tgi-infocert-eigor/eigor/merge_requests/new).  
+**DO NOT FINISH FEATURES THROUGH GIT FLOW.** If feature branches are closed by calling
+`git flow feature finish` it will automatically merge into `develop` and remove the remote feature branch.   
+Always use the merge request feature in GitLab and then delete your local feature branch after merge
+has been approved.
 
 
