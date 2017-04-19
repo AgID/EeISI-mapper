@@ -14,7 +14,7 @@ package-cli:
   script: mvn package
   artifacts:
     paths:
-      - target/*.jar
+      - eigor-cli/target/eigor.jar
 
 
   
