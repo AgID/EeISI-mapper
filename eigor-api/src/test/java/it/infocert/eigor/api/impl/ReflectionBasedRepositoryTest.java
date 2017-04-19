@@ -5,14 +5,15 @@ import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.reflections.Reflections;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -69,6 +70,20 @@ public class ReflectionBasedRepositoryTest {
         // then
         assertThat( conversion, notNullValue() );
         assertThat( conversion, instanceOf(aConversionThatShouldBeFound));
+
+    }
+
+    @Test public void shouldReturnAllSupportedFormats() {
+
+        // given
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
+
+        // when
+        Set<String> formats = sut.supportedToCenFormats();
+
+        // then
+        assertThat( formats, hasItems("aaa") );
+
 
     }
 

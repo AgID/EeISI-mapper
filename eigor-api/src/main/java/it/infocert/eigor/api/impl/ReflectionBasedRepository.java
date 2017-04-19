@@ -34,6 +34,24 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return fromCenConversions.stream().filter(c -> c.support(format)).findFirst().orElse(null);
     }
 
+    @Override
+    public Set<String> supportedFormats() {
+        LinkedHashSet<String> result = new LinkedHashSet<>();
+        for (FromCenConversion fromCenConversion : fromCenConversions) {
+            result.add( fromCenConversion.getSupportedFormats() );
+        }
+        return result;
+    }
+
+    @Override
+    public Set<String> supportedToCenFormats() {
+        LinkedHashSet<String> result = new LinkedHashSet<>();
+        for (ToCenConversion conversion : toCENConverters) {
+            result.addAll( conversion.getSupportedFormats() );
+        }
+        return result;
+    }
+
     @Override public ToCenConversion findConversionToCen(String sourceFormat) {
         if (toCENConverters == null) {
             this.toCENConverters = findImplementation(ToCenConversion.class);

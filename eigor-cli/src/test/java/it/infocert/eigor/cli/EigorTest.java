@@ -60,7 +60,7 @@ public class EigorTest {
         outputDir = tmp.newFolder(test.getMethodName(), "output");
 
         //...let's copy an input invoice in the input folder
-        plainFattPa = copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
+        plainFattPa = TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
 
     }
 
@@ -224,17 +224,5 @@ public class EigorTest {
         return new String(out.toByteArray());
     }
 
-    private static File copyResourceToFolder(String resourcePath, File destinationFolder) throws IOException {
-        URL resource = Object.class.getResource(resourcePath);
-        String path = resource.getPath();
-        path = path.substring( path.lastIndexOf('/')+1 );
-        File file = new File(destinationFolder, path);
-        Path p = file.toPath();
-        Files.copy(
-                resource.openStream(),
-                p
-        );
-        return file;
-    }
 
 }

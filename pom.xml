@@ -103,6 +103,16 @@
                 <artifactId>eigor-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-csvcen-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-fattpa-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--Testing-->
             <dependency>

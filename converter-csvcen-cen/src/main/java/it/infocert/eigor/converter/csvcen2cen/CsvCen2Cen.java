@@ -19,10 +19,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -191,6 +188,11 @@ public class CsvCen2Cen implements ToCenConversion {
     @Override
     public boolean support(String format) {
         return "csvcen".equals(format.toLowerCase().trim());
+    }
+
+    @Override
+    public Set<String> getSupportedFormats() {
+        return new HashSet<>( Arrays.asList("csvcen") );
     }
 
 }

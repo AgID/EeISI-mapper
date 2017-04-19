@@ -1,10 +1,11 @@
-package it.infocert.eigor.cli;
+package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
+import it.infocert.eigor.cli.CliCommand;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
@@ -14,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 
 /**
@@ -38,9 +40,10 @@ public class ConversionCommand implements CliCommand {
     }
 
     @Override
-    public void execute(){
+    public int execute(PrintStream out, PrintStream err){
 
         InMemoryRuleReport ruleReport = new InMemoryRuleReport();
+        File outputFolderFile;
 
         // Execute the conversion
         // ===================================================
@@ -53,7 +56,7 @@ public class ConversionCommand implements CliCommand {
             byte[] converted = fromCen.convert(cenInvoice);
 
 
-            File outputFolderFile = outputFolder.toFile();
+            outputFolderFile = outputFolder.toFile();
 
             // writes cen invoice
             Visitor v = new DumpVisitor();
@@ -69,8 +72,13 @@ public class ConversionCommand implements CliCommand {
             FileUtils.writeStringToFile(outreport, ruleReport.dump());
 
         } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
-            e.printStackTrace(System.err);
+            e.printStackTrace(err);
+            return 1;
         }
+
+        out.println("Conversion file stored in folder " + outputFolderFile.getAbsolutePath());
+
+        return 0;
     }
 
 }

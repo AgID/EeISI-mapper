@@ -9,16 +9,9 @@
         </layout>
     </appender>
 
-    <logger name="it.infocert.eigor" level="debug"
-            additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
+    <logger name="it.infocert.eigor" level="WARN" />
 
-    <logger name="org.reflections" level="WARN">
-        <appender-ref ref="STDOUT" />
-    </logger>
-
-    <root level="WARN">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
 

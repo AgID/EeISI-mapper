@@ -17,4 +17,9 @@ public class FakeFromCenConversion implements FromCenConversion {
         return "fake".equals(format);
     }
 
+    @Override
+    public String getSupportedFormats() {
+        return "fake";
+    }
+
 }

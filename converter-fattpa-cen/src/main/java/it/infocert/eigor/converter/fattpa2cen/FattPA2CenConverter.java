@@ -17,6 +17,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FattPA2CenConverter implements ToCenConversion {
 
@@ -57,6 +60,11 @@ public class FattPA2CenConverter implements ToCenConversion {
 
     @Override
     public boolean support(String format) {
-        return false;
+        return "fattpa".equals(format);
+    }
+
+    @Override
+    public Set<String> getSupportedFormats() {
+        return new HashSet<>( Arrays.asList("fattpa") );
     }
 }

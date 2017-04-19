@@ -1,5 +1,16 @@
 package it.infocert.eigor.cli;
 
+import java.io.PrintStream;
+
 public interface CliCommand {
-    void execute();
+
+    /**
+     * Execute the command.
+     * @param out The system output.
+     * @param err The system err.
+     * @return The exit code.
+     */
+    int execute(PrintStream out, PrintStream err);
+
+
 }

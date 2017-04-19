@@ -15,6 +15,6 @@ public class EigorCli {
 
     void run(String[] args) {
         CliCommand cliCommand = cli.parseCommandLine(args);
-        cliCommand.execute();
+        cliCommand.execute(System.out, System.err);
     }
 }
