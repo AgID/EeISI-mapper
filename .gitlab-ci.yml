@@ -13,7 +13,8 @@ package-cli:
   stage: packaging
   script: mvn package
   artifacts:
-    paths: bin/
+    paths:
+      - bin/
 
 
   
