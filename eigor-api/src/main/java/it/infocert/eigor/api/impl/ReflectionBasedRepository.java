@@ -46,8 +46,10 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
     @Override
     public Set<String> supportedToCenFormats() {
         LinkedHashSet<String> result = new LinkedHashSet<>();
-        for (ToCenConversion conversion : toCENConverters) {
-            result.addAll( conversion.getSupportedFormats() );
+        if(toCENConverters!=null) {
+            for (ToCenConversion conversion : toCENConverters) {
+                result.addAll(conversion.getSupportedFormats());
+            }
         }
         return result;
     }

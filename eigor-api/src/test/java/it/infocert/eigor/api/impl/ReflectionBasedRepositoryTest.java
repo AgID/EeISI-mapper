@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
@@ -82,7 +83,7 @@ public class ReflectionBasedRepositoryTest {
         Set<String> formats = sut.supportedToCenFormats();
 
         // then
-        assertThat( formats, hasItems("aaa") );
+        assertThat( formats.size(), is(0) );
 
 
     }
