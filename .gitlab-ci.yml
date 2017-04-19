@@ -1,10 +1,19 @@
+image: maven:3.3.9-jdk-8
+
 stages:
  - test
+ - packaging
 
-
-# Verify merge requests using JDK8
-test-jdk8:
-  image: maven:3.3.9-jdk-8
+# Verify merge requests
+tests:
   stage: test
   script: "mvn clean test"
+
+package-cli:
+  stage: packaging
+  script: mvn package
+  artifacts:
+    paths: bin/
+
+
   
