@@ -16,7 +16,6 @@
         <cli.main.jar>eigor</cli.main.jar>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>

@@ -4,17 +4,26 @@ import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
+import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class ApiTest {
 
+    private static Reflections reflections;
+
+    @Before
+    public void setUp() throws Exception {
+        reflections = new Reflections("it.infocert");
+    }
+
     @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
-        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository();
+        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
         RuleRepository ruleRepository = reflectionBasedRepository;
         ToCenConversionRepository conversionRepository = reflectionBasedRepository;
         FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;

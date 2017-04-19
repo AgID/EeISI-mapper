@@ -14,7 +14,11 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
     private Set<Rule> rules = null;
     private Set<FromCenConversion> fromCenConversions = null;
     private Set<ToCenConversion> toCENConverters = null;
-    private Reflections reflections = null;
+    private final Reflections reflections;
+
+    public ReflectionBasedRepository(Reflections reflections) {
+        this.reflections = reflections;
+    }
 
     @Override public List<Rule> rules() {
         if (rules == null) {
@@ -37,13 +41,8 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return toCENConverters.stream().filter(c -> c.support(sourceFormat)).findFirst().orElse(null);
     }
 
-    private Reflections lazyReflections() {
-        return reflections != null ? reflections : new Reflections("it.infocert");
-    }
-
     private <T> Set<T> findImplementation(Class<T> classToFind) {
         Set<T> myRules = new HashSet<>();
-        Reflections reflections = lazyReflections();
         Set<Class<? extends T>> ruleClasses = reflections.getSubTypesOf(classToFind);
         ruleClasses.forEach(ruleClass -> {
             try {

@@ -5,7 +5,10 @@ import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -16,10 +19,17 @@ import static org.junit.Assert.assertThat;
 
 public class ReflectionBasedRepositoryTest {
 
+    private static Reflections reflections;
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        reflections = new Reflections("it.infocert");
+    }
+
     @Test public void shouldFindRules() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository();
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
         Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
 
         // when
@@ -35,7 +45,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindToCen() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository();
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
         Class<? extends ToCenConversion> aConversionThatShouldBeFound = FakeToCenConversion.class;
 
         // when
@@ -50,7 +60,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindFromCen() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository();
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
         Class<? extends FromCenConversion> aConversionThatShouldBeFound = FakeFromCenConversion.class;
 
         // when

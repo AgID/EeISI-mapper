@@ -1,10 +1,13 @@
 package it.infocert.eigor.cli;
 
+import it.infocert.eigor.api.RuleRepository;
+import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.reflections.Reflections;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,6 +34,14 @@ public class EigorTest {
     private ByteArrayOutputStream out;
     private ByteArrayOutputStream err;
     private File plainFattPa;
+    private CommandLineInterpreter cli;
+
+    @Before public void setUpCommandLineInterpeter() {
+        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository( new Reflections("it.infocert") );
+        cli = new JoptsimpleBasecCommandLineInterpreter(
+                genericRepo, genericRepo, genericRepo
+        );
+    }
 
     @Before public void redirectConsoleStreams() {
         out = new ByteArrayOutputStream();
@@ -54,10 +65,12 @@ public class EigorTest {
     }
 
 
+
+
     @Test public void printHelpWhenLaunchedWithoutArguments() throws IOException {
 
         // when
-        new Eigor().run(new String[]{} );
+        new EigorCli(cli).run(new String[]{} );
 
         // then
         assertThat(out().toLowerCase(), allOf(
@@ -73,10 +86,10 @@ public class EigorTest {
     @Test public void failWhenTargetIsMissing() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--output", outputDir.getAbsolutePath(),
-                "--source", "source"
+                "--source", "fake"
         } );
 
         // then
@@ -91,7 +104,7 @@ public class EigorTest {
     @Test public void failWhenSourceIsMissing() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--output", outputDir.getAbsolutePath(),
                 "--target", "fake"
@@ -108,7 +121,7 @@ public class EigorTest {
     @Test public void failWhenOutputIsMissing() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--source", "fake",
                 "--target", "fake"
@@ -126,7 +139,7 @@ public class EigorTest {
     @Test public void failWhenInputIsMissing() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--source", "fake",
                 "--target", "fake",
                 "--output", outputDir.getAbsolutePath()
@@ -144,7 +157,7 @@ public class EigorTest {
     @Test public void executeWithFakeTransformations() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--source", "fake",
                 "--target", "fake",
@@ -168,7 +181,7 @@ public class EigorTest {
     @Test public void failWhenInputDoesNotExist() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", "i-bet-this-file-does-not-exist.xml",
                 "--source", "fattpa1.2",
                 "--target", "ubl",
@@ -187,7 +200,7 @@ public class EigorTest {
     @Test public void failWhenOutputDoesNotExist() throws IOException {
 
         // when
-        new Eigor().run(new String[]{
+        new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--source", "fattpa1.2",
                 "--target", "ubl",
