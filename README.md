@@ -31,7 +31,7 @@ with `develop` as the branch for the next version:
   * Support branches? `support/` 
   * Version tag prefix? : `eigor-` 
   
-* [git flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)
+* [git flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)  
 ##WARNING
 Since `develop` is now a protected branch, all merges to it must be done through GitLab by opening a 
 [merge request](https://gitlab.com/tgi-infocert-eigor/eigor/merge_requests/new).  
