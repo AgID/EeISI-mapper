@@ -7,13 +7,10 @@
         </encoder>
     </appender>
 
-    <logger name="it.infocert.eigor" level="debug"
-            additivity="false">
-        <appender-ref ref="STDOUT"/>
+    <logger name="it.infocert.eigor" level="debug">
     </logger>
 
     <logger name="org.reflections" level="WARN">
-        <appender-ref ref="STDOUT"/>
     </logger>
 
     <root level="WARN">
