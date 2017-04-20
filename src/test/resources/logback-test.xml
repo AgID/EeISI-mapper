@@ -9,7 +9,7 @@
 
    <logger name="it.infocert.eigor" level="error"/>
 
-    <root level="WARN">
+    <root level="ERROR">
         <appender-ref ref="STDOUT"/>
     </root>
 

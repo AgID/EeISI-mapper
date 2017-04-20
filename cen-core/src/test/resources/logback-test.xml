@@ -11,7 +11,7 @@
 
     <logger name="org.reflections" level="ERROR"/>
 
-    <root level="WARN">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
 
