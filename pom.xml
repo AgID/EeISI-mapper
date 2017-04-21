@@ -135,7 +135,6 @@
     </dependencyManagement>
 
 
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -152,6 +151,15 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.danidemi</groupId>
+                    <artifactId>template-generator-maven-plugin</artifactId>
+                    <version>0.0.4</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.pitest</groupId>
