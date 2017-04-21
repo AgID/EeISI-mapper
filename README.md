@@ -20,7 +20,8 @@ Execute it with `java -jar eigor.jar` to run it.
 5. close the release with gitflow.
 6. in local develop executes again `mvn versions:set` to set the next `x.y.z+1-SNAPSHOT`
 7. run a `mvn install` locally to have all project dependencies updated.
-8. push master and develop, TAGs inlcuded!
+8. push master TAG inlcuded!
+9. push and develop. 
    
 ## Contributing
 * Make your changes in a new git branch. 
