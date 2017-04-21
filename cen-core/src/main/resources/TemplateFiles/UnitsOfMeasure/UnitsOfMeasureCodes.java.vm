@@ -1,0 +1,63 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum UnitOfMeasureCodes {
+
+    #foreach($row in $File)
+        #if($row.Active == 1)
+        /**
+         * ${row.Alias}
+         * <p>${row.CommonCode}</p>
+         * <p>${row.Name}</p>
+         * <p>${row.Description}</p>
+         * <p>${row.Symbol}</p>
+         * <p>${row.Annex}</p>
+         */
+        ${row.Alias}("${row.CommonCode}", "${row.Name}", "${row.Description}", "${row.Symbol}", ${row.Annex})#if($LastIndex==$row.RowIndex);#else,#end
+        #end
+    #end
+
+    private String commonCode;
+    private String name;
+    private String description;
+    private String symbol;
+    private int annex;
+
+    UnitOfMeasureCodes(String commonCode, String name, String description, String symbol, int annex) {
+        this.commonCode = commonCode;
+        this.name = name;
+        this.description = description;
+        this.symbol = symbol;
+        this.annex = annex;
+    }
+
+    @Override
+    public String toString() {
+        return "UnitOfMeasureCodes{" +
+                "commonCode='" + commonCode + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", annex=" + annex +
+                '}';
+    }
+
+    public String getCommonCode() {
+        return commonCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public int getAnnex() {
+        return annex;
+    }
+}

@@ -1,0 +1,45 @@
+package it.infocert.eigor.model.core.model;
+
+public class CenStructureSource {
+
+    protected static class Item {
+
+        private final String btBg;
+        private final String number;
+        private final String parent;
+
+        private Item(String btBg, String number, String parent) {
+            this.btBg = btBg;
+            this.number = number;
+            this.parent = parent;
+        }
+
+        private Item(String btBg, String number) {
+            this.btBg = btBg;
+            this.number = number;
+            this.parent = null;
+        }
+
+        public String getBtBg() {
+            return btBg;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public String getParent() {
+            return parent;
+        }
+    }
+
+    protected final Item[] items;
+
+    protected CenStructureSource() {
+        items = new Item[$TotalRows];
+        #foreach($row in $File)
+            items[${row.RowIndex}] = new Item("${row.BtOrBg}", "${row.Index}", "${row.ParentClass}");
+        #end
+    }
+
+}

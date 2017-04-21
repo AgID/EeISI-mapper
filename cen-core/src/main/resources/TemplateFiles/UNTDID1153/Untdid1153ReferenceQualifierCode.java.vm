@@ -1,0 +1,28 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Untdid1153ReferenceQualifierCode {
+
+    #foreach( $row in $File )
+    /**
+     * Code ${row.ID}
+     * <p>${row.Sign}</p>
+     * <p>${row.Description}</p>
+     */
+    ${row.ID}("${row.Sign}", "${row.ID}", "${row.Description}")#if($LastIndex==$row.RowIndex);#else,#end
+    #end
+
+    private String sign;
+    private String id;
+    private String description;
+
+    Untdid1153ReferenceQualifierCode(String sign, String id, String description) {
+        this.sign = sign;
+        this.id = id;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + description;
+    }
+}

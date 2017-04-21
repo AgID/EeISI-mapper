@@ -1,0 +1,55 @@
+Sign,ID,ShortDescription,LongDescription
+,1,Handling commission,Fee for the processing of documentary credit collection and payment which are charged to the customer.
+,2,Amendment commission,Fee for amendments in documentary credit and collection business (not extensions and increases of documentary credits).
+,3,Acceptance commission,Fee for the acceptance of draft in documentary credit and collection business which are drawn on us (also to be seen as a kind of \'guarantee commission\').
+,4,Commission for obtaining acceptance,Fee for obtaining an acceptance under collections on the basis of \'documents against acceptance\'.
+,5,Commission on delivery,Fee for delivery of documents without corresponding payment.
+,6,Advising commission,Fee for advising documentary credits (charged also in case of confirmed credits).
+,7,Confirmation commission,Fee for confirmation of credit. 
+,8,Deferred payment commission,Fee for the deferred payment period under documentary credits confirmed by bank. This fee are charges for the period from presentation of the document until due date of payment.
+,9,Commission for taking up documents,Fee charged to the foreign bank for the processing of documentary credit.
+,10,Opening commission,Fee for opening revocable documentary credit. 
+,11,Fee for payment under reserve,Fee charged to the customer for discrepancies in credit documents in the case of which the bank have to stipulate payment under reserve.
+,12,Discrepancy fee,Fee charged to the foreign bank for discrepancies in credit documents.
+,13,Domicilation commission,Fee for the domicilation of bills with the bank. 
+,14,Commission for release of goods,Commission for the release of goods sent to the bank. 
+,15,Collection commission,Fee for settling collections on the basis of \'documents against payments\'.
+,16,Negotiation commission,Fee for the purchase of documents under sight credit for the first ten days.
+,17,Return commission,Fee for cheques bills and collections returned unpaid and/or recalled.
+,18,B/L splitting charges,Fee for the splitting of bills of lading. 
+,19,Trust commission,Fee for the handling on a fiduciary basis of imported goods that have been warehoused.
+,20,Transfer commission,Fee for the transfer of transferable documentary credits. 
+,21,Commission for opening irrevocable doc. credits,Fee for opening irrevocable documentary credits. This fee is a kind of \'Guarantee commission\' as compensation for the commitment into which the bank have entered on the customers behalf similar to confirmation commission acceptance commission.
+,22,Pre-advice commission,Fee for the pre-advice of a documentary credit. 
+,23,Supervisory commission,Fee for the supervising unconfirmed documentary credits with a deferred payment period.
+,24,Model charges,Fee for decoding telex messages. 
+,25,Risk commission,Commission in addition to the confirmation commission for documentary credits from sensitive countries.
+,26,Guarantee commission,Commission for drawing up guaranties. 
+,27,Reimbursement commission,Fee for reimbursement of for example documentary credits.
+,28,Stamp duty,Tax payable on bills in accordance with national bill of exchange legislations.
+,29,Brokerage,Brokers commission arising in trade with foreign currencies.
+,30,Bank charges,Charges deducted/claimed by other banks involved in the transaction.
+,31,Bank charges information,Charges not included in the total charge amount i.e. the charges are for information only.
+,32,Courier fee,Fee for use of courier service. 
+,33,Phone fee,Fee for use of phone. 
+,34,Postage fee,Fee for postage. 
+,35,S.W.I.F.T. fee,Fee for use of S.W.I.F.T. 
+,36,Telex fee,Fee for telex. 
+,37,Penalty for late delivery of documents,Self explanatory. 
+,38,Penalty for late delivery of valuation of works,Self explanatory. 
+,39,Penalty for execution of works behind schedule,Self explanatory. 
+,40,Other penalties,Self explanatory. 
+,41,Bonus for works ahead of schedule,Self explanatory. 
+,42,Other bonus,Self explanatory. 
+,43,Penalty refund,Self explanatory. 
+,44,Project management cost,Self explanatory. 
+,45,Pro rata retention,Self explanatory. 
+,46,Contractual retention,Self explanatory. 
+,47,Other retentions,Self explanatory. 
+,48,Interest on arrears,Interest for late payment. 
+,49,Interest,Cost of using money. 
+,50,Charge per credit cover,Unit charge per credit cover established. 
+,51,Charge per unused credit cover,Unit charge per unused credit cover. 
+,52,Minimum commission,Minimum commission charge. 
+,53,Factoring commission,Commission charged for factoring services. 
+,54,Chamber of commerce charge,Identifies the charges from the chamber of commerce. 

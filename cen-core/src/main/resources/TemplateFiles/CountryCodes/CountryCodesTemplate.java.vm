@@ -1,0 +1,42 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Iso31661CountryCodes {
+
+    //1: EnglishName,
+    //2: Alpha2Code
+    //3: Alpha3Code,
+    //4: NumericCode,
+    #foreach( $row in $File )
+    /** ISO informations for $row.EnglishName. */
+    ${row.Alpha2Code}("${row.EnglishName}","${row.Alpha2Code}","${row.Alpha3Code}",${row.NumericCode})#if($LastIndex==$row.RowIndex);#else,#end
+    #end
+
+
+    private final String countryNameInEnglish;
+    private final String iso2charCode;
+    private final String iso3charCode;
+    private final int index;
+
+    Iso31661CountryCodes(String countryNameInEnglish, String iso2charCode, String iso3charCode, int index) {
+        this.countryNameInEnglish = countryNameInEnglish;
+        this.iso2charCode = iso2charCode;
+        this.iso3charCode = iso3charCode;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getCountryNameInEnglish() {
+        return countryNameInEnglish;
+    }
+
+    public String getIso2charCode() {
+        return iso2charCode;
+    }
+
+    public String getIso3charCode() {
+        return iso3charCode;
+    }
+}

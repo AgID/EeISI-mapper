@@ -1,0 +1,25 @@
+NAME
+    @cli.main.jar@.jar - transform an invoice in another format
+
+SYNOPSIS
+    java -jar @cli.main.jar@.jar --input <original_invoice> --source <original_invoice_format> --output <output_folder> --target <transformed_invoice_format>
+
+DESCRIPTION
+
+    --input
+        path to the file of the invoice to transform.
+
+    --source
+        format of the invoice specified with '--input', as 'fatt-pa', 'ubl', ...
+
+    --output
+        path of the folder where the converted invoice will be stored along with other files.
+
+    --target
+        format of the transformed invoice, support the same formats of '--source'.
+
+EXAMPLES
+    java -jar @cli.main.jar@.jar --input 012.xml --source fattpa --output ~/transformed --target ubl
+
+    Transform the 'fatt pa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed'.
+
