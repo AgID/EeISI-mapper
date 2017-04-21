@@ -1,6 +1,10 @@
 Progetto EIGoR ![coverage](https://gitlab.com/tgi-infocert-eigor/eigor/badges/develop/build.svg)
 ==============
 
+## Latest Release
+* Download the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/builds/artifacts/master/download?job=package-cli)
+  * command line interface to convert invoices.
+
 ## Build
 Java 8 is needed. To build the project:
 
