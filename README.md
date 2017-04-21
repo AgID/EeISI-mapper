@@ -11,6 +11,13 @@ If it completes correctly, you'll find the CLI executable jar here...
     eigor-cli/target/eigor.jar
     
 Execute it with `java -jar eigor.jar` to run it.
+
+## Release
+1. start a release with gitflow. That places you in a `release/eigor-x.y.z` branch.
+2. from the root project executes `mvn versions:set` and set the release name: i.e. `x.y.z`
+3. run `mvn clean install` to check all is working correctly
+4. commit all modified files, usually the poms.
+4. close the release with gitflow.
    
 ## Contributing
 * Make your changes in a new git branch. 
@@ -32,7 +39,8 @@ with `develop` as the branch for the next version:
   * Version tag prefix? : `eigor-` 
   
 * [git flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)  
-##WARNING
+
+### WARNING
 Since `develop` is now a protected branch, all merges to it must be done through GitLab by opening a 
 [merge request](https://gitlab.com/tgi-infocert-eigor/eigor/merge_requests/new).  
 **DO NOT FINISH FEATURES THROUGH GIT FLOW.** If feature branches are closed by calling
