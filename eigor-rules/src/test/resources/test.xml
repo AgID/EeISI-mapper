@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules type="constraints">
+    <rule class="it.infocert.eigor.rules.business.ShallContainRule">
+        <parameters>
+            <parameter type="java.lang.String">/BG0004/BT0027</parameter>
+        </parameters>
+    </rule>
+    <rule class="it.infocert.eigor.rules.CardinalityRule">
+        <parameters>
+            <parameter type="java.lang.String">/BG0025/BG0031/BG0032/BT0161</parameter>
+            <parameter type="java.lang.Integer">1</parameter>
+            <parameter type="java.lang.Integer">1</parameter>
+        </parameters>
+    </rule>
+</rules>

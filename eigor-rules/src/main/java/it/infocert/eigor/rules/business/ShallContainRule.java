@@ -11,11 +11,11 @@ import org.reflections.Reflections;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class ShallContainBusinessRule implements Rule {
+public class ShallContainRule implements Rule {
 
     private String invoicePath;
 
-    public ShallContainBusinessRule(String invoicePath) {
+    public ShallContainRule(String invoicePath) {
         this.invoicePath = invoicePath;
     }
 
@@ -33,5 +33,9 @@ public class ShallContainBusinessRule implements Rule {
     private boolean contains(BG0000Invoice invoice) {
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
         return invoiceUtils.hasChild(invoicePath, invoice);
+    }
+
+    public String getInvoicePath() {
+        return invoicePath;
     }
 }
