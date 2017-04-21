@@ -9,7 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Eigor :: Rules</name>
     <artifactId>eigor-rules</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
