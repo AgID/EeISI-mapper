@@ -9,6 +9,9 @@
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
     <version>0.0.2-SNAPSHOT</version>
+    <name>Eigor</name>
+    <description>Electronic Invoice GO Regional</description>
+
     <modules>
         <module>cen-core</module>
         <module>converter-fattpa-cen</module>
