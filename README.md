@@ -17,7 +17,10 @@ Execute it with `java -jar eigor.jar` to run it.
 2. from the root project executes `mvn versions:set` and set the release name: i.e. `x.y.z`
 3. run `mvn clean install` to check all is working correctly
 4. commit all modified files, usually the poms.
-4. close the release with gitflow.
+5. close the release with gitflow.
+6. in local develop executes again `mvn versions:set` to set the next `x.y.z+1-SNAPSHOT`
+7. run a `mvn install` locally to have all project dependencies updated.
+8. push master and develop, TAGs inlcuded!
    
 ## Contributing
 * Make your changes in a new git branch. 
