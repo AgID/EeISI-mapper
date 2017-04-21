@@ -27,4 +27,9 @@ public interface FromCenConversion {
      */
     boolean support(String format);
 
+    /**
+     * The list of supported formats.
+     * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
+     */
+    String getSupportedFormats();
 }
