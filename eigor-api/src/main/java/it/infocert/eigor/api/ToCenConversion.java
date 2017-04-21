@@ -3,6 +3,7 @@ package it.infocert.eigor.api;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import java.io.InputStream;
+import java.util.Set;
 
 /**
  * Convert an invoice in a {@link BG0000Invoice CEN invoice}.
@@ -28,4 +29,10 @@ public interface ToCenConversion {
     BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
 
     boolean support(String format);
+
+    /**
+     * The list of supported formats.
+     * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
+     */
+    Set<String> getSupportedFormats();
 }

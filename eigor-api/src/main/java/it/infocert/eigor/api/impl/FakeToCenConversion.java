@@ -5,6 +5,9 @@ import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.model.*;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A fake conversion used to lay out the API general structure.
@@ -29,6 +32,11 @@ public class FakeToCenConversion implements ToCenConversion {
 
     @Override public boolean support(String format) {
         return format!=null && "fake".equals(format);
+    }
+
+    @Override
+    public Set<String> getSupportedFormats() {
+        return new HashSet<>( Arrays.asList("fake") );
     }
 
 }
