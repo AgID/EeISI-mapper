@@ -24,7 +24,6 @@
             <plugin>
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
-                <version>0.0.4-SNAPSHOT</version>
                 <executions>
 
                     <execution>

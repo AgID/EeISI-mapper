@@ -1,9 +1,10 @@
-package it.infocert.eigor.rules;
+package it.infocert.eigor.rules.constraints;
 
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +19,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void onlyOneCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BT0001", 1, 1);
+        CardinalityRule rule = new CardinalityRule("/BT0001", 1, 1, new Reflections("it.infocert"));
         invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber("1"));
 
         RuleOutcome compliant = rule.isCompliant(invoice);
@@ -30,7 +31,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void onlyOneNonCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BT0001", 1, 1);
+        CardinalityRule rule = new CardinalityRule("/BT0001", 1, 1, new Reflections("it.infocert"));
 
         RuleOutcome compliant = rule.isCompliant(invoice);
         RuleOutcome.Outcome outcome = compliant.outcome();
@@ -41,7 +42,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void atLeastOneCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BG0004/BT0029", 0, null);
+        CardinalityRule rule = new CardinalityRule("/BG0004/BT0029", 0, null, new Reflections("it.infocert"));
         BG0004Seller seller = new BG0004Seller();
         seller.getBT0029SellerIdentifierAndSchemeIdentifier().add(new BT0029SellerIdentifierAndSchemeIdentifier("id"));
         invoice.getBG0004Seller().add(seller);
@@ -55,7 +56,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void atLeastOneNotCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BG0004/BT0029", 1, null); //this voluntarily is a non valid rule
+        CardinalityRule rule = new CardinalityRule("/BG0004/BT0029", 1, null, new Reflections("it.infocert")); //this voluntarily is a non valid rule
         invoice.getBG0004Seller().add(new BG0004Seller());
 
         RuleOutcome compliant = rule.isCompliant(invoice);
@@ -67,7 +68,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void atMostOneCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BG0004/BT0028", 0, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0004/BT0028", 0, 1, new Reflections("it.infocert"));
         BG0004Seller seller = new BG0004Seller();
         seller.getBT0028SellerTradingName().add(new BT0028SellerTradingName("name"));
         invoice.getBG0004Seller().add(seller);
@@ -81,7 +82,7 @@ public class CardinalityRuleTest {
 
     @Test
     public void atMostOneNotCompliant() throws Exception {
-        CardinalityRule rule = new CardinalityRule("/BG0004/BT0028", 0, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0004/BT0028", 0, 1, new Reflections("it.infocert"));
         BG0004Seller seller = new BG0004Seller();
         seller.getBT0028SellerTradingName().add(new BT0028SellerTradingName("name"));
         seller.getBT0028SellerTradingName().add(new BT0028SellerTradingName("name2"));
@@ -105,7 +106,7 @@ public class CardinalityRuleTest {
         BG0000Invoice invoice = new BG0000Invoice();
         invoice.getBG0025InvoiceLine().add(invoiceLine);
 
-        CardinalityRule rule = new CardinalityRule("/BG0025/BG0031/BG0032/BT0161", 0, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0025/BG0031/BG0032/BT0161", 0, 1, new Reflections("it.infocert"));
 
         RuleOutcome compliant = rule.isCompliant(invoice);
         RuleOutcome.Outcome outcome = compliant.outcome();
@@ -123,7 +124,7 @@ public class CardinalityRuleTest {
         BG0000Invoice invoice = new BG0000Invoice();
         invoice.getBG0025InvoiceLine().add(invoiceLine);
 
-        CardinalityRule rule = new CardinalityRule("/BG0025/BG0031/BG0032/BT0161", 1, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0025/BG0031/BG0032/BT0161", 1, 1, new Reflections("it.infocert"));
 
         RuleOutcome compliant = rule.isCompliant(invoice);
         RuleOutcome.Outcome outcome = compliant.outcome();
@@ -143,7 +144,7 @@ public class CardinalityRuleTest {
         invoice.getBG0025InvoiceLine().add(invoiceLine2);
         invoice.getBG0025InvoiceLine().add(invoiceLine3);
 
-        CardinalityRule rule = new CardinalityRule("/BG0025/BG0029", 1, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0025/BG0029", 1, 1, new Reflections("it.infocert"));
         RuleOutcome compliant = rule.isCompliant(invoice);
         RuleOutcome.Outcome outcome = compliant.outcome();
 
@@ -165,7 +166,7 @@ public class CardinalityRuleTest {
         invoice.getBG0025InvoiceLine().add(invoiceLine2);
         invoice.getBG0025InvoiceLine().add(invoiceLine3);
 
-        CardinalityRule rule = new CardinalityRule("/BG0025/BG0029", 1, 1);
+        CardinalityRule rule = new CardinalityRule("/BG0025/BG0029", 1, 1, new Reflections("it.infocert"));
         RuleOutcome compliant = rule.isCompliant(invoice);
         RuleOutcome.Outcome outcome = compliant.outcome();
 

@@ -1,25 +1,36 @@
 package it.infocert.eigor.rules.repositories;
 
+import it.infocert.eigor.rules.constraints.*;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.rules.business.ShallContainRule;
-import it.infocert.eigor.rules.CardinalityRule;
+import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConstraintsRepository implements RuleRepository {
 
+    private List<Rule> ruleList;
+    private Reflections reflections;
+
+    public ConstraintsRepository(Reflections reflections) {
+        this.reflections = reflections;
+    }
+
     @Override
     public List<Rule> rules() {
-        List<Rule> ruleList = new ArrayList<>(0);
 
-        #foreach( $row in $File )
-        #if(${row.Active} == 1)
-        ruleList.add(new ${row.JavaClass}(#if(${row.JavaClass} == "ShallContainRule")"${row.BGPath}"#elseif(${row.JavaClass} == "CardinalityRule")"${row.BGPath}", ${row.Param1}, ${row.Param2}#end));
-        #end
-        #end
+        if (ruleList != null) {
+            return ruleList;
+        } else {
+            ruleList = new ArrayList<>(0);
+            #foreach( $row in $File )
+                #if(${row.Active} == 1)
+                    ruleList.add(new ${row.JavaClass}(#if(${row.JavaClass} == "ShallContainRule")"${row.BGPath}"#elseif(${row.JavaClass} == "CardinalityRule")"${row.BGPath}", ${row.Param1}, ${row.Param2}#end, reflections));
+                #end
+            #end
 
-        return ruleList;
+            return ruleList;
+        }
     }
 }

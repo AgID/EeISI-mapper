@@ -6,13 +6,16 @@ import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
+import it.infocert.eigor.rules.constraints.CardinalityRule;
+import it.infocert.eigor.rules.constraints.ShallContainRule;
 import org.junit.Test;
+import org.reflections.Reflections;
+import it.infocert.eigor.rules.repositories.ConstraintsRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ConstraintsRepositoryTest {
 
@@ -23,7 +26,7 @@ public class ConstraintsRepositoryTest {
         control.getBT0024SpecificationIdentifier().add(test);
         BG0000Invoice invoice = new BG0000Invoice();
         invoice.getBG0002ProcessControl().add(control);
-        ConstraintsRepository repository = new ConstraintsRepository();
+        ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
         List<Rule> rules = repository.rules();
         for (Rule rule : rules) {
             RuleOutcome compliant = rule.isCompliant(invoice);
@@ -35,13 +38,35 @@ public class ConstraintsRepositoryTest {
     @Test
     public void rulesAllSucceded() throws Exception {
         BG0000Invoice invoice = createInvoice();
-        ConstraintsRepository repository = new ConstraintsRepository();
+        ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
         List<Rule> rules = repository.rules();
         for (Rule rule : rules) {
             RuleOutcome compliant = rule.isCompliant(invoice);
             assertEquals(RuleOutcome.Outcome.SUCCESS, compliant.outcome());
-        }
 
+            if (rule instanceof ShallContainRule) {
+                assertTrue(compliant.description().matches("^Invoice contains B[T,G][0-9]{4}"));
+            } else if (rule instanceof CardinalityRule) {
+                assertTrue(compliant.description().matches("^An invoice shall have (at least|between|exactly) \\d(| and \\d) B[T,G]\\d{4}, it has: \\d."));
+            }
+        }
+    }
+
+    @Test
+    public void rulesAllFailed() throws Exception {
+        BG0000Invoice invoice = new BG0000Invoice();
+        ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
+        List<Rule> rules = repository.rules();
+        for (Rule rule : rules) {
+            RuleOutcome compliant = rule.isCompliant(invoice);
+            assertEquals(RuleOutcome.Outcome.FAILED, compliant.outcome());
+
+            if (rule instanceof ShallContainRule) {
+                assertTrue(compliant.description().matches("^Invoice doesn't contain B[T,G][0-9]{4}"));
+            } else if (rule instanceof CardinalityRule) {
+                assertTrue(compliant.description().matches("^An invoice shall have (at least|between|exactly) \\d(| and \\d) B[T,G]\\d{4}, it has: \\d."));
+            }
+        }
     }
 
     private BG0000Invoice createInvoice() {
@@ -72,6 +97,4 @@ public class ConstraintsRepositoryTest {
 
         return invoice;
     }
-
-
 }

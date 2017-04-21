@@ -31,9 +31,7 @@
             <plugin>
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
-                <version>0.0.4-SNAPSHOT</version>
                 <executions>
-
                     <execution>
                         <id>generate-rules</id>
                         <phase>generate-sources</phase>
@@ -48,10 +46,6 @@
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <!--<tagExpressions>
-                                <param>@{ParentClass}</param>
-                                <param>@{BTBGClassName}</param>
-                            </tagExpressions>-->
                             <fileNameTemplate>it/infocert/eigor/model/core/model/ConstraintsRepository.java
                             </fileNameTemplate>
                         </configuration>
