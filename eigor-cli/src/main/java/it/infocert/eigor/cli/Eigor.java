@@ -32,6 +32,11 @@ public class Eigor {
     @Bean(name = "constraintsRepository") RuleRepository constraintsRepository(Reflections reflections) { return new ConstraintsRepository(reflections);}
 
     @Bean
+    RuleRepository constraintsRepository(Reflections reflections) {
+        return new ConstraintsRepository(reflections);
+    }
+
+    @Bean
     ToCenConversionRepository toCenConversionRepository(Reflections reflections) {
         return new ReflectionBasedRepository(reflections);
     }

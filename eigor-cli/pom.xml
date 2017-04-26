@@ -53,7 +53,6 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-rules</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
