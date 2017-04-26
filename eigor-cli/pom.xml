@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Eigor :: CLI :: Client</name>
     <artifactId>eigor-cli</artifactId>
 
     <properties>
@@ -49,7 +50,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-rules</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

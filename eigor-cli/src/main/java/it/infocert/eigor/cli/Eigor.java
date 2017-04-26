@@ -2,6 +2,7 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.rules.repositories.ConstraintsRepository;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,11 @@ public class Eigor {
     }
 
     @Bean
+    RuleRepository constraintsRepository(Reflections reflections) {
+        return new ConstraintsRepository(reflections);
+    }
+
+    @Bean
     ToCenConversionRepository toCenConversionRepository(Reflections reflections) {
         return new ReflectionBasedRepository(reflections);
     }
@@ -44,8 +50,8 @@ public class Eigor {
     }
 
     @Bean
-    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository ruleRepository) {
-        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, ruleRepository);
+    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository constraintsRepository) {
+        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, constraintsRepository);
     }
 
 }
