@@ -38,6 +38,10 @@ public class ConstraintsRepositoryTest {
     @Test
     public void rulesAllSucceded() throws Exception {
         BG0000Invoice invoice = createInvoice();
+        BG0022DocumentTotals totals = new BG0022DocumentTotals();
+        totals.getBT0111InvoiceTotalVatAmountInAccountingCurrency().add(new BT0111InvoiceTotalVatAmountInAccountingCurrency(22d));
+        invoice.getBG0022DocumentTotals().add(totals);
+        invoice.getBT0006VatAccountingCurrencyCode().add(new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR));
         ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
         List<Rule> rules = repository.rules();
         for (Rule rule : rules) {
@@ -55,13 +59,14 @@ public class ConstraintsRepositoryTest {
     @Test
     public void rulesAllFailed() throws Exception {
         BG0000Invoice invoice = new BG0000Invoice();
+        invoice.getBT0006VatAccountingCurrencyCode().add(new BT0006VatAccountingCurrencyCode(Iso4217CurrenciesFundsCodes.EUR));
         ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
         List<Rule> rules = repository.rules();
         for (Rule rule : rules) {
             RuleOutcome compliant = rule.isCompliant(invoice);
             assertEquals(RuleOutcome.Outcome.FAILED, compliant.outcome());
 
-            if (rule instanceof ShallContainRule) {
+            if (rule.getClass().getSimpleName().equals(ShallContainRule.class.getSimpleName())) {
                 assertTrue(compliant.description().matches("^Invoice doesn't contain B[T,G][0-9]{4}"));
             } else if (rule instanceof CardinalityRule) {
                 assertTrue(compliant.description().matches("^An invoice shall have (at least|between|exactly) \\d(| and \\d) B[T,G]\\d{4}, it has: \\d."));
