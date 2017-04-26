@@ -116,6 +116,11 @@
                 <artifactId>converter-fattpa-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-rules</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--Testing-->
             <dependency>
