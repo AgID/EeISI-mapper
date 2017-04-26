@@ -7,6 +7,7 @@ import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.constraints.CardinalityRule;
+import it.infocert.eigor.rules.constraints.ConditionalShallContainRule;
 import it.infocert.eigor.rules.constraints.ShallContainRule;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -48,10 +49,12 @@ public class ConstraintsRepositoryTest {
             RuleOutcome compliant = rule.isCompliant(invoice);
             assertEquals(RuleOutcome.Outcome.SUCCESS, compliant.outcome());
 
-            if (rule instanceof ShallContainRule) {
+            if (rule.getClass().getSimpleName().equals(ShallContainRule.class.getSimpleName())) {
                 assertTrue(compliant.description().matches("^Invoice contains B[T,G][0-9]{4}"));
             } else if (rule instanceof CardinalityRule) {
                 assertTrue(compliant.description().matches("^An invoice shall have (at least|between|exactly) \\d(| and \\d) B[T,G]\\d{4}, it has: \\d."));
+            } else if (rule instanceof ConditionalShallContainRule) {
+                assertTrue(compliant.description().matches("^Since invoice contains \\w+, it should also contains \\w+. It does indeed."));
             }
         }
     }
@@ -70,9 +73,13 @@ public class ConstraintsRepositoryTest {
                 assertTrue(compliant.description().matches("^Invoice doesn't contain B[T,G][0-9]{4}"));
             } else if (rule instanceof CardinalityRule) {
                 assertTrue(compliant.description().matches("^An invoice shall have (at least|between|exactly) \\d(| and \\d) B[T,G]\\d{4}, it has: \\d."));
+            } else if (rule instanceof ConditionalShallContainRule) {
+                assertTrue(compliant.description().matches("^Since invoice contains \\w+, it should also contains \\w+. It does not."));
             }
         }
     }
+
+    //TODO test for Unapplicable outcome
 
     private BG0000Invoice createInvoice() {
         BG0000Invoice invoice = new BG0000Invoice();

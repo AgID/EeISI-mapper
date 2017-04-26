@@ -24,15 +24,14 @@ public class ConditionalShallContainRule extends ShallContainRule {
         if (invoiceUtils.hasChild(conditionPath, invoice)) {
             RuleOutcome ruleOutcome = super.isCompliant(invoice);
             if (RuleOutcome.Outcome.SUCCESS.equals(ruleOutcome.outcome())) {
-                RuleOutcome.newSuccessOutcome("Since invoice contains %s, it should also contains %s. It does indeed.",
+                return RuleOutcome.newSuccessOutcome("Since invoice contains %s, it should also contains %s. It does indeed.",
                         conditionPath.substring(conditionPath.lastIndexOf("/") + 1),
                         invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
             } else {
-                RuleOutcome.newFailedOutcome("Since invoice contains %s, it should also contains %s. It does not.",
+                return RuleOutcome.newFailedOutcome("Since invoice contains %s, it should also contains %s. It does not.",
                         conditionPath.substring(conditionPath.lastIndexOf("/") + 1),
                         invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
             }
-            return ruleOutcome;
         } else {
             return RuleOutcome.newUnapplicableOutcome("Invoice doesn't contain %s, rule is not applicable",
                     conditionPath.substring(conditionPath.lastIndexOf("/") + 1));
