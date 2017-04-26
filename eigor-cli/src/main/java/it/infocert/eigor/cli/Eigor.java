@@ -24,12 +24,11 @@ public class Eigor {
         return new Reflections("it.infocert");
     }
 
-    @Bean(name = "ruleRepository")
+    @Bean
     RuleRepository ruleRepository(Reflections reflections) {
         return new ReflectionBasedRepository(reflections);
     }
 
-    @Bean(name = "constraintsRepository") RuleRepository constraintsRepository(Reflections reflections) { return new ConstraintsRepository(reflections);}
 
     @Bean
     RuleRepository constraintsRepository(Reflections reflections) {
