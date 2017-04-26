@@ -15,6 +15,7 @@
     <modules>
         <module>cen-core</module>
         <module>converter-fattpa-cen</module>
+        <module>converter-cen-fattpa</module>
         <module>eigor-cli</module>
         <module>eigor-test-invoices</module>
         <module>eigor-api</module>
