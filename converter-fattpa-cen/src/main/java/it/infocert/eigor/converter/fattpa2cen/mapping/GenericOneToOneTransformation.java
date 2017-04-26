@@ -42,12 +42,29 @@ public class GenericOneToOneTransformation {
             BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
             Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
             try {
-                Constructor<? extends BTBG> btConstructor = btClass.getConstructor(String.class);
-                BTBG bt = btConstructor.newInstance(item.getTextContent());
+                if (!invoiceUtils.hasChild(btPath, invoice)) { //FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
+                    Constructor<?>[] constructors = btClass.getConstructors();
+                    BTBG bt = null;
+                    for (Constructor<?> constructor : constructors) {
+                        if (constructor.getParameterCount() == 0) {
+                            bt = (BTBG) constructor.newInstance();
+                        } else {
+                            Class<?>[] parameterTypes = constructor.getParameterTypes();
+                            for (Class<?> parameterType : parameterTypes) {
+                                if (String.class.equals(parameterType)) {
+                                    bt = (BTBG) constructor.newInstance(item.getTextContent());
+                                } else {
+                                    return;
+                                }
+                            }
+                        }
+                    }
 
-                invoiceUtils.addChild(bg, bt);
 
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    invoiceUtils.addChild(bg, bt);
+                }
+
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 log.error(e.getMessage(), e);
             }
 
