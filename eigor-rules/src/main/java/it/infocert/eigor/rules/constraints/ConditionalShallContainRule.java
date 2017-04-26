@@ -34,9 +34,8 @@ public class ConditionalShallContainRule extends ShallContainRule {
             }
             return ruleOutcome;
         } else {
-            return RuleOutcome.newFailedOutcome("Invoice doesn't contain %s",
-                    invoicePath.substring(invoicePath.lastIndexOf("/") + 1)); //FIXME How should we treat cases where
-                                                                                  //FIXME the condition isn't required (aka, "if this is present do this, otherwise... (?)
+            return RuleOutcome.newUnapplicableOutcome("Invoice doesn't contain %s, rule is not applicable",
+                    conditionPath.substring(conditionPath.lastIndexOf("/") + 1));
 
         }
     }

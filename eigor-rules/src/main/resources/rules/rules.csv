@@ -1,167 +1,167 @@
-ID,Description,TargetOrContext,BusinessTermOrGroup,JavaClass,BGPath,Param1,Param2,Active
-BR-1,An Invoice shall have a Specification identification.,Process control,BT-24,ShallContainRule,/BG0002/BT0024,,,1
-BR-2,An Invoice shall have an Invoice number.,Invoice,BT-1,ShallContainRule,/BT0001,,,1
-BR-3,An Invoice shall have an Invoice issue date.,Invoice,BT-2,ShallContainRule,/BT0002,,,1
-BR-4,An Invoice shall have an Invoice type code.,Invoice,BT-3,ShallContainRule,/BT0003,,,1
-BR-5,An Invoice shall have an Invoice currency code.,Invoice,BT-5,ShallContainRule,/BT0005,,,1
-BR-6,An Invoice shall contain Seller name.,Seller,BT-27,ShallContainRule,/BG0004/BT0027,,,1
-BR-7,An Invoice shall contain Buyer name.,Buyer,BT-44,ShallContainRule,/BG0007/BT0044,,,1
-BR-8,An Invoice shall contain the Seller postal address.,Seller,BG-5,ShallContainRule,/BG0004/BG0005,,,1
-BR-9,A Seller postal address shall contain a Seller country code,Seller Postal Address,BT-40,ShallContainRule,/BG0004/BG0005/BT0040,,,1
-BR-10,An Invoice shall contain the Buyer postal address.,Buyer,BG-8,ShallContainRule,,,,0
-BR-11,A Buyer postal address shall contain a Buyer country code,Buyer Postal Address,BT-55,ShallContainRule,,,,0
-BR-12,An Invoice shall have the Sum of Invoice line net amount.,Document totals,BT-106,ShallContainRule,,,,0
-BR-13,An Invoice shall have the Invoice total amount without VAT.,Document totals,BT-109,ShallContainRule,,,,0
-BR-14,An Invoice shall have the Invoice total amount with VAT.,Document totals,BT-112,ShallContainRule,,,,0
-BR-15,An Invoice shall have the Amount due for payment.,Document totals,BT-115,ShallContainRule,,,,0
-BR-16,An Invoice shall have at least one Invoice line.,Invoice,BG-25,CardinalityRule,/BG0025,1,null,1
-BR-17,"The Payee name shall be provided in the Invoice, if the Payee is different from the Seller.",Payee,BT-59,,,,,0
-BR-18,"The Seller tax representative name shall be provided in the Invoice, if the Seller has a tax representative party.",Seller tax representative,BT-62,,,,,0
-BR-19,"The Seller tax representative postal address shall be provided in the Invoice, if the Seller has a tax representative party.",Seller tax representative,BG-12,,,,,0
-BR-20,"The Seller tax representative postal address shall contain a Tax representative country code, if the Seller has a tax representative party.",Seller tax representative postal address,BT-69,,,,,0
-BR-21,Each Invoice line shall have an Invoice line identifier.,Invoice Line,BT-126,ShallContainRule,,,,0
-BR-22,Each Invoice line shall have an Invoiced quantity.,Invoice Line,BT-129,ShallContainRule,,,,0
-BR-23,An invoice line shall have an Invoice quantity unit of measure.,Invoice Line,BT-130,ShallContainRule,,,,0
-BR-24,Each Invoice line shall have an Invoice line net amount.,Invoice Line,BT-131,ShallContainRule,,,,0
-BR-25,Each Invoice line shall contain the Item name.,Item information,BT-153,ShallContainRule,,,,0
-BR-26,Each Invoice line shall contain the Item net price.,Price details,BT-146,ShallContainRule,,,,0
-BR-27,The Item net price shall NOT be negative.,Item net price,BT-146,,,,,0
-BR-28,Invoice line item gross price shall NOT be negative.,Price details,BT-148,,,,,0
-BR-29,If both Invoicing period start date and Invoicing period end date are given then the Invoicing period end date shall be later or equal to the Invoicing period start date.,Invoicing Period,BT-74,,,,,0
-BR-30,If both Invoice line period start date and Invoice line period end date are given then the Invoice line period end date shall be later or equal to the Invoice line period start date.,Invoice Line Period,BT-135,,,,,0
-BR-31,Each document level allowance shall have a Document level allowance amount.,Document level allowances,BT-92,ShallContainRule,,,,0
-BR-32,Each document level allowance shall have a Document level allowance VAT category code.,Document level allowances,BT-95,ShallContainRule,,,,0
-BR-33,Each document level allowance shall have a Document level allowance reason or a Document level allowance reason code.,Document level allowances,"BT-97, BT-98",ShallContainRule,,,,0
-BR-36,Each document level charge shall have a Document level charge amount.,Document level charges,BT-99,ShallContainRule,,,,0
-BR-37,Each document level charge shall have a Document level charge VAT category code.,Document level charges,BT-102,ShallContainRule,,,,0
-BR-38,Each document level charge shall have a Document level charge reason or a Document level charge reason code.,Document level charges,"BT-104, BT-105",,,,,0
-BR-41,Each Invoice line allowance shall have an Invoice line allowance amount.,Invoice line allowances,BT-136,ShallContainRule,,,,0
-BR-42,Each Invoice line allowance shall have an Invoice line allowance reason or an Invoice line allowance reason code.,Invoice line allowances,"BT-144, BT-145",ShallContainRule,,,,0
-BR-43,Each Invoice line charge shall have an Invoice line charge amount.,Invoice line charges,BT-141,,,,,0
-BR-44,Each Invoice line charge shall have an Invoice line charge reason or an Invoice line charge reason code.,Invoice line charges,"BT-139, BT-140",,,,,0
-BR-45,Each VAT breakdown shall have a VAT category taxable amount.,VAT breakdown,BT-116,ShallContainRule,,,,0
-BR-46,Each VAT breakdown shall have a VAT category tax amount.,VAT breakdown,BT-117,ShallContainRule,,,,0
-BR-47,Each VAT breakdown shall be defined through a VAT category code.,VAT breakdown,BT-118,ShallContainRule,,,,0
-BR-48,"Each VAT breakdown shall have a VAT category rate, except if the Invoice is not subject to VAT.",VAT breakdown,BT-119,,,,,0
-BR-49,A payment instruction shall specify the Payment means type code.,Payment instructions,BT-81,ShallContainRule,,,,0
-BR-50,A Payment account identifier shall be present if Credit transfer information is provided in the Invoice.,Account information,BT-84,,,,,0
-BR-51,The last 4 to 6 digits of the Payment card primary account number shall be present if Payment card information is provided in the Invoice.,Card information,BT-87,,,,,0
-BR-52,Each additional supporting document shall contain a Supporting document identifier.,Additional supporting documents,BT-122,,,,,0
-BR-53,"If the VAT accounting currency code is present, then the Invoice total VAT amount in accounting currency shall be provided.",Document totals,BT-111,,,,,0
-BR-54,Each Item attribute shall contain an Item attribute name and an Item attribute value.,Item attributes,"BT-160, BT-161",,,,,0
-BR-55,Each Preceding invoice reference shall contain a preceding invoice number.,Preceding invoice reference,BT-25,,,,,0
-BR-56,Each Seller tax representative shall have a Seller tax representative VAT identifier,Seller tax representative,BT-63,,,,,0
-BR-57,Each Deliver to address shall contain a Deliver to country code,Deliver to address,BT-80,,,,,0
-BR-61,"If the Payment means type is SEPA credit transfer, Local credit transfer or Non-SEPA international credit transfer, the Payment account identifier shall be present.",Payment instructions,BT-84,,,,,0
-BR-62,The Seller electronic address shall have a Scheme identifier,Seller electronic address,BT-34,ShallContainRule,,,,0
-BR-63,The Buyer electronic address shall have a Scheme identifier,Buyer electronic address,BT-49,ShallContainRule,,,,0
-BR-64,The Item standard identifier shall have a Scheme identifier,Item standard identifier,BT-157,ShallContainRule,,,,0
-BR-65,The Item classification identifier shall have a Scheme identifier,Item classification identifier,BT-158,ShallContainRule,,,,0
-Conditions,,,,,,,,0
-BR-CO-3,Value added tax point date and Value added tax point date code are mutually exclusive.,Invoice,"BT-7, BT-8",,,,,0
-BR-CO-4,Each Invoice line shall be categorized with an Invoiced item VAT category code.,Invoice Line,BT-151,,,,,0
-BR-CO-5,Document level allowance reason code and Document level allowance reason shall indicate the same type of allowance.,Document level Allowances,"BT-97, BT-98",,,,,0
-BR-CO-6,Document level charge reason code and Document level charge reason shall indicate the same type of charge.,Document level Charges,"BT-104, BT-105",,,,,0
-BR-CO-7,Invoice line allowance reason code and Invoice line allowance reason shall indicate the same type of allowance reason.,Invoice line Allowances,"BT-139, BT-140",,,,,0
-BR-CO-8,Invoice line charge reason code and Invoice line charge reason shall indicate the same type of charge reason.,Invoice line Charges,"BT-144, BT-145",,,,,0
-BR-CO-9,"The Seller VAT identifier, Seller tax representative VAT identifier, Buyer VAT identifier shall have a prefix in accordance with ISO code ISO�3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix �EL�.",VAT identifiers,"BT-31, BT-48, BT-63",,,,,0
-BR-CO-10,Sum of Invoice line net amount = ? Invoice line net amount.,Document totals,BT-106,,,,,0
-BR-CO-11,Sum of allowances on document level = ? Document level allowance amount.,Document totals,BT-107,,,,,0
-BR-CO-12,Sum of charges on document level = ? Document level charge amount.,Document totals,BT-108,,,,,0
-BR-CO-13,Invoice total amount without VAT = ? Invoice line net amount - Sum of allowances on document level + Sum of charges on document level.,Document totals,BT-109,,,,,0
-BR-CO-14,Invoice total VAT amount = ? VAT category tax amount.,Document totals,BT-110,,,,,0
-BR-CO-15,Invoice total amount with VAT = Invoice total amount without VAT + Invoice total VAT amount.,Document totals,BT-112,,,,,0
-BR-CO-16,Amount due for payment = Invoice total VAT amount-Paid amount + Rounding amount (BT-114).,Document totals,BT-115,,,,,0
-BR-CO-17,"VAT category tax amount = VAT category taxable amount x (VAT category rate / 100), rounded to two decimals.",VAT breakdown,BT-117,,,,,0
-BR-CO-18,An invoice shall at least have one VAT breakdown group (BG-23),VAT breakdown,BG-23,,,,,0
-BR-CO-19,"If Delivery or invoice period (BG-14) is used, the Delivery period start date or the Delivery period end date shall be filled, or both.",Delivery or invoice period,"BT-73, BT-74",,,,,0
-BR-CO-20,"If Invoice line period (BG-26) is used, the Invoice line period start date or the Invoice line period end date shall be filled, or both.",Invoice line period,"BT-134, BT-135",,,,,0
-BR-CO-21,"Each Document level allowance (BG-20) shall contain a Document level allowance reason or a Document level allowance reason code, or both.",Document level allowance,"BT-97, BT-98",,,,,0
-BR-CO-22,"Each Document level charge (BG-21) shall contain a Document level charge reason or a Document level charge reason code, or both.",Document level charge,"BT-104, BT-105",,,,,0
-BR-CO-23,"Each Invoice line allowance (BG-27) shall contain an Invoice line allowance reason or an Invoice line allowance reason code, or both.",Invoice line allowance,"BT-139, BT-140",,,,,0
-BR-CO-24,"Each Invoice line charge (BG-28) shall contain an Invoice line charge reason or an Invoice line charge reason code, or both.",Invoice line charge,"BT-144, BT-145",,,,,0
-BR-CO-25,"In case the Amount due for payment (BT-115) is positive, either the Payment due date (BT-9) or the Payment terms (BT-20) shall be present.",Invoice,"BT-9, BT-20",,,,,0
-BR-CO-26,"In order for the Buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) or the Seller VAT identifier (BT-31) shall be present.",Seller,"BT-29, BT-30, BT-31",,,,,0
-VAT standard and reduced rate,,,,,,,,0
-BR-S-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Standard rated� shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with ""Standard rated"".",,,,,,,0
-BR-S-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-S-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-S-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-S-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Standard rated"" the Invoiced item VAT rate (BT-152) shall be greater than zero.",,,,,,,0
-BR-S-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Standard rated"" the Invoiced item VAT rate (BT-96) shall be greater than zero.",,,,,,,0
-BR-S-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Standard rated"" the Invoiced item VAT rate (BT-103) shall be greater than zero.",,,,,,,0
-BR-S-8,"For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is ""Standard rated"", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is �Standard rated� and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).",,,,,,,0
-BR-S-9,"The VAT category tax amount (BT-117) in VAT breakdown (BG-23) where VAT category code (BT-118) is ""Standard rated"" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).",,,,,,,0
-BR-S-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Standard rate"" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).",,,,,,,0
-VAT zero rate,,,,,,,,0
-BR-Z-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Zero rated� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Zero rated"".",,,,,,,0
-BR-Z-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-Z-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-Z-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-Z-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Zero rated"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,0
-BR-Z-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Zero rated"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,0
-BR-Z-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Zero rated"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,0
-BR-Z-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Zero rated"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Zero rated"".",,,,,,,0
-BR-Z-9,"The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Zero rated"" shall equal 0 (zero).",,,,,,,0
-BR-Z-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Zero rated"" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).",,,,,,,0
-Exempted from VAT,,,,,,,,0
-BR-E-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Exempt from VAT� shall contain exactly one a VAT breakdown (BG-23) with VAT category code (BT-118) equal to ""Exempt from VAT"".",,,,,,,0
-BR-E-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-E-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-E-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,0
-BR-E-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,0
-BR-E-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,0
-BR-E-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,0
-BR-E-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Exempt from VAT"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Exempt from VAT"".",,,,,,,0
-BR-E-9,"The VAT category tax amount (BT-117) In a VAT breakdown (BG-23) where the VAT category code (BT-118) equals ""Exempt from VAT"" shall equal 0 (zero).",,,,,,,0
-BR-E-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Exempt from VAT"" shall have a VAT Exemption reason code (BT-121) or a VAT Exemption reason text (BT-120).",,,,,,,0
-VAT Reverse charge,,,,,,,,0
-BR-AE-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �VAT reverse charge� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""VAT reverse charge"".",,,,,,,0
-BR-AE-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.",,,,,,,0
-BR-AE-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.",,,,,,,0
-BR-AE-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).",,,,,,,0
-BR-AE-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Reverse charge"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,0
-BR-AE-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Reverse charge"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,0
-BR-AE-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Reverse charge"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,0
-BR-AE-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Reverse charge"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Reverse charge"".",,,,,,,0
-BR-AE-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Reverse charge� shall be 0 (zero).,,,,,,,0
-BR-AE-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Reverse charge"" shall have a VAT Exemption reason code (BT-121), meaning ""Reverse charge"" or the VAT Exemption reason text (BT-120) ""Reverse charge"" (or the equivalent standard text in another language).",,,,,,,0
-VAT Intra-community supply,,,,,,,,0
-BR-IC-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Intra-community supply� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Intra-community supply"".",,,,,,,0
-BR-IC-2,An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.,,,,,,,0
-BR-IC-3,An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.,,,,,,,0
-BR-IC-4,An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).,,,,,,,0
-BR-IC-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Intra-community supply"" the invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,0
-BR-IC-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Intra-community supply"" the invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,0
-BR-IC-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Intra-community supply"" the invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,0
-BR-IC-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Intra-community supply"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Intra-community supply"".",,,,,,,0
-BR-IC-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Intra-community supply� shall be 0 (zero).,,,,,,,0
-BR-IC-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Intra-community supply"" shall have a VAT Exemption reason code (BT-121), meaning ""Intra-community supply"" or the VAT Exemption reason text (BT-120) ""Intra-community supply"" (or the equivalent standard text in another language).",,,,,,,0
-BR-IC-11,"In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is ""Intra-community supply"" the actual delivery date (BT-72) or the delivery period (BG-14) shall not be blank.",,,,,,,0
-BR-IC-12,"In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is ""Intra-community supply"" the deliver to country code (BT-80) shall not be blank.",,,,,,,0
-VAT Export,,,,,,,,0
-BR-G-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Export outside the EU� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Export outside the EU"".",,,,,,,0
-BR-G-2,An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,0
-BR-G-3,An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,0
-BR-G-4,An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,0
-BR-G-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Export outside the EU"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,0
-BR-G-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Export outside the EU"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,0
-BR-G-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Export outside the EU"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,0
-BR-G-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Export outside the EU"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Export outside the EU"".",,,,,,,0
-BR-G-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Export outside the EU� shall be 0 (zero).,,,,,,,0
-BR-G-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Export outside the EU"" shall have a VAT Exemption reason code (BT-121), meaning ""Export outside the EU"" or the VAT Exemption reason text (BT-120) ""Export outside the EU"" (or the equivalent standard text in another language).",,,,,,,0
-Not subject to VAT,,,,,,,,0
-BR-O-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Not subject to VAT� shall contain exactly one VAT breakdown group (BG-23) with category code (BT-118) equal to ""Not subject to VAT"".",,,,,,,0
-BR-O-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-46).",,,,,,,0
-BR-O-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).",,,,,,,0
-BR-O-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).",,,,,,,0
-BR-O-5,"An Invoice line where VAT category code (BT-151) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-152).",,,,,,,0
-BR-O-6,"A document level allowance where VAT category code (BT-95) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-96).",,,,,,,0
-BR-O-7,"A document level charge where VAT category code (BT-102) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-103).",,,,,,,0
-BR-O-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is "" Not subject to VAT"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Not subject to VAT"".",,,,,,,0
-BR-O-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Not subject to VAT� shall be 0 (zero).,,,,,,,0
-BR-O-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) "" Not subject to VAT"" shall have a VAT Exemption reason code (BT-121), meaning "" Not subject to VAT"" or a VAT Exemption reason text (BT-120) "" Not subject to VAT"" (or the equivalent standard text in another language).",,,,,,,0
-BR-O-11,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) as ""Not subject to VAT"" shall not contain other VAT breakdown groups (BG-23).",,,,,,,0
-BR-O-12,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain lines where the Invoiced item VAT category code (BT-151) is not ""Not subject to VAT"".",,,,,,,0
-BR-O-13,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain a document level allowances group (BG-20) where document level allowance VAT category code (BT-95) is not ""Not subject to VAT"".",,,,,,,0
-BR-O-14,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain a document Level charge group (BG-21) where document level charge VAT category code (BT-102) is not ""Not subject to VAT"".",,,,,,,0
+ID,Description,TargetOrContext,BusinessTermOrGroup,JavaClass,BGPath,ConditionPath,Param1,Param2,Active
+BR-1,An Invoice shall have a Specification identification.,Process control,BT-24,ShallContainRule,/BG0002/BT0024,,,,1
+BR-2,An Invoice shall have an Invoice number.,Invoice,BT-1,ShallContainRule,/BT0001,,,,1
+BR-3,An Invoice shall have an Invoice issue date.,Invoice,BT-2,ShallContainRule,/BT0002,,,,1
+BR-4,An Invoice shall have an Invoice type code.,Invoice,BT-3,ShallContainRule,/BT0003,,,,1
+BR-5,An Invoice shall have an Invoice currency code.,Invoice,BT-5,ShallContainRule,/BT0005,,,,1
+BR-6,An Invoice shall contain Seller name.,Seller,BT-27,ShallContainRule,/BG0004/BT0027,,,,1
+BR-7,An Invoice shall contain Buyer name.,Buyer,BT-44,ShallContainRule,/BG0007/BT0044,,,,1
+BR-8,An Invoice shall contain the Seller postal address.,Seller,BG-5,ShallContainRule,/BG0004/BG0005,,,,1
+BR-9,A Seller postal address shall contain a Seller country code,Seller Postal Address,BT-40,ShallContainRule,/BG0004/BG0005/BT0040,,,,1
+BR-10,An Invoice shall contain the Buyer postal address.,Buyer,BG-8,ShallContainRule,,,,,0
+BR-11,A Buyer postal address shall contain a Buyer country code,Buyer Postal Address,BT-55,ShallContainRule,,,,,0
+BR-12,An Invoice shall have the Sum of Invoice line net amount.,Document totals,BT-106,ShallContainRule,,,,,0
+BR-13,An Invoice shall have the Invoice total amount without VAT.,Document totals,BT-109,ShallContainRule,,,,,0
+BR-14,An Invoice shall have the Invoice total amount with VAT.,Document totals,BT-112,ShallContainRule,,,,,0
+BR-15,An Invoice shall have the Amount due for payment.,Document totals,BT-115,ShallContainRule,,,,,0
+BR-16,An Invoice shall have at least one Invoice line.,Invoice,BG-25,CardinalityRule,/BG0025,,1,null,1
+BR-17,"The Payee name shall be provided in the Invoice, if the Payee is different from the Seller.",Payee,BT-59,,,,,,0
+BR-18,"The Seller tax representative name shall be provided in the Invoice, if the Seller has a tax representative party.",Seller tax representative,BT-62,,,,,,0
+BR-19,"The Seller tax representative postal address shall be provided in the Invoice, if the Seller has a tax representative party.",Seller tax representative,BG-12,,,,,,0
+BR-20,"The Seller tax representative postal address shall contain a Tax representative country code, if the Seller has a tax representative party.",Seller tax representative postal address,BT-69,,,,,,0
+BR-21,Each Invoice line shall have an Invoice line identifier.,Invoice Line,BT-126,ShallContainRule,,,,,0
+BR-22,Each Invoice line shall have an Invoiced quantity.,Invoice Line,BT-129,ShallContainRule,,,,,0
+BR-23,An invoice line shall have an Invoice quantity unit of measure.,Invoice Line,BT-130,ShallContainRule,,,,,0
+BR-24,Each Invoice line shall have an Invoice line net amount.,Invoice Line,BT-131,ShallContainRule,,,,,0
+BR-25,Each Invoice line shall contain the Item name.,Item information,BT-153,ShallContainRule,,,,,0
+BR-26,Each Invoice line shall contain the Item net price.,Price details,BT-146,ShallContainRule,,,,,0
+BR-27,The Item net price shall NOT be negative.,Item net price,BT-146,,,,,,0
+BR-28,Invoice line item gross price shall NOT be negative.,Price details,BT-148,,,,,,0
+BR-29,If both Invoicing period start date and Invoicing period end date are given then the Invoicing period end date shall be later or equal to the Invoicing period start date.,Invoicing Period,BT-74,,,,,,0
+BR-30,If both Invoice line period start date and Invoice line period end date are given then the Invoice line period end date shall be later or equal to the Invoice line period start date.,Invoice Line Period,BT-135,,,,,,0
+BR-31,Each document level allowance shall have a Document level allowance amount.,Document level allowances,BT-92,ShallContainRule,,,,,0
+BR-32,Each document level allowance shall have a Document level allowance VAT category code.,Document level allowances,BT-95,ShallContainRule,,,,,0
+BR-33,Each document level allowance shall have a Document level allowance reason or a Document level allowance reason code.,Document level allowances,"BT-97, BT-98",ShallContainRule,,,,,0
+BR-36,Each document level charge shall have a Document level charge amount.,Document level charges,BT-99,ShallContainRule,,,,,0
+BR-37,Each document level charge shall have a Document level charge VAT category code.,Document level charges,BT-102,ShallContainRule,,,,,0
+BR-38,Each document level charge shall have a Document level charge reason or a Document level charge reason code.,Document level charges,"BT-104, BT-105",,,,,,0
+BR-41,Each Invoice line allowance shall have an Invoice line allowance amount.,Invoice line allowances,BT-136,ShallContainRule,,,,,0
+BR-42,Each Invoice line allowance shall have an Invoice line allowance reason or an Invoice line allowance reason code.,Invoice line allowances,"BT-144, BT-145",ShallContainRule,,,,,0
+BR-43,Each Invoice line charge shall have an Invoice line charge amount.,Invoice line charges,BT-141,,,,,,0
+BR-44,Each Invoice line charge shall have an Invoice line charge reason or an Invoice line charge reason code.,Invoice line charges,"BT-139, BT-140",,,,,,0
+BR-45,Each VAT breakdown shall have a VAT category taxable amount.,VAT breakdown,BT-116,ShallContainRule,,,,,0
+BR-46,Each VAT breakdown shall have a VAT category tax amount.,VAT breakdown,BT-117,ShallContainRule,,,,,0
+BR-47,Each VAT breakdown shall be defined through a VAT category code.,VAT breakdown,BT-118,ShallContainRule,,,,,0
+BR-48,"Each VAT breakdown shall have a VAT category rate, except if the Invoice is not subject to VAT.",VAT breakdown,BT-119,,,,,,0
+BR-49,A payment instruction shall specify the Payment means type code.,Payment instructions,BT-81,ShallContainRule,,,,,0
+BR-50,A Payment account identifier shall be present if Credit transfer information is provided in the Invoice.,Account information,BT-84,,,,,,0
+BR-51,The last 4 to 6 digits of the Payment card primary account number shall be present if Payment card information is provided in the Invoice.,Card information,BT-87,,,,,,0
+BR-52,Each additional supporting document shall contain a Supporting document identifier.,Additional supporting documents,BT-122,ShallContainRule,,,,,0
+BR-53,"If the VAT accounting currency code is present, then the Invoice total VAT amount in accounting currency shall be provided.",Document totals,BT-111,ConditionalShallContainRule,/BG0022/BT0111,/BT0006,,,1
+BR-54,Each Item attribute shall contain an Item attribute name and an Item attribute value.,Item attributes,"BT-160, BT-161",,,,,,0
+BR-55,Each Preceding invoice reference shall contain a preceding invoice number.,Preceding invoice reference,BT-25,,,,,,0
+BR-56,Each Seller tax representative shall have a Seller tax representative VAT identifier,Seller tax representative,BT-63,,,,,,0
+BR-57,Each Deliver to address shall contain a Deliver to country code,Deliver to address,BT-80,,,,,,0
+BR-61,"If the Payment means type is SEPA credit transfer, Local credit transfer or Non-SEPA international credit transfer, the Payment account identifier shall be present.",Payment instructions,BT-84,,,,,,0
+BR-62,The Seller electronic address shall have a Scheme identifier,Seller electronic address,BT-34,ShallContainRule,,,,,0
+BR-63,The Buyer electronic address shall have a Scheme identifier,Buyer electronic address,BT-49,ShallContainRule,,,,,0
+BR-64,The Item standard identifier shall have a Scheme identifier,Item standard identifier,BT-157,ShallContainRule,,,,,0
+BR-65,The Item classification identifier shall have a Scheme identifier,Item classification identifier,BT-158,ShallContainRule,,,,,0
+Conditions,,,,,,,,,0
+BR-CO-3,Value added tax point date and Value added tax point date code are mutually exclusive.,Invoice,"BT-7, BT-8",,,,,,0
+BR-CO-4,Each Invoice line shall be categorized with an Invoiced item VAT category code.,Invoice Line,BT-151,,,,,,0
+BR-CO-5,Document level allowance reason code and Document level allowance reason shall indicate the same type of allowance.,Document level Allowances,"BT-97, BT-98",,,,,,0
+BR-CO-6,Document level charge reason code and Document level charge reason shall indicate the same type of charge.,Document level Charges,"BT-104, BT-105",,,,,,0
+BR-CO-7,Invoice line allowance reason code and Invoice line allowance reason shall indicate the same type of allowance reason.,Invoice line Allowances,"BT-139, BT-140",,,,,,0
+BR-CO-8,Invoice line charge reason code and Invoice line charge reason shall indicate the same type of charge reason.,Invoice line Charges,"BT-144, BT-145",,,,,,0
+BR-CO-9,"The Seller VAT identifier, Seller tax representative VAT identifier, Buyer VAT identifier shall have a prefix in accordance with ISO code ISO�3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix �EL�.",VAT identifiers,"BT-31, BT-48, BT-63",,,,,,0
+BR-CO-10,Sum of Invoice line net amount = ? Invoice line net amount.,Document totals,BT-106,,,,,,0
+BR-CO-11,Sum of allowances on document level = ? Document level allowance amount.,Document totals,BT-107,,,,,,0
+BR-CO-12,Sum of charges on document level = ? Document level charge amount.,Document totals,BT-108,,,,,,0
+BR-CO-13,Invoice total amount without VAT = ? Invoice line net amount - Sum of allowances on document level + Sum of charges on document level.,Document totals,BT-109,,,,,,0
+BR-CO-14,Invoice total VAT amount = ? VAT category tax amount.,Document totals,BT-110,,,,,,0
+BR-CO-15,Invoice total amount with VAT = Invoice total amount without VAT + Invoice total VAT amount.,Document totals,BT-112,,,,,,0
+BR-CO-16,Amount due for payment = Invoice total VAT amount-Paid amount + Rounding amount (BT-114).,Document totals,BT-115,,,,,,0
+BR-CO-17,"VAT category tax amount = VAT category taxable amount x (VAT category rate / 100), rounded to two decimals.",VAT breakdown,BT-117,,,,,,0
+BR-CO-18,An invoice shall at least have one VAT breakdown group (BG-23),VAT breakdown,BG-23,,,,,,0
+BR-CO-19,"If Delivery or invoice period (BG-14) is used, the Delivery period start date or the Delivery period end date shall be filled, or both.",Delivery or invoice period,"BT-73, BT-74",,,,,,0
+BR-CO-20,"If Invoice line period (BG-26) is used, the Invoice line period start date or the Invoice line period end date shall be filled, or both.",Invoice line period,"BT-134, BT-135",,,,,,0
+BR-CO-21,"Each Document level allowance (BG-20) shall contain a Document level allowance reason or a Document level allowance reason code, or both.",Document level allowance,"BT-97, BT-98",,,,,,0
+BR-CO-22,"Each Document level charge (BG-21) shall contain a Document level charge reason or a Document level charge reason code, or both.",Document level charge,"BT-104, BT-105",,,,,,0
+BR-CO-23,"Each Invoice line allowance (BG-27) shall contain an Invoice line allowance reason or an Invoice line allowance reason code, or both.",Invoice line allowance,"BT-139, BT-140",,,,,,0
+BR-CO-24,"Each Invoice line charge (BG-28) shall contain an Invoice line charge reason or an Invoice line charge reason code, or both.",Invoice line charge,"BT-144, BT-145",,,,,,0
+BR-CO-25,"In case the Amount due for payment (BT-115) is positive, either the Payment due date (BT-9) or the Payment terms (BT-20) shall be present.",Invoice,"BT-9, BT-20",,,,,,0
+BR-CO-26,"In order for the Buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) or the Seller VAT identifier (BT-31) shall be present.",Seller,"BT-29, BT-30, BT-31",,,,,,0
+VAT standard and reduced rate,,,,,,,,,0
+BR-S-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Standard rated� shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with ""Standard rated"".",,,,,,,,0
+BR-S-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-S-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-S-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Standard rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-S-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Standard rated"" the Invoiced item VAT rate (BT-152) shall be greater than zero.",,,,,,,,0
+BR-S-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Standard rated"" the Invoiced item VAT rate (BT-96) shall be greater than zero.",,,,,,,,0
+BR-S-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Standard rated"" the Invoiced item VAT rate (BT-103) shall be greater than zero.",,,,,,,,0
+BR-S-8,"For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is ""Standard rated"", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is �Standard rated� and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).",,,,,,,,0
+BR-S-9,"The VAT category tax amount (BT-117) in VAT breakdown (BG-23) where VAT category code (BT-118) is ""Standard rated"" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).",,,,,,,,0
+BR-S-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Standard rate"" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).",,,,,,,,0
+VAT zero rate,,,,,,,,,0
+BR-Z-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Zero rated� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Zero rated"".",,,,,,,,0
+BR-Z-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-Z-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-Z-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Zero rated� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-Z-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Zero rated"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,,0
+BR-Z-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Zero rated"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,,0
+BR-Z-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Zero rated"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,,0
+BR-Z-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Zero rated"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Zero rated"".",,,,,,,,0
+BR-Z-9,"The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Zero rated"" shall equal 0 (zero).",,,,,,,,0
+BR-Z-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Zero rated"" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).",,,,,,,,0
+Exempted from VAT,,,,,,,,,0
+BR-E-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Exempt from VAT� shall contain exactly one a VAT breakdown (BG-23) with VAT category code (BT-118) equal to ""Exempt from VAT"".",,,,,,,,0
+BR-E-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-E-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-E-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).",,,,,,,,0
+BR-E-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,,0
+BR-E-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,,0
+BR-E-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Exempt from VAT"", the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,,0
+BR-E-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Exempt from VAT"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Exempt from VAT"".",,,,,,,,0
+BR-E-9,"The VAT category tax amount (BT-117) In a VAT breakdown (BG-23) where the VAT category code (BT-118) equals ""Exempt from VAT"" shall equal 0 (zero).",,,,,,,,0
+BR-E-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Exempt from VAT"" shall have a VAT Exemption reason code (BT-121) or a VAT Exemption reason text (BT-120).",,,,,,,,0
+VAT Reverse charge,,,,,,,,,0
+BR-AE-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �VAT reverse charge� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""VAT reverse charge"".",,,,,,,,0
+BR-AE-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.",,,,,,,,0
+BR-AE-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.",,,,,,,,0
+BR-AE-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Exempt from VAT� shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).",,,,,,,,0
+BR-AE-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Reverse charge"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,,0
+BR-AE-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Reverse charge"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,,0
+BR-AE-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Reverse charge"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,,0
+BR-AE-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Reverse charge"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Reverse charge"".",,,,,,,,0
+BR-AE-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Reverse charge� shall be 0 (zero).,,,,,,,,0
+BR-AE-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Reverse charge"" shall have a VAT Exemption reason code (BT-121), meaning ""Reverse charge"" or the VAT Exemption reason text (BT-120) ""Reverse charge"" (or the equivalent standard text in another language).",,,,,,,,0
+VAT Intra-community supply,,,,,,,,,0
+BR-IC-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Intra-community supply� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Intra-community supply"".",,,,,,,,0
+BR-IC-2,An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.,,,,,,,,0
+BR-IC-3,An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.,,,,,,,,0
+BR-IC-4,An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Intra-community supply� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).,,,,,,,,0
+BR-IC-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Intra-community supply"" the invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,,0
+BR-IC-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Intra-community supply"" the invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,,0
+BR-IC-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Intra-community supply"" the invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,,0
+BR-IC-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Intra-community supply"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Intra-community supply"".",,,,,,,,0
+BR-IC-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Intra-community supply� shall be 0 (zero).,,,,,,,,0
+BR-IC-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Intra-community supply"" shall have a VAT Exemption reason code (BT-121), meaning ""Intra-community supply"" or the VAT Exemption reason text (BT-120) ""Intra-community supply"" (or the equivalent standard text in another language).",,,,,,,,0
+BR-IC-11,"In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is ""Intra-community supply"" the actual delivery date (BT-72) or the delivery period (BG-14) shall not be blank.",,,,,,,,0
+BR-IC-12,"In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is ""Intra-community supply"" the deliver to country code (BT-80) shall not be blank.",,,,,,,,0
+VAT Export,,,,,,,,,0
+BR-G-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Export outside the EU� shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with ""Export outside the EU"".",,,,,,,,0
+BR-G-2,An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,,0
+BR-G-3,An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,,0
+BR-G-4,An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Export outside the EU� shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).,,,,,,,,0
+BR-G-5,"In an Invoice line where the Invoice item VAT category code (BT-151) is ""Export outside the EU"" the Invoiced item VAT rate (BT-152) shall be 0 (zero).",,,,,,,,0
+BR-G-6,"In a document level allowance where the Invoice item VAT category code (BT-95) is ""Export outside the EU"" the Invoiced item VAT rate (BT-96) shall be 0 (zero).",,,,,,,,0
+BR-G-7,"In a document level charge where the Invoice item VAT category code (BT-102) is ""Export outside the EU"" the Invoiced item VAT rate (BT-103) shall be 0 (zero).",,,,,,,,0
+BR-G-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is ""Export outside the EU"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Export outside the EU"".",,,,,,,,0
+BR-G-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Export outside the EU� shall be 0 (zero).,,,,,,,,0
+BR-G-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) ""Export outside the EU"" shall have a VAT Exemption reason code (BT-121), meaning ""Export outside the EU"" or the VAT Exemption reason text (BT-120) ""Export outside the EU"" (or the equivalent standard text in another language).",,,,,,,,0
+Not subject to VAT,,,,,,,,,0
+BR-O-1,"An Invoice that contains a line, a document level allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is �Not subject to VAT� shall contain exactly one VAT breakdown group (BG-23) with category code (BT-118) equal to ""Not subject to VAT"".",,,,,,,,0
+BR-O-2,"An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-46).",,,,,,,,0
+BR-O-3,"An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).",,,,,,,,0
+BR-O-4,"An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is �Not subject to VAT� shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).",,,,,,,,0
+BR-O-5,"An Invoice line where VAT category code (BT-151) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-152).",,,,,,,,0
+BR-O-6,"A document level allowance where VAT category code (BT-95) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-96).",,,,,,,,0
+BR-O-7,"A document level charge where VAT category code (BT-102) is ""Not subject to VAT"" shall not contain an invoiced item VAT rate (BT-103).",,,,,,,,0
+BR-O-8,"In a VAT breakdown (BG-23) where VAT category code (BT-118) is "" Not subject to VAT"" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are �Not subject to VAT"".",,,,,,,,0
+BR-O-9,The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is �Not subject to VAT� shall be 0 (zero).,,,,,,,,0
+BR-O-10,"A VAT Breakdown (BG-23) with VAT Category code (BT-118) "" Not subject to VAT"" shall have a VAT Exemption reason code (BT-121), meaning "" Not subject to VAT"" or a VAT Exemption reason text (BT-120) "" Not subject to VAT"" (or the equivalent standard text in another language).",,,,,,,,0
+BR-O-11,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) as ""Not subject to VAT"" shall not contain other VAT breakdown groups (BG-23).",,,,,,,,0
+BR-O-12,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain lines where the Invoiced item VAT category code (BT-151) is not ""Not subject to VAT"".",,,,,,,,0
+BR-O-13,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain a document level allowances group (BG-20) where document level allowance VAT category code (BT-95) is not ""Not subject to VAT"".",,,,,,,,0
+BR-O-14,"An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) ""Not subject to VAT"" shall not contain a document Level charge group (BG-21) where document level charge VAT category code (BT-102) is not ""Not subject to VAT"".",,,,,,,,0

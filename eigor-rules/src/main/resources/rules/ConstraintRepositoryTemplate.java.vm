@@ -26,7 +26,7 @@ public class ConstraintsRepository implements RuleRepository {
             ruleList = new ArrayList<>(0);
             #foreach( $row in $File )
                 #if(${row.Active} == 1)
-                    ruleList.add(new ${row.JavaClass}(#if(${row.JavaClass} == "ShallContainRule")"${row.BGPath}"#elseif(${row.JavaClass} == "CardinalityRule")"${row.BGPath}", ${row.Param1}, ${row.Param2}#end, reflections));
+                    ruleList.add(new ${row.JavaClass}(#if(${row.JavaClass} == "ShallContainRule")"${row.BGPath}"#elseif(${row.JavaClass} == "CardinalityRule")"${row.BGPath}", ${row.Param1}, ${row.Param2}#elseif(${row.JavaClass} == "ConditionalShallContainRule")"${row.BGPath}","${row.ConditionPath}"#end, reflections));
                 #end
             #end
 
