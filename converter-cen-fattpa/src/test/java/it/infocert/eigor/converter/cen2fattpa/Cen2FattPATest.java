@@ -213,7 +213,7 @@ public class Cen2FattPATest {
         String[] testStrings = {
                 "RO151590954",
                 "IT 41440312",
-                "IE123456789"};
+                "IE123456Z89"};
 
         String[] expectedCountry = {
                 "RO",
@@ -223,7 +223,7 @@ public class Cen2FattPATest {
         String[] expectedCodes = {
                 "151590954",
                 "41440312",
-                "123456789"};
+                "123456Z89"};
 
         for (int i = 0; i < testStrings.length; i++) {
             String testString = testStrings[i];
@@ -232,6 +232,15 @@ public class Cen2FattPATest {
         }
     }
 
+    @Test
+    public void testNullOrEmptyVatIdSplitting() {
+
+            assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString("")));
+            assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString("")));
+
+            assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString(null)));
+            assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString(null)));
+    }
 
     private String getStringByXPath(Document doc, String xpath) throws XPathExpressionException {
         XPathExpression xPathExpression = xPathfactory.newXPath().compile(xpath);
