@@ -2,6 +2,7 @@ package it.infocert.eigor.rules.constraints;
 
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
+import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -56,5 +57,32 @@ public class ShallContainRuleTest {
         RuleOutcome.Outcome outcome = compliant.outcome();
 
         assertEquals(RuleOutcome.Outcome.FAILED, outcome);
+    }
+
+    @Test
+    public void multipleChildsFailingTest() throws Exception {
+        ShallContainRule rule = new ShallContainRule(Arrays.array("/BG0025/BG0031/BG0032/BT0160", "/BG0025/BG0031/BG0032/BT0160"), new Reflections("it.infocert"));
+        RuleOutcome compliant = rule.isCompliant(invoice);
+        RuleOutcome.Outcome outcome = compliant.outcome();
+
+        assertEquals(RuleOutcome.Outcome.FAILED, outcome);
+    }
+
+    @Test
+    public void multipleChildsSuccessfulTest() throws Exception {
+        BG0032ItemAttributes itemAttributes = new BG0032ItemAttributes();
+        itemAttributes.getBT0160ItemAttributeName().add(new BT0160ItemAttributeName("Name"));
+        itemAttributes.getBT0161ItemAttributeValue().add(new BT0161ItemAttributeValue("Attribute"));
+        BG0031ItemInformation itemInformation = new BG0031ItemInformation();
+        itemInformation.getBG0032ItemAttributes().add(itemAttributes);
+        BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
+        invoiceLine.getBG0031ItemInformation().add(itemInformation);
+        invoice.getBG0025InvoiceLine().add(invoiceLine);
+
+        ShallContainRule rule = new ShallContainRule(Arrays.array("/BG0025/BG0031/BG0032/BT0160", "/BG0025/BG0031/BG0032/BT0160"), new Reflections("it.infocert"));
+        RuleOutcome compliant = rule.isCompliant(invoice);
+        RuleOutcome.Outcome outcome = compliant.outcome();
+
+        assertEquals(RuleOutcome.Outcome.SUCCESS, outcome);
     }
 }

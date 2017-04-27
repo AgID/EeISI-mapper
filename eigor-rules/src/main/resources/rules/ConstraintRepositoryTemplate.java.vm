@@ -3,10 +3,12 @@ package it.infocert.eigor.rules.repositories;
 import it.infocert.eigor.rules.constraints.*;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.model.core.rules.Rule;
+import org.assertj.core.util.Arrays;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConstraintsRepository implements RuleRepository {
 
@@ -26,11 +28,22 @@ public class ConstraintsRepository implements RuleRepository {
             ruleList = new ArrayList<>(0);
             #foreach( $row in $File )
                 #if(${row.Active} == 1)
-                    ruleList.add(new ${row.JavaClass}(#if(${row.JavaClass} == "ShallContainRule")"${row.BGPath}"#elseif(${row.JavaClass} == "CardinalityRule")"${row.BGPath}", ${row.Param1}, ${row.Param2}#elseif(${row.JavaClass} == "ConditionalShallContainRule")"${row.BGPath}","${row.ConditionPath}"#end, reflections));
+                    ruleList.add(new ${row.JavaClass}(#if($row.JavaClass.equals("ShallContainRule"))#if(${row.BGPath.contains(';')})
+                    Arrays.array(
+                    #foreach($slice in $row.BGPath.split(';'))
+                        "${slice}"#if( $foreach.hasNext ),#end
+                    #end)#else"${row.BGPath}"
+                #end
+                #elseif($row.JavaClass.equals("CardinalityRule"))"${row.BGPath}", ${row.Param1}, ${row.Param2}
+                #elseif($row.JavaClass.equals("ConditionalShallContainRule"))"${row.BGPath}","${row.ConditionPath}"#end, reflections));
                 #end
             #end
 
             return ruleList;
         }
+    }
+
+    public List<Rule> getRulesByType(Class<? extends Rule> type) {
+        return rules().stream().filter(rule -> rule.getClass().equals(type)).collect(Collectors.toList());
     }
 }

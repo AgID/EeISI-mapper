@@ -48,7 +48,7 @@ BR-50,A Payment account identifier shall be present if Credit transfer informati
 BR-51,The last 4 to 6 digits of the Payment card primary account number shall be present if Payment card information is provided in the Invoice.,Card information,BT-87,,,,,,0
 BR-52,Each additional supporting document shall contain a Supporting document identifier.,Additional supporting documents,BT-122,ShallContainRule,,,,,0
 BR-53,"If the VAT accounting currency code is present, then the Invoice total VAT amount in accounting currency shall be provided.",Document totals,BT-111,ConditionalShallContainRule,/BG0022/BT0111,/BT0006,,,1
-BR-54,Each Item attribute shall contain an Item attribute name and an Item attribute value.,Item attributes,"BT-160, BT-161",,,,,,0
+BR-54,Each Item attribute shall contain an Item attribute name and an Item attribute value.,Item attributes,"BT-160, BT-161",ShallContainRule,/BG0025/BG0031/BG0032/BT0161;/BG0025/BG0031/BG0032/BT0160,,,,1
 BR-55,Each Preceding invoice reference shall contain a preceding invoice number.,Preceding invoice reference,BT-25,,,,,,0
 BR-56,Each Seller tax representative shall have a Seller tax representative VAT identifier,Seller tax representative,BT-63,,,,,,0
 BR-57,Each Deliver to address shall contain a Deliver to country code,Deliver to address,BT-80,,,,,,0
