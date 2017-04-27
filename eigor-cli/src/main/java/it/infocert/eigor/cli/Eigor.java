@@ -29,6 +29,7 @@ public class Eigor {
         return new ReflectionBasedRepository(reflections);
     }
 
+
     @Bean
     RuleRepository constraintsRepository(Reflections reflections) {
         return new ConstraintsRepository(reflections);
