@@ -1,6 +1,97 @@
 Progetto EIGoR ![coverage](https://gitlab.com/tgi-infocert-eigor/eigor/badges/develop/build.svg)
 ==============
 
+## Eigor Command Line
+
+### Example: Converting a CEN Invoice To FattPa
+
+1. Prepare a CEN file and store it in a `cen.csv`. For instance like that.
+
+```
+BG/BT,Value
+BT-1,TOSL110
+BT-2,10-Apr-13
+BT-3,Consignment invoice
+BT-5,Danish Krone
+BT-9,10-May-13
+BG-2,
+BT-24,urn:cen.eu:en16931:2017
+BG-4,
+BT-27,SellerCompany
+BT-31,123456789MVA [DK:VAT]
+BG-5,
+BT-35,Indirizzo obbligatorio
+BT-37,comune obbligatorio
+BT-38,20100
+BT-40,Denmark
+BG-7,
+BT-44,Buyercompany ltd
+BT-48,
+BT-49,UFF123
+BG-8,
+BT-50,Indirizzo obbligatorio
+BT-52,comune obbligatorio
+BT-53,20100
+BT-55,Denmark
+BG-22,
+BT-106,4000
+BT-109,4000
+BT-110,675
+BT-112,4675
+BT-115,4675
+BG-23,
+BT-116,1500
+BT-117,375
+BT-118,Standard rate
+BT-119,25%
+BG-23,
+BT-116,2500
+BT-117,300
+BT-118,Standard rate
+BT-119,12%
+BG-25,
+BT-126,1
+BT-129,1000
+BT-130,Each
+BT-131,1000
+BG-29,
+BT-146,1
+BG-30,
+BT-151,Standard rate
+BT-152,25%
+BG-31,
+BT-153,Printing paper
+BG-25,
+BT-126,2
+BT-129,100
+BT-130,Each
+BT-131,500
+BG-29,
+BT-146,5
+BG-30,
+BT-151,Standard rate
+BT-152,25%
+BG-31,
+BT-153,Parker Pen
+BG-25,
+BT-126,3
+BT-129,500
+BT-130,Each
+BT-131,2500
+BG-29,
+BT-146,5
+BG-30,
+BT-151,Standard rate
+BT-152,12%
+BG-31,
+BT-153,American Cookies
+```
+
+2. Invokes the converter
+
+    java -jar eigor.jar --input cen.csv --source cen --output ./result --target fattpa
+
+
 ## Latest Release
 * Download the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/builds/artifacts/master/download?job=package-cli)
   * command line interface to convert invoices.
