@@ -13,6 +13,8 @@ import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GenericOneToOneTransformation {
 
@@ -42,12 +44,36 @@ public class GenericOneToOneTransformation {
             BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
             Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
             try {
-                Constructor<? extends BTBG> btConstructor = btClass.getConstructor(String.class);
-                BTBG bt = btConstructor.newInstance(item.getTextContent());
+                if (!invoiceUtils.hasChild(btPath, invoice)) { //FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
+                    Constructor<?>[] constructors = btClass.getConstructors();
+                    final ArrayList<BTBG> bt = new ArrayList<>(1);
+                    Arrays.stream(constructors).forEach(constructor -> {
+                        try {
+                        if (constructor.getParameterCount() == 0) {
+                            bt.add((BTBG) constructor.newInstance());
+                        } else {
+                            Class<?>[] parameterTypes = constructor.getParameterTypes();
+                            Arrays.stream(parameterTypes).forEach(paramType -> {
+                                if (String.class.equals(paramType)) {
+                                    try {
+                                        bt.add((BTBG) constructor.newInstance(item.getTextContent()));
+                                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                    });
 
-                invoiceUtils.addChild(bg, bt);
+                    if(!bt.isEmpty()) {
+                        invoiceUtils.addChild(bg, bt.get(0));
+                    }
+                }
 
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 log.error(e.getMessage(), e);
             }
 

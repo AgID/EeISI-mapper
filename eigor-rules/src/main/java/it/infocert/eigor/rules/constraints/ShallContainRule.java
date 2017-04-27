@@ -1,22 +1,19 @@
-package it.infocert.eigor.rules.business;
+package it.infocert.eigor.rules.constraints;
 
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.model.AbstractBTBG;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.reflections.Reflections;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
-public class ShallContainBusinessRule implements Rule {
+public class ShallContainRule implements Rule {
 
     private String invoicePath;
+    private Reflections reflections;
 
-    public ShallContainBusinessRule(String invoicePath) {
+    public ShallContainRule(String invoicePath, Reflections reflections) {
         this.invoicePath = invoicePath;
+        this.reflections = reflections;
     }
 
 
@@ -25,13 +22,18 @@ public class ShallContainBusinessRule implements Rule {
         if (contains(invoice)) {
             return RuleOutcome.newSuccessOutcome("Invoice contains %s", invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
         } else {
-            return RuleOutcome.newFailedOutcome("Invoice doesn't contains %s", invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
+            return RuleOutcome.newFailedOutcome("Invoice doesn't contain %s", invoicePath.substring(invoicePath.lastIndexOf("/") + 1));
         }
 
     }
 
     private boolean contains(BG0000Invoice invoice) {
-        InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
+        InvoiceUtils invoiceUtils = new InvoiceUtils(reflections);
         return invoiceUtils.hasChild(invoicePath, invoice);
     }
+
+    public String getInvoicePath() {
+        return invoicePath;
+    }
+
 }

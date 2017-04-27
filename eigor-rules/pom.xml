@@ -5,11 +5,13 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Eigor :: Rules</name>
     <artifactId>eigor-rules</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
@@ -18,9 +20,60 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-fattpa-cen</artifactId>
-            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>cen-core</artifactId>
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.danidemi</groupId>
+                <artifactId>template-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-rules</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/rules/rules.csv</pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/rules/ConstraintRepositoryTemplate.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/ConstraintsRepository.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-rules</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/fromcsv</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

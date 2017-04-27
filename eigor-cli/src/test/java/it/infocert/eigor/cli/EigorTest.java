@@ -2,6 +2,7 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.rules.repositories.ConstraintsRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,9 +38,11 @@ public class EigorTest {
     private CommandLineInterpreter cli;
 
     @Before public void setUpCommandLineInterpeter() {
-        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository( new Reflections("it.infocert") );
+        Reflections reflections = new Reflections("it.infocert");
+        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
+        ConstraintsRepository constraintsRepo = new ConstraintsRepository(reflections);
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo, genericRepo, genericRepo
+                genericRepo, genericRepo, constraintsRepo
         );
     }
 
