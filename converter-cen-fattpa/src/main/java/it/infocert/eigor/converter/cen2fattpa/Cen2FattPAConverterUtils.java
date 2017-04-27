@@ -24,21 +24,23 @@ class Cen2FattPAConverterUtils {
 
 
     static String getCountryFromVATString(String vat) {
-        for (int i = 0; i < 2; i++) {
-            char c = vat.charAt(i);
-            if (!Character.isAlphabetic(c)) {
-                return "";
-            }
+        if (vat == null
+                || vat.length() < 2
+                || !Character.isAlphabetic(vat.charAt(0))
+                || !Character.isAlphabetic(vat.charAt(1))) {
+            return "";
         }
-        return vat.substring(0,2);
+        return vat.substring(0, 2);
     }
 
     static String getCodeFromVATString(String vat) {
-        for (int i = 0; i < 2; i++) {
-            char c = vat.charAt(i);
-            if (!Character.isAlphabetic(c)) {
-                return vat;
-            }
+        if (vat == null || vat.length() < 2) {
+            return "";
+        }
+        if (!Character.isAlphabetic(vat.charAt(0))
+                || !Character.isAlphabetic(vat.charAt(1))) {
+            // if no country code, the whole vat is considered vat code
+            return vat.trim();
         }
         return vat.substring(2).trim();
     }
