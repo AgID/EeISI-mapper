@@ -109,7 +109,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         for (DettaglioLineeType line : lineList) {
             invoiceTotal += line.getPrezzoTotale().doubleValue();
         }
-        Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue();
+        Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
         invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
     }
 
