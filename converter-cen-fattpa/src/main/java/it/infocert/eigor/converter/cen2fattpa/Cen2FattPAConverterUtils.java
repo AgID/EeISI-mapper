@@ -4,6 +4,8 @@ package it.infocert.eigor.converter.cen2fattpa;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 class Cen2FattPAConverterUtils {
@@ -43,5 +45,11 @@ class Cen2FattPAConverterUtils {
             return vat.trim();
         }
         return vat.substring(2).trim();
+    }
+
+    static BigDecimal doubleToBigDecimalWith2Decimals(Double value) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd;
     }
 }
