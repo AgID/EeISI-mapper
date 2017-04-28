@@ -13,12 +13,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
     private Double invoiceDiscountAmount;
+    private Double invoiceCorrectionAmount;
 
     public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice) {
         this.factory = factory;
         this.invoice = invoice;
         this.fatturaElettronicaBody = factory.createFatturaElettronicaBodyType();
         invoiceDiscountAmount = 0d;
+        invoiceCorrectionAmount = 0d;
     }
 
     public FatturaElettronicaBodyType getFatturaElettronicaBody() {
@@ -49,19 +51,19 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             }
             dettaglioLinee.setPrezzoUnitario(new BigDecimal(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
             dettaglioLinee.setPrezzoTotale(new BigDecimal(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
-            dettaglioLinee.setAliquotaIVA(new BigDecimal(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
+            dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
             datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
         }
 
 
         DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
-        datiRiepilogo1.setAliquotaIVA(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
+        datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
         datiRiepilogo1.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
         datiRiepilogo1.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
 
         DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
-        datiRiepilogo2.setAliquotaIVA(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
+        datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
         datiRiepilogo2.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
         datiRiepilogo2.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
@@ -86,19 +88,56 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         fatturaElettronicaBody.setDatiGenerali(datiGenerali);
     }
 
+
+    private void calculateDiscount() {
+        Double percentageDiscount = 0d;
+        Double baseAmount = 0d;
+
+        try {
+            percentageDiscount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0094DocumentLevelAllowancePercentage().get(0).getValue();
+            baseAmount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0093DocumentLevelAllowanceBaseAmount().get(0).getValue();
+        } catch (IndexOutOfBoundsException e) {
+            // do nothing if there is no document level discount
+        }
+
+        invoiceDiscountAmount = (baseAmount * percentageDiscount) / -100;
+    }
+
+    private void calculateCorrectionForTotalAmount() {
+        List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
+        Double invoiceTotal = 0d;
+        for (DettaglioLineeType line : lineList) {
+            invoiceTotal += line.getPrezzoTotale().doubleValue();
+        }
+        Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue();
+        invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
+    }
+
     private void addDiscountLine() {
         if (invoiceDiscountAmount < 0) {
-            DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
-            DettaglioLineeType dettaglioLinee = factory.createDettaglioLineeType();
-            dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().get(0).getNumeroLinea() + 1);
-            dettaglioLinee.setDescrizione(IConstants.DISCOUNT_DESCRIPTION);
-            dettaglioLinee.setQuantita(new BigDecimal(1));
-            dettaglioLinee.setUnitaMisura(IConstants.DISCOUNT_UNIT);
-            dettaglioLinee.setPrezzoUnitario(new BigDecimal(invoiceDiscountAmount));
-            dettaglioLinee.setPrezzoTotale(new BigDecimal(invoiceDiscountAmount));
-            dettaglioLinee.setAliquotaIVA(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-            datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
+            createAndAppendLine(IConstants.DISCOUNT_DESCRIPTION, IConstants.DISCOUNT_UNIT, 1d, invoiceDiscountAmount);
         }
+    }
+
+    private void addCorrectionLine() {
+        if (invoiceCorrectionAmount != 0) {
+            createAndAppendLine(IConstants.CORRECTION_DESCRIPTION, IConstants.CORRECTION_UNIT, 1d, invoiceCorrectionAmount);
+        }
+    }
+
+    private void createAndAppendLine(String description, String mUnitName, Double quantity, Double unitPrice) {
+        DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
+        DettaglioLineeType dettaglioLinee = factory.createDettaglioLineeType();
+
+        dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
+        dettaglioLinee.setDescrizione(description);
+        dettaglioLinee.setQuantita(new BigDecimal(quantity));
+        dettaglioLinee.setUnitaMisura(mUnitName);
+        dettaglioLinee.setPrezzoUnitario(new BigDecimal(unitPrice));
+        dettaglioLinee.setPrezzoTotale(new BigDecimal(unitPrice * quantity));
+        dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
+
+        datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
     }
 
     @Override
@@ -118,7 +157,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     @Override
     public void computeMultipleCenElements2FpaField() {
         transformInvoiceLinesWithItemPriceBaseQuatity();
+        calculateDiscount();
         addDiscountLine();
+        calculateCorrectionForTotalAmount();
+        addCorrectionLine();
     }
 
     private void transformInvoiceLinesWithItemPriceBaseQuatity() {
