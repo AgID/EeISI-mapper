@@ -21,6 +21,7 @@
         <module>eigor-api</module>
         <module>eigor-rules</module>
         <module>converter-csvcen-cen</module>
+        <module>converter-ubl-cen</module>
     </modules>
 
     <properties>

@@ -88,7 +88,7 @@ public class ConstraintsRepositoryTest {
         BG0000Invoice invoice = new BG0000Invoice();
         ConstraintsRepository repository = new ConstraintsRepository(new Reflections("it.infocert"));
 
-        List<Rule> rulesByType = repository.getRulesByType(ConditionalShallContainRule.class);
+        List<Rule> rulesByType = repository.rules();
         rulesByType.forEach(rule -> {
             RuleOutcome compliant = rule.isCompliant(invoice);
             assertEquals(RuleOutcome.Outcome.UNAPPLICABLE, compliant.outcome());
