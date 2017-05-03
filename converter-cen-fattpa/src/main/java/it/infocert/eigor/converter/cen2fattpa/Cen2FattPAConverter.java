@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
@@ -17,9 +17,13 @@ public class Cen2FattPAConverter implements FromCenConversion {
     private ObjectFactory factory = new ObjectFactory();
 
     @Override
-    public byte[] convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+    public ConversionResult convert(BG0000Invoice invoice) {
         try {
-            return makeXML(invoice);
+
+            ConversionResult conversionResult = new ConversionResult();
+            conversionResult.setResult(makeXML(invoice));
+            conversionResult.setSuccessful(true);
+            return conversionResult;
         } catch (JAXBException | DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }

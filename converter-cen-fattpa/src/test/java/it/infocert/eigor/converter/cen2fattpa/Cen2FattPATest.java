@@ -40,7 +40,7 @@ public class Cen2FattPATest {
     public void checkFattPAXMLsimple() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
         BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_simple.csv"));
-        byte[] fattpaXML = cen2FattPA.convert(invoice);
+        byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -205,7 +205,7 @@ public class Cen2FattPATest {
     public void checkFattPAXMLwithDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
         BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_discount.csv"));
-        byte[] fattpaXML = cen2FattPA.convert(invoice);
+        byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -277,7 +277,7 @@ public class Cen2FattPATest {
     public void checkFattPAXMLwithLineLevelChargesOrDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
         BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_line_charges.csv"));
-        byte[] fattpaXML = cen2FattPA.convert(invoice);
+        byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -346,11 +346,11 @@ public class Cen2FattPATest {
     @Test
     public void testNullOrEmptyVatIdSplitting() {
 
-            assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString("")));
-            assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString("")));
+        assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString("")));
+        assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString("")));
 
-            assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString(null)));
-            assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString(null)));
+        assertTrue("".equals(Cen2FattPAConverterUtils.getCountryFromVATString(null)));
+        assertTrue("".equals(Cen2FattPAConverterUtils.getCodeFromVATString(null)));
     }
 
     private String getStringByXPath(Document doc, String xpath) throws XPathExpressionException {
