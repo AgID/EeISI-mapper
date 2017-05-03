@@ -274,6 +274,45 @@ public class Cen2FattPATest {
     }
 
     @Test
+    public void checkFattPAXMLwithLineLevelChargesOrDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+
+        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_line_charges.csv"));
+        byte[] fattpaXML = cen2FattPA.convert(invoice);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new ByteArrayInputStream(fattpaXML));
+
+        // line 2 should be Line level surcharge for line 1
+
+        String line2Quantity = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/Quantita/text()");
+        assertThat("line2Quantity", line2Quantity, is("1"));
+
+        String line2UnitOfMeasure = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/UnitaMisura/text()");
+        assertThat("line2UnitOfMeasure", line2UnitOfMeasure, is("EA"));
+
+        String line2TotalPrice = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/PrezzoTotale/text()");
+        assertThat("line2TotalPrice", line2TotalPrice, is("100"));
+
+        String line2UnitPrice = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/PrezzoUnitario/text()");
+        assertThat("line2UnitPrice", line2UnitPrice, is("100"));
+
+        // line 4 should be Line level discount for line 3
+
+        String line4Quantity = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[4]/Quantita/text()");
+        assertThat("line4Quantity", line4Quantity, is("1"));
+
+        String line4UnitOfMeasure = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[4]/UnitaMisura/text()");
+        assertThat("line4UnitOfMeasure", line4UnitOfMeasure, is("EA"));
+
+        String line4TotalPrice = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[4]/PrezzoTotale/text()");
+        assertThat("line4TotalPrice", line4TotalPrice, is("-50"));
+
+        String line4UnitPrice = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[4]/PrezzoUnitario/text()");
+        assertThat("line4UnitPrice", line4UnitPrice, is("-50"));
+    }
+
+    @Test
     public void shouldSupportCsvCen() {
         assertThat(cen2FattPA.support("cenfattpa"), is(true));
         assertThat(cen2FattPA.support("CenFattPA"), is(true));
