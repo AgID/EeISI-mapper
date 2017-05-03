@@ -92,7 +92,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         if (chargeAmount > 0) {
             surchargeValue = chargeAmount;
         } else if (baseAmount != 0 && percentage != 0) {
-            surchargeValue = baseAmount * percentage / 100;
+            surchargeValue = baseAmount * percentage;
         }
 
 
@@ -111,7 +111,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         if (allowanceAmount > 0) {
             discountValue = -allowanceAmount;
         } else if (baseAmount != 0 && percentage != 0) {
-            discountValue = baseAmount * percentage / -100;
+            discountValue = baseAmount * -percentage;
         }
 
 
@@ -149,7 +149,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             // do nothing if there is no document level discount
         }
 
-        invoiceDiscountAmount = (baseAmount * percentageDiscount) / -100;
+        invoiceDiscountAmount = baseAmount * -percentageDiscount;
     }
 
     private void calculateCorrectionForTotalAmount() {
