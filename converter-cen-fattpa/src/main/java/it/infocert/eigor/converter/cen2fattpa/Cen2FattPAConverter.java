@@ -21,9 +21,9 @@ public class Cen2FattPAConverter implements FromCenConversion {
             byte[] xml = makeXML(invoice, conversionResult);
             conversionResult.setResult(xml);
 //            Validation currently disabled. Must check why it takes 10-15 seconds!!
-//            if (Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors()) && conversionResult.getErrors().isEmpty()) {
+            if (Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors()) && conversionResult.getErrors().isEmpty()) {
                 conversionResult.setSuccessful(true);
-//            }
+            }
             return conversionResult;
     }
 

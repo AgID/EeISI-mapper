@@ -64,12 +64,10 @@ class Cen2FattPAConverterUtils {
         return bd;
     }
 
-
     /**
-     *
      * @param xml Byte array containing raw XML
-     * @param errors List of exceptions, usually from @ConversionResult
-     * @return Is XML valid compared to XSD
+     * @param errors List of exceptions, usually from ConversionResult
+     * @return true if XML is valid compared to XSD
      */
     static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {
         URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("Schema_del_file_xml_FatturaPA_versione_1.2.xsd");

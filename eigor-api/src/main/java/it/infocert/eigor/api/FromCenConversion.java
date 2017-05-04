@@ -13,7 +13,11 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
  */
 public interface FromCenConversion {
 
-
+    /**
+     *
+     * @param invoice
+     * @return {@link ConversionResult ConversionResult}
+     */
     ConversionResult convert(BG0000Invoice invoice);
 
     /**

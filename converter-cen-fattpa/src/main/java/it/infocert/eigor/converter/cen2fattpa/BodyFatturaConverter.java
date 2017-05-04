@@ -106,6 +106,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         }
     }
 
+    /**
+     * Process line level discount (allowance)
+     * @param invoiceLine
+     */
     private void processLineDiscount(BG0025InvoiceLine invoiceLine) {
         Double discountValue = 0d;
         BG0027InvoiceLineAllowances bg0027 = invoiceLine.getBG0027InvoiceLineAllowances().get(0);
@@ -163,6 +167,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         }
     }
 
+    /**
+     * Checks if the sum of all lines without VAT matches total without VAT from CEN invoice.
+     * If not, it generates a correction line. This can occur if discounts or surcharges are converted from percent to values.
+     */
     private void calculateCorrectionForTotalAmount() {
         List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
         Double invoiceTotal = 0d;
