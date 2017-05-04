@@ -36,6 +36,7 @@ public class CsvCen2Cen implements ToCenConversion {
         conversionRegistry = new ConversionRegistry(
                 new StringToIso31661CountryCodesConverter(),
                 new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),
+                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
@@ -98,8 +99,14 @@ public class CsvCen2Cen implements ToCenConversion {
 
                 // A BG-XX can be instantiated...
                 if (btBgClass.getSimpleName().toLowerCase().startsWith("bg")) {
+
                     // BGs can be instantiated.
                     btbg = btBgClass.newInstance();
+
+                    // now, keep in mind that bg cannot have a value!
+                    if(bgbtValueFromCsv!=null && !bgbtValueFromCsv.trim().isEmpty()){
+                        throw new SyntaxErrorInInvoiceFormatException(btbg.denomination() + " cannot have a value, has '" + bgbtValueFromCsv + "' instead.");
+                    }
 
                 // A BT-XX should be instantiated through its constructor...
                 } else {
@@ -133,6 +140,8 @@ public class CsvCen2Cen implements ToCenConversion {
                 throw new RuntimeException(e);
             }
             if(btbg == null) throw new IllegalStateException("It was not possible to instantiate a BT/BG");
+
+
 
 
             // Calculate the path of the BG where we're trying to add the newly created BT/BG.
