@@ -28,18 +28,14 @@ public class Cen2FattPAConverter implements FromCenConversion {
 
     @Override
     public ConversionResult convert(BG0000Invoice invoice) {
-        try {
-
             ConversionResult conversionResult = new ConversionResult();
             byte[] xml = makeXML(invoice, conversionResult);
             conversionResult.setResult(xml);
+//            Validation currently disabled. Must check why it takes 10-15 seconds!!
 //            if (validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors()) && conversionResult.getErrors().isEmpty()) {
                 conversionResult.setSuccessful(true);
 //            }
             return conversionResult;
-        } catch (JAXBException | DatatypeConfigurationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -52,7 +48,7 @@ public class Cen2FattPAConverter implements FromCenConversion {
         return IConstants.SUPPORTED_FORMATS;
     }
 
-    private byte[] makeXML(BG0000Invoice invoice, ConversionResult conversionResult) throws JAXBException, DatatypeConfigurationException {
+    private byte[] makeXML(BG0000Invoice invoice, ConversionResult conversionResult) {
 
         StringWriter xmlOutput = new StringWriter();
 
@@ -75,11 +71,16 @@ public class Cen2FattPAConverter implements FromCenConversion {
 
 
         // XML GENERATION
-        JAXBContext context = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE); // neat formatting, for now
-        marshaller.marshal(fatturaElettronicaXML, xmlOutput);
 
+        JAXBContext context = null;
+        try {
+            context = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE); // neat formatting, for now
+            marshaller.marshal(fatturaElettronicaXML, xmlOutput);
+        } catch (JAXBException e) {
+            conversionResult.getErrors().add(new RuntimeException(IConstants.ERROR_XML_GENERATION));
+        }
         return xmlOutput.toString().getBytes();
     }
 

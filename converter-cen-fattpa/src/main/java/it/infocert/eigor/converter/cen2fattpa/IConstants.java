@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 public interface IConstants {
-
     String CONVERTER_SUPPORT = "cenfattpa";
     String SUPPORTED_FORMATS = "cenfattpa";
     String SAMPLE_INVOICE = "Esempio fattura trasformata da CEN a XML-PA";
@@ -13,6 +12,7 @@ public interface IConstants {
     String ITEM_BASE_PRICE = "Item Price Base Quantity Unit of Measure";
     String LINE_LEVEL_DISCOUNT_DESCRIPTION = "Line level discount";
     String LINE_LEVEL_SURCHARGE_DESCRIPTION = "Line level surcharge";
+    String ERROR_XML_GENERATION = "Error generating XML";
     String ERROR_XML_VALIDATION_FAILED = "XSD validation failed!";
     String ERROR_BUYER_INFORMATION = "Buyer information error.";
     String ERROR_SELLER_INFORMATION = "Seller information error";
