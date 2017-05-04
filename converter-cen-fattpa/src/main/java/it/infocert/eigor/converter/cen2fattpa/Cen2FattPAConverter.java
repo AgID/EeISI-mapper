@@ -4,13 +4,23 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.util.List;
 
 public class Cen2FattPAConverter implements FromCenConversion {
 
@@ -21,8 +31,11 @@ public class Cen2FattPAConverter implements FromCenConversion {
         try {
 
             ConversionResult conversionResult = new ConversionResult();
-            conversionResult.setResult(makeXML(invoice));
-            conversionResult.setSuccessful(true);
+            byte[] xml = makeXML(invoice);
+            conversionResult.setResult(xml);
+            if (validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors())) {
+                conversionResult.setSuccessful(true);
+            }
             return conversionResult;
         } catch (JAXBException | DatatypeConfigurationException e) {
             throw new RuntimeException(e);
@@ -68,6 +81,21 @@ public class Cen2FattPAConverter implements FromCenConversion {
         marshaller.marshal(fatturaElettronicaXML, xmlOutput);
 
         return xmlOutput.toString().getBytes();
+    }
+
+
+    private Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {
+        URL schemaFile = getClass().getClassLoader().getResource("Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
+        Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            schema.newValidator().validate(xmlFile);
+        } catch (SAXException | IOException e) {
+            errors.add(new RuntimeException("XSD validation failed!", e));
+            return false;
+        }
+        return true;
     }
 }
 
