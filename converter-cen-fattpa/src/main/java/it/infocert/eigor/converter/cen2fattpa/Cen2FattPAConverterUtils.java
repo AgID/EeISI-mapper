@@ -1,12 +1,23 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 
 class Cen2FattPAConverterUtils {
 
@@ -51,5 +62,26 @@ class Cen2FattPAConverterUtils {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd;
+    }
+
+
+    /**
+     *
+     * @param xml Byte array containing raw XML
+     * @param errors List of exceptions, usually from @ConversionResult
+     * @return Is XML valid compared to XSD
+     */
+    static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {
+        URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
+        Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            schema.newValidator().validate(xmlFile);
+        } catch (SAXException | IOException e) {
+            errors.add(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e));
+            return false;
+        }
+        return true;
     }
 }
