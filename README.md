@@ -101,11 +101,25 @@ Java 8 is needed. To build the project:
 
     mvn clean install
     
-If it completes correctly, you'll find the CLI executable jar here...
-    
-    eigor-cli/target/eigor.jar
-    
-Execute it with `java -jar eigor.jar` to run it.
+To package a distribution zip:
+```bash
+mvn package -P release
+```
+
+You will find the zip file in `eigor-cli/target/eigor.zip`, unzip the file and run one of the following scripts,
+according to your operative sistem:   
+
+*Windows*
+```powershell
+.\eigor.bat <insert params>
+```
+*Unix (MacOS, Linux, BSD...)*
+```bash
+./eigor.sh <insert params>
+```
+
+Example invoices can be found in `./examples`, configuration files in `./conf` and log files 
+are stored in `./logs`. A `./reports` folder will be automatically created as a potential output results.
 
 ## Release
 1. start a release with gitflow. That places you in a `release/eigor-x.y.z` branch.
