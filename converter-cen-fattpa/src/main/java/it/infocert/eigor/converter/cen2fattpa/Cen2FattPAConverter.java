@@ -31,11 +31,11 @@ public class Cen2FattPAConverter implements FromCenConversion {
         try {
 
             ConversionResult conversionResult = new ConversionResult();
-            byte[] xml = makeXML(invoice);
+            byte[] xml = makeXML(invoice, conversionResult);
             conversionResult.setResult(xml);
-            if (validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors())) {
+//            if (validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors()) && conversionResult.getErrors().isEmpty()) {
                 conversionResult.setSuccessful(true);
-            }
+//            }
             return conversionResult;
         } catch (JAXBException | DatatypeConfigurationException e) {
             throw new RuntimeException(e);
@@ -52,15 +52,15 @@ public class Cen2FattPAConverter implements FromCenConversion {
         return IConstants.SUPPORTED_FORMATS;
     }
 
-    private byte[] makeXML(BG0000Invoice invoice) throws JAXBException, DatatypeConfigurationException {
+    private byte[] makeXML(BG0000Invoice invoice, ConversionResult conversionResult) throws JAXBException, DatatypeConfigurationException {
 
         StringWriter xmlOutput = new StringWriter();
 
         // INVOICE CREATION
-        HeaderFatturaConverter hfc = new HeaderFatturaConverter(factory, invoice);
+        HeaderFatturaConverter hfc = new HeaderFatturaConverter(factory, invoice, conversionResult.getErrors());
         hfc.copyRequiredOne2OneFields();
 
-        BodyFatturaConverter bfc = new BodyFatturaConverter(factory, invoice);
+        BodyFatturaConverter bfc = new BodyFatturaConverter(factory, invoice, conversionResult.getErrors());
         bfc.copyRequiredOne2OneFields();
         bfc.copyOptionalOne2OneFields();
         bfc.computeMultipleCenElements2FpaField();
@@ -92,7 +92,7 @@ public class Cen2FattPAConverter implements FromCenConversion {
             Schema schema = schemaFactory.newSchema(schemaFile);
             schema.newValidator().validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(new RuntimeException("XSD validation failed!", e));
+            errors.add(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e));
             return false;
         }
         return true;

@@ -13,4 +13,14 @@ public interface IConstants {
     String ITEM_BASE_PRICE = "Item Price Base Quantity Unit of Measure";
     String LINE_LEVEL_DISCOUNT_DESCRIPTION = "Line level discount";
     String LINE_LEVEL_SURCHARGE_DESCRIPTION = "Line level surcharge";
+    String ERROR_XML_VALIDATION_FAILED = "XSD validation failed!";
+    String ERROR_BUYER_INFORMATION = "Buyer information error.";
+    String ERROR_SELLER_INFORMATION = "Seller information error";
+    String ERROR_TRANSMISSION_INFORMATION = "Dati Transmisioni error";
+    String ERROR_PAYMENT_INFORMATION = "Payment information error";
+    String ERROR_GENERAL_INFORMATION = "General invoice information error";
+    String ERROR_INVOICE_LEVEL_ALLOWANCES = "Invoice level allowances error";
+    String ERROR_TOTAL_AMOUNT_CORRECTION = "Invoice level allowances correction line error. Missing total amount without VAT?";
+    String ERROR_BASE_QUANTITY_TRANSFORM = "Error transforming base unit/qty for sales line.";
+    String ERROR_LINE_PROCESSING = "Error processing invoice line";
 }
