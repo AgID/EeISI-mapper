@@ -44,7 +44,7 @@ public class ApiTest {
             RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
             ruleReport.store( ruleOutcome, rule );
         });
-        byte[] converted = fromCen.convert(cenInvoice);
+        byte[] converted = fromCen.convert(cenInvoice).getResult();
 
     }
 

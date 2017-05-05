@@ -40,7 +40,7 @@ public class ConversionCommand implements CliCommand {
     }
 
     @Override
-    public int execute(PrintStream out, PrintStream err){
+    public int execute(PrintStream out, PrintStream err) {
 
         InMemoryRuleReport ruleReport = new InMemoryRuleReport();
         File outputFolderFile;
@@ -51,16 +51,16 @@ public class ConversionCommand implements CliCommand {
             BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
             ruleRepository.rules().forEach(rule -> {
                 RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
-                ruleReport.store( ruleOutcome, rule );
+                ruleReport.store(ruleOutcome, rule);
             });
-            byte[] converted = fromCen.convert(cenInvoice);
+            byte[] converted = fromCen.convert(cenInvoice).getResult();
 
 
             outputFolderFile = outputFolder.toFile();
 
             // writes cen invoice
             Visitor v = new DumpVisitor();
-            cenInvoice.accept( v );
+            cenInvoice.accept(v);
             FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
 
             // writes target invoice
