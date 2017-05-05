@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -33,8 +34,8 @@ public class CsvCen2CenTest {
         // given
         InputStream inputStream = asStream(
                 "BG/BT,Business Term Name,Value,Remarks,Calculations",
-                "BG-4,,XXX,,",
-                "BG-5,,XXX,,",
+                "BG-4,,,,",
+                "BG-5,,,,",
                 "BT-40,,AE,,");
 
         // when
@@ -117,16 +118,54 @@ public class CsvCen2CenTest {
 
     }
 
-    private InputStream asStream(String... lines) {
-        String join = String.join("\n", asList(lines));
-        return new ByteArrayInputStream(join.getBytes());
-    }
-
     @Test
     public void shouldSupportCsvCen() {
         assertThat( sut.support("csvcen"), is(true));
         assertThat( sut.support("CsvCen"), is(true));
         assertThat( sut.support("xml"), is(false));
+    }
+
+    @Test
+    public void shouldFixBug36() throws SyntaxErrorInInvoiceFormatException {
+
+        // given
+        InputStream inputStream = asStream(
+                "BG/BT,Value",
+                "BT-2,2015-01-09");
+
+        // when
+        BG0000Invoice invoice = sut.convert(inputStream);
+
+        // then
+        assertThat(invoice.getBT0002InvoiceIssueDate().get(0).toString(), equalTo("2015-01-09"));
+
+    }
+
+
+    @Test
+    public void shouldComplainIfBgHasAValue() {
+
+        // given
+        InputStream invoiceWithBgAndValue = asStream(
+                "BG/BT,Value",
+                "BG-2,BG-SHOULD-NOT-HAVE-A-VALUE");
+
+        // when
+        SyntaxErrorInInvoiceFormatException se = null;
+        try {
+            sut.convert(invoiceWithBgAndValue);
+        } catch (SyntaxErrorInInvoiceFormatException e) {
+            se = e;
+        }
+
+        // then
+        assertThat(se.getMessage().toLowerCase(), containsString("bg0002 cannot have a value, has 'bg-should-not-have-a-value' instead."));
+
+    }
+
+    private InputStream asStream(String... lines) {
+        String join = String.join("\n", asList(lines));
+        return new ByteArrayInputStream(join.getBytes());
     }
 
 }
