@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class ConversionResult {
 
-    private Boolean successful;
-    private Boolean hasResult;
+    private boolean successful;
+    private boolean hasResult;
     private List<Exception> errors;
     private final byte[] result;
 
@@ -34,14 +34,14 @@ public class ConversionResult {
     /**
      * @return TRUE if error list is empty and result is valid
      */
-    public Boolean isSuccessful() {
+    public boolean isSuccessful() {
         return successful;
     }
 
     /**
      * @return TRUE if atleast some result XML was generated
      */
-    public Boolean hasResult() {
+    public boolean hasResult() {
         return hasResult;
     }
 
