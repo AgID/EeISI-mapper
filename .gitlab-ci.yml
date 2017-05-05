@@ -11,10 +11,10 @@ tests:
 
 package-cli:
   stage: packaging
-  script: mvn package
+  script: mvn package -P release
   artifacts:
     paths:
-      - eigor-cli/target/eigor.jar
+      - eigor-cli/target/eigor.zip
   only:
     - master
 
