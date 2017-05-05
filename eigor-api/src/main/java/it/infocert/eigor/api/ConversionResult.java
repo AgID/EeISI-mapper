@@ -1,6 +1,5 @@
 package it.infocert.eigor.api;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +14,7 @@ public class ConversionResult {
     /**
      * Immutable object constructed with data result and not null but possible empty array of errors
      * The other flags, successful and hasResult are set automatically based on the result and errors parameters
+     *
      * @param result
      * @param errors
      */
@@ -23,9 +23,9 @@ public class ConversionResult {
 
         this.result = result;
         this.errors = errors;
-        if (result != null && result.length > 0){
+        if (result != null && result.length > 0) {
             hasResult = true;
-            if (errors.isEmpty()){
+            if (errors.isEmpty()) {
                 successful = true;
             }
         }
