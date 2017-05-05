@@ -128,6 +128,11 @@
                 <artifactId>eigor-rules</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-ubl-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--Testing-->
             <dependency>
@@ -170,14 +175,24 @@
                     <artifactId>template-generator-maven-plugin</artifactId>
                     <version>0.0.4</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <version>1.1.11</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.1.11</version>
                 <configuration>
+                    <targetClasses>
+                        <param>it.infocert.eigor.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>it.infocert.eigor.*</param>
+                    </targetTests>
                     <threads>5</threads>
                 </configuration>
                 <executions>
@@ -204,4 +219,25 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <sourceDataFormats>
+                        <sourceDataFormat>HTML</sourceDataFormat>
+                    </sourceDataFormats>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
