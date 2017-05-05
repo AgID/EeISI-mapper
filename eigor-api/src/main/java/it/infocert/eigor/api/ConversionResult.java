@@ -1,19 +1,34 @@
 package it.infocert.eigor.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ConversionResult {
 
     private Boolean successful;
     private Boolean hasResult;
     private List<Exception> errors;
-    private byte[] result;
+    private final byte[] result;
 
-    public ConversionResult() {
-        successful = false;
-        hasResult = false;
-        errors = new ArrayList<>();
+    /**
+     * Immutable object constructed with data result and not null but possible empty array of errors
+     * The other flags, successful and hasResult are set automatically based on the result and errors parameters
+     * @param result
+     * @param errors
+     */
+    public ConversionResult(byte[] result, List<Exception> errors) {
+        Objects.requireNonNull(errors);
+
+        this.result = result;
+        this.errors = errors;
+        if (result != null && result.length > 0){
+            hasResult = true;
+            if (errors.isEmpty()){
+                successful = true;
+            }
+        }
     }
 
     /**
@@ -21,10 +36,6 @@ public class ConversionResult {
      */
     public Boolean isSuccessful() {
         return successful;
-    }
-
-    public void setSuccessful(Boolean successful) {
-        this.successful = successful;
     }
 
     /**
@@ -38,7 +49,7 @@ public class ConversionResult {
      * @return List of exceptions caught during conversion
      */
     public List<Exception> getErrors() {
-        return errors;
+        return Collections.unmodifiableList(errors);
     }
 
     /**
@@ -46,10 +57,5 @@ public class ConversionResult {
      */
     public byte[] getResult() {
         return result;
-    }
-
-    public void setResult(byte[] result) {
-        this.result = result;
-        hasResult = true;
     }
 }

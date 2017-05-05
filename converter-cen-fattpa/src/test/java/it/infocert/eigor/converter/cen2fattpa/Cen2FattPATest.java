@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -17,6 +18,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -358,4 +360,14 @@ public class Cen2FattPATest {
         return (String) xPathExpression.evaluate(doc, XPathConstants.STRING);
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void testImmutableConversionResult() {
+        ConversionResult cr = new ConversionResult("dummy".getBytes(), new ArrayList<Exception>());
+        cr.getErrors().add(new Exception());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullErrorsConversionResult() {
+        ConversionResult cr = new ConversionResult("dummy".getBytes(), null);
+    }
 }

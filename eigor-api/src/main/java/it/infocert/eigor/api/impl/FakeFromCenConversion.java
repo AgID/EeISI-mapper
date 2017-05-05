@@ -4,6 +4,8 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
+import java.util.ArrayList;
+
 /**
  * A fake conversion used to lay out the API general structure.
  *
@@ -13,9 +15,7 @@ public class FakeFromCenConversion implements FromCenConversion {
 
     @Override
     public ConversionResult convert(BG0000Invoice invoice) {
-        ConversionResult conversionResult = new ConversionResult();
-        conversionResult.setResult("this is a fake invoice".getBytes());
-        conversionResult.setSuccessful(true);
+        ConversionResult conversionResult = new ConversionResult("this is a fake invoice".getBytes(), new ArrayList<Exception>());
         return conversionResult;
     }
 

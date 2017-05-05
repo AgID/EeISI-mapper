@@ -10,20 +10,27 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cen2FattPAConverter implements FromCenConversion {
 
     private ObjectFactory factory = new ObjectFactory();
 
+    /**
+     * Create XML based on Cen2FattPAConverter
+     * Apply XSD validation on resulting XML
+     * @param invoice
+     * @return ConversionResult object wrapping xml data and resulting errors from converting and XSD validation
+     */
     @Override
     public ConversionResult convert(BG0000Invoice invoice) {
-            ConversionResult conversionResult = new ConversionResult();
-            byte[] xml = makeXML(invoice, conversionResult);
-            conversionResult.setResult(xml);
-            if (Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, conversionResult.getErrors()) && conversionResult.getErrors().isEmpty()) {
-                conversionResult.setSuccessful(true);
-            }
-            return conversionResult;
+
+            List<Exception> errors = new ArrayList<Exception>();
+            byte[] xml = makeXML(invoice, errors);
+            Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, errors);
+
+            return new ConversionResult(xml, errors);
     }
 
     @Override
@@ -36,15 +43,15 @@ public class Cen2FattPAConverter implements FromCenConversion {
         return IConstants.SUPPORTED_FORMATS;
     }
 
-    private byte[] makeXML(BG0000Invoice invoice, ConversionResult conversionResult) {
+    private byte[] makeXML(BG0000Invoice invoice, List<Exception> errors) {
 
         StringWriter xmlOutput = new StringWriter();
 
         // INVOICE CREATION
-        HeaderFatturaConverter hfc = new HeaderFatturaConverter(factory, invoice, conversionResult.getErrors());
+        HeaderFatturaConverter hfc = new HeaderFatturaConverter(factory, invoice, errors);
         hfc.copyRequiredOne2OneFields();
 
-        BodyFatturaConverter bfc = new BodyFatturaConverter(factory, invoice, conversionResult.getErrors());
+        BodyFatturaConverter bfc = new BodyFatturaConverter(factory, invoice, errors);
         bfc.copyRequiredOne2OneFields();
         bfc.copyOptionalOne2OneFields();
         bfc.computeMultipleCenElements2FpaField();
@@ -67,7 +74,7 @@ public class Cen2FattPAConverter implements FromCenConversion {
             marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE); // neat formatting, for now
             marshaller.marshal(fatturaElettronicaXML, xmlOutput);
         } catch (JAXBException e) {
-            conversionResult.getErrors().add(new RuntimeException(IConstants.ERROR_XML_GENERATION));
+            errors.add(new RuntimeException(IConstants.ERROR_XML_GENERATION));
         }
         return xmlOutput.toString().getBytes();
     }
