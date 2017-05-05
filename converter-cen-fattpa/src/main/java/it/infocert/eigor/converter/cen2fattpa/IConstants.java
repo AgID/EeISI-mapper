@@ -8,8 +8,8 @@ public interface IConstants {
     String DISCOUNT_UNIT = "EA";
     String CORRECTION_DESCRIPTION = "CORRECTION";
     String CORRECTION_UNIT = "EA";
-    String ITEM_BASE_QTY = "Item Price Base Quantity";
-    String ITEM_BASE_PRICE = "Item Price Base Quantity Unit of Measure";
+    String ITEM_BASE_QTY = "Base Qty.";
+    String ITEM_BASE_PRICE = "Base Unit";
     String LINE_LEVEL_DISCOUNT_DESCRIPTION = "Line level discount";
     String LINE_LEVEL_SURCHARGE_DESCRIPTION = "Line level surcharge";
     String ERROR_XML_GENERATION = "Error generating XML";

@@ -91,6 +91,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
     private void setDatiTrasmissione() {
         DatiTrasmissioneType datiTrasmissioneType = factory.createDatiTrasmissioneType();
         datiTrasmissioneType.setFormatoTrasmissione(FormatoTrasmissioneType.FPA_12);
+//        datiTrasmissioneType.setProgressivoInvio("dummy"); // FIXME no actual mapping, required by XSD
         fatturaElettronicaHeader.setDatiTrasmissione(datiTrasmissioneType);
         IdFiscaleType idFiscaleSeller = factory.createIdFiscaleType();
         datiTrasmissioneType.setIdTrasmittente(idFiscaleSeller);

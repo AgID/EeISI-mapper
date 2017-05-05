@@ -53,12 +53,12 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 if (invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
                         invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                    dettaglioLinee.setQuantita(new BigDecimal(invoice.getBG0025InvoiceLine().get(i).getBT0129InvoicedQuantity().get(0).getValue()));
+                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0025InvoiceLine().get(i).getBT0129InvoicedQuantity().get(0).getValue()));
                     dettaglioLinee.setUnitaMisura(invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode());
                 }
 
-                dettaglioLinee.setPrezzoUnitario(new BigDecimal(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
-                dettaglioLinee.setPrezzoTotale(new BigDecimal(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
+                dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
+                dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
                 dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             } catch (Exception e) {
@@ -75,14 +75,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
         datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo1.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo1.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+        datiRiepilogo1.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+        datiRiepilogo1.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
 
         DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
         datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo2.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo2.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+        datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+        datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
 
     }
@@ -143,7 +143,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
             datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
 
-            datiGeneraliDocumento.setImportoTotaleDocumento(new BigDecimal(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
+            datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
         }
@@ -203,10 +203,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
         dettaglioLinee.setDescrizione(description);
-        dettaglioLinee.setQuantita(new BigDecimal(quantity));
+        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
         dettaglioLinee.setUnitaMisura(mUnitName);
-        dettaglioLinee.setPrezzoUnitario(new BigDecimal(unitPrice));
-        dettaglioLinee.setPrezzoTotale(new BigDecimal(unitPrice * quantity));
+        dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(unitPrice));
+        dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(unitPrice * quantity));
         dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
 
         datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
@@ -221,10 +221,13 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         DettaglioPagamentoType dettaglioPagamento = factory.createDettaglioPagamentoType();
         DatiPagamentoType datiPagamento = factory.createDatiPagamentoType();
         datiPagamento.getDettaglioPagamento().add(dettaglioPagamento);
+//        datiPagamento.setCondizioniPagamento(CondizioniPagamentoType.TP_01); // FIXME no actual mapping, dummy value
         fatturaElettronicaBody.getDatiPagamento().add(datiPagamento);
         try {
             dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
-            dettaglioPagamento.setImportoPagamento(new BigDecimal(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
+            dettaglioPagamento.setImportoPagamento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
+//            dettaglioPagamento.setBeneficiario("dummy"); // FIXME no actual mapping, dummy value
+//            dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_01); // FIXME no actual mapping, dummy value
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_PAYMENT_INFORMATION, e));
         }
@@ -255,7 +258,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     Double bt0149 = invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().get(0).getValue();
                     String bt0150 = invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
 
-                    dettaglioLinee.setQuantita(new BigDecimal(bt0129 / bt0149));
+                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0129 / bt0149));
                     dettaglioLinee.setUnitaMisura(bt0149.toString() + " " + bt0130);
 
                     AltriDatiGestionaliType altriDatiGestionaliQty = factory.createAltriDatiGestionaliType();
@@ -267,7 +270,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
 
                     altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
-                    altriDatiGestionaliQty.setRiferimentoNumero(new BigDecimal(bt0149));
+                    altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0149));
                 } catch (Exception e) {
                     errors.add(new RuntimeException(IConstants.ERROR_BASE_QUANTITY_TRANSFORM, e));
                 }
