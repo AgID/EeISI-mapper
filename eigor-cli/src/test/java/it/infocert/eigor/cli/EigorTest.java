@@ -231,7 +231,7 @@ public class EigorTest {
 
         // then a fromcen-errors.csv should be created for the errors along with the other files
         List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report expected.", files, hasSize(4) );
+        assertThat( "fromcen-errors, converted invoice, cen invoice, rule report expected.", files, hasSize(4) );
 
         assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("fromcen-errors.csv")), notNullValue() );
         assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
