@@ -1,9 +1,6 @@
 package it.infocert.eigor.cli.commands;
 
-import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.RuleRepository;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
@@ -17,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by danidemi on 19/04/17.
@@ -53,10 +52,35 @@ public class ConversionCommand implements CliCommand {
                 RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
                 ruleReport.store(ruleOutcome, rule);
             });
-            byte[] converted = fromCen.convert(cenInvoice).getResult();
 
-
+            ConversionResult conversionResult = fromCen.convert(cenInvoice);
+            byte[] converted = conversionResult.getResult();
             outputFolderFile = outputFolder.toFile();
+
+
+            if(conversionResult.isSuccessful()){
+                out.println("Conversion was successful!");
+            }else {
+                out.println("Conversion finished, but some errors have occured:");
+                List<Exception> errors = conversionResult.getErrors();
+
+
+                String fromCenErrorsCsv = "Error,Reason\n" +
+                        errors.stream()
+                                .map(x -> x.getMessage() + "," + x.getCause())
+                                .collect(Collectors.joining("\n"));
+
+                // writes from-cen errors csv
+                File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+                FileUtils.writeStringToFile(fromCenErrors, fromCenErrorsCsv);
+
+                for (Exception e : errors){
+                    out.println("Error: " + e.getMessage());
+                }
+                out.println("For more information see 'fromcen-errors.csv'.");
+            }
+
+
 
             // writes cen invoice
             Visitor v = new DumpVisitor();
