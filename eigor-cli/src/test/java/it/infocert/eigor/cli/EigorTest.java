@@ -210,12 +210,33 @@ public class EigorTest {
                 "--output", "i-bet-this-folder-does-not-exist"
         } );
 
-        // then
+        // theninvoice-
         assertThat(err().toLowerCase(), allOf(
                 containsString("output folder"),
                 containsString("i-bet-this-folder-does-not-exist"),
                 containsString("does not exist")
         ));
+
+    }
+
+    @Test public void fromCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException {
+
+        // when converting a fake (empty) invoice errors should occur
+        new EigorCli(cli).run(new String[]{
+                "--input", plainFattPa.getAbsolutePath(),
+                "--source", "fake",
+                "--target", "cenfattpa",
+                "--output", outputDir.getAbsolutePath()
+        } );
+
+        // then a fromcen-errors.csv should be created for the errors along with the other files
+        List<File> files = asList( outputDir.listFiles() );
+        assertThat( "converted invoice, cen invoice, rule report expected.", files, hasSize(4) );
+
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("fromcen-errors.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
+        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
 
     }
 
