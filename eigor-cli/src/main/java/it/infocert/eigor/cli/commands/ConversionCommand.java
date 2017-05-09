@@ -38,6 +38,14 @@ public class ConversionCommand implements CliCommand {
         this.invoiceInSourceFormat = invoiceInSourceFormat;
     }
 
+    /**
+     * Execute toCen converter and fromCen converter.
+     * Extract conversion result and rule validation report.
+     * Generate fromcen-errors.csv, invoice-cen.csv, invoice-target.xml, rule-report.csv
+     * @param out The system output.
+     * @param err The system err.
+     * @return 0 if success, 1 if IOException|SyntaxErrorInInvoiceFormatException
+     */
     @Override
     public int execute(PrintStream out, PrintStream err) {
 
@@ -52,48 +60,14 @@ public class ConversionCommand implements CliCommand {
                 RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
                 ruleReport.store(ruleOutcome, rule);
             });
-
             ConversionResult conversionResult = fromCen.convert(cenInvoice);
             byte[] converted = conversionResult.getResult();
             outputFolderFile = outputFolder.toFile();
 
-
-            if(conversionResult.isSuccessful()){
-                out.println("Conversion was successful!");
-            }else {
-                out.println("Conversion finished, but some errors have occured:");
-                List<Exception> errors = conversionResult.getErrors();
-
-
-                String fromCenErrorsCsv = "Error,Reason\n" +
-                        errors.stream()
-                                .map(x -> x.getMessage() + "," + x.getCause())
-                                .collect(Collectors.joining("\n"));
-
-                // writes from-cen errors csv
-                File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
-                FileUtils.writeStringToFile(fromCenErrors, fromCenErrorsCsv);
-
-                for (Exception e : errors){
-                    out.println("Error: " + e.getMessage());
-                }
-                out.println("For more information see 'fromcen-errors.csv'.");
-            }
-
-
-
-            // writes cen invoice
-            Visitor v = new DumpVisitor();
-            cenInvoice.accept(v);
-            FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
-
-            // writes target invoice
-            File outfile = new File(outputFolderFile, "invoice-target.xml");
-            FileUtils.writeByteArrayToFile(outfile, converted);
-
-            // writes report
-            File outreport = new File(outputFolderFile, "rule-report.csv");
-            FileUtils.writeStringToFile(outreport, ruleReport.dump());
+            writeFromCenErrors(out, conversionResult, outputFolderFile);
+            writeCenInvoice(cenInvoice, outputFolderFile);
+            writeTargetInvoice(converted, outputFolderFile);
+            writeRuleReport(ruleReport, outputFolderFile);
 
         } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
             e.printStackTrace(err);
@@ -103,6 +77,46 @@ public class ConversionCommand implements CliCommand {
         out.println("Conversion file stored in folder " + outputFolderFile.getAbsolutePath());
 
         return 0;
+    }
+
+    private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+        if(conversionResult.isSuccessful()){
+            out.println("Conversion was successful!");
+        }else {
+            out.println("Conversion finished, but some errors have occured:");
+            List<Exception> errors = conversionResult.getErrors();
+
+
+            String fromCenErrorsCsv = "Error,Reason\n" +
+                    errors.stream()
+                            .map(x -> x.getMessage() + "," + x.getCause())
+                            .collect(Collectors.joining("\n"));
+
+            // writes from-cen errors csv
+            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+            FileUtils.writeStringToFile(fromCenErrors, fromCenErrorsCsv);
+
+            for (Exception e : errors){
+                out.println("Error: " + e.getMessage());
+            }
+            out.println("For more information see 'fromcen-errors.csv'.");
+        }
+    }
+
+    private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
+        Visitor v = new DumpVisitor();
+        cenInvoice.accept(v);
+        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
+    }
+
+    private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
+        File outfile = new File(outputFolderFile, "invoice-target.xml");
+        FileUtils.writeByteArrayToFile(outfile, targetInvoice);
+    }
+
+    private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile) throws IOException {
+        File outreport = new File(outputFolderFile, "rule-report.csv");
+        FileUtils.writeStringToFile(outreport, ruleReport.dump());
     }
 
 }
