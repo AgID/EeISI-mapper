@@ -165,12 +165,13 @@ public class EigorTest {
 
         // then
         List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(4) );
+        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(5) );
 
         assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
         assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-target.fake")), notNullValue() );
         assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
         assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-source.xml")), notNullValue() );
 
     }
 
