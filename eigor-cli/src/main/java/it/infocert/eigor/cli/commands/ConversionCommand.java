@@ -48,7 +48,7 @@ public class ConversionCommand implements CliCommand {
         // Execute the conversion
         // ===================================================
         try {
-            BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
+            BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
             ruleRepository.rules().forEach(rule -> {
                 RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
                 ruleReport.store(ruleOutcome, rule);

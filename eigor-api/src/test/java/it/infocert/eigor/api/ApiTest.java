@@ -39,7 +39,7 @@ public class ApiTest {
         RuleReport ruleReport = new InMemoryRuleReport();
 
         // business logic
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
+        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         ruleRepository.rules().forEach( rule -> {
             RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
             ruleReport.store( ruleOutcome, rule );

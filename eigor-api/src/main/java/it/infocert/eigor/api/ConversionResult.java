@@ -1,61 +1,55 @@
 package it.infocert.eigor.api;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-public class ConversionResult {
+/**
+ * The result of a conversion executed by {@link FromCenConversion cen => xxx} converters
+ * and {@link ToCenConversion xxx => cen} converters.
+ */
+public class ConversionResult<R> {
 
-    private boolean successful;
-    private boolean hasResult;
-    private List<Exception> errors;
-    private final byte[] result;
+    protected final R result;
+    protected boolean successful;
+    protected List<Exception> errors;
 
-    /**
-     * Immutable object constructed with data result and not null but possible empty array of errors
-     * The other flags, successful and hasResult are set automatically based on the result and errors parameters
-     *
-     * @param result
-     * @param errors
-     */
-    public ConversionResult(byte[] result, List<Exception> errors) {
-        Objects.requireNonNull(errors);
 
+    public ConversionResult(List<Exception> errors, R result) {
+        this.errors = Collections.unmodifiableList(errors);
         this.result = result;
-        this.errors = errors;
-        if (result != null && result.length > 0) {
-            hasResult = true;
-            if (errors.isEmpty()) {
-                successful = true;
-            }
-        }
+    }
+
+    public ConversionResult(R result) {
+        this.result = result;
+        this.errors = Collections.unmodifiableList(new ArrayList<>());
     }
 
     /**
-     * @return TRUE if error list is empty and result is valid
+     * @return TRUE if conversion completed successfully, meaning error list is empty and result (if any) is valid.
      */
     public boolean isSuccessful() {
-        return successful;
+        return errors.isEmpty();
     }
 
     /**
-     * @return TRUE if atleast some result XML was generated
-     */
-    public boolean hasResult() {
-        return hasResult;
-    }
-
-    /**
-     * @return List of exceptions caught during conversion
+     * @return List of exceptions caught during conversion.
      */
     public List<Exception> getErrors() {
-        return Collections.unmodifiableList(errors);
+        return errors;
     }
 
     /**
-     * @return raw XML as Byte Array
+     * @return TRUE if the conversion was able to produce some result.
      */
-    public byte[] getResult() {
+    public boolean hasResult() {
+        return result != null;
+    }
+
+    /**
+     * @return The possibly invalid result.
+     */
+    public R getResult() {
         return result;
     }
 }

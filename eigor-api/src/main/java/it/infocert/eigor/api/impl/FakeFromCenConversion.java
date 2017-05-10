@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.impl;
 
-import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class FakeFromCenConversion implements FromCenConversion {
 
     @Override
-    public ConversionResult convert(BG0000Invoice invoice) {
-        ConversionResult conversionResult = new ConversionResult("this is a fake invoice".getBytes(), new ArrayList<Exception>());
-        return conversionResult;
+    public BinaryConversionResult convert(BG0000Invoice invoice) {
+        BinaryConversionResult binaryConversionResult = new BinaryConversionResult("this is a fake invoice".getBytes(), new ArrayList<Exception>());
+        return binaryConversionResult;
     }
 
     @Override

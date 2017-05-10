@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.conversion.*;
@@ -48,7 +49,7 @@ public class CsvCen2Cen implements ToCenConversion {
     }
 
     @Override
-    public BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+    public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 
@@ -191,7 +192,7 @@ public class CsvCen2Cen implements ToCenConversion {
         }
 
         // the topmost element in the stack is always the invoice.
-        return (BG0000Invoice) stack.get(0);
+        return new ConversionResult<BG0000Invoice>( (BG0000Invoice) stack.get(0) );
     }
 
     @Override

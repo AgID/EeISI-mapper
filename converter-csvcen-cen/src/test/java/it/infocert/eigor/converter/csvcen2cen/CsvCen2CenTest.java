@@ -29,6 +29,30 @@ public class CsvCen2CenTest {
     }
 
     @Test
+    public void shouldNotStopWhenAnUnmappabelEntityIsFound() {
+
+        // given
+        InputStream invoiceWithUnmappableBt3 = asStream(
+                "BG/BT,Value",
+                "BT-3,Invoice");
+
+        // when
+        BG0000Invoice invoice = null;
+        try {
+            invoice = sut.convert(invoiceWithUnmappableBt3).getResult();
+        }catch (Exception e){
+            fail("An exception should not be thrown");
+        }
+
+        // then
+        // ...the corresponding field should be null
+        assertThat( invoice.getBT0003InvoiceTypeCode(), nullValue() );
+
+    }
+
+
+
+    @Test
     public void shouldMapTheCountryCode() throws SyntaxErrorInInvoiceFormatException {
 
         // given
@@ -39,7 +63,7 @@ public class CsvCen2CenTest {
                 "BT-40,,AE,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         BT0040SellerCountryCode btCountryCode = invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0);
@@ -58,7 +82,7 @@ public class CsvCen2CenTest {
         // when
         SyntaxErrorInInvoiceFormatException exception = null;
         try {
-            BG0000Invoice invoice = sut.convert(inputStream);
+            BG0000Invoice invoice = sut.convert(inputStream).getResult();
             fail();
         } catch (SyntaxErrorInInvoiceFormatException e) {
             exception = e;
@@ -89,7 +113,7 @@ public class CsvCen2CenTest {
                 "BT-022,Invoice Note,This is note #2,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
@@ -109,7 +133,7 @@ public class CsvCen2CenTest {
         InputStream inputStream = getClass().getResourceAsStream("/cen-a7-minimum-content-with-std-values.csv");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         // let's check some elements.
@@ -134,7 +158,7 @@ public class CsvCen2CenTest {
                 "BT-2,2015-01-09");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         assertThat(invoice.getBT0002InvoiceIssueDate().get(0).toString(), equalTo("2015-01-09"));
