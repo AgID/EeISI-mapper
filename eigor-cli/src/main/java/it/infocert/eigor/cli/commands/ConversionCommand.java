@@ -4,6 +4,8 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
+import ch.qos.logback.core.filter.Filter;
+import ch.qos.logback.core.spi.FilterReply;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -90,6 +92,8 @@ public class ConversionCommand implements CliCommand {
         }
         byte[] converted = fromCen.convert(cenInvoice).getResult();
 
+        // writes clone of source invoice
+        cloneSourceInvoice(this.inputInvoice, outputFolderFile);
 
         // writes cen invoice
         Visitor v = new DumpVisitor();
@@ -107,6 +111,17 @@ public class ConversionCommand implements CliCommand {
         // writes report
         File outreport = new File(outputFolderFile, "rule-report.csv");
         FileUtils.writeStringToFile(outreport, ruleReport.dump());
+    }
+
+    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
+        String invoiceName = invoiceFile.toFile().getName();
+        int lastDotPosition = invoiceName.lastIndexOf('.');
+        String extension = null;
+        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
+            extension = invoiceName.substring(lastDotPosition+1);
+        }
+        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
     }
 
     public static class LogSupport {
@@ -159,6 +174,12 @@ public class ConversionCommand implements CliCommand {
             appender.setOutputStream(stream);
             appender.setImmediateFlush(true);
             appender.start();
+//            appender.addFilter(new Filter() {
+//                @Override
+//                public FilterReply decide(Object o) {
+//                    return null;
+//                }
+//            });
 
 
             log.addAppender(appender);
