@@ -14,12 +14,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
+    private List<Exception> errors;
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
 
-    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice) {
+    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<Exception> errors) {
         this.factory = factory;
         this.invoice = invoice;
+        this.errors = errors;
         this.fatturaElettronicaBody = factory.createFatturaElettronicaBodyType();
         invoiceDiscountAmount = 0d;
         invoiceCorrectionAmount = 0d;
@@ -48,17 +50,20 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
             dettaglioLinee.setDescrizione(invoiceLine.getBG0031ItemInformation().get(0).getBT0153ItemName().get(0).getValue());
 
-            if (invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
-                    invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                dettaglioLinee.setQuantita(new BigDecimal(invoice.getBG0025InvoiceLine().get(i).getBT0129InvoicedQuantity().get(0).getValue()));
-                dettaglioLinee.setUnitaMisura(invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode());
+            try {
+                if (invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
+                        invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
+                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0025InvoiceLine().get(i).getBT0129InvoicedQuantity().get(0).getValue()));
+                    dettaglioLinee.setUnitaMisura(invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode());
+                }
+
+                dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
+                dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
+                dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
+                datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
             }
-
-            dettaglioLinee.setPrezzoUnitario(new BigDecimal(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
-            dettaglioLinee.setPrezzoTotale(new BigDecimal(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
-            dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
-            datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
-
             if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                 processLineDiscount(invoiceLine);
             }
@@ -70,14 +75,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
         datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo1.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo1.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+        datiRiepilogo1.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+        datiRiepilogo1.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
 
         DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
         datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo2.setImponibileImporto(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo2.setImposta(new BigDecimal(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+        datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+        datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
         datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
 
     }
@@ -101,6 +106,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         }
     }
 
+    /**
+     * Process line level discount (allowance)
+     * @param invoiceLine
+     */
     private void processLineDiscount(BG0025InvoiceLine invoiceLine) {
         Double discountValue = 0d;
         BG0027InvoiceLineAllowances bg0027 = invoiceLine.getBG0027InvoiceLineAllowances().get(0);
@@ -123,43 +132,57 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private void setDatiGenerali() {
         DatiGeneraliType datiGenerali = factory.createDatiGeneraliType();
         DatiGeneraliDocumentoType datiGeneraliDocumento = factory.createDatiGeneraliDocumentoType();
-
-        datiGeneraliDocumento.setTipoDocumento(TipoDocumentoType.TD_01); // FIXME values from cen do not match fattpa enum
-//        datiGeneraliDocumento.setTipoDocumento(TipoDocumentoType.valueOf(invoice.getBT0003InvoiceTypeCode().get(0).getValue().getCode()));
-
-        datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
-        datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
-        datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
-
-        datiGeneraliDocumento.setImportoTotaleDocumento(new BigDecimal(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
         datiGeneraliDocumento.getCausale().add(IConstants.SAMPLE_INVOICE);
         datiGenerali.setDatiGeneraliDocumento(datiGeneraliDocumento);
         fatturaElettronicaBody.setDatiGenerali(datiGenerali);
+
+        try {
+            datiGeneraliDocumento.setTipoDocumento(TipoDocumentoType.TD_01);
+
+            datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
+            datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
+            datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
+
+            datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+        }
     }
 
 
     private void calculateDiscount() {
-        Double percentageDiscount = 0d;
-        Double baseAmount = 0d;
 
-        try {
-            percentageDiscount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0094DocumentLevelAllowancePercentage().get(0).getValue();
-            baseAmount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0093DocumentLevelAllowanceBaseAmount().get(0).getValue();
-        } catch (IndexOutOfBoundsException e) {
-            // do nothing if there is no document level discount
+
+        if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
+            Double percentageDiscount = 0d;
+            Double baseAmount = 0d;
+            try {
+                percentageDiscount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0094DocumentLevelAllowancePercentage().get(0).getValue();
+                baseAmount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0093DocumentLevelAllowanceBaseAmount().get(0).getValue();
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_INVOICE_LEVEL_ALLOWANCES, e));
+            }
+
+            invoiceDiscountAmount = baseAmount * -percentageDiscount;
         }
-
-        invoiceDiscountAmount = baseAmount * -percentageDiscount;
     }
 
+    /**
+     * Checks if the sum of all lines without VAT matches total without VAT from CEN invoice.
+     * If not, it generates a correction line. This can occur if discounts or surcharges are converted from percent to values.
+     */
     private void calculateCorrectionForTotalAmount() {
         List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
         Double invoiceTotal = 0d;
         for (DettaglioLineeType line : lineList) {
             invoiceTotal += line.getPrezzoTotale().doubleValue();
         }
-        Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
-        invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
+        try {
+            Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
+            invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_TOTAL_AMOUNT_CORRECTION, e));
+        }
     }
 
     private void addDiscountLine() {
@@ -180,10 +203,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
         dettaglioLinee.setDescrizione(description);
-        dettaglioLinee.setQuantita(new BigDecimal(quantity));
+        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
         dettaglioLinee.setUnitaMisura(mUnitName);
-        dettaglioLinee.setPrezzoUnitario(new BigDecimal(unitPrice));
-        dettaglioLinee.setPrezzoTotale(new BigDecimal(unitPrice * quantity));
+        dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(unitPrice));
+        dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(unitPrice * quantity));
         dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
 
         datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
@@ -196,23 +219,30 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     private void setDatiPagamento() {
         DettaglioPagamentoType dettaglioPagamento = factory.createDettaglioPagamentoType();
-        dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
-        dettaglioPagamento.setImportoPagamento(new BigDecimal(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
         DatiPagamentoType datiPagamento = factory.createDatiPagamentoType();
         datiPagamento.getDettaglioPagamento().add(dettaglioPagamento);
+//        datiPagamento.setCondizioniPagamento(CondizioniPagamentoType.TP_01); // FIXME no actual mapping, dummy value
         fatturaElettronicaBody.getDatiPagamento().add(datiPagamento);
+        try {
+            dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
+            dettaglioPagamento.setImportoPagamento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
+//            dettaglioPagamento.setBeneficiario("dummy"); // FIXME no actual mapping, dummy value
+//            dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_01); // FIXME no actual mapping, dummy value
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_PAYMENT_INFORMATION, e));
+        }
     }
 
     @Override
     public void computeMultipleCenElements2FpaField() {
-        transformInvoiceLinesWithItemPriceBaseQuatity();
+        transformInvoiceLinesWithItemPriceBaseQuantity();
         calculateDiscount();
         addDiscountLine();
         calculateCorrectionForTotalAmount();
         addCorrectionLine();
     }
 
-    private void transformInvoiceLinesWithItemPriceBaseQuatity() {
+    private void transformInvoiceLinesWithItemPriceBaseQuantity() {
         List<BG0025InvoiceLine> invoiceLineList = invoice.getBG0025InvoiceLine();
 
         for (int i = 0; i < invoiceLineList.size(); i++) {
@@ -222,23 +252,29 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             if (!(invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
                     invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty())) {
 
-                Double bt0129 = invoiceLine.getBT0129InvoicedQuantity().get(0).getValue();
-                String bt0130 = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
-                Double bt0149 = invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().get(0).getValue();
-                String bt0150 = invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
+                try {
+                    Double bt0129 = invoiceLine.getBT0129InvoicedQuantity().get(0).getValue();
+                    String bt0130 = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
+                    Double bt0149 = invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().get(0).getValue();
+                    String bt0150 = invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
 
-                dettaglioLinee.setQuantita(new BigDecimal(bt0129 / bt0149));
-                dettaglioLinee.setUnitaMisura(bt0149.toString() + " " + bt0130);
+                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0129 / bt0149));
+                    dettaglioLinee.setUnitaMisura(bt0149.toString() + " " + bt0130);
 
-                AltriDatiGestionaliType altriDatiGestionaliQty = factory.createAltriDatiGestionaliType();
-                altriDatiGestionaliQty.setRiferimentoNumero(new BigDecimal(bt0149));
-                altriDatiGestionaliQty.setTipoDato(IConstants.ITEM_BASE_QTY);
-                dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
+                    AltriDatiGestionaliType altriDatiGestionaliQty = factory.createAltriDatiGestionaliType();
+                    AltriDatiGestionaliType altriDatiGestionaliUnit = factory.createAltriDatiGestionaliType();
+                    altriDatiGestionaliQty.setTipoDato(IConstants.ITEM_BASE_QTY);
+                    altriDatiGestionaliUnit.setTipoDato(IConstants.ITEM_BASE_PRICE);
 
-                AltriDatiGestionaliType altriDatiGestionaliUnit = factory.createAltriDatiGestionaliType();
-                altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
-                altriDatiGestionaliUnit.setTipoDato(IConstants.ITEM_BASE_PRICE);
-                dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
+
+                    altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
+                    altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0149));
+                } catch (Exception e) {
+                    errors.add(new RuntimeException(IConstants.ERROR_BASE_QUANTITY_TRANSFORM, e));
+                }
+
             }
         }
     }
