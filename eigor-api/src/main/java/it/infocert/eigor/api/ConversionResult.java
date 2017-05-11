@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,13 @@ public class ConversionResult {
                 successful = true;
             }
         }
+    }
+
+    /**
+     * A conversion without errors.
+     */
+    public ConversionResult(byte[] result) {
+        this(result, new ArrayList<>());
     }
 
     /**
