@@ -1,7 +1,7 @@
 package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
-import it.infocert.eigor.rules.repositories.ConstraintsRepository;
+import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
@@ -35,10 +36,11 @@ public class EigorTest {
 
     @Before public void setUpCommandLineInterpeter() {
         Reflections reflections = new Reflections("it.infocert");
+        Properties properties = new Properties();
         ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
-        ConstraintsRepository constraintsRepo = new ConstraintsRepository(reflections);
+        IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo, genericRepo, constraintsRepo
+                genericRepo, genericRepo, integrityRepo
         );
     }
 

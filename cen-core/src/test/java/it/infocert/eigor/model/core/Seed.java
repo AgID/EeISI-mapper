@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 public class Seed {
 
     @Test
-    public void shouldApplyRule() {
+    public void shouldApplyRule() throws Exception{
 
         // given
         Br002AnInvoiceShallHaveAnInvoiceNumberRule rule = new Br002AnInvoiceShallHaveAnInvoiceNumberRule();

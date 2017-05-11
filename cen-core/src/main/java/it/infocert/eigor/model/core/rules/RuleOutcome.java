@@ -10,7 +10,9 @@ public class RuleOutcome {
         /** The rule cannot be verified against the invoice. */
         UNAPPLICABLE,
         /** The invoice failed to pass the rule. */
-        FAILED
+        FAILED,
+        /** The rule cannot be evaluated because of a problem in the rule itself. */
+        ERROR
     }
 
     private final Outcome outcome;
@@ -46,6 +48,10 @@ public class RuleOutcome {
      */
     public static RuleOutcome newUnapplicableOutcome(String stringFormat, Object... params) {
         return newOutcome(Outcome.UNAPPLICABLE, stringFormat, params);
+    }
+
+    public static RuleOutcome newErrorOutcome(String stringFormat, Object... params) {
+        return newOutcome(Outcome.ERROR, stringFormat, params);
     }
 
     public Outcome outcome() {
