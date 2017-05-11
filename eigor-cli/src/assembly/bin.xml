@@ -5,6 +5,7 @@
     <id>bin</id>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
 
@@ -33,6 +34,7 @@
                 <include>eigor.bat</include>
                 <include>eigor.sh</include>
             </includes>
+            <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
             <outputDirectory>/logs</outputDirectory>
