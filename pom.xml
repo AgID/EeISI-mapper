@@ -27,6 +27,7 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.6.6</powermock.version>
+        <juel-api.version>2.2.7</juel-api.version>
     </properties>
 
     <pluginRepositories>
@@ -126,6 +127,18 @@
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>eigor-rules</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- JUEL -->
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-api</artifactId>
+                <version>${juel-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-impl</artifactId>
+                <version>${juel-api.version}</version>
             </dependency>
 
             <!--Testing-->
