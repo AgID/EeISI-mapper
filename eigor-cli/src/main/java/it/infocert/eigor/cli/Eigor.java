@@ -16,6 +16,7 @@ public class Eigor {
 
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
+        ApplicationContextProvider.setApplicationContext(ctx);
         ctx.getBean(EigorCli.class).run(args);
     }
 

@@ -1,11 +1,13 @@
 package it.infocert.eigor.converter.ubl2cen.mapping;
 
+import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -36,7 +38,15 @@ public class GenericOneToOneTransformation {
         log.info(logPrefix + "item found: " + item);
 
         if (item != null) {
-            InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
+            Reflections reflections;
+            InvoiceUtils invoiceUtils;
+            ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+            if (applicationContext == null) {
+                reflections = new Reflections("it.infocert");
+            } else {
+                reflections = (Reflections) applicationContext.getBean("reflections");
+            }
+            invoiceUtils = new InvoiceUtils(reflections);
 
             // find the parent BG
             String bgPath = bgBtPath.substring(0, bgBtPath.lastIndexOf("/"));
