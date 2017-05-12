@@ -30,6 +30,14 @@
         <juel-api.version>2.2.7</juel-api.version>
     </properties>
 
+    <distributionManagement>
+        <site>
+            <id>eigor</id>
+            <name>Eigor</name>
+            <url>http://not.yet.defined</url>
+        </site>
+    </distributionManagement>
+
     <pluginRepositories>
         <pluginRepository>
             <id>central-snapshot</id>
@@ -189,7 +197,10 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+
         <plugins>
+
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -201,16 +212,46 @@
                         <param>it.infocert.eigor.*</param>
                     </targetTests>
                     <threads>5</threads>
+                    <verbose>false</verbose>
+                    <failWhenNoMutations>false</failWhenNoMutations>
+                    <avoidCallsTo>
+                        <avoidCallsTo>java.util.logging</avoidCallsTo>
+                        <avoidCallsTo>org.apache.log4j</avoidCallsTo>
+                        <avoidCallsTo>org.slf4j</avoidCallsTo>
+                        <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+                        <avoidCallsTo>org.objectweb</avoidCallsTo>
+                        <avoidCallsTo>org.reflections</avoidCallsTo>
+                    </avoidCallsTo>
+                    <timestampedReports>false</timestampedReports>
+                    <mutators>
+                        <mutator>MATH</mutator>
+                        <!--
+                        <mutator>INVERT_NEGS</mutator>
+                        <mutator>RETURN_VALS</mutator>
+                        <mutator>INLINE_CONSTS</mutator>
+                        <mutator>VOID_METHOD_CALLS</mutator>
+                        <mutator>NEGATE_CONDITIONALS</mutator>
+                        <mutator>CONDITIONALS_BOUNDARY</mutator>
+                        <mutator>INCREMENTS</mutator>
+                        <mutator>REMOVE_INCREMENTS</mutator>
+                        <mutator>NON_VOID_METHOD_CALLS</mutator>
+                        <mutator>CONSTRUCTOR_CALLS</mutator>
+                        <mutator>REMOVE_CONDITIONALS</mutator>
+                        <mutator>REMOVE_SWITCH</mutator>
+                        -->
+                    </mutators>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>mutationCoverage</goal>
                         </goals>
-                        <phase>site</phase>
+                        <phase>validate</phase>
                     </execution>
                 </executions>
             </plugin>
+
+            <!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -224,10 +265,13 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
     <reporting>
         <plugins>
+
+            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -245,6 +289,131 @@
                     </reportSet>
                 </reportSets>
             </plugin>
+            -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+
+                <reportSets>
+                    <reportSet>
+                        <id>info-reports</id>
+                        <inherited>true</inherited>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <!-- please, keep this list in order to quickly add reports if needed -->
+                            <!--
+                            <report>modules</report>
+                            <report>plugins</report>
+                            <report>dependency-info</report>
+                            <report>dependency-convergence</report>
+                            <report>dependencies</report>
+                            <report>scm</report>
+                            <report>cim</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>help</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>plugin-management</report>
+                            <report>project-team</report>
+                            -->
+
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>info-reports</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>index</report>
+                            <report>modules</report>
+                            <report>dependency-convergence</report>
+                            <report>plugins</report>
+                            <!-- please, keep this list in order to quickly add reports if needed -->
+                            <!--
+                            <report>summary</report>
+                            <report>dependency-info</report>
+                            <report>dependencies</report>
+                            <report>scm</report>
+                            <report>cim</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>help</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>plugin-management</report>
+                            <report>project-team</report>
+                            -->
+
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>report</id>
+
+            <build>
+                <plugins>
+                    <!--
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <targetClasses>
+                                <param>it.infocert.eigor.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>it.infocert.eigor.*</param>
+                            </targetTests>
+                            <threads>5</threads>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                                <phase>pre-site</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
+                </plugins>
+            </build>
+
+            <reporting>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <sourceDataFormats>
+                                <sourceDataFormat>HTML</sourceDataFormat>
+                            </sourceDataFormats>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+                </plugins>
+            </reporting>
+
+        </profile>
+    </profiles>
+
 </project>
