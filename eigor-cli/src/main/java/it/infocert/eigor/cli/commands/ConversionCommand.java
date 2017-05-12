@@ -18,9 +18,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 
-/**
- * Created by danidemi on 19/04/17.
- */
 public class ConversionCommand implements CliCommand {
 
     private final RuleRepository ruleRepository;

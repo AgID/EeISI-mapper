@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -12,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import static it.infocert.eigor.test.Failures.fail;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,20 +39,20 @@ public class CsvCen2CenTest {
                 "BT-3,Invoice");
 
         // when
-        BG0000Invoice invoice = null;
+        ConversionResult<BG0000Invoice> conversion = null;
         try {
-            invoice = sut.convert(invoiceWithUnmappableBt3).getResult();
+            conversion = sut.convert(invoiceWithUnmappableBt3);
         }catch (Exception e){
-            fail("An exception should not be thrown");
+            fail(e);
         }
 
         // then
         // ...the corresponding field should be null
-        assertThat( invoice.getBT0003InvoiceTypeCode(), nullValue() );
+        assertThat( conversion.getResult().getBT0003InvoiceTypeCode(), hasSize(0) );
+        assertThat( conversion.getErrors(), hasSize(1) );
+        assertThat( conversion.getErrors().get(0), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
 
     }
-
-
 
     @Test
     public void shouldMapTheCountryCode() throws SyntaxErrorInInvoiceFormatException {
@@ -191,5 +193,6 @@ public class CsvCen2CenTest {
         String join = String.join("\n", asList(lines));
         return new ByteArrayInputStream(join.getBytes());
     }
+
 
 }
