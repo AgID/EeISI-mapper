@@ -55,7 +55,12 @@ public class ConversionCommand implements CliCommand {
     /**
      * Execute toCen converter and fromCen converter.
      * Extract conversion result and rule validation report.
-     * Generate fromcen-errors.csv, invoice-cen.csv, invoice-target.xml, rule-report.csv
+     * Generate files:
+     *          invoice-source.{extension} (clone of source invoice)
+     *          fromcen-errors.csv,
+     *          invoice-cen.csv,
+     *          invoice-target.{extension},
+     *          rule-report.csv
      * @param out The system output.
      * @param err The system err.
      * @return 0 if success, 1 if IOException|SyntaxErrorInInvoiceFormatException
@@ -99,13 +104,22 @@ public class ConversionCommand implements CliCommand {
         ConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
 
-        // writes clone of source invoice
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
-
         writeFromCenErrors(out, conversionResult, outputFolderFile);
         writeCenInvoice(cenInvoice, outputFolderFile);
         writeTargetInvoice(converted, outputFolderFile);
         writeRuleReport(ruleReport, outputFolderFile);
+    }
+
+    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
+        String invoiceName = invoiceFile.toFile().getName();
+        int lastDotPosition = invoiceName.lastIndexOf('.');
+        String extension = null;
+        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
+            extension = invoiceName.substring(lastDotPosition+1);
+        }
+        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
     }
 
     private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
@@ -150,17 +164,6 @@ public class ConversionCommand implements CliCommand {
     private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile) throws IOException {
         File outreport = new File(outputFolderFile, "rule-report.csv");
         FileUtils.writeStringToFile(outreport, ruleReport.dump());
-    }
-
-    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
-        String invoiceName = invoiceFile.toFile().getName();
-        int lastDotPosition = invoiceName.lastIndexOf('.');
-        String extension = null;
-        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
-            extension = invoiceName.substring(lastDotPosition+1);
-        }
-        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
-        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
     }
 
     public static class LogSupport {

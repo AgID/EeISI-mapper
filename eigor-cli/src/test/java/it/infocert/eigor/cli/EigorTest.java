@@ -219,27 +219,6 @@ public class EigorTest {
 
     }
 
-    @Test public void fromCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException {
-
-        // when converting a fake (empty) invoice errors should occur
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "cenfattpa",
-                "--output", outputDir.getAbsolutePath()
-        } );
-
-        // then a fromcen-errors.csv should be created for the errors along with the other files
-        List<File> files = asList( outputDir.listFiles() );
-        assertThat( "fromcen-errors, converted invoice, cen invoice, rule report expected.", files, hasSize(4) );
-
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("fromcen-errors.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
-
-    }
-
     private String err() {
         return new String(err.toByteArray());
     }
