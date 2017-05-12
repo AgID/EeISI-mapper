@@ -29,4 +29,9 @@ public class FakeFromCenConversion implements FromCenConversion {
         return "fake";
     }
 
+    @Override
+    public String extension() {
+        return "fake";
+    }
+
 }

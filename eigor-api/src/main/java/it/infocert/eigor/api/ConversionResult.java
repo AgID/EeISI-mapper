@@ -14,12 +14,21 @@ public class ConversionResult<R> {
     protected boolean successful;
     protected List<Exception> errors;
 
-
+    /**
+     * Immutable object constructed with data result and not null but possible empty array of errors
+     * The other flags, successful and hasResult are set automatically based on the result and errors parameters
+     *
+     * @param result
+     * @param errors
+     */
     public ConversionResult(List<Exception> errors, R result) {
         this.errors = Collections.unmodifiableList(errors);
         this.result = result;
     }
 
+    /**
+     * A conversion without errors.
+     */
     public ConversionResult(R result) {
         this.result = result;
         this.errors = Collections.unmodifiableList(new ArrayList<>());

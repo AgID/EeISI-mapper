@@ -31,4 +31,10 @@ public interface FromCenConversion {
      * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
      */
     String getSupportedFormats();
+
+    /**
+     * The preferred file extension for the target format, without ".".
+     * For instance, not '{@code .xml}' but '{@code xml}'.
+     */
+    String extension();
 }

@@ -1,0 +1,76 @@
+package it.infocert.eigor.rules.integrity;
+
+import de.odysseus.el.ExpressionFactoryImpl;
+import de.odysseus.el.util.SimpleContext;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BTBG;
+import it.infocert.eigor.model.core.rules.Rule;
+import it.infocert.eigor.model.core.rules.RuleOutcome;
+
+import javax.el.ELException;
+import javax.el.ExpressionFactory;
+import javax.el.ValueExpression;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Properties;
+
+public class IteratingIntegrityRule implements Rule{
+
+    private final String iterating;
+    private final ExpressionFactory expressionFactory;
+    private final SimpleContext juelContext;
+    private final String expression;
+
+    private static Properties initProps() {
+        Properties properties = new Properties();
+        properties.setProperty("javax.el.nullProperties", "true");
+        return properties;
+    }
+
+    public IteratingIntegrityRule(String iterating, String expression) {
+        this.expression = expression;
+        this.iterating = iterating;
+        this.expressionFactory = new ExpressionFactoryImpl(initProps());
+        this.juelContext = new SimpleContext();
+    }
+
+    @Override
+    public RuleOutcome isCompliant(BG0000Invoice invoice) {
+        juelContext.setVariable("invoice", expressionFactory.createValueExpression(invoice, BG0000Invoice.class));
+        Object object = expressionFactory.createValueExpression(juelContext, iterating, Object.class).getValue(juelContext);
+        if (object != null && object instanceof Iterator) {
+            Iterator iterator = (Iterator) object;
+            RuleOutcome outcome = null;
+            while (iterator.hasNext()) {
+                juelContext.setVariable("item", expressionFactory.createValueExpression(iterator.next(), BTBG.class));
+                ValueExpression valueExpression = expressionFactory.createValueExpression(juelContext, expression, Object.class);
+                Boolean condition;
+                try {
+                    Object tmp = valueExpression.getValue(juelContext);
+                    if (Objects.isNull(tmp)) {
+                        outcome = RuleOutcome.newUnapplicableOutcome("Rule is unapplicable");
+                        continue;
+                    } else {
+                        condition = (Boolean) tmp;
+                    }
+                } catch (IllegalArgumentException | ClassCastException | ELException e) {
+                    outcome = RuleOutcome.newErrorOutcome("Error in the rule: %s", e.getMessage());
+                    continue;
+                }
+
+                if (condition) {
+                    outcome = RuleOutcome.newSuccessOutcome("Rule successfully validated");
+                } else {
+                    return RuleOutcome.newFailedOutcome("Rule has failed");
+                }
+            }
+            if (outcome != null) {
+                return outcome;
+            } else {
+                return RuleOutcome.newUnapplicableOutcome("Rule is unapplicable, the Iterator is empty");
+            }
+        } else {
+            return RuleOutcome.newErrorOutcome("Error in the items expression. Result is not a valid Iterator");
+        }
+    }
+}
