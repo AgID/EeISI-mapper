@@ -15,6 +15,7 @@ package-cli:
   artifacts:
     paths:
       - eigor-cli/target/eigor.zip
+      - eigor-cli/target/eigor.tar.gz
   only:
     - master
 

@@ -1,0 +1,292 @@
+ID,Level,Cardinality,Business Term,Description,Usage Note,Req. ID,Semantic data type[1]
+BT-1,+,1..1,Invoice number,A unique identification of the Invoice.,"The sequential number required in Article 226(2) of the directive 2006/112/EC [2], to uniquely identify the Invoice within the business context, time-frame, operating systems and records of the Seller. It may be based on one or more series of numbers, which may include alphanumeric characters. No identification scheme is to be used.",R56,Identifier
+BT-2,+,1..1,Invoice issue date,The date when the Invoice was issued.,,R56,Date
+BT-3,+,1..1,Invoice type code,A code specifying the functional type of the Invoice.,Commercial invoices and credit notes are defined according the entries in UNTDID 1001 [6].,R44,Code
+,,,,,Other entries of UNTDID 1001 [6] with specific invoices or credit notes may be used if applicable.,,
+BT-5,+,1..1,Invoice currency code,"The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.","Only one currency shall be used in the Invoice, except for the Total VAT amount in accounting currency (BT-111) in accordance with article 230 of Directive 2006/112/EC on VAT.","R54, R47",Code
+,,,,,"The lists of valid currencies are registered with the ISO 4217 Maintenance Agency ""Codes for the representation of currencies and funds"".",,
+BT-6,+,0..1,VAT accounting currency code,The currency used for VAT accounting and reporting purposes as accepted or required in the country of the Seller.,Shall be used in combination with the Total VAT amount in accounting currency (BT-111) when the VAT accounting currency code differs from the Invoice currency code.,R54,Code
+,,,,,"The lists of valid currencies are registered with the ISO 4217 Maintenance Agency ""Codes for the representation of currencies and funds"". Please refer to Article 230 of the Council Directive 2006/112/EC [2] for more information.",,
+BT-7,+,0..1,Value added tax point date,"The date when the VAT becomes accountable for the Seller and for the Buyer in so far as that date can be determined and differs from the date of issue of the invoice, according to the VAT directive.",The tax point is usually the date goods were supplied or services completed (the 'basic tax point'). There are some variations. Please refer to Article 226 (7) of the Council Directive 2006/112/EC [2] for more information.,R45,Date
+,,,,,This element is required if the Value added tax point date is different from the Invoice issue date.,,
+,,,,,Both Buyer and Seller should use the Tax Point Date when provided by the Seller.,,
+BT-8,+,0..1,Value added tax point date code,The code of the date when the VAT becomes accountable for the Seller and for the Buyer.,The code shall distinguish between the following entries of UNTDID 2005 [6]:,R45,Code
+,,,,,- Invoice date,,
+,,,,,- Delivery date,,
+,,,,,- Payment date,,
+,,,,,The Value added tax point date code is used if the Value added tax point date is not known when the invoice is issued. The use of BT-8 and BT-7 is mutually exclusive.,,
+BT-9,+,0..1,Payment due date,The date when the payment is due.,The payment due date reflects the due date of the net payment. For partial payments it states the first net due date. The corresponding description of more complex payment terms can be stated in BT-20.,R60,Date
+BT-10,+,0..1,Buyer reference,An identifier assigned by the Buyer used for internal routing purposes.,"The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.",R8,Text
+BT-11,+,0..1,Project reference,The identification of the project the invoice refers to,,R44,Document reference
+BT-12,+,0..1,Contract reference,The identification of a contract.,The contract identifier should be unique in the context of the specific trading relationship and for a defined time period.,R7,Document reference
+BT-13,+,0..1,Purchase order reference,"An identifier of a referenced purchase order, issued by the Buyer.",,"R5, R56",Document reference
+BT-14,+,0..1,Sales order reference,"An identifier of a referenced sales order, issued by the Seller.",,R41,Document reference
+BT-15,+,0..1,Receiving advice reference,An identifier of a referenced receiving advice.,,"R10, R56",Document reference
+BT-16,+,0..1,Despatch advice reference,An identifier of a referenced despatch advice.,,"R9, R56",Document reference
+BT-17,+,0..1,Tender or lot reference,The identification of the call for tender or lot the invoice relates to.,In some countries a reference to the call for tender that has led to the contract shall be provided.,"R7, R4",Document reference
+BT-18,+,0..1,Invoiced object identifier,"An identifier for an object on which the invoice is based, given by the Seller.","It may be a subscription number, telephone number, meter point, vehicle, person etc., as applicable. ",R33,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Invoiced object identifier.,"If it may be not clear for the receiver what scheme is used for the identifier, a conditional scheme identifier should be used that shall be chosen from the UNTDID 1153 code list [6] entries.",,
+BT-19,+,0..1,Buyer accounting reference,A textual value that specifies where to book the relevant data into the Buyer's financial accounts.,,"R2, R4",Text
+BT-20,+,0..1,Payment terms,A textual description of the payment terms that apply to the amount due for payment (Including description of possible penalties)., This element may contain multiple lines and multiple terms.,R60,Text
+BG-1,+,0..n,INVOICE NOTE,"A group of business terms providing textual notes that are relevant for the invoice, together with an indication of the note subject.",,R56,
+BT-21,++,0..1,Invoice note subject code,The subject of the following textual note.,To be chosen from the entries in UNTDID 4451 [6].,R56,Text
+BT-22,++,1..1,Invoice note,A textual note that gives unstructured information that is relevant to the Invoice as a whole.,Such as the reason for any correction or assignment note in case the invoice has been factored,R56,Text
+BG-2,+,1..1,PROCESS CONTROL,A group of business terms providing information on the business process and rules applicable to the Invoice document.,,R44,
+BT-23,++,0..1,Business process type,"Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.",To be specified by the Buyer.,R44,Text
+BT-24,++,1..1,Specification identifier,"An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained in the instance document conforms.","This identifies compliance or conformance to this document. Conformant invoices specify: urn:cen.eu:en16931:2017. Invoices, compliant to a user specification may identify that user specification here. ",R44,Identifier
+,,,,,No identification scheme is to be used.,,
+BG-3,+,0..n,PRECEDING INVOICE REFERENCE,A group of business terms providing information on one or more preceding Invoices.,To be used in case:,R11,
+,,,,,- a preceding invoice is corrected,,
+,,,,,- preceding partial invoices are referred to from a final invoice,,
+,,,,,-preceding pre-payment invoices are referred to from a final invoice,,
+BT-25,++,1..1,Preceding Invoice reference,The identification of an Invoice that was previously sent by the Seller.,,R11,Document reference
+BT-26,++,0..1,Preceding Invoice issue date,The date when the Preceding Invoice was issued.,The Preceding Invoice issue date shall be provided in case the Preceding Invoice identifier is not unique.,R11,Date
+BG-4,+,1..1,SELLER,A group of business terms providing information about the Seller.,,R48,
+BT-27,++,1..1,Seller name,The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.,,R48,Text
+BT-28,++,0..1,Seller trading name,"A name by which the Seller is known, other than Seller name (also known as Business name).",This may be used if different from the Seller name.,R48,Text
+BT-29,++,0..n,Seller identifier,An identification of the Seller.,"For many systems, the Seller identifier is a key piece of information. Multiple Seller identifiers may be assigned or specified. They may be differentiated by using various identification schemes. If no scheme is specified, it should be known by Buyer and Seller, e.g. a previously exchanged Buyer assigned identifier of the Seller. ",R57,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Seller identifier.,"If used, the identification scheme identifier shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-30,++,0..1,Seller legal registration identifier,An identifier issued by an official registrar that identifies the Seller as a legal entity or person.,"If no identification scheme is specified, it should be known by Buyer and Seller.",R52,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Seller legal registration identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-31,++,0..1,Seller VAT identifier,The Seller's VAT identifier (also known as Seller VAT identification number).,"VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.",R52,Identifier
+BT-32,++,0..1,Seller tax registration identifier,The local identification (defined by the Seller’s address) of the Seller for tax purposes or a reference that enables the Seller to state his registered tax status.,"This information may affect how the Buyer settles the payment (such as for social security fees). E.g. in some countries, if the Seller is not registered as a tax paying entity then the Buyer is required to withhold the amount of the tax and pay it on behalf of the Seller.",R47,Identifier
+BT-33,++,0..1,Seller additional legal information,Additional legal information relevant for the Seller.,Such as share capital.,R47,Text
+BT-34,++,0..1,Seller electronic address,Identifies the Seller's electronic address to which the application level response to the invoice may be delivered.,,"R13, R57",Identifier
+,,1..1,Scheme identifier,The identification scheme identifier of the Seller electronic address.,The scheme identifier shall be chosen from a list to be maintained by the Connecting Europe Facility.,,
+ BG-5,++,1..1,SELLER POSTAL ADDRESS,A group of business terms providing information about the address of the Seller., Sufficient components of the address are to be filled to comply with legal requirements.,R53,
+ BT-35,+++,0..1,Seller address line 1,The main address line in an address.,Usually the street name and number or post office box.,R53,Text
+ BT-36,+++,0..1,Seller address line 2,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+BT-162,+++,0..1,Seller address line 3,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+ BT-37,+++,0..1,Seller city,"The common name of the city, town or village, where the Seller address is located.",,R53,Text
+BT-38,+++,0..1,Seller post code,The identifier for an addressable group of properties according to the relevant postal service.,Such as a ZIP code or a post code.,R53,Text
+BT-39,+++,0..1,Seller country subdivision,The subdivision of a country.,"Such as a region, a county, a state, a province, etc.",R53,Text
+BT-40,+++,1..1,Seller country code,A code that identifies the country.,"If no tax representative is specified, this is the country where VAT is liable. The lists of valid countries are registered with the ISO 3166-1 Maintenance agency, ""Codes for the representation of names of countries and their subdivisions"". ",R53,Code
+BG-6,++,0..1,SELLER CONTACT,A group of business terms providing contact information about the Seller.,,R57,
+BT-41,+++,0..1,Seller contact point,A contact point for a legal entity or person.,"Such as person name, contact identification, department or office identification.",R57,Text
+BT-42,+++,0..1,Seller contact telephone number,A phone number for the contact point.,,R57,Text
+BT-43,+++,0..1,Seller contact email address,An e-mail address for the contact point.,,R57,Text
+BG-7,+,1..1,BUYER,A group of business terms providing information about the Buyer.,,R57,
+BT-44,++,1..1,Buyer name,The full name of the Buyer.,,R57,Text
+BT-45,++,0..1,Buyer trading name,"A name by which the Buyer is known, other than Buyer name (also known as Business name).",This may be used if different from the Buyer name.,R57,Text
+BT-46,++,0..1,Buyer identifier,An identifier of the Buyer.,"If no scheme is specified, it should be known by Buyer and Seller, e.g. a previously exchanged Seller assigned identifier of the Buyer.",R57,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Buyer identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-47,++,0..1,Buyer legal registration identifier,An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.,"If no identification scheme is specified, it should be known by Buyer and Seller, e.g. the identifier that is exclusively used in the applicable legal environment.","R47, R52, R57",Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Buyer legal registration identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-48,++,0..1,Buyer VAT identifier,The Buyer's VAT identifier (also known as Buyer VAT identification number).,VAT number prefixed by a country code based on ISO 3166-1. ,"R45, R52, R57",Identifier
+BT-49,++,0..1,Buyer electronic address,Identifies the Buyer's electronic address to which the invoice is delivered.,,"R13, R57",Identifier
+,,1..1,Scheme identifier,The identification scheme identifier of the Buyer electronic address.,The scheme identifier shall be chosen from a list to be maintained by the Connecting Europe Facility.,,
+BG-8,++,1..1,BUYER POSTAL ADDRESS,A group of business terms providing information about the postal address for the Buyer., Sufficient components of the address are to be filled to comply with legal requirements.,R53,
+BT-50,+++,0..1,Buyer address line 1,The main address line in an address.,Usually the street name and number or post office box.,R53,Text
+BT-51,+++,0..1,Buyer address line 2,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+BT-163,+++,0..1,Buyer address line 3,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+BT-52,+++,0..1,Buyer city,"The common name of the city, town or village, where the Buyer's address is located.",,R53,Text
+BT-53,+++,0..1,Buyer post code,The identifier for an addressable group of properties according to the relevant postal service.,Such as a ZIP code or a post code.,R53,Text
+BT-54,+++,0..1,Buyer country subdivision,The subdivision of a country.,"Such as a region, a county, a state, a province, etc.",R53,Text
+BT-55,+++,1..1,Buyer country code,A code that identifies the country.,"The lists of valid countries are registered with the ISO 3166‑1 Maintenance agency, ""Codes for the representation of names of countries and their subdivisions"". ",R53,Code
+BG-9,++,0..1,BUYER CONTACT,A group of business terms providing contact information relevant for the Buyer.,Contact details can be given by the Buyer at the time of the ordering or as master data exchanged prior to ordering. It is recommended not to use contact details for the purpose of routing the received Invoice internally by the recipient; the Buyer reference identifier should be used for this purpose.,R57,
+BT-56,+++,0..1,Buyer contact point,A contact point for a legal entity or person.,"Such as person name, contact identification, department or office identification.",R57,Text
+BT-57,+++,0..1,Buyer contact telephone number,A phone number for the contact point.,,R57,Text
+BT-58,+++,0..1,Buyer contact email address,An e-mail address for the contact point.,,R57,Text
+BG-10,+,0..1,PAYEE,"A group of business terms providing information about the Payee, i.e. the role that receives the payment."," The role of Payee may be fulfilled by another party than the Seller, e.g. a factoring service.","R1, R57",
+BT-59,++,1..1,Payee name,The name of the Payee.,Shall be used when the Payee is different from the Seller. The Payee name may however be the same as the Seller name.,"R1, R57",Text
+BT-60,++,0..1,Payee identifier,An identifier for the Payee.,"If no scheme is specified, it should be known by Buyer and Seller, e.g. a previously exchanged Buyer or Seller assigned identifier.","R1, R57",Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Payee identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-61,++,0..1,Payee legal registration identifier,An identifier issued by an official registrar that identifies the Payee as a legal entity or person.,"If no scheme is specified, it should be known by Buyer and Seller, e.g. the identifier that is exclusively used in the applicable legal environment.",R1,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Payee legal registration identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BG-11,+,0..1,SELLER TAX REPRESENTATIVE PARTY,A group of business terms providing information about the Seller's tax representative.,,R57,
+BT-62,++,1..1,Seller tax representative name,The full name of the Seller's tax representative party.,,R57,Text
+BT-63,++,1..1,Seller tax representative VAT identifier,The VAT identifier of the Seller's tax representative party.,VAT number prefixed by a country code based on ISO 3166-1. ,R52,Identifier
+BG-12,++,1..1,SELLER TAX REPRESENTATIVE POSTAL ADDRESS,A group of business terms providing information about the postal address for the tax representative party.," The Seller tax representative name/postal address shall be provided in the invoice, if the Seller has a tax representative who is liable to pay the VAT due. Sufficient components of the address are to be filled to comply with legal requirements.",R53,
+BT-64,+++,0..1,Tax representative address line 1,The main address line in an address.,Usually the street name and number or the post office box.,R53,Text
+BT-65,+++,0..1,Tax representative address line 2,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+BT-164,+++,0..1,Tax representative address line 3,An additional address line in an address that can be used to give further details supplementing the main line.,,R53,Text
+BT-66,+++,0..1,Tax representative city,"The common name of the city, town or village, where the tax representative address is located.",,R53,Text
+BT-67,+++,0..1,Tax representative post code,The identifier for an addressable group of properties according to the relevant postal service.,Such as a ZIP code or a post code.,R53,Text
+BT-68,+++,0..1,Tax representative country subdivision,The subdivision of a country.,"Such as a region, a county, a state, a province, etc.",R53,Text
+BT-69,+++,1..1,Tax representative country code,A code that identifies the country.,"Country where VAT is liable. The lists of valid countries are registered with the ISO 3166‑1 Maintenance agency, ""Codes for the representation of names of countries and their subdivisions"". ",R53,Code
+BG-13,+,0..1,DELIVERY INFORMATION,A group of business terms providing information about where and when the goods and services invoiced are delivered.,,"R31, R32, R57",
+BT-70,++,0..1,Deliver to party name,The name of the party to which the goods and services are delivered.,Shall be used if the Deliver to party is different from the Buyer.,R57,Text
+BT-71,++,0..1,Deliver to location identifier,An identifier for the location at which the goods and services are delivered.,"If no scheme is specified, it should be known by Buyer and Seller, e.g. a previously exchanged Buyer or Seller assigned identifier.",R32,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Deliver to location identifier.,"If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency.",,
+BT-72,++,0..1,Actual delivery date,the date on which the supply of goods or services was made or completed.,,R31,Date
+BG-14,++,0..1,INVOICING PERIOD,A group of business terms providing information on the invoice period.,Used to indicate when the period covered by the invoice starts and when it ends. Also called delivery period.,R34,
+BT-73,+++,0..1,Invoicing period start date,The date when the Invoice period starts.,The initial date of delivery of goods or services.,R34,Date
+BT-74,+++,0..1,Invoicing period end date,The date when the Invoice period ends.,The date on which the delivery of goods or services was completed.,R34,Date
+BG-15,++,0..1,DELIVER TO ADDRESS,A group of business terms providing information about the address to which goods and services invoiced were or are delivered.," In the case of pick-up, the deliver to address is the pick-up address. Sufficient components of the address are to be filled to comply with legal requirements.",R32,
+BT-75,+++,0..1,Deliver to address line 1,The main address line in an address.,Usually the street name and number.,R32,Text
+BT-76,+++,0..1,Deliver to address line 2,An additional address line in an address that can be used to give further details supplementing the main line.,,R32,Text
+BT-165,+++,0..1,Deliver to address line 3,An additional address line in an address that can be used to give further details supplementing the main line.,,R32,Text
+BT-77,+++,0..1,Deliver to city,"The common name of the city, town or village, where the deliver to address is located.",,R32,Text
+BT-78,+++,0..1,Deliver to post code,The identifier for an addressable group of properties according to the relevant postal service.,Such as a ZIP code or a post code.,R32,Text
+BT-79,+++,0..1,Deliver to country subdivision,The subdivision of a country.,"Such as a region, a county, a state, a province, etc.",R32,Text
+BT-80,+++,1..1,Deliver to country code,A code that identifies the country.,"The lists of valid countries are registered with the ISO 3166‑1 Maintenance agency, ""Codes for the representation of names of countries and their subdivisions"". ",R32,Code
+BG-16,+,0..1,PAYMENT INSTRUCTIONS,A group of business terms providing information about the payment.,,R58,
+BT-81,++,1..1,Payment means type code,"The means, expressed as code, for how a payment is expected to be or has been settled.",The following entries from the UNTDID 4461 code list [6] may be used:,R58,Code
+,,,,,- Standing instructions,,
+,,,,,- SEPA Credit transfer,,
+,,,,,- SEPA Direct Debit,,
+,,,,,- Local Credit transfer,,
+,,,,,- Non-SEPA international credit transfer,,
+,,,,,- Local Direct Debit,,
+,,,,,- Check,,
+,,,,,- Cash,,
+,,,,,- Account transfer over the books of the same payment service provider,,
+,,,,,- No payment (add to balance),,
+,,,,,- Payment card,,
+BT-82,++,0..1,Payment means text,"The means, expressed as text, for how a payment is expected to be or has been settled.","Such as cash, credit transfer, direct debit, credit card, etc.",R58,Text
+BT-83,++,0..1,Remittance information,"A textual value used to establish a link between the payment and the Invoice, issued by the Seller.","The reference helps the Seller to assign an incoming payment to the relevant payment process. When specifying the textual value, which is commonly the invoice number of the invoice being paid, but may be another seller reference, the buyer should indicate this reference in his payment order when executing the payment. In a payment transaction this reference is transferred back to the Seller as Remittance Information.","R56, R62",Text
+,,,,,"In order to allow for automatic processing of cross-border SEPA payments, only Latin characters should be used in this field. Reference section 1.4 of the SEPA credit transfer and SEPA direct debit scheme implementation guides [13] and [14] for details of the allowed characters. Other rules may apply for SEPA payments within national borders.",,
+,,,,,"If remittance information is structured according to the ISO 11649:2009 standard [16] for Structured RF Creditor Reference, it shall be mapped to the Structured Remittance Information Creditor Reference field in SEPA payments messages.",,
+,,,,,"If remittance information is structured according to the EACT standard for automated reconciliation [17], it shall be mapped to the Unstructured Remittance Information field in SEPA payments messages.""",,
+,,,,,"If remittance information is to be mapped to the End To End Identification field or to the Structured Remittance Information Creditor Reference field in SEPA payments messages, then in addition to the Latin character set restriction, the content shall not start or end with a '/' and the content shall not contain '//'s. See reference [15]. ",,
+BG-17,++,0..n,CREDIT TRANSFER,A group of business terms to specify credit transfer payments.,,R58,
+BT-84,+++,1..1,Payment account identifier,"A unique identifier of the financial payment account, at a payment service provider, to which payment should be made.",Such as IBAN (in case of a SEPA payment) or a national account number. ,"R61, R65",Identifier
+BT-85,+++,0..1,Payment account name,"The name of the payment account, at a payment service provider, to which payment should be made.",,"R61, R65",Text
+BT-86,+++,0..1,Payment service provider identifier,An identifier for the payment service provider where a payment account is located.,Such as a BIC or a national clearing code where required. No identification scheme to be used.,"R61, R65",Identifier
+BG-18,++,0..1,PAYMENT CARD INFORMATION,A group of business terms providing information about card used for payment contemporaneous with invoice issuance. ,Only used if the Buyer had opted to pay by using a payment card such as a credit or debit card.,R64,
+BT-87,+++,1..1,Payment card primary account number,The Primary Account Number (PAN) of the card used for payment.,In accordance with card payments security standards an invoice should never include a full card primary account number. At the moment PCI Security Standards Council has defined following: The first 6 digits and last 4 digits are the maximum number of digits to be shown.,R64,Text
+BT-88,+++,0..1,Payment card holder name,The name of the payment card holder.,,R64,Text
+BG-19,++,0..1,DIRECT DEBIT,A group of business terms to specify a direct debit.,"This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with the rules of the SEPA or other direct debit scheme.",R69,
+BT-89,+++,0..1,Mandate reference identifier,Unique identifier assigned by the Payee for referencing the direct debit mandate.,Used in order to pre-notify the Buyer of a SEPA direct debit. ,R69,Identifier
+BT-90,+++,0..1,Bank assigned creditor identifier,Unique banking reference identifier of the Payee or Seller assigned by the Payee or Seller bank.,Used in order to pre-notify the Buyer of a SEPA direct debit. ,R69,Identifier
+BT-91,+++,0..1,Debited account identifier,The account to be debited by the direct debit.,,R69,Identifier
+BG-20,+,0..n,DOCUMENT LEVEL ALLOWANCES,A group of business terms providing information about allowances applicable to the Invoice as a whole.,"Deductions, such as withheld tax may also be specified in this group.",R15,
+BT-92,++,1..1,Document level allowance amount,"The amount of an allowance, without VAT.",,"R15, R19",Amount
+BT-93,++,0..1,Document level allowance base amount,"The base amount that may be used, in conjunction with the document level allowance percentage, to calculate the document level allowance amount.",,"R15, R42",Amount
+BT-94,++,0..1,Document level allowance percentage,"The percentage that may be used, in conjunction with the document level allowance base amount, to calculate the document level allowance amount.",,"R15, R42",Percentage
+BT-95,++,1..1,Document level allowance VAT category code,A coded identification of what VAT category applies to the document level allowance.,The following entries of UNTDID 5305 [6] are used:,"R15, R16, R45, R48",Code
+,,,,,- Liable for VAT in a standard way,,
+,,,,,- Liable for VAT with a percentage rate of 0 (zero).,,
+,,,,,- Exempt from VAT/IGIC/IPSI.,,
+,,,,,- Reverse charge VAT/IGIC/IPSI rules apply.,,
+,,,,,- VAT/IGIC/IPSI not levied due to Intra-community supply rules.,,
+,,,,,- VAT/IGIC/IPSI not levied due to export outside of the EU.,,
+,,,,,- Sale is not subject to VAT/IGIC/IPSI.,,
+,,,,,- Liable for IGIC (Canary) tax,,
+,,,,,- Liable for IPSI (Ceuta/Melilla) tax,,
+BT-96,++,0..1,Document level allowance VAT rate,"The VAT rate, represented as percentage that applies to the document level allowance.",,"R15, R16, R45, R48",Percentage
+BT-97,++,0..1,Document level allowance reason,"The reason for the document level allowance, expressed as text.",,R15,Text
+BT-98,++,0..1,Document level allowance reason code,"The reason for the document level allowance, expressed as a code.",Use entries of the UNTDID 5189 code list [6]. The Document level allowance reason code and the Document level allowance reason shall indicate the same allowance reason.,R15,Code
+BG-21,+,0..n,DOCUMENT LEVEL CHARGES,"A group of business terms providing information about charges and taxes other than VAT, applicable to the Invoice as a whole.",,R15,
+BT-99,++,1..1,Document level charge amount,"The amount of a charge, without VAT.",,"R15, R16, R19",Amount
+BT-100,++,0..1,Document level charge base amount,"The base amount that may be used, in conjunction with the document level charge percentage, to calculate the document level charge amount.",,"R15, R16, R19",Amount
+BT-101,++,0..1,Document level charge percentage,"The percentage that may be used, in conjunction with the document level charge base amount, to calculate the document level charge amount.",,"R15, R16, R19",Percentage
+BT-102,++,1..1,Document level charge VAT category code,A coded identification of what VAT category applies to the document level charge.,The following entries of UNTDID 5305 [6] are used:,"R15, R45, R48",Code
+,,,,,- Liable for VAT in a standard way,,
+,,,,,- Liable for VAT with a percentage rate of 0 (zero).,,
+,,,,,- Exempt from VAT/IGIC/IPSI.,,
+,,,,,- Reverse charge VAT/IGIC/IPSI rules apply.,,
+,,,,,- VAT/IGIC/IPSI not levied due to Intra-community supply rules.,,
+,,,,,- VAT/IGIC/IPSI not levied due to export outside of the EU.,,
+,,,,,- Sale is not subject to VAT/IGIC/IPSI.,,
+,,,,,- Liable for IGIC (Canary) tax,,
+,,,,,- Liable for IPSI (Ceuta/Melilla) tax,,
+BT-103,++,0..1,Document level charge VAT rate,"The VAT rate, represented as percentage that applies to the document level charge.",,"R15, R45, R48",Percentage
+BT-104,++,0..1,Document level charge reason,"The reason for the document level charge, expressed as text.",,"R15, R16",Text
+BT-105,++,0..1,Document level charge reason code,"The reason for the document level charge, expressed as a code.",Use entries of the UNTDID 7161 code list [6]. The Document level charge reason code and the Document level charge reason shall indicate the same charge reason.,"R15, R16",Code
+BG-22,+,1..1,DOCUMENT TOTALS,A group of business terms providing the monetary totals for the Invoice.,,R40,
+BT-106,++,1..1,Sum of Invoice line net amount,Sum of all Invoice line net amounts in the Invoice.,,R40,Amount
+BT-107,++,0..1,Sum of allowances on document level,Sum of all allowances on document level in the Invoice.,Allowances on line level are included in the Invoice line net amount which is summed up into the Sum of Invoice line net amount.,"R19, R40",Amount
+BT-108,++,0..1,Sum of charges on document level,Sum of all charges on document level in the Invoice.,Charges on line level are included in the Invoice line net amount which is summed up into the Sum of Invoice line net amount.,"R19, R40",Amount
+BT-109,++,1..1,Invoice total amount without VAT,The total amount of the Invoice without VAT.,The Invoice total amount without VAT is the Sum of Invoice line net amount minus Sum of allowances on document level plus Sum of charges on document level.,R40,Amount
+BT-110,++,0..1,Invoice total VAT amount,The total VAT amount for the Invoice.,The Invoice total VAT amount is the sum of all VAT category tax amounts.,"R40, R49",Amount
+BT-111,++,0..1,Invoice total VAT amount in accounting currency,The VAT total amount expressed in the accounting currency accepted or required in the country of the Seller.,To be used when the VAT accounting currency (BT-6) differs from the Invoice currency code (BT-5) in accordance with article 230 of Directive 2006/112 / EC on VAT.,R54,Amount
+,,,,,The VAT amount in accounting currency is not used in the calculation of the Invoice totals.,,
+BT-112,++,1..1,Invoice total amount with VAT,The total amount of the Invoice with VAT.,The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount. ,"R40, R67",Amount
+BT-113,++,0..1,Paid amount,The sum of amounts which have been paid in advance.,This amount is subtracted from the invoice total amount with VAT to calculate the amount due for payment.,"R40, R66",Amount
+BT-114,++,0..1,Rounding amount,The amount to be added to the invoice total to round the amount to be paid.,,R40,Amount
+BT-115,++,1..1,Amount due for payment,The outstanding amount that is requested to be paid.,This amount is the Invoice total amount with VAT minus the paid amount that has been paid in advance. The amount is zero in case of a fully paid Invoice. The amount may be negative; in that case the Seller owes the amount to the Buyer.,"R40, R59, R68",Amount
+BG-23,+,1..n,VAT BREAKDOWN,"A group of business terms providing information about VAT breakdown by different categories, rates and exemption reasons",,"R38, R45, R47, R48, R49",
+BT-116,++,1..1,VAT category taxable amount,Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable).,The sum of Invoice line net amount minus allowances plus charges on document level which are subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable).,R50,Amount
+BT-117,++,1..1,VAT category tax amount,The total VAT amount for a given VAT category.,Calculated by multiplying the VAT category taxable amount with the VAT category rate for the relevant VAT category.,R49,Amount
+BT-118,++,1..1,VAT category code,Coded identification of a VAT category.,The following entries of UNTDID 5305 [6] are used:,"R38, R45, R49",Code
+,,,,,- Liable for VAT in a standard way,,
+,,,,,- Liable for VAT with a percentage rate of 0 (zero).,,
+,,,,,- Exempt from VAT/IGIC/IPSI.,,
+,,,,,- Reverse charge VAT/IGIC/IPSI rules apply.,,
+,,,,,- VAT/IGIC/IPSI not levied due to Intra-community supply rules.,,
+,,,,,- VAT/IGIC/IPSI not levied due to export outside of the EU.,,
+,,,,,- Sale is not subject to VAT/IGIC/IPSI.,,
+,,,,,- Liable for IGIC (Canary) tax,,
+,,,,,- Liable for IPSI (Ceuta/Melilla) tax,,
+BT-119,++,0..1,VAT category rate,"The VAT rate, represented as percentage that applies for the relevant VAT category.",The VAT category code and the VAT category rate shall be consistent.,"R38, R49",Percentage
+BT-120,++,0..1,VAT exemption reason text,A textual statement of the reason why the amount is exempted from VAT or why no VAT is being charged,Articles 226 items 11 to 15 Directive 2006/112/EN,"R48, R49, R51",Text
+BT-121,++,0..1,VAT exemption reason code,A coded statement of the reason for why the amount is exempted from VAT.,Code list issued and maintained by the Connecting Europe Facility.,"R48, R49, R51",Code
+BG-24,+,0..n,ADDITIONAL SUPPORTING DOCUMENTS,A group of business terms providing information about additional supporting documents substantiating the claims made in the Invoice.,"The additional supporting documents can be used for both referencing a document number which is expected to be known by the receiver, an external document (referenced by a URL) or as an embedded document (such as a time report in pdf). The option to link to an external document will be needed, for example in the case of large attachments and/or when sensitive information, e.g. person-related services, has to be separated from the Invoice itself.",R36,
+BT-122,++,1..1,Supporting document reference,An identifier of the supporting document.,,R36,Document reference
+BT-123,++,0..1,Supporting document description,A description of the supporting document.,"Such as: timesheet, usage report etc.",R36,Text
+BT-124,++,0..1,External document location,The URL (Uniform Resource Locator) that identifies where the external document is located.,"A means of locating the resource including its primary access mechanism, e.g. http:// or ftp://.",R36,Text
+,,,,,External document location shall be used if the Buyer requires additional information to support the Invoice.,,
+,,,,,External documents do not form part of the invoice. Risks can be involved when accessing external documents.,,
+BT-125,++,0..1,Attached document,An attached document embedded as binary object or sent together with the invoice.,Attached document is used when documentation shall be stored with the Invoice for future reference or audit purposes.,R35,Binary object
+,,,,,,,
+,,1..1,Attached document Mime code,The mime code of the attached document.,Allowed mime codes:,,
+,,,,,- application/pdf,,
+,,,,,- image/png,,
+,,,,,- image/jpeg,,
+,,,,,- text/csv,,
+,,,,,- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,,
+,,,,,- application/vnd.oasis.opendocument. spreadsheet,,
+,,1..1,Attached document Filename,The file name of the attached document,,,
+BG-25,+,1..n,INVOICE LINE,A group of business terms providing information on individual Invoice lines.,,R17,
+,,,,,,R23,
+BT-126,++,1..1,Invoice line identifier,A unique identifier for the individual line within the Invoice.,,R44,Identifier
+BT-127,++,0..1,Invoice line note,A textual note that gives unstructured information that is relevant to the Invoice line.,,R28,Text
+BT-128,++,0..1,Invoice line object identifier,"An identifier for an object on which the invoice line is based, given by the Seller.","It may be a subscription number, telephone number, meter point etc., as applicable. ",R33,Identifier
+,,0..1,Scheme identifier,The identification scheme identifier of the Invoice line object identifier.,"If it may be not clear for the receiver what scheme is used for the identifier, a conditional scheme identifier should be used that shall be chosen from the UNTDID 1153 code list [6] entries.",,
+BT-129,++,1..1,Invoiced quantity,The quantity of items (goods or services) that is charged in the Invoice line.,,"R39, R56",Quantity
+BT-130,++,1..1,Invoiced quantity unit of measure code,The unit of measure that applies to the invoiced quantity.,"The unit of measure shall be chosen from the lists in UN/ECE Recommendation N°. 20 ""Codes for Units of Measure Used in International Trade"" [7] and UN/ECE Recommendation N° 21 ""Codes for Passengers, Types of Cargo, Packages and Packaging Materials (with Complementary Codes for Package Names)"" [19] applying the method described in UN/ECE Rec N° 20 Intro 2.a). Note that in most cases it is not needed for Buyers and Sellers to implement these lists fully in their software. Sellers need only to support the units needed for their goods and services; Buyers only need to verify that the units used in the Invoice are equal to the units used in other documents (such as Contract, Catalogue, Order and Despatch advice).","R14, R39",Code
+BT-131,++,1..1,Invoice line net amount,The total amount of the Invoice line.,"The amount is “net” without VAT, i.e. inclusive of line level allowances and charges as well as other relevant taxes.","R39, R40, R56",Amount
+BT-132,++,0..1,Referenced purchase order line reference,"An identifier for a referenced line within a purchase order, issued by the Buyer.",The purchase order identifier is referenced on document level.,R6,Document reference
+BT-133,++,0..1,Invoice line Buyer accounting reference,A textual value that specifies where to book the relevant data into the Buyer's financial accounts.,"If required, this reference shall be provided by the Buyer to the Seller prior to the issuing of the Invoice.",R3,Text
+BG-26,++,0..1,INVOICE LINE PERIOD,A group of business terms providing information about the period relevant for the Invoice line., Is also called Invoice line delivery period.,R30,
+BT-134,+++,0..1,Invoice line period start date,The date when the Invoice period for this Invoice line starts.,The date is the first day of the period.,R30,Date
+BT-135,+++,0..1,Invoice line period end date,The date when the Invoice period for this Invoice line ends.,The date is the last day of the period.,R30,Date
+BG-27,++,0..n,INVOICE LINE ALLOWANCES,A group of business terms providing information about allowances applicable to the individual Invoice line.,,R15,
+BT-136,+++,1..1,Invoice line allowance amount,"The amount of an allowance, without VAT.",,"R15, R19",Amount
+BT-137,+++,0..1,Invoice line allowance base amount,"The base amount that may be used, in conjunction with the Invoice line allowance percentage, to calculate the Invoice line allowance amount.",,"R15, R42",Amount
+BT-138,+++,0..1,Invoice line allowance percentage,"The percentage that may be used, in conjunction with the Invoice line allowance base amount, to calculate the Invoice line allowance amount.",,"R15, R42",Percentage
+BT-139,+++,0..1,Invoice line allowance reason,"The reason for the Invoice line allowance, expressed as text.",,R15,Text
+BT-140,+++,0..1,Invoice line allowance reason code,"The reason for the Invoice line allowance, expressed as a code.",Use entries of the UNTDID 5189 code list [6]. The Invoice line level allowance reason code and the Invoice line level allowance reason shall indicate the same allowance reason.,R15,Code
+BG-28,++,0..n,INVOICE LINE CHARGES,A group of business terms providing information about charges and taxes other than VAT applicable to the individual Invoice line.,All charges and taxes are assumed to be liable to the same VAT rate as the Invoice line.,R18,
+BT-141,+++,1..1,Invoice line charge amount,"The amount of a charge, without VAT.",,R19,Amount
+BT-142,+++,0..1,Invoice line charge base amount,"The base amount that may be used, in conjunction with the Invoice line charge percentage, to calculate the Invoice line charge amount.",,R42,Amount
+BT-143,+++,0..1,Invoice line charge percentage,"The percentage that may be used, in conjunction with the Invoice line charge base amount, to calculate the Invoice line charge amount.",,R42,Percentage
+BT-144,+++,0..1,Invoice line charge reason,"The reason for the Invoice line charge, expressed as text.",,R18,Text
+BT-145,+++,0..1,Invoice line charge reason code,"The reason for the Invoice line charge, expressed as a code.",Use entries of the UNTDID 7161 code list [6]. The Invoice line charge reason code and the Invoice line charge reason shall indicate the same charge reason.,R18,Code
+BG-29,++,1..1,PRICE DETAILS,A group of business terms providing information about the price applied for the goods and services invoiced on the Invoice line.,,R14,
+BT-146,+++,1..1,Item net price,"The price of an item, exclusive of VAT, after subtracting item price discount.",The Item net price has to be equal with the Item gross price less the Item price discount.,R14,Unit price amount
+BT-147,+++,0..1,Item price discount,The total discount subtracted from the Item gross price to calculate the Item net price.,Only applies if the discount is provided per unit and if it is not included in the Item gross price.,R14,Unit price amount
+BT-148,+++,0..1,Item gross price,"The unit price, exclusive of VAT, before subtracting Item price discount.",,R14,Unit price amount
+BT-149,+++,0..1,Item price base quantity,The number of item units to which the price applies.,,R14,Quantity
+BT-150,+++,0..1,Item price base quantity unit of measure code,The unit of measure that applies to the Item price base quantity.,The Item price base quantity unit of measure shall be the same as the Invoiced quantity unit of measure (BT-130).,R14,Code
+BG-30,++,1..1,LINE VAT INFORMATION,A group of business terms providing information about the VAT applicable for the goods and services invoiced on the Invoice line.,,"R45, R48",
+BT-151,+++,1..1,Invoiced item VAT category code,The VAT category code for the invoiced item.,The following entries of UNTDID 5305 [6] are used:,"R37, R45, R48",Code
+,,,,,- Liable for VAT in a standard way,,
+,,,,,- Liable for VAT with a percentage rate of 0 (zero).,,
+,,,,,- Exempt from VAT/IGIC/IPSI.,,
+,,,,,- Reverse charge VAT/IGIC/IPSI rules apply.,,
+,,,,,- VAT/IGIC/IPSI not levied due to Intra-community supply rules.,,
+,,,,,- VAT/IGIC/IPSI not levied due to export outside of the EU.,,
+,,,,,- Sale is not subject to VAT/IGIC/IPSI.,,
+,,,,,- Liable for IGIC (Canary) tax,,
+,,,,,- Liable for IPSI (Ceuta/Melilla) tax,,
+BT-152,+++,0..1,Invoiced item VAT rate,"The VAT rate, represented as percentage that applies to the invoiced item.",,"R37, R45, R48",Percent
+BG-31,++,1..1,ITEM INFORMATION,A group of business terms providing information about the goods and services invoiced.,,"R20, R56",
+BT-153,+++,1..1,Item name,A name for an item.,,"R20, R56",Text
+BT-154,+++,0..1,Item description,A description for an item.,The Item description allows for describing the item and its features in more detail than the Item name.,"R20, R56",Text
+,,,,,,,
+BT-155,+++,0..1,Item Seller's identifier,"An identifier, assigned by the Seller, for the item.",,"R21, R56",Identifier
+BT-156,+++,0..1,Item Buyer's identifier,"An identifier, assigned by the Buyer, for the item.",,"R21, R56",Identifier
+BT-157,+++,0..1,Item standard identifier,An item identifier based on a registered scheme.,,"R23, R56",Identifier
+,,1..1,Scheme identifier,The identification scheme identifier of the Item standard identifier,The identification scheme shall be identified from the entries of the list published by the ISO 6523 maintenance agency.,,
+BT-158,+++,0..n,Item classification identifier,A code for classifying the item by its type or nature.,"Classification codes are used to allow grouping of similar items for a various purposes e.g. public procurement (CPV), e-Commerce (UNSPSC) etc. ",R24,Identifier
+,,1..1,Scheme identifier,The identification scheme identifier of the Item classification identifier,The identification scheme shall be chosen from the entries in UNTDID 7143 [6].,,
+,,0..1,Scheme version identifier,The version of the identification scheme.,,,
+BT-159,+++,0..1,Item country of origin,The code identifying the country from which the item originates.,"The lists of valid countries are registered with the ISO 3166‑1 Maintenance agency, ""Codes for the representation of names of countries and their subdivisions"". ",R29,Code
+BG-32,+++,0..n,ITEM ATTRIBUTES,A group of business terms providing information about properties of the goods and services invoiced.,,R28,
+BT-160,++++,1..1,Item attribute name,The name of the attribute or property of the item.,"Such as ""Colour"".",R28,Text
+BT-161,++++,1..1,Item attribute value,The value of the attribute or property of the item.,"Such as ""Red"".",R28,Text
+BE-IT,,,,,,,
+,,,,,,,
+"[1] The suffix "".Type"" has been deleted for readability.",,,,,,,
