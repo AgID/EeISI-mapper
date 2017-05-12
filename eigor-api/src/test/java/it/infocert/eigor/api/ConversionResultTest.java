@@ -1,18 +1,14 @@
 package it.infocert.eigor.api;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.emptyCollectionOf;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 public class ConversionResultTest {
 
@@ -42,20 +38,6 @@ public class ConversionResultTest {
                 errors, hasItem(exceptionToReturn));
         assertThat( sut.hasResult(), is(true));
         assertThat( sut.isSuccessful(), is(false));
-
-    }
-
-
-    @Test
-    public void shouldCreateConversionResultWithoutErrors() {
-
-        // given
-        ConversionResult sut = new ConversionResult("result".getBytes());
-
-        // then
-        assertTrue( sut.getErrors().isEmpty() );
-        assertTrue( sut.hasResult() );
-        assertArrayEquals( "result".getBytes(), sut.getResult() );
 
     }
 

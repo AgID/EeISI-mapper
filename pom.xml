@@ -94,7 +94,7 @@
             <!-- Eigor modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>eigor-test-invoices</artifactId>
+                <artifactId>eigor-test</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -126,11 +126,6 @@
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>eigor-rules</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>it.infocert.eigor</groupId>
-                <artifactId>eigor-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

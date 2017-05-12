@@ -1,11 +1,5 @@
 package it.infocert.eigor.cli.commands;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.OutputStreamAppender;
-import ch.qos.logback.core.filter.Filter;
-import ch.qos.logback.core.spi.FilterReply;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -82,7 +76,7 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport) throws SyntaxErrorInInvoiceFormatException, IOException {
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
+        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         List<Rule> rules = ruleRepository.rules();
         if(rules!=null) {
             rules.forEach(rule -> {
@@ -123,84 +117,5 @@ public class ConversionCommand implements CliCommand {
         invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
         FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
     }
-
-    public static class LogSupport {
-
-        // inspired by http://stackoverflow.com/questions/19058722/creating-an-outputstreamappender-for-logback#19074027
-
-
-        private final ch.qos.logback.classic.Logger log;
-        private OutputStreamAppender appender;
-        private final LoggerContext context;
-
-        public LogSupport(Class clazz) {
-            context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            log = context.getLogger(clazz);
-        }
-
-        public LogSupport() {
-            context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            log = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        }
-
-        public void addLogger(File outputLog) {
-
-            if(appender != null) {
-                throw new IllegalStateException("Already added");
-            }
-
-
-
-            // Destination stream
-            FileOutputStream stream = null;
-            try {
-                stream = new FileOutputStream(outputLog);
-            } catch (FileNotFoundException e) {
-                log.error("An error occurred.", e);
-            }
-
-
-            // Encoder
-            PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-            encoder.setContext(context);
-            encoder.setPattern("%d{HH:mm:ss} %-5level %logger{36} - %msg%n");
-            encoder.start();
-
-            // OutputStreamAppender
-            appender= new OutputStreamAppender<>();
-            appender.setName( "OutputStream Appender" );
-            appender.setContext(context);
-            appender.setEncoder(encoder);
-            appender.setOutputStream(stream);
-            appender.setImmediateFlush(true);
-            appender.start();
-//            appender.addFilter(new Filter() {
-//                @Override
-//                public FilterReply decide(Object o) {
-//                    return null;
-//                }
-//            });
-
-
-            log.addAppender(appender);
-
-        }
-
-        public void removeLogger() {
-
-            if(appender==null) {
-                throw new IllegalArgumentException("Not yet added");
-            }
-
-            appender.stop();
-            log.detachAppender(appender);
-
-            log.info( "text from logger");
-        }
-    }
-
-
-
-
 
 }

@@ -31,4 +31,18 @@ public class BinaryConversionResultTest {
 
     }
 
+
+    @Test
+    public void shouldCreateConversionResultWithoutErrors() {
+
+        // given
+        BinaryConversionResult sut = new BinaryConversionResult("result".getBytes());
+
+        // then
+        assertTrue( sut.getErrors().isEmpty() );
+        assertTrue( sut.hasResult() );
+        assertArrayEquals( "result".getBytes(), sut.getResult() );
+
+    }
+
 }

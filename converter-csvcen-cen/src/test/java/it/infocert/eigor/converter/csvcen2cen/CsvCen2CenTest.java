@@ -13,7 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import static it.infocert.eigor.test.Failures.fail;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -43,7 +42,7 @@ public class CsvCen2CenTest {
         try {
             conversion = sut.convert(invoiceWithUnmappableBt3);
         }catch (Exception e){
-            fail(e);
+            it.infocert.eigor.test.Failures.fail(e);
         }
 
         // then

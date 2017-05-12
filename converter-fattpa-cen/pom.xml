@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test-invoices</artifactId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>

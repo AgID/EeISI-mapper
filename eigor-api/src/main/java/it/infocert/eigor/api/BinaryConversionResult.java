@@ -1,22 +1,26 @@
 package it.infocert.eigor.api;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@link ConversionResult result of a conversion} that can provide a binary result.
+ * A {@link ConversionResult result of a conversion} that provides a binary result.
  */
 public class BinaryConversionResult extends ConversionResult<byte[]> {
 
     protected final boolean hasResult;
 
     /**
+     * A successfull conversion.
+     */
+    public BinaryConversionResult(byte[] result) {
+        this(result, new ArrayList<>());
+    }
+
+    /**
      * Immutable object constructed with data result and not null but possible empty array of errors
      * The other flags, successful and hasResult are set automatically based on the result and errors parameters
-     *
-     * @param result
-     * @param errors
      */
     public BinaryConversionResult(byte[] result, List<Exception> errors) {
         super(errors, result);
