@@ -94,15 +94,18 @@ public class ConversionCommandTest {
 
     }
 
-    @Test public void fromCen2FattPAConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException {
+    @Test public void fromCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException {
 
         // given
         given( fromCen.extension() ).willReturn(".xml");
 
+        List<Exception> myErrors = Arrays.asList(new IllegalArgumentException("test exception"));
+        when(fromCen.convert(any())).thenReturn(new ConversionResult("bytes".getBytes(), myErrors));
+
         // when converting a mock invoice, errors should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
         InputStream invoiceSourceFormat = null;
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, new Cen2FattPAConverter(), inputInvoice, outputFolder, invoiceSourceFormat);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat);
         PrintStream err = new PrintStream( new ByteArrayOutputStream() );
         PrintStream out = new PrintStream( new ByteArrayOutputStream() );
 
