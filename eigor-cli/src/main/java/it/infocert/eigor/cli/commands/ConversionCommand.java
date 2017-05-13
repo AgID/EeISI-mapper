@@ -4,6 +4,13 @@ import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.OutputStreamAppender;
+import ch.qos.logback.core.filter.Filter;
+import ch.qos.logback.core.spi.FilterReply;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
@@ -17,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 import java.util.List;
 
 public class ConversionCommand implements CliCommand {
@@ -45,26 +53,36 @@ public class ConversionCommand implements CliCommand {
         this.invoiceInSourceFormat = invoiceInSourceFormat;
     }
 
+    /**
+     * Execute toCen converter and fromCen converter.
+     * Extract conversion result and rule validation report.
+     * Generate files:
+     *          invoice-source.{extension} (clone of source invoice)
+     *          fromcen-errors.csv,
+     *          invoice-cen.csv,
+     *          invoice-target.{extension},
+     *          rule-report.csv
+     * @param out The system output.
+     * @param err The system err.
+     * @return 0 if success, 1 if IOException|SyntaxErrorInInvoiceFormatException
+     */
     @Override
     public int execute(PrintStream out, PrintStream err) {
 
+        InMemoryRuleReport ruleReport = new InMemoryRuleReport();
         File outputFolderFile;
         outputFolderFile = outputFolder.toFile();
 
         LogSupport logSupport = new LogSupport();
         logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
 
-
-
-        InMemoryRuleReport ruleReport = new InMemoryRuleReport();
-
         // Execute the conversion
         // ===================================================
         try {
-            conversion(outputFolderFile, ruleReport);
+            conversion(outputFolderFile, ruleReport, out);
 
         } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
-            e.printStackTrace(err);
+            log.error(e.getMessage(), e);
             return 1;
         } finally {
             logSupport.removeLogger();
@@ -75,7 +93,7 @@ public class ConversionCommand implements CliCommand {
         return 0;
     }
 
-    private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport) throws SyntaxErrorInInvoiceFormatException, IOException {
+    private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
         BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         List<Rule> rules = ruleRepository.rules();
         if(rules!=null) {
@@ -84,25 +102,68 @@ public class ConversionCommand implements CliCommand {
                 ruleReport.store(ruleOutcome, rule);
             });
         }
-        byte[] converted = fromCen.convert(cenInvoice).getResult();
+        ConversionResult conversionResult = fromCen.convert(cenInvoice);
+        byte[] converted = conversionResult.getResult();
 
         // writes clone of source invoice
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
+        writeFromCenErrors(out, conversionResult, outputFolderFile);
+        writeCenInvoice(cenInvoice, outputFolderFile);
+        writeTargetInvoice(converted, outputFolderFile);
+        writeRuleReport(ruleReport, outputFolderFile);
+    }
 
-        // writes cen invoice
+    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
+        String invoiceName = invoiceFile.toFile().getName();
+        int lastDotPosition = invoiceName.lastIndexOf('.');
+        String extension = null;
+        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
+            extension = invoiceName.substring(lastDotPosition+1);
+        }
+        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
+    }
+
+    private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+        if(conversionResult.isSuccessful()){
+            out.println("Conversion was successful!");
+        }else {
+            out.println("Conversion finished, but some errors have occured:");
+            List<Exception> errors = conversionResult.getErrors();
+
+
+            String fromCenErrorsCsv = "Error,Reason\n" +
+                    errors.stream()
+                            .map(x -> x.getMessage() + "," + x.getCause())
+                            .collect(Collectors.joining("\n"));
+
+            // writes from-cen errors csv
+            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+            FileUtils.writeStringToFile(fromCenErrors, fromCenErrorsCsv);
+
+            for (Exception e : errors){
+                out.println("Error: " + e.getMessage());
+            }
+            out.println("For more information see 'fromcen-errors.csv'.");
+        }
+    }
+
+    private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
         Visitor v = new DumpVisitor();
         cenInvoice.accept(v);
         FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
+    }
 
-        // writes target invoice
+    private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
         String extension = fromCen.extension();
         while(!extension.isEmpty() && extension.startsWith(".")){
             extension = extension.substring(1);
         }
         File outfile = new File(outputFolderFile, "invoice-target." + extension);
-        FileUtils.writeByteArrayToFile(outfile, converted);
+        FileUtils.writeByteArrayToFile(outfile, targetInvoice);
+    }
 
-        // writes report
+    private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile) throws IOException {
         File outreport = new File(outputFolderFile, "rule-report.csv");
         FileUtils.writeStringToFile(outreport, ruleReport.dump());
     }
