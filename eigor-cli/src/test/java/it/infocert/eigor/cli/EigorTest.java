@@ -210,7 +210,7 @@ public class EigorTest {
                 "--output", "i-bet-this-folder-does-not-exist"
         } );
 
-        // then
+        // theninvoice-
         assertThat(err().toLowerCase(), allOf(
                 containsString("output folder"),
                 containsString("i-bet-this-folder-does-not-exist"),
