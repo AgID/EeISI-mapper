@@ -1,8 +1,6 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.cli.EigorCli;
-import it.infocert.eigor.converter.cen2fattpa.Cen2FattPAConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,10 +18,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.contains;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -97,7 +93,7 @@ public class ConversionCommandTest {
         given( fromCen.extension() ).willReturn(".xml");
 
         List<Exception> myErrors = Arrays.asList(new IllegalArgumentException("test exception"));
-        when(fromCen.convert(any())).thenReturn(new ConversionResult("bytes".getBytes(), myErrors));
+        when(fromCen.convert(any())).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
         // when converting a mock invoice, errors should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());

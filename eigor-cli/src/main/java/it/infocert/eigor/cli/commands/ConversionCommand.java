@@ -1,15 +1,5 @@
 package it.infocert.eigor.cli.commands;
 
-import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.RuleRepository;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.OutputStreamAppender;
-import ch.qos.logback.core.filter.Filter;
-import ch.qos.logback.core.spi.FilterReply;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
@@ -22,10 +12,13 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConversionCommand implements CliCommand {
 
@@ -102,7 +95,7 @@ public class ConversionCommand implements CliCommand {
                 ruleReport.store(ruleOutcome, rule);
             });
         }
-        ConversionResult conversionResult = fromCen.convert(cenInvoice);
+        BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
 
         // writes clone of source invoice
@@ -113,16 +106,6 @@ public class ConversionCommand implements CliCommand {
         writeRuleReport(ruleReport, outputFolderFile);
     }
 
-    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
-        String invoiceName = invoiceFile.toFile().getName();
-        int lastDotPosition = invoiceName.lastIndexOf('.');
-        String extension = null;
-        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
-            extension = invoiceName.substring(lastDotPosition+1);
-        }
-        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
-        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
-    }
 
     private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if(conversionResult.isSuccessful()){
