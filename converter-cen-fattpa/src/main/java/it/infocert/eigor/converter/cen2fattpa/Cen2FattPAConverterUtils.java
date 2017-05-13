@@ -66,7 +66,7 @@ class Cen2FattPAConverterUtils {
 
     /**
      * @param xml Byte array containing raw XML
-     * @param errors List of exceptions, usually from ConversionResult
+     * @param errors List of exceptions, usually from BinaryConversionResult
      * @return true if XML is valid compared to XSD
      */
     static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {

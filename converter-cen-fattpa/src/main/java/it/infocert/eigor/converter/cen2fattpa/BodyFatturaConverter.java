@@ -6,7 +6,6 @@ import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
 import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class BodyFatturaConverter implements ICen2FattPAConverter {

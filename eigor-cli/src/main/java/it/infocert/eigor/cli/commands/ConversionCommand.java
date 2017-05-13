@@ -1,11 +1,5 @@
 package it.infocert.eigor.cli.commands;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.OutputStreamAppender;
-import ch.qos.logback.core.filter.Filter;
-import ch.qos.logback.core.spi.FilterReply;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
@@ -18,14 +12,14 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Created by danidemi on 19/04/17.
- */
 public class ConversionCommand implements CliCommand {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -93,7 +87,7 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
+        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         List<Rule> rules = ruleRepository.rules();
         if(rules!=null) {
             rules.forEach(rule -> {
@@ -101,9 +95,10 @@ public class ConversionCommand implements CliCommand {
                 ruleReport.store(ruleOutcome, rule);
             });
         }
-        ConversionResult conversionResult = fromCen.convert(cenInvoice);
+        BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
 
+        // writes clone of source invoice
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
         writeFromCenErrors(out, conversionResult, outputFolderFile);
         writeCenInvoice(cenInvoice, outputFolderFile);
@@ -111,16 +106,6 @@ public class ConversionCommand implements CliCommand {
         writeRuleReport(ruleReport, outputFolderFile);
     }
 
-    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
-        String invoiceName = invoiceFile.toFile().getName();
-        int lastDotPosition = invoiceName.lastIndexOf('.');
-        String extension = null;
-        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
-            extension = invoiceName.substring(lastDotPosition+1);
-        }
-        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
-        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
-    }
 
     private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if(conversionResult.isSuccessful()){
@@ -166,78 +151,15 @@ public class ConversionCommand implements CliCommand {
         FileUtils.writeStringToFile(outreport, ruleReport.dump());
     }
 
-    public static class LogSupport {
-
-        // inspired by http://stackoverflow.com/questions/19058722/creating-an-outputstreamappender-for-logback#19074027
-
-
-        private final ch.qos.logback.classic.Logger log;
-        private OutputStreamAppender appender;
-        private final LoggerContext context;
-
-        public LogSupport(Class clazz) {
-            context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            log = context.getLogger(clazz);
+    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
+        String invoiceName = invoiceFile.toFile().getName();
+        int lastDotPosition = invoiceName.lastIndexOf('.');
+        String extension = null;
+        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
+            extension = invoiceName.substring(lastDotPosition+1);
         }
-
-        public LogSupport() {
-            context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            log = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        }
-
-        public void addLogger(File outputLog) {
-
-            if (appender != null) {
-                throw new IllegalStateException("Already added");
-            }
-
-
-            // Destination stream
-            FileOutputStream stream = null;
-            try {
-                stream = new FileOutputStream(outputLog);
-            } catch (FileNotFoundException e) {
-                log.error("An error occurred.", e);
-            }
-
-
-            // Encoder
-            PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-            encoder.setContext(context);
-            encoder.setPattern("%d{HH:mm:ss} %-5level %logger{36} - %msg%n");
-            encoder.start();
-
-            // OutputStreamAppender
-            appender = new OutputStreamAppender<>();
-            appender.setName("OutputStream Appender");
-            appender.setContext(context);
-            appender.setEncoder(encoder);
-            appender.setOutputStream(stream);
-            appender.setImmediateFlush(true);
-            appender.start();
-//            appender.addFilter(new Filter() {
-//                @Override
-//                public FilterReply decide(Object o) {
-//                    return null;
-//                }
-//            });
-
-
-            log.addAppender(appender);
-
-        }
-
-        public void removeLogger() {
-
-            if (appender == null) {
-                throw new IllegalArgumentException("Not yet added");
-            }
-
-            appender.stop();
-            log.detachAppender(appender);
-
-            log.info("text from logger");
-        }
+        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
     }
 
 }

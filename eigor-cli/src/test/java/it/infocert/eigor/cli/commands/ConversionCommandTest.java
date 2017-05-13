@@ -1,20 +1,13 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.cli.EigorCli;
-import it.infocert.eigor.converter.cen2fattpa.Cen2FattPAConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.*;
@@ -25,11 +18,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.*;
+import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -65,9 +56,11 @@ public class ConversionCommandTest {
 
     @Before
     public void setUpOutputMocks() throws IOException, SyntaxErrorInInvoiceFormatException {
-        ConversionResult t = new ConversionResult("result".getBytes());
+        BinaryConversionResult t = new BinaryConversionResult("result".getBytes());
         when(fromCen.convert(any())).thenReturn(t);
-        when(toCen.convert(any())).thenReturn(new BG0000Invoice());
+        when(toCen.convert(any())).thenReturn(
+                new ConversionResult<BG0000Invoice>( new BG0000Invoice() )
+        );
     }
 
     @Test
@@ -100,7 +93,7 @@ public class ConversionCommandTest {
         given( fromCen.extension() ).willReturn(".xml");
 
         List<Exception> myErrors = Arrays.asList(new IllegalArgumentException("test exception"));
-        when(fromCen.convert(any())).thenReturn(new ConversionResult("bytes".getBytes(), myErrors));
+        when(fromCen.convert(any())).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
         // when converting a mock invoice, errors should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());

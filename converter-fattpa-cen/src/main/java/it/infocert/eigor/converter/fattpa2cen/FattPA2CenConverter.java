@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.base.Preconditions;
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.FattPA2CenMapper;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
@@ -25,7 +26,7 @@ public class FattPA2CenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
 
-    public BG0000Invoice convert(InputStream input) {
+    public ConversionResult<BG0000Invoice> convert(InputStream input) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {
@@ -39,7 +40,7 @@ public class FattPA2CenConverter implements ToCenConversion {
 
         //TODO Implement conversion
 
-        return new BG0000Invoice();
+        return new ConversionResult<BG0000Invoice>( new BG0000Invoice() );
     }
 
     public BG0000Invoice convert(String fileName) {
@@ -50,7 +51,7 @@ public class FattPA2CenConverter implements ToCenConversion {
         BG0000Invoice converted = null;
 
         try(FileInputStream input = new FileInputStream(file)) {
-            converted = convert(input);
+            converted = convert(input).getResult();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
