@@ -17,6 +17,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class does the generic one to one transformations
+ */
 public class GenericOneToOneTransformation {
 
     private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformation.class);
@@ -24,11 +27,23 @@ public class GenericOneToOneTransformation {
     private final String xPath;
     private final String bgBtPath;
 
+    /**
+     * Instantiates a new Generic one to one transformation.
+     *
+     * @param xPath    the UBL invoice path
+     * @param bgBtPath the CEN invoice path
+     */
     public GenericOneToOneTransformation(String xPath, String bgBtPath) {
         this.xPath = xPath;
         this.bgBtPath = bgBtPath;
     }
 
+    /**
+     * Transform.
+     *
+     * @param document the document
+     * @param invoice  the invoice
+     */
     public void transform(Document document, BG0000Invoice invoice) {
         String logPrefix = "(" + xPath + " - " + bgBtPath + ") ";
         log.info(logPrefix + "resolving");

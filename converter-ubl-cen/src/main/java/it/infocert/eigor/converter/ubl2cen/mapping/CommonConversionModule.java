@@ -7,10 +7,20 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 
+/**
+ * Common conversion utilities module.
+ */
 class CommonConversionModule {
 
     private static Logger log = LoggerFactory.getLogger(CommonConversionModule.class);
 
+    /**
+     * Evaluate xpath and get node list.
+     *
+     * @param doc             the doc
+     * @param xPathExpression the x path expression
+     * @return the node list
+     */
     static NodeList evaluateXpath(Document doc, String xPathExpression) {
         Object result = null;
         try {
@@ -21,6 +31,13 @@ class CommonConversionModule {
         return (NodeList) result;
     }
 
+    /**
+     * Check if a node exists.
+     *
+     * @param doc             the doc
+     * @param xPathExpression the x path expression
+     * @return True if node exists
+     */
     static Boolean hasNode(Document doc, String xPathExpression) {
         String booleanExpression = "boolean(" + xPathExpression + ")";
         Object result = null;

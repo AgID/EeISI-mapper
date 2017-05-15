@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class stores the invoice path mappings for GenericOneToOneTransformation
+ */
 public class UblXpathMap {
 
     private Multimap<String, String> mapping = HashMultimap.create();
@@ -29,6 +32,11 @@ public class UblXpathMap {
             "/BT0040"
     ));
 
+    /**
+     * Gets the mappings for GenericOneToOneTransformations.
+     *
+     * @return the mapping map
+     */
     public Multimap<String, String> getMapping() {
         if (mapping.isEmpty()) {
             for (int i = 0; i < italianPaths.size(); i++) {

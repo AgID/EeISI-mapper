@@ -21,6 +21,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The UBL to CEN format converter
+ */
 public class Ubl2Cen implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
@@ -40,6 +43,13 @@ public class Ubl2Cen implements ToCenConversion {
         return invoice;
     }
 
+    /**
+     * Gets the document.
+     *
+     * @param sourceInvoiceStream the source invoice stream
+     * @return the document
+     * @throws SyntaxErrorInInvoiceFormatException syntax error in invoice format exception
+     */
     protected Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
         Document doc = null;
         try {
@@ -52,6 +62,12 @@ public class Ubl2Cen implements ToCenConversion {
         return doc;
     }
 
+    /**
+     * Apply transformations into BG0000Invoice.
+     *
+     * @param document the input document
+     * @return the BG0000Invoice
+     */
     protected BG0000Invoice applyTransformations(Document document) {
         BG0000Invoice invoice = new BG0000Invoice();
 
