@@ -1,7 +1,9 @@
 package it.infocert.eigor.cli;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.FromCenConversionRepository;
+import it.infocert.eigor.api.RuleRepository;
+import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.reflections.Reflections;
@@ -11,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
