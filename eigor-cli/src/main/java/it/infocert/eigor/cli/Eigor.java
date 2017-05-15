@@ -43,7 +43,7 @@ public class Eigor {
         Properties properties = new Properties();
         URL resource = Resources.getResource("rules.properties");
         try {
-            properties.load(new FileInputStream(resource.getFile()));
+            properties.load(resource.openStream());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }

@@ -72,7 +72,7 @@ public class Cen2FattPAConverter implements FromCenConversion {
 
         // XML GENERATION
 
-        JAXBContext context = null;
+        JAXBContext context;
         try {
             context = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
             Marshaller marshaller = context.createMarshaller();
