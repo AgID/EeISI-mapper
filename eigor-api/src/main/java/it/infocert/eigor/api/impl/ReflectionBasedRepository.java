@@ -68,7 +68,7 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
             try {
                 myRules.add(ruleClass.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("An error occurred instantiating class '" + ruleClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
             }
         });
         return myRules;

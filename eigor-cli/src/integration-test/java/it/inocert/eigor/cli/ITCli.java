@@ -90,7 +90,7 @@ public class ITCli {
 
     }
 
-    @Ignore
+    @Ignore("it should be tested on a unix machine")
     @Test public void shouldUnzipAndRunOnUnix() throws Exception {
 
         assumeTrue(OS.isUnix());

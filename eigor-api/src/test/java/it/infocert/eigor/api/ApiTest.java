@@ -24,7 +24,7 @@ public class ApiTest {
 
         // services
         ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
-        RuleRepository ruleRepository = reflectionBasedRepository;
+        RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         ToCenConversionRepository conversionRepository = reflectionBasedRepository;
         FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;
 

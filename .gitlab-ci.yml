@@ -7,7 +7,7 @@ stages:
 # Verify merge requests
 tests:
   stage: test
-  script: "mvn clean test"
+  script: "mvn clean install"
 
 package-cli:
   stage: packaging
