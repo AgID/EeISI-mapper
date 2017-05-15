@@ -5,6 +5,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Arrays;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -22,6 +24,11 @@ public class Files {
      */
     public static File newFile(File folder, String... pathComponents) {
         return newFile(new StringBuilder( folder.toString() ), pathComponents);
+    }
+
+    /** Find first file in a given folder, or {@code null}. */
+    public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
+        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
 
     /**
