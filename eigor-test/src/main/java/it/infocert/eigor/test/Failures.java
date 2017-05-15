@@ -9,7 +9,7 @@ public final class Failures {
     /**
      * Fails because of an unexpected exception.
      */
-    public static void fail(Exception unexpectedException){
+    public static void failForException(Exception unexpectedException){
         Assert.fail( "Unexpected exception!\n" + stackTrace(unexpectedException) );
     }
 

@@ -67,6 +67,10 @@
     <build>
         <plugins>
 
+            <!--
+            add integration-test to the sources,
+            to be sure the integration test at least compile.
+             -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -142,6 +146,7 @@
             </activation>
             <build>
                 <plugins>
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -190,6 +195,7 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- assembles the archive files running the app -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
@@ -211,6 +217,8 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!-- ensure some file exists -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
@@ -236,6 +244,29 @@
                                         </requireFilesExist>
                                     </rules>
                                     <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- execute the integration tests -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.20</version>
+                        <executions>
+                            <execution>
+                                <id>integration-tests</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <!--
+                                        Skips integration tests if the value of skip.integration.tests
+                                        property is true
+                                    -->
+                                    <skipTests>${skip.integration.tests}</skipTests>
                                 </configuration>
                             </execution>
                         </executions>

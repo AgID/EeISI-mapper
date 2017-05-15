@@ -42,7 +42,7 @@ public class CsvCen2CenTest {
         try {
             conversion = sut.convert(invoiceWithUnmappableBt3);
         }catch (Exception e){
-            it.infocert.eigor.test.Failures.fail(e);
+            it.infocert.eigor.test.Failures.failForException(e);
         }
 
         // then
