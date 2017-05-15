@@ -1,4 +1,3 @@
-#Bug Name: {name}
 #### Where: {module where the bug occurs}
 #### Version Number: {version affected}
 #### Severity: {High/Medium/Low}
