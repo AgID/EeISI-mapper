@@ -69,7 +69,7 @@
 
             <!--
             add integration-test to the sources,
-            to be sure the integration test at least compile.
+            to be sure the integration test at least always compile.
              -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
