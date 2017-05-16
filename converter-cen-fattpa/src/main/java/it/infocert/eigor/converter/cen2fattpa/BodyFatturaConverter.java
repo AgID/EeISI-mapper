@@ -6,7 +6,6 @@ import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
 import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class BodyFatturaConverter implements ICen2FattPAConverter {
@@ -72,19 +71,21 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             }
         }
 
+        try {
+            DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
+            datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
+            datiRiepilogo1.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+            datiRiepilogo1.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+            datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
 
-        DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
-        datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo1.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo1.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
-        datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
-
-        DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
-        datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-        datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-        datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
-        datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
-
+            DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
+            datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
+            datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+            datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
+            datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_TAX_INFORMATION, e));
+        }
     }
 
     private void processLineCharges(BG0025InvoiceLine invoiceLine) {
@@ -108,6 +109,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     /**
      * Process line level discount (allowance)
+     *
      * @param invoiceLine
      */
     private void processLineDiscount(BG0025InvoiceLine invoiceLine) {

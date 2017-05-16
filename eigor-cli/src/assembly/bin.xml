@@ -5,6 +5,7 @@
     <id>bin</id>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
 
@@ -15,16 +16,25 @@
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
     </dependencySets>
-    <files>
-        <file>
-            <outputDirectory>conf</outputDirectory>
-            <source>env/release/logback.xml</source>
-        </file>
-    </files>
     <fileSets>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>env/release</directory>
+            <excludes>
+                <exclude>eigor.bat</exclude>
+                <exclude>eigor.sh</exclude>
+            </excludes>
+        </fileSet>
         <fileSet>
             <outputDirectory>examples</outputDirectory>
             <directory>../eigor-test-invoices/src/main/resources</directory>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>../eigor-rules/src/main/resources</directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>/</outputDirectory>
@@ -33,9 +43,10 @@
                 <include>eigor.bat</include>
                 <include>eigor.sh</include>
             </includes>
+            <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
-            <outputDirectory>/logs</outputDirectory>
+            <outputDirectory>logs</outputDirectory>
             <directory>src/main/resources</directory>
             <excludes>
                 <exclude>*/**</exclude>

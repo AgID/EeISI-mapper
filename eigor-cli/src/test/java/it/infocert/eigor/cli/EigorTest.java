@@ -1,8 +1,7 @@
 package it.infocert.eigor.cli;
 
-import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
-import it.infocert.eigor.rules.repositories.ConstraintsRepository;
+import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,11 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
@@ -39,10 +36,11 @@ public class EigorTest {
 
     @Before public void setUpCommandLineInterpeter() {
         Reflections reflections = new Reflections("it.infocert");
+        Properties properties = new Properties();
         ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
-        ConstraintsRepository constraintsRepo = new ConstraintsRepository(reflections);
+        IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo, genericRepo, constraintsRepo
+                genericRepo, genericRepo, integrityRepo
         );
     }
 
@@ -169,15 +167,17 @@ public class EigorTest {
 
         // then
         List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report expected.", files, hasSize(3) );
+        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(5) );
 
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-target.fake")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-source.xml")), notNullValue() );
 
     }
 
-    private File findFirstFile(File outputDir, Predicate<File> col) {
+    private File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
 
@@ -210,7 +210,7 @@ public class EigorTest {
                 "--output", "i-bet-this-folder-does-not-exist"
         } );
 
-        // then
+        // theninvoice-
         assertThat(err().toLowerCase(), allOf(
                 containsString("output folder"),
                 containsString("i-bet-this-folder-does-not-exist"),

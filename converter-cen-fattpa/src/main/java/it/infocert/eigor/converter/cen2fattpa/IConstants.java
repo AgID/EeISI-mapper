@@ -23,4 +23,5 @@ public interface IConstants {
     String ERROR_TOTAL_AMOUNT_CORRECTION = "Invoice level allowances correction line error. Missing total amount without VAT?";
     String ERROR_BASE_QUANTITY_TRANSFORM = "Error transforming base unit/qty for sales line.";
     String ERROR_LINE_PROCESSING = "Error processing invoice line";
+    String ERROR_TAX_INFORMATION = "Tax information error";
 }

@@ -1,14 +1,21 @@
 package it.infocert.eigor.cli;
 
+import com.google.common.io.Resources;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
-import it.infocert.eigor.rules.repositories.ConstraintsRepository;
+import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Properties;
 
 public class Eigor {
 
@@ -32,8 +39,15 @@ public class Eigor {
 
 
     @Bean
-    RuleRepository constraintsRepository(Reflections reflections) {
-        return new ConstraintsRepository(reflections);
+    RuleRepository integrityRepository() {
+        Properties properties = new Properties();
+        URL resource = Resources.getResource("rules.properties");
+        try {
+            properties.load(new FileInputStream(resource.getFile()));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        return new IntegrityRulesRepository(properties);
     }
 
     @Bean
@@ -52,8 +66,8 @@ public class Eigor {
     }
 
     @Bean
-    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository constraintsRepository) {
-        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, constraintsRepository);
+    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository integrityRepository) {
+        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, integrityRepository);
     }
 
 }

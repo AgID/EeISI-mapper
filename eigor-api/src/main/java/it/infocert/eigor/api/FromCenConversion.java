@@ -15,11 +15,11 @@ public interface FromCenConversion {
 
     /**
      * The return object should contain a byte[] result and a not null but possible empty array of errors
-     * ConversionResult is immutable, once created with the result and errors parameters, cannot be changed
+     * BinaryConversionResult is immutable, once created with the result and errors parameters, cannot be changed
      * @param invoice
-     * @return {@link ConversionResult ConversionResult}
+     * @return {@link BinaryConversionResult BinaryConversionResult}
      */
-    ConversionResult convert(BG0000Invoice invoice);
+    BinaryConversionResult convert(BG0000Invoice invoice);
 
     /**
      * Whether the given format is supported or not.
@@ -31,4 +31,10 @@ public interface FromCenConversion {
      * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
      */
     String getSupportedFormats();
+
+    /**
+     * The preferred file extension for the target format, without ".".
+     * For instance, not '{@code .xml}' but '{@code xml}'.
+     */
+    String extension();
 }

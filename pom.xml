@@ -8,7 +8,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>Eigor</name>
     <description>Electronic Invoice GO Regional</description>
 
@@ -17,7 +17,7 @@
         <module>converter-fattpa-cen</module>
         <module>converter-cen-fattpa</module>
         <module>eigor-cli</module>
-        <module>eigor-test-invoices</module>
+        <module>eigor-test</module>
         <module>eigor-api</module>
         <module>eigor-rules</module>
         <module>converter-csvcen-cen</module>
@@ -28,6 +28,7 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.6.6</powermock.version>
+        <juel-api.version>2.2.7</juel-api.version>
     </properties>
 
     <pluginRepositories>
@@ -94,7 +95,7 @@
             <!-- Eigor modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>eigor-test-invoices</artifactId>
+                <artifactId>eigor-test</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -132,6 +133,18 @@
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>converter-ubl-cen</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- JUEL -->
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-api</artifactId>
+                <version>${juel-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-impl</artifactId>
+                <version>${juel-api.version}</version>
             </dependency>
 
             <!--Testing-->

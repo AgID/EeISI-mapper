@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -29,6 +30,30 @@ public class CsvCen2CenTest {
     }
 
     @Test
+    public void shouldNotStopWhenAnUnmappabelEntityIsFound() {
+
+        // given
+        InputStream invoiceWithUnmappableBt3 = asStream(
+                "BG/BT,Value",
+                "BT-3,Invoice");
+
+        // when
+        ConversionResult<BG0000Invoice> conversion = null;
+        try {
+            conversion = sut.convert(invoiceWithUnmappableBt3);
+        }catch (Exception e){
+            it.infocert.eigor.test.Failures.fail(e);
+        }
+
+        // then
+        // ...the corresponding field should be null
+        assertThat( conversion.getResult().getBT0003InvoiceTypeCode(), hasSize(0) );
+        assertThat( conversion.getErrors(), hasSize(1) );
+        assertThat( conversion.getErrors().get(0), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
+
+    }
+
+    @Test
     public void shouldMapTheCountryCode() throws SyntaxErrorInInvoiceFormatException {
 
         // given
@@ -39,7 +64,7 @@ public class CsvCen2CenTest {
                 "BT-40,,AE,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         BT0040SellerCountryCode btCountryCode = invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0);
@@ -58,7 +83,7 @@ public class CsvCen2CenTest {
         // when
         SyntaxErrorInInvoiceFormatException exception = null;
         try {
-            BG0000Invoice invoice = sut.convert(inputStream);
+            BG0000Invoice invoice = sut.convert(inputStream).getResult();
             fail();
         } catch (SyntaxErrorInInvoiceFormatException e) {
             exception = e;
@@ -89,7 +114,7 @@ public class CsvCen2CenTest {
                 "BT-022,Invoice Note,This is note #2,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
@@ -109,7 +134,7 @@ public class CsvCen2CenTest {
         InputStream inputStream = getClass().getResourceAsStream("/cen-a7-minimum-content-with-std-values.csv");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         // let's check some elements.
@@ -134,7 +159,7 @@ public class CsvCen2CenTest {
                 "BT-2,2015-01-09");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         assertThat(invoice.getBT0002InvoiceIssueDate().get(0).toString(), equalTo("2015-01-09"));
@@ -167,5 +192,6 @@ public class CsvCen2CenTest {
         String join = String.join("\n", asList(lines));
         return new ByteArrayInputStream(join.getBytes());
     }
+
 
 }

@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -21,16 +21,16 @@ public class Cen2FattPAConverter implements FromCenConversion {
      * Create XML based on Cen2FattPAConverter
      * Apply XSD validation on resulting XML
      * @param invoice
-     * @return ConversionResult object wrapping xml data and resulting errors from converting and XSD validation
+     * @return BinaryConversionResult object wrapping xml data and resulting errors from converting and XSD validation
      */
     @Override
-    public ConversionResult convert(BG0000Invoice invoice) {
+    public BinaryConversionResult convert(BG0000Invoice invoice) {
 
             List<Exception> errors = new ArrayList<Exception>();
             byte[] xml = makeXML(invoice, errors);
             Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, errors);
 
-            return new ConversionResult(xml, errors);
+            return new BinaryConversionResult(xml, errors);
     }
 
     @Override
@@ -41,6 +41,11 @@ public class Cen2FattPAConverter implements FromCenConversion {
     @Override
     public String getSupportedFormats() {
         return IConstants.SUPPORTED_FORMATS;
+    }
+
+    @Override
+    public String extension() {
+        return "xml";
     }
 
     private byte[] makeXML(BG0000Invoice invoice, List<Exception> errors) {

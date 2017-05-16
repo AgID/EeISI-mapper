@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
@@ -41,7 +42,7 @@ public class Cen2FattPATest {
     @Test
     public void checkFattPAXMLsimple() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
-        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_simple.csv"));
+        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_simple.csv")).getResult();
         byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -206,7 +207,7 @@ public class Cen2FattPATest {
     @Test
     public void checkFattPAXMLwithDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
-        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_discount.csv"));
+        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_discount.csv")).getResult();
         byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -278,7 +279,7 @@ public class Cen2FattPATest {
     @Test
     public void checkFattPAXMLwithLineLevelChargesOrDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
-        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_line_charges.csv"));
+        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_line_charges.csv")).getResult();
         byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -362,12 +363,12 @@ public class Cen2FattPATest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testImmutableConversionResult() {
-        ConversionResult cr = new ConversionResult("dummy".getBytes(), new ArrayList<Exception>());
+        ConversionResult cr = new BinaryConversionResult("dummy".getBytes(), new ArrayList<Exception>());
         cr.getErrors().add(new Exception());
     }
 
     @Test(expected = NullPointerException.class)
     public void testNullErrorsConversionResult() {
-        ConversionResult cr = new ConversionResult("dummy".getBytes(), null);
+        ConversionResult cr = new BinaryConversionResult("dummy".getBytes(), null);
     }
 }
