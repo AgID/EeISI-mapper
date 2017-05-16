@@ -1,40 +1,54 @@
 package it.infocert.eigor.converter.ubl2cen.mapping;
 
 import com.google.common.collect.Multimap;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class UblXpathMapTest {
 
-    //TODO update to check for all mandatory paths when converter is finished
-    private String mandatoryInvoicePaths[] = {
-            "/BT0001",
-            "/BT0002",
-            "/BT0003",
-            "/BT0005",
-            "/BT0031",
-            "/BT0040"};
+    private UblXpathMap ublXpathMap;
+    private List<String> invoicePaths;
+    private List<String> italianPaths;
 
+    @Before
+    public void setUp() throws Exception {
+        ublXpathMap = new UblXpathMap();
+        invoicePaths = ublXpathMap.getInvoicePaths();
+        italianPaths = ublXpathMap.getItalianPaths();
+    }
 
     @Test
-    public void getMappingShouldContainAtleastMandatoryInvoicePaths() throws Exception {
+    public void getMappingShouldHaveSameSizeAsPaths() throws Exception {
 
-        UblXpathMap ublXpathMap = new UblXpathMap();
         Multimap<String, String> mapping = ublXpathMap.getMapping();
 
-        for (String path : mandatoryInvoicePaths) {
-            assertTrue(mapping.containsKey(path));
+        assertTrue(mapping.size() == invoicePaths.size());
+        assertTrue(mapping.size() == italianPaths.size());
+    }
+
+    @Test
+    public void getMappingShouldContainSameElementsAsPathsLists() throws Exception {
+
+        Multimap<String, String> mapping = ublXpathMap.getMapping();
+        for (int i = 0; i < invoicePaths.size(); i++) {
+            String invoicePath = invoicePaths.get(i);
+            String italianPath = italianPaths.get(i);
+            Collection<String> mapInvoicePath = mapping.get(invoicePath);
+            assertTrue(mapInvoicePath.contains(italianPath));
         }
     }
 
     @Test
-    public void getMappingMandatoryInvoicePathsShouldNotHaveEmptyValues() throws Exception {
+    public void invoicePathsShouldNotHaveEmptyValues() throws Exception {
 
-        UblXpathMap ublXpathMap = new UblXpathMap();
         Multimap<String, String> mapping = ublXpathMap.getMapping();
 
-        for (String path : mandatoryInvoicePaths) {
+        for (String path : invoicePaths) {
             assertFalse(mapping.get(path).isEmpty());
 
         }

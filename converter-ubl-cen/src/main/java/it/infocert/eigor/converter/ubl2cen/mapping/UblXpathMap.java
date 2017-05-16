@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,4 +49,11 @@ public class UblXpathMap {
         }
     }
 
+    public List<String> getItalianPaths() {
+        return Collections.unmodifiableList(italianPaths);
+    }
+
+    public List<String> getInvoicePaths() {
+        return Collections.unmodifiableList(invoicePaths);
+    }
 }
