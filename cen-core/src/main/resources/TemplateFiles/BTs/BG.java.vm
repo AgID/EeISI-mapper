@@ -46,8 +46,15 @@ public class ${clzName} extends AbstractBTBG {
         list.addAll(this.${row.BTBGClassName});
         #end
         #end
-        list.sort( comparing( o -> o.order() ) );
-        list.forEach( o -> o.accept(v) );
+        list.sort(new Comparator<BTBG>() {
+            @Override
+            public int compare(BTBG o1, BTBG o2) {
+                return o1.order() - o2.order();
+            }
+        });
+        for (BTBG btbg : list) {
+            btbg.accept(v);
+        }
 
         #if( ${row0.BTBGClassName.startsWith("BG0000")} )
         v.endInvoice(this);
