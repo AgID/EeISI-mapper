@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertFalse;
 
-public class FattPA2CenConverterTest {
+public class ITFattPA2CenConverterTest {
 
     private static Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
 
