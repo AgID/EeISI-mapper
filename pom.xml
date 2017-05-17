@@ -39,6 +39,7 @@
         <guava.version>20.0</guava.version>
         <jopt-simple.version>5.0.3</jopt-simple.version>
         <pitest-maven.version>1.1.11</pitest-maven.version>
+        <commons-compress.version>1.9</commons-compress.version>
 
         <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
@@ -80,6 +81,11 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>

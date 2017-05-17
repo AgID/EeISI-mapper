@@ -1,14 +1,19 @@
 package it.infocert.eigor.test;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Arrays;
+import java.io.*;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static java.nio.file.Files.setPosixFilePermissions;
+
 
 public class Files {
 
@@ -95,6 +100,75 @@ public class Files {
 
     }
 
+    public static void untar(File tarGzFile, File outputFolder) throws Exception {
+
+        /** create a TarArchiveInputStream object. **/
+
+        FileInputStream fin = new FileInputStream(tarGzFile);
+        BufferedInputStream in = new BufferedInputStream(fin);
+        GzipCompressorInputStream gzIn = new GzipCompressorInputStream(in);
+        TarArchiveInputStream tarIn = new TarArchiveInputStream(gzIn);
+
+        TarArchiveEntry entry = null;
+
+        /** Read the tar entries using the getNextEntry method **/
+
+        while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+
+            /** If the entry is a directory, create the directory. **/
+
+            if (entry.isDirectory()) {
+
+                String[] theNewFolder = entry.getName().split(File.separator);
+                File f = newFile(outputFolder, theNewFolder);
+                f.mkdirs();
+            }
+            /**
+             * If the entry is a file,write the decompressed file to the disk
+             * and close destination stream.
+             **/
+            else {
+                int count;
+                int buffer = 2048;
+                byte data[] = new byte[buffer];
+
+                File root = outputFolder.getAbsoluteFile();
+                String fileInTarGz = entry.getName();
+                String[] split = fileInTarGz.split(File.separator);
+                File theNewInflatedFile = newFile(root, split);
+
+                File folderOfTheNewInflatedFile = theNewInflatedFile.getParentFile();
+                folderOfTheNewInflatedFile.mkdirs();
+
+                theNewInflatedFile.createNewFile();
+                FileOutputStream fos = new FileOutputStream(theNewInflatedFile);
+                BufferedOutputStream dest = new BufferedOutputStream(fos,
+                        buffer);
+                while ((count = tarIn.read(data, 0, buffer)) != -1) {
+                    dest.write(data, 0, count);
+                }
+                dest.close();
+            }
+        }
+
+        /** Close the input stream **/
+
+        tarIn.close();
+
+    }
+
+
+    public static void setPermission(File file, PosixFilePermission... permissions) throws IOException{
+
+        Set<PosixFilePermission> perms = new HashSet<>();
+
+        for (PosixFilePermission permission : permissions) {
+            perms.add(permission);
+        }
+
+        setPosixFilePermissions(file.toPath(), perms);
+    }
+
     private static File newFile(StringBuilder pathname, String[] pathComponents) {
         for (String component : pathComponents) {
             pathname.append(File.separator);
@@ -102,6 +176,7 @@ public class Files {
         }
         return new File(pathname.toString());
     }
+
 
     private Files() {
         throw new UnsupportedOperationException("Cannot be instatiated.");
