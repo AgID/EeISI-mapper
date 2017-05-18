@@ -38,14 +38,14 @@ public class IntegrityRuleTest {
         String expr = "${!invoice.getBT0001InvoiceNumber().isEmpty()}";
         invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber("1"));
 
-        assertRuleOutcome(RuleOutcome.Outcome.SUCCESS, expr, "Rule successfully validated");
+        assertRuleOutcome(RuleOutcome.Outcome.SUCCESS, expr, "Rule \\w+ successfully validated");
     }
 
     @Test
     public void evaluateFailingRuleExpression() throws Exception {
         String expr = "${!invoice.getBT0001InvoiceNumber().isEmpty()}";
 
-        assertRuleOutcome(RuleOutcome.Outcome.FAILED, expr, "Rule has failed");
+        assertRuleOutcome(RuleOutcome.Outcome.FAILED, expr, "Rule \\w+ has failed");
     }
 
     @Test
@@ -60,14 +60,14 @@ public class IntegrityRuleTest {
     public void evaluateUnapplicableRuleAsUnapplicable() throws Exception {
         String expr = "${null}";
 
-        assertRuleOutcome(RuleOutcome.Outcome.UNAPPLICABLE, expr, "Rule is unapplicable");
+        assertRuleOutcome(RuleOutcome.Outcome.UNAPPLICABLE, expr, "Rule \\w+ is unapplicable");
     }
 
     @Test
     public void evaluateExpressionThatDoesNotReturnABoolean() throws Exception {
         String expr = "test";
 
-        assertRuleOutcome(RuleOutcome.Outcome.ERROR, expr, "Error in the rule: java.lang.String cannot be cast to java.lang.Boolean");
+        assertRuleOutcome(RuleOutcome.Outcome.ERROR, expr, "Error in the rule \\w+: java.lang.String cannot be cast to java.lang.Boolean");
     }
 
     @Test
@@ -83,7 +83,7 @@ public class IntegrityRuleTest {
     }
 
     private RuleOutcome assertRuleOutcome(RuleOutcome.Outcome expected, String expr, BG0000Invoice invoice) {
-        Rule rule = new IntegrityRule(expr);
+        Rule rule = new IntegrityRule(expr, "br1");
         RuleOutcome outcome = rule.isCompliant(invoice);
         assertEquals(expected, outcome.outcome());
         return outcome;
@@ -95,6 +95,6 @@ public class IntegrityRuleTest {
 
     private void assertRuleOutcome(RuleOutcome.Outcome expected, String expr, String message, BG0000Invoice invoice) {
         RuleOutcome outcome = assertRuleOutcome(expected, expr, invoice);
-        assertEquals(message, outcome.description());
+        assertTrue(outcome.description().matches(message));
     }
 }

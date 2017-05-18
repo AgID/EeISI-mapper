@@ -29,6 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
+@Ignore
 public class ITCli {
 
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
