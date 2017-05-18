@@ -27,7 +27,7 @@
         </fileSet>
         <fileSet>
             <outputDirectory>examples</outputDirectory>
-            <directory>../eigor-test-invoices/src/main/resources</directory>
+            <directory>../eigor-test/src/main/resources</directory>
         </fileSet>
         <fileSet>
             <outputDirectory>conf</outputDirectory>

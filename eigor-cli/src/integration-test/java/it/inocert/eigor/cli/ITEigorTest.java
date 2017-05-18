@@ -1,6 +1,10 @@
-package it.infocert.eigor.cli;
+package it.inocert.eigor.cli;
 
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.cli.CommandLineInterpreter;
+import it.infocert.eigor.cli.EigorCli;
+import it.infocert.eigor.cli.JoptsimpleBasecCommandLineInterpreter;
+import it.infocert.eigor.cli.TestUtils;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,13 +17,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Properties;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static it.infocert.eigor.test.Files.findFirstFileOrNull;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-public class EigorTest {
+public class ITEigorTest {
 
     public @Rule TemporaryFolder tmp = new TemporaryFolder();
     public @Rule TestName test = new TestName();
@@ -61,94 +68,59 @@ public class EigorTest {
 
     }
 
-
-
-
-    @Test public void printHelpWhenLaunchedWithoutArguments() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{} );
-
-        // then
-        assertThat(out().toLowerCase(), allOf(
-                containsString("--target"),
-                containsString("--source"),
-                containsString("--input"),
-                containsString("--output")
-        ));
-
-    }
-
-    @Test public void failWhenSourceIsMissing() throws IOException {
+    @Test public void failWhenOutputIsMissing() throws IOException {
 
         // when
         new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
-                "--output", outputDir.getAbsolutePath(),
+                "--source", "fake",
                 "--target", "fake"
         } );
 
         // then
+        // then
         assertThat(err().toLowerCase(), allOf(
-                containsString("source"),
+                containsString("output"),
                 containsString("missing")
         ));
 
     }
 
-
-    @Test public void failWhenInputIsMissing() throws IOException {
+    @Test public void executeWithFakeTransformations() throws IOException {
 
         // when
         new EigorCli(cli).run(new String[]{
+                "--input", plainFattPa.getAbsolutePath(),
                 "--source", "fake",
                 "--target", "fake",
                 "--output", outputDir.getAbsolutePath()
         } );
 
         // then
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("input"),
-                containsString("missing")
-        ));
+        List<File> files = asList( outputDir.listFiles() );
+        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(5) );
+
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-target.fake")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-source.xml")), notNullValue() );
 
     }
 
-    @Test public void failWhenInputDoesNotExist() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", "i-bet-this-file-does-not-exist.xml",
-                "--source", "fattpa1.2",
-                "--target", "ubl",
-                "--output", outputDir.getAbsolutePath()
-        } );
-
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("input invoice"),
-                containsString("i-bet-this-file-does-not-exist.xml"),
-                containsString("does not exist")
-        ));
-
-    }
-
-    @Test public void failWhenOutputDoesNotExist() throws IOException {
+    @Test public void failWhenTargetIsMissing() throws IOException {
 
         // when
         new EigorCli(cli).run(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fattpa1.2",
-                "--target", "ubl",
-                "--output", "i-bet-this-folder-does-not-exist"
+                "--output", outputDir.getAbsolutePath(),
+                "--source", "fake"
         } );
 
-        // theninvoice-
+        // then
         assertThat(err().toLowerCase(), allOf(
-                containsString("output folder"),
-                containsString("i-bet-this-folder-does-not-exist"),
-                containsString("does not exist")
+                containsString("target"),
+                containsString("missing")
         ));
 
     }
