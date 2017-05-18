@@ -28,6 +28,9 @@
         <fileSet>
             <outputDirectory>examples</outputDirectory>
             <directory>../eigor-test/src/main/resources</directory>
+            <includes>
+                <include>ubl-plain.xml</include>
+            </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>conf</outputDirectory>
