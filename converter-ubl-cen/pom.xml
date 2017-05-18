@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
         <!-- TEST -->
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test-invoices</artifactId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
 
     </dependencies>

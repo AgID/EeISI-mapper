@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.ubl2cen.mapping;
 
 import it.infocert.eigor.api.ApplicationContextProvider;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -16,6 +17,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class does the generic one to one transformations
@@ -26,6 +28,7 @@ public class GenericOneToOneTransformation {
 
     private final String xPath;
     private final String bgBtPath;
+    private Reflections reflections;
 
     /**
      * Instantiates a new Generic one to one transformation.
@@ -33,9 +36,10 @@ public class GenericOneToOneTransformation {
      * @param xPath    the UBL invoice path
      * @param bgBtPath the CEN invoice path
      */
-    public GenericOneToOneTransformation(String xPath, String bgBtPath) {
+    public GenericOneToOneTransformation(String xPath, String bgBtPath, Reflections reflections) {
         this.xPath = xPath;
         this.bgBtPath = bgBtPath;
+        this.reflections = reflections;
     }
 
     /**
@@ -44,7 +48,7 @@ public class GenericOneToOneTransformation {
      * @param document the document
      * @param invoice  the invoice
      */
-    public void transform(Document document, BG0000Invoice invoice) {
+    public void transform(Document document, BG0000Invoice invoice, List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
         String logPrefix = "(" + xPath + " - " + bgBtPath + ") ";
         log.info(logPrefix + "resolving");
 
@@ -53,15 +57,8 @@ public class GenericOneToOneTransformation {
         log.info(logPrefix + "item found: " + item);
 
         if (item != null) {
-            Reflections reflections;
-            InvoiceUtils invoiceUtils;
-            ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
-            if (applicationContext == null) {
-                reflections = new Reflections("it.infocert");
-            } else {
-                reflections = (Reflections) applicationContext.getBean("reflections");
-            }
-            invoiceUtils = new InvoiceUtils(reflections);
+
+            InvoiceUtils invoiceUtils = new InvoiceUtils(reflections);
 
             // find the parent BG
             String bgPath = bgBtPath.substring(0, bgBtPath.lastIndexOf("/"));
@@ -91,14 +88,17 @@ public class GenericOneToOneTransformation {
                                             bt.add((BTBG) constructor.newInstance(item.getTextContent()));
                                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                             log.error(e.getMessage(), e);
+                                            errors.add(e);
                                         }
                                     } else {
                                         log.error(logPrefix + "paramType is not String: " + paramType);
+                                        errors.add(new Exception(logPrefix + "paramType is not String: " + paramType));
                                     }
                                 });
                             }
                         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
+                            errors.add(e);
                         }
                     });
                     log.info(logPrefix + "bt element created: " + bt);
@@ -109,6 +109,7 @@ public class GenericOneToOneTransformation {
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     log.error(e.getMessage(), e);
+                    errors.add(e);
                 }
             }
         }

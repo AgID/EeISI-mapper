@@ -1,6 +1,7 @@
 package it.infocert.eigor.cli;
 
 import com.google.common.io.Resources;
+import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;

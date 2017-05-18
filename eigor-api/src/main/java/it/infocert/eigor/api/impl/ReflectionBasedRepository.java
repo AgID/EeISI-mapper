@@ -4,6 +4,8 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -66,8 +68,19 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         Set<Class<? extends T>> ruleClasses = reflections.getSubTypesOf(classToFind);
         ruleClasses.forEach(ruleClass -> {
             try {
-                myRules.add(ruleClass.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
+                Constructor constrWithReflections = null;
+                for (Constructor c: ruleClass.getConstructors()) {
+                    if (c.getParameterCount() == 1 &&
+                            Reflections.class.equals(c.getParameterTypes()[0])) {
+                        constrWithReflections = c;
+                    }
+                }
+                if (constrWithReflections == null) {
+                    myRules.add(ruleClass.newInstance());
+                } else {
+                    myRules.add( (T)constrWithReflections.newInstance(reflections));
+                }
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException("An error occurred instantiating class '" + ruleClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
             }
         });

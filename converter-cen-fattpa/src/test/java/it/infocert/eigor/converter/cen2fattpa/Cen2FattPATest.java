@@ -5,6 +5,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPathConstants;
@@ -26,7 +27,7 @@ public class Cen2FattPATest {
 
     @Before
     public void setUp() {
-        csvCen2Cen = new CsvCen2Cen();
+        csvCen2Cen = new CsvCen2Cen(new Reflections("it.infocert"));
         cen2FattPA = new Cen2FattPAConverter();
         xPathfactory = XPathFactory.newInstance();
     }
