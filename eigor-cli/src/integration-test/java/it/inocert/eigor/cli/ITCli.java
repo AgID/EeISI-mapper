@@ -102,25 +102,20 @@ public class ITCli {
         File workdir = tmp.newFolder("workdir");
         File outputFolder = newFile(workdir, "output");
         assertTrue( outputFolder.mkdirs() );
-        File cliFolder = newFile(workdir, "eigor-cli");
-        assertTrue( cliFolder.mkdirs() );
-        File examplesFolder = newFile(cliFolder, "examples");
-        assertTrue( examplesFolder.mkdirs() );
-        File csvInput = createNewFileUnix(examplesFolder, "cen-a7-minimum-content-with-std-values.csv");
 
         File eigorCliZipped = moveEigorTarGzFile(workdir);
-        Files.unzip(eigorCliZipped, workdir);
+        Files.untar(eigorCliZipped, workdir);
 
         // prepare invocation
         String args =
                 "--input "
-                        + csvInput
+                        + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "cenfattpa";
 
 
-        File batToRun = createNewFileUnix(cliFolder, "eigor.sh");
+        File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
         Files.setPermission(batToRun, PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ);
 
         // run eigor cli
@@ -162,7 +157,6 @@ public class ITCli {
 
 
         assertThat( proc.get().exitValue(), is(0) );
-
         proc.get().destroyForcibly();
 
 
@@ -195,7 +189,7 @@ public class ITCli {
         return file;
     }
     private File moveEigorTarGzFile(File destinationFolder) throws IOException {
-        File eigorCliZipped = createNewFileUnix("target", "eigor.zip");
+        File eigorCliZipped = newFile("target", "eigor.tar.gz");//createNewFileUnix("target", "eigor.zip");
         return moveFile(destinationFolder, eigorCliZipped);
     }
 
