@@ -5,6 +5,8 @@ import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.rules.MalformedRuleException;
 import it.infocert.eigor.rules.integrity.IntegrityRule;
 import it.infocert.eigor.rules.integrity.IteratingIntegrityRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -13,8 +15,11 @@ import java.util.*;
  * It stores all the active integrity rules
  */
 public class IntegrityRulesRepository implements RuleRepository {
+    private static final Logger log = LoggerFactory.getLogger(IntegrityRulesRepository.class);
     private List<Rule> ruleList;
     private final Properties properties;
+    private final List<Rule> validRules = new ArrayList<>(0);
+    private final Map<String, String> invalidRules = new HashMap<>();
 
     public IntegrityRulesRepository(Properties properties) {
         this.properties = properties;
@@ -46,19 +51,53 @@ public class IntegrityRulesRepository implements RuleRepository {
                     values.put(split[1], entry.getValue());
                     collected.put(superKey, values);
                 }
+
             }
             List<Rule> rules = new ArrayList<>();
             collected.forEach((key, entry) -> {
                 Rule rule;
                 if (entry.containsKey("items")) {
-                    rule = new IteratingIntegrityRule(((String) entry.get("items")), ((String) entry.get("body")));
+                    rule = new IteratingIntegrityRule(((String) entry.get("items")), ((String) entry.get("body")), key);
                 } else {
-                    rule = new IntegrityRule((String) entry.get("body"));
+                    rule = new IntegrityRule((String) entry.get("body"), key);
                 }
+                Map<String, Object> validation;
+                for (Map.Entry<String, Object>ruleDef : entry.entrySet()) {
+                    validation = validateExpression(((String) ruleDef.getValue()));
+                    if (((boolean) validation.get("result"))) {
+                        validRules.add(rule);
+                    } else {
+                        invalidRules.put(String.format("%s.%s", key, ruleDef.getKey()), (String) validation.get("expression"));
+                    }
+                }
+
                 rules.add(rule);
             });
+            if (!invalidRules.isEmpty()) {
+                throw new MalformedRuleException("There are invalid rules in the configuration.", Collections.unmodifiableMap(invalidRules), validRules);
+            }
             this.ruleList = rules;
             return ruleList;
         }
+    }
+
+    private Map<String, Object> validateExpression(String expr) {
+            HashMap<String, Object> result = new HashMap<>();
+        if (expr.matches("^(\\$)\\{((?!\\{|}).)*}$")) {
+            result.put("result", true);
+            return result;
+        } else {
+            result.put("result", false);
+            result.put("expression", expr);
+            return result;
+        }
+    }
+
+    public List<Rule> getValidRules() {
+        return validRules;
+    }
+
+    public Map<String, String> getInvalidRules() {
+        return Collections.unmodifiableMap(invalidRules);
     }
 }

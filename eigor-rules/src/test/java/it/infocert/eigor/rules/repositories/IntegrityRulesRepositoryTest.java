@@ -12,10 +12,13 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class IntegrityRulesRepositoryTest {
@@ -31,7 +34,7 @@ public class IntegrityRulesRepositoryTest {
 
     @Test
     public void repositoryShouldReturnAListOfRulesFromProps() throws Exception {
-        properties.put("br1.body", "");
+        properties.put("br1.body", "${}");
         IntegrityRulesRepository repo = new IntegrityRulesRepository(properties);
         List<Rule> firstRun = repo.rules();
         assertNotNull(firstRun);
@@ -74,7 +77,7 @@ public class IntegrityRulesRepositoryTest {
 
         assertNotNull(rules);
         assertFalse(rules.isEmpty());
-        assertThat(rules.get(0), Matchers.instanceOf(IteratingIntegrityRule.class));
+        assertThat(rules.get(0), instanceOf(IteratingIntegrityRule.class));
     }
 
     @Test
@@ -87,6 +90,22 @@ public class IntegrityRulesRepositoryTest {
         invoice.getBG0004Seller().add(seller);
 
         assertOutcome(SUCCESS);
+    }
+
+    @Test
+    public void assertThatAnExceptionIsThrownWhenARuleIsMalformed() throws Exception {
+        properties.put("br1.items", "${invoice.getBG0004Seller().iterator()}");
+        properties.put("br1.body", "${!item.getBT0027SellerName().isEmpty()}}");
+        IntegrityRulesRepository repo = new IntegrityRulesRepository(properties);
+
+        try {
+            repo.rules();
+            fail();
+        } catch (Exception e) {
+            assertThat(e, instanceOf(MalformedRuleException.class));
+            assertThat(((MalformedRuleException) e).getInvalidRules().size(), is(1));
+            assertThat(((MalformedRuleException) e).getValidRules().size(), is(1));
+        }
     }
 
     private void assertOutcome(RuleOutcome.Outcome expected) {
