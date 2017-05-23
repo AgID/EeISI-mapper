@@ -1,5 +1,8 @@
 package it.infocert.eigor.model.core;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
@@ -9,9 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.reflect.Modifier.isAbstract;
@@ -66,44 +67,58 @@ public class InvoiceUtils {
         return invoice;
     }
 
-    public List<BTBG> getChildrenAsList(BTBG parent, String childName) throws IllegalAccessException, InvocationTargetException {
-        Method getterMethod = Arrays.stream(parent.getClass()
-                .getMethods())
-                .filter(method ->
-                        method.getName()
-                                .startsWith("get" + childName))
-                .findFirst()
-                .orElse(null);
-        if (getterMethod == null) {
-            return null;
-        }
+    public List<BTBG> getChildrenAsList(BTBG parent, final String childName) throws IllegalAccessException, InvocationTargetException {
 
-        return (List<BTBG>) getterMethod.invoke(parent);
+        List<Method> methods = Arrays.asList(parent.getClass().getMethods());
+        Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
+            @Override
+            public boolean apply(Method method) {
+                return method.getName().startsWith("get" + childName);
+            }
+        });
+
+        if(filter == null || filter.isEmpty()) return null;
+
+        return (List<BTBG>) filter.iterator().next().invoke(parent);
     }
 
-    public Class<? extends BTBG> getBtBgByName(String name) {
-        return reflections.getSubTypesOf(BTBG.class)
-                                .stream()
-                                .filter(c ->
-                                        c.getSimpleName()
-                                                .startsWith(name)
-                                )
-                                .findFirst()
-                                .orElse(null);
+    public Class<? extends BTBG> getBtBgByName(final String name) {
+
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+
+        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
+            @Override
+            public boolean apply(Class<? extends BTBG> c) {
+                return c.getSimpleName().startsWith(name);
+            }
+        });
+
+        if(filter==null || filter.isEmpty()) return null;
+        else return filter.iterator().next();
+
     }
 
-    public Class<? extends BTBG> getBtBgByName(BtBgName name) {
-        return reflections.getSubTypesOf(BTBG.class)
-                .stream()
-                .filter(c-> !isAbstract(c.getModifiers()) )
-                .filter(c -> {
-                            String substring = c.getSimpleName().substring(0, 6);
-                            BtBgName parse = BtBgName.parse(substring);
-                            return parse.equals(name);
-                        }
-                )
-                .findFirst()
-                .orElse(null);
+    public Class<? extends BTBG> getBtBgByName(final BtBgName name) {
+
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+
+        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
+            @Override
+            public boolean apply(Class<? extends BTBG> c) {
+
+                if (isAbstract(c.getModifiers())) return false;
+
+                String substring = c.getSimpleName().substring(0, 6);
+                BtBgName parse = BtBgName.parse(substring);
+                return parse.equals(name);
+
+            }
+        });
+
+        if(filter==null || filter.isEmpty()) return null;
+
+        return filter.iterator().next();
+
     }
 
     public BTBG getFirstChild(String path, BG0000Invoice invoice) {

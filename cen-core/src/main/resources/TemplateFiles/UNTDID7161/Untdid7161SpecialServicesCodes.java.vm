@@ -6,9 +6,9 @@ public enum Untdid7161SpecialServicesCodes {
     // 2 - Code,
     // 3 - ShortDesc,
     // 4 - LongDesc
-    #foreach( $row in $File )
-        /** ${row.ShortDesc}. */
-    ${row.Code}(#if(${row.PlusSign.equals("+")}) true #else false #end,"${row.ShortDesc}", "${row.LongDesc}")#if($LastIndex==$row.RowIndex);#else,#end
+    #foreach( $row in $rows )
+        /** ${row.data.ShortDesc}. */
+    ${row.data.Code}(#if(${row.data.PlusSign.equals("+")}) true #else false #end,"${row.data.ShortDesc}", "${row.data.LongDesc}")#if($meta.count.lastIndex==$row.meta.rowIndex);#else,#end
     #end
 
     private boolean hasPlusSign;

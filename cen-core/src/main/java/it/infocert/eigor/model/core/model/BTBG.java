@@ -3,15 +3,15 @@ package it.infocert.eigor.model.core.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface BTBG {
+public abstract class BTBG {
 
-    BTBG getParent();
+    public abstract BTBG getParent();
 
-    int order();
+    public abstract int order();
 
-    void accept(Visitor v);
+    public abstract void accept(Visitor v);
 
-    default String denomination(){
+    public String denomination(){
         String simpleName = getClass().getSimpleName();
         Pattern pattern = Pattern.compile("(..\\d*)\\D");
         Matcher matcher = pattern.matcher(simpleName);
