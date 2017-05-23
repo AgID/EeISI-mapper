@@ -30,10 +30,13 @@ public class CsvCen2Cen implements ToCenConversion {
     private final InvoiceUtils utils;
     private final ConversionRegistry conversionRegistry;
 
-    public CsvCen2Cen() {
+    private Reflections reflections;
+
+    public CsvCen2Cen(Reflections reflections) {
+        this.reflections = reflections;
 
         cenStructure = new CenStructure();
-        utils = new InvoiceUtils(new Reflections("it.infocert"));
+        utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
                 new StringToIso31661CountryCodesConverter(),
                 new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),

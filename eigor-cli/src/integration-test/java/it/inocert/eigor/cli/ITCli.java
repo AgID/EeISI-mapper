@@ -114,7 +114,9 @@ public class ITCli {
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "cenfattpa";
-        File batToRun = newFile(workdir , "eigor-cli" , "eigor.sh");
+
+
+        File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
         Files.setPermission(batToRun, PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ);
 
         // run eigor cli
@@ -126,7 +128,7 @@ public class ITCli {
                     String[] command = new String[]{
                             "bash", "-c", "cd " + batToRun.getParentFile().getAbsolutePath() + ";" + "./" + batToRun.getName() + " " + args };
                     proc.set( runtime.exec(command) );
-                    } catch (IOException e) {
+                } catch (IOException e) {
                     failForException(e);
                 }
             }
@@ -156,7 +158,6 @@ public class ITCli {
 
 
         assertThat( proc.get().exitValue(), is(0) );
-
         proc.get().destroyForcibly();
 
 
@@ -173,8 +174,23 @@ public class ITCli {
         return moveFile(destinationFolder, eigorCliZipped);
     }
 
+    private File createNewFileUnix(Object target, String... pathComponents) throws IOException {
+        File file = null;
+        if (target instanceof String) {
+            file = newFile((String)target, pathComponents);
+        } else if (target instanceof File) {
+            file = newFile((File)target, pathComponents);
+        } else {
+            throw new IOException("Failed to create " + Arrays.toString(pathComponents) + " on Linux machine! Invalid File descriptor!");
+        }
+        if (!file.exists() &&
+                !file.createNewFile()) {
+            throw new IOException("Failed to create " + Arrays.toString(pathComponents) + " on Linux machine!");
+        }
+        return file;
+    }
     private File moveEigorTarGzFile(File destinationFolder) throws IOException {
-        File eigorCliZipped = newFile("target", "eigor.tar.gz");
+        File eigorCliZipped = newFile("target", "eigor.tar.gz");//createNewFileUnix("target", "eigor.zip");
         return moveFile(destinationFolder, eigorCliZipped);
     }
 

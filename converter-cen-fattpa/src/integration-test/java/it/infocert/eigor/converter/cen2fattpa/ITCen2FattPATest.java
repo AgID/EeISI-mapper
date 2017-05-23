@@ -5,6 +5,7 @@ import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -29,7 +30,7 @@ public class ITCen2FattPATest {
 
     @Before
     public void setUp() {
-        csvCen2Cen = new CsvCen2Cen();
+        csvCen2Cen = new CsvCen2Cen(new Reflections("it.infocert"));
         cen2FattPA = new Cen2FattPAConverter();
         xPathfactory = XPathFactory.newInstance();
     }

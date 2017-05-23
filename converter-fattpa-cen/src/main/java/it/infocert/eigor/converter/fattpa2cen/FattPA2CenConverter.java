@@ -7,6 +7,7 @@ import it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated.FattPA2
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -25,6 +26,12 @@ import java.util.Set;
 public class FattPA2CenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
+
+    private Reflections reflections;
+
+    public FattPA2CenConverter(Reflections reflections) {
+        this.reflections = reflections;
+    }
 
     public ConversionResult<BG0000Invoice> convert(InputStream input) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
