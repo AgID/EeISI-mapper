@@ -27,6 +27,7 @@ public class IntegrityRulesRepository implements RuleRepository {
 
     /**
      * Lazily loads and returns all the rules expressed in "rules.properties".
+     *
      * @return a {@link List} of {@link Rule} containing all the {@link IntegrityRule} configured
      * @throws MalformedRuleException if the expression is not a valid rule definition
      */
@@ -57,21 +58,37 @@ public class IntegrityRulesRepository implements RuleRepository {
             collected.forEach((key, entry) -> {
                 Rule rule;
                 if (entry.containsKey("items")) {
-                    rule = new IteratingIntegrityRule(((String) entry.get("items")), ((String) entry.get("body")), key);
-                } else {
-                    rule = new IntegrityRule((String) entry.get("body"), key);
-                }
-                Map<String, Object> validation;
-                for (Map.Entry<String, Object>ruleDef : entry.entrySet()) {
-                    validation = validateExpression(((String) ruleDef.getValue()));
-                    if (((boolean) validation.get("result"))) {
+                    String items = (String) entry.get("items");
+                    String body = (String) entry.get("body");
+                    Map<String, Object> itemsResult = validateExpression(items);
+                    Map<String, Object> bodyResult = validateExpression(body);
+
+                    boolean itemR = (boolean) itemsResult.get("result");
+                    boolean bodyR = (boolean) bodyResult.get("result");
+                    if (itemR && bodyR) {
+                        rule = new IteratingIntegrityRule(items, body, key);
                         validRules.add(rule);
+                        rules.add(rule);
                     } else {
-                        invalidRules.put(String.format("%s.%s", key, ruleDef.getKey()), (String) validation.get("expression"));
+                        if (!itemR) {
+                            invalidRules.put(String.format("%s.items", key), (String) itemsResult.get("expression"));
+                        }
+                        if (!bodyR) {
+                            invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
+                        }
+                    }
+                } else {
+                    String body = (String) entry.get("body");
+                    Map<String, Object> bodyResult = validateExpression(body);
+                    if (((boolean) bodyResult.get("result"))) {
+                        rule = new IntegrityRule(body, key);
+                        validRules.add(rule);
+                        rules.add(rule);
+                    } else {
+                        invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
                     }
                 }
 
-                rules.add(rule);
             });
             if (!invalidRules.isEmpty()) {
                 throw new MalformedRuleException("There are invalid rules in the configuration.", Collections.unmodifiableMap(invalidRules), validRules);
@@ -82,7 +99,7 @@ public class IntegrityRulesRepository implements RuleRepository {
     }
 
     private Map<String, Object> validateExpression(String expr) {
-            HashMap<String, Object> result = new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>();
         if (expr.matches("^(\\$)\\{((?!\\{|}).)*}$")) {
             result.put("result", true);
             return result;
