@@ -1,9 +1,8 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.collect.Multimap;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import com.google.common.io.ByteStreams;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.converter.ubl2cen.mapping.UblXpathMap;
 import it.infocert.eigor.converter.ubl2cen.mapping.GenericOneToOneTransformation;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -16,6 +15,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -45,9 +45,18 @@ public class Ubl2Cen implements ToCenConversion {
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = null;
+        List<Exception> errors = new ArrayList<>();
 
+        File fullSchemaFile = new File("xslt/EN16931-UBL-validation.xslt");
+        IXMLValidator validator;
+        try {
+            validator = new SchematronValidator(fullSchemaFile, true);
+            errors.addAll(validator.validate(ByteStreams.toByteArray(sourceInvoiceStream)));
+        } catch (IOException | IllegalArgumentException e) {
+            errors.add(new Exception("Unable to schematron-validate input!", e));
+        }
         Document document = getDocument(sourceInvoiceStream);
-        ConversionResult<BG0000Invoice> result = applyTransformations(document);
+        ConversionResult<BG0000Invoice> result = applyTransformations(document, errors);
 
         return result;
     }
@@ -76,14 +85,14 @@ public class Ubl2Cen implements ToCenConversion {
      * Apply transformations into BG0000Invoice.
      *
      * @param document the input document
+     * @param errors the errors list
      * @return the BG0000Invoice
      */
-    protected ConversionResult<BG0000Invoice> applyTransformations(Document document) throws SyntaxErrorInInvoiceFormatException {
+    protected ConversionResult<BG0000Invoice> applyTransformations(Document document, List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
         UblXpathMap mapper = new UblXpathMap();
         Multimap<String, String> mapping = mapper.getMapping();
-        List<Exception> errors = new ArrayList<>();
         for (Map.Entry<String, String> entry : mapping.entries()) {
             GenericOneToOneTransformation transformer = new GenericOneToOneTransformation(entry.getValue(), entry.getKey(), reflections);
             transformer.transform(document, invoice, errors);
