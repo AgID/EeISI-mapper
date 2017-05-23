@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -7,12 +8,14 @@ import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BT0040SellerCountryCode;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -24,7 +27,31 @@ public class CsvCen2CenTest {
 
     @Before
     public void setUp() {
-        sut = new CsvCen2Cen();
+        sut = new CsvCen2Cen(new Reflections("it.infocert"));
+    }
+
+    @Test
+    public void shouldNotStopWhenAnUnmappabelEntityIsFound() {
+
+        // given
+        InputStream invoiceWithUnmappableBt3 = asStream(
+                "BG/BT,Value",
+                "BT-3,Invoice");
+
+        // when
+        ConversionResult<BG0000Invoice> conversion = null;
+        try {
+            conversion = sut.convert(invoiceWithUnmappableBt3);
+        }catch (Exception e){
+            it.infocert.eigor.test.Failures.failForException(e);
+        }
+
+        // then
+        // ...the corresponding field should be null
+        assertThat( conversion.getResult().getBT0003InvoiceTypeCode(), hasSize(0) );
+        assertThat( conversion.getErrors(), hasSize(1) );
+        assertThat( conversion.getErrors().get(0), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
+
     }
 
     @Test
@@ -33,12 +60,12 @@ public class CsvCen2CenTest {
         // given
         InputStream inputStream = asStream(
                 "BG/BT,Business Term Name,Value,Remarks,Calculations",
-                "BG-4,,XXX,,",
-                "BG-5,,XXX,,",
+                "BG-4,,,,",
+                "BG-5,,,,",
                 "BT-40,,AE,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         BT0040SellerCountryCode btCountryCode = invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0);
@@ -57,7 +84,7 @@ public class CsvCen2CenTest {
         // when
         SyntaxErrorInInvoiceFormatException exception = null;
         try {
-            BG0000Invoice invoice = sut.convert(inputStream);
+            BG0000Invoice invoice = sut.convert(inputStream).getResult();
             fail();
         } catch (SyntaxErrorInInvoiceFormatException e) {
             exception = e;
@@ -88,7 +115,7 @@ public class CsvCen2CenTest {
                 "BT-022,Invoice Note,This is note #2,,");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
@@ -108,7 +135,7 @@ public class CsvCen2CenTest {
         InputStream inputStream = getClass().getResourceAsStream("/cen-a7-minimum-content-with-std-values.csv");
 
         // when
-        BG0000Invoice invoice = sut.convert(inputStream);
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
 
         // then
         // let's check some elements.
@@ -117,16 +144,55 @@ public class CsvCen2CenTest {
 
     }
 
-    private InputStream asStream(String... lines) {
-        String join = String.join("\n", asList(lines));
-        return new ByteArrayInputStream(join.getBytes());
-    }
-
     @Test
     public void shouldSupportCsvCen() {
         assertThat( sut.support("csvcen"), is(true));
         assertThat( sut.support("CsvCen"), is(true));
         assertThat( sut.support("xml"), is(false));
     }
+
+    @Test
+    public void shouldFixBug36() throws SyntaxErrorInInvoiceFormatException {
+
+        // given
+        InputStream inputStream = asStream(
+                "BG/BT,Value",
+                "BT-2,2015-01-09");
+
+        // when
+        BG0000Invoice invoice = sut.convert(inputStream).getResult();
+
+        // then
+        assertThat(invoice.getBT0002InvoiceIssueDate().get(0).toString(), equalTo("2015-01-09"));
+
+    }
+
+
+    @Test
+    public void shouldComplainIfBgHasAValue() {
+
+        // given
+        InputStream invoiceWithBgAndValue = asStream(
+                "BG/BT,Value",
+                "BG-2,BG-SHOULD-NOT-HAVE-A-VALUE");
+
+        // when
+        SyntaxErrorInInvoiceFormatException se = null;
+        try {
+            sut.convert(invoiceWithBgAndValue);
+        } catch (SyntaxErrorInInvoiceFormatException e) {
+            se = e;
+        }
+
+        // then
+        assertThat(se.getMessage().toLowerCase(), containsString("bg0002 cannot have a value, has 'bg-should-not-have-a-value' instead."));
+
+    }
+
+    private InputStream asStream(String... lines) {
+        String join = String.join("\n", asList(lines));
+        return new ByteArrayInputStream(join.getBytes());
+    }
+
 
 }

@@ -1,0 +1,67 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+    </formats>
+
+
+    <baseDirectory>${artifactId}</baseDirectory>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+    <fileSets>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>env/release</directory>
+            <excludes>
+                <exclude>eigor.bat</exclude>
+                <exclude>eigor.sh</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>examples</outputDirectory>
+            <directory>../eigor-test/src/main/resources</directory>
+            <includes>
+                <include>ubl-plain.xml</include>
+                <include>cen-a7-minimum-content-with-std-values.csv</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>schematron-xslt</outputDirectory>
+            <directory>../converter-ubl-cen/schematron-xslt</directory>
+            <includes>
+                <include>*.xslt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>../eigor-rules/src/main/resources</directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>/</outputDirectory>
+            <directory>env/release</directory>
+            <includes>
+                <include>eigor.bat</include>
+                <include>eigor.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>logs</outputDirectory>
+            <directory>src/main/resources</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

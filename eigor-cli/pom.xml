@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.3</version>
+        <version>0.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test-invoices</artifactId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -51,6 +51,10 @@
             <artifactId>converter-fattpa-cen</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-ubl-cen</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
@@ -58,23 +62,74 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-rules</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
 
+            <!--
+            add integration-test to the sources,
+            to be sure the integration test at least always compile.
+             -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <!-- Add a new source directory to our build -->
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add a new resource directory to our build -->
+                    <execution>
+                        <id>add-integration-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the resource directory of our integration tests -->
+                            <resources>
+                                <!--
+                                    Placeholders that are found from the files located in the configured resource
+                                    directories are replaced with the property values found from the profile
+                                    specific configuration file.
+                                -->
+                                <resource>
+                                    <filtering>true</filtering>
+                                    <directory>src/integration-test/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                 <configuration>
-                    <resources>
-                        <resource>
-                            <directory>src/main/resources</directory>
-                            <filtering>true</filtering>
-                        </resource>
-                    </resources>
-
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>it.infocert.eigor.cli.Eigor</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
 
@@ -83,33 +138,95 @@
             Not using 'maven-shade-plugin' because I get an error about a missing "resource".
             Feel free to set up 'maven-shade-plugin' if you prefer.
             -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>it.infocert.eigor.cli.Eigor</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <finalName>${cli.main.jar}</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- assembles the archive files running the app -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <finalName>${cli.main.jar}</finalName>
+                            <descriptors>
+                                <descriptor>src/assembly/bin.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>create-zip</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- ensure some file exists -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>1.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-files-exist</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireFilesExist>
+                                            <files>
+                                                <file>../eigor-test/src/main/resources</file>
+                                                <file>../eigor-rules/src/main/resources</file>
+                                                <file>env/release/eigor.sh</file>
+                                                <file>env/release/eigor.bat</file>
+                                                <file>../eigor-rules/src/main/resources/cardinality.properties</file>
+                                                <file>../eigor-rules/src/main/resources/rules.properties</file>
+                                                <file>env/release/logback.xml</file>
+                                            </files>
+                                        </requireFilesExist>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

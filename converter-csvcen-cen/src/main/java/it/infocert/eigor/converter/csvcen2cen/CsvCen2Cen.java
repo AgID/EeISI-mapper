@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.conversion.*;
@@ -29,13 +30,17 @@ public class CsvCen2Cen implements ToCenConversion {
     private final InvoiceUtils utils;
     private final ConversionRegistry conversionRegistry;
 
-    public CsvCen2Cen() {
+    private Reflections reflections;
+
+    public CsvCen2Cen(Reflections reflections) {
+        this.reflections = reflections;
 
         cenStructure = new CenStructure();
-        utils = new InvoiceUtils(new Reflections("it.infocert"));
+        utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
                 new StringToIso31661CountryCodesConverter(),
                 new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),
+                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
@@ -47,7 +52,9 @@ public class CsvCen2Cen implements ToCenConversion {
     }
 
     @Override
-    public BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+    public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+
+        List<Exception> errors = new ArrayList<>();
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 
@@ -98,8 +105,14 @@ public class CsvCen2Cen implements ToCenConversion {
 
                 // A BG-XX can be instantiated...
                 if (btBgClass.getSimpleName().toLowerCase().startsWith("bg")) {
+
                     // BGs can be instantiated.
                     btbg = btBgClass.newInstance();
+
+                    // now, keep in mind that bg cannot have a value!
+                    if(bgbtValueFromCsv!=null && !bgbtValueFromCsv.trim().isEmpty()){
+                        throw new SyntaxErrorInInvoiceFormatException(btbg.denomination() + " cannot have a value, has '" + bgbtValueFromCsv + "' instead.");
+                    }
 
                 // A BT-XX should be instantiated through its constructor...
                 } else {
@@ -116,23 +129,28 @@ public class CsvCen2Cen implements ToCenConversion {
                     Object convert = null;
                     try {
                         convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
-                    } catch (Exception e) {
-                        throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
+                        // instantiate the BT
+                        btbg = (BTBG) constructor.newInstance(convert);
+                    } catch (IllegalArgumentException e) {
+                        errors.add(
+                        new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
                                 cenRecord.getRecordNumber(),
                                 bgbtIdFromCsv,
                                 bgbtValueFromCsv,
                                 constructorParamType.getSimpleName()
-                        ));
+                        )));
                     }
 
-                    // instantiate the BT
-                    btbg = (BTBG) constructor.newInstance(convert);
                 }
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-            if(btbg == null) throw new IllegalStateException("It was not possible to instantiate a BT/BG");
+            if(btbg == null) {
+                continue;
+            }
+
+
 
 
             // Calculate the path of the BG where we're trying to add the newly created BT/BG.
@@ -182,7 +200,8 @@ public class CsvCen2Cen implements ToCenConversion {
         }
 
         // the topmost element in the stack is always the invoice.
-        return (BG0000Invoice) stack.get(0);
+
+        return new ConversionResult<BG0000Invoice>(errors, (BG0000Invoice) stack.get(0) );
     }
 
     @Override

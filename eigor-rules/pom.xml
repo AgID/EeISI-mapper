@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.3</version>
+        <version>0.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,39 +25,23 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>cen-core</artifactId>
         </dependency>
+
+        <!-- JUEL -->
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-impl</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.danidemi</groupId>
-                <artifactId>template-generator-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-rules</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/rules/rules.csv</pathToCsv>
-                            <pathToTemplate>
-                                ${project.basedir}/src/main/resources/rules/ConstraintRepositoryTemplate.java.vm
-                            </pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
-                            </pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/ConstraintsRepository.java
-                            </fileNameTemplate>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>generate-rules</id>
@@ -75,5 +59,27 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>**</exclude>
+                        </excludes>
+                        <filtering>false</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

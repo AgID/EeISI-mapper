@@ -1,8 +1,7 @@
 package it.infocert.eigor.cli;
 
-import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
-import it.infocert.eigor.rules.repositories.ConstraintsRepository;
+import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,16 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.Properties;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 public class EigorTest {
@@ -39,10 +32,11 @@ public class EigorTest {
 
     @Before public void setUpCommandLineInterpeter() {
         Reflections reflections = new Reflections("it.infocert");
+        Properties properties = new Properties();
         ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
-        ConstraintsRepository constraintsRepo = new ConstraintsRepository(reflections);
+        IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo, genericRepo, constraintsRepo
+                genericRepo, genericRepo, integrityRepo
         );
     }
 
@@ -85,25 +79,6 @@ public class EigorTest {
 
     }
 
-
-    @Test public void failWhenTargetIsMissing() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--output", outputDir.getAbsolutePath(),
-                "--source", "fake"
-        } );
-
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("target"),
-                containsString("missing")
-        ));
-
-    }
-
-
     @Test public void failWhenSourceIsMissing() throws IOException {
 
         // when
@@ -121,23 +96,6 @@ public class EigorTest {
 
     }
 
-    @Test public void failWhenOutputIsMissing() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "fake"
-        } );
-
-        // then
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("output"),
-                containsString("missing")
-        ));
-
-    }
 
     @Test public void failWhenInputIsMissing() throws IOException {
 
@@ -155,30 +113,6 @@ public class EigorTest {
                 containsString("missing")
         ));
 
-    }
-
-    @Test public void executeWithFakeTransformations() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "fake",
-                "--output", outputDir.getAbsolutePath()
-        } );
-
-        // then
-        List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report expected.", files, hasSize(3) );
-
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
-        assertThat( files + " found", findFirstFile(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
-
-    }
-
-    private File findFirstFile(File outputDir, Predicate<File> col) {
-        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
 
     @Test public void failWhenInputDoesNotExist() throws IOException {
@@ -210,7 +144,7 @@ public class EigorTest {
                 "--output", "i-bet-this-folder-does-not-exist"
         } );
 
-        // then
+        // theninvoice-
         assertThat(err().toLowerCase(), allOf(
                 containsString("output folder"),
                 containsString("i-bet-this-folder-does-not-exist"),

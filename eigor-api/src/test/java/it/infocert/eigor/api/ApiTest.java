@@ -24,7 +24,7 @@ public class ApiTest {
 
         // services
         ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
-        RuleRepository ruleRepository = reflectionBasedRepository;
+        RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         ToCenConversionRepository conversionRepository = reflectionBasedRepository;
         FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;
 
@@ -39,12 +39,12 @@ public class ApiTest {
         RuleReport ruleReport = new InMemoryRuleReport();
 
         // business logic
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat);
+        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         ruleRepository.rules().forEach( rule -> {
             RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
             ruleReport.store( ruleOutcome, rule );
         });
-        byte[] converted = fromCen.convert(cenInvoice);
+        byte[] converted = fromCen.convert(cenInvoice).getResult();
 
     }
 

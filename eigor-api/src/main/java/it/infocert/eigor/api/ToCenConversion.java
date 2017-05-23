@@ -26,7 +26,7 @@ public interface ToCenConversion {
      * @throws SyntaxErrorInInvoiceFormatException   When a syntax error that makes impossible
      *                                  to convert the source invoice in the CEN format is found.
      */
-    BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
+    ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
 
     boolean support(String format);
 
