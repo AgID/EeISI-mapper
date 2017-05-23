@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,18 +45,23 @@ public class Ubl2Cen implements ToCenConversion {
      */
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
-        BG0000Invoice invoice = null;
         List<Exception> errors = new ArrayList<>();
 
-        File fullSchemaFile = new File("xslt/EN16931-UBL-validation.xslt");
+        InputStream clonedInputStream = null;
+        File fullSchemaFile = new File("converter-ubl-cen/xslt/EN16931-UBL-validation.xslt");
         IXMLValidator validator;
         try {
+            byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+            clonedInputStream = new ByteArrayInputStream(bytes);
+
             validator = new SchematronValidator(fullSchemaFile, true);
-            errors.addAll(validator.validate(ByteStreams.toByteArray(sourceInvoiceStream)));
+            errors.addAll(validator.validate(bytes));
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new Exception("Unable to schematron-validate input!", e));
+            clonedInputStream = sourceInvoiceStream;
         }
-        Document document = getDocument(sourceInvoiceStream);
+
+        Document document = getDocument(clonedInputStream);
         ConversionResult<BG0000Invoice> result = applyTransformations(document, errors);
 
         return result;
