@@ -34,6 +34,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <outputDirectory>schematron-xslt</outputDirectory>
+            <directory>../converter-ubl-cen/schematron-xslt</directory>
+            <includes>
+                <include>*.xslt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <outputDirectory>conf</outputDirectory>
             <directory>../eigor-rules/src/main/resources</directory>
             <includes>

@@ -48,7 +48,10 @@ public class Ubl2Cen implements ToCenConversion {
         List<Exception> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
-        File fullSchemaFile = new File("converter-ubl-cen/xslt/EN16931-UBL-validation.xslt");
+        File fullSchemaFile = new File("schematron-xslt/EN16931-UBL-validation.xslt");
+        // FIXME workaround for different paths between dev and release...
+        if (!fullSchemaFile.exists())
+            fullSchemaFile = new File("converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
         IXMLValidator validator;
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
@@ -58,7 +61,6 @@ public class Ubl2Cen implements ToCenConversion {
             errors.addAll(validator.validate(bytes));
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new Exception("Unable to schematron-validate input!", e));
-            clonedInputStream = sourceInvoiceStream;
         }
 
         Document document = getDocument(clonedInputStream);
@@ -91,7 +93,7 @@ public class Ubl2Cen implements ToCenConversion {
      * Apply transformations into BG0000Invoice.
      *
      * @param document the input document
-     * @param errors the errors list
+     * @param errors   the errors list
      * @return the BG0000Invoice
      */
     protected ConversionResult<BG0000Invoice> applyTransformations(Document document, List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
