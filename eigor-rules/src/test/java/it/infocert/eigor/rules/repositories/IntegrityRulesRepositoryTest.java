@@ -92,10 +92,14 @@ public class IntegrityRulesRepositoryTest {
         assertOutcome(SUCCESS);
     }
 
+
     @Test
     public void assertThatAnExceptionIsThrownWhenARuleIsMalformed() throws Exception {
         properties.put("br1.items", "${invoice.getBG0004Seller().iterator()}");
+        properties.put("br2.items", "${{invoice.getBG0004Seller().iterator()}");
         properties.put("br1.body", "${!item.getBT0027SellerName().isEmpty()}}");
+        properties.put("br2.body", "${!item.getBT0027SellerName().isEmpty()}");
+
         IntegrityRulesRepository repo = new IntegrityRulesRepository(properties);
 
         try {
@@ -103,16 +107,16 @@ public class IntegrityRulesRepositoryTest {
             fail();
         } catch (Exception e) {
             assertThat(e, instanceOf(MalformedRuleException.class));
-            assertThat(((MalformedRuleException) e).getInvalidRules().size(), is(1));
-            assertThat(((MalformedRuleException) e).getValidRules().size(), is(1));
+            assertThat(((MalformedRuleException) e).getInvalidRules().size(), is(2));
+            assertTrue(((MalformedRuleException) e).getValidRules().isEmpty());
         }
     }
 
     private void assertOutcome(RuleOutcome.Outcome expected) {
-        getRules().forEach(rule -> {
+        for (Rule rule : getRules()) {
             RuleOutcome outcome = rule.isCompliant(invoice);
             assertEquals(expected, outcome.outcome());
-        });
+        }
     }
 
     private List<Rule> getRules() {
