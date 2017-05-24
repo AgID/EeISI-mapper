@@ -1,3 +1,10 @@
+# Inspired by:
+# - https://gitlab.com/gitlab-org/gitlab-ci-yml/blob/master/Maven.gitlab-ci.yml
+#
+# Reference:
+# - https://docs.gitlab.com/ce/ci/yaml/README.html
+
+
 image: maven:3.3.9-jdk-8
 
 variables:
@@ -23,10 +30,10 @@ stages:
 tests:
   stage: test
   script:
-  - mvn $MAVEN_CLI_OPTS clean install -Prelease
+  - mvn $MAVEN_CLI_OPTS clean install -Prelease -DskipITs -DskipTests
 
 pages:
-  stage: test
+  stage: packaging
   script:
   - mvn $MAVEN_CLI_OPTS site site:stage
   - mv $MAVEN_CLI_OPTS ./target/staging/ public
