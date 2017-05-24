@@ -16,8 +16,9 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/eigor-${day}-errors.log</file> <append>true</append>
+    <appender name="ERROR-FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/eigor-${day}-errors.log</file>
+        <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
@@ -26,13 +27,16 @@
         </filter>
     </appender>
 
-    <logger name="it.infocert.eigor" level="INFO"/>
+    <logger name="it.infocert.eigor" level="INFO" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR-FILE"/>
+    </logger>
 
     <logger name="org.reflections" level="ERROR"/>
 
     <root level="ERROR">
-        <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR-FILE"/>
     </root>
 
 </configuration>
