@@ -62,10 +62,6 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-rules</artifactId>
         </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

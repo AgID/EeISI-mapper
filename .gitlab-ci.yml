@@ -4,20 +4,31 @@ stages:
  - test
  - packaging
 
-# Verify merge requests
-tests:
-  stage: test
-  script: "mvn clean install -Prelease"
+## Verify merge requests
+#tests:
+#  stage: test
+#  script: "mvn clean install -Prelease"
 
-release-cli:
+#release-cli:
+#  stage: packaging
+#  script: mvn install -Prelease
+#  artifacts:
+#    paths:
+#      - eigor-cli/target/eigor.zip
+#      - eigor-cli/target/eigor.tar.gz
+#  only:
+#    - master
+
+pages:
   stage: packaging
-  script: mvn install -Prelease
+  script:
+  - mvn site site:stage
+  - mv ./target/staging/ public
   artifacts:
     paths:
-      - eigor-cli/target/eigor.zip
-      - eigor-cli/target/eigor.tar.gz
-  only:
-    - master
+    - public
+#  only:
+#  - develop
 
 
   
