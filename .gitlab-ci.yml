@@ -22,7 +22,7 @@ stages:
 pages:
   stage: packaging
   script:
-  - mvn site site:stage
+  - mvn install site site:stage -Prelease
   - mv ./target/staging/ public
   artifacts:
     paths:
