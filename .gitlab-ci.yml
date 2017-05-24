@@ -30,7 +30,7 @@ stages:
 tests:
   stage: test
   script:
-  - mvn $MAVEN_CLI_OPTS clean install -Prelease -DskipITs -DskipTests
+  - mvn $MAVEN_CLI_OPTS clean install -Prelease
 
 pages:
   stage: packaging
@@ -40,8 +40,8 @@ pages:
   artifacts:
     paths:
     - public
-#  only:
-#  - develop
+  only:
+  - develop
 
 release-cli:
   stage: packaging
