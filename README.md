@@ -95,6 +95,9 @@ BT-153,American Cookies
 ## Latest Release
 * Download the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/builds/artifacts/master/download?job=package-cli)
   * command line interface to convert invoices.
+  
+## Documentation
+[Eigor documentation](https://tgi-infocert-eigor.gitlab.io/eigor/)
 
 ## Build
 Java 8 is needed. To build the project:

@@ -11,6 +11,10 @@
     <version>0.0.7-SNAPSHOT</version>
     <name>Eigor</name>
     <description>Electronic Invoice GO Regional</description>
+    <organization>
+        <name>Infocert</name>
+        <url>https://www.infocert.it/</url>
+    </organization>
 
     <modules>
         <module>cen-core</module>
@@ -48,7 +52,17 @@
         <template-generator-maven-plugin.version>0.0.4</template-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+
+        <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
+
+    <distributionManagement>
+        <site>
+            <id>eigor</id>
+            <name>eigor</name>
+            <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
+        </site>
+    </distributionManagement>
 
     <pluginRepositories>
         <pluginRepository>
@@ -295,6 +309,8 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
+            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -316,6 +332,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -329,10 +346,17 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
         </plugins>
     </build>
     <reporting>
         <plugins>
+            <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
+            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -346,6 +370,36 @@
                     <reportSet>
                         <reports>
                             <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>dependency-convergence</report>
+                            <report>index</report>
+                            <!--
+                            <report>cim</report>
+                            <report>dependency-info</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>help</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>modules</report>
+                            <report>plugin-management</report>
+                            <report>plugins</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                            -->
                         </reports>
                     </reportSet>
                 </reportSets>
