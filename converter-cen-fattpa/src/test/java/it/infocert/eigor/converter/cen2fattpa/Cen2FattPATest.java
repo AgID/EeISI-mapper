@@ -34,8 +34,8 @@ public class Cen2FattPATest {
 
     @Test
     public void shouldSupportCsvCen() {
-        assertThat(cen2FattPA.support("cenfattpa"), is(true));
-        assertThat(cen2FattPA.support("CenFattPA"), is(true));
+        assertThat(cen2FattPA.support("fatturapa"), is(true));
+        assertThat(cen2FattPA.support("FatturaPA"), is(true));
         assertThat(cen2FattPA.support("xml"), is(false));
     }
 
