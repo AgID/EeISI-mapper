@@ -53,6 +53,7 @@ public class ConversionCommand implements CliCommand {
      * Execute toCen converter and fromCen converter.
      * Extract conversion result and rule validation report.
      * Generate files:
+     * tocen-errors.csv
      * invoice-source.{extension} (clone of source invoice)
      * fromcen-errors.csv,
      * invoice-cen.csv,
@@ -91,7 +92,44 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
+        ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
+        BG0000Invoice cenInvoice = toCenResult.getResult();
+        writeToCenErrors(out, toCenResult, outputFolderFile);
+        applyRulesToCenObject(cenInvoice, ruleReport);
+
+        BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
+        byte[] converted = conversionResult.getResult();
+
+        cloneSourceInvoice(this.inputInvoice, outputFolderFile);
+        writeFromCenErrors(out, conversionResult, outputFolderFile);
+        writeCenInvoice(cenInvoice, outputFolderFile);
+        writeTargetInvoice(converted, outputFolderFile);
+        writeRuleReport(ruleReport, outputFolderFile);
+    }
+
+    private void writeToCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+        if (conversionResult.isSuccessful()) {
+            out.println("To Cen Conversion was successful!");
+        } else {
+            out.println("To Cen Conversion finished, but some errors have occured:");
+            List<Exception> errors = conversionResult.getErrors();
+
+            StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
+            for (Exception e: errors){
+                toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
+            }
+            // writes to-cen errors csv
+            File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
+            FileUtils.writeStringToFile(toCenErrors, toCenErrorsCsv.toString());
+
+            for (Exception e : errors) {
+                out.println("Error: " + e.getMessage());
+            }
+            out.println("For more information see 'tocen-errors.csv'.");
+        }
+    }
+
+    private void applyRulesToCenObject(BG0000Invoice cenInvoice, InMemoryRuleReport ruleReport) {
         List<Rule> rules;
         try {
             rules = ruleRepository.rules();
@@ -106,23 +144,14 @@ public class ConversionCommand implements CliCommand {
                 ruleReport.store(ruleOutcome, rule);
             });
         }
-        BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
-        byte[] converted = conversionResult.getResult();
-
-        // writes clone of source invoice
-        cloneSourceInvoice(this.inputInvoice, outputFolderFile);
-        writeFromCenErrors(out, conversionResult, outputFolderFile);
-        writeCenInvoice(cenInvoice, outputFolderFile);
-        writeTargetInvoice(converted, outputFolderFile);
-        writeRuleReport(ruleReport, outputFolderFile);
     }
 
 
     private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (conversionResult.isSuccessful()) {
-            out.println("Conversion was successful!");
+            out.println("From Cen Conversion was successful!");
         } else {
-            out.println("Conversion finished, but some errors have occured:");
+            out.println("From Cen Conversion finished, but some errors have occured:");
             List<Exception> errors = conversionResult.getErrors();
 
 
