@@ -118,6 +118,37 @@ public class ConversionCommandTest {
 
     }
 
+    @Test public void toCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException, SyntaxErrorInInvoiceFormatException {
+
+
+        List<Exception> myErrors = Arrays.asList(new IllegalArgumentException("test exception"));
+        when(toCen.convert(any())).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
+
+        // given
+        given( fromCen.extension() ).willReturn(".xml");
+
+        // when converting a mock invoice, errors should occur
+        Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+        InputStream invoiceSourceFormat = null;
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat);
+        PrintStream err = new PrintStream( new ByteArrayOutputStream() );
+        PrintStream out = new PrintStream( new ByteArrayOutputStream() );
+
+        // when
+        sut.execute(out, err);
+
+        // then a fromcen-errors.csv should be created for the errors along with the other files
+        List<File> files = asList( outputFolderFile.listFiles() );
+
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("tocen-errors.csv")), notNullValue() );
+
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-source.txt")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("rule-report.csv")), notNullValue() );
+        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
+    }
+
     private File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
