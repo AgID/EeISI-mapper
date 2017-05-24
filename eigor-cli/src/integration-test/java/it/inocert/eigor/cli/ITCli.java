@@ -51,7 +51,7 @@ public class ITCli {
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
-                        + " --source " + "csvcen" + " --target " + "cenfattpa";
+                        + " --source " + "csvcen" + " --target " + "fatturapa";
         File batToRun = newFile(workdir , "eigor-cli" , "eigor.bat");
 
         // run eigor cli
@@ -113,7 +113,7 @@ public class ITCli {
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
-                        + " --source " + "csvcen" + " --target " + "cenfattpa";
+                        + " --source " + "csvcen" + " --target " + "fatturapa";
 
 
         File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
