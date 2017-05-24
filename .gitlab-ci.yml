@@ -41,7 +41,7 @@ pages:
     paths:
     - public
   only:
-  - develop
+    - develop
 
 release-cli:
   stage: packaging
