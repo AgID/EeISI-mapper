@@ -1,14 +1,11 @@
 package it.infocert.eigor.model.core.model.structure;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import it.infocert.eigor.model.core.model.CenStructureSource;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import java.util.*;
 
 /**
  * Gives access to the CEN structure tree.
@@ -45,16 +42,21 @@ public class CenStructure extends CenStructureSource {
 
     private Item findItemByBgBtName(final BtBgName name) {
 
-        Collection<Item> filter = Collections2.filter(Arrays.asList(items), new com.google.common.base.Predicate<Item>() {
-
-            @Override
-            public boolean apply(Item i) {
+        Predicate<Item> predicate = new Predicate<Item>() {
+            @Override public boolean apply(Item i) {
                 return i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals(String.valueOf(name.number()));
             }
+        };
 
-        });
-        if(filter!=null && !filter.isEmpty()){
-            return filter.iterator().next();
+        List<Item> unfiltered = Arrays.asList(items);
+
+        ArrayList<Item> filtered = new ArrayList<>();
+        for (Item item : unfiltered) {
+            if( predicate.apply(item) ) filtered.add(item);
+        }
+
+        if(!filtered.isEmpty()){
+            return filtered.get(0);
         }else{
             return null;
         }

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class CountryCodeToIso31661CountryCodeConverterTest {
+public class LookUpEnumConversionTest {
 
     LookUpEnumConversion sut = new LookUpEnumConversion<Iso31661CountryCodes>(Iso31661CountryCodes.class);
 

@@ -61,6 +61,13 @@ public class CenStructureTest {
 
     }
 
+    @Test public void shouldFindBg25() {
+
+        CenStructure.BtBgNode item = sut.findByName("BG25");
+        assertThat( item.getName().toString(), is("BG25") );
+
+    }
+
     @Test public void shouldKnowWhoIsTheParent() {
 
         // when

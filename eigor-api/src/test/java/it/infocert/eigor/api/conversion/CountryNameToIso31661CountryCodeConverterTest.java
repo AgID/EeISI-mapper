@@ -16,17 +16,7 @@ public class CountryNameToIso31661CountryCodeConverterTest {
 
         assertThat( denmark, is(Iso31661CountryCodes.DK) );
     }
-
-    @Test public void convertStringToIso() {
-
-        // when
-        Iso31661CountryCodes iso = sut.convert("IT");
-
-        // then
-        assertThat( iso, is(Iso31661CountryCodes.IT) );
-
-    }
-
+    
     @Test(expected = IllegalArgumentException.class) public void shouldThrowExceptionIfConversionIsNotPossible() {
 
         // given
