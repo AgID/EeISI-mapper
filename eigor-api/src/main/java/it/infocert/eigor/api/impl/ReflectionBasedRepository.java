@@ -9,7 +9,6 @@ import org.reflections.Reflections;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Repository based on <a href="https://github.com/ronmamo/reflections">Reflections</a>.

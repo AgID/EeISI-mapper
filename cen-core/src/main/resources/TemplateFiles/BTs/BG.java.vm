@@ -4,10 +4,9 @@
 package it.infocert.eigor.model.core.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Comparator;
 import java.util.Collections;
-
+import java.util.Comparator;
+import java.util.List;
 
 public class ${clzName} extends AbstractBTBG {
 

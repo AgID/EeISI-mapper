@@ -5,7 +5,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
-import java.time.Month;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;

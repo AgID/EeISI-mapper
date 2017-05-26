@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import com.google.common.base.Joiner;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -190,7 +191,7 @@ public class CsvCen2CenTest {
     }
 
     private InputStream asStream(String... lines) {
-        String join = String.join("\n", asList(lines));
+        String join = Joiner.on("\n").join(asList(lines));
         return new ByteArrayInputStream(join.getBytes());
     }
 

@@ -1,7 +1,5 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
-
-import it.infocert.eigor.converter.fattpa2cen.models.DatiTrasportoType;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;

@@ -2,7 +2,6 @@ package it.infocert.eigor.api.impl;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Mapper;
-import com.google.common.base.Strings;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -11,8 +10,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class InMemoryRuleReport implements RuleReport {
 

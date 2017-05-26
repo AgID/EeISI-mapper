@@ -2,7 +2,6 @@ package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.test.Files;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static it.infocert.eigor.test.Files.findFirstFileByNameOrNull;
 import static java.util.Arrays.asList;

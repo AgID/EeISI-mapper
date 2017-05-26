@@ -9,7 +9,6 @@ import it.infocert.eigor.model.core.rules.RuleOutcome;
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
-import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -48,7 +47,7 @@ public class IntegrityRule extends Rule {
         Boolean condition;
         try {
             Object tmp =  valueExpression.getValue(juelContext);
-            if (Objects.isNull(tmp)) {
+            if (tmp == null) {
                 return RuleOutcome.newUnapplicableOutcome("Rule %s is unapplicable", ruleName);
             } else {
                 condition = (Boolean) tmp;

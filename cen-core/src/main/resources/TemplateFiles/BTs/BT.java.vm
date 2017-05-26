@@ -2,10 +2,10 @@
 #set( $ClassName = ${rows[0].data.BTBGClassName} )
 ## ============================
 package it.infocert.eigor.model.core.model;
-
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.model.core.datatypes.*;
 import it.infocert.eigor.model.core.enums.*;
+import java.util.*;
+import com.google.common.base.Preconditions;
 
 import java.util.Objects;
 

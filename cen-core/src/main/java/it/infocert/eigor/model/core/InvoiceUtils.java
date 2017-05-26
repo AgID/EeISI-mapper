@@ -2,7 +2,6 @@ package it.infocert.eigor.model.core;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;

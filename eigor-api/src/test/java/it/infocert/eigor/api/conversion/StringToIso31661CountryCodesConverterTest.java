@@ -1,11 +1,10 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.StringToIso31661CountryCodesConverter;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class StringToIso31661CountryCodesConverterTest {
 

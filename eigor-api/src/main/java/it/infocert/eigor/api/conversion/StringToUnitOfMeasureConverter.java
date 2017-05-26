@@ -4,9 +4,6 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 
-import java.util.Arrays;
-import java.util.function.Predicate;
-
 public class StringToUnitOfMeasureConverter implements TypeConverter<String, UnitOfMeasureCodes> {
     @Override public UnitOfMeasureCodes convert(final String s) {
 

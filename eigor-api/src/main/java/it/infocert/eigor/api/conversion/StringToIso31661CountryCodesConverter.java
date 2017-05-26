@@ -3,9 +3,6 @@ package it.infocert.eigor.api.conversion;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 
-import java.util.Arrays;
-import java.util.function.Predicate;
-
 public class StringToIso31661CountryCodesConverter extends FilteringEnumConversion<String, Iso31661CountryCodes> {
 
     public StringToIso31661CountryCodesConverter() {
