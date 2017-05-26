@@ -40,7 +40,7 @@ public class CsvCen2Cen implements ToCenConversion {
         cenStructure = new CenStructure();
         utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
-                new StringToIso31661CountryCodesConverter(),
+                new CountryNameToIso31661CountryCodeConverter(),
                 new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("dd-MMM-yy")),
                 new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd")),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),

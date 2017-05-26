@@ -26,17 +26,17 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
 
         List<Target> enumValues;
         try {
-            Object[] values = (Object[]) theEnum.getClass().getMethod("values", new Class[]{}).invoke(theEnum);
+            Object[] values = (Object[]) theEnum.getMethod("values", new Class[]{}).invoke(theEnum);
             enumValues = new ArrayList<>();
             for (Object theValue : values) {
                 enumValues.add((Target) theValue);
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new IllegalArgumentException();
+            throw new RuntimeException(e);
         }
 
         Target result = Stream.create(enumValues).filter(f).first();
-        if(result==null) throw new IllegalArgumentException();
+        if(result==null) throw new IllegalArgumentException( String.format("Value '%s' not found among %d entries in %s.", value, enumValues.size(), theEnum.getSimpleName()) );
         return result;
 
     }

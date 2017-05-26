@@ -1,21 +1,24 @@
 package it.infocert.eigor.api.conversion;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public abstract class LookUpEnumConversion<Target extends Enum<Target>> implements TypeConverter<String, Target> {
+public class LookUpEnumConversion<Target> implements TypeConverter<String, Target> {
 
-    private Class<Enum<Target>> theEnum;
+    private Class theEnum;
 
     public LookUpEnumConversion(Class theEnum){
+        if(!theEnum.isEnum()) throw new IllegalArgumentException("Not an enum");
         this.theEnum = theEnum;
     }
 
     public Target convert(final String value) {
 
         try {
-            return (Target) theEnum.getClass().getMethod("valueOf", new Class[]{String.class}).invoke(value);
+            Method theMethod = theEnum.getMethod("valueOf", new Class[] { String.class });
+            return (Target) theMethod.invoke(theEnum, new String[]{value});
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new IllegalArgumentException();
+            throw new RuntimeException(e);
         }
 
     }

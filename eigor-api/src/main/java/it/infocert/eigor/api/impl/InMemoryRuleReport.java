@@ -29,8 +29,9 @@ public class InMemoryRuleReport implements RuleReport {
         List<String> stringPieces = Stream.create( items ).map( mapper ).toList();
 
         StringBuffer sb = new StringBuffer("Outcome,Reason\n");
-        for (String stringPiece : stringPieces) {
-            sb.append(stringPiece).append("\n");
+        for(int i = 0; i<stringPieces.size(); i++){
+            sb.append(stringPieces.get(i));
+            if(i<stringPieces.size()-1) sb.append("\n");
         }
         return sb.toString();
 

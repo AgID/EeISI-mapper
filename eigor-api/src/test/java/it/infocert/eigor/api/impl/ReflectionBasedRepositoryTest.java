@@ -52,7 +52,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindToCen() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.api.impl"));
         Class<? extends ToCenConversion> aConversionThatShouldBeFound = FakeToCenConversion.class;
 
         // when

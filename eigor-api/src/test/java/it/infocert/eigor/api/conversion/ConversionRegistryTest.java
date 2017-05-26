@@ -14,7 +14,7 @@ public class ConversionRegistryTest {
 
         // given
         ConversionRegistry sut = new ConversionRegistry(
-                new StringToIso31661CountryCodesConverter(),
+                new CountryNameToIso31661CountryCodeConverter(),
                 new StringToJavaLocalDateConverter()
         );
 

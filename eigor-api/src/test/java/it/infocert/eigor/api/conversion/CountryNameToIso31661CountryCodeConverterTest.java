@@ -6,9 +6,9 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class StringToIso31661CountryCodesConverterTest {
+public class CountryNameToIso31661CountryCodeConverterTest {
 
-    StringToIso31661CountryCodesConverter sut = new StringToIso31661CountryCodesConverter();
+    CountryNameToIso31661CountryCodeConverter sut = new CountryNameToIso31661CountryCodeConverter();
 
     @Test public void convertCountryNamesToIso() {
 
@@ -30,7 +30,7 @@ public class StringToIso31661CountryCodesConverterTest {
     @Test(expected = IllegalArgumentException.class) public void shouldThrowExceptionIfConversionIsNotPossible() {
 
         // given
-        StringToIso31661CountryCodesConverter sut = new StringToIso31661CountryCodesConverter();
+        CountryNameToIso31661CountryCodeConverter sut = new CountryNameToIso31661CountryCodeConverter();
 
         // when
         Iso31661CountryCodes iso = sut.convert("-not-a-country-");
