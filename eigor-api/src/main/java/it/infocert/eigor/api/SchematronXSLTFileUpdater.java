@@ -142,6 +142,7 @@ class SchematronXSLTFileUpdater {
                                 .addMapping("svrl", CSVRL.SVRL_NAMESPACE_URI);
                         // Add all namespaces from XSLT document root
                         final String sNSPrefix = CXML.XML_ATTR_XMLNS + ":";
+
                         XMLHelper.forAllAttributes(xsltProvider.getXSLTDocument().getDocumentElement(),
                                 (sAttrName, sAttrValue) -> {
                                     if (sAttrName.startsWith(sNSPrefix))
