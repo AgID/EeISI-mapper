@@ -48,15 +48,12 @@ public class Ubl2Cen implements ToCenConversion {
         List<Exception> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
-        File fullSchemaFile = new File("schematron-xslt/EN16931-UBL-validation.xslt");
-        // FIXME workaround for different paths between dev and release...
-        if (!fullSchemaFile.exists())
-            fullSchemaFile = new File("converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
+        File fullSchemaFile = new File("converterdata/converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
+
         IXMLValidator validator;
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
-
             validator = new SchematronValidator(fullSchemaFile, true);
             errors.addAll(validator.validate(bytes));
         } catch (IOException | IllegalArgumentException e) {

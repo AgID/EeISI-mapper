@@ -18,9 +18,8 @@ import java.util.*;
  */
 public class IntegrityRulesRepository implements RuleRepository {
     private static final Logger log = LoggerFactory.getLogger(IntegrityRulesRepository.class);
-    private List<Rule> ruleList;
     private final Properties properties;
-    private final List<Rule> validRules = new ArrayList<>(0);
+    private List<Rule> validRules;
     private final Map<String, String> invalidRules = new HashMap<>();
 
     public IntegrityRulesRepository(Properties properties) {
@@ -35,9 +34,10 @@ public class IntegrityRulesRepository implements RuleRepository {
      */
     @Override
     public List<Rule> rules() {
-        if (ruleList != null) {
-            return ruleList;
+        if (validRules != null) {
+            return validRules;
         } else {
+            validRules = new ArrayList<>(0);
             Map<String, Map<String, Object>> collected = new HashMap<>();
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
@@ -102,8 +102,7 @@ public class IntegrityRulesRepository implements RuleRepository {
             if (!invalidRules.isEmpty()) {
                 throw new MalformedRuleException("There are invalid rules in the configuration.", Collections.unmodifiableMap(invalidRules), validRules);
             }
-            this.ruleList = rules;
-            return ruleList;
+            return rules;
         }
     }
 

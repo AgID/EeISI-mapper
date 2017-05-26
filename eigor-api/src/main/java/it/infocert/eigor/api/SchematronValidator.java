@@ -18,6 +18,14 @@ public class SchematronValidator implements IXMLValidator {
 
     public SchematronValidator(File schemaFile, boolean isXSLT) {
         if (isXSLT) {
+            // we check if relative path ../schematron contains newer .sch files
+            SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
+                    schemaFile.getParent(),
+                    schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron"            );
+
+            if (xsltFileUpdater.checkForUpdatedSchematron()) {
+                xsltFileUpdater.updateXSLTfromSch();
+            }
             schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
         } else {
             schematronResource = SchematronResourceSCH.fromFile(schemaFile);

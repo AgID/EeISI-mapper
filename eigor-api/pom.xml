@@ -23,13 +23,20 @@
             <artifactId>ph-schematron</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>
-        <!-- test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
         <dependency>
             <groupId>com.amoerie</groupId>
