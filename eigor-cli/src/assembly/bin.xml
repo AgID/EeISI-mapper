@@ -34,11 +34,15 @@
             </includes>
         </fileSet>
         <fileSet>
-            <outputDirectory>schematron-xslt</outputDirectory>
-            <directory>../converter-ubl-cen/schematron-xslt</directory>
+            <outputDirectory>converterdata/converter-ubl-cen/schematron-xslt</outputDirectory>
+            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/schematron-xslt</directory>
             <includes>
                 <include>*.xslt</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-ubl-cen/schematron</outputDirectory>
+            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/schematron</directory>
         </fileSet>
         <fileSet>
             <outputDirectory>conf</outputDirectory>
