@@ -5,11 +5,21 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>Eigor :: Test :: Invoices</name>
     <description>Invoice samples of different types used for testing.</description>
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+    </dependencies>
 
     <artifactId>eigor-test</artifactId>
 

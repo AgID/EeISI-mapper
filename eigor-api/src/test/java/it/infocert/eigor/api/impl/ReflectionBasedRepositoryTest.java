@@ -14,7 +14,6 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -31,7 +30,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindRules() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.model"));
         Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
 
         // when

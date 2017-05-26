@@ -7,9 +7,9 @@
         </encoder>
     </appender>
 
-   <logger name="it.infocert.eigor" level="error"/>
-
     <logger name="org.reflections" level="ERROR"/>
+
+    <logger name="it.infocert.eigor" level="INFO"/>
 
     <root level="ERROR">
         <appender-ref ref="STDOUT"/>

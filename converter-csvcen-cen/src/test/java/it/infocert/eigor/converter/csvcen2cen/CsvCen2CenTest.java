@@ -8,6 +8,7 @@ import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BT0040SellerCountryCode;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,7 +27,7 @@ public class CsvCen2CenTest {
 
     @Before
     public void setUp() {
-        sut = new CsvCen2Cen();
+        sut = new CsvCen2Cen(new Reflections("it.infocert"));
     }
 
     @Test
@@ -42,7 +43,7 @@ public class CsvCen2CenTest {
         try {
             conversion = sut.convert(invoiceWithUnmappableBt3);
         }catch (Exception e){
-            it.infocert.eigor.test.Failures.fail(e);
+            it.infocert.eigor.test.Failures.failForException(e);
         }
 
         // then
