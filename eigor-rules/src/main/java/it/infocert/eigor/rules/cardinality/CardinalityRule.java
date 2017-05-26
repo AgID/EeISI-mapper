@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardinalityRule implements Rule {
+public class CardinalityRule extends Rule {
 
     private final static Logger log = LoggerFactory.getLogger(CardinalityRule.class);
 
