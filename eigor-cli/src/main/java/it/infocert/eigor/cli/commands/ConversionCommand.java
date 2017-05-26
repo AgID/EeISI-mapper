@@ -114,13 +114,11 @@ public class ConversionCommand implements CliCommand {
             out.println("To Cen Conversion finished, but some errors have occured:");
             List<Exception> errors = conversionResult.getErrors();
 
-            StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
-            for (Exception e: errors){
-                toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
-            }
+            String data = toCsvFileContent(errors);
+
             // writes to-cen errors csv
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
-            FileUtils.writeStringToFile(toCenErrors, toCenErrorsCsv.toString());
+            FileUtils.writeStringToFile(toCenErrors, data);
 
             for (Exception e : errors) {
                 out.println("Error: " + e.getMessage());
@@ -129,20 +127,28 @@ public class ConversionCommand implements CliCommand {
         }
     }
 
+
     private void applyRulesToCenObject(BG0000Invoice cenInvoice, InMemoryRuleReport ruleReport) {
         List<Rule> rules;
         try {
             rules = ruleRepository.rules();
         } catch (MalformedRuleException e) {
             Map<String, String> invalidRules = e.getInvalidRules();
-            invalidRules.forEach((name, expr) -> log.error(String.format("Rule %s is malformed: %s. Rule expression should follow the pattern ${ expression } without any surrounding quotes,", name, expr)));
+
+            for (Map.Entry<String, String> entry : invalidRules.entrySet()) {
+                log.error(
+                    String.format("Rule %s is malformed: %s. Rule expression should follow the pattern ${ expression } without any surrounding quotes,", entry.getKey(), entry.getValue())
+                );
+            }
+
             rules = e.getValidRules();
         }
         if (rules != null) {
-            rules.forEach(rule -> {
+            for (Rule rule : rules) {
                 RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
                 ruleReport.store(ruleOutcome, rule);
-            });
+            }
+
         }
     }
 
@@ -154,15 +160,9 @@ public class ConversionCommand implements CliCommand {
             out.println("From Cen Conversion finished, but some errors have occured:");
             List<Exception> errors = conversionResult.getErrors();
 
-
-            String fromCenErrorsCsv = "Error,Reason\n" +
-                    errors.stream()
-                            .map(x -> x.getMessage() + "," + x.getCause())
-                            .collect(Collectors.joining("\n"));
-
             // writes from-cen errors csv
             File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
-            FileUtils.writeStringToFile(fromCenErrors, fromCenErrorsCsv);
+            FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors));
 
             for (Exception e : errors) {
                 out.println("Error: " + e.getMessage());
@@ -200,6 +200,15 @@ public class ConversionCommand implements CliCommand {
         }
         invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
         FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
+    }
+
+
+    private String toCsvFileContent(List<Exception> errors) {
+        StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
+        for (Exception e: errors){
+            toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
+        }
+        return toCenErrorsCsv.toString();
     }
 
 }

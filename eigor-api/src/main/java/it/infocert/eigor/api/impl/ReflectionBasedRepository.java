@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.impl;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
@@ -7,6 +9,7 @@ import org.reflections.Reflections;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Repository based on <a href="https://github.com/ronmamo/reflections">Reflections</a>.
@@ -29,11 +32,19 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return new ArrayList<>(rules);
     }
 
-    @Override public FromCenConversion findConversionFromCen(String format) {
+    @Override public FromCenConversion findConversionFromCen(final String format) {
         if (fromCenConversions == null) {
             this.fromCenConversions = findImplementation(FromCenConversion.class);
         }
-        return fromCenConversions.stream().filter(c -> c.support(format)).findFirst().orElse(null);
+
+        Filter<FromCenConversion> filter = new Filter<FromCenConversion>() {
+            @Override public boolean apply(FromCenConversion c) {
+                return c.support(format);
+            }
+        };
+
+        return Stream.create(fromCenConversions).filter(filter).first();
+
     }
 
     @Override
@@ -56,21 +67,29 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return result;
     }
 
-    @Override public ToCenConversion findConversionToCen(String sourceFormat) {
+    @Override public ToCenConversion findConversionToCen(final String sourceFormat) {
         if (toCENConverters == null) {
             this.toCENConverters = findImplementation(ToCenConversion.class);
         }
-        return toCENConverters.stream().filter(c -> c.support(sourceFormat)).findFirst().orElse(null);
+
+        Filter<ToCenConversion> f = new Filter<ToCenConversion>() {
+            @Override public boolean apply(ToCenConversion c) {
+                return c.support(sourceFormat);
+            }
+        };
+        return Stream.create(toCENConverters).filter(f).first();
+
     }
 
     private <T> Set<T> findImplementation(Class<T> classToFind) {
         Set<T> myRules = new HashSet<>();
         Set<Class<? extends T>> ruleClasses = reflections.getSubTypesOf(classToFind);
-        ruleClasses.forEach(ruleClass -> {
+
+        for (Class<? extends T> ruleClass : ruleClasses) {
             try {
                 Constructor constrWithReflections = null;
                 for (Constructor c: ruleClass.getConstructors()) {
-                    if (c.getParameterCount() == 1 &&
+                    if (c.getTypeParameters().length  == 1 &&
                             Reflections.class.equals(c.getParameterTypes()[0])) {
                         constrWithReflections = c;
                     }
@@ -83,7 +102,8 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException("An error occurred instantiating class '" + ruleClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
             }
-        });
+        }
+
         return myRules;
     }
 

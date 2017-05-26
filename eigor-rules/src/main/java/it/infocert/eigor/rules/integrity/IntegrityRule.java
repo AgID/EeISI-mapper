@@ -16,7 +16,7 @@ import java.util.Properties;
  * A {@link Rule} that checks the integrity of the CEN-format converted invoice.
  * The actual body of the rule is stored as a JUEL expression in the "rules.properties" file.
  */
-public class IntegrityRule implements Rule {
+public class IntegrityRule extends Rule {
 
     private final String expression;
     private final ExpressionFactory expressionFactory;

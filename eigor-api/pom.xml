@@ -34,7 +34,6 @@
         <dependency>
             <groupId>com.amoerie</groupId>
             <artifactId>jstreams</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

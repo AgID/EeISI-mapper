@@ -5,6 +5,7 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
 import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
+import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -142,7 +143,8 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             datiGeneraliDocumento.setTipoDocumento(TipoDocumentoType.TD_01);
 
             datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
-            datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
+            LocalDate value = invoice.getBT0002InvoiceIssueDate().get(0).getValue();
+            datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(value));
             datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
 
             datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));

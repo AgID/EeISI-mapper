@@ -1,12 +1,15 @@
 package it.infocert.eigor.api.conversion;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class StringToUntdid1001InvoiceTypeCodeConverter implements TypeConverter<String, Untdid1001InvoiceTypeCode> {
 
-    @Override public Untdid1001InvoiceTypeCode convert(String s) {
+    @Override public Untdid1001InvoiceTypeCode convert(final String s) {
 
         Integer code;
         try {
@@ -15,9 +18,18 @@ public class StringToUntdid1001InvoiceTypeCodeConverter implements TypeConverter
             code = null;
         }
 
-        Integer finalCode = code;
-        return Arrays.stream(Untdid1001InvoiceTypeCode.values()).filter(
-                u -> (finalCode !=null && u.getCode() == finalCode) || u.getShortDescritpion().equals(s)
-        ).findFirst().orElseThrow(()->new IllegalArgumentException("Not found"));
+        final Integer finalCode = code;
+
+        Filter<Untdid1001InvoiceTypeCode> f = new Filter<Untdid1001InvoiceTypeCode>() {
+            @Override public boolean apply(Untdid1001InvoiceTypeCode u) {
+                return (finalCode != null && u.getCode() == finalCode) || u.getShortDescritpion().equals(s);
+            }
+        };
+        Untdid1001InvoiceTypeCode first = Stream.create(Untdid1001InvoiceTypeCode.values()).filter(f).first();
+
+        if(first == null) throw new IllegalArgumentException("Not found");
+
+        return first;
+
     }
 }

@@ -46,13 +46,13 @@ public class ITCli {
         unzip(eigorCliZipped, workdir);
 
         // prepare invocation
-        String args =
+        final String args =
                 "--input "
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "fatturapa";
-        File batToRun = newFile(workdir , "eigor-cli" , "eigor.bat");
+        final File batToRun = newFile(workdir , "eigor-cli" , "eigor.bat");
 
         // run eigor cli
         final AtomicReference<Process> proc = new AtomicReference<>();
@@ -108,7 +108,7 @@ public class ITCli {
         Files.untar(eigorCliZipped, workdir);
 
         // prepare invocation
-        String args =
+        final String args =
                 "--input "
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
@@ -116,7 +116,7 @@ public class ITCli {
                         + " --source " + "csvcen" + " --target " + "fatturapa";
 
 
-        File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
+        final File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
         Files.setPermission(batToRun, PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ);
 
         // run eigor cli

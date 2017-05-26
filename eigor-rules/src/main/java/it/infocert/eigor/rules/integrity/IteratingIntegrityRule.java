@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Properties;
 
-public class IteratingIntegrityRule implements Rule{
+public class IteratingIntegrityRule extends Rule{
 
     private final String iterating;
     private final ExpressionFactory expressionFactory;
