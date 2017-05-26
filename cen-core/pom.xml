@@ -30,72 +30,6 @@
                 <artifactId>template-generator-maven-plugin</artifactId>
                 <executions>
 
-                    <execution>
-                        <id>generate-cen-structure</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/CenStructureSource.java.vm
-                            </pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
-                            </pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <tagExpressions>
-                                <param>@{ParentClass}</param>
-                                <param>@{BTBGClassName}</param>
-                            </tagExpressions>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/CenStructureSource.java
-                            </fileNameTemplate>
-                        </configuration>
-                    </execution>
-
-
-                    <execution>
-                        <id>generate-bgs</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BG.java.vm
-                            </pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
-                            </pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_TAG</contextMode>
-                            <tagExpressions>
-                                <param>@{row.data.ParentClass}</param>
-                                <param>@{row.data.BTBGClassName}</param>
-                            </tagExpressions>
-                            <includeContextExpression>@{rows[0].data.BTBGClassName.startsWith("BG")}
-                            </includeContextExpression>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/${rows[0].data.BTBGClassName}.java
-                            </fileNameTemplate>
-                        </configuration>
-                    </execution>
-
-
-                    <execution>
-                        <id>generate-bts</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BT.java.vm
-                            </pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
-                            </pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/${rows[0].data.BTBGClassName}.java
-                            </fileNameTemplate>
-                            <includeContextExpression>@{rows[0].data.BTBGClassName.startsWith("BT")}</includeContextExpression>
-                        </configuration>
-                    </execution>
 
                     <execution>
                         <id>generate-country-codes</id>
@@ -118,7 +52,6 @@
                         </configuration>
                     </execution>
 
-                    <!--
                     <execution>
                         <id>generate-untdid-4451</id>
                         <phase>generate-sources</phase>
@@ -138,6 +71,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-untdid-1001</id>
                         <phase>generate-sources</phase>
@@ -157,6 +91,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-untdid-4461</id>
                         <phase>generate-sources</phase>
@@ -176,6 +111,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-untdid-5305</id>
                         <phase>generate-sources</phase>
@@ -195,6 +131,8 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
+
                     <execution>
                         <id>generate-untdid-7161</id>
                         <phase>generate-sources</phase>
@@ -214,6 +152,8 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
+
                     <execution>
                         <id>generate-vat-exemption-reasons-codes</id>
                         <phase>generate-sources</phase>
@@ -234,6 +174,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-untdid-5189</id>
                         <phase>generate-sources</phase>
@@ -254,6 +195,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-iso-4217</id>
                         <phase>generate-sources</phase>
@@ -274,6 +216,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-untdid-2005</id>
                         <phase>generate-sources</phase>
@@ -294,6 +237,7 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-unit-of-measure</id>
                         <phase>generate-sources</phase>
@@ -334,7 +278,75 @@
                             </fileNameTemplate>
                         </configuration>
                     </execution>
-                    -->
+
+                    <execution>
+                        <id>generate-cen-structure</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/CenStructureSource.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <tagExpressions>
+                                <param>@{ParentClass}</param>
+                                <param>@{BTBGClassName}</param>
+                            </tagExpressions>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/CenStructureSource.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>generate-bts</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BT.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${rows[0].data.BTBGClassName}.java
+                            </fileNameTemplate>
+                            <includeContextExpression>@{rows[0].data.BTBGClassName.startsWith("BT")}</includeContextExpression>
+                        </configuration>
+                    </execution>
+
+
+                    <execution>
+                        <id>generate-bgs</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/BG.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_TAG</contextMode>
+                            <tagExpressions>
+                                <param>@{row.data.ParentClass.equals("")?"BG0000Invoice":row.data.ParentClass}</param>
+                                <param>@{row.data.BTBGClassName}</param>
+                            </tagExpressions>
+                            <includeContextExpression>@{rows[0].data.BTBGClassName.startsWith("BG")}
+                            </includeContextExpression>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/${rows[0].data.BTBGClassName}.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+
+
+
 
                 </executions>
             </plugin>

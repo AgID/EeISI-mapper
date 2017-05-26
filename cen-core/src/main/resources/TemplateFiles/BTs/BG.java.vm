@@ -6,6 +6,7 @@ package it.infocert.eigor.model.core.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
+import java.util.Collections;
 
 
 public class ${clzName} extends AbstractBTBG {
@@ -41,12 +42,12 @@ public class ${clzName} extends AbstractBTBG {
         #end
 
         List<BTBG> list = new ArrayList<>();
-        #foreach( $row in $File )
+        #foreach( $row in $rows )
         #if( !$clzName.equals( $row.data.BTBGClassName ) )
         list.addAll(this.${row.data.BTBGClassName});
         #end
         #end
-        list.sort(new Comparator<BTBG>() {
+        Collections.sort(list, new Comparator<BTBG>() {
             @Override
             public int compare(BTBG o1, BTBG o2) {
                 return o1.order() - o2.order();
@@ -66,6 +67,6 @@ public class ${clzName} extends AbstractBTBG {
 
     @Override
     public String toString() {
-        return "${row0.data.IdNormalized}";
+        return "${row0.data.IdSanitized}";
     }
 }

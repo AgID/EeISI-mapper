@@ -5,9 +5,7 @@ import com.google.common.collect.Collections2;
 import it.infocert.eigor.model.core.model.CenStructureSource;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Gives access to the CEN structure tree.
