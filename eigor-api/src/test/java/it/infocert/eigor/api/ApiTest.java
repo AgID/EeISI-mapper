@@ -1,8 +1,11 @@
 package it.infocert.eigor.api;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +13,8 @@ import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
+
 
 public class ApiTest {
 
@@ -36,14 +41,19 @@ public class ApiTest {
         // preconditions
         ToCenConversion toCen = conversionRepository.findConversionToCen(soureFormat);
         FromCenConversion fromCen = fromCenConversionRepository.findConversionFromCen(targetFormat);
-        RuleReport ruleReport = new InMemoryRuleReport();
+        final RuleReport ruleReport = new InMemoryRuleReport();
 
         // business logic
-        BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
-        ruleRepository.rules().forEach( rule -> {
-            RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
-            ruleReport.store( ruleOutcome, rule );
+        final BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
+        List<Rule> rules = ruleRepository.rules();
+
+        Stream.create(rules).forEach(new Consumer<Rule>() {
+            @Override public void consume(Rule rule) {
+                RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
+                ruleReport.store(ruleOutcome, rule);
+            }
         });
+
         byte[] converted = fromCen.convert(cenInvoice).getResult();
 
     }

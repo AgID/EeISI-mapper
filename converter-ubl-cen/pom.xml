@@ -18,6 +18,11 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+
 
         <!-- TEST -->
         <dependency>

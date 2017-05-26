@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -12,6 +14,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.joda.time.format.DateTimeFormat;
 import org.reflections.Reflections;
 
 import java.io.IOException;
@@ -19,9 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 
 public class CsvCen2Cen implements ToCenConversion {
@@ -39,8 +41,8 @@ public class CsvCen2Cen implements ToCenConversion {
         utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
                 new StringToIso31661CountryCodesConverter(),
-                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),
-                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)),
+                new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("dd-MMM-yy")),
+                new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd")),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
@@ -118,7 +120,11 @@ public class CsvCen2Cen implements ToCenConversion {
                 } else {
 
                     // double chacks BT has only one single arg constructor
-                    List<Constructor<?>> constructors = Arrays.stream(btBgClass.getConstructors()).filter(c -> c.getParameterCount() == 1).collect(Collectors.toList());
+                    List<Constructor<?>> constructors = Stream.create( Arrays.asList( btBgClass.getConstructors() ) ).filter(new Filter<Constructor<?>>() {
+                        @Override public boolean apply(Constructor<?> c) {
+                            return c.getParameterTypes().length == 1;
+                        }
+                    }).toList();
                     if (constructors.size() != 1) {
                         throw new IllegalArgumentException("Just one constructor with one argument expected, " + constructors.size() + " found instead.");
                     }
