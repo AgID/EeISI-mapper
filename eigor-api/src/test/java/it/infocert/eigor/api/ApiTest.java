@@ -7,7 +7,6 @@ import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
-import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 
@@ -18,17 +17,10 @@ import java.util.List;
 
 public class ApiTest {
 
-    private static Reflections reflections;
-
-    @Before
-    public void setUp() throws Exception {
-        reflections = new Reflections("it.infocert");
-    }
-
     @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
-        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
+        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.api"));
         RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         ToCenConversionRepository conversionRepository = reflectionBasedRepository;
         FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;

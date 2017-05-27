@@ -31,7 +31,7 @@ public class ITCli {
 
     @Test(timeout = 50000) public void shouldUnzipAndRunOnWindows() throws Exception {
 
-        assumeTrue(OS.isWindows());
+        assumeTrue("Run only on Win.", OS.isWindows());
 
         File workdir = tmp.newFolder("workdir");
         File outputFolder = newFile(workdir, "output");
@@ -93,7 +93,7 @@ public class ITCli {
 
     @Test(timeout = 50000) public void shouldUnzipAndRunOnUnix() throws Exception {
 
-        assumeTrue(OS.isUnix());
+        assumeTrue("Run only on linux.", OS.isUnix());
 
         File workdir = tmp.newFolder("workdir");
         File outputFolder = newFile(workdir, "output");
