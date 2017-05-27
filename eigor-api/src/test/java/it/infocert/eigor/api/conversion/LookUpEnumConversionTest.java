@@ -21,4 +21,15 @@ public class LookUpEnumConversionTest {
 
     }
 
+    @Test public void convertStringHRToIso() {
+
+        // when
+        Iso31661CountryCodes it = (Iso31661CountryCodes) sut.convert("HR");
+
+        // then
+        Iso31661CountryCodes it1 = Iso31661CountryCodes.HR;
+        assertThat( it, is(it1) );
+
+    }
+
 }

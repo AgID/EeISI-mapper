@@ -1,5 +1,10 @@
 package it.infocert.eigor.api.conversion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -9,6 +14,8 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class ConversionRegistry {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final List<TypeConverter> converters;
 
@@ -27,18 +34,44 @@ public class ConversionRegistry {
 
         for (TypeConverter converter : converters) {
 
-            Type[] genericInterfaces = converter.getClass().getGenericInterfaces();
-            ParameterizedType typeConverterIface = (ParameterizedType) genericInterfaces[0];
-            Type sourceType = typeConverterIface.getActualTypeArguments()[0];
-            Type targetType = typeConverterIface.getActualTypeArguments()[1];
+            log.trace("Trying to convert value '{}' with converter '{}'.", value, converter);
 
-            if(sourceType.equals(sourceClz) && targetType.equals(targetClz)){
+            Type[] genericInterfaces = converter.getClass().getGenericInterfaces();
+
+            if(genericInterfaces == null || genericInterfaces.length == 0){
+
+                try {
+                    Method theConvertMethod = null;
+                    Method[] methods = converter.getClass().getMethods();
+                    for (Method method : methods) {
+                        if(method.getName().equals("convert") && method.getParameterTypes().length == 1){
+                            theConvertMethod = method;
+                            break;
+                        }
+                    }
+
+                    Object result = theConvertMethod.invoke(converter, value);
+                    T actualResult = (T)result;
+                    return actualResult;
+                } catch (IllegalAccessException | InvocationTargetException | ClassCastException e ) {
+                    log.trace("Skipped converter '{}' because of error.", converter, e);
+                }
+
+            }else{
+
+                ParameterizedType typeConverterIface = (ParameterizedType) genericInterfaces[0];
+                Type sourceType = typeConverterIface.getActualTypeArguments()[0];
+                Type targetType = typeConverterIface.getActualTypeArguments()[1];
+
                 try {
                     return (T) converter.convert(value);
                 } catch (RuntimeException e) {
-                    // ok, let's proceed with the next converter
+                    log.trace("Skipped converter '{}' because of error.", converter, e);
                 }
+
             }
+
+
         }
         throw new IllegalArgumentException(
                 format("Cannot convert value '%s' of declared type '%s' to the desired type '%s'.",

@@ -8,6 +8,10 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
@@ -41,11 +45,15 @@ public class CsvCen2Cen implements ToCenConversion {
         utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
+                new LookUpEnumConversion(Iso31661CountryCodes.class),
                 new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("dd-MMM-yy")),
                 new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd")),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
+                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
+                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
                 new StringToUnitOfMeasureConverter(),
                 new StringToDoublePercentageConverter(),
                 new StringToDoubleConverter(),
