@@ -39,7 +39,9 @@ public class CenStructureSource {
 
         items = new Item[${meta.count.rows}];
         #foreach($row in ${rows})
-            items[${row.meta.index}] = new Item("${row.data.BtOrBg}", "${row.meta.index}", "${row.data.ParentClass}");
+
+            // row ${row.meta.count}, coming from row ${row.meta.sourceCount}
+            items[${row.meta.index}] = new Item("${row.data.BtOrBg}", "${row.data.Index}", "${row.data.ParentClass}");
         #end
     }
 

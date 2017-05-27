@@ -280,28 +280,6 @@
                     </execution>
 
                     <execution>
-                        <id>generate-cen-structure</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
-                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/CenStructureSource.java.vm
-                            </pathToTemplate>
-                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
-                            </pathToOutputFolder>
-                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
-                            <tagExpressions>
-                                <param>@{ParentClass}</param>
-                                <param>@{BTBGClassName}</param>
-                            </tagExpressions>
-                            <fileNameTemplate>it/infocert/eigor/model/core/model/CenStructureSource.java
-                            </fileNameTemplate>
-                        </configuration>
-                    </execution>
-
-                    <execution>
                         <id>generate-bts</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -345,7 +323,23 @@
                         </configuration>
                     </execution>
 
-
+                    <execution>
+                        <id>generate-cen-structure</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/BTs/BTsAndBGs.csv</pathToCsv>
+                            <pathToTemplate>${project.basedir}/src/main/resources/TemplateFiles/BTs/CenStructureSource.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>it/infocert/eigor/model/core/model/CenStructureSource.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
 
 
                 </executions>
