@@ -174,7 +174,7 @@ public class CsvCen2Cen implements ToCenConversion {
             for(int i=stack.size() - 1; i>=0; i--){
                 pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg + "/" + stack.get(i);
             }
-            pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0000", "/") + btbgName.toString();
+            pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0", "/") + btbgName.toString();
 
 
             // It search in the stack a BG that will accept the current BG/BT.
