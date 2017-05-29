@@ -352,7 +352,6 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
-            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -364,6 +363,26 @@
                         <param>it.infocert.eigor.*</param>
                     </targetTests>
                     <threads>5</threads>
+                    <mutators>
+                        <mutator>INVERT_NEGS</mutator>
+                        <!--
+                        <mutator>RETURN_VALS</mutator>
+                        <mutator>INLINE_CONSTS</mutator>
+                        <mutator>MATH</mutator>
+                        <mutator>VOID_METHOD_CALLS</mutator>
+                        <mutator>NEGATE_CONDITIONALS</mutator>
+                        <mutator>CONDITIONALS_BOUNDARY</mutator>
+                        <mutator>INCREMENTS</mutator>
+                        <mutator>REMOVE_INCREMENTS</mutator>
+                        <mutator>NON_VOID_METHOD_CALLS</mutator>
+                        <mutator>CONSTRUCTOR_CALLS</mutator>
+                        <mutator>REMOVE_CONDITIONALS_EQ_IF</mutator>
+                        <mutator>REMOVE_CONDITIONALS_EQ_ELSE</mutator>
+                        <mutator>REMOVE_CONDITIONALS_ORD_IF</mutator>
+                        <mutator>REMOVE_CONDITIONALS_ORD_ELSE</mutator>
+                        <mutator>REMOVE_CONDITIONALS</mutator>
+                        -->
+                    </mutators>
                 </configuration>
                 <executions>
                     <execution>
@@ -374,7 +393,6 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
             <!-- Jacoco currently disabled because it seems its reports are not used at all -->
             <!--
             <plugin>
