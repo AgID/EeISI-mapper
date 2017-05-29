@@ -44,7 +44,7 @@
         <jopt-simple.version>5.0.3</jopt-simple.version>
         <pitest-maven.version>1.1.11</pitest-maven.version>
         <commons-compress.version>1.9</commons-compress.version>
-        <phschematron.version>4.3.0</phschematron.version>
+        <phschematron.version>3.0.1</phschematron.version>
         <jstreams.version>1.1</jstreams.version>
         <plexus-utils.version>3.0.24</plexus-utils.version>
 

@@ -4,14 +4,15 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.file.FilenameHelper;
 import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.commons.io.resource.IReadableResource;
+import com.helger.commons.xml.CXML;
+import com.helger.commons.xml.namespace.MapBasedNamespaceContext;
+import com.helger.commons.xml.serialize.write.XMLWriter;
+import com.helger.commons.xml.serialize.write.XMLWriterSettings;
 import com.helger.schematron.svrl.CSVRL;
 import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
 import com.helger.schematron.xslt.SCHTransformerCustomizer;
 import com.helger.schematron.xslt.SchematronResourceSCHCache;
-import com.helger.xml.CXML;
-import com.helger.xml.namespace.MapBasedNamespaceContext;
-import com.helger.xml.serialize.write.XMLWriter;
-import com.helger.xml.serialize.write.XMLWriterSettings;
+
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -147,23 +148,15 @@ class SchematronXSLTFileUpdater {
 
                         Element documentElement = xsltProvider.getXSLTDocument().getDocumentElement();
                         NamedNodeMap attributes = documentElement.getAttributes();
-                        for(int i=0; i<attributes.getLength(); i++){
+                        for (int i = 0; i < attributes.getLength(); i++) {
                             Attr item = (Attr) attributes.item(i);
                             String sAttrName = item.getName();
                             String sAttrValue = item.getValue();
-                            if (sAttrName.startsWith(sNSPrefix)){
+                            if (sAttrName.startsWith(sNSPrefix)) {
                                 aNSContext.addMapping(sAttrName.substring(sNSPrefix.length()),
                                         sAttrValue);
                             }
                         }
-
-
-//                        XMLHelper.forAllAttributes(documentElement,
-//                                (sAttrName, sAttrValue) -> {
-//                                    if (sAttrName.startsWith(sNSPrefix))
-//                                        aNSContext.addMapping(sAttrName.substring(sNSPrefix.length()),
-//                                                sAttrValue);
-//                                });
 
                         final XMLWriterSettings xmlWriterSettings = new XMLWriterSettings();
                         xmlWriterSettings.setNamespaceContext(aNSContext).setPutNamespaceContextPrefixesInRoot(true);
