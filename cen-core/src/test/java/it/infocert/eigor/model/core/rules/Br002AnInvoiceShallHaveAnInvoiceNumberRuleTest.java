@@ -2,7 +2,6 @@ package it.infocert.eigor.model.core.rules;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
-
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;

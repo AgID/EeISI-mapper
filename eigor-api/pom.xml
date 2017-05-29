@@ -38,6 +38,11 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

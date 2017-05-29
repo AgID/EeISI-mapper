@@ -6,9 +6,9 @@ public enum Iso31661CountryCodes {
     //2: Alpha2Code
     //3: Alpha3Code,
     //4: NumericCode,
-    #foreach( $row in $File )
-    /** ISO informations for $row.EnglishName. */
-    ${row.Alpha2Code}("${row.EnglishName}","${row.Alpha2Code}","${row.Alpha3Code}",${row.NumericCode})#if($LastIndex==$row.RowIndex);#else,#end
+    #foreach( $row in $rows )
+    /** ISO informations for $row.data.EnglishName. */
+    ${row.data.Alpha2Code}("${row.data.EnglishName}","${row.data.Alpha2Code}","${row.data.Alpha3Code}",${row.data.NumericCode})#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
 

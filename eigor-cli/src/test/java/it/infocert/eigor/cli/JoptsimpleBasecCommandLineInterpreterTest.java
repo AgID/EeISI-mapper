@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 

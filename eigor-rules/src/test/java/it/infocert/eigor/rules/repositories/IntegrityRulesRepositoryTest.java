@@ -8,17 +8,15 @@ import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
 import it.infocert.eigor.rules.integrity.IteratingIntegrityRule;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class IntegrityRulesRepositoryTest {

@@ -31,7 +31,7 @@ public class ConversionResult<R> {
      */
     public ConversionResult(R result) {
         this.result = result;
-        this.errors = Collections.unmodifiableList(new ArrayList<>());
+        this.errors = Collections.unmodifiableList(new ArrayList<Exception>());
     }
 
     /**

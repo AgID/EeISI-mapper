@@ -6,6 +6,8 @@ import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
+import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -14,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
@@ -39,6 +40,22 @@ public class Eigor {
         return new ReflectionBasedRepository(reflections);
     }
 
+    @Bean
+    RuleRepository compositeRepository(RuleRepository cardinalityRepository, RuleRepository integrityRepository) {
+        return new CompositeRuleRepository(cardinalityRepository, integrityRepository);
+    }
+
+    @Bean
+    RuleRepository cardinalityRepository() {
+        Properties properties = new Properties();
+        URL resource = Resources.getResource("cardinality.properties");
+        try {
+            properties.load(resource.openStream());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        return new CardinalityRulesRepository(properties);
+    }
 
     @Bean
     RuleRepository integrityRepository() {
@@ -68,8 +85,8 @@ public class Eigor {
     }
 
     @Bean
-    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository integrityRepository) {
-        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, integrityRepository);
+    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository compositeRepository) {
+        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, compositeRepository);
     }
 
 }

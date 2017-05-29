@@ -100,7 +100,30 @@ BT-153,American Cookies
 [Eigor documentation](https://tgi-infocert-eigor.gitlab.io/eigor/)
 
 ## Build
-Java 8 is needed. To build the project:
+
+### Java 7
+Java 7 is needed (and enforced) to properly build the project.
+
+To switch between different JDKs you can execute that:
+
+_on win:_
+```bash
+java -version
+set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80
+set PATH=%JAVA_HOME%\bin;%PATH%
+java -version
+```
+ 
+_on linux:_
+```bash
+java -version
+set JAVA_HOME=/opt/jdk1.7
+set PATH=${JAVA_HOME}/bin;${PATH}
+java -version
+``` 
+
+### Compile 
+To build the project:
 
     mvn clean install
     
@@ -109,6 +132,7 @@ To package a distribution zip:
 mvn package -P release
 ```
 
+### Run
 You will find the zip file in `eigor-cli/target/eigor.zip`, unzip the file and run one of the following scripts,
 according to your operative sistem:   
 

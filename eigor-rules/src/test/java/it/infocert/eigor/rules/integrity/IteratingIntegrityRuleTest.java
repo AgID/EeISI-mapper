@@ -10,10 +10,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class IteratingIntegrityRuleTest {

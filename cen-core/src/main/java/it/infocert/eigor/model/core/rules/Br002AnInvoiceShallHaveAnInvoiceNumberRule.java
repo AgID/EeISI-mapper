@@ -3,7 +3,7 @@ package it.infocert.eigor.model.core.rules;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
-public class Br002AnInvoiceShallHaveAnInvoiceNumberRule implements Rule {
+public class Br002AnInvoiceShallHaveAnInvoiceNumberRule extends Rule {
 
     @Override
     public RuleOutcome isCompliant(BG0000Invoice coreInvoice) {

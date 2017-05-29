@@ -5,7 +5,7 @@
 # - https://docs.gitlab.com/ce/ci/yaml/README.html
 
 
-image: maven:3.3.9-jdk-8
+image: maven:3.3.9-jdk-7
 
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.

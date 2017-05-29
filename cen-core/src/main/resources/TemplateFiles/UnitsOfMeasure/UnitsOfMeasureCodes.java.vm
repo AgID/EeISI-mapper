@@ -2,17 +2,17 @@ package it.infocert.eigor.model.core.enums;
 
 public enum UnitOfMeasureCodes {
 
-    #foreach($row in $File)
-        #if($row.Active == 1)
+    #foreach($row in $rows)
+        #if($row.data.Active == 1)
         /**
-         * ${row.Alias}
-         * <p>${row.CommonCode}</p>
-         * <p>${row.Name}</p>
-         * <p>${row.Description}</p>
-         * <p>${row.Symbol}</p>
-         * <p>${row.Annex}</p>
+         * ${row.data.Alias}
+         * <p>${row.data.CommonCode}</p>
+         * <p>${row.data.Name}</p>
+         * <p>${row.data.Description}</p>
+         * <p>${row.data.Symbol}</p>
+         * <p>${row.data.Annex}</p>
          */
-        ${row.Alias}("${row.CommonCode}", "${row.Name}", "${row.Description}", "${row.Symbol}", ${row.Annex})#if($LastIndex==$row.RowIndex);#else,#end
+        ${row.data.Alias}("${row.data.CommonCode}", "${row.data.Name}", "${row.data.Description}", "${row.data.Symbol}", ${row.data.Annex})#if($meta.count.lastIndex==$row.meta.index);#else,#end
         #end
     #end
 

@@ -12,5 +12,6 @@
     </root>
 
     <logger name="it.infocert" level="error" />
+    <logger name="it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen" level="error" />
 
 </configuration>

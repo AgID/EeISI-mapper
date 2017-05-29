@@ -78,14 +78,35 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             String sellerVatId = invoice.getBG0004Seller().get(0).getBT0031SellerVatIdentifier().get(0).getValue();
             idFiscaleSeller.setIdCodice(Cen2FattPAConverterUtils.getCodeFromVATString(sellerVatId));
             idFiscaleSeller.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(sellerVatId));
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+        }
 
+        try {
             sedoCedente.setIndirizzo(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0035SellerAddressLine1().get(0).getValue());
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+        }
+
+        try {
             sedoCedente.setCAP(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0038SellerPostCode().get(0).getValue());
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+        }
+
+        try {
             sedoCedente.setComune(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0037SellerCity().get(0).getValue());
+        } catch (Exception e) {
+            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+        }
+
+        try {
             sedoCedente.setNazione(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0).getValue().getIso2charCode());
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
         }
+
+
     }
 
     private void setDatiTrasmissione() {

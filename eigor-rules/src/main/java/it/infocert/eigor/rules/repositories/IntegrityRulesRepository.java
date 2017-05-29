@@ -1,5 +1,7 @@
 package it.infocert.eigor.rules.repositories;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.rules.MalformedRuleException;
@@ -16,9 +18,8 @@ import java.util.*;
  */
 public class IntegrityRulesRepository implements RuleRepository {
     private static final Logger log = LoggerFactory.getLogger(IntegrityRulesRepository.class);
-    private List<Rule> ruleList;
     private final Properties properties;
-    private final List<Rule> validRules = new ArrayList<>(0);
+    private List<Rule> validRules;
     private final Map<String, String> invalidRules = new HashMap<>();
 
     public IntegrityRulesRepository(Properties properties) {
@@ -33,9 +34,10 @@ public class IntegrityRulesRepository implements RuleRepository {
      */
     @Override
     public List<Rule> rules() {
-        if (ruleList != null) {
-            return ruleList;
+        if (validRules != null) {
+            return validRules;
         } else {
+            validRules = new ArrayList<>(0);
             Map<String, Map<String, Object>> collected = new HashMap<>();
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
@@ -54,47 +56,53 @@ public class IntegrityRulesRepository implements RuleRepository {
                 }
 
             }
-            List<Rule> rules = new ArrayList<>();
-            collected.forEach((key, entry) -> {
-                Rule rule;
-                if (entry.containsKey("items")) {
-                    String items = (String) entry.get("items");
-                    String body = (String) entry.get("body");
-                    Map<String, Object> itemsResult = validateExpression(items);
-                    Map<String, Object> bodyResult = validateExpression(body);
+            final List<Rule> rules = new ArrayList<>();
 
-                    boolean itemR = (boolean) itemsResult.get("result");
-                    boolean bodyR = (boolean) bodyResult.get("result");
-                    if (itemR && bodyR) {
-                        rule = new IteratingIntegrityRule(items, body, key);
-                        validRules.add(rule);
-                        rules.add(rule);
-                    } else {
-                        if (!itemR) {
-                            invalidRules.put(String.format("%s.items", key), (String) itemsResult.get("expression"));
+            Stream.create( collected.entrySet() ).forEach(new Consumer<Map.Entry<String, Map<String, Object>>>() {
+                @Override public void consume(Map.Entry<String, Map<String, Object>> stringMapEntry) {
+
+                    String key = stringMapEntry.getKey();
+                    Map<String, Object> value = stringMapEntry.getValue();
+
+                    Rule rule;
+                    if (value.containsKey("items")) {
+                        String items = (String) value.get("items");
+                        String body = (String) value.get("body");
+                        Map<String, Object> itemsResult = validateExpression(items);
+                        Map<String, Object> bodyResult = validateExpression(body);
+
+                        boolean itemR = (boolean) itemsResult.get("result");
+                        boolean bodyR = (boolean) bodyResult.get("result");
+                        if (itemR && bodyR) {
+                            rule = new IteratingIntegrityRule(items, body, key);
+                            validRules.add(rule);
+                            rules.add(rule);
+                        } else {
+                            if (!itemR) {
+                                invalidRules.put(String.format("%s.items", key), (String) itemsResult.get("expression"));
+                            }
+                            if (!bodyR) {
+                                invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
+                            }
                         }
-                        if (!bodyR) {
+                    } else {
+                        String body = (String) value.get("body");
+                        Map<String, Object> bodyResult = validateExpression(body);
+                        if (((boolean) bodyResult.get("result"))) {
+                            rule = new IntegrityRule(body, key);
+                            validRules.add(rule);
+                            rules.add(rule);
+                        } else {
                             invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
                         }
                     }
-                } else {
-                    String body = (String) entry.get("body");
-                    Map<String, Object> bodyResult = validateExpression(body);
-                    if (((boolean) bodyResult.get("result"))) {
-                        rule = new IntegrityRule(body, key);
-                        validRules.add(rule);
-                        rules.add(rule);
-                    } else {
-                        invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
-                    }
                 }
-
             });
+
             if (!invalidRules.isEmpty()) {
                 throw new MalformedRuleException("There are invalid rules in the configuration.", Collections.unmodifiableMap(invalidRules), validRules);
             }
-            this.ruleList = rules;
-            return ruleList;
+            return rules;
         }
     }
 
