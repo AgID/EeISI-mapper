@@ -352,6 +352,7 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
+            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -365,7 +366,6 @@
                     <threads>5</threads>
                     <mutators>
                         <mutator>INVERT_NEGS</mutator>
-                        <!--
                         <mutator>RETURN_VALS</mutator>
                         <mutator>INLINE_CONSTS</mutator>
                         <mutator>MATH</mutator>
@@ -381,7 +381,6 @@
                         <mutator>REMOVE_CONDITIONALS_ORD_IF</mutator>
                         <mutator>REMOVE_CONDITIONALS_ORD_ELSE</mutator>
                         <mutator>REMOVE_CONDITIONALS</mutator>
-                        -->
                     </mutators>
                 </configuration>
                 <executions>
@@ -393,6 +392,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <!-- Jacoco currently disabled because it seems its reports are not used at all -->
             <!--
             <plugin>
