@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.StringToDoublePercentageConverter;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

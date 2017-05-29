@@ -1,12 +1,11 @@
 package it.infocert.eigor.model.core.model.structure;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import it.infocert.eigor.model.core.model.CenStructureSource;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
+import java.util.*;
 
 /**
  * Gives access to the CEN structure tree.
@@ -34,23 +33,47 @@ public class CenStructure extends CenStructureSource {
      * @throws IllegalArgumentException When the node cannot be found in the CEN structure.
      */
     public BtBgNode findByName(BtBgName name) {
-        Item item = findItemByBgBtName(name).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + name + "'."));
+        Item item = findItemByBgBtName(name);
+        Preconditions.checkArgument(item!=null, "Unable to find an element with name '" + name + "'.");
         return new BtBgNode(
                 item.getBtBg(),
                 Integer.parseInt( item.getNumber() ), this);
     }
 
-    private Optional<Item> findItemByBgBtName(BtBgName name) {
-        return Arrays.stream(items).filter(i -> i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals( String.valueOf(name.number()) ) ).findFirst();
+    private Item findItemByBgBtName(final BtBgName name) {
+
+        Predicate<Item> predicate = new Predicate<Item>() {
+            @Override public boolean apply(Item i) {
+                return i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals(String.valueOf(name.number()));
+            }
+        };
+
+        List<Item> unfiltered = Arrays.asList(items);
+
+        ArrayList<Item> filtered = new ArrayList<>();
+        for (Item item : unfiltered) {
+            if( predicate.apply(item) ) filtered.add(item);
+        }
+
+        if(!filtered.isEmpty()){
+            return filtered.get(0);
+        }else{
+            return null;
+        }
+
     }
 
     private Item findItemByName(String btBgNumberName) {
         BtBgName name = BtBgName.parse(btBgNumberName);
-        return findItemByBgBtName(name).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + btBgNumberName + "'."));
+        Item item = findItemByBgBtName(name);
+        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNumberName);
+        return item;
     }
 
     private BtBgNode parentOf(BtBgNode btBgNode) {
-        Item item = findItemByBgBtName(btBgNode.getName()).orElseThrow(() -> new IllegalArgumentException("Unable to find an element with name '" + btBgNode + "'."));
+        Item item = findItemByBgBtName(btBgNode.getName());
+
+        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNode);
 
         String parent = item.getParent();
         if(parent.isEmpty()){
@@ -60,8 +83,8 @@ public class CenStructure extends CenStructureSource {
 
         BtBgName nameOfParent = BtBgName.parse(parent.substring(0, 6));
 
-        Item item1 = findItemByBgBtName(nameOfParent).orElse(null);
 
+        Item item1 = findItemByBgBtName(nameOfParent);
         if(item1 == null) return null;
 
         return findByName(item1.getBtBg() + item1.getNumber());
@@ -69,11 +92,23 @@ public class CenStructure extends CenStructureSource {
     }
 
     private Set<BtBgNode> childrenOf(BtBgNode btBgNode) {
-        String key = btBgNode.getBtOrBg() + String.format("%04d", btBgNode.getNumber());
-        return Arrays.stream(items)
-                .filter( i -> i.getParent().startsWith(key) )
-                .map( i -> new BtBgNode(i,this) )
-                .collect(toSet());
+        final String key = btBgNode.getBtOrBg() + String.format("%04d", btBgNode.getNumber());
+
+        Collection<Item> filter = Collections2.filter(Arrays.asList(items), new com.google.common.base.Predicate<Item>() {
+
+            @Override
+            public boolean apply(Item item) {
+                return item.getParent().startsWith(key);
+            }
+        });
+
+        return new LinkedHashSet<>( Collections2.transform(filter, new com.google.common.base.Function<Item, BtBgNode>(){
+            @Override
+            public BtBgNode apply(Item item) {
+                return new BtBgNode(item,CenStructure.this);
+            }
+        }));
+
     }
 
 

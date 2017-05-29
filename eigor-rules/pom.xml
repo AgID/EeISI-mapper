@@ -25,6 +25,10 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>cen-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
 
         <!-- JUEL -->
         <dependency>

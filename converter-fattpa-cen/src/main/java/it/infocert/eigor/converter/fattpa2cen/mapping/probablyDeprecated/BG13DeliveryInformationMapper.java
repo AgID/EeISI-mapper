@@ -4,8 +4,7 @@ import it.infocert.eigor.converter.fattpa2cen.models.DatiTrasportoType;
 import it.infocert.eigor.converter.fattpa2cen.models.IndirizzoType;
 import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
 import it.infocert.eigor.model.core.model.BT0072ActualDeliveryDate;
-
-import java.time.LocalDate;
+import org.joda.time.LocalDate;
 
 class BG13DeliveryInformationMapper {
 
@@ -31,6 +30,6 @@ class BG13DeliveryInformationMapper {
     }
 
     private static LocalDate mapBT72() {
-        return datiTrasporto.getDataOraConsegna().toGregorianCalendar().toZonedDateTime().toLocalDate();
+        return new LocalDate( datiTrasporto.getDataOraConsegna().toGregorianCalendar() );
     }
 }

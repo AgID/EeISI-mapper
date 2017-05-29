@@ -36,9 +36,12 @@ public class CenStructureSource {
     protected final Item[] items;
 
     protected CenStructureSource() {
-        items = new Item[$TotalRows];
-        #foreach($row in $File)
-            items[${row.RowIndex}] = new Item("${row.BtOrBg}", "${row.Index}", "${row.ParentClass}");
+
+        items = new Item[${meta.count.rows}];
+        #foreach($row in ${rows})
+
+            // row ${row.meta.count}, coming from row ${row.meta.sourceCount}
+            items[${row.meta.index}] = new Item("${row.data.BtOrBg}", "${row.data.Index}", "${row.data.ParentClass}");
         #end
     }
 

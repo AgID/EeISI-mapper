@@ -65,7 +65,7 @@ public class LogSupport {
         appender.setOutputStream(stream);
         appender.setImmediateFlush(true);
         appender.start();
-        Thread loggingThread = Thread.currentThread();
+        final Thread loggingThread = Thread.currentThread();
         appender.addFilter(new Filter() {
             @Override
             public FilterReply decide(Object o) {

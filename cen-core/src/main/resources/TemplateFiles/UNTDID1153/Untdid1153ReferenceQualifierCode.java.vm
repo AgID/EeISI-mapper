@@ -2,13 +2,13 @@ package it.infocert.eigor.model.core.enums;
 
 public enum Untdid1153ReferenceQualifierCode {
 
-    #foreach( $row in $File )
+    #foreach( $row in $rows )
     /**
-     * Code ${row.ID}
-     * <p>${row.Sign}</p>
-     * <p>${row.Description}</p>
+     * Code ${row.data.ID}
+     * <p>${row.data.Sign}</p>
+     * <p>${row.data.Description}</p>
      */
-    ${row.ID}("${row.Sign}", "${row.ID}", "${row.Description}")#if($LastIndex==$row.RowIndex);#else,#end
+    ${row.data.ID}("${row.data.Sign}", "${row.data.ID}", "${row.data.Description}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
     private String sign;

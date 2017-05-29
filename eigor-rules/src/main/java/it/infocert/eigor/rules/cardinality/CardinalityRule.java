@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardinalityRule implements Rule {
+public class CardinalityRule extends Rule {
 
     private final static Logger log = LoggerFactory.getLogger(CardinalityRule.class);
 
@@ -64,7 +64,7 @@ public class CardinalityRule implements Rule {
                     }
                     childrenAsList = invoiceUtils.getChildrenAsList(childrenAsList.get(0), formatName(node.getName()));
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
 
@@ -90,7 +90,7 @@ public class CardinalityRule implements Rule {
 
                 computeCardinality(childrenAsList.size(), outcomes);
 
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
     }

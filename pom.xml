@@ -29,13 +29,12 @@
     </modules>
 
     <properties>
-
-        <java.version>1.8</java.version>
-
+        <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <powermock.version>1.6.6</powermock.version>
         <juel-api.version>2.2.7</juel-api.version>
+        <joda-time.version>2.9.9</joda-time.version>
         <commons-csv.version>1.4</commons-csv.version>
         <logback.version>1.2.3</logback.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
@@ -45,12 +44,13 @@
         <jopt-simple.version>5.0.3</jopt-simple.version>
         <pitest-maven.version>1.1.11</pitest-maven.version>
         <commons-compress.version>1.9</commons-compress.version>
-        <phschematron.version>4.3.0</phschematron.version>
+        <phschematron.version>3.0.1</phschematron.version>
+        <jstreams.version>1.1</jstreams.version>
         <plexus-utils.version>3.0.24</plexus-utils.version>
 
         <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
-        <template-generator-maven-plugin.version>0.0.4</template-generator-maven-plugin.version>
+        <template-generator-maven-plugin.version>0.0.7</template-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
 
@@ -140,6 +140,11 @@
                 <artifactId>commons-csv</artifactId>
                 <version>${commons-csv.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.amoerie</groupId>
+                <artifactId>jstreams</artifactId>
+                <version>${jstreams.version}</version>
+            </dependency>
 
             <!-- Eigor modules -->
             <dependency>
@@ -182,6 +187,12 @@
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>converter-ubl-cen</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
             </dependency>
 
             <!-- JUEL -->
@@ -310,11 +321,37 @@
                     </configuration>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4.1</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-java-7</id>
+                            <goals>
+                                <goal>display-info</goal>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <message>This project should be compiled on JDK 1.7 because SOGEI have not yet migrated to 1.8</message>
+                                        <version>[1.7.0,1.8.0)</version>
+                                    </requireJavaVersion>
+                                </rules>
+                                <fail>true</fail>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
             <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
-            <!--
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -326,6 +363,26 @@
                         <param>it.infocert.eigor.*</param>
                     </targetTests>
                     <threads>5</threads>
+                    <mutators>
+                        <mutator>INVERT_NEGS</mutator>
+                        <!--
+                        <mutator>RETURN_VALS</mutator>
+                        <mutator>INLINE_CONSTS</mutator>
+                        <mutator>MATH</mutator>
+                        <mutator>VOID_METHOD_CALLS</mutator>
+                        <mutator>NEGATE_CONDITIONALS</mutator>
+                        <mutator>CONDITIONALS_BOUNDARY</mutator>
+                        <mutator>INCREMENTS</mutator>
+                        <mutator>REMOVE_INCREMENTS</mutator>
+                        <mutator>NON_VOID_METHOD_CALLS</mutator>
+                        <mutator>CONSTRUCTOR_CALLS</mutator>
+                        <mutator>REMOVE_CONDITIONALS_EQ_IF</mutator>
+                        <mutator>REMOVE_CONDITIONALS_EQ_ELSE</mutator>
+                        <mutator>REMOVE_CONDITIONALS_ORD_IF</mutator>
+                        <mutator>REMOVE_CONDITIONALS_ORD_ELSE</mutator>
+                        <mutator>REMOVE_CONDITIONALS</mutator>
+                        -->
+                    </mutators>
                 </configuration>
                 <executions>
                     <execution>
@@ -336,7 +393,8 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
+            <!-- Jacoco currently disabled because it seems its reports are not used at all -->
+            <!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -350,6 +408,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>

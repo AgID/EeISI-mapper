@@ -1,5 +1,7 @@
 package it.infocert.eigor.test;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -8,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -33,7 +34,18 @@ public class Files {
 
     /** Find first file in a given folder, or {@code null}. */
     public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
-        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
+        List<File> files = Arrays.asList(outputDir.listFiles());
+        Collection<File> filter = Collections2.filter(files, col);
+        return filter != null && !filter.isEmpty() ? filter.iterator().next() : null;
+    }
+
+    /** Find first file by name. */
+    public static File findFirstFileByNameOrNull(File outputDir, final String name) {
+        return findFirstFileOrNull(outputDir, new Predicate<File>() {
+            @Override public boolean apply(File input) {
+                return input.getName().equals(name);
+            }
+        });
     }
 
     /**

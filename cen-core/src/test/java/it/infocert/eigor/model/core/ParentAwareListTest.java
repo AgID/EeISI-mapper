@@ -4,7 +4,6 @@ import it.infocert.eigor.model.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -38,7 +37,7 @@ public class ParentAwareListTest {
 
         // then
         // ...it should reference the parent
-        Assert.assertThat(toAdd.getParent(), is(invoice));
+        Assert.assertThat(toAdd.getParent(), is( (BTBG)invoice));
 
     }
 

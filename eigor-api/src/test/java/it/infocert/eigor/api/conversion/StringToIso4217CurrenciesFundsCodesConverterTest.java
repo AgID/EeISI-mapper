@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.StringToIso4217CurrenciesFundsCodesConverter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import org.junit.Test;
 

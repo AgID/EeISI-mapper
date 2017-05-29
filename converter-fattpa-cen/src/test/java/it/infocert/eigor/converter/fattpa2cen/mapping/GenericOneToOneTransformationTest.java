@@ -1,9 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.converter.fattpa2cen.mapping.GenericOneToOneTransformation;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0027SellerName;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +10,12 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.net.URL;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class GenericOneToOneTransformationTest {
 

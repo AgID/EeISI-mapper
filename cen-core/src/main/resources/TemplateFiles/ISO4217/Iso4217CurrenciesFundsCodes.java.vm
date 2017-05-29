@@ -6,16 +6,16 @@ public enum Iso4217CurrenciesFundsCodes {
     // 2: Num
     // 3: NumberOfDecimalDigits
     // 4: Currency
- #foreach( $row in $File )
+ #foreach( $row in $rows )
 
      /**
-      * ${row.Code}
-      * <p>${row.Num}</p>
-      * <p>${row.NumberOfDecimalDigits}</p>
-      * <p>${row.Currency}</p>
-      * <p>${row.LocationsUsingThisCurrency}</p>
+      * ${row.data.Code}
+      * <p>${row.data.Num}</p>
+      * <p>${row.data.NumberOfDecimalDigits}</p>
+      * <p>${row.data.Currency}</p>
+      * <p>${row.data.LocationsUsingThisCurrency}</p>
       */
-     ${row.Code}("${row.Code}", ${row.Num}, ${row.NumberOfDecimalDigits}, "${row.Currency}")#if($LastIndex==$row.RowIndex);#else,#end
+     ${row.data.Code}("${row.data.Code}", ${row.data.Num}, ${row.data.NumberOfDecimalDigits}, "${row.data.Currency}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
  #end
 
 

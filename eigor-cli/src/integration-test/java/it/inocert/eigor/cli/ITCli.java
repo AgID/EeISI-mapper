@@ -3,19 +3,15 @@ package it.inocert.eigor.cli;
 import it.infocert.eigor.test.Files;
 import it.infocert.eigor.test.OS;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static it.infocert.eigor.test.Failures.failForException;
@@ -29,14 +25,13 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
-@Ignore
 public class ITCli {
 
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
-    @Test public void shouldUnzipAndRunOnWindows() throws Exception {
+    @Test(timeout = 50000) public void shouldUnzipAndRunOnWindows() throws Exception {
 
-        assumeTrue(OS.isWindows());
+        assumeTrue("Run only on Win.", OS.isWindows());
 
         File workdir = tmp.newFolder("workdir");
         File outputFolder = newFile(workdir, "output");
@@ -46,13 +41,13 @@ public class ITCli {
         unzip(eigorCliZipped, workdir);
 
         // prepare invocation
-        String args =
+        final String args =
                 "--input "
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "fatturapa";
-        File batToRun = newFile(workdir , "eigor-cli" , "eigor.bat");
+        final File batToRun = newFile(workdir , "eigor-cli" , "eigor.bat");
 
         // run eigor cli
         final AtomicReference<Process> proc = new AtomicReference<>();
@@ -80,8 +75,8 @@ public class ITCli {
             runningThread.interrupt();
             Assert.fail("process didn't finished after " + timeoutToGetTheProcess + " millis");
         }
-        proc.get().waitFor(timeoutToProcessCompletion, TimeUnit.MILLISECONDS);
-        proc.get().destroyForcibly();
+        proc.get().waitFor();
+        proc.get().destroy();
 
         // uncomment to check for program output
         // BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
@@ -96,9 +91,9 @@ public class ITCli {
 
     }
 
-    @Test public void shouldUnzipAndRunOnUnix() throws Exception {
+    @Test(timeout = 50000) public void shouldUnzipAndRunOnUnix() throws Exception {
 
-        assumeTrue(OS.isUnix());
+        assumeTrue("Run only on linux.", OS.isUnix());
 
         File workdir = tmp.newFolder("workdir");
         File outputFolder = newFile(workdir, "output");
@@ -108,7 +103,7 @@ public class ITCli {
         Files.untar(eigorCliZipped, workdir);
 
         // prepare invocation
-        String args =
+        final String args =
                 "--input "
                         + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
@@ -116,7 +111,7 @@ public class ITCli {
                         + " --source " + "csvcen" + " --target " + "fatturapa";
 
 
-        File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
+        final File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
         Files.setPermission(batToRun, PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ);
 
         // run eigor cli
@@ -146,7 +141,7 @@ public class ITCli {
             runningThread.interrupt();
             Assert.fail("process didn't finished after " + timeoutToGetTheProcess + " millis");
         }
-        proc.get().waitFor(timeoutToProcessCompletion, TimeUnit.MILLISECONDS);
+        proc.get().waitFor();
 
         // uncomment to check for program output
 //        BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
@@ -158,7 +153,7 @@ public class ITCli {
 
 
         assertThat( proc.get().exitValue(), is(0) );
-        proc.get().destroyForcibly();
+        proc.get().destroy();
 
 
         String[] producedFiles = outputFolder.list();

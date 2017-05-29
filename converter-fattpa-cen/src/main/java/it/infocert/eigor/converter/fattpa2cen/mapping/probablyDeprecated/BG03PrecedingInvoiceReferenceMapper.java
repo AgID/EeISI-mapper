@@ -5,8 +5,8 @@ import it.infocert.eigor.converter.fattpa2cen.models.DatiGeneraliType;
 import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
 import it.infocert.eigor.model.core.model.BT0025PrecedingInvoiceReference;
 import it.infocert.eigor.model.core.model.BT0026PrecedingInvoiceIssueDate;
+import org.joda.time.LocalDate;
 
-import java.time.LocalDate;
 import java.util.List;
 
 class BG03PrecedingInvoiceReferenceMapper {
@@ -35,6 +35,6 @@ class BG03PrecedingInvoiceReferenceMapper {
     }
 
     private static LocalDate mapBT26(DatiDocumentiCorrelatiType dati) {
-        return dati.getData().toGregorianCalendar().toZonedDateTime().toLocalDate();
+        return new LocalDate( dati.getData().toGregorianCalendar() );
     }
 }
