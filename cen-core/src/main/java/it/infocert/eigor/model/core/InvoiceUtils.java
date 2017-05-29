@@ -59,26 +59,37 @@ public class InvoiceUtils {
                 current = children.get(0);
 
             }
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             log.error(e.getMessage(), e);
         }
 
         return invoice;
     }
 
-    public List<BTBG> getChildrenAsList(BTBG parent, final String childName) throws IllegalAccessException, InvocationTargetException {
+    /** Return the children of a parent by name. */
+    public List<BTBG> getChildrenAsList(BTBG parent, final String childName) {
 
         List<Method> methods = Arrays.asList(parent.getClass().getMethods());
         Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
-                return method.getName().startsWith("get" + childName);
+                return method.getName().startsWith("get" + childName) &&
+                        method.getParameterTypes().length == 0;
             }
         });
 
         if(filter == null || filter.isEmpty()) return null;
 
-        return (List<BTBG>) filter.iterator().next().invoke(parent);
+        Method getterMethod = filter.iterator().next();
+        try {
+            return (List<BTBG>) getterMethod.invoke(parent);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if(cause == null || !(cause instanceof RuntimeException)) throw new RuntimeException("An exception occurred while invoking " + getterMethod.toString() + " on " + parent, e);
+            throw (RuntimeException)cause;
+        }
     }
 
     public Class<? extends BTBG> getBtBgByName(final String name) {
@@ -127,22 +138,18 @@ public class InvoiceUtils {
 
         BTBG current = invoice;
 
-        try {
-            for (String name : namesOfBGs) {
-                List<BTBG> children = getChildrenAsList(current, name);
+        for (String name : namesOfBGs) {
+            List<BTBG> children = getChildrenAsList(current, name);
 
-                if (children == null) {
-                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
-                }
-
-               if (children.isEmpty()) {
-                   return null;
-               }
-                current = children.get(0);
-
+            if (children == null) {
+                throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            log.error(e.getMessage(), e);
+
+           if (children.isEmpty()) {
+               return null;
+           }
+            current = children.get(0);
+
         }
 
         return current;
@@ -170,19 +177,16 @@ public class InvoiceUtils {
 
         BTBG current = invoice;
 
-        try {
-            for (String name : namesOfBGs) {
-                List<BTBG> children = getChildrenAsList(current, name);
-                if (children != null && children.size() != 0) {
-                    current = children.get(0);
-                }
-                if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1 ))) {
-                    return true;
-                }
+        for (String name : namesOfBGs) {
+            List<BTBG> children = getChildrenAsList(current, name);
+            if (children != null && children.size() != 0) {
+                current = children.get(0);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1 ))) {
+                return true;
+            }
         }
+
         return false;
     }
 }

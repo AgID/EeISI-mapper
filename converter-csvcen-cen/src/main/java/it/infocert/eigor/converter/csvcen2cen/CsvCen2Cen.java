@@ -20,6 +20,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.joda.time.format.DateTimeFormat;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,8 @@ public class CsvCen2Cen implements ToCenConversion {
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
     private final ConversionRegistry conversionRegistry;
+
+    private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
 
     private Reflections reflections;
 
@@ -90,6 +94,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
             bgbtIdFromCsv = cenRecord.get("BG/BT");
             bgbtValueFromCsv = cenRecord.get("Value");
+            log.trace("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
 
 
 
@@ -143,6 +148,10 @@ public class CsvCen2Cen implements ToCenConversion {
                     Object convert = null;
                     try {
                         convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
+                        log.trace("Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
+                                String.valueOf( bgbtValueFromCsv ),
+                                convert!=null ? convert.getClass().getName() : "<null>",
+                                String.valueOf( convert ));
                         // instantiate the BT
                         btbg = (BTBG) constructor.newInstance(convert);
                     } catch (IllegalArgumentException e) {
@@ -156,11 +165,13 @@ public class CsvCen2Cen implements ToCenConversion {
                     }
 
                 }
+                log.trace("Successfully instantiated: '{}'.", btbg);
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
             if(btbg == null) {
+                log.trace("Unable to instantiate item, skipping CSV record.");
                 continue;
             }
 
@@ -175,7 +186,7 @@ public class CsvCen2Cen implements ToCenConversion {
                 pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg + "/" + stack.get(i);
             }
             pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0", "/") + btbgName.toString();
-
+            log.trace("Item will be placed at path '{}'.", pathWhereYouAreTryingToPlaceTheBtBg);
 
             // It search in the stack a BG that will accept the current BG/BT.
             boolean found = false;
@@ -184,6 +195,7 @@ public class CsvCen2Cen implements ToCenConversion {
                 try {
                     boolean added = utils.addChild(parentBg, btbg);
                     if(added) {
+                        log.trace("Item '{}' added as child of '{}'.", btbg, parentBg);
                         stack.push(parentBg);
                         if (btbg.denomination().toLowerCase().startsWith("bg")) {
                             stack.push(btbg);
@@ -196,7 +208,7 @@ public class CsvCen2Cen implements ToCenConversion {
             } while (!found && !stack.empty());
 
 
-            // if we browsed the full stack withouth being able to add
+            // if we browsed the full stack without being able to add
             // the current BT, then that BT was in the wrong position in the file.
             if(stack.empty()){
                 String pathWhereTheBtBgBelongs = cenStructure.findByName( btbgName ).path();

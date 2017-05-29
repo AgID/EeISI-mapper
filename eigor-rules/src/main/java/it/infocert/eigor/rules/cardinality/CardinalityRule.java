@@ -64,7 +64,7 @@ public class CardinalityRule extends Rule {
                     }
                     childrenAsList = invoiceUtils.getChildrenAsList(childrenAsList.get(0), formatName(node.getName()));
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
 
@@ -90,7 +90,7 @@ public class CardinalityRule extends Rule {
 
                 computeCardinality(childrenAsList.size(), outcomes);
 
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
     }

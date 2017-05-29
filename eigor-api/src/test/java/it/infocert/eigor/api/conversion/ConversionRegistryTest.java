@@ -3,11 +3,49 @@ package it.infocert.eigor.api.conversion;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
+import org.junit.Assert;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ConversionRegistryTest {
+
+    @Test
+    public void understanding() {
+        Class<Number> numberClass = Number.class;
+        Class<Integer> integerClass = Integer.class;
+        Assert.assertTrue( numberClass.isAssignableFrom(integerClass) );
+        Assert.assertFalse( integerClass.isAssignableFrom(numberClass) );
+    }
+
+    @Test
+    public void shouldNotConvertAStringToADoubleIfAStringIsNeeded() {
+
+        // given
+        ConversionRegistry sut = new ConversionRegistry(
+                new StringToDoubleConverter()
+        );
+
+        // when
+        IllegalArgumentException ex = null;
+        Class<String> sourceClz = String.class;
+        Class<String> targetClz = String.class;
+        try {
+            String converted = sut.convert(sourceClz, targetClz, "20100");
+        }catch(IllegalArgumentException iae){
+            ex = iae;
+        }catch(Exception e){
+            fail();
+        }
+
+        // then
+        assertThat( ex.getMessage(), is("Cannot convert value '20100' of declared type 'String' to the desired type 'String'.") );
+
+    }
+
 
     @Test
     public void shouldConvertUsingRegisteredConverters() {

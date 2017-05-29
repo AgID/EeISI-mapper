@@ -27,6 +27,14 @@ public class ${clzName} extends AbstractBTBG {
     #end
     #end
 
+    #foreach( $row in $rows )
+    #if( !$clzName.equals( $row.data.BTBGClassName ) )
+    public ${row.data.BTBGClassName} get${row.data.BTBGClassName}(int index) {
+            return ${row.data.BTBGClassName}.get(index);
+    }
+    #end
+    #end
+
     @Override
     public int order() {
         return ${row0.data.OrderInCEN};

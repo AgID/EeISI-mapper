@@ -28,6 +28,10 @@ public class ConversionRegistry {
     }
 
     /**
+     * Converts the given value of type sourceClz, into the corresponding value of type targetClz.
+     * @param sourceClz The type of the value that should be converted.
+     * @param targetClz The type value should be converted to.
+     * @param value The value that should be converted to targetClz.
      * @throws IllegalArgumentException When it is not able to convert the given value to the desired class.
      */
     public <T,S> T convert(Class<S> sourceClz, Class<T> targetClz, S value) {
@@ -63,8 +67,26 @@ public class ConversionRegistry {
                 Type sourceType = typeConverterIface.getActualTypeArguments()[0];
                 Type targetType = typeConverterIface.getActualTypeArguments()[1];
 
+                // let's test the converter is a good candidate.
                 try {
-                    return (T) converter.convert(value);
+                    TypeConverter<S,T> check = (TypeConverter<S,T>) converter;
+                } catch (ClassCastException e) {
+                    log.trace("Skipped converter '{}' because not matching source '{}', target '{}'.", converter, sourceClz, targetClz);
+                }
+
+                try {
+                    Object convertedValue = converter.convert(value);
+
+                    if(!targetClz.isAssignableFrom(convertedValue.getClass())){
+                        log.trace("Skipped converter '{}' because it converted to '{}' of type '{}' but required target is '{}'.",
+                                converter,
+                                convertedValue,
+                                convertedValue.getClass().getName(),
+                                targetClz.getName());
+                        continue;
+                    }
+
+                    return (T) convertedValue;
                 } catch (RuntimeException e) {
                     log.trace("Skipped converter '{}' because of error.", converter, e);
                 }
