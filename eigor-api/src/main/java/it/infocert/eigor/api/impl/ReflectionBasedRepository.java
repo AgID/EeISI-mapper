@@ -82,24 +82,26 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
 
     private <T> Set<T> findImplementation(Class<T> classToFind) {
         Set<T> myRules = new HashSet<>();
-        Set<Class<? extends T>> ruleClasses = reflections.getSubTypesOf(classToFind);
+        Set<Class<? extends T>> subClasses = reflections.getSubTypesOf(classToFind);
 
-        for (Class<? extends T> ruleClass : ruleClasses) {
+        for (Class<? extends T> subClass : subClasses) {
             try {
                 Constructor constrWithReflections = null;
-                for (Constructor c: ruleClass.getConstructors()) {
-                    if (c.getTypeParameters().length  == 1 &&
-                            Reflections.class.equals(c.getParameterTypes()[0])) {
-                        constrWithReflections = c;
+                for (Constructor c: subClass.getConstructors()) {
+                    if (c.getParameterTypes().length  == 1) {
+                        Class aClass = c.getParameterTypes()[0];
+                        if (Reflections.class.equals(aClass)) {
+                            constrWithReflections = c;
+                        }
                     }
                 }
                 if (constrWithReflections == null) {
-                    myRules.add(ruleClass.newInstance());
+                    myRules.add(subClass.newInstance());
                 } else {
                     myRules.add( (T)constrWithReflections.newInstance(reflections));
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("An error occurred instantiating class '" + ruleClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
+                throw new RuntimeException("An error occurred instantiating class '" + subClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
             }
         }
 
