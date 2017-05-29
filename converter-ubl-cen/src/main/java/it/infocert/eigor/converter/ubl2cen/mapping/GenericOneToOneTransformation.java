@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.ubl2cen.mapping;
 
 import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -15,9 +16,12 @@ import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This class does the generic one to one transformations
@@ -29,6 +33,7 @@ public class GenericOneToOneTransformation {
     private final String xPath;
     private final String bgBtPath;
     private Reflections reflections;
+    private StringToJavaLocalDateConverter stringToLocalDateConverter;
 
     /**
      * Instantiates a new Generic one to one transformation.
@@ -40,6 +45,7 @@ public class GenericOneToOneTransformation {
         this.xPath = xPath;
         this.bgBtPath = bgBtPath;
         this.reflections = reflections;
+        stringToLocalDateConverter = new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH));
     }
 
     /**
@@ -86,6 +92,13 @@ public class GenericOneToOneTransformation {
                                     if (String.class.equals(paramType)) {
                                         try {
                                             bt.add((BTBG) constructor.newInstance(item.getTextContent()));
+                                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                                            log.error(e.getMessage(), e);
+                                            errors.add(e);
+                                        }
+                                    } else if(LocalDate.class.equals(paramType)) {
+                                        try {
+                                            bt.add((BTBG) constructor.newInstance(stringToLocalDateConverter.convert(item.getTextContent())));
                                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                             log.error(e.getMessage(), e);
                                             errors.add(e);
