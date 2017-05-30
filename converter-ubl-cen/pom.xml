@@ -42,23 +42,23 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>com.helger.maven</groupId>-->
-                <!--<artifactId>ph-sch2xslt-maven-plugin</artifactId>-->
-                <!--<version>${phschematron.version}</version>-->
-                <!--<configuration>-->
-                    <!--<xsltDirectory>${basedir}/converterdata/converter-ubl-cen/schematron-xslt</xsltDirectory>-->
-                    <!--<schematronDirectory>${basedir}/converterdata/converter-ubl-cen/schematron</schematronDirectory>-->
-                    <!--<schematronPattern>*.sch</schematronPattern>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>convert</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>ph-sch2xslt-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <xsltDirectory>${basedir}/converterdata/converter-ubl-cen/schematron-xslt</xsltDirectory>
+                    <schematronDirectory>${basedir}/converterdata/converter-ubl-cen/schematron</schematronDirectory>
+                    <schematronPattern>*.sch</schematronPattern>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
