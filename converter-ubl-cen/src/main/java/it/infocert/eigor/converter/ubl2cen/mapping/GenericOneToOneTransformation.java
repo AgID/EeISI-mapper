@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.ubl2cen.mapping;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.conversion.StringToIso4217CurrenciesFundsCodesConverter;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.joda.time.LocalDate;
@@ -34,7 +36,8 @@ public class GenericOneToOneTransformation {
     private final String xPath;
     private final String bgBtPath;
     private Reflections reflections;
-    private StringToJavaLocalDateConverter stringToLocalDateConverter;
+    private StringToJavaLocalDateConverter stringToLocalDate;
+    private StringToIso4217CurrenciesFundsCodesConverter stringToIso4217;
 
     /**
      * Instantiates a new Generic one to one transformation.
@@ -46,7 +49,8 @@ public class GenericOneToOneTransformation {
         this.xPath = xPath;
         this.bgBtPath = bgBtPath;
         this.reflections = reflections;
-        stringToLocalDateConverter = new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.ENGLISH));
+        stringToLocalDate = new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.ENGLISH));
+        stringToIso4217 = new StringToIso4217CurrenciesFundsCodesConverter();
     }
 
     /**
@@ -95,23 +99,26 @@ public class GenericOneToOneTransformation {
                                     classes1.forEach(new Consumer<Class<?>>() {
                                         @Override public void consume(Class<?> paramType) {
                                             // FIXME add data converter...
+                                            Object constructorParam = null;
                                             if (String.class.equals(paramType)) {
-                                                try {
-                                                    bt.add((BTBG) constructor.newInstance(item.getTextContent()));
-                                                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                                    log.error(e.getMessage(), e);
-                                                    errors.add(e);
-                                                }
+                                                constructorParam = item.getTextContent();
+                                            } else if(Double.class.equals(paramType)) {
+                                                constructorParam = Double.parseDouble(item.getTextContent());
                                             } else if(LocalDate.class.equals(paramType)) {
-                                                try {
-                                                    bt.add((BTBG) constructor.newInstance(stringToLocalDateConverter.convert(item.getTextContent())));
-                                                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                                    log.error(e.getMessage(), e);
-                                                    errors.add(e);
-                                                }
+                                                constructorParam = stringToLocalDate.convert(item.getTextContent());
+                                            } else if(Iso4217CurrenciesFundsCodes.class.equals(paramType)) {
+                                                constructorParam = stringToIso4217.convert(item.getTextContent());
                                             } else {
                                                 log.error(logPrefix + "paramType is not String: " + paramType);
                                                 errors.add(new Exception(logPrefix + "paramType is not String: " + paramType));
+                                                return; // jumps to next step in foreach
+                                            }
+
+                                            try {
+                                                bt.add((BTBG) constructor.newInstance(constructorParam));
+                                            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                                                log.error(e.getMessage(), e);
+                                                errors.add(e);
                                             }
                                         }
                                     });
