@@ -101,26 +101,28 @@ BT-153,American Cookies
 
 ## Build
 
-### Java 7
-Java 7 is needed (and enforced) to properly build the project.
+### Development Environment
+This project requires Maven 3 and Java 7. To avoid messing around with `JAVA_HOME` or break other project, you must set a Maven Toolchain that makes use of the right JDK.
+Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the following snippet:
 
-To switch between different JDKs you can execute that:
-
-_on win:_
-```bash
-java -version
-set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80
-set PATH=%JAVA_HOME%\bin;%PATH%
-java -version
 ```
- 
-_on linux:_
-```bash
-java -version
-set JAVA_HOME=/opt/jdk1.7
-set PATH=${JAVA_HOME}/bin;${PATH}
-java -version
-``` 
+<toolchains>
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>1.7.0</version>
+            <vendor>YOUR_VENDOR (openjdk or oracle)</vendor>
+            <id>jdk-1.7.0</id>
+        </provides>
+        <configuration>
+            <jdkHome>/path/to/your/java/home</jdkHome>
+        </configuration>
+    </toolchain>
+</toolchains>
+  ```
+
+***THIS STEP IS MANDATORY EVEN IF THE JDK 7 IS YOUR ONLY INSTALLED JDK***
+
 
 ### Compile 
 To build the project:
