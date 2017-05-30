@@ -42,7 +42,7 @@ public class CsvCen2CenTest {
         InputStream invoiceStream = Preconditions.checkNotNull( getClass().getResourceAsStream("/samplecen_simple.csv"), "invoice not found");
 
         // when
-        ConversionResult<BG0000Invoice> conversion = null;
+        ConversionResult<BG0000Invoice> conversion;
         BG0000Invoice invoice = null;
         try {
             conversion = sut.convert(invoiceStream);

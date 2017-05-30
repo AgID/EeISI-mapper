@@ -29,8 +29,6 @@
                 <groupId>com.danidemi</groupId>
                 <artifactId>template-generator-maven-plugin</artifactId>
                 <executions>
-
-
                     <execution>
                         <id>generate-country-codes</id>
                         <phase>generate-sources</phase>
