@@ -244,6 +244,24 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>1.1</version>
+                    <configuration>
+                        <toolchains>
+                            <jdk>
+                                <version>[1.7,1.8)</version>
+                            </jdk>
+                        </toolchains>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>toolchain</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>com.danidemi</groupId>
                     <artifactId>template-generator-maven-plugin</artifactId>
                     <version>${template-generator-maven-plugin.version}</version>
@@ -320,36 +338,20 @@
                         </excludes>
                     </configuration>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4.1</version>
-                    <executions>
-                        <execution>
-                            <id>enforce-java-7</id>
-                            <goals>
-                                <goal>display-info</goal>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <rules>
-                                    <requireJavaVersion>
-                                        <message>This project should be compiled on JDK 1.7 because SOGEI have not yet migrated to 1.8</message>
-                                        <version>[1.7.0,1.8.0)</version>
-                                    </requireJavaVersion>
-                                </rules>
-                                <fail>true</fail>
-                            </configuration>
-                        </execution>
-                    </executions>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
+                <artifactId>maven-toolchains-plugin</artifactId>
             </plugin>
             <!-- Pitest should be integrated in a more smart way because it needs tests to be executed and reports moved around -->
             <!--

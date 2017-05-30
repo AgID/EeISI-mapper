@@ -50,8 +50,8 @@ public class CsvCen2Cen implements ToCenConversion {
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("dd-MMM-yy")),
-                new StringToJavaLocalDateConverter(DateTimeFormat.forPattern("yyyy-MM-dd")),
+                new StringToJavaLocalDateConverter("dd-MMM-yy"),
+                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
                 new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
