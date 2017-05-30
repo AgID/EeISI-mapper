@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core.model;
 
-public abstract class AbstractBTBG implements BTBG{
+public abstract class AbstractBTBG extends BTBG {
 
     private AbstractBTBG parent;
 

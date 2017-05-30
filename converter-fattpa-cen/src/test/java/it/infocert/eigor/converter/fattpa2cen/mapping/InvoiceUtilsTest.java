@@ -1,12 +1,13 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
-import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
-import it.infocert.eigor.model.core.model.BTBG;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+import it.infocert.eigor.model.core.model.*;
 import org.junit.Test;
 import org.reflections.Reflections;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -68,5 +69,22 @@ public class InvoiceUtilsTest {
         invoice.getBG0025InvoiceLine().add(bg25);
         BTBG child = invoiceUtils.getFirstChild(s, invoice);
         assertTrue(child instanceof BG0027InvoiceLineAllowances);
+    }
+
+    @Test
+    public void getChildrenOfParent() throws Exception {
+        // given
+        InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
+        BG0000Invoice invoice = new BG0000Invoice();
+        invoice.getBT0003InvoiceTypeCode().add(new BT0003InvoiceTypeCode(Untdid1001InvoiceTypeCode.Code1));
+
+        // when
+        List<BTBG> bt0003 = invoiceUtils.getChildrenAsList(invoice, "BT0003");
+
+        // then
+        assertThat( bt0003.size(), is(1) );
+        assertThat( ((BT0003InvoiceTypeCode)(bt0003.get(0))).getValue(), is(Untdid1001InvoiceTypeCode.Code1) );
+
+
     }
 }

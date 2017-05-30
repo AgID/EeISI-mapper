@@ -15,7 +15,7 @@ public class BinaryConversionResult extends ConversionResult<byte[]> {
      * A successfull conversion.
      */
     public BinaryConversionResult(byte[] result) {
-        this(result, new ArrayList<>());
+        this(result, new ArrayList<Exception>());
     }
 
     /**

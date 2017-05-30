@@ -3,13 +3,11 @@ package it.infocert.eigor.rules.cardinality;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
-import it.infocert.eigor.rules.cardinality.CardinalityRule;
-import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.FAILED;
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;

@@ -12,10 +12,9 @@ import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Properties;
 
-public class IteratingIntegrityRule implements Rule{
+public class IteratingIntegrityRule extends Rule{
 
     private final String iterating;
     private final ExpressionFactory expressionFactory;
@@ -50,7 +49,7 @@ public class IteratingIntegrityRule implements Rule{
                 Boolean condition;
                 try {
                     Object tmp = valueExpression.getValue(juelContext);
-                    if (Objects.isNull(tmp)) {
+                    if (tmp == null) {
                         outcome = RuleOutcome.newUnapplicableOutcome("Rule %s is unapplicable", ruleName);
                         continue;
                     } else {

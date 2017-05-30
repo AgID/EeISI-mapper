@@ -20,7 +20,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
 
-import static it.infocert.eigor.test.Files.findFirstFileOrNull;
+import static it.infocert.eigor.test.Files.findFirstFileByNameOrNull;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
@@ -100,11 +100,11 @@ public class ITEigorTest {
         List<File> files = asList( outputDir.listFiles() );
         assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(5) );
 
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-target.fake")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-source.xml")), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-cen.csv"), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir,"invoice-target.fake"), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "rule-report.csv"), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-source.xml"), notNullValue() );
 
     }
 

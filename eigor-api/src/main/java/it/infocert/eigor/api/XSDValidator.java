@@ -31,7 +31,7 @@ public class XSDValidator implements IXMLValidator {
 
     @Override
     public List<Exception> validate(byte[] xml) {
-        List<Exception> errors = new ArrayList<>();
+        final List<Exception> errors = new ArrayList<>();
         Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
         Validator validator = schema.newValidator();
         try {

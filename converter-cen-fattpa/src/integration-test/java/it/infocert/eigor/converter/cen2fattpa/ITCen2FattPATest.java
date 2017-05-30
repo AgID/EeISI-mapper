@@ -2,10 +2,14 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
+import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.Visitor;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -27,6 +31,7 @@ public class ITCen2FattPATest {
     private CsvCen2Cen csvCen2Cen;
     private Cen2FattPAConverter cen2FattPA;
     private XPathFactory xPathfactory;
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before
     public void setUp() {
@@ -39,6 +44,9 @@ public class ITCen2FattPATest {
     public void checkFattPAXMLsimple() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
         BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_simple.csv")).getResult();
+
+        dumpInvoice(invoice);
+
         byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -204,6 +212,9 @@ public class ITCen2FattPATest {
     public void checkFattPAXMLwithDiscount() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
         BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_discount.csv")).getResult();
+
+        dumpInvoice(invoice);
+
         byte[] fattpaXML = cen2FattPA.convert(invoice).getResult();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -270,6 +281,14 @@ public class ITCen2FattPATest {
 
         String line4UnitPrice = getStringByXPath(doc, "/FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[4]/PrezzoUnitario/text()");
         assertThat("line4UnitPrice", line4UnitPrice, is("-2.00"));
+    }
+
+    private void dumpInvoice(BG0000Invoice invoice) {
+        if(log.isDebugEnabled()) {
+            Visitor v = new DumpVisitor();
+            invoice.accept(v);
+            log.debug(v.toString());
+        }
     }
 
     @Test

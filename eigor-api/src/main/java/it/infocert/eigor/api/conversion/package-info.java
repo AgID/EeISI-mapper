@@ -8,7 +8,7 @@
  *     <li>Lots of basic {@link it.infocert.eigor.api.conversion.TypeConverter converters} such as:
  *      <ul>
  *          <li>{@link it.infocert.eigor.api.conversion.StringToDoublePercentageConverter percentages as "%25" to corresponding double value};</li>
- *          <li>{@link it.infocert.eigor.api.conversion.StringToIso31661CountryCodesConverter country codes as "DK" to corresponding} country {@link it.infocert.eigor.model.core.enums.Iso31661CountryCodes#DK Denmark}.</li>
+ *          <li>{@link it.infocert.eigor.api.conversion.CountryNameToIso31661CountryCodeConverter country codes as "DK" to corresponding} country {@link it.infocert.eigor.model.core.enums.Iso31661CountryCodes#DK Denmark}.</li>
  *      </ul>
  *     </li>
  *     <li>{@link it.infocert.eigor.api.conversion.ConversionRegistry}: that automatically tries to convert a value delegating to multiple {@link it.infocert.eigor.api.conversion.TypeConverter converters}.</li>

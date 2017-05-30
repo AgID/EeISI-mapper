@@ -3,11 +3,11 @@ package it.infocert.eigor.model.core.rules;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
-public interface Rule {
+public abstract class Rule {
 
-    default boolean issCompliant(BG0000Invoice invoice) {
+    public boolean issCompliant(BG0000Invoice invoice) {
         return isCompliant(invoice).outcome() == RuleOutcome.Outcome.FAILED ? false : true;
     }
 
-    RuleOutcome isCompliant(BG0000Invoice coreInvoice);
+    public abstract RuleOutcome isCompliant(BG0000Invoice coreInvoice);
 }
