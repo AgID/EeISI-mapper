@@ -50,6 +50,7 @@
                     <xsltDirectory>${basedir}/converterdata/converter-ubl-cen/schematron-xslt</xsltDirectory>
                     <schematronDirectory>${basedir}/converterdata/converter-ubl-cen/schematron</schematronDirectory>
                     <schematronPattern>*.sch</schematronPattern>
+                    <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
                 </configuration>
                 <executions>
                     <execution>
