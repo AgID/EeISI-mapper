@@ -32,10 +32,11 @@ print OUTPUT
 
 my $count = 0;
 while (my $line = <INPUT>) {
-    if ($count eq 0) {
-        $count++;
-        next;
-    }
+	#if ($count eq 0) {
+    #    $count++;
+	#next;
+	#}
+
 
     if ($csv->parse($line)) {
         my @fields = $csv->fields();

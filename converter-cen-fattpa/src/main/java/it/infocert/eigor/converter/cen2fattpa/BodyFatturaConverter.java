@@ -1,15 +1,24 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.converter.cen2fattpa.models.*;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
-import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
-import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
+import it.infocert.eigor.model.core.datatypes.Binary;
+import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.model.*;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
 public class BodyFatturaConverter implements ICen2FattPAConverter {
+
+    private static final Logger log = LoggerFactory.getLogger(BodyFatturaConverter.class);
 
     private ObjectFactory factory;
     private BG0000Invoice invoice;
@@ -33,36 +42,113 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     @Override
     public void copyRequiredOne2OneFields() {
-
         setDatiGenerali();
         setDatiBeniServizi();
+        setAllegati();
     }
 
     private void setDatiBeniServizi() {
+        log.info("Starting converting DatiBeniServizi");
         DatiBeniServiziType datiBeniServizi = factory.createDatiBeniServiziType();
         fatturaElettronicaBody.setDatiBeniServizi(datiBeniServizi);
 
         List<BG0025InvoiceLine> invoiceLineList = invoice.getBG0025InvoiceLine();
 
-        for (int i = 0; i < invoiceLineList.size(); i++) {
-            BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
+        for (BG0025InvoiceLine invoiceLine : invoiceLineList) {
             DettaglioLineeType dettaglioLinee = factory.createDettaglioLineeType();
-            dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
-            dettaglioLinee.setDescrizione(invoiceLine.getBG0031ItemInformation().get(0).getBT0153ItemName().get(0).getValue());
+            dettaglioLinee.setNumeroLinea(Integer.parseInt(invoiceLine.getBT0126InvoiceLineIdentifier().get(0).getValue()));
+
+            if (!invoiceLine.getBT0127InvoiceLineNote().isEmpty()) {
+                AltriDatiGestionaliType altriDatiGestionali = factory.createAltriDatiGestionaliType();
+                dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+
+
+                altriDatiGestionali.setTipoDato(invoiceLine.getBT0127InvoiceLineNote().get(0).getValue());
+                logBt(127, "DatiGestionali.TipoDato");
+            }
+
+            if (!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier identifierAndSchemeIdentifier = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().get(0);
+                codiceArticolo.setCodiceValore(identifierAndSchemeIdentifier.getValue());
+                codiceArticolo.setCodiceTipo(identifierAndSchemeIdentifier.getValue()); //TODO Check how to extract scheme identifier
+                logBt(128, "CodiceArticolo");
+            }
+
+
+            BG0031ItemInformation itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
+            dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
+
+            if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
+                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                codiceArticolo.setCodiceTipo("Seller");
+                codiceArticolo.setCodiceValore(itemInformation.getBT0155ItemSellerSIdentifier().get(0).getValue());
+                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                logBt(155, "CodiceArticolo");
+            }
+
+            if (!itemInformation.getBT0156ItemBuyerSIdentifier().isEmpty()) {
+                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                codiceArticolo.setCodiceTipo("Buyer");
+                codiceArticolo.setCodiceValore(itemInformation.getBT0156ItemBuyerSIdentifier().get(0).getValue());
+                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                logBt(156, "CodiceArticolo");
+            }
+
+            if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
+                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().get(0).getValue());
+                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                logBt(157, "CodiceArticolo");
+            }
+
+            if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
+                for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
+                    CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                    codiceArticolo.setCodiceValore(identifier.getValue());
+                    dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                    logBt(158, "CodiceArticolo");
+                }
+            }
+
+            if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
+                AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin().get(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
+                dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                logBt(159, "AltriDatiGestionali.RiferimentoTesto");
+            }
+
+            if (!itemInformation.getBG0032ItemAttributes().isEmpty()) {
+                for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
+                    AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                    altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName().get(0).getValue());
+                    altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue().get(0).getValue());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                    logBt(160, "AltriDatiGestionali.TipoDato");
+                    logBt(160, "AltriDatiGestionali.RiferimentoTesto");
+                }
+            }
 
             try {
                 if (invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
                         invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0025InvoiceLine().get(i).getBT0129InvoicedQuantity().get(0).getValue()));
+                    dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0129InvoicedQuantity().get(0).getValue()));
                     dettaglioLinee.setUnitaMisura(invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode());
+                    logBt(129, "DettaglioLinee.Quantita");
+                    logBt(130, "DettaglioLinee.UnitaMisura");
                 }
 
                 dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0029PriceDetails().get(0).getBT0146ItemNetPrice().get(0).getValue()));
+                logBt(146, "DettaglioLinee.PrezzoUnitario");
                 dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount().get(0).getValue()));
+                logBt(131, "DettaglioLinee.PrezzoTotale");
                 dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
+                logBt(152, "DettaglioLinee.AliquotaIVA");
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             } catch (Exception e) {
                 errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
+                log.error(e.getMessage());
             }
             if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                 processLineDiscount(invoiceLine);
@@ -70,24 +156,130 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             if (!invoiceLine.getBG0028InvoiceLineCharges().isEmpty()) {
                 processLineCharges(invoiceLine);
             }
+
+            if (!invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
+                dettaglioLinee.setRiferimentoAmministrazione(invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().get(0).getValue());
+                logBt(133, "DettaglioLinee.RiferimentoAmministrazione");
+            }
         }
 
         try {
-            DatiRiepilogoType datiRiepilogo1 = factory.createDatiRiepilogoType();
-            datiRiepilogo1.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-            datiRiepilogo1.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-            datiRiepilogo1.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
-            datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo1);
+            DatiRiepilogoType datiRiepilogo = factory.createDatiRiepilogoType();
+            DettaglioLineeType dettaglioLinee = factory.createDettaglioLineeType();
 
-            DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
-            datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0119VatCategoryRate().get(0).getValue()));
-            datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0116VatCategoryTaxableAmount().get(0).getValue()));
-            datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0023VatBreakdown().get(0).getBT0117VatCategoryTaxAmount().get(0).getValue()));
-            datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2);
+            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                BG0013DeliveryInformation deliveryInformation = invoice.getBG0013DeliveryInformation().get(0);
+                if (!deliveryInformation.getBT0070DeliverToPartyName().isEmpty()) {
+                    AltriDatiGestionaliType altriDatiGestionali = factory.createAltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato(deliveryInformation.getBT0070DeliverToPartyName().get(0).getValue());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    logBt(70, "AltriDatiGestionali.TipoDato");
+                }
+
+                if (!deliveryInformation.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
+                    AltriDatiGestionaliType altriDatiGestionali = factory.createAltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato(deliveryInformation.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().get(0).getValue());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    logBt(71, "AltriDatiGestionali.TipoDato");
+                }
+
+                if (!deliveryInformation.getBT0072ActualDeliveryDate().isEmpty()) {
+                    AltriDatiGestionaliType altriDatiGestionali = factory.createAltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato(deliveryInformation.getBT0072ActualDeliveryDate().get(0).getValue().toString());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    logBt(71, "AltriDatiGestionali.TipoDato");
+                }
+
+                if (!deliveryInformation.getBG0014InvoicingPeriod().isEmpty()) {
+                    BG0014InvoicingPeriod invoicingPeriod = deliveryInformation.getBG0014InvoicingPeriod().get(0);
+                    if (!invoicingPeriod.getBT0073InvoicingPeriodStartDate().isEmpty()) {
+                        dettaglioLinee.setDataInizioPeriodo(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(
+                                invoicingPeriod.getBT0073InvoicingPeriodStartDate().get(0).getValue())
+                        );
+                        logBt(73, "DettaglioLinee.DataInizioPeriodo");
+                    }
+
+                    if (!invoicingPeriod.getBT0074InvoicingPeriodEndDate().isEmpty()) {
+                        dettaglioLinee.setDataFinePeriodo(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(
+                                invoicingPeriod.getBT0074InvoicingPeriodEndDate().get(0).getValue())
+                        );
+                        logBt(74, "DettaglioLinee.DataFinePeriodo");
+                    }
+                }
+
+            }
+
+            BG0023VatBreakdown vatBreakdown = null;
+            try {
+                vatBreakdown = invoice.getBG0023VatBreakdown().get(0);
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+            if (vatBreakdown != null) {
+                datiRiepilogo.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+                logBt(116, "DatiRiepilogo.ImponibileImporto");
+                datiRiepilogo.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0117VatCategoryTaxAmount().get(0).getValue()));
+                logBt(117, "DatiRiepilogo.ImponibileImporto");
+                datiRiepilogo.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate().get(0).getValue()));
+                logBt(119, "DatiRiepilogo.AliquotaIva");
+                if (!vatBreakdown.getBT0120VatExemptionReasonText().isEmpty()) {
+                    datiRiepilogo.setRiferimentoNormativo(vatBreakdown.getBT0120VatExemptionReasonText().get(0).getValue());
+                    logBt(120, "DatiRiepilogo.RiferimentoNormativo");
+                }
+
+                Untdid5305DutyTaxFeeCategories category = vatBreakdown.getBT0118VatCategoryCode().get(0).getValue();
+                switch (category) {
+                    case Z:
+                        datiRiepilogo.setNatura(NaturaType.N_3);//TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                        break;
+                    case E:
+                        datiRiepilogo.setNatura(NaturaType.N_4);
+                        break;
+                    case G:
+                        datiRiepilogo.setNatura(NaturaType.N_2);
+                        break;
+                    case O:
+                        datiRiepilogo.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
+                        break;
+                    default:
+                        datiRiepilogo.setNatura(null);
+                }
+                logBt(118, "DatiRiepilogo.Natura");
+            }
+
+
+            EsigibilitaIVAType esigibilita = null;
+            if (!invoice.getBT0007ValueAddedTaxPointDate().isEmpty() && invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
+                esigibilita = EsigibilitaIVAType.D;
+                logBt(7, "DatiRiepilogo.EsigibilitaIVA");
+            } else if (invoice.getBT0007ValueAddedTaxPointDate().isEmpty() && !invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
+                switch (invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue()) {
+                    case Code3:
+                        esigibilita = EsigibilitaIVAType.I;
+                        break;
+                    case Code355:
+                    case Code432:
+                        esigibilita = EsigibilitaIVAType.D;
+                        break;
+                }
+                logBt(8, "DatiRiepilogo.EsigibilitaIVA");
+            }
+            datiRiepilogo.setEsigibilitaIVA(esigibilita);
+            datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo);
+
+
+            if (vatBreakdown != null) {
+                DatiRiepilogoType datiRiepilogo2 = factory.createDatiRiepilogoType();
+                datiRiepilogo2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate().get(0).getValue()));
+                datiRiepilogo2.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0116VatCategoryTaxableAmount().get(0).getValue()));
+                datiRiepilogo2.setImposta(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0117VatCategoryTaxAmount().get(0).getValue()));
+                datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2); // TODO check mapping for this
+            }
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_TAX_INFORMATION, e));
         }
     }
+
 
     private void processLineCharges(BG0025InvoiceLine invoiceLine) {
         Double surchargeValue = 0d;
@@ -133,30 +325,253 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     }
 
     private void setDatiGenerali() {
+        log.info("Starting converting DatiGenerali");
         DatiGeneraliType datiGenerali = factory.createDatiGeneraliType();
         DatiGeneraliDocumentoType datiGeneraliDocumento = factory.createDatiGeneraliDocumentoType();
-        datiGeneraliDocumento.getCausale().add(IConstants.SAMPLE_INVOICE);
-        datiGenerali.setDatiGeneraliDocumento(datiGeneraliDocumento);
-        fatturaElettronicaBody.setDatiGenerali(datiGenerali);
+        DatiDocumentiCorrelatiType datiContratto = factory.createDatiDocumentiCorrelatiType();
+        DatiDocumentiCorrelatiType datiOrdineAcquisto = factory.createDatiDocumentiCorrelatiType();
+        DatiDocumentiCorrelatiType datiRicezione = factory.createDatiDocumentiCorrelatiType();
+        DatiDDTType datiDDT = factory.createDatiDDTType();
+        DatiTrasportoType datiTrasporto = factory.createDatiTrasportoType();
+        datiGenerali.setDatiTrasporto(datiTrasporto);
+        IndirizzoType indirizzoResa = factory.createIndirizzoType();
+        datiTrasporto.setIndirizzoResa(indirizzoResa);
+
+        if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
+            BG0016PaymentInstructions paymentInstructions = invoice.getBG0016PaymentInstructions().get(0);
+
+            if (!paymentInstructions.getBT0082PaymentMeansText().isEmpty()) {
+                datiGeneraliDocumento.getCausale().add(paymentInstructions.getBT0082PaymentMeansText().get(0).getValue());
+                logBt(82, "DatiGeneraliDocumento.Causale");
+            }
+
+
+        }
+
+        List<BT0011ProjectReference> projectReference = invoice.getBT0011ProjectReference();
+        if (!projectReference.isEmpty()) {
+            datiContratto.setCodiceCUP(projectReference.get(0).getValue());
+            logBt(11, "DatiContratto.CodiceCUP");
+        }
+
+        List<BT0012ContractReference> contractReference = invoice.getBT0012ContractReference();
+        if (!contractReference.isEmpty()) {
+            datiContratto.setIdDocumento(contractReference.get(0).getValue());
+            logBt(12, "DatiContratto.IdDocumento");
+        }
+
+        List<BT0013PurchaseOrderReference> orderReference = invoice.getBT0013PurchaseOrderReference();
+        if (!orderReference.isEmpty()) {
+            datiOrdineAcquisto.setIdDocumento(orderReference.get(0).getValue());
+            logBt(13, "DatiOrdineAcquisto.IdDocumento");
+        }
+
+        for (BG0025InvoiceLine invoiceLine : invoice.getBG0025InvoiceLine())
+            if (!invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
+                datiOrdineAcquisto.setNumItem(invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().get(0).getValue());
+                logBt(132, "DatiOrdineAcquisto.NumItem");
+                datiOrdineAcquisto.getRiferimentoNumeroLinea().add(Integer.valueOf(invoiceLine.getBT0126InvoiceLineIdentifier().get(0).getValue()));
+                logBt(126, "DatiOrdineAcquisto.RiferimentoNumeroLinea");
+            }
+
+        List<BT0015ReceivingAdviceReference> receivingAdviceReference = invoice.getBT0015ReceivingAdviceReference();
+        if (!receivingAdviceReference.isEmpty()) {
+            datiRicezione.setIdDocumento(receivingAdviceReference.get(0).getValue());
+            logBt(15, "DatiRicezione.IdDocumento");
+        }
+
+        List<BT0017TenderOrLotReference> references = invoice.getBT0017TenderOrLotReference();
+        if (!references.isEmpty()) {
+            datiContratto.setCodiceCIG(references.get(0).getValue());
+            logBt(17, "DatiContratto.CodiceCIG");
+        }
+
+        List<BT0020PaymentTerms> paymentTerms = invoice.getBT0020PaymentTerms();
+        if (!paymentTerms.isEmpty()) {
+            datiGeneraliDocumento.getCausale().add(paymentTerms.get(0).getValue());
+            logBt(20, "DatiGeneraliDocumento.Causale");
+        }
 
         try {
+
+            List<BT0016DespatchAdviceReference> adviceReferences = invoice.getBT0016DespatchAdviceReference();
+            if (!adviceReferences.isEmpty()) {
+                String adviceReference = adviceReferences.get(0).getValue();
+                String[] data = adviceReference.split("_");
+                datiDDT.setNumeroDDT(data[0]);
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+                XMLGregorianCalendar date = Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(LocalDate.parse(data[1], formatter));
+                datiDDT.setDataDDT(date);
+                logBt(16, "DatiDDT.DataDDT");
+            }
+
+            try {
+                datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
+                logBt(1, "DatiGeneraliDocumento.Numero");
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+
+            try {
+                datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
+                logBt(5, "DatiGeneraliDocumento.Divisa");
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+
+            try {
+                datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
+                logBt(2, "DatiGeneraliDocumento.Data");
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+
+            try {
+                datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
+                logBt(112, "DatiGeneraliDocumento.ImportoTotaleDocumento");
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+
+            List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
+            if (!notes.isEmpty()) {
+                for (BG0001InvoiceNote note : notes) {
+                    StringBuilder sb = new StringBuilder();
+                    if (!note.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
+                        sb.append(note.getBT0021InvoiceNoteSubjectCode().get(0).getValue());
+                        logBt(21, "DatiGeneraliDocumento.Causale");
+                    }
+
+                    if (!note.getBT0022InvoiceNote().isEmpty()) {
+                        sb.append(note.getBT0022InvoiceNote().get(0).getValue());
+                        logBt(21, "DatiGeneraliDocumento.Causale");
+                    }
+                    datiGeneraliDocumento.getCausale().add(sb.toString());
+                }
+            }
+
+            List<BG0003PrecedingInvoiceReference> precedingInvoiceReferences = invoice.getBG0003PrecedingInvoiceReference();
+            if (!precedingInvoiceReferences.isEmpty()) {
+                for (BG0003PrecedingInvoiceReference reference : precedingInvoiceReferences) {
+                    DatiDocumentiCorrelatiType datiFattureCollegate = factory.createDatiDocumentiCorrelatiType();
+
+                    if (!reference.getBT0025PrecedingInvoiceReference().isEmpty()) {
+                        datiFattureCollegate.setIdDocumento(reference.getBT0025PrecedingInvoiceReference().get(0).getValue());
+                    }
+
+                    if (!reference.getBT0026PrecedingInvoiceIssueDate().isEmpty()) {
+                        LocalDate date = reference.getBT0026PrecedingInvoiceIssueDate().get(0).getValue();
+                        datiFattureCollegate.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(date));
+                    }
+                    datiGenerali.getDatiFattureCollegate().add(datiFattureCollegate);
+                }
+            }
+
+            BG0004Seller seller = null;
+            try {
+                seller = invoice.getBG0004Seller().get(0);
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+            List<BG0006SellerContact> sellerContacts = null;
+            try {
+                sellerContacts = seller.getBG0006SellerContact();
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+            if (sellerContacts != null && !sellerContacts.isEmpty()) {
+                BG0006SellerContact sellerContact = sellerContacts.get(0);
+                if (!sellerContact.getBT0041SellerContactPoint().isEmpty()) {
+                    datiGeneraliDocumento.getCausale().add(sellerContact.getBT0041SellerContactPoint().get(0).getValue());
+                }
+            }
+
+            datiGenerali.getDatiDDT().add(datiDDT);
+            datiGenerali.setDatiGeneraliDocumento(datiGeneraliDocumento);
+            datiGenerali.getDatiContratto().add(datiContratto);
+            datiGenerali.getDatiOrdineAcquisto().add(datiOrdineAcquisto);
+            fatturaElettronicaBody.setDatiGenerali(datiGenerali);
+
             datiGeneraliDocumento.setTipoDocumento(TipoDocumentoType.TD_01);
 
-            datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
-            LocalDate value = invoice.getBT0002InvoiceIssueDate().get(0).getValue();
-            datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(value));
-            datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
+            BG0007Buyer buyer = null;
+            try {
+                buyer = invoice.getBG0007Buyer().get(0);
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            }
+            if (!buyer.getBG0009BuyerContact().isEmpty()) {
+                BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact().get(0);
+                if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
+                    datiGeneraliDocumento.getCausale().add(buyerContact.getBT0056BuyerContactPoint().get(0).getValue());
+                }
+            }
 
-            datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
+            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                if (!invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().isEmpty()) {
+                    BG0015DeliverToAddress deliverToAddress = invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().get(0);
+                    StringBuilder sb = new StringBuilder();
+                    if (!deliverToAddress.getBT0075DeliverToAddressLine1().isEmpty()) {
+                        sb.append(deliverToAddress.getBT0075DeliverToAddressLine1().get(0).getValue()).append(", ");
+                    }
+
+                    if (!deliverToAddress.getBT0076DeliverToAddressLine2().isEmpty()) {
+                        sb.append(deliverToAddress.getBT0076DeliverToAddressLine2().get(0).getValue()).append(", ");
+                    }
+
+                    if (!deliverToAddress.getBT0165DeliverToAddressLine3().isEmpty()) {
+                        sb.append(deliverToAddress.getBT0165DeliverToAddressLine3().get(0).getValue());
+                    }
+
+                    if (!deliverToAddress.getBT0077DeliverToCity().isEmpty()) {
+                        indirizzoResa.setComune(deliverToAddress.getBT0077DeliverToCity().get(0).getValue());
+                    }
+
+                    if (!deliverToAddress.getBT0078DeliverToPostCode().isEmpty()) {
+                        indirizzoResa.setCAP(deliverToAddress.getBT0078DeliverToPostCode().get(0).getValue());
+                    }
+
+                    if (!deliverToAddress.getBT0079DeliverToCountrySubdivision().isEmpty()) {
+                        indirizzoResa.setProvincia(deliverToAddress.getBT0079DeliverToCountrySubdivision().get(0).getValue());
+                    }
+
+                    indirizzoResa.setNazione(deliverToAddress.getBT0080DeliverToCountryCode().get(0).getValue().getIso2charCode());
+                }
+            }
+
+
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
         }
     }
 
+    private void setAllegati() {
+        log.info("Starting converting Allegati");
+        if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
+            for (BG0024AdditionalSupportingDocuments documents : invoice.getBG0024AdditionalSupportingDocuments()) {
+                AllegatiType allegati = factory.createAllegatiType();
+                fatturaElettronicaBody.getAllegati().add(allegati);
+                allegati.setNomeAttachment(documents.getBT0122SupportingDocumentReference().get(0).getValue());
+
+                if (!documents.getBT0123SupportingDocumentDescription().isEmpty()) {
+                    allegati.setDescrizioneAttachment(documents.getBT0123SupportingDocumentDescription().get(0).getValue());
+                }
+
+                if (!documents.getBT0124ExternalDocumentLocation().isEmpty() && documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                    allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
+                } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                    Binary file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
+                    allegati.setAttachment(file.getBytes());
+                    allegati.setFormatoAttachment(file.getMimeType().toString());
+                    allegati.setNomeAttachment(file.getFileName());
+                }
+
+            }
+        }
+    }
+
 
     private void calculateDiscount() {
-
-
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             Double percentageDiscount = 0d;
             Double baseAmount = 0d;
@@ -179,10 +594,11 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
         Double invoiceTotal = 0d;
         for (DettaglioLineeType line : lineList) {
-            invoiceTotal += line.getPrezzoTotale()!=null ? line.getPrezzoTotale().doubleValue() : 0.0;
+            invoiceTotal += line.getPrezzoTotale().doubleValue();
         }
         try {
-            Double actualInvoiceTotal = invoice.getBG0022DocumentTotals().get(0).getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
+            BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals().get(0);
+            Double actualInvoiceTotal = documentTotals.getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
             invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_TOTAL_AMOUNT_CORRECTION, e));
@@ -222,16 +638,93 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     }
 
     private void setDatiPagamento() {
+        log.info("Starting converting DatiPagamento");
         DettaglioPagamentoType dettaglioPagamento = factory.createDettaglioPagamentoType();
         DatiPagamentoType datiPagamento = factory.createDatiPagamentoType();
         datiPagamento.getDettaglioPagamento().add(dettaglioPagamento);
 //        datiPagamento.setCondizioniPagamento(CondizioniPagamentoType.TP_01); // FIXME no actual mapping, dummy value
         fatturaElettronicaBody.getDatiPagamento().add(datiPagamento);
         try {
+            if (!invoice.getBG0010Payee().isEmpty()) {
+                BG0010Payee payee = invoice.getBG0010Payee().get(0);
+                dettaglioPagamento.setBeneficiario(payee.getBT0059PayeeName().get(0).getValue());
+            }
+
+            if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
+                BG0016PaymentInstructions paymentInstructions = invoice.getBG0016PaymentInstructions().get(0);
+
+                Untdid4461PaymentMeansCode paymentMeansCode = paymentInstructions.getBT0081PaymentMeansTypeCode().get(0).getValue();
+                switch (paymentMeansCode) {
+
+                    case Code30:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_05);
+                        break;
+                    case Code20:
+                    case Code92:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_02);
+                        break;
+                    case Code10:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_01);
+                        break;
+                    case Code21:
+                    case Code22:
+                    case Code23:
+                    case Code91:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_03);
+                        break;
+                    case Code60:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_06);
+                        break;
+                    case Code70:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_12);
+                        break;
+                    case Code15:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_15);
+                        break;
+                    case Code50:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_18);
+                        break;
+                    case Code1:
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_22);
+                        break;
+                    default:
+                        dettaglioPagamento.setModalitaPagamento(null);
+                }
+
+                if (!paymentInstructions.getBT0083RemittanceInformation().isEmpty()) {
+                    dettaglioPagamento.setCodicePagamento(paymentInstructions.getBT0083RemittanceInformation().get(0).getValue());
+                }
+
+                if (!paymentInstructions.getBG0017CreditTransfer().isEmpty()) {
+                    Iterator<BG0017CreditTransfer> itr = paymentInstructions.getBG0017CreditTransfer().iterator();
+                    BG0017CreditTransfer first = itr.next();
+                    dettaglioPagamento.setIBAN(first.getBT0084PaymentAccountIdentifier().get(0).getValue());
+                    if (!first.getBT0085PaymentAccountName().isEmpty()) {
+                        dettaglioPagamento.setBeneficiario(first.getBT0085PaymentAccountName().get(0).getValue());
+                    }
+
+                    if (!first.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
+                        dettaglioPagamento.setBIC(first.getBT0086PaymentServiceProviderIdentifier().get(0).getValue());
+                    }
+                    while (itr.hasNext()) {
+                        BG0017CreditTransfer creditTransfer = itr.next();
+                        DettaglioPagamentoType dettaglioPagamentoNew = factory.createDettaglioPagamentoType();
+
+                        dettaglioPagamentoNew.setIBAN(creditTransfer.getBT0084PaymentAccountIdentifier().get(0).getValue());
+                        if (!creditTransfer.getBT0085PaymentAccountName().isEmpty()) {
+                            dettaglioPagamentoNew.setBeneficiario(creditTransfer.getBT0085PaymentAccountName().get(0).getValue());
+                        }
+
+                        if (!creditTransfer.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
+                            dettaglioPagamentoNew.setBIC(creditTransfer.getBT0086PaymentServiceProviderIdentifier().get(0).getValue());
+                        }
+                        datiPagamento.getDettaglioPagamento().add(dettaglioPagamentoNew);
+                    }
+                }
+            }
+
             dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
             dettaglioPagamento.setImportoPagamento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
-//            dettaglioPagamento.setBeneficiario("dummy"); // FIXME no actual mapping, dummy value
-//            dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_01); // FIXME no actual mapping, dummy value
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_PAYMENT_INFORMATION, e));
         }
@@ -239,7 +732,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     @Override
     public void computeMultipleCenElements2FpaField() {
-        transformInvoiceLinesWithItemPriceBaseQuantity();
+        transformInvoiceLinesWithItemPriceBaseQuantity(); // This must be first, order is important
         calculateDiscount();
         addDiscountLine();
         calculateCorrectionForTotalAmount();
@@ -249,13 +742,64 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private void transformInvoiceLinesWithItemPriceBaseQuantity() {
         List<BG0025InvoiceLine> invoiceLineList = invoice.getBG0025InvoiceLine();
 
+        if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
+            List<BG0020DocumentLevelAllowances> documentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
+            DettaglioLineeType dettaglioLinee;
+            for (int j = 0; j < documentLevelAllowances.size(); j++) {
+                BG0020DocumentLevelAllowances documentLevelAllowance = documentLevelAllowances.get(j);
+                dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee().get(j);
+
+                Untdid5305DutyTaxFeeCategories category = documentLevelAllowance.getBT0095DocumentLevelAllowanceVatCategoryCode().get(0).getValue();
+                switch (category) {
+                    case Z:
+                        dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                        break;
+                    case E:
+                        dettaglioLinee.setNatura(NaturaType.N_4);
+                        break;
+                    case G:
+                        dettaglioLinee.setNatura(NaturaType.N_2);
+                        break;
+                    case O:
+                        dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
+                        break;
+                    default:
+                        dettaglioLinee.setNatura(null);
+                }
+
+                if (!documentLevelAllowance.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
+                    dettaglioLinee.setAliquotaIVA(BigDecimal.valueOf(documentLevelAllowance.getBT0096DocumentLevelAllowanceVatRate().get(0).getValue()));
+                }
+
+                StringBuilder sb = new StringBuilder();
+                if (!documentLevelAllowance.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
+                    sb.append(documentLevelAllowance.getBT0097DocumentLevelAllowanceReason().get(0).getValue());
+                } else {
+                    sb.append("Sconto documento");
+                }
+
+                if (!documentLevelAllowance.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                    BT0098DocumentLevelAllowanceReasonCode reasonCode = documentLevelAllowance.getBT0098DocumentLevelAllowanceReasonCode().get(0);
+                    sb.append(" ").append(reasonCode.getValue());
+                }
+
+                dettaglioLinee.setDescrizione(sb.toString());
+
+                dettaglioLinee.setQuantita(BigDecimal.valueOf(documentLevelAllowance.getBT0092DocumentLevelAllowanceAmount().get(0).getValue()));
+
+                if (!invoice.getBG0021DocumentLevelCharges().isEmpty()) {
+
+                    BG0021DocumentLevelCharges documentLevelCharges = invoice.getBG0021DocumentLevelCharges().get(j); //FIXME Why is this mapping to the same fields as BG0020?
+
+
+                }
+            }
+        }
+
         for (int i = 0; i < invoiceLineList.size(); i++) {
             BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
-            List<DettaglioLineeType> dettaglioLineeTypeList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
-            if(i >= dettaglioLineeTypeList.size()){
-                dettaglioLineeTypeList.add( factory.createDettaglioLineeType() );
-            }
-            DettaglioLineeType dettaglioLinee = dettaglioLineeTypeList.get(i);
+            DettaglioLineeType dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee().get(i);
+
 
             if (!(invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
                     invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty())) {
@@ -290,5 +834,9 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     @Override
     public void transformFpaFields() {
 
+    }
+
+    private void logBt(int bt, String name) {
+        log.debug("Converted BT-{} into {}", bt, name);
     }
 }
