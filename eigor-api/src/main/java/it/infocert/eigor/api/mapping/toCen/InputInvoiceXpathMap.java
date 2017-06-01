@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.ubl2cen.mapping;
+package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * This class stores the invoice path mappings for GenericOneToOneTransformation
  */
-public class UblXpathMap {
+public class InputInvoiceXpathMap {
 
     private Multimap<String, String> mapping = HashMultimap.create();
 
@@ -22,25 +22,26 @@ public class UblXpathMap {
      *
      * @return the mapping map
      */
-    public Multimap<String, String> getMapping() {
+    public Multimap<String, String> getMapping(String path) {
         if (mapping.isEmpty()) {
-            mapping = loadMapFromFile();
+            mapping = loadMapFromFile(path);
         }
         return mapping;
     }
 
-    private Multimap<String, String> loadMapFromFile() {
+    private Multimap<String, String> loadMapFromFile(String path) {
         Multimap<String, String> mappings = HashMultimap.create();
         Properties properties = new Properties();
-        File file = new File("converterdata/converter-ubl-cen/mappings/one_to_one.properties");
+        File file = new File(path);
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
+            for (String key : properties.stringPropertyNames()) {
+                mappings.put(key, properties.getProperty(key));
+            }
         } catch (IOException e) {
-            //TODO log something if file is missing or can't be opened
+            throw new RuntimeException("Error on loading mappings file", e);
         }
-        for (String key : properties.stringPropertyNames()) {
-            mappings.put(key, properties.getProperty(key));
-        }
+
         return mappings;
     }
 }

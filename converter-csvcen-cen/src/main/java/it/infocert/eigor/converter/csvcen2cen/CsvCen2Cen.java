@@ -240,4 +240,9 @@ public class CsvCen2Cen implements ToCenConversion {
         return new HashSet<>( Arrays.asList("csvcen") );
     }
 
+    @Override
+    public String getMappingPath() {
+        return null;
+    }
+
 }

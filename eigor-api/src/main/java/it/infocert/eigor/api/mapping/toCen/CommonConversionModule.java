@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.ubl2cen.mapping;
+package it.infocert.eigor.api.mapping.toCen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

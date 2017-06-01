@@ -1,9 +1,12 @@
 package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.Abstract2CenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.model.*;
+import net.sf.saxon.functions.Abs;
+import org.reflections.Reflections;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -13,7 +16,14 @@ import java.util.Set;
 /**
  * A fake conversion used to lay out the API general structure.
  */
-public class FakeToCenConversion implements ToCenConversion {
+public class FakeToCenConversion extends Abstract2CenConverter {
+
+    public FakeToCenConversion() {
+    }
+
+    public FakeToCenConversion(Reflections reflections) {
+        super(reflections);
+    }
 
     @Override public ConversionResult convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
@@ -38,6 +48,11 @@ public class FakeToCenConversion implements ToCenConversion {
     @Override
     public Set<String> getSupportedFormats() {
         return new HashSet<>( Arrays.asList("fake") );
+    }
+
+    @Override
+    public String getMappingPath() {
+        return "/tmp/fake.properties";
     }
 
 }
