@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.Abstract2CenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
@@ -32,7 +33,7 @@ import java.util.*;
 
 
 
-public class CsvCen2Cen implements ToCenConversion {
+public class CsvCen2Cen extends Abstract2CenConverter {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
@@ -238,11 +239,6 @@ public class CsvCen2Cen implements ToCenConversion {
     @Override
     public Set<String> getSupportedFormats() {
         return new HashSet<>( Arrays.asList("csvcen") );
-    }
-
-    @Override
-    public String getMappingPath() {
-        return null;
     }
 
 }

@@ -69,4 +69,9 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
         return doc;
     }
 
+    @Override
+    public String getMappingPath() {
+        return null;
+    }
+
 }
