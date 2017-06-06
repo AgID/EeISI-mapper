@@ -37,7 +37,7 @@ public class SchematronValidator implements IXMLValidator {
     @Override
     public List<Exception> validate(byte[] xml) {
         List<Exception> errors = new ArrayList<>();
-        SchematronOutputType schematronOutput = null;
+        SchematronOutputType schematronOutput;
 
         try {
             schematronOutput = schematronResource.applySchematronValidationToSVRL(new StreamSource(new ByteArrayInputStream(xml)));
@@ -46,7 +46,14 @@ public class SchematronValidator implements IXMLValidator {
             return errors;
         }
 
-        List<Object> firedRuleAndFailedAssert = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
+
+        List<Object> firedRuleAndFailedAssert;
+        try {
+            firedRuleAndFailedAssert = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
+        } catch (Exception e) {
+            errors.add(e);
+            return errors;
+        }
         for (Object obj : firedRuleAndFailedAssert) {
             if (obj instanceof FailedAssert) {
                 FailedAssert failedAssert = (FailedAssert) obj;
