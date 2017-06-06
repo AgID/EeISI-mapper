@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 public interface IConstants {
-    String CONVERTER_SUPPORT = "cenfattpa";
-    String SUPPORTED_FORMATS = "cenfattpa";
+    String CONVERTER_SUPPORT = "fatturapa";
+    String SUPPORTED_FORMATS = "fatturapa";
     String SAMPLE_INVOICE = "Esempio fattura trasformata da CEN a XML-PA";
     String INVOICE_LEVEL_DISCOUNT_DESCRIPTION = "Invoice level discount";
     String DISCOUNT_UNIT = "EA";
@@ -23,4 +23,5 @@ public interface IConstants {
     String ERROR_TOTAL_AMOUNT_CORRECTION = "Invoice level allowances correction line error. Missing total amount without VAT?";
     String ERROR_BASE_QUANTITY_TRANSFORM = "Error transforming base unit/qty for sales line.";
     String ERROR_LINE_PROCESSING = "Error processing invoice line";
+    String ERROR_TAX_INFORMATION = "Tax information error";
 }

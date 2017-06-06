@@ -6,14 +6,14 @@ public enum VatExemptionReasonsCodes {
     // 2: ID
     // 3: ShortDescription
     // 4: LongDescription
-    #foreach( $row in $File )
+    #foreach( $row in $rows )
         /**
          * ${row.Code}
-         * <p>${row.Description}</p>
-         * <p>${row.Explanation}</p>
-         * <p>${row.ApplicationGuideline}</p>
+         * <p>${row.data.Description}</p>
+         * <p>${row.data.Explanation}</p>
+         * <p>${row.data.ApplicationGuideline}</p>
          */
-        ${row.Code}("${row.Description}", "${row.Explanation}", "${row.ApplicationGuideline}")#if($LastIndex==$row.RowIndex);#else,#end
+        ${row.data.Code}("${row.data.Description}", "${row.data.Explanation}", "${row.data.ApplicationGuideline}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
     private String description;

@@ -9,9 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class IteratingIntegrityRuleTest {
@@ -100,8 +101,30 @@ public class IteratingIntegrityRuleTest {
         assertOutcome(FAILED, iter, expr);
     }
 
+    @Test
+    public void prop() throws Exception {
+        String iter = "${invoice.getBG0004Seller().iterator()}";
+        String expr = "${!item.getBT0027SellerName().isEmpty()}";
+        Properties prop = new Properties();
+        prop.put("br1.item", iter);
+        prop.put("br1.body", expr);
+
+
+        assertOutcome(UNAPPLICABLE, ((String) prop.get("br1.item")), ((String) prop.get("br1.body")));
+    }
+
+    @Test
+    public void name() throws Exception {
+        String iter = "${invoice.getBG0004Seller().iterator()}";
+        String expr = "${!item.getBT0027SellerName().isEmpty()}";
+        Rule rule = new IteratingIntegrityRule(iter, expr, "br1");
+
+        RuleOutcome outcome = rule.isCompliant(invoice);
+        System.out.println(outcome.outcome() + " " + outcome.description());
+    }
+
     private void assertOutcome(RuleOutcome.Outcome expected, String iter, String expr) {
-        Rule rule = new IteratingIntegrityRule(iter, expr);
+        Rule rule = new IteratingIntegrityRule(iter, expr, "br1");
 
         RuleOutcome outcome = rule.isCompliant(invoice);
         assertEquals(expected, outcome.outcome());

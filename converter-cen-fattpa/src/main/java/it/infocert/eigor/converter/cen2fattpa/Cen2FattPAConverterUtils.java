@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-
+import org.joda.time.LocalDate;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 
 class Cen2FattPAConverterUtils {
@@ -26,7 +25,7 @@ class Cen2FattPAConverterUtils {
         try {
             invoiceDate = DatatypeFactory.newInstance().newXMLGregorianCalendar();
             invoiceDate.setDay(dateTime.getDayOfMonth());
-            invoiceDate.setMonth(dateTime.getMonthValue());
+            invoiceDate.setMonth(dateTime.getMonthOfYear());
             invoiceDate.setYear(dateTime.getYear());
 
         } catch (DatatypeConfigurationException e) {
@@ -66,7 +65,7 @@ class Cen2FattPAConverterUtils {
 
     /**
      * @param xml Byte array containing raw XML
-     * @param errors List of exceptions, usually from ConversionResult
+     * @param errors List of exceptions, usually from BinaryConversionResult
      * @return true if XML is valid compared to XSD
      */
     static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {

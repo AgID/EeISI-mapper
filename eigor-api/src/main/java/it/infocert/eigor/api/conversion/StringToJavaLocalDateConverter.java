@@ -1,7 +1,10 @@
 package it.infocert.eigor.api.conversion;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Locale;
 
 public class StringToJavaLocalDateConverter implements TypeConverter<String, LocalDate> {
 
@@ -12,7 +15,7 @@ public class StringToJavaLocalDateConverter implements TypeConverter<String, Loc
     }
 
     public StringToJavaLocalDateConverter(String pattern) {
-        this(DateTimeFormatter.ofPattern(pattern));
+        this(DateTimeFormat.forPattern(pattern).withLocale(Locale.ENGLISH));
     }
 
     public StringToJavaLocalDateConverter(DateTimeFormatter dateTimeFormatter) {

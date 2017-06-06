@@ -9,18 +9,18 @@ import it.infocert.eigor.model.core.rules.RuleOutcome;
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
-import java.util.Objects;
 import java.util.Properties;
 
 /**
  * A {@link Rule} that checks the integrity of the CEN-format converted invoice.
  * The actual body of the rule is stored as a JUEL expression in the "rules.properties" file.
  */
-public class IntegrityRule implements Rule {
+public class IntegrityRule extends Rule {
 
     private final String expression;
     private final ExpressionFactory expressionFactory;
     private final SimpleContext juelContext;
+    private final String ruleName;
 
     private static Properties initProps() {
         Properties properties = new Properties();
@@ -28,10 +28,11 @@ public class IntegrityRule implements Rule {
         return properties;
     }
 
-    public IntegrityRule(String expression) {
+    public IntegrityRule(String expression, String ruleName) {
         this.expressionFactory = new ExpressionFactoryImpl(initProps());
         this.expression = expression;
         this.juelContext = new SimpleContext();
+        this.ruleName = ruleName;
     }
 
     /**
@@ -46,19 +47,19 @@ public class IntegrityRule implements Rule {
         Boolean condition;
         try {
             Object tmp =  valueExpression.getValue(juelContext);
-            if (Objects.isNull(tmp)) {
-                return RuleOutcome.newUnapplicableOutcome("Rule is unapplicable");
+            if (tmp == null) {
+                return RuleOutcome.newUnapplicableOutcome("Rule %s is unapplicable", ruleName);
             } else {
                 condition = (Boolean) tmp;
             }
         } catch (IllegalArgumentException | ClassCastException | ELException e) {
-            return RuleOutcome.newErrorOutcome("Error in the rule: %s", e.getMessage());
+            return RuleOutcome.newErrorOutcome("Error in the rule %s: %s", ruleName, e.getMessage());
         }
 
         if (condition) {
-            return RuleOutcome.newSuccessOutcome("Rule successfully validated");
+            return RuleOutcome.newSuccessOutcome("Rule %s successfully validated", ruleName);
         } else {
-            return RuleOutcome.newFailedOutcome("Rule has failed");
+            return RuleOutcome.newFailedOutcome("Rule %s has failed", ruleName);
         }
     }
 }

@@ -2,22 +2,44 @@ package it.infocert.eigor.api;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 public class ConversionResultTest {
 
     @Test
-    public void shouldCreateConversionResultWithoutErrors() {
+    public void conversionResultWithoutErrors() {
 
         // given
-        ConversionResult sut = new ConversionResult("result".getBytes());
+        ConversionResult<String> sut = new ConversionResult<String>( "the result" );
 
         // then
-        assertTrue( sut.getErrors().isEmpty() );
-        assertTrue( sut.hasResult() );
-        assertArrayEquals( "result".getBytes(), sut.getResult() );
+        assertThat( sut.getErrors(), allOf( notNullValue(), emptyCollectionOf(Exception.class) ));
+        assertThat( sut.hasResult(), is(true));
+        assertThat( sut.isSuccessful(), is(true));
+
+    }
+
+    @Test
+    public void conversionResultWithErrors() {
+
+        // given
+        Exception exceptionToReturn = new Exception();
+        ConversionResult sut = new ConversionResult<String>(asList(exceptionToReturn), "result with errors" );
+
+        // then
+        List<Exception> errors = sut.getErrors();
+        assertThat(
+                errors, hasItem(exceptionToReturn));
+        assertThat( sut.hasResult(), is(true));
+        assertThat( sut.isSuccessful(), is(false));
 
     }
 
 }
+

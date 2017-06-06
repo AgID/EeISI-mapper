@@ -1,5 +1,6 @@
 package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.model.*;
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 public class FakeToCenConversion implements ToCenConversion {
 
-    @Override public BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+    @Override public ConversionResult convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
         BG0006SellerContact sellerContact = new BG0006SellerContact();
         sellerContact.getBT0043SellerContactEmailAddress().add( new BT0043SellerContactEmailAddress("johm@email.com") );
@@ -27,7 +28,7 @@ public class FakeToCenConversion implements ToCenConversion {
         BG0000Invoice cenInvoice = new BG0000Invoice();
         cenInvoice.getBG0004Seller().add(seller);
 
-        return cenInvoice;
+        return (ConversionResult<BG0000Invoice>) new ConversionResult(cenInvoice);
     }
 
     @Override public boolean support(String format) {

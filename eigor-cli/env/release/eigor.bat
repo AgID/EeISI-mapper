@@ -46,5 +46,5 @@ echo LAUNCHING %APP_NAME% %APP_PATH%
 ECHO --------------------------------------------------------------
 %JAVA_COMMAND% %JVM_ARGUMENTS% %MAIN_CLASS% %APP_ARGS%
 
-pause
+REM pause
 

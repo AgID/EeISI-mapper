@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.StringToUnitOfMeasureConverter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import org.junit.Test;
 

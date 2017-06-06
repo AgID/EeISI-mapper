@@ -1,26 +1,34 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.joda.time.format.DateTimeFormat;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class CsvCen2Cen implements ToCenConversion {
@@ -29,17 +37,26 @@ public class CsvCen2Cen implements ToCenConversion {
     private final InvoiceUtils utils;
     private final ConversionRegistry conversionRegistry;
 
-    public CsvCen2Cen() {
+    private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
+
+    private Reflections reflections;
+
+    public CsvCen2Cen(Reflections reflections) {
+        this.reflections = reflections;
 
         cenStructure = new CenStructure();
-        utils = new InvoiceUtils(new Reflections("it.infocert"));
+        utils = new InvoiceUtils(reflections);
         conversionRegistry = new ConversionRegistry(
-                new StringToIso31661CountryCodesConverter(),
-                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH)),
-                new StringToJavaLocalDateConverter(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)),
+                new CountryNameToIso31661CountryCodeConverter(),
+                new LookUpEnumConversion(Iso31661CountryCodes.class),
+                new StringToJavaLocalDateConverter("dd-MMM-yy"),
+                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
+                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
+                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
                 new StringToUnitOfMeasureConverter(),
                 new StringToDoublePercentageConverter(),
                 new StringToDoubleConverter(),
@@ -48,7 +65,9 @@ public class CsvCen2Cen implements ToCenConversion {
     }
 
     @Override
-    public BG0000Invoice convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+    public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+
+        List<Exception> errors = new ArrayList<>();
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 
@@ -74,7 +93,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
             bgbtIdFromCsv = cenRecord.get("BG/BT");
             bgbtValueFromCsv = cenRecord.get("Value");
-
+            log.trace("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
 
 
             // verifies that the name of the bgbt read from csv is a well formed name and that it is actually
@@ -88,9 +107,8 @@ public class CsvCen2Cen implements ToCenConversion {
                 ));
             }
             btBgClass = utils.getBtBgByName(btbgName);
-            if(btBgClass == null) throw
+            if (btBgClass == null) throw
                     new SyntaxErrorInInvoiceFormatException("Unable to retrieve class for '" + bgbtIdFromCsv + "'");
-
 
 
             // Instantiate the BTBG corresponding to the current CSV record.
@@ -104,15 +122,20 @@ public class CsvCen2Cen implements ToCenConversion {
                     btbg = btBgClass.newInstance();
 
                     // now, keep in mind that bg cannot have a value!
-                    if(bgbtValueFromCsv!=null && !bgbtValueFromCsv.trim().isEmpty()){
+                    if (bgbtValueFromCsv != null && !bgbtValueFromCsv.trim().isEmpty()) {
                         throw new SyntaxErrorInInvoiceFormatException(btbg.denomination() + " cannot have a value, has '" + bgbtValueFromCsv + "' instead.");
                     }
 
-                // A BT-XX should be instantiated through its constructor...
+                    // A BT-XX should be instantiated through its constructor...
                 } else {
 
                     // double chacks BT has only one single arg constructor
-                    List<Constructor<?>> constructors = Arrays.stream(btBgClass.getConstructors()).filter(c -> c.getParameterCount() == 1).collect(Collectors.toList());
+                    List<Constructor<?>> constructors = Stream.create(Arrays.asList(btBgClass.getConstructors())).filter(new Filter<Constructor<?>>() {
+                        @Override
+                        public boolean apply(Constructor<?> c) {
+                            return c.getParameterTypes().length == 1;
+                        }
+                    }).toList();
                     if (constructors.size() != 1) {
                         throw new IllegalArgumentException("Just one constructor with one argument expected, " + constructors.size() + " found instead.");
                     }
@@ -123,36 +146,43 @@ public class CsvCen2Cen implements ToCenConversion {
                     Object convert = null;
                     try {
                         convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
-                    } catch (Exception e) {
-                        throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
-                                cenRecord.getRecordNumber(),
-                                bgbtIdFromCsv,
-                                bgbtValueFromCsv,
-                                constructorParamType.getSimpleName()
-                        ));
+                        log.trace("Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
+                                String.valueOf(bgbtValueFromCsv),
+                                convert != null ? convert.getClass().getName() : "<null>",
+                                String.valueOf(convert));
+                        // instantiate the BT
+                        btbg = (BTBG) constructor.newInstance(convert);
+                    } catch (IllegalArgumentException e) {
+                        errors.add(
+                                new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
+                                        cenRecord.getRecordNumber(),
+                                        bgbtIdFromCsv,
+                                        bgbtValueFromCsv,
+                                        constructorParamType.getSimpleName()
+                                )));
                     }
 
-                    // instantiate the BT
-                    btbg = (BTBG) constructor.newInstance(convert);
                 }
+                log.trace("Successfully instantiated: '{}'.", btbg);
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-            if(btbg == null) throw new IllegalStateException("It was not possible to instantiate a BT/BG");
-
-
+            if (btbg == null) {
+                log.trace("Unable to instantiate item, skipping CSV record.");
+                continue;
+            }
 
 
             // Calculate the path of the BG where we're trying to add the newly created BT/BG.
             // This is done because this information is in the stack and if we're not doing that now,
             // we'll loose that info.
             String pathWhereYouAreTryingToPlaceTheBtBg = "";
-            for(int i=stack.size() - 1; i>=0; i--){
+            for (int i = stack.size() - 1; i >= 0; i--) {
                 pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg + "/" + stack.get(i);
             }
-            pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0000", "/") + btbgName.toString();
-
+            pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0", "/") + btbgName.toString();
+            log.trace("Item will be placed at path '{}'.", pathWhereYouAreTryingToPlaceTheBtBg);
 
             // It search in the stack a BG that will accept the current BG/BT.
             boolean found = false;
@@ -160,7 +190,8 @@ public class CsvCen2Cen implements ToCenConversion {
                 BTBG parentBg = stack.pop();
                 try {
                     boolean added = utils.addChild(parentBg, btbg);
-                    if(added) {
+                    if (added) {
+                        log.trace("Item '{}' added as child of '{}'.", btbg, parentBg);
                         stack.push(parentBg);
                         if (btbg.denomination().toLowerCase().startsWith("bg")) {
                             stack.push(btbg);
@@ -173,10 +204,10 @@ public class CsvCen2Cen implements ToCenConversion {
             } while (!found && !stack.empty());
 
 
-            // if we browsed the full stack withouth being able to add
+            // if we browsed the full stack without being able to add
             // the current BT, then that BT was in the wrong position in the file.
-            if(stack.empty()){
-                String pathWhereTheBtBgBelongs = cenStructure.findByName( btbgName ).path();
+            if (stack.empty()) {
+                String pathWhereTheBtBgBelongs = cenStructure.findByName(btbgName).path();
                 String umh = btbgName.toString();
 
                 throw new SyntaxErrorInInvoiceFormatException(String.format("Record #%d tries to place a '%s' at '%s', but this element should be placed at '%s' instead.",
@@ -191,7 +222,8 @@ public class CsvCen2Cen implements ToCenConversion {
         }
 
         // the topmost element in the stack is always the invoice.
-        return (BG0000Invoice) stack.get(0);
+
+        return new ConversionResult<BG0000Invoice>(errors, (BG0000Invoice) stack.get(0));
     }
 
     @Override
@@ -201,7 +233,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
     @Override
     public Set<String> getSupportedFormats() {
-        return new HashSet<>( Arrays.asList("csvcen") );
+        return new HashSet<>(Arrays.asList("csvcen"));
     }
 
 }

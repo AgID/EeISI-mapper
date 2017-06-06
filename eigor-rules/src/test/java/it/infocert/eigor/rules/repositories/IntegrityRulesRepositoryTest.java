@@ -8,7 +8,6 @@ import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
 import it.infocert.eigor.rules.integrity.IteratingIntegrityRule;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Properties;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class IntegrityRulesRepositoryTest {
@@ -31,7 +32,7 @@ public class IntegrityRulesRepositoryTest {
 
     @Test
     public void repositoryShouldReturnAListOfRulesFromProps() throws Exception {
-        properties.put("br1.body", "");
+        properties.put("br1.body", "${}");
         IntegrityRulesRepository repo = new IntegrityRulesRepository(properties);
         List<Rule> firstRun = repo.rules();
         assertNotNull(firstRun);
@@ -74,7 +75,7 @@ public class IntegrityRulesRepositoryTest {
 
         assertNotNull(rules);
         assertFalse(rules.isEmpty());
-        assertThat(rules.get(0), Matchers.instanceOf(IteratingIntegrityRule.class));
+        assertThat(rules.get(0), instanceOf(IteratingIntegrityRule.class));
     }
 
     @Test
@@ -89,11 +90,31 @@ public class IntegrityRulesRepositoryTest {
         assertOutcome(SUCCESS);
     }
 
+
+    @Test
+    public void assertThatAnExceptionIsThrownWhenARuleIsMalformed() throws Exception {
+        properties.put("br1.items", "${invoice.getBG0004Seller().iterator()}");
+        properties.put("br2.items", "${{invoice.getBG0004Seller().iterator()}");
+        properties.put("br1.body", "${!item.getBT0027SellerName().isEmpty()}}");
+        properties.put("br2.body", "${!item.getBT0027SellerName().isEmpty()}");
+
+        IntegrityRulesRepository repo = new IntegrityRulesRepository(properties);
+
+        try {
+            repo.rules();
+            fail();
+        } catch (Exception e) {
+            assertThat(e, instanceOf(MalformedRuleException.class));
+            assertThat(((MalformedRuleException) e).getInvalidRules().size(), is(2));
+            assertTrue(((MalformedRuleException) e).getValidRules().isEmpty());
+        }
+    }
+
     private void assertOutcome(RuleOutcome.Outcome expected) {
-        getRules().forEach(rule -> {
+        for (Rule rule : getRules()) {
             RuleOutcome outcome = rule.isCompliant(invoice);
             assertEquals(expected, outcome.outcome());
-        });
+        }
     }
 
     private List<Rule> getRules() {

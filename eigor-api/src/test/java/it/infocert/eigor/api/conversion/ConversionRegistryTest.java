@@ -1,31 +1,65 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.ConversionRegistry;
-import it.infocert.eigor.api.conversion.StringToIso31661CountryCodesConverter;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ConversionRegistryTest {
+
+    @Test
+    public void understanding() {
+        Class<Number> numberClass = Number.class;
+        Class<Integer> integerClass = Integer.class;
+        Assert.assertTrue( numberClass.isAssignableFrom(integerClass) );
+        Assert.assertFalse( integerClass.isAssignableFrom(numberClass) );
+    }
+
+    @Test
+    public void shouldNotConvertAStringToADoubleIfAStringIsNeeded() {
+
+        // given
+        ConversionRegistry sut = new ConversionRegistry(
+                new StringToDoubleConverter()
+        );
+
+        // when
+        IllegalArgumentException ex = null;
+        Class<String> sourceClz = String.class;
+        Class<String> targetClz = String.class;
+        try {
+            String converted = sut.convert(sourceClz, targetClz, "20100");
+        }catch(IllegalArgumentException iae){
+            ex = iae;
+        }catch(Exception e){
+            fail();
+        }
+
+        // then
+        assertThat( ex.getMessage(), is("Cannot convert value '20100' of declared type 'String' to the desired type 'String'.") );
+
+    }
+
 
     @Test
     public void shouldConvertUsingRegisteredConverters() {
 
         // given
         ConversionRegistry sut = new ConversionRegistry(
-                new StringToIso31661CountryCodesConverter(),
-                new StringToJavaLocalDateConverter()
+                new CountryNameToIso31661CountryCodeConverter(),
+                new StringToJavaLocalDateConverter(),
+                new LookUpEnumConversion(Iso31661CountryCodes.class)
         );
 
         // then
         assertEquals( Iso31661CountryCodes.HR, sut.convert(String.class, Iso31661CountryCodes.class, "HR") );
-        assertEquals( LocalDate.parse("2010-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd")), sut.convert(String.class, LocalDate.class, "2010-12-31") );
+        assertEquals( LocalDate.parse("2010-12-31", DateTimeFormat.forPattern("yyyy-MM-dd")), sut.convert(String.class, LocalDate.class, "2010-12-31") );
 
     }
 

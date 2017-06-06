@@ -5,13 +5,18 @@
     <parent>
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>converter-csvcen-cen</artifactId>
+    <name>Eigor :: Converter :: CEN/CSV - CEN</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-api</artifactId>
@@ -20,11 +25,17 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
 
         <!-- TEST -->
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test-invoices</artifactId>
+            <artifactId>eigor-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

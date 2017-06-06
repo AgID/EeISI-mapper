@@ -13,7 +13,7 @@ public class EigorCli {
         this.cli = cli;
     }
 
-    void run(String[] args) {
+    public void run(String[] args) {
         CliCommand cliCommand = cli.parseCommandLine(args);
         cliCommand.execute(System.out, System.err);
     }

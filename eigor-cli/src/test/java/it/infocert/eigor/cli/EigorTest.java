@@ -13,14 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
-import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 public class EigorTest {
@@ -61,7 +57,7 @@ public class EigorTest {
         outputDir = tmp.newFolder(test.getMethodName(), "output");
 
         //...let's copy an input invoice in the input folder
-        plainFattPa = TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
+        plainFattPa = it.infocert.eigor.cli.TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
 
     }
 
@@ -83,25 +79,6 @@ public class EigorTest {
 
     }
 
-
-    @Test public void failWhenTargetIsMissing() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--output", outputDir.getAbsolutePath(),
-                "--source", "fake"
-        } );
-
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("target"),
-                containsString("missing")
-        ));
-
-    }
-
-
     @Test public void failWhenSourceIsMissing() throws IOException {
 
         // when
@@ -119,23 +96,6 @@ public class EigorTest {
 
     }
 
-    @Test public void failWhenOutputIsMissing() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "fake"
-        } );
-
-        // then
-        // then
-        assertThat(err().toLowerCase(), allOf(
-                containsString("output"),
-                containsString("missing")
-        ));
-
-    }
 
     @Test public void failWhenInputIsMissing() throws IOException {
 
@@ -153,32 +113,6 @@ public class EigorTest {
                 containsString("missing")
         ));
 
-    }
-
-    @Test public void executeWithFakeTransformations() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "fake",
-                "--output", outputDir.getAbsolutePath()
-        } );
-
-        // then
-        List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(5) );
-
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-target.fake")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("rule-report.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputDir, f -> f.getName().equals("invoice-source.xml")), notNullValue() );
-
-    }
-
-    private File findFirstFileOrNull(File outputDir, Predicate<File> col) {
-        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
     }
 
     @Test public void failWhenInputDoesNotExist() throws IOException {
@@ -210,7 +144,7 @@ public class EigorTest {
                 "--output", "i-bet-this-folder-does-not-exist"
         } );
 
-        // then
+        // theninvoice-
         assertThat(err().toLowerCase(), allOf(
                 containsString("output folder"),
                 containsString("i-bet-this-folder-does-not-exist"),

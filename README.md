@@ -95,9 +95,37 @@ BT-153,American Cookies
 ## Latest Release
 * Download the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/builds/artifacts/master/download?job=package-cli)
   * command line interface to convert invoices.
+  
+## Documentation
+[Eigor documentation](https://tgi-infocert-eigor.gitlab.io/eigor/)
 
 ## Build
-Java 8 is needed. To build the project:
+
+### Development Environment
+This project requires Maven 3 and Java 7. To avoid messing around with `JAVA_HOME` or break other project, you must set a Maven Toolchain that makes use of the right JDK.
+Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the following snippet:
+
+```
+<toolchains>
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>1.7.0</version>
+            <vendor>YOUR_VENDOR (openjdk or oracle)</vendor>
+            <id>jdk-1.7.0</id>
+        </provides>
+        <configuration>
+            <jdkHome>/path/to/your/java/home</jdkHome>
+        </configuration>
+    </toolchain>
+</toolchains>
+  ```
+
+***THIS STEP IS MANDATORY EVEN IF THE JDK 7 IS YOUR ONLY INSTALLED JDK***
+
+
+### Compile 
+To build the project:
 
     mvn clean install
     
@@ -106,6 +134,7 @@ To package a distribution zip:
 mvn package -P release
 ```
 
+### Run
 You will find the zip file in `eigor-cli/target/eigor.zip`, unzip the file and run one of the following scripts,
 according to your operative sistem:   
 

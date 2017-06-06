@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.impl;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
@@ -12,9 +14,7 @@ import org.reflections.Reflections;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -31,14 +31,19 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindRules() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
-        Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.model"));
+        final Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
 
         // when
         List<Rule> allRules = sut.rules();
 
         // then
-        List<Rule> rules = allRules.stream().filter(r -> r.getClass().equals(aRuleThatShouldBeFound)).collect(toList());
+        List<Rule> rules = Stream.create(allRules).filter(new Filter<Rule>() {
+            @Override public boolean apply(Rule r) {
+                return r.getClass().equals(aRuleThatShouldBeFound);
+            }
+        }).toList();
+
         assertThat( rules, Matchers.hasSize(1) );
         assertThat( rules.get(0), instanceOf(aRuleThatShouldBeFound));
 
@@ -47,7 +52,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindToCen() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.api.impl"));
         Class<? extends ToCenConversion> aConversionThatShouldBeFound = FakeToCenConversion.class;
 
         // when
