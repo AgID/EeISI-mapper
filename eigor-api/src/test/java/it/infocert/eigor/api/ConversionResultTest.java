@@ -16,12 +16,12 @@ public class ConversionResultTest {
     public void conversionResultWithoutErrors() {
 
         // given
-        ConversionResult<String> sut = new ConversionResult<String>( "the result" );
+        ConversionResult<String> sut = new ConversionResult<String>("the result");
 
         // then
-        assertThat( sut.getErrors(), allOf( notNullValue(), emptyCollectionOf(Exception.class) ));
-        assertThat( sut.hasResult(), is(true));
-        assertThat( sut.isSuccessful(), is(true));
+        assertThat(sut.getIssues(), allOf(notNullValue(), emptyCollectionOf(ConversionIssue.class)));
+        assertThat(sut.hasResult(), is(true));
+        assertThat(sut.isSuccessful(), is(true));
 
     }
 
@@ -29,15 +29,16 @@ public class ConversionResultTest {
     public void conversionResultWithErrors() {
 
         // given
-        Exception exceptionToReturn = new Exception();
-        ConversionResult sut = new ConversionResult<String>(asList(exceptionToReturn), "result with errors" );
+        ConversionIssue issueToReturn = ConversionIssue.newError(new Exception());
+        ConversionResult sut = new ConversionResult<String>(asList(issueToReturn), "result with issues");
 
         // then
-        List<Exception> errors = sut.getErrors();
+        List<ConversionIssue> errors = sut.getIssues();
         assertThat(
-                errors, hasItem(exceptionToReturn));
-        assertThat( sut.hasResult(), is(true));
-        assertThat( sut.isSuccessful(), is(false));
+                errors, hasItem(issueToReturn));
+        assertThat(sut.hasResult(), is(true));
+        assertThat(sut.isSuccessful(), is(false));
+        assertThat(sut.hasErrors(), is(true));
 
     }
 

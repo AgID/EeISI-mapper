@@ -13,10 +13,10 @@ public class BinaryConversionResultTest {
     public void shouldNotHaveResultsWhenByteArrayIsEmpty() {
 
         // given
-        BinaryConversionResult sut = new BinaryConversionResult(new byte[]{}, new ArrayList<Exception>());
+        BinaryConversionResult sut = new BinaryConversionResult(new byte[]{}, new ArrayList<ConversionIssue>());
 
         // then
-        assertFalse( sut.hasResult() );
+        assertFalse(sut.hasResult());
 
     }
 
@@ -24,10 +24,10 @@ public class BinaryConversionResultTest {
     public void shouldHaveResultsWhenByteArrayIsNotEmpty() {
 
         // given
-        BinaryConversionResult sut = new BinaryConversionResult(new byte[]{1,2,3}, new ArrayList<Exception>());
+        BinaryConversionResult sut = new BinaryConversionResult(new byte[]{1, 2, 3}, new ArrayList<ConversionIssue>());
 
         // then
-        assertTrue( sut.hasResult() );
+        assertTrue(sut.hasResult());
 
     }
 
@@ -39,9 +39,9 @@ public class BinaryConversionResultTest {
         BinaryConversionResult sut = new BinaryConversionResult("result".getBytes());
 
         // then
-        assertTrue( sut.getErrors().isEmpty() );
-        assertTrue( sut.hasResult() );
-        assertArrayEquals( "result".getBytes(), sut.getResult() );
+        assertTrue(sut.getIssues().isEmpty());
+        assertTrue(sut.hasResult());
+        assertArrayEquals("result".getBytes(), sut.getResult());
 
     }
 

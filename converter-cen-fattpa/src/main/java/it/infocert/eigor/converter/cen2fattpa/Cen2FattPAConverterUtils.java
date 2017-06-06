@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionIssue;
 import org.joda.time.LocalDate;
 import org.xml.sax.SAXException;
 
@@ -64,11 +65,11 @@ class Cen2FattPAConverterUtils {
     }
 
     /**
-     * @param xml Byte array containing raw XML
+     * @param xml    Byte array containing raw XML
      * @param errors List of exceptions, usually from BinaryConversionResult
      * @return true if XML is valid compared to XSD
      */
-    static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<Exception> errors) {
+    static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<ConversionIssue> errors) {
         URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
         Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -76,7 +77,7 @@ class Cen2FattPAConverterUtils {
             Schema schema = schemaFactory.newSchema(schemaFile);
             schema.newValidator().validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e));
+            errors.add(ConversionIssue.newWarning(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e)));
             return false;
         }
         return true;

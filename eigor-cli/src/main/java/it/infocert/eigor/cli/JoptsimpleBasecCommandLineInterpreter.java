@@ -47,18 +47,19 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // Parses command line
         // ===================================================
         OptionParser parser = new OptionParser();
-        parser.accepts( "input" ).withRequiredArg();
-        parser.accepts( "output" ).withRequiredArg();
-        parser.accepts( "source" ).withRequiredArg();
-        parser.accepts( "target" ).withRequiredArg();
-        OptionSet options = parser.parse( args );
+        parser.accepts("input").withRequiredArg();
+        parser.accepts("output").withRequiredArg();
+        parser.accepts("source").withRequiredArg();
+        parser.accepts("target").withRequiredArg();
+        parser.accepts("force");
+        OptionSet options = parser.parse(args);
 
 
         // Validates all params
         // ===================================================
 
         // if all params are missing the print the help
-        if(!options.hasOptions()){
+        if (!options.hasOptions()) {
             return new HelpCommand();
         }
 
@@ -68,9 +69,10 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         ToCenConversion toCen;
         FromCenConversion fromCen;
         InputStream invoiceInSourceFormat;
+        boolean forceConversion;
         {
 
-            if(!options.has("input")){
+            if (!options.has("input")) {
                 return new ReportFailuereCommand("Input file missing, please specify the path of the invoice to trasform with the --input parameter.");
             }
 
@@ -83,7 +85,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // output: path to output folder
         {
 
-            if(!options.has("output")){
+            if (!options.has("output")) {
                 return new ReportFailuereCommand("Output folder missing, please specify the output path with the --output parameter.", inputInvoice);
             }
 
@@ -96,7 +98,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // source format: should be supported
         {
 
-            if(!options.has("source")){
+            if (!options.has("source")) {
                 return new ReportFailuereCommand("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice);
             }
 
@@ -111,7 +113,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // target format: should be supported
         {
 
-            if(!options.has("target")){
+            if (!options.has("target")) {
                 return new ReportFailuereCommand("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice);
             }
 
@@ -123,6 +125,11 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             }
         }
 
+        // force flag: force conversion to continue even if there are errors
+        {
+            forceConversion = options.has("force");
+        }
+
         try {
             invoiceInSourceFormat = Files.newInputStream(inputInvoice, READ);
         } catch (IOException e) {
@@ -130,7 +137,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         }
 
         return new ConversionCommand(
-            ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceInSourceFormat
+                ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion
         );
     }
 

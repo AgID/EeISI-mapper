@@ -14,8 +14,8 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 public interface FromCenConversion {
 
     /**
-     * The return object should contain a byte[] result and a not null but possible empty array of errors
-     * BinaryConversionResult is immutable, once created with the result and errors parameters, cannot be changed
+     * The return object should contain a byte[] result and a not null but possible empty array of issues
+     * BinaryConversionResult is immutable, once created with the result and issues parameters, cannot be changed
      * @param invoice
      * @return {@link BinaryConversionResult BinaryConversionResult}
      */

@@ -30,8 +30,8 @@ public class XSDValidator implements IXMLValidator {
     }
 
     @Override
-    public List<Exception> validate(byte[] xml) {
-        final List<Exception> errors = new ArrayList<>();
+    public List<ConversionIssue> validate(byte[] xml) {
+        final List<ConversionIssue> errors = new ArrayList<>();
         Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
         Validator validator = schema.newValidator();
         try {
@@ -43,7 +43,7 @@ public class XSDValidator implements IXMLValidator {
 
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
-                    errors.add(new RuntimeException("XSD validation error.", exception));
+                    errors.add(ConversionIssue.newWarning(exception, "XSD validation error."));
                 }
 
                 @Override
@@ -53,7 +53,7 @@ public class XSDValidator implements IXMLValidator {
             });
             validator.validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(new RuntimeException("XSD validation failed!", e));
+            errors.add(ConversionIssue.newWarning(e, "XSD validation failed!"));
         }
         return errors;
     }
