@@ -15,21 +15,21 @@ public class BinaryConversionResult extends ConversionResult<byte[]> {
      * A successfull conversion.
      */
     public BinaryConversionResult(byte[] result) {
-        this(result, new ArrayList<Exception>());
+        this(result, new ArrayList<ConversionIssue>());
     }
 
     /**
-     * Immutable object constructed with data result and not null but possible empty array of errors
-     * The other flags, successful and hasResult are set automatically based on the result and errors parameters
+     * Immutable object constructed with data result and not null but possible empty array of issues
+     * The other flags, successful and hasResult are set automatically based on the result and issues parameters
      */
-    public BinaryConversionResult(byte[] result, List<Exception> errors) {
+    public BinaryConversionResult(byte[] result, List<ConversionIssue> errors) {
         super(errors, result);
         if (result != null && result.length > 0) {
             hasResult = true;
             if (errors.isEmpty()) {
                 successful = true;
             }
-        }else{
+        } else {
             hasResult = false;
         }
         Objects.requireNonNull(errors);

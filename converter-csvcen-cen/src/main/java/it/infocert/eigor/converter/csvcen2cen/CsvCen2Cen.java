@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
@@ -18,7 +19,6 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.joda.time.format.DateTimeFormat;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public class CsvCen2Cen implements ToCenConversion {
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
-        List<Exception> errors = new ArrayList<>();
+        List<ConversionIssue> errors = new ArrayList<>();
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 
@@ -153,13 +153,13 @@ public class CsvCen2Cen implements ToCenConversion {
                         // instantiate the BT
                         btbg = (BTBG) constructor.newInstance(convert);
                     } catch (IllegalArgumentException e) {
-                        errors.add(
+                        errors.add(ConversionIssue.newWarning(
                                 new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
                                         cenRecord.getRecordNumber(),
                                         bgbtIdFromCsv,
                                         bgbtValueFromCsv,
                                         constructorParamType.getSimpleName()
-                                )));
+                                ))));
                     }
 
                 }

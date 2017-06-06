@@ -21,7 +21,7 @@ public class SchematronValidator implements IXMLValidator {
             // we check if relative path ../schematron contains newer .sch files
             SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
                     schemaFile.getParent(),
-                    schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron"            );
+                    schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron");
 
             if (xsltFileUpdater.checkForUpdatedSchematron()) {
                 xsltFileUpdater.updateXSLTfromSch();
@@ -35,14 +35,14 @@ public class SchematronValidator implements IXMLValidator {
     }
 
     @Override
-    public List<Exception> validate(byte[] xml) {
-        List<Exception> errors = new ArrayList<>();
-        SchematronOutputType schematronOutput;
+    public List<ConversionIssue> validate(byte[] xml) {
+        List<ConversionIssue> errors = new ArrayList<>();
+        SchematronOutputType schematronOutput = null;
 
         try {
             schematronOutput = schematronResource.applySchematronValidationToSVRL(new StreamSource(new ByteArrayInputStream(xml)));
         } catch (Exception e) {
-            errors.add(e);
+            errors.add(ConversionIssue.newWarning(e));
             return errors;
         }
 
@@ -51,7 +51,7 @@ public class SchematronValidator implements IXMLValidator {
         try {
             firedRuleAndFailedAssert = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
         } catch (Exception e) {
-            errors.add(e);
+            errors.add(ConversionIssue.newError(e));
             return errors;
         }
         for (Object obj : firedRuleAndFailedAssert) {
@@ -59,7 +59,7 @@ public class SchematronValidator implements IXMLValidator {
                 FailedAssert failedAssert = (FailedAssert) obj;
                 Exception cause = new Exception(failedAssert.getLocation() + " failed test: " + failedAssert.getTest());
                 Exception error = new Exception("Schematron failed assert:" + failedAssert.getText(), cause);
-                errors.add(error);
+                errors.add(ConversionIssue.newWarning(error));
             }
         }
         return errors;

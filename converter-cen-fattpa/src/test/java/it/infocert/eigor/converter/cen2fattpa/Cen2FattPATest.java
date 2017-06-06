@@ -1,11 +1,14 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPathConstants;
@@ -24,6 +27,7 @@ public class Cen2FattPATest {
     private Cen2FattPAConverter cen2FattPA;
     private XPathFactory xPathfactory;
 
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before
     public void setUp() {
@@ -80,8 +84,8 @@ public class Cen2FattPATest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testImmutableConversionResult() {
-        ConversionResult cr = new BinaryConversionResult("dummy".getBytes(), new ArrayList<Exception>());
-        cr.getErrors().add(new Exception());
+        ConversionResult cr = new BinaryConversionResult("dummy".getBytes(), new ArrayList<ConversionIssue>());
+        cr.getIssues().add(ConversionIssue.newError(new Exception()));
     }
 
     @Test(expected = NullPointerException.class)

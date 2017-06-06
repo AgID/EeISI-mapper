@@ -18,8 +18,11 @@ DESCRIPTION
     --target
         format of the transformed invoice, support the same formats of '--source'.
 
-EXAMPLES
-    -/eigor.sh --input 012.xml --source fattpa --output ~/transformed --target ubl
+    --force
+        continue conversion process even if errors are encountered.
 
-    Transform the 'fatt pa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed'.
+EXAMPLES
+    -/eigor.sh --input 012.xml --source fattpa --output ~/transformed --target ubl --force
+
+    Transform the 'fatt pa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed', without stopping because of errors.
 
