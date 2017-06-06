@@ -77,57 +77,73 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             }
 
 
-            BG0031ItemInformation itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
-            dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
-
-            if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceTipo("Seller");
-                codiceArticolo.setCodiceValore(itemInformation.getBT0155ItemSellerSIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(155, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0156ItemBuyerSIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceTipo("Buyer");
-                codiceArticolo.setCodiceValore(itemInformation.getBT0156ItemBuyerSIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(156, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(157, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
-                for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
-                    CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                    codiceArticolo.setCodiceValore(identifier.getValue());
-                    dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                    logBt(158, "CodiceArticolo");
+            try {
+                BG0031ItemInformation itemInformation = null;
+                try {
+                    itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
+                } catch (Exception e) {
+                    errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
                 }
-            }
 
-            if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
-                AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
-                altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin().get(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
-                dettaglioLinee.getAltriDatiGestionali().add(altriDati);
-                logBt(159, "AltriDatiGestionali.RiferimentoTesto");
-            }
+                if (itemInformation != null) {
+                    try {
+                        dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
+                    } catch (Exception e) {
+                        errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                    }
+                    if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceTipo("Seller");
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0155ItemSellerSIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(155, "CodiceArticolo");
+                    }
 
-            if (!itemInformation.getBG0032ItemAttributes().isEmpty()) {
-                for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
-                    AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
-                    altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName().get(0).getValue());
-                    altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue().get(0).getValue());
-                    dettaglioLinee.getAltriDatiGestionali().add(altriDati);
-                    logBt(160, "AltriDatiGestionali.TipoDato");
-                    logBt(160, "AltriDatiGestionali.RiferimentoTesto");
+                    if (!itemInformation.getBT0156ItemBuyerSIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceTipo("Buyer");
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0156ItemBuyerSIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(156, "CodiceArticolo");
+                    }
+
+                    if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(157, "CodiceArticolo");
+                    }
+
+                    if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
+                        for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
+                            CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                            codiceArticolo.setCodiceValore(identifier.getValue());
+                            dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                            logBt(158, "CodiceArticolo");
+                        }
+                    }
+
+                    if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
+                        AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                        altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin().get(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                        logBt(159, "AltriDatiGestionali.RiferimentoTesto");
+                    }
+
+                    if (!itemInformation.getBG0032ItemAttributes().isEmpty()) {
+                        for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
+                            AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                            altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName().get(0).getValue());
+                            altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue().get(0).getValue());
+                            dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                            logBt(160, "AltriDatiGestionali.TipoDato");
+                            logBt(160, "AltriDatiGestionali.RiferimentoTesto");
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
+                log.error(e.getMessage());
             }
 
             try {
@@ -500,46 +516,49 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             } catch (Exception e) {
                 errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
             }
-            if (!buyer.getBG0009BuyerContact().isEmpty()) {
-                BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact().get(0);
-                if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
-                    datiGeneraliDocumento.getCausale().add(buyerContact.getBT0056BuyerContactPoint().get(0).getValue());
+            if (buyer != null) {
+                if (!buyer.getBG0009BuyerContact().isEmpty()) {
+                    BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact().get(0);
+                    if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
+                        datiGeneraliDocumento.getCausale().add(buyerContact.getBT0056BuyerContactPoint().get(0).getValue());
+                    }
                 }
-            }
 
-            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
-                if (!invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().isEmpty()) {
-                    BG0015DeliverToAddress deliverToAddress = invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().get(0);
-                    StringBuilder sb = new StringBuilder();
-                    if (!deliverToAddress.getBT0075DeliverToAddressLine1().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0075DeliverToAddressLine1().get(0).getValue()).append(", ");
+                if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                    if (!invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().isEmpty()) {
+                        BG0015DeliverToAddress deliverToAddress = invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().get(0);
+                        StringBuilder sb = new StringBuilder();
+                        if (!deliverToAddress.getBT0075DeliverToAddressLine1().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0075DeliverToAddressLine1().get(0).getValue()).append(", ");
+                        }
+
+                        if (!deliverToAddress.getBT0076DeliverToAddressLine2().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0076DeliverToAddressLine2().get(0).getValue()).append(", ");
+                        }
+
+                        if (!deliverToAddress.getBT0165DeliverToAddressLine3().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0165DeliverToAddressLine3().get(0).getValue());
+                        }
+
+                        indirizzoResa.setIndirizzo(sb.toString());
+
+                        if (!deliverToAddress.getBT0077DeliverToCity().isEmpty()) {
+                            indirizzoResa.setComune(deliverToAddress.getBT0077DeliverToCity().get(0).getValue());
+                        }
+
+                        if (!deliverToAddress.getBT0078DeliverToPostCode().isEmpty()) {
+                            indirizzoResa.setCAP(deliverToAddress.getBT0078DeliverToPostCode().get(0).getValue());
+                        }
+
+                        if (!deliverToAddress.getBT0079DeliverToCountrySubdivision().isEmpty()) {
+                            indirizzoResa.setProvincia(deliverToAddress.getBT0079DeliverToCountrySubdivision().get(0).getValue());
+                        }
+
+                        indirizzoResa.setNazione(deliverToAddress.getBT0080DeliverToCountryCode().get(0).getValue().getIso2charCode());
                     }
-
-                    if (!deliverToAddress.getBT0076DeliverToAddressLine2().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0076DeliverToAddressLine2().get(0).getValue()).append(", ");
-                    }
-
-                    if (!deliverToAddress.getBT0165DeliverToAddressLine3().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0165DeliverToAddressLine3().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0077DeliverToCity().isEmpty()) {
-                        indirizzoResa.setComune(deliverToAddress.getBT0077DeliverToCity().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0078DeliverToPostCode().isEmpty()) {
-                        indirizzoResa.setCAP(deliverToAddress.getBT0078DeliverToPostCode().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0079DeliverToCountrySubdivision().isEmpty()) {
-                        indirizzoResa.setProvincia(deliverToAddress.getBT0079DeliverToCountrySubdivision().get(0).getValue());
-                    }
-
-                    indirizzoResa.setNazione(deliverToAddress.getBT0080DeliverToCountryCode().get(0).getValue().getIso2charCode());
                 }
+
             }
-
-
         } catch (Exception e) {
             errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
         }
