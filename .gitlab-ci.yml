@@ -35,8 +35,8 @@ tests:
 pages:
   stage: packaging
   script:
-  - mvn $MAVEN_CLI_OPTS clean install -Prelease  
-  - mvn $MAVEN_CLI_OPTS site site:stage
+  - mvn $MAVEN_CLI_OPTS clean
+  - mvn $MAVEN_CLI_OPTS install site site:stage -Prelease -Pcoverage
   - mv ./target/staging/ public
   artifacts:
     paths:
