@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.ubl2cen.mapping;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.StringToIso4217CurrenciesFundsCodesConverter;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
@@ -59,7 +60,7 @@ public class GenericOneToOneTransformation {
      * @param document the document
      * @param invoice  the invoice
      */
-    public void transform(Document document, BG0000Invoice invoice, final List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transform(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + xPath + " - " + bgBtPath + ") ";
         log.info(logPrefix + "resolving");
 
@@ -87,7 +88,8 @@ public class GenericOneToOneTransformation {
                     Constructor<?>[] constructors = btClass.getConstructors();
                     final ArrayList<BTBG> bt = new ArrayList<>(1);
                     com.amoerie.jstreams.functions.Consumer<Constructor<?>> k = new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
-                        @Override public void consume(final Constructor<?> constructor) {
+                        @Override
+                        public void consume(final Constructor<?> constructor) {
                             try {
                                 if (constructor.getParameterTypes().length == 0) {
                                     bt.add((BTBG) constructor.newInstance());
@@ -97,20 +99,21 @@ public class GenericOneToOneTransformation {
                                     Stream<Class<?>> classes1 = Stream.create(classes);
 
                                     classes1.forEach(new Consumer<Class<?>>() {
-                                        @Override public void consume(Class<?> paramType) {
+                                        @Override
+                                        public void consume(Class<?> paramType) {
                                             // FIXME add data converter...
                                             Object constructorParam = null;
                                             if (String.class.equals(paramType)) {
                                                 constructorParam = item.getTextContent();
-                                            } else if(Double.class.equals(paramType)) {
+                                            } else if (Double.class.equals(paramType)) {
                                                 constructorParam = Double.parseDouble(item.getTextContent());
-                                            } else if(LocalDate.class.equals(paramType)) {
+                                            } else if (LocalDate.class.equals(paramType)) {
                                                 constructorParam = stringToLocalDate.convert(item.getTextContent());
-                                            } else if(Iso4217CurrenciesFundsCodes.class.equals(paramType)) {
+                                            } else if (Iso4217CurrenciesFundsCodes.class.equals(paramType)) {
                                                 constructorParam = stringToIso4217.convert(item.getTextContent());
                                             } else {
                                                 log.error(logPrefix + "paramType is not String: " + paramType);
-                                                errors.add(new Exception(logPrefix + "paramType is not String: " + paramType));
+                                                errors.add(ConversionIssue.newError(new Exception(logPrefix + "paramType is not String: " + paramType)));
                                                 return; // jumps to next step in foreach
                                             }
 
@@ -118,7 +121,7 @@ public class GenericOneToOneTransformation {
                                                 bt.add((BTBG) constructor.newInstance(constructorParam));
                                             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                                 log.error(e.getMessage(), e);
-                                                errors.add(e);
+                                                errors.add(ConversionIssue.newError(e));
                                             }
                                         }
                                     });
@@ -126,11 +129,11 @@ public class GenericOneToOneTransformation {
                                 }
                             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                                 log.error(e.getMessage(), e);
-                                errors.add(e);
+                                errors.add(ConversionIssue.newError(e));
                             }
                         }
                     };
-                    Stream.create( Arrays.asList(constructors) ).forEach(k);
+                    Stream.create(Arrays.asList(constructors)).forEach(k);
 
                     log.info(logPrefix + "bt element created: " + bt);
 
@@ -140,7 +143,7 @@ public class GenericOneToOneTransformation {
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     log.error(e.getMessage(), e);
-                    errors.add(e);
+                    errors.add(ConversionIssue.newError(e));
                 }
             }
         }

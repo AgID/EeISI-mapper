@@ -45,7 +45,7 @@ public class Ubl2Cen implements ToCenConversion {
      */
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
-        List<Exception> errors = new ArrayList<>();
+        List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
         File fullSchemaFile = new File("converterdata/converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
@@ -57,7 +57,7 @@ public class Ubl2Cen implements ToCenConversion {
             validator = new SchematronValidator(fullSchemaFile, true);
             errors.addAll(validator.validate(bytes));
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new Exception("Unable to schematron-validate input!", e));
+            errors.add(ConversionIssue.newWarning(e, "Unable to schematron-validate input!"));
         }
 
         Document document = getDocument(clonedInputStream);
@@ -90,10 +90,10 @@ public class Ubl2Cen implements ToCenConversion {
      * Apply transformations into BG0000Invoice.
      *
      * @param document the input document
-     * @param errors   the errors list
+     * @param errors   the issues list
      * @return the BG0000Invoice
      */
-    protected ConversionResult<BG0000Invoice> applyTransformations(Document document, List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected ConversionResult<BG0000Invoice> applyTransformations(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
         UblXpathMap mapper = new UblXpathMap();

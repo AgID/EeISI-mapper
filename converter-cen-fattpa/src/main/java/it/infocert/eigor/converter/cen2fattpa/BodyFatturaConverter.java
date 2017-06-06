@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
@@ -23,11 +24,11 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
-    private List<Exception> errors;
+    private List<ConversionIssue> errors;
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
 
-    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<Exception> errors) {
+    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         this.errors = errors;
@@ -82,14 +83,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 try {
                     itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
                 } catch (Exception e) {
-                    errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                    errors.add(ConversionIssue.newError(e,IConstants.ERROR_GENERAL_INFORMATION));
                 }
 
                 if (itemInformation != null) {
                     try {
                         dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
                     } catch (Exception e) {
-                        errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                        errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
                     }
                     if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
                         CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
@@ -142,7 +143,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     }
                 }
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
                 log.error(e.getMessage());
             }
 
@@ -163,7 +164,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 logBt(152, "DettaglioLinee.AliquotaIVA");
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
                 log.error(e.getMessage());
             }
             if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
@@ -229,7 +230,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 vatBreakdown = invoice.getBG0023VatBreakdown().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             if (vatBreakdown != null) {
                 datiRiepilogo.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0116VatCategoryTaxableAmount().get(0).getValue()));
@@ -292,7 +293,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2); // TODO check mapping for this
             }
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TAX_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TAX_INFORMATION));
         }
     }
 
@@ -425,28 +426,28 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
                 logBt(1, "DatiGeneraliDocumento.Numero");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
                 logBt(5, "DatiGeneraliDocumento.Divisa");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
                 logBt(2, "DatiGeneraliDocumento.Data");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
                 logBt(112, "DatiGeneraliDocumento.ImportoTotaleDocumento");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
@@ -487,13 +488,13 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 seller = invoice.getBG0004Seller().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             List<BG0006SellerContact> sellerContacts = null;
             try {
                 sellerContacts = seller.getBG0006SellerContact();
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             if (sellerContacts != null && !sellerContacts.isEmpty()) {
                 BG0006SellerContact sellerContact = sellerContacts.get(0);
@@ -514,7 +515,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 buyer = invoice.getBG0007Buyer().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             if (buyer != null) {
                 if (!buyer.getBG0009BuyerContact().isEmpty()) {
@@ -560,7 +561,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
             }
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
         }
     }
 
@@ -598,7 +599,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 percentageDiscount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0094DocumentLevelAllowancePercentage().get(0).getValue();
                 baseAmount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0093DocumentLevelAllowanceBaseAmount().get(0).getValue();
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_INVOICE_LEVEL_ALLOWANCES, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_INVOICE_LEVEL_ALLOWANCES));
             }
 
             invoiceDiscountAmount = baseAmount * -percentageDiscount;
@@ -620,7 +621,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             Double actualInvoiceTotal = documentTotals.getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
             invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TOTAL_AMOUNT_CORRECTION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TOTAL_AMOUNT_CORRECTION));
         }
     }
 
@@ -745,7 +746,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
             dettaglioPagamento.setImportoPagamento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_PAYMENT_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_PAYMENT_INFORMATION));
         }
     }
 
@@ -843,7 +844,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
                     altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0149));
                 } catch (Exception e) {
-                    errors.add(new RuntimeException(IConstants.ERROR_BASE_QUANTITY_TRANSFORM, e));
+                    errors.add(ConversionIssue.newError(e, IConstants.ERROR_BASE_QUANTITY_TRANSFORM));
                 }
 
             }

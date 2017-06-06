@@ -31,6 +31,7 @@ public class ConversionCommand implements CliCommand {
     private final Path inputInvoice;
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
+    private final Boolean forceConversion;
 
     public ConversionCommand(
             RuleRepository ruleRepository,
@@ -38,13 +39,15 @@ public class ConversionCommand implements CliCommand {
             FromCenConversion fromCen,
             Path inputInvoice,
             Path outputFolder,
-            InputStream invoiceInSourceFormat) {
+            InputStream invoiceInSourceFormat,
+            boolean forceConversion) {
         this.ruleRepository = ruleRepository;
         this.toCen = toCen;
         this.fromCen = fromCen;
         this.inputInvoice = inputInvoice;
         this.outputFolder = outputFolder;
         this.invoiceInSourceFormat = invoiceInSourceFormat;
+        this.forceConversion = forceConversion;
     }
 
     /**
@@ -93,32 +96,54 @@ public class ConversionCommand implements CliCommand {
         ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
         BG0000Invoice cenInvoice = toCenResult.getResult();
         writeToCenErrors(out, toCenResult, outputFolderFile);
+        cloneSourceInvoice(this.inputInvoice, outputFolderFile);
+
+        if (toCenResult.hasErrors()) {
+            if (isForceConversion()) {
+                out.println("Conversion to CEN has encountered errors but will continue anyway.");
+            } else {
+                out.println("Conversion to CEN has encountered errors and will abort.");
+                return;
+            }
+        }
+
         applyRulesToCenObject(cenInvoice, ruleReport);
+        writeRuleReport(ruleReport, outputFolderFile);
 
         BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
-
-        cloneSourceInvoice(this.inputInvoice, outputFolderFile);
         writeFromCenErrors(out, conversionResult, outputFolderFile);
         writeCenInvoice(cenInvoice, outputFolderFile);
+
+        if (conversionResult.hasErrors()) {
+            if (isForceConversion()) {
+                out.println("Conversion from CEN has encountered errors but will continue anyway.");
+            } else {
+                out.println("Conversion from CEN has encountered errors and will abort.");
+                return;
+            }
+        }
         writeTargetInvoice(converted, outputFolderFile);
-        writeRuleReport(ruleReport, outputFolderFile);
+    }
+
+    public boolean isForceConversion() {
+        return forceConversion;
     }
 
     private void writeToCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (conversionResult.isSuccessful()) {
             out.println("To Cen Conversion was successful!");
         } else {
-            out.println("To Cen Conversion finished, but some errors have occured:");
-            List<Exception> errors = conversionResult.getErrors();
+            out.println("To Cen Conversion finished, but some issues have occured:");
+            List<ConversionIssue> errors = conversionResult.getIssues();
 
             String data = toCsvFileContent(errors);
 
-            // writes to-cen errors csv
+            // writes to-cen issues csv
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
             FileUtils.writeStringToFile(toCenErrors, data);
 
-            for (Exception e : errors) {
+            for (ConversionIssue e : errors) {
                 out.println("Error: " + e.getMessage());
             }
             out.println("For more information see 'tocen-errors.csv'.");
@@ -135,7 +160,7 @@ public class ConversionCommand implements CliCommand {
 
             for (Map.Entry<String, String> entry : invalidRules.entrySet()) {
                 log.error(
-                    String.format("Rule %s is malformed: %s. Rule expression should follow the pattern ${ expression } without any surrounding quotes,", entry.getKey(), entry.getValue())
+                        String.format("Rule %s is malformed: %s. Rule expression should follow the pattern ${ expression } without any surrounding quotes,", entry.getKey(), entry.getValue())
                 );
             }
 
@@ -155,14 +180,14 @@ public class ConversionCommand implements CliCommand {
         if (conversionResult.isSuccessful()) {
             out.println("From Cen Conversion was successful!");
         } else {
-            out.println("From Cen Conversion finished, but some errors have occured:");
-            List<Exception> errors = conversionResult.getErrors();
+            out.println("From Cen Conversion finished, but some issues have occured:");
+            List<ConversionIssue> errors = conversionResult.getIssues();
 
-            // writes from-cen errors csv
+            // writes from-cen issues csv
             File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
             FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors));
 
-            for (Exception e : errors) {
+            for (ConversionIssue e : errors) {
                 out.println("Error: " + e.getMessage());
             }
             out.println("For more information see 'fromcen-errors.csv'.");
@@ -201,9 +226,9 @@ public class ConversionCommand implements CliCommand {
     }
 
 
-    private String toCsvFileContent(List<Exception> errors) {
+    private String toCsvFileContent(List<ConversionIssue> errors) {
         StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
-        for (Exception e: errors){
+        for (ConversionIssue e : errors) {
             toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
         }
         return toCenErrorsCsv.toString();
