@@ -3,7 +3,6 @@ package it.infocert.eigor.converter.cen2fattpa;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
-import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -13,10 +12,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -94,18 +89,4 @@ public class Cen2FattPATest {
         ConversionResult cr = new BinaryConversionResult("dummy".getBytes(), null);
     }
 
-    @Test
-    public void name() throws Exception {
-        BG0000Invoice invoice = new BG0000Invoice();
-        invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber("1"));
-        BG0011SellerTaxRepresentativeParty party = new BG0011SellerTaxRepresentativeParty();
-        party.getBT0062SellerTaxRepresentativeName().add(new BT0062SellerTaxRepresentativeName("Name"));
-        party.getBT0063SellerTaxRepresentativeVatIdentifier().add(new BT0063SellerTaxRepresentativeVatIdentifier("IT0123456789"));
-        invoice.getBG0011SellerTaxRepresentativeParty().add(party);
-
-        BinaryConversionResult convert = cen2FattPA.convert(invoice);
-        OutputStream outputStream = new FileOutputStream("C:\\Users\\Matteo\\Documents\\test.xml");
-        outputStream.write(convert.getResult());
-        outputStream.close();
-    }
 }

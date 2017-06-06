@@ -3,13 +3,576 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>eigor</artifactId>
-        <groupId>it.infocert.eigor</groupId>
-        <version>0.0.7-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.7-SNAPSHOT</version>
+    <name>Eigor</name>
+    <description>Electronic Invoice GO Regional</description>
+    <organization>
+        <name>Infocert</name>
+        <url>https://www.infocert.it/</url>
+    </organization>
+
+    <properties>
+        <java.version>1.7</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <powermock.version>1.6.6</powermock.version>
+        <juel-api.version>2.2.7</juel-api.version>
+        <joda-time.version>2.9.9</joda-time.version>
+        <commons-csv.version>1.4</commons-csv.version>
+        <logback.version>1.2.3</logback.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
+        <reflections.version>0.9.11</reflections.version>
+        <commons-io.version>1.3.2</commons-io.version>
+        <guava.version>20.0</guava.version>
+        <jopt-simple.version>5.0.3</jopt-simple.version>
+        <pitest-maven.version>1.1.11</pitest-maven.version>
+        <commons-compress.version>1.9</commons-compress.version>
+        <phschematron.version>3.0.1</phschematron.version>
+        <jstreams.version>1.1</jstreams.version>
+        <plexus-utils.version>3.0.24</plexus-utils.version>
+
+        <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+        <template-generator-maven-plugin.version>0.0.7</template-generator-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+
+        <dependency.locations.enabled>false</dependency.locations.enabled>
+    </properties>
+
+    <distributionManagement>
+        <site>
+            <id>eigor</id>
+            <name>eigor</name>
+            <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
+        </site>
+    </distributionManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central-snapshot</id>
+            <name>Sonatype Snapshot</name>
+            <layout>default</layout>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Libs -->
+            <dependency>
+                <groupId>net.sf.jopt-simple</groupId>
+                <artifactId>jopt-simple</artifactId>
+                <version>${jopt-simple.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${plexus-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.helger</groupId>
+                <artifactId>ph-schematron</artifactId>
+                <version>${phschematron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${commons-csv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amoerie</groupId>
+                <artifactId>jstreams</artifactId>
+                <version>${jstreams.version}</version>
+            </dependency>
+
+            <!-- Eigor modules -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>eigor-test</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>cen-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-csvcen-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-fattpa-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-cen-fattpa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-rules</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-ubl-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+
+            <!-- JUEL -->
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-api</artifactId>
+                <version>${juel-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel-impl</artifactId>
+                <version>${juel-api.version}</version>
+            </dependency>
+
+            <!--Testing-->
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+
+                <!-- defaults to force compilation with desired JDK -->
+                <plugin>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>1.1</version>
+                    <configuration>
+                        <toolchains>
+                            <jdk>
+                                <version>[1.7,1.8)</version>
+                            </jdk>
+                        </toolchains>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>toolchain</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.danidemi</groupId>
+                    <artifactId>template-generator-maven-plugin</artifactId>
+                    <version>${template-generator-maven-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <version>${pitest-maven.version}</version>
+                    <configuration>
+                        <targetClasses>
+                            <param>it.infocert.eigor.*</param>
+                        </targetClasses>
+                        <targetTests>
+                            <param>it.infocert.eigor.*</param>
+                        </targetTests>
+                        <threads>5</threads>
+                        <verbose>false</verbose>
+                        <failWhenNoMutations>false</failWhenNoMutations>
+                        <avoidCallsTo>
+                            <avoidCallsTo>java.util.logging</avoidCallsTo>
+                            <avoidCallsTo>org.apache.log4j</avoidCallsTo>
+                            <avoidCallsTo>org.slf4j</avoidCallsTo>
+                            <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+                            <avoidCallsTo>org.objectweb</avoidCallsTo>
+                            <avoidCallsTo>org.reflections</avoidCallsTo>
+                        </avoidCallsTo>
+                        <timestampedReports>false</timestampedReports>
+                        <mutators>
+                            <mutator>MATH</mutator>
+                            <!--
+                            <mutator>INVERT_NEGS</mutator>
+                            <mutator>RETURN_VALS</mutator>
+                            <mutator>INLINE_CONSTS</mutator>
+                            <mutator>VOID_METHOD_CALLS</mutator>
+                            <mutator>NEGATE_CONDITIONALS</mutator>
+                            <mutator>CONDITIONALS_BOUNDARY</mutator>
+                            <mutator>INCREMENTS</mutator>
+                            <mutator>REMOVE_INCREMENTS</mutator>
+                            <mutator>NON_VOID_METHOD_CALLS</mutator>
+                            <mutator>CONSTRUCTOR_CALLS</mutator>
+                            <mutator>REMOVE_CONDITIONALS_EQ_IF</mutator>
+                            <mutator>REMOVE_CONDITIONALS_EQ_ELSE</mutator>
+                            <mutator>REMOVE_CONDITIONALS_ORD_IF</mutator>
+                            <mutator>REMOVE_CONDITIONALS_ORD_ELSE</mutator>
+                            <mutator>REMOVE_CONDITIONALS</mutator>
+                            -->
+                        </mutators>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>basic-pitest</id>
+                            <goals>
+                                <goal>mutationCoverage</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!--
+                Default configuration that add "integration-test/java"
+                and "integration-test/resources" to the source tree,
+                to be sure the integration test at least always compile.
+                 -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build-helper-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>add-integration-test-sources</id>
+                            <phase>generate-test-sources</phase>
+                            <goals>
+                                <goal>add-test-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/integration-test/java</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>add-integration-test-resources</id>
+                            <phase>generate-test-resources</phase>
+                            <goals>
+                                <goal>add-test-resource</goal>
+                            </goals>
+                            <configuration>
+                                <resources>
+                                    <resource>
+                                        <filtering>true</filtering>
+                                        <directory>src/integration-test/resources</directory>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!--
+                Default configuration that executes all integration testing found in the sources.
+                Integration tests are usually placed in "src/integration-test/java" and "src/integration-test/resources"
+                according to the default config of 'build-helper-maven-plugin'.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>integration-tests</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!--
+                Default that avoid running tests which name starts with 'IT'.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <!-- Excludes integration tests when unit tests are run -->
+                        <excludes>
+                            <exclude>**/IT*.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!--
+                Default to compiling for the desired platform.
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-toolchains-plugin</artifactId>
+            </plugin>
+
+            <!-- Pitest should not be executed in the aggregator pom, so it is bound to "none" -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <executions>
+                    <execution>
+                        <id>basic-pitest</id>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Jacoco currently disabled because it seems its reports are not used at all -->
+            <!--
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+
+            <!--
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <sourceDataFormats>
+                        <sourceDataFormat>HTML</sourceDataFormat>
+                    </sourceDataFormats>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+
+                <reportSets>
+                    <reportSet>
+                        <id>info-reports</id>
+                        <inherited>true</inherited>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>dependency-convergence</report>
+                            <report>index</report>
+                            <!-- please, keep this list in order to quickly add reports if needed -->
+                            <!--
+                            <report>modules</report>
+                            <report>plugins</report>
+                            <report>dependency-info</report>
+                            <report>dependency-convergence</report>
+                            <report>dependencies</report>
+                            <report>scm</report>
+                            <report>cim</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>help</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>plugin-management</report>
+                            <report>project-team</report>
+                            -->
+
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>report</id>
+
+            <build>
+                <plugins>
+                    <!--
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <targetClasses>
+                                <param>it.infocert.eigor.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>it.infocert.eigor.*</param>
+                            </targetTests>
+                            <threads>5</threads>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                                <phase>pre-site</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
+                </plugins>
+            </build>
+
+            <reporting>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <sourceDataFormats>
+                                <sourceDataFormat>HTML</sourceDataFormat>
+                            </sourceDataFormats>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+                </plugins>
+            </reporting>
+
+        </profile>
+    </profiles>
 
 
 </project>
