@@ -16,6 +16,14 @@
         <url>https://www.infocert.it/</url>
     </organization>
 
+    <distributionManagement>
+        <site>
+            <id>eigor</id>
+            <name>eigor</name>
+            <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
+        </site>
+    </distributionManagement>
+
     <modules>
         <module>eigor-parent</module>
         <module>cen-core</module>
@@ -29,6 +37,62 @@
         <module>converter-ubl-cen</module>
         <module>ph-sch2xslt-maven-plugin</module>
     </modules>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <id>info-reports</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>modules</report>
+                            <report>index</report>
+                            <!--
+                            <report>scm</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>project-team</report>
+                            -->
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <reporting>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <sourceDataFormats>
+                                <sourceDataFormat>HTML</sourceDataFormat>
+                            </sourceDataFormats>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
 
 
 
