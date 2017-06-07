@@ -19,6 +19,17 @@ public class InMemoryRuleReport implements RuleReport {
         items.add(new AbstractMap.SimpleEntry<>(ruleOutcome, rule) );
     }
 
+    @Override
+    public boolean hasFailures() {
+        for(Map.Entry<RuleOutcome, Rule> item : items){
+            RuleOutcome.Outcome outcome = item.getKey().outcome();
+            if(outcome == RuleOutcome.Outcome.FAILED || outcome == RuleOutcome.Outcome.ERROR){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String dump() {
 
         Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
