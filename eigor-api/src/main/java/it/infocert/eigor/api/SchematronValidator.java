@@ -59,7 +59,11 @@ public class SchematronValidator implements IXMLValidator {
                 FailedAssert failedAssert = (FailedAssert) obj;
                 Exception cause = new Exception(failedAssert.getLocation() + " failed test: " + failedAssert.getTest());
                 Exception error = new Exception("Schematron failed assert:" + failedAssert.getText(), cause);
-                errors.add(ConversionIssue.newWarning(error));
+                if (failedAssert.getFlag().equals("fatal")) {
+                    errors.add(ConversionIssue.newError(error));
+                } else {
+                    errors.add(ConversionIssue.newWarning(error));
+                }
             }
         }
         return errors;
