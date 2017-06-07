@@ -38,8 +38,9 @@ pages:
   script:
   - mvn $MAVEN_CLI_OPTS_COVERAGE install -DskipTests -DskipITs
   - mvn $MAVEN_CLI_OPTS_COVERAGE verify site site:stage -Pcoverage -DskipITs
-  - ls -latr ./target/staging/
-  - ls -latr ./target/pit-reports/
+  - ls -Rlr ./target/pit-reports/
+  - ls -Rlr ./target/site/
+  - ls -Rlr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
     paths:
