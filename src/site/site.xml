@@ -13,26 +13,16 @@
             <item name="TechGap" href="http://www.techgap.it/"/>
         </links>
 
-        <!--
-        What we can place in the menus ?
-        -->
-        <menu name="UBL">
-            <item name="On Wiki" href="https://en.wikipedia.org/wiki/Universal_Business_Language"/>
+        <menu name="Eigor App">
+            <item name="Configuration" href="configuration/configuration.html"/>
         </menu>
 
-        <menu name="CII">
-            <item name="On U.N." href="http://tfig.unece.org/contents/cross-industry-invoice-cii.htm"/>
+        <menu name="Formats">
+            <item name="UBL" href="https://en.wikipedia.org/wiki/Universal_Business_Language"/>
+            <item name="CII" href="http://tfig.unece.org/contents/cross-industry-invoice-cii.htm"/>
+            <item name="CEN" href="http://tfig.unece.org/contents/cen-e-invocie.htm"/>
+            <item name="Fattua PA" href="http://www.fatturapa.gov.it/export/fatturazione/it/index.htm"/>
         </menu>
-
-        <menu name="CEN">
-            <item name="On U.N." href="http://tfig.unece.org/contents/cen-e-invocie.htm"/>
-        </menu>
-
-        <menu name="Fattua PA">
-            <item name="On gov.it" href="http://www.fatturapa.gov.it/export/fatturazione/it/index.htm"/>
-        </menu>
-
-
 
         <menu ref="reports"/>
 
