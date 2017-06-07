@@ -38,12 +38,12 @@ public class XSDValidator implements IXMLValidator {
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
-                    // do nothing
+                    errors.add(ConversionIssue.newWarning(exception));
                 }
 
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
-                    errors.add(ConversionIssue.newWarning(exception, "XSD validation error."));
+                    errors.add(ConversionIssue.newError(exception, "XSD validation error."));
                 }
 
                 @Override
@@ -53,7 +53,7 @@ public class XSDValidator implements IXMLValidator {
             });
             validator.validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newWarning(e, "XSD validation failed!"));
+            errors.add(ConversionIssue.newError(e, "XSD validation failed!"));
         }
         return errors;
     }
