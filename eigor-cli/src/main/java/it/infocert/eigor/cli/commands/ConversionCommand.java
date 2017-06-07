@@ -110,6 +110,15 @@ public class ConversionCommand implements CliCommand {
         applyRulesToCenObject(cenInvoice, ruleReport);
         writeRuleReport(ruleReport, outputFolderFile);
 
+        if (ruleReport.hasFailures()){
+            if (isForceConversion()) {
+                out.println("CEN rules validation has encountered errors but will continue anyway.");
+            } else {
+                out.println("CEN rules validation has encountered errors and will abort.");
+                return;
+            }
+        }
+
         BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
         writeFromCenErrors(out, conversionResult, outputFolderFile);
@@ -183,7 +192,7 @@ public class ConversionCommand implements CliCommand {
             out.println("From Cen Conversion finished, but some issues have occured:");
             List<ConversionIssue> errors = conversionResult.getIssues();
 
-            // writes from-cen issues csv
+            // writes from-cen errors csv
             File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
             FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors));
 

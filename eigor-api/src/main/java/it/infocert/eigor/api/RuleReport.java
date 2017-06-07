@@ -8,4 +8,5 @@ import it.infocert.eigor.model.core.rules.RuleOutcome;
  */
 public interface RuleReport {
     void store(RuleOutcome ruleOutcome, Rule rule);
+    boolean hasFailures();
 }
