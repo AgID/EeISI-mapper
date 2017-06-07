@@ -35,9 +35,8 @@ tests:
 pages:
   stage: packaging
   script:
-  - mvn $MAVEN_CLI_OPTS install -DskipTests -DskipITs
-  - mvn $MAVEN_CLI_OPTS verify site -Pcoverage
-  - mvn $MAVEN_CLI_OPTS site:stage -Pcoverage
+  - mvn --global-toolchains=.gitlab/toolchains.xml --batch-mode --errors --fail-at-end --show-version install -DskipTests -DskipITs
+  - mvn --global-toolchains=.gitlab/toolchains.xml --batch-mode --errors --fail-at-end --show-version verify site site:stage -Pcoverage -DskipITs
   - ls -latr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
