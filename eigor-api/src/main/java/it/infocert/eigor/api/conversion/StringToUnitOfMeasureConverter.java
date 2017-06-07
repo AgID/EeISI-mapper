@@ -15,7 +15,7 @@ public class StringToUnitOfMeasureConverter implements TypeConverter<String, Uni
 
         Filter<UnitOfMeasureCodes> f = new Filter<UnitOfMeasureCodes>() {
             @Override public boolean apply(UnitOfMeasureCodes uom) {
-                return uom.getName().equalsIgnoreCase(s);
+                return uom.getName().equalsIgnoreCase(s) || uom.getCommonCode().equalsIgnoreCase(s);
             }
         };
 

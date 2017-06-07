@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
+import it.infocert.eigor.api.Abstract2CenConverter;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -19,6 +20,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.joda.time.format.DateTimeFormat;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
-public class CsvCen2Cen implements ToCenConversion {
+
+public class CsvCen2Cen extends Abstract2CenConverter {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;

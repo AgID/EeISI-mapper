@@ -73,4 +73,10 @@ public class FattPA2CenConverter implements ToCenConversion {
     public Set<String> getSupportedFormats() {
         return new HashSet<>( Arrays.asList("fattpa") );
     }
+
+    @Override
+    public String getMappingPath() {
+        // TODO change when mapping properties file added to this converter too
+        return null;
+    }
 }
