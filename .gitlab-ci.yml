@@ -37,9 +37,10 @@ pages:
   stage: packaging
   script:
   - mvn $MAVEN_CLI_OPTS_COVERAGE install -DskipTests -DskipITs
-  - mvn $MAVEN_CLI_OPTS_COVERAGE verify site site:stage -Pcoverage -DskipITs
+  - mvn $MAVEN_CLI_OPTS_COVERAGE verify site -Pcoverage -DskipITs
   - ls -Rlr ./target/pit-reports/
   - ls -Rlr ./target/site/
+  - mvn $MAVEN_CLI_OPTS_COVERAGE site:stage -Pcoverage -DskipITs
   - ls -Rlr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
