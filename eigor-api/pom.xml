@@ -42,7 +42,11 @@
             <groupId>com.amoerie</groupId>
             <artifactId>jstreams</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

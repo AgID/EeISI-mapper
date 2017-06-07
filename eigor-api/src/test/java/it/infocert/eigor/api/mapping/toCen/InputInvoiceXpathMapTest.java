@@ -1,28 +1,31 @@
-package it.infocert.eigor.converter.ubl2cen.mapping;
+package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.Multimap;
+import com.google.common.io.Resources;
 import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
-import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.URL;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class UblXpathMapTest {
+public class InputInvoiceXpathMapTest {
 
-    private InputInvoiceXpathMap ublXpathMap;
+    private InputInvoiceXpathMap xpathMap;
 
     @Before
     public void setUp() throws Exception {
-        ublXpathMap = new InputInvoiceXpathMap();
+        xpathMap = new InputInvoiceXpathMap();
     }
 
     @Test
     public void invoicePathsShouldNotHaveEmptyValues() throws Exception {
 
-        Multimap<String, String> mapping = ublXpathMap.getMapping(Ubl2Cen.MAPPING_PATH);
+        URL mappingFile = Resources.getResource("test-paths.properties");
+        Multimap<String, String> mapping = xpathMap.getMapping(mappingFile.getPath());
 
         for (String path : mapping.keySet()) {
             assertFalse(mapping.get(path).isEmpty());
@@ -32,7 +35,7 @@ public class UblXpathMapTest {
     @Test(expected = RuntimeException.class)
     public void mappingShouldBeClearWhenInvalidPath() {
 
-        Multimap<String, String> mapping = ublXpathMap.getMapping("/tmp/fake.properties");
+        Multimap<String, String> mapping = xpathMap.getMapping("/tmp/fake.properties");
         assertFalse(mapping.isEmpty());
     }
 
