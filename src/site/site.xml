@@ -5,6 +5,7 @@
         <src>https://cdn.meme.am/cache/images/folder492/50x50/9501492.jpg</src>
         <href>https://tgi-infocert-eigor.gitlab.io/eigor/</href>
     </bannerLeft>
+    <publishDate position="left" format="yyyy-MM-dd HH:mm:ss" />
     <body>
         <!-- these links appear in the "tool bar". -->
         <links>

@@ -37,6 +37,7 @@ pages:
   script:
   - mvn $MAVEN_CLI_OPTS clean
   - mvn $MAVEN_CLI_OPTS install site site:stage -Prelease -Pcoverage
+  - ls -latr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
     paths:
