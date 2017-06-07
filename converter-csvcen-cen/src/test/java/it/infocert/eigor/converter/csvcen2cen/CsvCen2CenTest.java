@@ -4,10 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,8 +97,8 @@ public class CsvCen2CenTest {
         // then
         // ...the corresponding field should be null
         assertThat( conversion.getResult().getBT0003InvoiceTypeCode(), hasSize(0) );
-        assertThat( conversion.getErrors(), hasSize(1) );
-        assertThat( conversion.getErrors().get(0), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
+        assertThat( conversion.getIssues(), hasSize(1) );
+        assertThat( conversion.getIssues().get(0).getCause(), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
 
     }
 

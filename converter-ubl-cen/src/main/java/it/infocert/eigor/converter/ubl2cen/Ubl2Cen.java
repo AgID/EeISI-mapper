@@ -43,7 +43,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
      */
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
-        List<Exception> errors = new ArrayList<>();
+        List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
         File fullSchemaFile = new File("converterdata/converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
@@ -55,7 +55,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
             validator = new SchematronValidator(fullSchemaFile, true);
             errors.addAll(validator.validate(bytes));
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new Exception("Unable to schematron-validate input!", e));
+            errors.add(ConversionIssue.newWarning(e, "Unable to schematron-validate input!"));
         }
 
         Document document = getDocument(clonedInputStream);

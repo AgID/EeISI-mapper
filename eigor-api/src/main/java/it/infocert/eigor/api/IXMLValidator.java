@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface IXMLValidator {
 
-    List<Exception> validate(byte[] xml);
+    List<ConversionIssue> validate(byte[] xml);
 }

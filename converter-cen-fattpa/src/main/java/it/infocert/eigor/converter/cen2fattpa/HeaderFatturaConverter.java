@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.*;
 
@@ -10,10 +11,10 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private FatturaElettronicaHeaderType fatturaElettronicaHeader;
     private BG0000Invoice invoice;
-    private List<Exception> errors;
+    private List<ConversionIssue> errors;
 
 
-    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<Exception> errors) {
+    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         fatturaElettronicaHeader = factory.createFatturaElettronicaHeaderType();
@@ -109,7 +110,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             }
             sedeCessionario.setNazione(buyerPostalAddress.getBT0055BuyerCountryCode().get(0).getValue().getIso2charCode());
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_BUYER_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_BUYER_INFORMATION));
         }
     }
 
@@ -192,7 +193,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             }
 
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_SELLER_INFORMATION));
         }
     }
 
@@ -210,7 +211,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             idFiscaleSeller.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(sellerVatId));
             datiTrasmissioneType.setCodiceDestinatario(invoice.getBG0007Buyer().get(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().get(0).getValue());
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TRANSMISSION_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TRANSMISSION_INFORMATION));
         }
     }
 

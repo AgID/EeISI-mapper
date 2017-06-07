@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
@@ -23,11 +24,11 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
-    private List<Exception> errors;
+    private List<ConversionIssue> errors;
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
 
-    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<Exception> errors) {
+    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         this.errors = errors;
@@ -77,57 +78,73 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             }
 
 
-            BG0031ItemInformation itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
-            dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
-
-            if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceTipo("Seller");
-                codiceArticolo.setCodiceValore(itemInformation.getBT0155ItemSellerSIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(155, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0156ItemBuyerSIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceTipo("Buyer");
-                codiceArticolo.setCodiceValore(itemInformation.getBT0156ItemBuyerSIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(156, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
-                CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().get(0).getValue());
-                dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                logBt(157, "CodiceArticolo");
-            }
-
-            if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
-                for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
-                    CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
-                    codiceArticolo.setCodiceValore(identifier.getValue());
-                    dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
-                    logBt(158, "CodiceArticolo");
+            try {
+                BG0031ItemInformation itemInformation = null;
+                try {
+                    itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
+                } catch (Exception e) {
+                    errors.add(ConversionIssue.newError(e,IConstants.ERROR_GENERAL_INFORMATION));
                 }
-            }
 
-            if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
-                AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
-                altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin().get(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
-                dettaglioLinee.getAltriDatiGestionali().add(altriDati);
-                logBt(159, "AltriDatiGestionali.RiferimentoTesto");
-            }
+                if (itemInformation != null) {
+                    try {
+                        dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName().get(0).getValue());
+                    } catch (Exception e) {
+                        errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
+                    }
+                    if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceTipo("Seller");
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0155ItemSellerSIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(155, "CodiceArticolo");
+                    }
 
-            if (!itemInformation.getBG0032ItemAttributes().isEmpty()) {
-                for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
-                    AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
-                    altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName().get(0).getValue());
-                    altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue().get(0).getValue());
-                    dettaglioLinee.getAltriDatiGestionali().add(altriDati);
-                    logBt(160, "AltriDatiGestionali.TipoDato");
-                    logBt(160, "AltriDatiGestionali.RiferimentoTesto");
+                    if (!itemInformation.getBT0156ItemBuyerSIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceTipo("Buyer");
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0156ItemBuyerSIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(156, "CodiceArticolo");
+                    }
+
+                    if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
+                        CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                        codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().get(0).getValue());
+                        dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                        logBt(157, "CodiceArticolo");
+                    }
+
+                    if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
+                        for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
+                            CodiceArticoloType codiceArticolo = factory.createCodiceArticoloType();
+                            codiceArticolo.setCodiceValore(identifier.getValue());
+                            dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                            logBt(158, "CodiceArticolo");
+                        }
+                    }
+
+                    if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
+                        AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                        altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin().get(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                        logBt(159, "AltriDatiGestionali.RiferimentoTesto");
+                    }
+
+                    if (!itemInformation.getBG0032ItemAttributes().isEmpty()) {
+                        for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
+                            AltriDatiGestionaliType altriDati = factory.createAltriDatiGestionaliType();
+                            altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName().get(0).getValue());
+                            altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue().get(0).getValue());
+                            dettaglioLinee.getAltriDatiGestionali().add(altriDati);
+                            logBt(160, "AltriDatiGestionali.TipoDato");
+                            logBt(160, "AltriDatiGestionali.RiferimentoTesto");
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
+                log.error(e.getMessage());
             }
 
             try {
@@ -147,7 +164,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 logBt(152, "DettaglioLinee.AliquotaIVA");
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_LINE_PROCESSING, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
                 log.error(e.getMessage());
             }
             if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
@@ -213,7 +230,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 vatBreakdown = invoice.getBG0023VatBreakdown().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             if (vatBreakdown != null) {
                 datiRiepilogo.setImponibileImporto(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0116VatCategoryTaxableAmount().get(0).getValue()));
@@ -276,7 +293,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo2); // TODO check mapping for this
             }
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TAX_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TAX_INFORMATION));
         }
     }
 
@@ -409,28 +426,28 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 datiGeneraliDocumento.setNumero(invoice.getBT0001InvoiceNumber().get(0).getValue());
                 logBt(1, "DatiGeneraliDocumento.Numero");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setDivisa(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue().getCode());
                 logBt(5, "DatiGeneraliDocumento.Divisa");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setData(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0002InvoiceIssueDate().get(0).getValue()));
                 logBt(2, "DatiGeneraliDocumento.Data");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             try {
                 datiGeneraliDocumento.setImportoTotaleDocumento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0112InvoiceTotalAmountWithVat().get(0).getValue()));
                 logBt(112, "DatiGeneraliDocumento.ImportoTotaleDocumento");
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
 
             List<BG0001InvoiceNote> notes = invoice.getBG0001InvoiceNote();
@@ -471,13 +488,13 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 seller = invoice.getBG0004Seller().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             List<BG0006SellerContact> sellerContacts = null;
             try {
                 sellerContacts = seller.getBG0006SellerContact();
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
             if (sellerContacts != null && !sellerContacts.isEmpty()) {
                 BG0006SellerContact sellerContact = sellerContacts.get(0);
@@ -498,50 +515,53 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             try {
                 buyer = invoice.getBG0007Buyer().get(0);
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
             }
-            if (!buyer.getBG0009BuyerContact().isEmpty()) {
-                BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact().get(0);
-                if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
-                    datiGeneraliDocumento.getCausale().add(buyerContact.getBT0056BuyerContactPoint().get(0).getValue());
+            if (buyer != null) {
+                if (!buyer.getBG0009BuyerContact().isEmpty()) {
+                    BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact().get(0);
+                    if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
+                        datiGeneraliDocumento.getCausale().add(buyerContact.getBT0056BuyerContactPoint().get(0).getValue());
+                    }
                 }
-            }
 
-            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
-                if (!invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().isEmpty()) {
-                    BG0015DeliverToAddress deliverToAddress = invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().get(0);
-                    StringBuilder sb = new StringBuilder();
-                    if (!deliverToAddress.getBT0075DeliverToAddressLine1().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0075DeliverToAddressLine1().get(0).getValue()).append(", ");
+                if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                    if (!invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().isEmpty()) {
+                        BG0015DeliverToAddress deliverToAddress = invoice.getBG0013DeliveryInformation().get(0).getBG0015DeliverToAddress().get(0);
+                        StringBuilder sb = new StringBuilder();
+                        if (!deliverToAddress.getBT0075DeliverToAddressLine1().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0075DeliverToAddressLine1().get(0).getValue()).append(", ");
+                        }
+
+                        if (!deliverToAddress.getBT0076DeliverToAddressLine2().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0076DeliverToAddressLine2().get(0).getValue()).append(", ");
+                        }
+
+                        if (!deliverToAddress.getBT0165DeliverToAddressLine3().isEmpty()) {
+                            sb.append(deliverToAddress.getBT0165DeliverToAddressLine3().get(0).getValue());
+                        }
+
+                        indirizzoResa.setIndirizzo(sb.toString());
+
+                        if (!deliverToAddress.getBT0077DeliverToCity().isEmpty()) {
+                            indirizzoResa.setComune(deliverToAddress.getBT0077DeliverToCity().get(0).getValue());
+                        }
+
+                        if (!deliverToAddress.getBT0078DeliverToPostCode().isEmpty()) {
+                            indirizzoResa.setCAP(deliverToAddress.getBT0078DeliverToPostCode().get(0).getValue());
+                        }
+
+                        if (!deliverToAddress.getBT0079DeliverToCountrySubdivision().isEmpty()) {
+                            indirizzoResa.setProvincia(deliverToAddress.getBT0079DeliverToCountrySubdivision().get(0).getValue());
+                        }
+
+                        indirizzoResa.setNazione(deliverToAddress.getBT0080DeliverToCountryCode().get(0).getValue().getIso2charCode());
                     }
-
-                    if (!deliverToAddress.getBT0076DeliverToAddressLine2().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0076DeliverToAddressLine2().get(0).getValue()).append(", ");
-                    }
-
-                    if (!deliverToAddress.getBT0165DeliverToAddressLine3().isEmpty()) {
-                        sb.append(deliverToAddress.getBT0165DeliverToAddressLine3().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0077DeliverToCity().isEmpty()) {
-                        indirizzoResa.setComune(deliverToAddress.getBT0077DeliverToCity().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0078DeliverToPostCode().isEmpty()) {
-                        indirizzoResa.setCAP(deliverToAddress.getBT0078DeliverToPostCode().get(0).getValue());
-                    }
-
-                    if (!deliverToAddress.getBT0079DeliverToCountrySubdivision().isEmpty()) {
-                        indirizzoResa.setProvincia(deliverToAddress.getBT0079DeliverToCountrySubdivision().get(0).getValue());
-                    }
-
-                    indirizzoResa.setNazione(deliverToAddress.getBT0080DeliverToCountryCode().get(0).getValue().getIso2charCode());
                 }
+
             }
-
-
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_GENERAL_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
         }
     }
 
@@ -579,7 +599,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 percentageDiscount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0094DocumentLevelAllowancePercentage().get(0).getValue();
                 baseAmount = invoice.getBG0020DocumentLevelAllowances().get(0).getBT0093DocumentLevelAllowanceBaseAmount().get(0).getValue();
             } catch (Exception e) {
-                errors.add(new RuntimeException(IConstants.ERROR_INVOICE_LEVEL_ALLOWANCES, e));
+                errors.add(ConversionIssue.newError(e, IConstants.ERROR_INVOICE_LEVEL_ALLOWANCES));
             }
 
             invoiceDiscountAmount = baseAmount * -percentageDiscount;
@@ -601,7 +621,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             Double actualInvoiceTotal = documentTotals.getBT0109InvoiceTotalAmountWithoutVat().get(0).getValue();
             invoiceCorrectionAmount = actualInvoiceTotal - invoiceTotal;
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TOTAL_AMOUNT_CORRECTION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TOTAL_AMOUNT_CORRECTION));
         }
     }
 
@@ -726,7 +746,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             dettaglioPagamento.setDataScadenzaPagamento(Cen2FattPAConverterUtils.fromLocalDateToXMLGregorianCalendarIgnoringTimeZone(invoice.getBT0009PaymentDueDate().get(0).getValue()));
             dettaglioPagamento.setImportoPagamento(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue()));
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_PAYMENT_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_PAYMENT_INFORMATION));
         }
     }
 
@@ -824,7 +844,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
                     altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0149));
                 } catch (Exception e) {
-                    errors.add(new RuntimeException(IConstants.ERROR_BASE_QUANTITY_TRANSFORM, e));
+                    errors.add(ConversionIssue.newError(e, IConstants.ERROR_BASE_QUANTITY_TRANSFORM));
                 }
 
             }

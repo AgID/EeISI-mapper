@@ -12,7 +12,7 @@ SET MAIN_CLASS=it.infocert.eigor.cli.Eigor
 SET JVM_ARGUMENTS= -Xmx512m  -Dlogback.configurationFile=%APPLICATION_HOME%\conf\logback.xml
 
 if not exist %APPLICATION_HOME%\reports mkdir %APPLICATION_HOME%\reports
-SET APP_ARGS=%1 %2 %3 %4 %5 %6 %7 %8
+SET APP_ARGS=%1 %2 %3 %4 %5 %6 %7 %8 %9
 
 setlocal ENABLEDELAYEDEXPANSION
 
