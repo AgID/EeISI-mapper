@@ -37,7 +37,7 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
      * @param errors   the errors list
      * @return the BG0000Invoice
      */
-    protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<Exception> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
         InputInvoiceXpathMap mapper = new InputInvoiceXpathMap();

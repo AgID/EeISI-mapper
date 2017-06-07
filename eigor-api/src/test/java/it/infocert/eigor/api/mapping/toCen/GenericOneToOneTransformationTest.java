@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.io.Resources;
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -44,7 +45,7 @@ public class GenericOneToOneTransformationTest {
         GenericOneToOneTransformation transformator = new GenericOneToOneTransformation(xPathExpression, cenPath, new Reflections("it.infocert"));
 
         BG0000Invoice invoice = new BG0000Invoice();
-        List<Exception> errors = new ArrayList<>();
+        List<ConversionIssue> errors = new ArrayList<>();
         transformator.transform(doc, invoice, errors);
 
         assertThat(invoice.getBG0004Seller(), hasSize(1));
