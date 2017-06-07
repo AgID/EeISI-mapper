@@ -6,6 +6,7 @@ import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URL;
 
 import static org.junit.Assert.assertFalse;
@@ -24,9 +25,7 @@ public class InputInvoiceXpathMapTest {
     @Test
     public void invoicePathsShouldNotHaveEmptyValues() throws Exception {
 
-        URL mappingFile = Resources.getResource("test-paths.properties");
-        Multimap<String, String> mapping = xpathMap.getMapping(mappingFile.getPath());
-
+        Multimap<String, String> mapping = xpathMap.getMapping("../eigor-test/src/main/resources/test-paths.properties");
         for (String path : mapping.keySet()) {
             assertFalse(mapping.get(path).isEmpty());
         }
