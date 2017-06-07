@@ -35,8 +35,9 @@ tests:
 pages:
   stage: packaging
   script:
-  - mvn $MAVEN_CLI_OPTS clean
-  - mvn $MAVEN_CLI_OPTS install site site:stage -Prelease -Pcoverage
+  - mvn $MAVEN_CLI_OPTS install -DskipTests -DskipITs
+  - mvn $MAVEN_CLI_OPTS verify site -Pcoverage
+  - mvn $MAVEN_CLI_OPTS site:stage -Pcoverage
   - ls -latr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
