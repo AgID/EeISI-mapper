@@ -47,14 +47,27 @@
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>ph-sch2xslt-maven-plugin</artifactId>
                 <version>${project.version}</version>
-                <configuration>
-                    <xsltDirectory>${basedir}/converterdata/converter-ubl-cen/schematron-xslt</xsltDirectory>
-                    <schematronDirectory>${basedir}/converterdata/converter-ubl-cen/schematron</schematronDirectory>
-                    <schematronPattern>*.sch</schematronPattern>
-                    <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>ubl-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>cius-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
                         <goals>
                             <goal>convert</goal>
                         </goals>
