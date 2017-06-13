@@ -36,7 +36,7 @@ public class CsvCen2CenTest {
     public void executeACompleteMapping() {
 
         // given
-        InputStream invoiceStream = Preconditions.checkNotNull( getClass().getResourceAsStream("/samplecen_simple.csv"), "invoice not found");
+        InputStream invoiceStream = Preconditions.checkNotNull( getClass().getResourceAsStream("/examples/cen/samplecen_simple.csv"), "invoice not found");
 
         // when
         ConversionResult<BG0000Invoice> conversion;
@@ -180,7 +180,7 @@ public class CsvCen2CenTest {
     public void shouldConvertA7MinimumContentStandardExample() throws SyntaxErrorInInvoiceFormatException {
 
         // given
-        InputStream inputStream = getClass().getResourceAsStream("/cen-a7-minimum-content-with-std-values.csv");
+        InputStream inputStream = getClass().getResourceAsStream("/examples/cen/cen-a7-minimum-content-with-std-values.csv");
 
         // when
         BG0000Invoice invoice = sut.convert(inputStream).getResult();

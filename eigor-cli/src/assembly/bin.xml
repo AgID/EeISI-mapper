@@ -25,15 +25,22 @@
                 <exclude>eigor.sh</exclude>
             </excludes>
         </fileSet>
+
+        <!-- invoice examples -->
         <fileSet>
-            <outputDirectory>examples</outputDirectory>
-            <directory>../eigor-test/src/main/resources</directory>
-            <includes>
-                <include>ubl-plain.xml</include>
-                <include>ubl-oasis.xml</include>
-                <include>cen-a7-minimum-content-with-std-values.csv</include>
-            </includes>
+            <outputDirectory>examples/cen</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/cen</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/fattpa</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/fattpa</directory>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>examples/ubl</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/ubl</directory>
+        </fileSet>
+        <!-- invoice examples -->
+
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</outputDirectory>
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>

@@ -57,7 +57,7 @@ public class EigorTest {
         outputDir = tmp.newFolder(test.getMethodName(), "output");
 
         //...let's copy an input invoice in the input folder
-        plainFattPa = it.infocert.eigor.cli.TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
+        plainFattPa = it.infocert.eigor.cli.TestUtils.copyResourceToFolder("/examples/fattpa/fatt-pa-plain-vanilla.xml", inputDir);
 
     }
 

@@ -53,7 +53,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
         outputDir = tmp.newFolder(test.getMethodName(), "output");
 
         //...let's copy an input invoice in the input folder
-        plainFattPa = TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
+        plainFattPa = TestUtils.copyResourceToFolder("/examples/fattpa/fatt-pa-plain-vanilla.xml", inputDir);
 
     }
 

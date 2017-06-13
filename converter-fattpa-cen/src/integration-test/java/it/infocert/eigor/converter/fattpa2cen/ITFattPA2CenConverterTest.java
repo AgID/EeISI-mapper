@@ -25,7 +25,7 @@ public class ITFattPA2CenConverterTest {
 
     @Test
     public void test() throws Exception {
-        URL italianInvoiceUrl = Resources.getResource("fatt-pa-plain-vanilla.xml");
+        URL italianInvoiceUrl = Resources.getResource("examples/fattpa/fatt-pa-plain-vanilla.xml");
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {

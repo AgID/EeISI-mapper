@@ -21,10 +21,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -46,7 +43,7 @@ public class ITCen2FattPATest {
     @Test
     public void checkFattPAXMLsimple() throws SyntaxErrorInInvoiceFormatException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 
-        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("samplecen_simple.csv")).getResult();
+        BG0000Invoice invoice = csvCen2Cen.convert(getClass().getClassLoader().getResourceAsStream("examples/cen/samplecen_simple.csv")).getResult();
 
         dumpInvoice(invoice);
 
