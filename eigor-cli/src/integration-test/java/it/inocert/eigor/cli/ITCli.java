@@ -25,10 +25,8 @@ import static it.infocert.eigor.test.Files.unzip;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
@@ -53,7 +51,7 @@ public class ITCli {
         // prepare invocation
         final String args =
                 "--input "
-                        + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
+                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "fatturapa" + " --force"; // FIXME maybe remove --force once conversion is free of errors
@@ -64,34 +62,6 @@ public class ITCli {
         String[] producedFiles = outputFolder.list();
         assertThat("Output folder '" + outputFolder.getAbsolutePath() + "' was supposed to contain some files, but it don't.", producedFiles.length, greaterThan(0) );
         assertThat(asList(producedFiles), hasItems( "fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-target.xml", "invoice-transformation.log", "rule-report.csv" ) );
-
-    }
-
-    @Test(timeout = 50000) public void shouldUnzipAndRunOnWindowsWithoutForcing() throws Exception {
-
-        assumeTrue("Run only on Win.", OS.isWindows());
-
-        log.error("Starting test {} on win.", testName.getMethodName());
-
-        File workdir = tmp.newFolder("workdir");
-        File outputFolder = newFile(workdir, "output");
-        assertTrue( outputFolder.mkdirs() );
-
-        // prepare invocation
-        final String args =
-                "--input "
-                        + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
-                        + " --output "
-                        + outputFolder
-                        + " --source " + "csvcen" + " --target " + "fatturapa";
-
-        Process process = executeTheCli(workdir, args);
-
-        assertThat( process.exitValue(), is(0) );
-        String[] producedFiles = outputFolder.list();
-        assertThat("Output folder '" + outputFolder.getAbsolutePath() + "' was supposed to contain some files, but it don't.", producedFiles.length, greaterThan(0) );
-        assertThat(asList(producedFiles), hasItems( "fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-transformation.log", "rule-report.csv" ) );
-        assertThat("Target invoice cannot be produced, because it is the last step and --force was not provded.", asList(producedFiles), not(contains("invoice-target.xml")) );
 
     }
 
@@ -210,7 +180,7 @@ public class ITCli {
         // prepare invocation
         final String args =
                 "--input "
-                        + newFile(workdir , "eigor-cli" , "examples" , "cen-a7-minimum-content-with-std-values.csv")
+                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen-a7-minimum-content-with-std-values.csv")
                         + " --output "
                         + outputFolder
                         + " --source " + "csvcen" + " --target " + "fatturapa" + " --force"; // FIXME maybe remove --force once conversion is free of errors
@@ -249,11 +219,11 @@ public class ITCli {
         proc.get().waitFor();
 
         // uncomment to check for program output
-//        BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
-//        BufferedInputStream err = new BufferedInputStream(proc.get().getErrorStream());
-//        System.out.println( IOUtils.toString(out) );
-//        System.out.println( IOUtils.toString(err) );
-//        System.exit(1);
+        // BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
+        // BufferedInputStream err = new BufferedInputStream(proc.get().getErrorStream());
+        // System.out.println( IOUtils.toString(out) );
+        // System.out.println( IOUtils.toString(err) );
+        // System.exit(1);
 
 
 
