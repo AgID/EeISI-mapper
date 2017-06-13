@@ -47,7 +47,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
         InputStream clonedInputStream = null;
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
-        File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.sch");
+        File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
