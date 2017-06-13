@@ -46,16 +46,24 @@ public class Ubl2Cen extends Abstract2CenConverter {
         List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
-        File fullSchemaFile = new File("converterdata/converter-ubl-cen/schematron-xslt/EN16931-UBL-validation.xslt");
+        File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
+        File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
 
-        IXMLValidator validator;
+        IXMLValidator ublValidator;
+        IXMLValidator ciusValidator;
         try {
+
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
-            validator = new SchematronValidator(fullSchemaFile, true);
-            errors.addAll(validator.validate(bytes));
+
+            ublValidator = new SchematronValidator(ublSchemaFile, true);
+            errors.addAll(ublValidator.validate(bytes));
+
+            ciusValidator = new SchematronValidator(ciusSchemaFile, true);
+            errors.addAll(ciusValidator.validate(bytes));
+
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, "Unable to schematron-validate input!"));
+            errors.add(ConversionIssue.newWarning(e, "Schematron validation error!"));
         }
 
         Document document = getDocument(clonedInputStream);
@@ -63,7 +71,6 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
         return result;
     }
-
 
 
     @Override
