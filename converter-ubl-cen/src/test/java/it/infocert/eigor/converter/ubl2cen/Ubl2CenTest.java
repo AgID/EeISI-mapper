@@ -32,7 +32,7 @@ public class Ubl2CenTest {
 
     @Test
     public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
-        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("ubl-plain.xml");
+        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
 
         ConversionResult<BG0000Invoice> conversionResult = sut.convert(sourceInvoiceStream);
 
@@ -41,7 +41,7 @@ public class Ubl2CenTest {
 
     @Test
     public void canReadDocument() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
-        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("ubl-plain.xml");
+        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
 
         Document document = sut.getDocument(sourceInvoiceStream);
 

@@ -27,7 +27,7 @@ public class GenericOneToOneTransformationTest {
 
     @Test
     public void mappingTest() throws Exception {
-        URL italianInvoiceUrl = Resources.getResource("fatt-pa-plain-vanilla.xml");
+        URL italianInvoiceUrl = Resources.getResource("examples/fattpa/fatt-pa-plain-vanilla.xml");
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {

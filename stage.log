@@ -1,0 +1,220 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:eigor-parent:pom:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:ph-sch2xslt-maven-plugin:maven-plugin:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:cen-core:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:converter-fattpa-cen:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:converter-cen-fattpa:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:eigor-cli:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:eigor-test:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:eigor-api:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:eigor-rules:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:converter-csvcen-cen:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.infocert.eigor:converter-ubl-cen:jar:0.0.7-SNAPSHOT
+[WARNING] 'parent.relativePath' of POM it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT (C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml) points at it.infocert.eigor:eigor instead of org.springframework.boot:spring-boot-starter-parent, please verify your project structure @ it.infocert.eigor:eigor-parent:0.0.7-SNAPSHOT, C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\pom.xml, line 5, column 13
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] Eigor
+[INFO] ph-sch2xslt-maven-plugin
+[INFO] cen-core
+[INFO] Eigor :: Test :: Invoices
+[INFO] Eigor :: API
+[INFO] Eigor :: Converter :: FattPA - CEN
+[INFO] Eigor :: Converter :: CEN/CSV - CEN
+[INFO] Eigor :: Converter :: CEN - FattPA
+[INFO] Eigor :: Converter :: UBL - CEN
+[INFO] Eigor :: Rules
+[INFO] Eigor :: CLI :: Client
+[INFO] Eigor
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor-parent ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-parent\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/./
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building ph-sch2xslt-maven-plugin 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ ph-sch2xslt-maven-plugin ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\ph-sch2xslt-maven-plugin\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ph-sch2xslt-maven-plugin
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building cen-core 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ cen-core ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\cen-core\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/cen-core
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Test :: Invoices 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor-test ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-test\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/eigor-test
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: API 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor-api ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-api\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/eigor-api
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Converter :: FattPA - CEN 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ converter-fattpa-cen ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\converter-fattpa-cen\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/converter-fattpa-cen
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Converter :: CEN/CSV - CEN 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ converter-csvcen-cen ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\converter-csvcen-cen\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/converter-csvcen-cen
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Converter :: CEN - FattPA 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ converter-cen-fattpa ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\converter-cen-fattpa\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/converter-cen-fattpa
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Converter :: UBL - CEN 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ converter-ubl-cen ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\converter-ubl-cen\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/converter-ubl-cen
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: Rules 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor-rules ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-rules\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/eigor-rules
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor :: CLI :: Client 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor-cli ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\eigor-cli\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/eigor-cli
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Eigor 0.0.7-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-site-plugin:3.5.1:stage (default-cli) @ eigor ---
+[INFO] Using this base directory for staging: C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Opened  
+[INFO] Pushing C:\Users\danidemi\workspace\repos\infocert\eigor\target\site
+[INFO]    >>> to file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/./
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnecting  
+file://C:\Users\danidemi\workspace\repos\infocert\eigor\target\staging/ - Session: Disconnected
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] Eigor .............................................. SUCCESS [  0.690 s]
+[INFO] ph-sch2xslt-maven-plugin ........................... SUCCESS [  0.144 s]
+[INFO] cen-core ........................................... SUCCESS [  0.055 s]
+[INFO] Eigor :: Test :: Invoices .......................... SUCCESS [  0.054 s]
+[INFO] Eigor :: API ....................................... SUCCESS [  0.077 s]
+[INFO] Eigor :: Converter :: FattPA - CEN ................. SUCCESS [  0.092 s]
+[INFO] Eigor :: Converter :: CEN/CSV - CEN ................ SUCCESS [  0.065 s]
+[INFO] Eigor :: Converter :: CEN - FattPA ................. SUCCESS [  0.063 s]
+[INFO] Eigor :: Converter :: UBL - CEN .................... SUCCESS [  0.061 s]
+[INFO] Eigor :: Rules ..................................... SUCCESS [  0.067 s]
+[INFO] Eigor :: CLI :: Client ............................. SUCCESS [  0.069 s]
+[INFO] Eigor .............................................. SUCCESS [  2.168 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 4.258 s
+[INFO] Finished at: 2017-06-07T18:42:12+02:00
+[INFO] Final Memory: 45M/617M
+[INFO] ------------------------------------------------------------------------
