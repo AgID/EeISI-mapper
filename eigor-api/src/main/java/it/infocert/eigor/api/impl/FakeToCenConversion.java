@@ -51,8 +51,18 @@ public class FakeToCenConversion extends Abstract2CenConverter {
     }
 
     @Override
-    public String getMappingPath() {
-        return "/tmp/fake.properties";
+    public String getOne2OneMappingPath() {
+        return "/tmp/fakeone2one.properties";
+    }
+
+    @Override
+    protected String getMany2OneMappingPath() {
+        return "/tmp/fakemany2one.properties";
+    }
+
+    @Override
+    protected String getOne2ManyMappingPath() {
+        return "/tmp/fakeone2many.properties";
     }
 
 }

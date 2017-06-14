@@ -34,7 +34,7 @@ import java.util.*;
 
 
 
-public class CsvCen2Cen extends Abstract2CenConverter {
+public class CsvCen2Cen implements ToCenConversion {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;

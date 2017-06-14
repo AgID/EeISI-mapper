@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
+import it.infocert.eigor.api.Abstract2CenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FattPA2CenConverter implements ToCenConversion {
+public class FattPA2CenConverter extends Abstract2CenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
 
@@ -72,11 +73,5 @@ public class FattPA2CenConverter implements ToCenConversion {
     @Override
     public Set<String> getSupportedFormats() {
         return new HashSet<>( Arrays.asList("fattpa") );
-    }
-
-    @Override
-    public String getMappingPath() {
-        // TODO change when mapping properties file added to this converter too
-        return null;
     }
 }
