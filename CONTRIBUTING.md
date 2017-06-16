@@ -37,7 +37,30 @@ Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the followin
 
 ***THIS STEP IS MANDATORY EVEN IF THE JDK 7 IS YOUR ONLY INSTALLED JDK***
 
+#### Maven Wrapper
   
+**You don't need to have Maven installed**   
+The project provides an embedded Maven executable that you
+can invoke using the Maven wrapper. It accepts all the normal Maven commands and uses the standard configuration
+                                    files and folders (`.m2/`, `settings.xml`, `toolchains.xml` etc...).
+
+You can invoke it in the following ways:   
+*Unix (MacOS, Linux, BSD...)*
+
+    ./mvnw
+    
+*Windows Powershell*
+    
+    ./mvnw.cmd
+    
+*Windows CMD*
+    
+    mvnw
+    
+*For example*:
+
+    ./mvnw clean install
+    
 ### Contribution
 
 1) Start a _feature branch_ from _develop_.

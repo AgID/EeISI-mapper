@@ -5,7 +5,7 @@
 # - https://docs.gitlab.com/ce/ci/yaml/README.html
 
 
-image: maven:3.3.9-jdk-7
+image: openjdk:7-jdk
 
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
@@ -16,6 +16,9 @@ variables:
   # `installAtEnd` and `deployAtEnd`are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--global-toolchains=.gitlab/toolchains.xml --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   MAVEN_CLI_OPTS_COVERAGE: "--global-toolchains=.gitlab/toolchains.xml"
+
+before_script:
+  - ./mvnw clean -B
 
 # Cache downloaded dependencies and plugins between builds.
 # To keep cache across branches add 'key: "$CI_JOB_REF_NAME"'
@@ -31,16 +34,16 @@ stages:
 tests:
   stage: test
   script:
-  - mvn $MAVEN_CLI_OPTS clean install -Prelease
+  - ./mvnw clean install -Prelease $MAVEN_CLI_OPTS
 
 pages:
   stage: packaging
   script:
-  - mvn $MAVEN_CLI_OPTS_COVERAGE install -DskipTests -DskipITs
-  - mvn $MAVEN_CLI_OPTS_COVERAGE verify site -Pcoverage -DskipITs
+  - ./mvnw $MAVEN_CLI_OPTS_COVERAGE install -DskipTests -DskipITs
+  - ./mvnw $MAVEN_CLI_OPTS_COVERAGE verify site -Pcoverage -DskipITs
   - ls -Rlr ./target/pit-reports/
   - ls -Rlr ./target/site/
-  - mvn $MAVEN_CLI_OPTS_COVERAGE site:stage -Pcoverage -DskipITs
+  - ./mvnw $MAVEN_CLI_OPTS_COVERAGE site:stage -Pcoverage -DskipITs
   - ls -Rlr ./target/staging/
   - mv ./target/staging/ public
   artifacts:
@@ -51,7 +54,7 @@ pages:
 
 release-cli:
   stage: packaging
-  script: mvn install -Prelease
+  script: ./mvnw install -Prelease
   artifacts:
     paths:
       - eigor-cli/target/eigor.zip
