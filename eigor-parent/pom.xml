@@ -44,6 +44,7 @@
         <template-generator-maven-plugin.version>0.0.7</template-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
@@ -546,7 +547,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
+                        <version>${maven-antrun-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>copy-pitest-to-module</id>
