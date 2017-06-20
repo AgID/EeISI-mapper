@@ -33,8 +33,8 @@ public class GenericOneToOneTransformation {
 
     private final String xPath;
     private final String bgBtPath;
-    private Reflections reflections;
-    private ConversionRegistry conversionRegistry;
+    private final Reflections reflections;
+    private final ConversionRegistry conversionRegistry;
 
     /**
      * Instantiates a new Generic one to one transformation.
@@ -54,6 +54,7 @@ public class GenericOneToOneTransformation {
                 new StringToUntdid1001InvoiceTypeCodeConverter(),
                 new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
                 new StringToIso4217CurrenciesFundsCodesConverter(),
+                new StringToUntdid4461PaymentMeansCode(),
                 new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
                 new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
                 new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
@@ -116,8 +117,9 @@ public class GenericOneToOneTransformation {
                                     classes1.forEach(new Consumer<Class<?>>() {
                                         @Override public void consume(Class<?> paramType) {
 
+                                            String tagContent = item.getTextContent();
                                             try {
-                                                Object constructorParam = conversionRegistry.convert(String.class, paramType, item.getTextContent());
+                                                Object constructorParam = conversionRegistry.convert(String.class, paramType, tagContent);
                                                 try {
                                                     bt.add((BTBG) constructor.newInstance(constructorParam));
                                                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -125,7 +127,7 @@ public class GenericOneToOneTransformation {
                                                     errors.add(ConversionIssue.newError(e));
                                                 }
                                             } catch (IllegalArgumentException e) {
-                                                log.error("There is no converter registered for: " + paramType, e);
+                                                log.error("An error occurred while transforming xpath '{}' with value '{}' to CEN '{}'.", xPath, tagContent, bgBtPath, e);
                                                 errors.add(ConversionIssue.newError(e));
                                             }
                                         }

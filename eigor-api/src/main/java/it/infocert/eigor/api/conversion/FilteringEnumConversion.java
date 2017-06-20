@@ -41,6 +41,9 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
 
     }
 
+    /**
+     * Should return a {@link Filter} that among all entries of the enum select the only one corresponding to the source value.
+     */
     protected abstract Filter<Target> buildFilter(Source value);
 
     protected abstract static class FilterByValue<E,V> implements Filter<E> {
