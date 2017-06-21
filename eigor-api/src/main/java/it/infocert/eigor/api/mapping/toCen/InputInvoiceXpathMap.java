@@ -14,8 +14,13 @@ import java.util.*;
  */
 public class InputInvoiceXpathMap {
 
-    private Multimap<String, String> mapping = HashMultimap.create();
+    private Multimap<String, String> mapping;
+    private InputInvoiceMapValidator validator;
 
+    public InputInvoiceXpathMap(InputInvoiceMapValidator validator) {
+        this.validator = validator;
+        mapping = HashMultimap.create();
+    }
 
     /**
      * Gets the mappings for GenericOneToOneTransformations.
@@ -41,7 +46,7 @@ public class InputInvoiceXpathMap {
         } catch (IOException e) {
             throw new RuntimeException("Error on loading mappings file", e);
         }
-
+        validator.validate(mappings);
         return mappings;
     }
 }

@@ -19,7 +19,7 @@ public class InputInvoiceXpathMapTest {
 
     @Before
     public void setUp() throws Exception {
-        xpathMap = new InputInvoiceXpathMap();
+        xpathMap = new InputInvoiceXpathMap(new InputInvoiceCenXpathMapValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?"));
     }
 
     @Test
