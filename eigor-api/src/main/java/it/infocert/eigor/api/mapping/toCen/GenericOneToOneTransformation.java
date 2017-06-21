@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.management.RuntimeErrorException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -94,6 +95,11 @@ public class GenericOneToOneTransformation {
                     // create BT element
                     String btName = bgBtPath.substring(bgBtPath.lastIndexOf("/") + 1);
                     Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
+
+                    if(btClass==null) {
+                        throw new RuntimeException("Unable to find BT with name '" + btName + "'");
+                    }
+
                     Constructor<?>[] constructors = btClass.getConstructors();
                     final ArrayList<BTBG> bt = new ArrayList<>(1);
                     com.amoerie.jstreams.functions.Consumer<Constructor<?>> k = new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
