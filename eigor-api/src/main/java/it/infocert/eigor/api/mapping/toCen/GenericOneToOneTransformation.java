@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.management.RuntimeErrorException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -60,5 +61,4 @@ public class GenericOneToOneTransformation extends GenericTransformation{
             addNewCenObjectFromStringValueToInvoice(bgBtPath, invoice, xPathText, errors);
         }
     }
-
 }

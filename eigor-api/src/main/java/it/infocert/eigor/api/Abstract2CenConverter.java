@@ -3,6 +3,7 @@ package it.infocert.eigor.api;
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.mapping.toCen.GenericManyToOneTransformation;
 import it.infocert.eigor.api.mapping.toCen.GenericOneToOneTransformation;
+import it.infocert.eigor.api.mapping.toCen.InputInvoiceCenXpathMapValidator;
 import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.reflections.Reflections;
@@ -42,7 +43,7 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
     protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap();
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InputInvoiceCenXpathMapValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?"));
         Multimap<String, String> mapping = mapper.getMapping(getOne2OneMappingPath());
         for (Map.Entry<String, String> entry : mapping.entries()) {
             GenericOneToOneTransformation transformer = new GenericOneToOneTransformation(entry.getValue(), entry.getKey(), reflections);

@@ -68,6 +68,37 @@
     <profiles>
         <profile>
             <id>coverage</id>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>overwrite-pitest-index</id>
+                                <phase>post-site</phase>
+                                <configuration>
+                                    <target>
+                                        <move
+                                                file="target/site/pit-reports/index_pits.html"
+                                                tofile="target/site/pit-reports/index.html"
+                                                verbose="yes" quiet="false"
+                                        />
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
             <reporting>
                 <plugins>
 
@@ -89,6 +120,8 @@
                             </reportSet>
                         </reportSets>
                     </plugin>
+
+
 
                 </plugins>
             </reporting>

@@ -124,14 +124,34 @@ Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the followin
 ***THIS STEP IS MANDATORY EVEN IF THE JDK 7 IS YOUR ONLY INSTALLED JDK***
 
 
-### Compile 
-To build the project:
+### Compile
+The project uses Maven as its build system. A convenient wrapper is provided to avoid the need
+to install Maven on each system. It accepts all the normal Maven commands and uses the standard configuration
+files and folders (`.m2/`, `settings.xml`, `toolchains.xml` etc...).
 
-    mvn clean install
+You can invoke it in the following ways:   
+*Unix (MacOS, Linux, BSD...)*
+
+    ./mvnw
+    
+*Windows Powershell*
+    
+    ./mvnw.cmd
+    
+*Windows CMD*
+    
+    mvnw
+    
+In the following examples we will use the Unix notation.
+
+To build the project:   
+
+    ./mvnw clean install
+
     
 To package a distribution zip:
 ```bash
-mvn package -P release
+./mvnw package -P release
 ```
 
 ### Run
@@ -152,12 +172,12 @@ are stored in `./logs`. A `./reports` folder will be automatically created as a 
 
 ## Release
 1. start a release with gitflow. That places you in a `release/eigor-x.y.z` branch.
-2. from the root project executes `mvn versions:set` and set the release name: i.e. `x.y.z`
-3. run `mvn clean install` to check all is working correctly
+2. from the root project executes `./mvnw versions:set` and set the release name: i.e. `x.y.z`
+3. run `./mvnw clean install` to check all is working correctly
 4. commit all modified files, usually the poms.
 5. close the release with gitflow.
-6. in local develop executes again `mvn versions:set` to set the next `x.y.z+1-SNAPSHOT`
-7. run a `mvn install` locally to have all project dependencies updated.
+6. in local develop executes again `./mvnw versions:set` to set the next `x.y.z+1-SNAPSHOT`
+7. run a `./mvnw install` locally to have all project dependencies updated.
 8. push master TAG inlcuded!
 9. push and develop. 
    

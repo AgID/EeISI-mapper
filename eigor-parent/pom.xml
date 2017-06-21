@@ -44,6 +44,7 @@
         <template-generator-maven-plugin.version>0.0.7</template-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
@@ -546,7 +547,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
+                        <version>${maven-antrun-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>copy-pitest-to-module</id>
@@ -568,6 +569,42 @@
 
                 </plugins>
             </build>
+
+            <reporting>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>2.5</version>
+                        <!--
+                        <reportSets>
+                            <reportSet>
+                                <id>aggregate</id>
+                                <reports>
+                                    <report>aggregate</report>
+                                    <report>test-aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                        -->
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>3.6</version>
+                        <configuration>
+                            <linkXref>true</linkXref>
+                            <sourceEncoding>utf-8</sourceEncoding>
+                            <minimumTokens>25</minimumTokens>
+                            <targetJdk>1.7</targetJdk>
+                            <skipEmptyReport>false</skipEmptyReport>
+                        </configuration>
+                    </plugin>
+
+                </plugins>
+            </reporting>
 
         </profile>
     </profiles>
