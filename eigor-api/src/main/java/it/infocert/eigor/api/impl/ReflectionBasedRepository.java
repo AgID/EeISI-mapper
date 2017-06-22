@@ -17,7 +17,7 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
 
     private Set<Rule> rules = null;
     private Set<FromCenConversion> fromCenConversions = null;
-    private Set<Abstract2CenConverter> toCENConverters = null;
+    private Set<ToCenConversion> toCENConverters = null;
     private final Reflections reflections;
 
     public ReflectionBasedRepository(Reflections reflections) {
@@ -66,13 +66,14 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return result;
     }
 
-    @Override public Abstract2CenConverter findConversionToCen(final String sourceFormat) {
+    @Override public ToCenConversion findConversionToCen(final String sourceFormat) {
         if (toCENConverters == null) {
-            this.toCENConverters = findImplementation(Abstract2CenConverter.class);
+            this.toCENConverters = new HashSet<>();
+            this.toCENConverters.addAll(findImplementation(ToCenConversion.class));
         }
 
-        Filter<Abstract2CenConverter> f = new Filter<Abstract2CenConverter>() {
-            @Override public boolean apply(Abstract2CenConverter c) {
+        Filter<ToCenConversion> f = new Filter<ToCenConversion>() {
+            @Override public boolean apply(ToCenConversion c) {
                 return c.support(sourceFormat);
             }
         };

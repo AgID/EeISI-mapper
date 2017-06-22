@@ -3,6 +3,7 @@ package it.inocert.eigor.cli;
 import it.infocert.eigor.test.Files;
 import it.infocert.eigor.test.OS;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,10 +12,7 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
@@ -218,12 +216,12 @@ public class ITCli {
         }
         proc.get().waitFor();
 
-        // uncomment to check for program output
-        // BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
-        // BufferedInputStream err = new BufferedInputStream(proc.get().getErrorStream());
-        // System.out.println( IOUtils.toString(out) );
-        // System.out.println( IOUtils.toString(err) );
-        // System.exit(1);
+         //uncomment to check for program output
+         BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
+         BufferedInputStream err = new BufferedInputStream(proc.get().getErrorStream());
+         System.out.println( IOUtils.toString(out) );
+         System.out.println( IOUtils.toString(err) );
+         System.exit(1);
 
 
 

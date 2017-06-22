@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Abstract2CenConverter implements  ToCenConversion {
+public abstract class Abstract2CenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(Abstract2CenConverter.class);
     private Reflections reflections;
@@ -54,7 +54,7 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
 
     protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap();
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
         Multimap<String, String> mapping = mapper.getMapping(getMany2OneMappingPath());
         for (String key: mapping.keySet()) {
 
