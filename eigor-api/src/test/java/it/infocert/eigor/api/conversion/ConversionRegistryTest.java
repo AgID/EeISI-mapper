@@ -1,17 +1,47 @@
 package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ConversionRegistryTest {
+
+    @Test
+    public void shouldActuallyConvertUsingExistingConverters() {
+
+        // given
+        ConversionRegistry sut = new ConversionRegistry(
+                new StringToIso4217CurrenciesFundsCodesConverter(),
+                new LookUpEnumConversion<>(Iso31661CountryCodes.class),
+                new TypeConverter<Integer, Double>() {
+            @Override public Double convert(Integer integer) {
+                return integer.doubleValue();
+            }
+
+            @Override public Class<Double> getTargetClass() {
+                return Double.class;
+            }
+
+            @Override public Class<Integer> getSourceClass() {
+                return Integer.class;
+            }
+        });
+
+        // then
+        assertThat( sut.convert(String.class, Iso4217CurrenciesFundsCodes.class, "croatian kuna"), equalTo(Iso4217CurrenciesFundsCodes.HRK) );
+        assertThat( sut.convert(String.class, Iso31661CountryCodes.class, "IT"), equalTo(Iso31661CountryCodes.IT) );
+        assertThat( sut.convert(Integer.class, Double.class, 123), equalTo(123.00) );
+
+    }
 
     @Test
     public void understanding() {
@@ -78,7 +108,7 @@ public class ConversionRegistryTest {
 
     }
 
-    public static class MockStringToNumber implements TypeConverter<String, Number> {
+    public static class MockStringToNumber extends FromStringTypeConverter<Number> {
 
         private RuntimeException alwaysFail;
 
@@ -90,6 +120,16 @@ public class ConversionRegistryTest {
         MockStringToNumber alwaysFailWith(RuntimeException e){
             this.alwaysFail = e;
             return this;
+        }
+
+        @Override
+        public Class<String> getSourceClass() {
+            return String.class;
+        }
+
+        @Override
+        public Class<Number> getTargetClass() {
+            return Number.class;
         }
     }
 

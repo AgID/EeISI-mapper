@@ -49,8 +49,16 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
@@ -67,7 +75,7 @@
                 <configuration>
                     <packageName>it.infocert.eigor.converter.cen2fattpa.models</packageName>
                     <sources>
-                        <source>src/main/resources</source>
+                        <source>src/main/resources/xsd</source>
                     </sources>
                 </configuration>
             </plugin>
@@ -81,7 +89,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
-
         </plugins>
     </build>
 

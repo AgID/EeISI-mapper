@@ -16,7 +16,7 @@ public interface FromCenConversionRepository {
     /**
      * Return the supported formats.
      */
-    public Set<String> supportedFormats();
+    public Set<String> supportedFromCenFormats();
 
 
 }

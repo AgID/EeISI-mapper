@@ -70,7 +70,7 @@ class Cen2FattPAConverterUtils {
      * @return true if XML is valid compared to XSD
      */
     static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<ConversionIssue> errors) {
-        URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
+        URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
         Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {

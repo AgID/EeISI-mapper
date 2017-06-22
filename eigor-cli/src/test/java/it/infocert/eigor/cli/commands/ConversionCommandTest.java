@@ -62,7 +62,7 @@ public class ConversionCommandTest {
         BinaryConversionResult t = new BinaryConversionResult("result".getBytes());
         when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(t);
         when(toCen.convert(any(InputStream.class))).thenReturn(
-                new ConversionResult<BG0000Invoice>(new BG0000Invoice())
+                new ConversionResult<>(new BG0000Invoice())
         );
     }
 
@@ -91,12 +91,12 @@ public class ConversionCommandTest {
     }
 
     @Test
-    public void fromCenConversionShouldCreateCsvIfConversionResultHasErrorsAndForceFlag() throws IOException {
+    public void fromCenConversionShouldCreateCsvIfConversionResultHasErrorsAndForceFlag() throws Exception {
 
         // given
         given(fromCen.extension()).willReturn(".xml");
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError((Exception) new IllegalArgumentException("test exception")));
+        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
         when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
         // when converting a mock invoice, issues should occur
