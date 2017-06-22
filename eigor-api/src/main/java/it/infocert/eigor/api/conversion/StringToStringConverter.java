@@ -1,8 +1,15 @@
 package it.infocert.eigor.api.conversion;
 
-public class StringToStringConverter implements TypeConverter<String, String> {
+public class StringToStringConverter extends FromStringTypeConverter<String> {
 
     @Override public String convert(String in) {
         return in;
     }
+
+    @Override
+    public Class<String> getTargetClass() {
+        return String.class;
+    }
+
+
 }

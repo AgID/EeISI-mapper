@@ -57,6 +57,36 @@ public class BtBgName {
     }
 
     /**
+     *
+     * @param name
+     * @return
+     */
+    public static String format(String name) {
+        name = name.replace(" ", "");
+        String identifier = name.substring(0, 2).toUpperCase();
+        String body = name.substring(2);
+        String number;
+
+        if (body.startsWith("-")) {
+            body = body.substring(1);
+        }
+        if (body.matches("^\\d+$")) {
+            number = formatNum(body);
+        } else if (body.matches("^\\d+-\\d$")) {
+            String[] slices = body.split("-");
+            number = String.format("%s-%s", formatNum(slices[0]), slices[1]);
+        } else {
+            throw new IllegalArgumentException(String.format("Cannot format %s, should starts with either \"BT\" or \"BG\" followed by numbers. " +
+                    "Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", name));
+        }
+        return identifier + number;
+    }
+
+    private static String formatNum(String s) {
+        return String.format("%04d", Integer.parseInt(s));
+    }
+
+    /**
      * @return {@code "BT"} or {@code "BG"} uppercase.
      */
     public String bgOrBt() {

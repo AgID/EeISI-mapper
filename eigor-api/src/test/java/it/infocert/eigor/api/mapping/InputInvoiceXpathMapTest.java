@@ -1,13 +1,10 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Multimap;
-import com.google.common.io.Resources;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
+import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
+import it.infocert.eigor.api.mapping.toCen.InputInvoiceCenXpathMapValidator;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.net.URL;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;

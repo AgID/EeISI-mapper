@@ -4,7 +4,7 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 
-public class StringToUnitOfMeasureConverter implements TypeConverter<String, UnitOfMeasureCodes> {
+public class StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCodes> {
     @Override public UnitOfMeasureCodes convert(final String s) {
 
         try {
@@ -26,4 +26,11 @@ public class StringToUnitOfMeasureConverter implements TypeConverter<String, Uni
         return result;
 
     }
+
+    @Override
+    public Class<UnitOfMeasureCodes> getTargetClass() {
+        return UnitOfMeasureCodes.class;
+    }
+
+
 }
