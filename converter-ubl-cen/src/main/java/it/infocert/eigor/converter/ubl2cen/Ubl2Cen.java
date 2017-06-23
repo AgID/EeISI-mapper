@@ -2,11 +2,13 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
+import org.jdom2.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,10 +23,33 @@ import java.util.*;
 /**
  * The UBL to CEN format converter
  */
+@SuppressWarnings("unchecked")
 public class Ubl2Cen extends Abstract2CenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
     private static final String FORMAT = "ubl";
+    private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
+            new CountryNameToIso31661CountryCodeConverter(),
+            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new StringToJavaLocalDateConverter("dd-MMM-yy"),
+            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+            new StringToUntdid1001InvoiceTypeCodeConverter(),
+            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new StringToIso4217CurrenciesFundsCodesConverter(),
+            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+            new StringToUnitOfMeasureConverter(),
+            new LookUpEnumConversion(UnitOfMeasureCodes.class),
+            new StringToDoubleConverter(),
+            new StringToStringConverter(),
+            new JavaLocalDateToStringConverter(),
+            new JavaLocalDateToStringConverter("dd-MMM-yy"),
+            new Iso4217CurrenciesFundsCodesToStringConverter(),
+            new Iso31661CountryCodesToStringConverter(),
+            new DoubleToStringConverter("#.00"),
+            new UnitOfMeasureCodesToStringConverter()
+    );
 
     public static final String ONE2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
     public static final String MANY2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/many_to_one.properties";
@@ -32,7 +57,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
 
     public Ubl2Cen(Reflections reflections) {
-        super(reflections);
+        super(reflections, conversionRegistry);
+        setMappingRegex("/(BG|BT)[0-9]{4}(-[0-9]{1})?");
     }
 
     /**

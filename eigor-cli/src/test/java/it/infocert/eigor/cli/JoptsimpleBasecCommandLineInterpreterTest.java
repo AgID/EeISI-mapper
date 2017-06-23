@@ -62,7 +62,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
 
         // given
         given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(null);
-        given( fromCenRepo.supportedFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("frm1", "frm2") ) );
+        given( fromCenRepo.supportedFromCenFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("frm1", "frm2") ) );
         given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
 
         JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);

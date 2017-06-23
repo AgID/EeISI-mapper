@@ -1,10 +1,6 @@
-package it.inocert.eigor.cli;
+package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
-import it.infocert.eigor.cli.CommandLineInterpreter;
-import it.infocert.eigor.cli.EigorCli;
-import it.infocert.eigor.cli.JoptsimpleBasecCommandLineInterpreter;
-import it.infocert.eigor.cli.TestUtils;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;

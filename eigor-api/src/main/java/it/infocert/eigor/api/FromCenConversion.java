@@ -2,6 +2,8 @@ package it.infocert.eigor.api;
 
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
+import java.util.Set;
+
 /**
  * Convert a {@link BG0000Invoice CEN invoice} into another format.
  * <h2>General Contract</h2>
@@ -19,7 +21,7 @@ public interface FromCenConversion {
      * @param invoice
      * @return {@link BinaryConversionResult BinaryConversionResult}
      */
-    BinaryConversionResult convert(BG0000Invoice invoice);
+    BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException;
 
     /**
      * Whether the given format is supported or not.
@@ -30,11 +32,17 @@ public interface FromCenConversion {
      * The list of supported formats.
      * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
      */
-    String getSupportedFormats();
+    Set<String> getSupportedFormats();
 
     /**
      * The preferred file extension for the target format, without ".".
      * For instance, not '{@code .xml}' but '{@code xml}'.
      */
     String extension();
+
+    /**
+     *
+     * Regex string for mapping key validation
+     */
+    String getMappingRegex();
 }

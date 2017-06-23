@@ -169,7 +169,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <version>3.0.0</version>
                         <configuration>
-                            <finalName>${cli.main.jar}</finalName>
+                            <finalName>${cli.main.jar}-${project.version}</finalName>
                             <descriptors>
                                 <descriptor>src/assembly/bin.xml</descriptor>
                             </descriptors>
@@ -220,7 +220,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

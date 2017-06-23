@@ -3,10 +3,36 @@ package it.infocert.eigor.model.core.model.structure;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 public class BtBgNameTest {
+
+    @Test
+    public void shouldFormatDifferentNames() throws Exception {
+        assertEquals("BT0001", BtBgName.format("BT-1") );
+        assertEquals("BT0012", BtBgName.format("BT12"));
+        assertEquals("BT0021", BtBgName.format("Bt21"));
+        assertEquals("BT0023", BtBgName.format("bt 23"));
+        assertEquals("BT0023", BtBgName.format("bt          23"));
+        assertEquals("BG0015", BtBgName.format("bG-15"));
+        assertEquals("BG0015", BtBgName.format("bg- 15"));
+        assertEquals("BG0015", BtBgName.format("bg - 15"));
+        assertEquals("BG0015", BtBgName.format("bg -15"));
+        assertEquals("BG0015", BtBgName.format("bg                  -15"));
+        assertEquals("BG0015-1", BtBgName.format("BG15-1"));
+        assertEquals("BG0015-1", BtBgName.format("bg -15-1"));
+        assertEquals("BG0015-1", BtBgName.format("bg -15-                      1"));
+    }
+
+    @Test
+    public void shouldFailIfNotAMeaningfulBgBtName() throws Exception {
+        try {
+            BtBgName.format("invalid string");
+            fail();
+        } catch (IllegalArgumentException ignored) {}
+    }
 
     @Test
     public void shouldParseSuccessfully() {

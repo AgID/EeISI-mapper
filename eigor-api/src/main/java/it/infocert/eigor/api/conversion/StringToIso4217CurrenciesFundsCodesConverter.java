@@ -3,6 +3,10 @@ package it.infocert.eigor.api.conversion;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 
+/**
+ * Converts "EURO" and "euro" in {@link it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes#EUR},
+ * "croatian khuna" in {@link it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes#HRK} and so on.
+ */
 public class StringToIso4217CurrenciesFundsCodesConverter extends FilteringEnumConversion<String, Iso4217CurrenciesFundsCodes> {
 
     public StringToIso4217CurrenciesFundsCodesConverter() {
@@ -17,6 +21,15 @@ public class StringToIso4217CurrenciesFundsCodesConverter extends FilteringEnumC
         };
     }
 
+    @Override
+    public Class<Iso4217CurrenciesFundsCodes> getTargetClass() {
+        return Iso4217CurrenciesFundsCodes.class;
+    }
+
+    @Override
+    public Class<String> getSourceClass() {
+        return String.class;
+    }
 
 
 }

@@ -27,7 +27,7 @@ public class InvoiceUtils {
     }
 
     /**
-     * @param path A path like "/BG0025/BG0026".
+     * @param path    A path like "/BG0025/BG0026".
      * @param invoice The invoice where the path should be guaranteed.
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
@@ -45,6 +45,7 @@ public class InvoiceUtils {
                     throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
                 }
 
+
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
 
@@ -53,7 +54,7 @@ public class InvoiceUtils {
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
                             format("'%s' is wrong, too many '%s' children found.",
-                            path, current.denomination())
+                                    path, current.denomination())
                     );
                 }
                 current = children.get(0);
@@ -66,19 +67,20 @@ public class InvoiceUtils {
         return invoice;
     }
 
-    /** Return the children of a parent by name. */
+    /**
+     * Return the children of a parent by name.
+     */
     public List<BTBG> getChildrenAsList(BTBG parent, final String childName) {
-
         List<Method> methods = Arrays.asList(parent.getClass().getMethods());
         Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
-                return method.getName().startsWith("get" + childName) &&
+                return method.getName().startsWith("get" + BtBgName.format(childName)) &&
                         method.getParameterTypes().length == 0;
             }
         });
 
-        if(filter == null || filter.isEmpty()) return null;
+        if (filter == null || filter.isEmpty()) return null;
 
         Method getterMethod = filter.iterator().next();
         try {
@@ -87,8 +89,9 @@ public class InvoiceUtils {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            if(cause == null || !(cause instanceof RuntimeException)) throw new RuntimeException("An exception occurred while invoking " + getterMethod.toString() + " on " + parent, e);
-            throw (RuntimeException)cause;
+            if (cause == null || !(cause instanceof RuntimeException))
+                throw new RuntimeException("An exception occurred while invoking " + getterMethod.toString() + " on " + parent, e);
+            throw (RuntimeException) cause;
         }
     }
 
@@ -99,11 +102,11 @@ public class InvoiceUtils {
         Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
             public boolean apply(Class<? extends BTBG> c) {
-                return c.getSimpleName().startsWith(name);
+                return c.getSimpleName().startsWith(BtBgName.format(name));
             }
         });
 
-        if(filter==null || filter.isEmpty()) return null;
+        if (filter == null || filter.isEmpty()) return null;
         else return filter.iterator().next();
 
     }
@@ -125,7 +128,7 @@ public class InvoiceUtils {
             }
         });
 
-        if(filter==null || filter.isEmpty()) return null;
+        if (filter == null || filter.isEmpty()) return null;
 
         return filter.iterator().next();
 
@@ -145,9 +148,9 @@ public class InvoiceUtils {
                 throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
             }
 
-           if (children.isEmpty()) {
-               return null;
-           }
+            if (children.isEmpty()) {
+                return null;
+            }
             current = children.get(0);
 
         }
@@ -157,13 +160,14 @@ public class InvoiceUtils {
 
     /**
      * Tries to add the given child to the given parent if it is possible.
-     * @throws IllegalAccessException If something goes wrong.
-     * @throws InvocationTargetException If something goes wrong.
+     *
      * @return {@literal true} if the child has been added, {@literal false} otherwise.
+     * @throws IllegalAccessException    If something goes wrong.
+     * @throws InvocationTargetException If something goes wrong.
      */
     public boolean addChild(BTBG parentBg, BTBG childBt) throws IllegalAccessException, InvocationTargetException {
         List<BTBG> childrenAsList = getChildrenAsList(parentBg, childBt.denomination());
-        if(childrenAsList != null) {
+        if (childrenAsList != null) {
             childrenAsList.add(childBt);
             return true;
         }
@@ -182,7 +186,7 @@ public class InvoiceUtils {
             if (children != null && children.size() != 0) {
                 current = children.get(0);
             }
-            if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1 ))) {
+            if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1))) {
                 return true;
             }
         }

@@ -16,4 +16,15 @@ public class CountryNameToIso31661CountryCodeConverter extends FilteringEnumConv
             }};
     }
 
+    @Override
+    public Class<Iso31661CountryCodes> getTargetClass() {
+        return Iso31661CountryCodes.class;
+    }
+
+    @Override
+    public Class<String> getSourceClass() {
+        return String.class;
+    }
+
+
 }

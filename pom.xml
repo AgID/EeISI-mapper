@@ -101,7 +101,6 @@
 
             <reporting>
                 <plugins>
-
                     <plugin>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-maven</artifactId>

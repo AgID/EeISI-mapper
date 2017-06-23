@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
-public class StringToJavaLocalDateConverter implements TypeConverter<String, LocalDate> {
+public class StringToJavaLocalDateConverter extends FromStringTypeConverter<LocalDate> {
 
     private final DateTimeFormatter formatter;
 
@@ -25,5 +25,10 @@ public class StringToJavaLocalDateConverter implements TypeConverter<String, Loc
     @Override
     public LocalDate convert(String s) {
         return LocalDate.parse(s, formatter);
+    }
+
+    @Override
+    public Class<LocalDate> getTargetClass() {
+        return LocalDate.class;
     }
 }

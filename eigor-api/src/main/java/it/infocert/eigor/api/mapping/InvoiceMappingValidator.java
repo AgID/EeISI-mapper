@@ -1,4 +1,4 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping;
 
 
 import com.google.common.collect.Multimap;
@@ -6,7 +6,7 @@ import com.google.common.collect.Multimap;
 /**
  * Interface for input invoice map validators.
  */
-public interface InputInvoiceMapValidator {
+public interface InvoiceMappingValidator {
 
     /**
      * Validates a mappings map.
