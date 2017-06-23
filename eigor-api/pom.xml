@@ -52,5 +52,4 @@
             <artifactId>jaxen</artifactId>
         </dependency>
     </dependencies>
-
 </project>
