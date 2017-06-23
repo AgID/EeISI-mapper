@@ -35,10 +35,4 @@ public interface ToCenConversion {
      * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
      */
     Set<String> getSupportedFormats();
-
-    /**
-     *
-     * Regex string for mapping key validation
-     */
-    String getMappingRegex();
 }

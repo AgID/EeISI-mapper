@@ -1,19 +1,19 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.mapping.CommonConversionModule;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
+import org.jdom2.Document;
+import org.jdom2.Element;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,54 +21,40 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class GenericTransformation {
+public abstract class GenericTransformer {
 
     protected static Logger log = null;
-    protected Reflections reflections;
     protected ConversionRegistry conversionRegistry;
+    protected InvoiceUtils invoiceUtils;
 
-    public GenericTransformation(Reflections reflections) {
-        this.reflections = reflections;
-        conversionRegistry = new ConversionRegistry(
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                new StringToUnitOfMeasureConverter(),
-                new LookUpEnumConversion(UnitOfMeasureCodes.class),
-                new StringToDoubleConverter(),
-                new StringToStringConverter()
-        );
+    public GenericTransformer(Reflections reflections, ConversionRegistry conversionRegistry) {
+        this.invoiceUtils = new InvoiceUtils(reflections);
+        this.conversionRegistry = conversionRegistry;
     }
 
     protected String getNodeTextFromXPath(Document document, String xPath) {
-        NodeList nodeList = CommonConversionModule.evaluateXpath(document, xPath);
-        final Node item = nodeList.item(0);
-        log.info(xPath + " item found: " + item);
-        return item != null ? item.getTextContent() : null;
+        List<Element> elementList = CommonConversionModule.evaluateXpath(document, xPath);
+        String item = null;
+        if (!elementList.isEmpty()) {
+            item = elementList.get(0).getText();
+            log.info(xPath + "item found: " + item);
+        }
+        return item;
     }
 
-    protected void addNewCenObjectFromStringValueToInvoice(String bgBtPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
-        InvoiceUtils invoiceUtils = new InvoiceUtils(reflections);
-
+    protected void addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
         // find the parent BG
-        String bgPath = bgBtPath.substring(0, bgBtPath.lastIndexOf("/"));
+        String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
         invoiceUtils.ensurePathExists(bgPath, invoice);
         BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
-        log.info(bgBtPath + " has BG parent: " + bg);
+        log.info(cenPath + " has BG parent: " + bg);
 
         // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
         // if there no child? what?
-        if (!invoiceUtils.hasChild(bgBtPath, invoice)) {
+        if (!invoiceUtils.hasChild(cenPath, invoice)) {
             try {
                 // create BT element
-                String btName = bgBtPath.substring(bgBtPath.lastIndexOf("/") + 1);
+                String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if(btClass==null) {
                     throw new RuntimeException("Unable to find BT with name '" + btName + "'");
@@ -114,7 +100,7 @@ public abstract class GenericTransformation {
                 };
                 Stream.create(Arrays.asList(constructors)).forEach(k);
 
-                log.info(bgBtPath + " - bt element created: " + bt);
+                log.info(cenPath + " - bt element created: " + bt);
 
                 // add BT element to BG parent
                 if (!bt.isEmpty()) {
@@ -127,5 +113,6 @@ public abstract class GenericTransformation {
         }
     }
 
-    public abstract void transform(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
+    public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
+    public abstract void transformCenToXml(BG0000Invoice invoice, Document document, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
 }

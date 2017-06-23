@@ -222,12 +222,12 @@ public class ITCli {
         }
         proc.get().waitFor();
 
-         //uncomment to check for program output
+         /*//uncomment to check for program output
          BufferedInputStream out = new BufferedInputStream(proc.get().getInputStream());
          BufferedInputStream err = new BufferedInputStream(proc.get().getErrorStream());
          System.out.println( IOUtils.toString(out) );
          System.out.println( IOUtils.toString(err) );
-         System.exit(1);
+         System.exit(1);*/
 
 
 

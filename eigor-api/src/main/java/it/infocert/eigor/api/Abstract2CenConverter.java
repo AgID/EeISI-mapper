@@ -2,7 +2,7 @@ package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
-import it.infocert.eigor.api.mapping.toCen.GenericManyToOneTransformation;
+import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
@@ -81,8 +81,8 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
                     index++;
                 }
 
-                GenericManyToOneTransformation transformer = new GenericManyToOneTransformation(bgBtPath, combinationExpression, xPaths, reflections);
-                transformer.transform(document, partialInvoice, errors);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, reflections, conversionRegistry);
+                transformer.transformXmlToCen(document, partialInvoice, errors);
             }
 //            mapBt33.type=concatenation
 //            mapBt33.xml.source.1=**/CapitaleSociale
@@ -135,7 +135,6 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
         return null;
     }
 
-    @Override
     public String getMappingRegex() {
         return regex;
     }
