@@ -1,6 +1,10 @@
 package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.model.BTBG;
+import org.reflections.Reflections;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -10,12 +14,15 @@ import java.util.regex.Pattern;
 /**
  * Validator for Map<CEN,XPATH>
  */
-public class InputInvoiceCenXpathMapValidator implements InputInvoiceMapValidator {
+public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator {
 
     private final Pattern pattern;
+    private final InvoiceUtils invoiceUtils;
 
-    public InputInvoiceCenXpathMapValidator(String keyRegex) {
+
+    public InvoiceCenXpathMappingValidator(String keyRegex, Reflections reflections) {
         pattern = Pattern.compile(keyRegex);
+        invoiceUtils = new InvoiceUtils(reflections);
     }
 
     @Override
@@ -33,7 +40,7 @@ public class InputInvoiceCenXpathMapValidator implements InputInvoiceMapValidato
 
 
     private boolean validateKey(String key) {
-        return pattern.matcher(key).matches();
+        return pattern.matcher(key).matches() && validateBTsBGs(key);
     }
 
     private boolean validateValue(String value) {
@@ -45,4 +52,11 @@ public class InputInvoiceCenXpathMapValidator implements InputInvoiceMapValidato
         }
         return true;
     }
+
+    private boolean validateBTsBGs(String key) {
+        String btName = key.substring(key.lastIndexOf("/") + 1);
+        Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
+        return btClass != null;
+    }
 }
+

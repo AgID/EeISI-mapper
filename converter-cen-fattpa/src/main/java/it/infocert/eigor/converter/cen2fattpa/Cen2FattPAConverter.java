@@ -53,6 +53,11 @@ public class Cen2FattPAConverter implements FromCenConversion {
         return "xml";
     }
 
+    @Override
+    public String getMappingRegex() {
+        return null;
+    }
+
     private byte[] makeXML(BG0000Invoice invoice, List<ConversionIssue> errors) {
 
         StringWriter xmlOutput = new StringWriter();

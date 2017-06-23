@@ -4,7 +4,7 @@ import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceCenXpathMapValidator;
+import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -22,6 +22,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(Abstract2CenConverter.class);
     private Reflections reflections;
+    private String regex;
     private ConversionRegistry conversionRegistry;
 
     public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
@@ -40,7 +41,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InputInvoiceCenXpathMapValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?"));
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(getMappingRegex(), reflections));
         Multimap<String, String> mapping = mapper.getMapping(getMappingPath());
         for (Map.Entry<String, String> entry : mapping.entries()) {
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
@@ -72,5 +73,14 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     @Override
     public String getMappingPath() {
         return null;
+    }
+
+    @Override
+    public String getMappingRegex() {
+        return regex;
+    }
+
+    public void setMappingRegex(String regex) {
+        this.regex = regex;
     }
 }
