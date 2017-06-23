@@ -2,13 +2,11 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Resources;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceMapValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.Properties;
 
 /**
  * This class stores the invoice path mappings for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
@@ -17,13 +15,12 @@ public class InputInvoiceXpathMap {
     private static final Logger log = LoggerFactory.getLogger(InputInvoiceXpathMap.class);
 
     private Multimap<String, String> mapping = HashMultimap.create();
-    private InputInvoiceMapValidator validator;
+    private InvoiceMappingValidator validator;
 
-    public InputInvoiceXpathMap(InputInvoiceMapValidator validator) {
+    public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
         mapping = HashMultimap.create();
     }
-
 
 
     /**

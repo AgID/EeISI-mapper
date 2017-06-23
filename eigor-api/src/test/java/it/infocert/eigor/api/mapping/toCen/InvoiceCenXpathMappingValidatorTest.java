@@ -4,17 +4,16 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
+import org.reflections.Reflections;
 
-import static org.junit.Assert.*;
 
+public class InvoiceCenXpathMappingValidatorTest {
 
-public class InputInvoiceCenXpathMapValidatorTest {
-
-    private InputInvoiceCenXpathMapValidator validator;
+    private InvoiceCenXpathMappingValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new InputInvoiceCenXpathMapValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?");
+        validator = new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new Reflections("it.infocert"));
     }
 
     @Test
@@ -24,8 +23,8 @@ public class InputInvoiceCenXpathMapValidatorTest {
         mappings.put("/BT0024", "/Invoice/Note");
         mappings.put("/BT0025", "/Invoice/BillingReference/InvoiceDocumentReference/ID");
         mappings.put("/BT0125", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject");
-        mappings.put("/BT0125-1", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject/@mimeCode");
-
+//        mappings.put("/BT0125-1", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject/@mimeCode");
+//        TODO uncomment once identifiers are supported in BGs/BTs
         validator.validate(mappings);
     }
 
@@ -38,9 +37,18 @@ public class InputInvoiceCenXpathMapValidatorTest {
         mappings.put("/BT0025", "/Invoice/BillingReference/InvoiceDocumentReference/ID");
         mappings.put("/BG0010", "/Invoice/PayeeParty");
         mappings.put("/BT0125", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject");
-        mappings.put("/BT0125-1", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject/@mimeCode");
-
+//        mappings.put("/BT0125-1", "/Invoice/AdditionalDocumentReference/Attachment/EmbeddedDocumentBinaryObject/@mimeCode");
+//        TODO uncomment once identifiers are supported in BGs/BTs
         mappings.put("/BT019", "/Invoice/AccountingCost");
+
+        validator.validate(mappings);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionIfAKeyValueDoesNotExistInCen() throws Exception {
+        Multimap<String, String> mappings = HashMultimap.create();
+
+        mappings.put("/BT9999", "/Invoice/Note");
 
         validator.validate(mappings);
     }
