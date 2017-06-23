@@ -49,6 +49,14 @@
             </includes>
         </fileSet>
         <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa/mappings</outputDirectory>
+            <directory>../converter-cen-fattpa/src/main/resources/converter-cen-fattpa/mappings</directory>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
+            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
+        </fileSet>
+        <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron</outputDirectory>
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron</directory>
         </fileSet>

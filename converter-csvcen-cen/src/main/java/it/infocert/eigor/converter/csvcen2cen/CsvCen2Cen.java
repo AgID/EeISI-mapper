@@ -38,18 +38,8 @@ public class CsvCen2Cen extends Abstract2CenConverter {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
-    private final ConversionRegistry conversionRegistry;
 
-    private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
-
-    private Reflections reflections;
-
-    public CsvCen2Cen(Reflections reflections) {
-        this.reflections = reflections;
-
-        cenStructure = new CenStructure();
-        utils = new InvoiceUtils(reflections);
-        conversionRegistry = new ConversionRegistry(
+    private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),
                 new StringToJavaLocalDateConverter("dd-MMM-yy"),
@@ -65,6 +55,15 @@ public class CsvCen2Cen extends Abstract2CenConverter {
                 new StringToDoubleConverter(),
                 new StringToStringConverter()
         );
+
+    private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
+
+
+    public CsvCen2Cen(Reflections reflections) {
+        super(reflections, conversionRegistry);
+
+        cenStructure = new CenStructure();
+        utils = new InvoiceUtils(reflections);
     }
 
     @Override

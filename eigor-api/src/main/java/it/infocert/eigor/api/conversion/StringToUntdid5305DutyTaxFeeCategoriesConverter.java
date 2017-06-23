@@ -17,4 +17,15 @@ public class StringToUntdid5305DutyTaxFeeCategoriesConverter extends FilteringEn
         };
     }
 
+    @Override
+    public Class<Untdid5305DutyTaxFeeCategories> getTargetClass() {
+        return Untdid5305DutyTaxFeeCategories.class;
+    }
+
+    @Override
+    public Class<String> getSourceClass() {
+        return String.class;
+    }
+
+
 }

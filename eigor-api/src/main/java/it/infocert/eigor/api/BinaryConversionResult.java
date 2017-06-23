@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public class BinaryConversionResult extends ConversionResult<byte[]> {
 
-    protected final boolean hasResult;
+    private final boolean hasResult;
 
     /**
      * A successfull conversion.

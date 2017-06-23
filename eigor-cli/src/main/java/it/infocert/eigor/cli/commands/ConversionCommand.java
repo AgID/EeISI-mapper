@@ -3,6 +3,7 @@ package it.infocert.eigor.cli.commands;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
+import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
@@ -67,7 +68,7 @@ public class ConversionCommand implements CliCommand {
      */
     @Override
     public int execute(PrintStream out, PrintStream err) {
-
+        
         InMemoryRuleReport ruleReport = new InMemoryRuleReport();
         File outputFolderFile;
         outputFolderFile = outputFolder.toFile();
@@ -78,12 +79,14 @@ public class ConversionCommand implements CliCommand {
         // Execute the conversion
         // ===================================================
         try {
+            
             conversion(outputFolderFile, ruleReport, out);
-
         } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
+            
             log.error(e.getMessage(), e);
             return 1;
         } finally {
+            
             logSupport.removeLogger();
         }
 
@@ -121,7 +124,9 @@ public class ConversionCommand implements CliCommand {
 
         BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
+        
         writeFromCenErrors(out, conversionResult, outputFolderFile);
+        
         writeCenInvoice(cenInvoice, outputFolderFile);
 
         if (conversionResult.hasErrors()) {
@@ -151,7 +156,7 @@ public class ConversionCommand implements CliCommand {
             // writes to-cen issues csv
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
             FileUtils.writeStringToFile(toCenErrors, data);
-
+            
             for (ConversionIssue e : errors) {
                 out.println("Error: " + e.getMessage());
             }
@@ -185,7 +190,7 @@ public class ConversionCommand implements CliCommand {
     }
 
 
-    private void writeFromCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+    private void writeFromCenErrors(PrintStream out, BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (conversionResult.isSuccessful()) {
             out.println("From Cen Conversion was successful!");
         } else {
@@ -200,6 +205,7 @@ public class ConversionCommand implements CliCommand {
                 out.println("Error: " + e.getMessage());
             }
             out.println("For more information see 'fromcen-errors.csv'.");
+
         }
     }
 
@@ -210,6 +216,7 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
+
         String extension = fromCen.extension();
         while (!extension.isEmpty() && extension.startsWith(".")) {
             extension = extension.substring(1);

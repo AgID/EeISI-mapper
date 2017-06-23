@@ -1,4 +1,4 @@
-package it.inocert.eigor.cli;
+package it.infocert.eigor.cli;
 
 import it.infocert.eigor.test.Files;
 import it.infocert.eigor.test.OS;
@@ -53,16 +53,20 @@ public class ITCli {
         // prepare invocation
         final String args =
                 "--input "
-                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen-a7-minimum-content-with-std-values.csv")
+                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen.csv")
                         + " --output "
                         + outputFolder
-                        + " --source " + "csvcen" + " --target " + "fatturapa" + " --force"; // FIXME maybe remove --force once conversion is free of errors
+                        + " --source " + "csvcen" + " --target " + "fatturapa" + " --force > consoleOutputDump"; // FIXME maybe remove --force once conversion is free of errors
 
         Process process = executeTheCli(workdir, args);
 
         assertThat( process.exitValue(), is(0) );
         String[] producedFiles = outputFolder.list();
-        assertThat("Output folder '" + outputFolder.getAbsolutePath() + "' was supposed to contain some files, but it don't.", producedFiles.length, greaterThan(0) );
+        assertThat("Output folder '" + outputFolder.getAbsolutePath() + "' was supposed to contain some files, but it doesn't.", producedFiles.length, greaterThan(0) );
+        log.error("\nExpected: {} \nFound: {}",
+                asList("fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-target.xml", "invoice-transformation.log", "rule-report.csv"),
+                asList(producedFiles)
+                );
         assertThat(asList(producedFiles), hasItems( "fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-target.xml", "invoice-transformation.log", "rule-report.csv" ) );
 
     }
@@ -182,10 +186,10 @@ public class ITCli {
         // prepare invocation
         final String args =
                 "--input "
-                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen-a7-minimum-content-with-std-values.csv")
+                        + newFile(workdir , "eigor-cli" , "examples" , "cen/cen.csv")
                         + " --output "
                         + outputFolder
-                        + " --source " + "csvcen" + " --target " + "fatturapa" + " --force"; // FIXME maybe remove --force once conversion is free of errors
+                        + " --source " + "csvcen" + " --target " + "fatturapa" + " --force > consoleOutputDump"; // FIXME maybe remove --force once conversion is free of errors
 
 
         final File batToRun = newFile(workdir , "eigor-cli", "eigor.sh"); //createNewFileUnix(workdir , "eigor-cli" , "eigor.sh");
@@ -235,6 +239,10 @@ public class ITCli {
 
         String[] producedFiles = outputFolder.list();
         assertThat("Output folder '" + outputFolder.getAbsolutePath() + "' was supposed to contain some files, but it don't.", producedFiles.length, greaterThan(0) );
+        log.info("Expected: {} \nBut found: {}",
+                asList("fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-target.xml", "invoice-transformation.log", "rule-report.csv"),
+                asList(producedFiles)
+        );
         assertThat(asList(producedFiles), hasItems( "fromcen-errors.csv", "invoice-cen.csv", "invoice-source.csv", "invoice-target.xml", "invoice-transformation.log", "rule-report.csv" ) );
 
 

@@ -19,4 +19,8 @@ public interface TypeConverter<Source, Target> {
 
     Target convert(Source source);
 
+    Class<Target> getTargetClass();
+
+    Class<Source> getSourceClass();
+
 }

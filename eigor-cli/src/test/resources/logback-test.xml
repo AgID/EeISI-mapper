@@ -11,7 +11,6 @@
         <appender-ref ref="STDOUT" />
     </root>
 
-    <logger name="it.infocert" level="off" />
-    <logger name="it.inocert" level="off" />
+    <logger name="it.infocert" level="trace" />
 
 </configuration>
