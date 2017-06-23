@@ -4,7 +4,8 @@ import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceCenXpathMapValidator;
+import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.output.XMLOutputter;
@@ -35,16 +36,17 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     /**
      * Move values from a {@link BG0000Invoice} to an XML {@link Document} and serialize it in a byte array
-     * @param invoice the {@link BG0000Invoice} from which to take the values
+     *
+     * @param invoice  the {@link BG0000Invoice} from which to take the values
      * @param document the {@link Document} to populate with BT values
-     * @param errors a list of {@link ConversionIssue}, to be filled if an error occurs during the conversion
+     * @param errors   a list of {@link ConversionIssue}, to be filled if an error occurs during the conversion
      * @return a {@link ConversionResult} of {@link BinaryConversionResult} containing both the XML byte array and the error list
      * @throws SyntaxErrorInInvoiceFormatException
      */
     protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         byte[] bytes = null;
         try {
-            InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InputInvoiceCenXpathMapValidator(regex));
+            InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections));
             Multimap<String, String> mapping = mapper.getMapping(getMappingPath());
 
             for (Map.Entry<String, String> entry : mapping.entries()) {
@@ -64,11 +66,17 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     /**
      * Get the mapping configuration file path
+     *
      * @return the path to the file
      */
     public abstract String getMappingPath();
 
-    public void setValidationExpression(String regex) {
+    public void setMappingRegex(String regex) {
         this.regex = regex;
+    }
+
+    @Override
+    public String getMappingRegex() {
+        return regex;
     }
 }

@@ -79,4 +79,10 @@ public class FattPA2CenConverter implements ToCenConversion {
         // TODO change when mapping properties file added to this converter too
         return null;
     }
+
+    @Override
+    public String getMappingRegex() {
+        // TODO change if there will be external mappings file that needs validation
+        return null;
+    }
 }

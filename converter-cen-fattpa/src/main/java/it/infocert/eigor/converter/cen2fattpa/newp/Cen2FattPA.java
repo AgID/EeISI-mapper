@@ -52,7 +52,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
     public Cen2FattPA(Reflections reflections) {
         super(reflections, conversionRegistry);
-        setValidationExpression("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
+        setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
     /**

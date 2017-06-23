@@ -37,4 +37,10 @@ public interface ToCenConversion {
     Set<String> getSupportedFormats();
 
     String getMappingPath();
+
+    /**
+     *
+     * Regex string for mapping key validation
+     */
+    String getMappingRegex();
 }

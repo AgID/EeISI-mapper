@@ -39,4 +39,10 @@ public interface FromCenConversion {
      * For instance, not '{@code .xml}' but '{@code xml}'.
      */
     String extension();
+
+    /**
+     *
+     * Regex string for mapping key validation
+     */
+    String getMappingRegex();
 }
