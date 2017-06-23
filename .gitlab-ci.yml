@@ -52,13 +52,24 @@ pages:
   only:
     - develop
 
-release-cli:
+eigor-cli-snapshot:
   stage: packaging
-  script: ./mvnw install -Prelease
+  script: ./mvnw $MAVEN_CLI_OPTS install -Prelease
   artifacts:
     paths:
-      - eigor-cli/target/eigor.zip
-      - eigor-cli/target/eigor.tar.gz
+      - eigor-cli/target/eigor-*.zip
+      - eigor-cli/target/eigor-*.tar.gz
+  only:
+    - develop
+
+eigor-cli-release:
+  stage: packaging
+  script: ./mvnw $MAVEN_CLI_OPTS install -Prelease
+  artifacts:
+    paths:
+      - eigor-cli/target/eigor-*.zip
+      - eigor-cli/target/eigor-*.tar.gz
   only:
     - master
+
 

@@ -3,6 +3,7 @@ package it.infocert.eigor.cli;
 import it.infocert.eigor.test.Files;
 import it.infocert.eigor.test.OS;
 import org.apache.commons.io.FileUtils;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -12,6 +13,7 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.Kernel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
+
 
 public class ITCli {
 
@@ -249,7 +252,7 @@ public class ITCli {
     }
 
     private File moveEigorZipFile(File destinationFolder) throws IOException {
-        File eigorCliZipped = newFile("target", "eigor.zip");
+        File eigorCliZipped = scanFiles("zip");
         return moveFile(destinationFolder, eigorCliZipped);
     }
 
@@ -269,7 +272,7 @@ public class ITCli {
         return file;
     }
     private File moveEigorTarGzFile(File destinationFolder) throws IOException {
-        File eigorCliZipped = newFile("target", "eigor.tar.gz");//createNewFileUnix("target", "eigor.zip");
+        File eigorCliZipped = scanFiles("tar.gz");
         return moveFile(destinationFolder, eigorCliZipped);
     }
 
@@ -281,4 +284,14 @@ public class ITCli {
         return fileToMove;
     }
 
+    private File scanFiles(String format) {
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setIncludes(new String[] {"eigor-*." + format});
+        String target = "target";
+        scanner.setBasedir(newFile(target));
+        scanner.scan();
+        String[] includedFiles = scanner.getIncludedFiles();
+        return newFile("target", includedFiles[0]);
+    }
 }
+
