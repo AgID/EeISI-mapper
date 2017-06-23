@@ -5,7 +5,6 @@ import it.infocert.eigor.test.OS;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -13,7 +12,6 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.Kernel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
