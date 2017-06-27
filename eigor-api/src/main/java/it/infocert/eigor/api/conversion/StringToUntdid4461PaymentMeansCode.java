@@ -20,4 +20,8 @@ public class StringToUntdid4461PaymentMeansCode extends FilteringEnumConversion<
         };
     }
 
+    @Override
+    public Class<String> getSourceClass() {
+        return String.class;
+    }
 }
