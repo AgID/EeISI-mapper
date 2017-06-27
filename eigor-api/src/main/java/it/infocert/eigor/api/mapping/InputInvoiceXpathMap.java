@@ -39,7 +39,7 @@ public class InputInvoiceXpathMap {
             }
 
             // try #2, from classpath with path not changed
-            if(mapping==null) {
+            if(mapping == null || mapping.isEmpty()) {
                 try {
                     InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
                     if (resourceAsStream == null) {
@@ -52,7 +52,7 @@ public class InputInvoiceXpathMap {
             }
 
             // try #3, from classpath with path with "/" prepended
-            if(mapping==null) {
+            if(mapping==null || mapping.isEmpty()) {
                 try {
                     InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
                     if (resourceAsStream == null) {

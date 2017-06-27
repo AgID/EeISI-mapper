@@ -845,7 +845,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         for (int i = 0; i < invoiceLineList.size(); i++) {
             BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
-            DettaglioLineeType dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee().get(i);
+
+            if(fatturaElettronicaBody.getDatiBeniServizi() == null ||
+                    fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee() == null) continue;
+
+            DettaglioLineeType dettaglioLinee = fatturaElettronicaBody
+                    .getDatiBeniServizi()
+                    .getDettaglioLinee()
+                    .get(i);
 
 
             if (!(invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
