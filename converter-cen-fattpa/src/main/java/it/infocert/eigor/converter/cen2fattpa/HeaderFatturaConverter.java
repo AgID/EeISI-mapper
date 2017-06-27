@@ -166,6 +166,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             if (!sellerPostalAddress.getBT0036SellerAddressLine2().isEmpty()) {
                 sedeCedente.setIndirizzo(sellerPostalAddress.getBT0036SellerAddressLine2().get(0).getValue());
             }
+
             if (!sellerPostalAddress.getBT0162SellerAddressLine3().isEmpty()) {
                 sedeCedente.setIndirizzo(sellerPostalAddress.getBT0162SellerAddressLine3().get(0).getValue());
             }

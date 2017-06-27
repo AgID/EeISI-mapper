@@ -1,34 +1,35 @@
 package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
-import it.infocert.eigor.api.mapping.toCen.GenericOneToOneTransformation;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
+import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
+import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Abstract2CenConverter implements  ToCenConversion {
+public abstract class Abstract2CenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(Abstract2CenConverter.class);
     private Reflections reflections;
+    private String regex;
+    private ConversionRegistry conversionRegistry;
 
-    public Abstract2CenConverter(Reflections reflections) {
+    public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
         this.reflections = reflections;
+        this.conversionRegistry = conversionRegistry;
     }
 
-    protected Abstract2CenConverter() {
-    }
 
     /**
      * Apply 1to1 transformations into BG0000Invoice.
@@ -40,13 +41,13 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
     protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         BG0000Invoice invoice = new BG0000Invoice();
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap();
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(getMappingRegex(), reflections));
         Multimap<String, String> mapping = mapper.getMapping(getMappingPath());
         for (Map.Entry<String, String> entry : mapping.entries()) {
-            GenericOneToOneTransformation transformer = new GenericOneToOneTransformation(entry.getValue(), entry.getKey(), reflections);
-            transformer.transform(document, invoice, errors);
+            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
+            transformer.transformXmlToCen(document, invoice, errors);
         }
-        return new ConversionResult<BG0000Invoice>(errors, invoice);
+        return new ConversionResult<>(errors, invoice);
     }
 
     /**
@@ -57,12 +58,12 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
      * @throws SyntaxErrorInInvoiceFormatException syntax error in invoice format exception
      */
     public Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
-        Document doc = null;
+        Document doc;
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = factory.newDocumentBuilder();
-            doc = dBuilder.parse(sourceInvoiceStream);
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+            SAXBuilder saxBuilder = new SAXBuilder();
+            saxBuilder.setIgnoringBoundaryWhitespace(true);
+            doc = saxBuilder.build(sourceInvoiceStream);
+        } catch (JDOMException | IOException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
@@ -74,4 +75,12 @@ public abstract class Abstract2CenConverter implements  ToCenConversion {
         return null;
     }
 
+    @Override
+    public String getMappingRegex() {
+        return regex;
+    }
+
+    public void setMappingRegex(String regex) {
+        this.regex = regex;
+    }
 }

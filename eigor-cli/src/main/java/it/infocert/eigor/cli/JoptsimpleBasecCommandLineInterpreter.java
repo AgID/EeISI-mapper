@@ -120,7 +120,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             String target = (String) options.valueOf("target");
             fromCen = fromCenConversionRepository.findConversionFromCen(target);
             if (fromCen == null) {
-                Set<String> supportedFormats = fromCenConversionRepository.supportedFormats();
+                Set<String> supportedFormats = fromCenConversionRepository.supportedFromCenFormats();
                 return new ReportFailuereCommand("Target format '%s' is not supported. Please choose one among: %s.", target, supportedFormats);
             }
         }

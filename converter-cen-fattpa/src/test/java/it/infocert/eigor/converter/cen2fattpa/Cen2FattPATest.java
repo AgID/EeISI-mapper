@@ -4,6 +4,7 @@ import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -15,6 +16,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.is;

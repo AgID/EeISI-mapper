@@ -1,17 +1,13 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Multimap;
-import com.google.common.io.Resources;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
+import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
+import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.net.URL;
+import org.reflections.Reflections;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class InputInvoiceXpathMapTest {
 
@@ -19,7 +15,7 @@ public class InputInvoiceXpathMapTest {
 
     @Before
     public void setUp() throws Exception {
-        xpathMap = new InputInvoiceXpathMap();
+        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new Reflections("it.infocert")));
     }
 
     @Test

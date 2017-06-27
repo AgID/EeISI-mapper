@@ -1,15 +1,8 @@
 package it.infocert.eigor.api;
 
-import com.google.common.collect.Multimap;
-import it.infocert.eigor.api.mapping.toCen.GenericOneToOneTransformation;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceXpathMap;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import org.reflections.Reflections;
-import org.w3c.dom.Document;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -44,4 +37,10 @@ public interface ToCenConversion {
     Set<String> getSupportedFormats();
 
     String getMappingPath();
+
+    /**
+     *
+     * Regex string for mapping key validation
+     */
+    String getMappingRegex();
 }

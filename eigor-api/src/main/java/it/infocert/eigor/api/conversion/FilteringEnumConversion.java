@@ -46,14 +46,5 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
      */
     protected abstract Filter<Target> buildFilter(Source value);
 
-    protected abstract static class FilterByValue<E,V> implements Filter<E> {
-
-        protected final V value;
-
-        FilterByValue(V value) {
-            this.value = value;
-        }
-
-    }
 
 }

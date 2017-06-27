@@ -4,7 +4,7 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
-public class StringToUntdid1001InvoiceTypeCodeConverter implements TypeConverter<String, Untdid1001InvoiceTypeCode> {
+public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeConverter<Untdid1001InvoiceTypeCode> {
 
     @Override public Untdid1001InvoiceTypeCode convert(final String s) {
 
@@ -28,5 +28,10 @@ public class StringToUntdid1001InvoiceTypeCodeConverter implements TypeConverter
 
         return first;
 
+    }
+
+    @Override
+    public Class<Untdid1001InvoiceTypeCode> getTargetClass() {
+        return Untdid1001InvoiceTypeCode.class;
     }
 }

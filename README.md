@@ -92,9 +92,12 @@ BT-153,American Cookies
     java -jar eigor.jar --input cen.csv --source cen --output ./result --target fattpa
 
 
+## Latest Snapshot
+* Download the lastest snapshot version of the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/-/jobs/artifacts/develop/download?job=eigor-cli-snapshot) command line interface to convert invoices.
+
+
 ## Latest Release
-* Download the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/builds/artifacts/master/download?job=package-cli)
-  * command line interface to convert invoices.
+* Download the lastest stable version of the [Eigor CLI](https://gitlab.com/tgi-infocert-eigor/eigor/-/jobs/artifacts/master/download?job=eigor-cli-release) command line interface to convert invoices.
   
 ## Documentation
 [Eigor documentation](https://tgi-infocert-eigor.gitlab.io/eigor/)
