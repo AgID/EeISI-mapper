@@ -59,7 +59,7 @@ public class CardinalityRule extends Rule {
                     childrenAsList = invoiceUtils.getChildrenAsList(invoice, formatName(node.getName()));
                 } else {
                     if (childrenAsList.isEmpty()) {
-                        return RuleOutcome.newFailedOutcome("%s - Can't verify the cardinality because " +
+                        return RuleOutcome.newUnapplicableOutcome("%s - Can't verify the cardinality because " +
                                 "one of its parent elements is missing. Last parent checked: %s.", name, node.getParent());
                     }
                     childrenAsList = invoiceUtils.getChildrenAsList(childrenAsList.get(0), formatName(node.getName()));

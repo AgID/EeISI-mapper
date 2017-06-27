@@ -620,15 +620,26 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
      * If not, it generates a correction line. This can occur if discounts or surcharges are converted from percent to values.
      */
     private void calculateCorrectionForTotalAmount() {
+
+        // let's check if we have all the info we need.
+        if( ! (fatturaElettronicaBody!=null &&
+                fatturaElettronicaBody
+                        .getDatiBeniServizi()!=null &&
+                fatturaElettronicaBody
+                        .getDatiBeniServizi()
+                        .getDettaglioLinee() != null )) return;
+
         Double invoiceTotal = 0d;
         try {
-            List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
+            List<DettaglioLineeType> lineList = fatturaElettronicaBody
+                    .getDatiBeniServizi()
+                    .getDettaglioLinee();
             for (DettaglioLineeType line : lineList) {
                 if (line.getPrezzoTotale() != null) {
                     invoiceTotal += line.getPrezzoTotale().doubleValue();
                 }
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
             errors.add(ConversionIssue.newError(e));
             log.error(e.getMessage(), e);
         }

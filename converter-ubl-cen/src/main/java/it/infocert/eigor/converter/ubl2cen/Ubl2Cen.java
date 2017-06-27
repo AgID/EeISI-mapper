@@ -91,7 +91,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
             errors.addAll(ciusValidator.validate(bytes));
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, "Schematron validation error!"));
+            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
         Document document = getDocument(clonedInputStream);

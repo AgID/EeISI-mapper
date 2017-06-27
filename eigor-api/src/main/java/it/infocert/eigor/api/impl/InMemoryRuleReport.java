@@ -30,6 +30,19 @@ public class InMemoryRuleReport implements RuleReport {
         return false;
     }
 
+    /**
+     * Return the items in the report that are {@link RuleOutcome.Outcome#ERROR errors} or {@link RuleOutcome.Outcome#FAILED failues}.
+     */
+    public List<Map.Entry<RuleOutcome, Rule>> getErrorsAndFailures() {
+        ArrayList<Map.Entry<RuleOutcome, Rule>> list = new ArrayList<>();
+        for (Map.Entry<RuleOutcome, Rule> item : items) {
+            if(item.getKey().outcome()== RuleOutcome.Outcome.ERROR || item.getKey().outcome()== RuleOutcome.Outcome.FAILED){
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
     public String dump() {
 
         Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
