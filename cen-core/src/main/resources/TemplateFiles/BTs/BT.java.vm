@@ -10,8 +10,10 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 
 /**
-* ${rows[0].data.BusinessTerm} (${rows[0].data.ClassName})
+* ${rows[0].data.BusinessTerm}
+* child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
 * <p>${rows[0].data.Description}</p>
+* <strong>Automatically generated, please don't change.</strong>
 */
 public class ${ClassName} extends AbstractBTBG {
 

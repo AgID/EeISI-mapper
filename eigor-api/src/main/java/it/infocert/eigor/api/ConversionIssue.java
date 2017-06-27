@@ -1,6 +1,10 @@
 package it.infocert.eigor.api;
 
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class ConversionIssue {
     private final String message;
     private final Exception cause;
@@ -14,8 +18,19 @@ public class ConversionIssue {
 
     public String getMessage() {
         if (message == null) {
-            return cause.getMessage();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(cause.getMessage());
+            // Please keep it, used for debugging.
+//            if(cause!=null){
+//                StringWriter sw = new StringWriter();
+//                cause.printStackTrace( new PrintWriter(sw));
+//                sb.append("\n").append(sw.toString());
+//            }
+
+            return sb.toString();
         }
+
         return message;
     }
 

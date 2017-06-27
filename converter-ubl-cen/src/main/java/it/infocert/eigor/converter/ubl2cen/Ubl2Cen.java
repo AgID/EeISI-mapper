@@ -41,14 +41,16 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
             new StringToUnitOfMeasureConverter(),
             new LookUpEnumConversion(UnitOfMeasureCodes.class),
+            new LookUpEnumConversion(VatExemptionReasonsCodes.class),
             new StringToDoubleConverter(),
-            new StringToStringConverter(),
             new JavaLocalDateToStringConverter(),
             new JavaLocalDateToStringConverter("dd-MMM-yy"),
             new Iso4217CurrenciesFundsCodesToStringConverter(),
             new Iso31661CountryCodesToStringConverter(),
             new DoubleToStringConverter("#.00"),
-            new UnitOfMeasureCodesToStringConverter()
+            new UnitOfMeasureCodesToStringConverter(),
+            new StringToStringConverter()
+
     );
 
     public static final String MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
@@ -89,7 +91,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
             errors.addAll(ciusValidator.validate(bytes));
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, "Schematron validation error!"));
+            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
         Document document = getDocument(clonedInputStream);

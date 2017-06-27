@@ -1,4 +1,5 @@
 CommonCode,Name,Description,Symbol,Annex,Alias,Active
+C62,one,Synonym: unit,1,1,C62_ONE,1
 84,A unit of pressure defining the number of kilopounds force per square inch. Use kip per square inch (common code N20).,A unit of pressure defining the number of kilopounds force per square inch.,klbf/in^2,1,A_UNIT_OF_PRESSURE_DEFINING_THE_NUMBER_OF_KILOPOUNDS_FORCE_PER_SQUARE_INCH_USE_KIP_PER_SQUARE_INCH_COMMON_CODE_N20_84,0
 AL,access line,A unit of count defining the number of telephone access lines.,,2,ACCESS_LINE_AL,1
 E50,accounting unit,A unit of count defining the number of accounting units.,,2,ACCOUNTING_UNIT_E50,1

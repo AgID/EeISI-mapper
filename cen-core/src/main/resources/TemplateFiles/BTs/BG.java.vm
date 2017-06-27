@@ -8,6 +8,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+${rows[0].data.BusinessTerm}
+#if( !${row0.data.BTBGClassName.startsWith("BG0000")} )
+child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
+#end
+<p>${rows[0].data.Description}</p>
+<strong>Automatically generated, please don't change.</strong>
+ */
 public class ${clzName} extends AbstractBTBG {
 
     #foreach( $row in $rows )

@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -9,6 +10,19 @@ import static org.junit.Assert.assertThat;
 public class LookUpEnumConversionTest {
 
     LookUpEnumConversion sut = new LookUpEnumConversion<Iso31661CountryCodes>(Iso31661CountryCodes.class);
+
+    @Test public void convertStringToVat() {
+
+        // given
+        LookUpEnumConversion<VatExemptionReasonsCodes> sut = new LookUpEnumConversion<>(VatExemptionReasonsCodes.class);
+
+        // when
+        VatExemptionReasonsCodes aam = sut.convert("AAM");
+
+        // then
+        assertThat( aam, is(VatExemptionReasonsCodes.AAM) );
+
+    }
 
     @Test public void convertStringToIso() {
 
