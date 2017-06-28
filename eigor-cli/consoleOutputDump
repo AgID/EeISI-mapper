@@ -1,0 +1,56 @@
+--------------------------------------------------------------
+--------------------------------------------------------------
+LAUNCHING Infocert - Eigor CLI Client - C:\Users\MARCOB~1\AppData\Local\Temp\junit2900746009629687359\workdir\eigor-cli\
+--------------------------------------------------------------
+To Cen Conversion was successful!
+1) Rule: BT0121 - Cardinality 0..1 not verified. Found 2 times.
+2) Rule: BT0120 - Cardinality 0..1 not verified. Found 2 times.
+3) Rule: BT0119 - Cardinality 0..1 not verified. Found 2 times.
+4) Rule: BT0118 - Cardinality 1..1 not verified. Found 2 times.
+5) Rule: BT0117 - Cardinality 1..1 not verified. Found 2 times.
+6) Rule: BT0116 - Cardinality 1..1 not verified. Found 2 times.
+7) Rule: BT0115 - Cardinality 1..1 not verified. Found 2 times.
+8) Rule: BT0114 - Cardinality 0..1 not verified. Found 2 times.
+9) Rule: BT0113 - Cardinality 0..1 not verified. Found 2 times.
+10) Rule: BT0112 - Cardinality 1..1 not verified. Found 2 times.
+11) Rule: BT0111 - Cardinality 0..1 not verified. Found 2 times.
+12) Rule: BT0110 - Cardinality 0..1 not verified. Found 2 times.
+13) Rule: BT0109 - Cardinality 1..1 not verified. Found 2 times.
+14) Rule: BT0108 - Cardinality 0..1 not verified. Found 2 times.
+15) Rule: BT0107 - Cardinality 0..1 not verified. Found 2 times.
+16) Rule: BT0106 - Cardinality 1..1 not verified. Found 2 times.
+17) Rule: BG0031 - Cardinality 1..1 not verified. Found 4 times.
+18) Rule: BG0030 - Cardinality 1..1 not verified. Found 4 times.
+19) Rule: BG0029 - Cardinality 1..1 not verified. Found 4 times.
+20) Rule: BG0026 - Cardinality 0..1 not verified. Found 4 times.
+21) Rule: BG0022 - Cardinality 1..1 not verified. Found 2 times.
+22) Rule: BT0159 - Cardinality 0..1 not verified. Found 4 times.
+23) Rule: BT0157 - Cardinality 0..1 not verified. Found 4 times.
+24) Rule: BT0156 - Cardinality 0..1 not verified. Found 4 times.
+25) Rule: BT0155 - Cardinality 0..1 not verified. Found 4 times.
+26) Rule: BT0154 - Cardinality 0..1 not verified. Found 4 times.
+27) Rule: BT0153 - Cardinality 1..1 not verified. Found 4 times.
+28) Rule: BT0152 - Cardinality 0..1 not verified. Found 4 times.
+29) Rule: BT0151 - Cardinality 1..1 not verified. Found 4 times.
+30) Rule: BT0150 - Cardinality 0..1 not verified. Found 4 times.
+31) Rule: BT0149 - Cardinality 0..1 not verified. Found 4 times.
+32) Rule: BT0148 - Cardinality 0..1 not verified. Found 4 times.
+33) Rule: BT0147 - Cardinality 0..1 not verified. Found 4 times.
+34) Rule: BT0146 - Cardinality 1..1 not verified. Found 4 times.
+35) Rule: BT0133 - Cardinality 0..1 not verified. Found 4 times.
+36) Rule: BT0132 - Cardinality 0..1 not verified. Found 4 times.
+37) Rule: BT0131 - Cardinality 1..1 not verified. Found 4 times.
+38) Rule: BT0130 - Cardinality 1..1 not verified. Found 4 times.
+39) Rule: BT0129 - Cardinality 1..1 not verified. Found 4 times.
+40) Rule: BT0128 - Cardinality 0..1 not verified. Found 4 times.
+41) Rule: BT0127 - Cardinality 0..1 not verified. Found 4 times.
+42) Rule: BT0126 - Cardinality 1..1 not verified. Found 4 times.
+CEN rules validation has encountered errors but will continue anyway.
+From Cen Conversion finished, but some issues have occured:
+Error: Found 2 /BG-22/BT-112 but only 1 /FatturaElettronica/FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/ImportoTotaleDocumento XML elements were created. Maybe there is an error in the configuration file or the converted CEN object is not well formed. Check rule-report.csv for more informations about BT/BGs validation
+Error: Found 2 /BG-22/BT-115 but only 1 /FatturaElettronica/FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/ImportoPagamento XML elements were created. Maybe there is an error in the configuration file or the converted CEN object is not well formed. Check rule-report.csv for more informations about BT/BGs validation
+Error: Error transforming base unit/qty for sales line.
+Error: Error transforming base unit/qty for sales line.
+For more information see 'fromcen-errors.csv'.
+Conversion from CEN has encountered errors but will continue anyway.
+Conversion file stored in folder C:\Users\MARCOB~1\AppData\Local\Temp\junit2900746009629687359\workdir\output

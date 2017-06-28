@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class Ubl2CenTest {
 
@@ -86,10 +87,18 @@ public class Ubl2CenTest {
     
     @Test
     public void shouldValidateXsd() throws IOException {
-    	List<ConversionIssue> errors = new ArrayList<>();
+    	List<ConversionIssue> errors = mock(ArrayList.class);
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
     	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
     	assertThat(Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors), is(true));
     }
 
+    @Test
+    public void shouldNotValidateXsd() throws IOException {
+    	List<ConversionIssue> errors = new ArrayList<>();
+    	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
+    	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+    	assertThat(Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors), is(false));
+    	assertFalse(errors.isEmpty());
+    }
 }

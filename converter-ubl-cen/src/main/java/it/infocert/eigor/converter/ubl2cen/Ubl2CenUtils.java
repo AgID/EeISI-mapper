@@ -30,10 +30,11 @@ class Ubl2CenUtils {
         try {
             Schema schema = schemaFactory.newSchema(schemaFile);
             schema.newValidator().validate(xmlFile);
-        } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newWarning(new RuntimeException("XSD validation failed!", e)));
-            e.getMessage();
-            e.printStackTrace();
+        } catch(SAXException e) {
+        	errors.add(ConversionIssue.newWarning(new RuntimeException("XSD validation failed! Cause: " + e.getMessage(), e)));
+            return false;
+        } catch (IOException e) { 
+        	errors.add(ConversionIssue.newError(new RuntimeException("XSD validation failed!", e)));
             return false;
         }
         return true;
