@@ -2,6 +2,7 @@ package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,12 +44,62 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
         BG0000Invoice invoice = new BG0000Invoice();
 
         InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(getMappingRegex(), reflections));
-        Multimap<String, String> mapping = mapper.getMapping(getMappingPath());
+        Multimap<String, String> mapping = mapper.getMapping(getOne2OneMappingPath());
         for (Map.Entry<String, String> entry : mapping.entries()) {
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
             transformer.transformXmlToCen(document, invoice, errors);
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+        Multimap<String, String> mapping = mapper.getMapping(getMany2OneMappingPath());
+        for (String key: mapping.keySet()) {
+
+            // Stop at each something.target key
+            if (key.contains("target")){
+                if (existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
+                    continue;
+                }
+                String bgBtPath = mapping.get(key).iterator().next();
+                String expressionKey = key.replace(".target", ".expression");
+                if (!existsValueForKeyInMany2OneMultiMap(mapping, expressionKey, errors)) {
+                    continue;
+                }
+                String combinationExpression = mapping.get(expressionKey).iterator().next();
+
+                int index = 1;
+                List<String> xPaths = new ArrayList<>();
+                String sourceKey = key.replace("cen.target", "xml.expression."+index);
+                while (mapping.containsKey(sourceKey)){
+                    if (existsValueForKeyInMany2OneMultiMap(mapping, sourceKey, errors)) {
+                        xPaths.add(mapping.get(sourceKey).iterator().next());
+
+                    }
+                    index++;
+                }
+
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, reflections, conversionRegistry);
+                transformer.transformXmlToCen(document, partialInvoice, errors);
+            }
+//            mapBt33.type=concatenation
+//            mapBt33.xml.source.1=**/CapitaleSociale
+//            mapBt33.xml.source.2=**/SocioUnico
+//            mapBt33.xml.source.3=**/StatoLiquidazione
+//            mapBt33.cen.target=BT-33
+//            mapBt33.cen.expression=%1-%2 %3
+        }
+        return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
+    }
+
+    private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors) {
+        if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
+            errors.add(ConversionIssue.newError(new RuntimeException("No value in many2one mapping properties for key: " + key)));
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -70,12 +122,19 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
         return doc;
     }
 
-    @Override
-    public String getMappingPath() {
+
+    protected String getOne2OneMappingPath() {
         return null;
     }
 
-    @Override
+    protected String getMany2OneMappingPath() {
+        return null;
+    }
+
+    protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
     public String getMappingRegex() {
         return regex;
     }
