@@ -28,19 +28,15 @@ import java.util.List;
  * based on a 1-1 configurable mapping
  */
 @SuppressWarnings("unchecked")
-public class GenericOneToOneTransformer {
-    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
+public class GenericOneToOneTransformer extends GenericTransformer{
     private final String xPath;
     private final String cenPath;
-    private final ConversionRegistry conversionRegistry;
-    private final InvoiceUtils invoiceUtils;
-
 
     public GenericOneToOneTransformer(String xPath, String cenPath, Reflections reflections, ConversionRegistry conversionRegistry) {
+        super(reflections, conversionRegistry);
         this.xPath = xPath;
         this.cenPath = cenPath;
-        this.conversionRegistry = conversionRegistry;
-        this.invoiceUtils = new InvoiceUtils(reflections);
+        log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
     }
 
     private List<BTBG> getBtRecursively(BTBG parent, final ArrayList<String> steps, final List<BTBG> bts) {
@@ -143,7 +139,7 @@ public class GenericOneToOneTransformer {
             ConversionIssue e = ConversionIssue.newError(
                     new IllegalArgumentException("BTs can not be more than XML elements"),
                     String.format("Found %d %s but only %d %s XML elements were created. " +
-                                    "Maybe there is an error in the configuration file, or the converted CEN object is not well formed. " +
+                                    "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
                                     "Check rule-report.csv for more informations about BT/BGs validation",
                             bts.size(),
                             cenPath,
@@ -189,77 +185,9 @@ public class GenericOneToOneTransformer {
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
         log.info(logPrefix + "resolving");
 
-        List<Element> elementList = CommonConversionModule.evaluateXpath(document, xPath);
-
-        if (!elementList.isEmpty()) {
-            final Element item = elementList.get(0);
-            log.info(logPrefix + "item found: " + item);
-
-            // find the parent BG
-            String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
-            invoiceUtils.ensurePathExists(bgPath, invoice);
-            BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
-            log.info(logPrefix + "BG parent: " + bg);
-
-            // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
-            // if there no child? what?
-            if (!invoiceUtils.hasChild(cenPath, invoice)) {
-                try {
-                    // create BT element
-                    String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
-                    Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
-                    Constructor<?>[] constructors = btClass.getConstructors();
-                    final ArrayList<BTBG> bt = new ArrayList<>(1);
-                    com.amoerie.jstreams.functions.Consumer<Constructor<?>> k = new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
-                        @Override
-                        public void consume(final Constructor<?> constructor) {
-                            try {
-                                if (constructor.getParameterTypes().length == 0) {
-                                    bt.add((BTBG) constructor.newInstance());
-                                } else {
-                                    Class<?>[] parameterTypes = constructor.getParameterTypes();
-                                    List<Class<?>> classes = Arrays.asList(parameterTypes);
-                                    Stream<Class<?>> classes1 = Stream.create(classes);
-
-                                    classes1.forEach(new Consumer<Class<?>>() {
-                                        @Override
-                                        public void consume(Class<?> paramType) {
-
-                                            try {
-                                                Object constructorParam = conversionRegistry.convert(String.class, paramType, item.getText());
-                                                try {
-                                                    bt.add((BTBG) constructor.newInstance(constructorParam));
-                                                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                                    log.error(e.getMessage(), e);
-                                                    errors.add(ConversionIssue.newError(e));
-                                                }
-                                            } catch (IllegalArgumentException e) {
-                                                log.error("There is no converter registered for: " + paramType, e);
-                                                errors.add(ConversionIssue.newError(e));
-                                            }
-                                        }
-                                    });
-
-                                }
-                            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                                log.error(e.getMessage(), e);
-                                errors.add(ConversionIssue.newError(e));
-                            }
-                        }
-                    };
-                    Stream.create(Arrays.asList(constructors)).forEach(k);
-
-                    log.info(logPrefix + "bt element created: " + bt);
-
-                    // add BT element to BG parent
-                    if (!bt.isEmpty()) {
-                        invoiceUtils.addChild(bg, bt.get(0));
-                    }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.error(e.getMessage(), e);
-                    errors.add(ConversionIssue.newError(e));
-                }
-            }
+        final String xPathText = getNodeTextFromXPath(document, xPath);
+        if (xPathText != null) {
+            addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
         }
     }
 }

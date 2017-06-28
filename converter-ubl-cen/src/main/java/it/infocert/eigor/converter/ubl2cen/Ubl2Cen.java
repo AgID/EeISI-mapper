@@ -41,17 +41,21 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
             new StringToUnitOfMeasureConverter(),
             new LookUpEnumConversion(UnitOfMeasureCodes.class),
+            new LookUpEnumConversion(VatExemptionReasonsCodes.class),
             new StringToDoubleConverter(),
-            new StringToStringConverter(),
             new JavaLocalDateToStringConverter(),
             new JavaLocalDateToStringConverter("dd-MMM-yy"),
             new Iso4217CurrenciesFundsCodesToStringConverter(),
             new Iso31661CountryCodesToStringConverter(),
             new DoubleToStringConverter("#.00"),
-            new UnitOfMeasureCodesToStringConverter()
+            new UnitOfMeasureCodesToStringConverter(),
+            new StringToStringConverter()
+
     );
 
-    public static final String MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
+    public static final String ONE2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
+    public static final String MANY2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/many_to_one.properties";
+    public static final String ONE2MANY_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_many.properties";
 
 
     public Ubl2Cen(Reflections reflections) {
@@ -89,15 +93,16 @@ public class Ubl2Cen extends Abstract2CenConverter {
             errors.addAll(ciusValidator.validate(bytes));
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, "Schematron validation error!"));
+            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
         Document document = getDocument(clonedInputStream);
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
+        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, result.getIssues());
+
         return result;
     }
-
 
     @Override
     public boolean support(String format) {
@@ -110,8 +115,12 @@ public class Ubl2Cen extends Abstract2CenConverter {
     }
 
     @Override
-    public String getMappingPath() {
-        return MAPPING_PATH;
+    public String getOne2OneMappingPath() {
+        return ONE2ONE_MAPPING_PATH;
     }
 
+    @Override
+    public String getMany2OneMappingPath() {
+        return MANY2ONE_MAPPING_PATH;
+    }
 }

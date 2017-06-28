@@ -58,9 +58,6 @@ public class ITCen2FattPATest {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(fattpaXML));
 
-        FileOutputStream fos = new FileOutputStream("C:\\Users\\Matteo\\Desktop\\Help.xml");
-        fos.write(fattpaXML);
-        fos.close();
         String invoiceNumber = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero/text()");
         assertThat("invoiceNumber", invoiceNumber, is("TOSL110"));
 
@@ -150,10 +147,10 @@ public class ITCen2FattPATest {
         assertThat("line1Number", line1Number, is("1"));
 
         String line1Quantity = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/Quantita/text()");
-        assertThat("line1Quantity", line1Quantity, is("24.00"));
+        assertThat("line1Quantity", line1Quantity, is("4.00"));
 
         String line1UnitOfMeasure = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/UnitaMisura/text()");
-        assertThat("line1UnitOfMeasure", line1UnitOfMeasure, is("EA"));
+        assertThat("line1UnitOfMeasure", line1UnitOfMeasure, is("6.0 EA"));
 
         String line1TotalPrice = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/PrezzoTotale/text()");
         assertThat("line1TotalPrice", line1TotalPrice, is("2000.00"));

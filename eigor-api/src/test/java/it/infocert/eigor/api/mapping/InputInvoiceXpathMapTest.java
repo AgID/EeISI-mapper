@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class InputInvoiceXpathMapTest {
@@ -27,11 +28,11 @@ public class InputInvoiceXpathMapTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void mappingShouldBeClearWhenInvalidPath() {
 
         Multimap<String, String> mapping = xpathMap.getMapping("/tmp/fake.properties");
-        assertFalse(mapping.isEmpty());
+        assertTrue(mapping.isEmpty());
     }
 
 }

@@ -21,12 +21,21 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     private static final Logger log = LoggerFactory.getLogger(BodyFatturaConverter.class);
 
-    private ObjectFactory factory;
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
     private List<ConversionIssue> errors;
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
+    private ObjectFactory factory;
+
+    public BodyFatturaConverter(FatturaElettronicaBodyType fatturaElettronicaBody, ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
+        this.invoice = invoice;
+        this.errors = errors;
+        this.fatturaElettronicaBody = fatturaElettronicaBody;
+        this.factory = factory;
+        invoiceDiscountAmount = 0d;
+        invoiceCorrectionAmount = 0d;
+    }
 
     public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
@@ -83,7 +92,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 try {
                     itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
                 } catch (Exception e) {
-                    errors.add(ConversionIssue.newError(e,IConstants.ERROR_GENERAL_INFORMATION));
+                    errors.add(ConversionIssue.newError(e, IConstants.ERROR_GENERAL_INFORMATION));
                 }
 
                 if (itemInformation != null) {
@@ -611,10 +620,28 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
      * If not, it generates a correction line. This can occur if discounts or surcharges are converted from percent to values.
      */
     private void calculateCorrectionForTotalAmount() {
-        List<DettaglioLineeType> lineList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
+
+        // let's check if we have all the info we need.
+        if( ! (fatturaElettronicaBody!=null &&
+                fatturaElettronicaBody
+                        .getDatiBeniServizi()!=null &&
+                fatturaElettronicaBody
+                        .getDatiBeniServizi()
+                        .getDettaglioLinee() != null )) return;
+
         Double invoiceTotal = 0d;
-        for (DettaglioLineeType line : lineList) {
-            invoiceTotal += line.getPrezzoTotale().doubleValue();
+        try {
+            List<DettaglioLineeType> lineList = fatturaElettronicaBody
+                    .getDatiBeniServizi()
+                    .getDettaglioLinee();
+            for (DettaglioLineeType line : lineList) {
+                if (line.getPrezzoTotale() != null) {
+                    invoiceTotal += line.getPrezzoTotale().doubleValue();
+                }
+            }
+        }catch (Exception e) {
+            errors.add(ConversionIssue.newError(e));
+            log.error(e.getMessage(), e);
         }
         try {
             BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals().get(0);
@@ -818,7 +845,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         for (int i = 0; i < invoiceLineList.size(); i++) {
             BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
-            DettaglioLineeType dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee().get(i);
+
+            if(fatturaElettronicaBody.getDatiBeniServizi() == null ||
+                    fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee() == null) continue;
+
+            DettaglioLineeType dettaglioLinee = fatturaElettronicaBody
+                    .getDatiBeniServizi()
+                    .getDettaglioLinee()
+                    .get(i);
 
 
             if (!(invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
@@ -857,6 +891,6 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     }
 
     private void logBt(int bt, String name) {
-        log.debug("Converted BT-{} into {}", bt, name);
+        log.debug("Converted BT-{} into {}" , bt, name);
     }
 }
