@@ -55,6 +55,8 @@ public class Ubl2CenTest {
         assertFalse(bt0002InvoiceIssueDates.isEmpty());
         assertEquals("TOSL108", bt0001InvoiceNumbers.get(0).getValue());
         assertEquals("2009-12-15", bt0002InvoiceIssueDates.get(0).getValue().toString("yyyy-MM-dd"));
+        
+        //// TODO: 6/28/17 check manytoone output after getting examples from Sara 
     }
 
     @Test

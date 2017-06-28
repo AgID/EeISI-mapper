@@ -42,7 +42,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
 
             String xPathText = getNodeTextFromXPath(document, xPaths.get(idx));
             if (xPathText != null) {
-                finalValue.replace("%"+(idx+1), xPathText);
+                finalValue = finalValue.replace("%"+(idx+1), xPathText);
             }
         }
 
