@@ -1,3 +1,6 @@
+# This is the folder where you have to cop the converter data to make the app run from wihin the IDE
+converterdata/
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Maven template
 target/
