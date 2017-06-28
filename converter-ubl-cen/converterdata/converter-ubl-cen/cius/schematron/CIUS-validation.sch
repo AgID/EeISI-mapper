@@ -35,7 +35,7 @@
 
         <pattern name="CIUS-BT-84">
             <rule context="cac:PaymentMeans/cac:PayeeFinancialAccount">
-                <assert test="matches(cbc:ID, '/([A-Z,0-9]{15,34})/')" flag="fatal">
+                <assert test="matches(cbc:ID, '([A-Z,0-9]{15,34})')" flag="fatal">
                     [CIUS-BT-84]-The payment account identifier shall be an IBAN code.
                 </assert>
             </rule>
@@ -352,7 +352,7 @@
         </pattern>
 
         <pattern name="CIUS-VD-38">
-            <rule context="//ubl:Invoice">
+            <rule context="cac:InvoiceLine">
                 <assert test="string-length(cbc:AccountingCost) &lt;= 20" flag="fatal">
                     [CIUS-VD-38]-BT maximum length shall be 20 chars.
                 </assert>
@@ -810,8 +810,8 @@
         </pattern>
 
         <pattern name="CIUS-VD-95">
-            <rule context="cac:InvoiceLine">
-                <assert test="matches(cac:Price, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
+            <rule context="cac:InvoiceLine/cac:Price">
+                <assert test="matches(cac:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
                     [CIUS-VD-95]-BT allowed fraction digits shall be 8.
                 </assert>
             </rule>
