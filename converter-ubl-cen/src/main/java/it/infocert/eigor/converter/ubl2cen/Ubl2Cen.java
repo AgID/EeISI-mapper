@@ -80,6 +80,9 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
+            
+            //PROVA
+            Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors);
 
             ublValidator = new SchematronValidator(ublSchemaFile, true);
             errors.addAll(ublValidator.validate(bytes));

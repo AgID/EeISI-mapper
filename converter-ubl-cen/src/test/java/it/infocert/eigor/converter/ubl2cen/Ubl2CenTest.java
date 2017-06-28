@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.ubl2cen;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -11,11 +12,16 @@ import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.io.ByteStreams;
+
 import org.jdom2.Document;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -34,7 +40,7 @@ public class Ubl2CenTest {
     public void setUp() {
         sut = new Ubl2Cen(new Reflections("it.infocert"));
     }
-
+    
     @Test
     public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
         InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
@@ -74,6 +80,14 @@ public class Ubl2CenTest {
     @Test
     public void shouldSupportedFormatsUbl() {
         assertThat(sut.getSupportedFormats(), contains("ubl"));
+    }
+    
+    @Test
+    public void shouldValidateXsd() throws IOException {
+    	List<ConversionIssue> errors = new ArrayList<>();
+    	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
+    	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+    	assertThat(Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors), is(true));
     }
 
 }
