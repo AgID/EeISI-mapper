@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.FAILED;
 import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
+import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.UNAPPLICABLE;
 import static org.junit.Assert.*;
 
 public class CardinalityRuleTest {
@@ -90,12 +91,12 @@ public class CardinalityRuleTest {
     }
 
     @Test
-    public void shouldFailIfAParentIsMissing() throws Exception {
+    public void shouldBeUnapplicableWhenAParentIsMissing() throws Exception {
         CardinalityRule rule = new CardinalityRule("BT-22", "1..1");
 
         RuleOutcome outcome = rule.isCompliant(invoice);
 
-        assertEquals(FAILED, outcome.outcome());
+        assertEquals(UNAPPLICABLE, outcome.outcome());
         assertTrue(outcome.description().matches("^\\w+ - Can't verify the cardinality because one of its parent elements is missing\\. Last parent checked: \\w\\w-\\d\\.$"));
     }
 

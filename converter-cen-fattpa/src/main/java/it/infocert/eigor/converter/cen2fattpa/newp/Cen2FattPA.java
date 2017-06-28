@@ -5,8 +5,12 @@ import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.converter.cen2fattpa.BodyFatturaConverter;
 import it.infocert.eigor.converter.cen2fattpa.IConstants;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.assertj.core.util.Lists;
@@ -17,6 +21,9 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.*;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -47,16 +54,19 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Iso31661CountryCodesToStringConverter(),
             new DoubleToStringConverter("#.00"),
             new UnitOfMeasureCodesToStringConverter(),
-            new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter()
+            new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
+            new Untdid4461PaymentMeansCodeToItalianCodeString()
     );
+    private final ObjectFactory factory = new ObjectFactory();
 
     public Cen2FattPA(Reflections reflections) {
         super(reflections, conversionRegistry);
-        setValidationExpression("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
+        setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
     /**
      * Override the default mapping configuration file path
+     *
      * @param mappingPath the new configuration file path
      */
     public void setMappingFile(String mappingPath) {
@@ -71,7 +81,39 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         setFormatoTrasmissione(document);
         //TODO Add here hardcoded conversion
         BinaryConversionResult oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        return oneToOneResult;
+        byte[] xml = oneToOneResult.getResult();
+        FatturaElettronicaType jaxbFattura = null;
+        JAXBContext jaxbContext = null;
+        try {
+            jaxbContext = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
+        } catch (JAXBException e) {
+            errors.add(ConversionIssue.newError(e));
+            log.error(e.getMessage(), e);
+        }
+
+        if (jaxbFattura != null) {
+            BodyFatturaConverter bfc = new BodyFatturaConverter(jaxbFattura.getFatturaElettronicaBody().get(0), factory, invoice, errors);
+            bfc.computeMultipleCenElements2FpaField();
+            jaxbFattura.getFatturaElettronicaBody().add(bfc.getFatturaElettronicaBody());
+        }
+
+        JAXBElement<FatturaElettronicaType> fatturaElettronicaXML = factory.createFatturaElettronica(jaxbFattura);
+
+        StringWriter xmlOutput = null;
+
+        try {
+            if (jaxbContext != null) {
+                xmlOutput = new StringWriter();
+                Marshaller marshaller = jaxbContext.createMarshaller();
+                marshaller.marshal(fatturaElettronicaXML, xmlOutput);
+            }
+        } catch (JAXBException e) {
+            errors.add(ConversionIssue.newError(e));
+            log.error(e.getMessage(), e);
+        }
+        return xmlOutput != null ? new BinaryConversionResult(xmlOutput.toString().getBytes(), errors) : oneToOneResult;
     }
 
     @Override
@@ -95,10 +137,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     }
 
     private void createRootNode(Document doc) {
-        Element root = new Element(ROOT_TAG, Namespace.getNamespace("nx", "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"));
-        root.addNamespaceDeclaration( Namespace.getNamespace("ds", "http://www.w3.org/2000/09/xmldsig#"));
-        root.addNamespaceDeclaration( Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
-        root.setAttribute("versione", "FPA12");
+        Element root = new Element(ROOT_TAG, Namespace.getNamespace("nx" , "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("ds" , "http://www.w3.org/2000/09/xmldsig#"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("xsi" , "http://www.w3.org/2001/XMLSchema-instance"));
+        root.setAttribute("versione" , "FPA12");
         root.addContent(new Element("FatturaElettronicaHeader"));
         root.addContent(new Element("FatturaElettronicaBody"));
         doc.setRootElement(root);

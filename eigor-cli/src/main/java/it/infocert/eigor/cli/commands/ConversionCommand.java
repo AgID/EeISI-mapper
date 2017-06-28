@@ -3,7 +3,6 @@ package it.infocert.eigor.cli.commands;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
-import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
@@ -14,10 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +94,7 @@ public class ConversionCommand implements CliCommand {
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
         ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
         BG0000Invoice cenInvoice = toCenResult.getResult();
-        writeToCenErrors(out, toCenResult, outputFolderFile);
+        writeToCenErrorsToOutputStreamAndFile(out, toCenResult, outputFolderFile);
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
 
         if (toCenResult.hasErrors()) {
@@ -111,8 +107,7 @@ public class ConversionCommand implements CliCommand {
         }
 
         applyRulesToCenObject(cenInvoice, ruleReport);
-        writeRuleReport(ruleReport, outputFolderFile);
-
+        writeRuleReport(ruleReport, outputFolderFile, out);
         if (ruleReport.hasFailures()){
             if (isForceConversion()) {
                 out.println("CEN rules validation has encountered errors but will continue anyway.");
@@ -144,11 +139,11 @@ public class ConversionCommand implements CliCommand {
         return forceConversion;
     }
 
-    private void writeToCenErrors(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+    private void writeToCenErrorsToOutputStreamAndFile(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (conversionResult.isSuccessful()) {
             out.println("To Cen Conversion was successful!");
         } else {
-            out.println("To Cen Conversion finished, but some issues have occured:");
+            out.println( String.format("To Cen Conversion finished, but %d issues have occured.", conversionResult.getIssues().size()) );
             List<ConversionIssue> errors = conversionResult.getIssues();
 
             String data = toCsvFileContent(errors);
@@ -156,9 +151,10 @@ public class ConversionCommand implements CliCommand {
             // writes to-cen issues csv
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
             FileUtils.writeStringToFile(toCenErrors, data);
-            
-            for (ConversionIssue e : errors) {
-                out.println("Error: " + e.getMessage());
+
+            for (int i = 0; i < errors.size(); i++) {
+                ConversionIssue e = errors.get(i);
+                out.println( String.format("%d) Error: %s", i+1, e.getMessage()));
             }
             out.println("For more information see 'tocen-errors.csv'.");
         }
@@ -225,9 +221,15 @@ public class ConversionCommand implements CliCommand {
         FileUtils.writeByteArrayToFile(outfile, targetInvoice);
     }
 
-    private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile) throws IOException {
+    private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile, PrintStream out) throws IOException {
         File outreport = new File(outputFolderFile, "rule-report.csv");
         FileUtils.writeStringToFile(outreport, ruleReport.dump());
+
+        List<Map.Entry<RuleOutcome, Rule>> errors = ruleReport.getErrorsAndFailures();
+        for (int i = 0; i < errors.size(); i++) {
+            Map.Entry<RuleOutcome, Rule> e = errors.get(i);
+            out.println( String.format("%d) Rule: %s", i+1, e.getKey().description()));
+        }
     }
 
     private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {

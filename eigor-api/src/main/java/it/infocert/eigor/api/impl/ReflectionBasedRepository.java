@@ -72,7 +72,7 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
     }
 
     @Override
-    public Abstract2CenConverter findConversionToCen(final String sourceFormat) {
+    public ToCenConversion findConversionToCen(final String sourceFormat) {
         if (toCENConverters == null) {
             this.toCENConverters = findImplementation(Abstract2CenConverter.class);
         }

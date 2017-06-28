@@ -3,10 +3,8 @@ package it.infocert.eigor.converter.cen2fattpa.newp;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0004Seller;
-import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
-import it.infocert.eigor.model.core.model.BT0027SellerName;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -54,6 +52,14 @@ public class Cen2FattPATest {
         BG0004Seller seller = new BG0004Seller();
         seller.getBT0027SellerName().add(new BT0027SellerName("seller-name"));
         invoice.getBG0004Seller().add(seller);
+        BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
+        invoiceLine.getBT0126InvoiceLineIdentifier().add(new BT0126InvoiceLineIdentifier("1"));
+        BG0029PriceDetails priceDetails = new BG0029PriceDetails();
+        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(1d));
+        priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.ACRE_ACR));
+        invoiceLine.getBG0029PriceDetails().add(priceDetails);
+        invoiceLine.getBT0131InvoiceLineNetAmount().add(new BT0131InvoiceLineNetAmount(12d));
+        invoice.getBG0025InvoiceLine().add(invoiceLine);
         return invoice;
     }
 

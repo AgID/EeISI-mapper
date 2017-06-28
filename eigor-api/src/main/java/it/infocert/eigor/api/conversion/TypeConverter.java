@@ -2,7 +2,7 @@ package it.infocert.eigor.api.conversion;
 
 /**
  * Generic service that converts a value in another format.
- * I.e. it can convert a {@link java.time.LocalDate} in a {@link String}, a {@link String} in a {@link Number} and so on.
+ * I.e. it can convert a {@link java.util.Date} in a {@link String}, a {@link String} in a {@link Number} and so on.
  *<p>
  * {@link TypeConverter converters} can be grouped in a {@link ConversionRegistry} to have an easier way to convert values.
  *</p>

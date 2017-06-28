@@ -2,6 +2,7 @@ package it.infocert.eigor.api.conversion;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -41,7 +42,15 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
 
     }
 
+    /**
+     * Should return a {@link Filter} that among all entries of the enum select the only one corresponding to the source value.
+     */
     protected abstract Filter<Target> buildFilter(Source value);
+
+    @Override
+    public Class<Target> getTargetClass() {
+        return (Class<Target>) theEnum;
+    }
 
 
 }

@@ -2,13 +2,11 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Resources;
-import it.infocert.eigor.api.mapping.toCen.InputInvoiceMapValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.Properties;
 
 /**
  * This class stores the invoice path mappings for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
@@ -17,13 +15,12 @@ public class InputInvoiceXpathMap {
     private static final Logger log = LoggerFactory.getLogger(InputInvoiceXpathMap.class);
 
     private Multimap<String, String> mapping = HashMultimap.create();
-    private InputInvoiceMapValidator validator;
+    private InvoiceMappingValidator validator;
 
-    public InputInvoiceXpathMap(InputInvoiceMapValidator validator) {
+    public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
         mapping = HashMultimap.create();
     }
-
 
 
     /**
@@ -34,15 +31,41 @@ public class InputInvoiceXpathMap {
     public Multimap<String, String> getMapping(String path) {
         if (mapping.isEmpty()) {
 
+            // try #1, from filesystem
             try {
                 mapping = loadMapFromFile(path);
             } catch (RuntimeException e) {
-                InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
-                if (resourceAsStream == null) {
-                    throw new RuntimeException("Error on loading mappings file from resource: " + path);
-                }
+                // no luck!
+            }
 
-                mapping = loadMapFromInputStream(resourceAsStream);
+            // try #2, from classpath with path not changed
+            if(mapping == null || mapping.isEmpty()) {
+                try {
+                    InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
+                    if (resourceAsStream == null) {
+                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
+                    }
+                    mapping = loadMapFromInputStream(resourceAsStream);
+                } catch (RuntimeException e) {
+                    // no luck!
+                }
+            }
+
+            // try #3, from classpath with path with "/" prepended
+            if(mapping==null || mapping.isEmpty()) {
+                try {
+                    InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
+                    if (resourceAsStream == null) {
+                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
+                    }
+                    mapping = loadMapFromInputStream(resourceAsStream);
+                } catch (RuntimeException e) {
+                    // no luck!
+                }
+            }
+
+            if(mapping==null){
+                throw new RuntimeException("Error on loading mappings file from resource: " + path);
             }
 
         }
@@ -78,7 +101,9 @@ public class InputInvoiceXpathMap {
         } catch (IOException e) {
             throw new RuntimeException("Error on loading mappings file", e);
         }
-        validator.validate(mappings);
+        if (validator != null) {
+            validator.validate(mappings);
+        }
         return mappings;
     }
 
