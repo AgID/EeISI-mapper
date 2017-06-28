@@ -53,6 +53,29 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>converterdata/converter-ubl-cen/cius/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>ph-sch2xslt-maven-plugin</artifactId>
                 <version>${project.version}</version>
