@@ -59,6 +59,9 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new StringToDoubleConverter(),
             new DoubleToStringConverter("#.00"),
 
+            // binaries
+            new Base64StringToBinaryConverter(),
+
             // string
             new StringToStringConverter()
 
