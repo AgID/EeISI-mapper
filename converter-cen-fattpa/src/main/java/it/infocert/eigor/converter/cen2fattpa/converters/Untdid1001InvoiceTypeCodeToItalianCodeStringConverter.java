@@ -1,9 +1,10 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
+import it.infocert.eigor.api.conversion.ToStringTypeConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
-public class Untdid1001InvoiceTypeCodeToItalianCodeStringConverter implements TypeConverter<Untdid1001InvoiceTypeCode, String> {
+public class Untdid1001InvoiceTypeCodeToItalianCodeStringConverter extends ToStringTypeConverter<Untdid1001InvoiceTypeCode> {
     @Override
     public String convert(Untdid1001InvoiceTypeCode untdid1001InvoiceTypeCode) {
         switch (untdid1001InvoiceTypeCode.getCode()) {
@@ -19,12 +20,6 @@ public class Untdid1001InvoiceTypeCodeToItalianCodeStringConverter implements Ty
             default:
                 return "";
         }
-    }
-
-
-    @Override
-    public Class<String> getTargetClass() {
-        return String.class;
     }
 
     @Override

@@ -139,7 +139,7 @@ public class GenericOneToOneTransformer extends GenericTransformer{
             ConversionIssue e = ConversionIssue.newError(
                     new IllegalArgumentException("BTs can not be more than XML elements"),
                     String.format("Found %d %s but only %d %s XML elements were created. " +
-                                    "Maybe there is an error in the configuration file, or the converted CEN object is not well formed. " +
+                                    "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
                                     "Check rule-report.csv for more informations about BT/BGs validation",
                             bts.size(),
                             cenPath,

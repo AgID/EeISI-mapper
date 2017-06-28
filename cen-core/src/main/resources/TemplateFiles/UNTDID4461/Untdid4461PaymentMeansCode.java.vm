@@ -7,12 +7,12 @@ public enum Untdid4461PaymentMeansCode {
     // 3: ShortDescription
     // 4: LongDescription
     #foreach( $row in $rows )
-        /**
-         * Code ${row.data.ID}
-         * <p>${row.data.ShortDescription}</p>
-         * <p>${row.data.LongDescription}</p>
-         */
-        Code${row.data.ID}("${row.data.Sign}",${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    /**
+     * Code ${row.data.ID}
+     * <p>${row.data.ShortDescription}</p>
+     * <p>${row.data.LongDescription}</p>
+     */
+    Code${row.data.ID}("${row.data.Sign}" ,${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
     private String sign;
@@ -30,5 +30,17 @@ public enum Untdid4461PaymentMeansCode {
     @Override
     public String toString() {
         return super.toString() + " " + shortDescritpion;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getShortDescritpion() {
+        return shortDescritpion;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
     }
 }

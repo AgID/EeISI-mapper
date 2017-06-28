@@ -31,11 +31,6 @@ public class Cen2FattPATest {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Test
-    public void name() throws Exception {
-
-    }
-
     @Before
     public void setUp() {
         csvCen2Cen = new CsvCen2Cen(new Reflections("it.infocert"));

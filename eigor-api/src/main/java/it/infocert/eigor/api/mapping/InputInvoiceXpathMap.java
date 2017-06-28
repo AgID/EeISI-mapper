@@ -31,15 +31,41 @@ public class InputInvoiceXpathMap {
     public Multimap<String, String> getMapping(String path) {
         if (mapping.isEmpty()) {
 
+            // try #1, from filesystem
             try {
                 mapping = loadMapFromFile(path);
             } catch (RuntimeException e) {
-                InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
-                if (resourceAsStream == null) {
-                    throw new RuntimeException("Error on loading mappings file from resource: " + path);
-                }
+                // no luck!
+            }
 
-                mapping = loadMapFromInputStream(resourceAsStream);
+            // try #2, from classpath with path not changed
+            if(mapping == null || mapping.isEmpty()) {
+                try {
+                    InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
+                    if (resourceAsStream == null) {
+                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
+                    }
+                    mapping = loadMapFromInputStream(resourceAsStream);
+                } catch (RuntimeException e) {
+                    // no luck!
+                }
+            }
+
+            // try #3, from classpath with path with "/" prepended
+            if(mapping==null || mapping.isEmpty()) {
+                try {
+                    InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
+                    if (resourceAsStream == null) {
+                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
+                    }
+                    mapping = loadMapFromInputStream(resourceAsStream);
+                } catch (RuntimeException e) {
+                    // no luck!
+                }
+            }
+
+            if(mapping==null){
+                throw new RuntimeException("Error on loading mappings file from resource: " + path);
             }
 
         }
