@@ -101,7 +101,9 @@ public class InputInvoiceXpathMap {
         } catch (IOException e) {
             throw new RuntimeException("Error on loading mappings file", e);
         }
-        validator.validate(mappings);
+        if (validator != null) {
+            validator.validate(mappings);
+        }
         return mappings;
     }
 
