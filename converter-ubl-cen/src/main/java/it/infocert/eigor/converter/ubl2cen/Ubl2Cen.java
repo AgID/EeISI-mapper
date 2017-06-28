@@ -5,15 +5,11 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.jdom2.Document;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -29,26 +25,41 @@ public class Ubl2Cen extends Abstract2CenConverter {
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
     private static final String FORMAT = "ubl";
     private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
+
+            // enums
             new CountryNameToIso31661CountryCodeConverter(),
             new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("dd-MMM-yy"),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+
             new StringToUntdid1001InvoiceTypeCodeConverter(),
             new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+
             new StringToIso4217CurrenciesFundsCodesConverter(),
             new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+
             new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
             new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+
             new StringToUnitOfMeasureConverter(),
             new LookUpEnumConversion(UnitOfMeasureCodes.class),
+
             new LookUpEnumConversion(VatExemptionReasonsCodes.class),
-            new StringToDoubleConverter(),
-            new JavaLocalDateToStringConverter(),
-            new JavaLocalDateToStringConverter("dd-MMM-yy"),
+
             new Iso4217CurrenciesFundsCodesToStringConverter(),
             new Iso31661CountryCodesToStringConverter(),
-            new DoubleToStringConverter("#.00"),
+            new StringToUntdid4461PaymentMeansCode(),
             new UnitOfMeasureCodesToStringConverter(),
+
+            // dates
+            new StringToJavaLocalDateConverter("dd-MMM-yy"),
+            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+            new JavaLocalDateToStringConverter(),
+            new JavaLocalDateToStringConverter("dd-MMM-yy"),
+
+            // numbers
+            new StringToDoubleConverter(),
+            new DoubleToStringConverter("#.00"),
+
+            // string
             new StringToStringConverter()
 
     );
