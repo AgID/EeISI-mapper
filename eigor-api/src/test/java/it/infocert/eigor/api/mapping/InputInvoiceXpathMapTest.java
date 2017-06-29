@@ -1,14 +1,13 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Multimap;
-import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 public class InputInvoiceXpathMapTest {
 
@@ -29,10 +28,17 @@ public class InputInvoiceXpathMapTest {
     }
 
     @Test
-    public void mappingShouldBeClearWhenInvalidPath() {
+    public void mappingShouldThrowExceptionWhenInvalidPath() {
 
-        Multimap<String, String> mapping = xpathMap.getMapping("/tmp/fake.properties");
-        assertTrue(mapping.isEmpty());
+        try{
+            xpathMap.getMapping("/tmp/fake.properties");
+            fail();
+        }catch(RuntimeException re){
+
+        }catch(Exception e){
+            fail();
+        }
+
     }
 
 }
