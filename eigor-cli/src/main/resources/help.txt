@@ -22,7 +22,14 @@ DESCRIPTION
         continue conversion process even if errors are encountered.
 
 EXAMPLES
-    -/eigor.sh --input 012.xml --source fattpa --output ~/transformed --target ubl --force
+
+    ./eigor.sh --input 012.xml --source fattpa --output ~/transformed --target ubl --force
 
     Transform the 'fatt pa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed', without stopping because of errors.
 
+
+
+    eigor --input examples\ubl\UBL-Invoice-2.1-Example.xml --source ubl --output reports --target fatturapa
+
+    Transform the 'UBL' input file 'UBL-Invoice-2.1-Example.xml' into a 'Fattura PA' invoice and stores the result in 'reports', stopping when the first error occurs.
+    This example should work straight out of the box.
