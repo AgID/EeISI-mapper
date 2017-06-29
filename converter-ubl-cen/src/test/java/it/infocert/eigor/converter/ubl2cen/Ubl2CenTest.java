@@ -86,20 +86,22 @@ public class Ubl2CenTest {
     @Test
     public void shouldValidateXsd() throws IOException {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
-    	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-    	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
-    	XSDValidator xsdValidator = new XSDValidator(xsdFile);
-    	List<ConversionIssue> errors = xsdValidator.validate(bytes);
+    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
     	assertTrue(errors.isEmpty());
     }
 
     @Test
     public void shouldNotValidateXsd() throws IOException {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
-    	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-    	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
-    	XSDValidator xsdValidator = new XSDValidator(xsdFile);
-    	List<ConversionIssue> errors = xsdValidator.validate(bytes);
+    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
     	assertFalse(errors.isEmpty());
     }
+    
+    
+    private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
+	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+	   	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
+	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
+	   	return xsdValidator.validate(bytes);
+   }
 }

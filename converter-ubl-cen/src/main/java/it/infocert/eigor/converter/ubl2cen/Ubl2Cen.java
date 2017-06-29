@@ -94,7 +94,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
         File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
         
-        URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
+        URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
