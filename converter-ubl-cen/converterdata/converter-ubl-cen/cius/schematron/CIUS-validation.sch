@@ -564,7 +564,7 @@
 
         <pattern name="CIUS-VD-65">
             <rule context="cac:LegalMonetaryTotal">
-                <assert test="string-length(cbc:PayableRoundingAmount) &lt;= 15 and string-length(cbc:PayableRoundingAmount) &gt;= 4"
+                <assert test="not(exists(cbc:PayableRoundingAmount)) or (string-length(cbc:PayableRoundingAmount) &lt;= 15 and string-length(cbc:PayableRoundingAmount) &gt;= 4)"
                         flag="fatal">
                     [CIUS-VD-65]-BT minimum length shall be 4 maximum length shall be 15 chars.
                 </assert>
