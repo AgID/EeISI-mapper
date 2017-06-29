@@ -72,10 +72,10 @@ public class SchematronValidator implements IXMLValidator {
                         failedAssert.getLocation() + " failed test: " + failedAssert.getTest()
                 );
 
+                String ruleDescriptionFromSchematron = failedAssert.getText().trim().replaceAll("\\n", " ").replaceAll(" {2,}", " ");
+                String offendingElement = failedAssert.getLocation().trim();
                 Exception error = new Exception(
-                        String.format("Schematron failed assert '%s' on XML element at '%s'.",
-                                failedAssert.getText().trim(),
-                                failedAssert.getLocation().trim()), cause);
+                        String.format("Schematron failed assert '%s' on XML element at '%s'.", ruleDescriptionFromSchematron, offendingElement), cause);
 
                 if (failedAssert.getFlag().equals("fatal")) {
                     errors.add(ConversionIssue.newError(error));
