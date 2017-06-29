@@ -93,8 +93,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
         InputStream clonedInputStream = null;
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
         File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
-        
-        URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
+        File xsdFile = new File("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
@@ -102,10 +101,13 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
-
-            // the XSD is missing!
-            // XSDValidator xsdValidator = new XSDValidator(xsdFile);
-            // errors.addAll(xsdValidator.validate(bytes));
+            
+            XSDValidator xsdValidator = new XSDValidator(xsdFile);
+            List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            if(validationErrors.isEmpty()){
+            	log.info("Xsd validation succesful!");
+            }
+			errors.addAll(validationErrors);
 
             ublValidator = new SchematronValidator(ublSchemaFile, true);
             errors.addAll(ublValidator.validate(bytes));

@@ -18,11 +18,11 @@ import com.google.common.io.ByteStreams;
 
 import org.jdom2.Document;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -100,7 +100,8 @@ public class Ubl2CenTest {
     
     private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-	   	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
+	   	String filePath = getClass().getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd").getFile();
+	   	File xsdFile = new File(filePath);
 	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
 	   	return xsdValidator.validate(bytes);
    }
