@@ -1,7 +1,9 @@
 package it.infocert.eigor.converter.ubl2cen;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.XSDValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
@@ -11,18 +13,21 @@ import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.io.ByteStreams;
+
 import org.jdom2.Document;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class Ubl2CenTest {
 
@@ -34,7 +39,7 @@ public class Ubl2CenTest {
     public void setUp() {
         sut = new Ubl2Cen(new Reflections("it.infocert"));
     }
-
+    
     @Test
     public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
         InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
@@ -77,5 +82,26 @@ public class Ubl2CenTest {
     public void shouldSupportedFormatsUbl() {
         assertThat(sut.getSupportedFormats(), contains("ubl"));
     }
+    
+    @Test
+    public void shouldValidateXsd() throws IOException {
+    	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
+    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
+    	assertTrue(errors.isEmpty());
+    }
 
+    @Test
+    public void shouldNotValidateXsd() throws IOException {
+    	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
+    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
+    	assertFalse(errors.isEmpty());
+    }
+    
+    
+    private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
+	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+	   	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
+	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
+	   	return xsdValidator.validate(bytes);
+   }
 }

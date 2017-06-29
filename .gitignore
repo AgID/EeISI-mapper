@@ -114,3 +114,6 @@ local.properties
 # Code Recommenders
 .recommenders/
 .~lock.*
+
+
+eigor-cli/consoleOutputDump
