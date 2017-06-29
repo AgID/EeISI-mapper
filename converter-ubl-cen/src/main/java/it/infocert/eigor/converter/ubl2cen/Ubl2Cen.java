@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Resources;
+
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
@@ -14,6 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
@@ -93,25 +97,29 @@ public class Ubl2Cen extends Abstract2CenConverter {
         InputStream clonedInputStream = null;
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
         File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
+        File xsdFile = new File("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
         
-        URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd");
+        URL xsdF = this.getClass().getClassLoader().getResource("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
+		try {
+			
+	        IXMLValidator ublValidator;
+	        IXMLValidator ciusValidator;
 
-        IXMLValidator ublValidator;
-        IXMLValidator ciusValidator;
-        try {
+	        byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+	        clonedInputStream = new ByteArrayInputStream(bytes);
 
-            byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-            clonedInputStream = new ByteArrayInputStream(bytes);
-            
-            XSDValidator xsdValidator = new XSDValidator(xsdFile);
-            errors.addAll(xsdValidator.validate(bytes));
+	        XSDValidator xsdValidator = new XSDValidator(xsdFile);
+	        errors.addAll(xsdValidator.validate(bytes));
 
-            ublValidator = new SchematronValidator(ublSchemaFile, true);
-            errors.addAll(ublValidator.validate(bytes));
+	        ublValidator = new SchematronValidator(ublSchemaFile, true);
+	        errors.addAll(ublValidator.validate(bytes));
 
-            ciusValidator = new SchematronValidator(ciusSchemaFile, true);
-            errors.addAll(ciusValidator.validate(bytes));
-
+	        ciusValidator = new SchematronValidator(ciusSchemaFile, true);
+	        errors.addAll(ciusValidator.validate(bytes));
+	        
+		} catch (MalformedURLException e) {
+			errors.add(ConversionIssue.newError(e, e.getMessage()));
+			log.error(e.getMessage(), e);
         } catch (IOException | IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
