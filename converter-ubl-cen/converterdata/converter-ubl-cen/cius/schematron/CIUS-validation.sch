@@ -811,7 +811,7 @@
 
         <pattern name="CIUS-VD-95">
             <rule context="cac:InvoiceLine/cac:Price">
-                <assert test="matches(cac:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
+                <assert test="matches(cbc:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
                     [CIUS-VD-95]-BT allowed fraction digits shall be 8.
                 </assert>
             </rule>
