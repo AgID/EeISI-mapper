@@ -512,7 +512,7 @@
 
         <pattern name="CIUS-VD-59">
             <rule context="cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch">
-                <assert test="string-length(cbc:ID) &lt;= 11 and string-length(cbc:ID) &gt;= 8" flag="fatal">
+                <assert test="string-length(cac:ID) &lt;= 11 and string-length(cac:ID) &gt;= 8" flag="fatal">
                     [CIUS-VD-59]-BT minimum length shall be 8 maximum length shall be 11 chars.
                 </assert>
             </rule>

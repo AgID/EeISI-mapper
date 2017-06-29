@@ -102,9 +102,10 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
-            
-            XSDValidator xsdValidator = new XSDValidator(xsdFile);
-            errors.addAll(xsdValidator.validate(bytes));
+
+            // the XSD is missing!
+            // XSDValidator xsdValidator = new XSDValidator(xsdFile);
+            // errors.addAll(xsdValidator.validate(bytes));
 
             ublValidator = new SchematronValidator(ublSchemaFile, true);
             errors.addAll(ublValidator.validate(bytes));

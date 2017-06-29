@@ -13,7 +13,6 @@ import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -32,7 +31,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
-    private String mappingPath = "/converter-cen-fattpa/mappings/one_to_one.properties";
+    private String mappingPath = "converter-cen-fattpa/mappings/one_to_one.properties";
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
