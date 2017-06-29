@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Resources;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
@@ -16,9 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -107,7 +103,11 @@ public class Ubl2Cen extends Abstract2CenConverter {
             clonedInputStream = new ByteArrayInputStream(bytes);
             
             XSDValidator xsdValidator = new XSDValidator(xsdFile);
-            errors.addAll(xsdValidator.validate(bytes));
+            List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            if(validationErrors.isEmpty()){
+            	log.info("Xsd validation succesful!");
+            }
+			errors.addAll(validationErrors);
 
             ublValidator = new SchematronValidator(ublSchemaFile, true);
             errors.addAll(ublValidator.validate(bytes));
