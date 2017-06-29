@@ -98,28 +98,23 @@ public class Ubl2Cen extends Abstract2CenConverter {
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
         File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
         File xsdFile = new File("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
-        
-        URL xsdF = this.getClass().getClassLoader().getResource("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
-		try {
-			
-	        IXMLValidator ublValidator;
-	        IXMLValidator ciusValidator;
 
-	        byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-	        clonedInputStream = new ByteArrayInputStream(bytes);
+        IXMLValidator ublValidator;
+        IXMLValidator ciusValidator;
+        try {
 
-	        XSDValidator xsdValidator = new XSDValidator(xsdFile);
-	        errors.addAll(xsdValidator.validate(bytes));
+            byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+            clonedInputStream = new ByteArrayInputStream(bytes);
+            
+            XSDValidator xsdValidator = new XSDValidator(xsdFile);
+            errors.addAll(xsdValidator.validate(bytes));
 
-	        ublValidator = new SchematronValidator(ublSchemaFile, true);
-	        errors.addAll(ublValidator.validate(bytes));
+            ublValidator = new SchematronValidator(ublSchemaFile, true);
+            errors.addAll(ublValidator.validate(bytes));
 
-	        ciusValidator = new SchematronValidator(ciusSchemaFile, true);
-	        errors.addAll(ciusValidator.validate(bytes));
-	        
-		} catch (MalformedURLException e) {
-			errors.add(ConversionIssue.newError(e, e.getMessage()));
-			log.error(e.getMessage(), e);
+            ciusValidator = new SchematronValidator(ciusSchemaFile, true);
+            errors.addAll(ciusValidator.validate(bytes));
+
         } catch (IOException | IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
