@@ -182,7 +182,9 @@ public class GenericOneToOneTransformer extends GenericTransformer{
 
         final String xPathText = getNodeTextFromXPath(document, xPath);
         if (xPathText != null) {
-            addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
+            Object assignedValue = addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
+            log.info("XML element '{}' with value '{}' mapped to CEN '{}' with value '{}'.",
+                    xPath, xPathText, cenPath, assignedValue);
         }
     }
 }

@@ -40,7 +40,10 @@ public abstract class GenericTransformer {
         return item;
     }
 
-    protected void addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+    protected Object addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+
+        final Object[] constructorParam = new Object[]{null};
+
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
         invoiceUtils.ensurePathExists(bgPath, invoice);
@@ -75,9 +78,9 @@ public abstract class GenericTransformer {
                                     @Override public void consume(Class<?> paramType) {
 
                                         try {
-                                            Object constructorParam = conversionRegistry.convert(String.class, paramType, xPathText);
+                                            constructorParam[0] = conversionRegistry.convert(String.class, paramType, xPathText);
                                             try {
-                                                bt.add((BTBG) constructor.newInstance(constructorParam));
+                                                bt.add((BTBG) constructor.newInstance(constructorParam[0]));
                                             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                                 log.error(e.getMessage(), e);
                                                 errors.add(ConversionIssue.newError(e));
@@ -109,6 +112,7 @@ public abstract class GenericTransformer {
                 errors.add(ConversionIssue.newError(e));
             }
         }
+        return constructorParam[0];
     }
 
     public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
