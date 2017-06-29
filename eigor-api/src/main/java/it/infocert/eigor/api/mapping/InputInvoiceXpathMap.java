@@ -14,12 +14,12 @@ import java.util.Properties;
 public class InputInvoiceXpathMap {
     private static final Logger log = LoggerFactory.getLogger(InputInvoiceXpathMap.class);
 
-    private Multimap<String, String> mapping = HashMultimap.create();
-    private InvoiceMappingValidator validator;
+    private Multimap<String, String> mapping;
+    private final InvoiceMappingValidator validator;
 
     public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
-        mapping = HashMultimap.create();
+        mapping = null;
     }
 
 
@@ -29,61 +29,55 @@ public class InputInvoiceXpathMap {
      * @return the mapping map
      */
     public Multimap<String, String> getMapping(String path) {
-        if (mapping.isEmpty()) {
-
+        if (mapping == null) {
             // try #1, from filesystem
             try {
-                mapping = loadMapFromFile(path);
+                File file = new File(path);
+                FileInputStream fileInputStream;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException("Error on loading mappings file from path '" + path + "' (resolved to '" + file.getAbsolutePath() + "') because of: " + e.getMessage(), e);
+                }
+                log.debug("Reading mapping file from {}", file.getAbsolutePath());
+
+                mapping = loadMapFromInputStream(fileInputStream);
             } catch (RuntimeException e) {
-                // no luck!
+                log.warn("Unable to load mapping from file '{}'.", path, e);
             }
+        }
 
+        if(mapping == null) {
             // try #2, from classpath with path not changed
-            if(mapping == null || mapping.isEmpty()) {
-                try {
-                    InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
-                    if (resourceAsStream == null) {
-                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
-                    }
-                    mapping = loadMapFromInputStream(resourceAsStream);
-                } catch (RuntimeException e) {
-                    // no luck!
+            try {
+                InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
+                if (resourceAsStream == null) {
+                    throw new RuntimeException("Error on loading mappings file from resource: " + path);
                 }
+                mapping = loadMapFromInputStream(resourceAsStream);
+            } catch (RuntimeException e) {
+                log.warn("Unable to load mapping from resource '{}'.", path, e);
             }
+        }
 
+        if(mapping == null) {
             // try #3, from classpath with path with "/" prepended
-            if(mapping==null || mapping.isEmpty()) {
-                try {
-                    InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
-                    if (resourceAsStream == null) {
-                        throw new RuntimeException("Error on loading mappings file from resource: " + path);
-                    }
-                    mapping = loadMapFromInputStream(resourceAsStream);
-                } catch (RuntimeException e) {
-                    // no luck!
+            try {
+                InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
+                if (resourceAsStream == null) {
+                    throw new RuntimeException("Error on loading mappings file from resource: " + path);
                 }
+                mapping = loadMapFromInputStream(resourceAsStream);
+            } catch (RuntimeException e) {
+                log.warn("Unable to load mapping from resource '{}'.", path, e);
             }
-
-            if(mapping==null){
-                throw new RuntimeException("Error on loading mappings file from resource: " + path);
-            }
-
         }
+
+        if(mapping==null){
+            throw new RuntimeException("Unable to load mapping file from resource: '" + path + "'.");
+        }
+
         return mapping;
-    }
-
-    private Multimap<String, String> loadMapFromFile(String path) {
-        File file = new File(path);
-        FileInputStream fileInputStream;
-        try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Error on loading mappings file from path", e);
-        }
-        log.debug("Reading mapping file from {}", file.getAbsolutePath());
-
-
-        return loadMapFromInputStream(fileInputStream);
     }
 
     private Multimap<String, String> loadMapFromInputStream(InputStream inputStream) {

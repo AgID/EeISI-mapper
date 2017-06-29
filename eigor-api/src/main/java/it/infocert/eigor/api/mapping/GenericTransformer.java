@@ -4,10 +4,8 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.mapping.CommonConversionModule;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
@@ -37,7 +35,7 @@ public abstract class GenericTransformer {
         String item = null;
         if (!elementList.isEmpty()) {
             item = elementList.get(0).getText();
-            log.info(xPath + "item found: " + item);
+            log.trace(xPath + "item found: " + item);
         }
         return item;
     }
@@ -47,7 +45,7 @@ public abstract class GenericTransformer {
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
         invoiceUtils.ensurePathExists(bgPath, invoice);
         BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
-        log.info(cenPath + " has BG parent: " + bg);
+        log.trace(cenPath + " has BG parent: " + bg);
 
         // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
         // if there no child? what?
@@ -100,7 +98,7 @@ public abstract class GenericTransformer {
                 };
                 Stream.create(Arrays.asList(constructors)).forEach(k);
 
-                log.info(cenPath + " - bt element created: " + bt);
+                log.trace(cenPath + " - bt element created: " + bt);
 
                 // add BT element to BG parent
                 if (!bt.isEmpty()) {
