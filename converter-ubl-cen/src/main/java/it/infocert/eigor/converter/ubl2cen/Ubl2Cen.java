@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -92,6 +93,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
         InputStream clonedInputStream = null;
         File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
         File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
+        
+        URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
@@ -100,8 +103,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
             
-            //PROVA
-            Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors);
+            XSDValidator xsdValidator = new XSDValidator(xsdFile);
+            errors.addAll(xsdValidator.validate(bytes));
 
             ublValidator = new SchematronValidator(ublSchemaFile, true);
             errors.addAll(ublValidator.validate(bytes));

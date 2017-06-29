@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.ubl2cen;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.XSDValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
@@ -21,15 +22,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
 
 public class Ubl2CenTest {
 
@@ -87,18 +85,21 @@ public class Ubl2CenTest {
     
     @Test
     public void shouldValidateXsd() throws IOException {
-    	List<ConversionIssue> errors = mock(ArrayList.class);
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
     	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-    	assertThat(Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors), is(true));
+    	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
+    	XSDValidator xsdValidator = new XSDValidator(xsdFile);
+    	List<ConversionIssue> errors = xsdValidator.validate(bytes);
+    	assertTrue(errors.isEmpty());
     }
 
     @Test
     public void shouldNotValidateXsd() throws IOException {
-    	List<ConversionIssue> errors = new ArrayList<>();
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
     	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-    	assertThat(Ubl2CenUtils.validateXmlAgainstSchemaDefinition(bytes, errors), is(false));
+    	URL xsdFile = Ubl2Cen.class.getClassLoader().getResource("xsd/Schema_del_file_xml_Ubl_versione_2.1.xsd");
+    	XSDValidator xsdValidator = new XSDValidator(xsdFile);
+    	List<ConversionIssue> errors = xsdValidator.validate(bytes);
     	assertFalse(errors.isEmpty());
     }
 }
