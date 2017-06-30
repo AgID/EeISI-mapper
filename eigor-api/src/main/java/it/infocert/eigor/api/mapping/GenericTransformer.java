@@ -4,10 +4,8 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.mapping.CommonConversionModule;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
@@ -37,17 +35,20 @@ public abstract class GenericTransformer {
         String item = null;
         if (!elementList.isEmpty()) {
             item = elementList.get(0).getText();
-            log.info(xPath + "item found: " + item);
+            log.trace(xPath + "item found: " + item);
         }
         return item;
     }
 
-    protected void addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+    protected Object addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+
+        final Object[] constructorParam = new Object[]{null};
+
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
         invoiceUtils.ensurePathExists(bgPath, invoice);
         BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
-        log.info(cenPath + " has BG parent: " + bg);
+        log.trace(cenPath + " has BG parent: " + bg);
 
         // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
         // if there no child? what?
@@ -77,9 +78,9 @@ public abstract class GenericTransformer {
                                     @Override public void consume(Class<?> paramType) {
 
                                         try {
-                                            Object constructorParam = conversionRegistry.convert(String.class, paramType, xPathText);
+                                            constructorParam[0] = conversionRegistry.convert(String.class, paramType, xPathText);
                                             try {
-                                                bt.add((BTBG) constructor.newInstance(constructorParam));
+                                                bt.add((BTBG) constructor.newInstance(constructorParam[0]));
                                             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                                 log.error(e.getMessage(), e);
                                                 errors.add(ConversionIssue.newError(e));
@@ -100,7 +101,7 @@ public abstract class GenericTransformer {
                 };
                 Stream.create(Arrays.asList(constructors)).forEach(k);
 
-                log.info(cenPath + " - bt element created: " + bt);
+                log.trace(cenPath + " - bt element created: " + bt);
 
                 // add BT element to BG parent
                 if (!bt.isEmpty()) {
@@ -111,6 +112,7 @@ public abstract class GenericTransformer {
                 errors.add(ConversionIssue.newError(e));
             }
         }
+        return constructorParam[0];
     }
 
     public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;

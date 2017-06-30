@@ -1,26 +1,19 @@
 package it.infocert.eigor.api.mapping;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Consumer;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom2.Element;
+import org.reflections.Reflections;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -118,7 +111,7 @@ public class GenericOneToOneTransformer extends GenericTransformer{
     public void transformCenToXml(BG0000Invoice invoice, Document document, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         final String logPrefix = "(" + cenPath + " - " + xPath + ") ";
-        log.info(logPrefix + "resolving");
+        log.trace(logPrefix + "resolving");
 
         String[] cenSteps = cenPath.substring(1).split("/");
         ArrayList<String> xmlSteps = Lists.newArrayList(xPath.substring(1).split("/"));
@@ -158,6 +151,8 @@ public class GenericOneToOneTransformer extends GenericTransformer{
             if (value != null) {
                 Class<?> aClass = value.getClass();
                 String converted = conversionRegistry.convert(aClass, String.class, value);
+                log.info("CEN '{}' with value '{}' mapped to XML element '{}' with value '{}'.",
+                        btbg.denomination(), String.valueOf(value), element.getName(), converted);
                 element.setText(converted);
             }
         }
@@ -183,11 +178,13 @@ public class GenericOneToOneTransformer extends GenericTransformer{
      */
     public void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
-        log.info(logPrefix + "resolving");
+        log.trace(logPrefix + "resolving");
 
         final String xPathText = getNodeTextFromXPath(document, xPath);
         if (xPathText != null) {
-            addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
+            Object assignedValue = addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
+            log.info("XML element '{}' with value '{}' mapped to CEN '{}' with value '{}'.",
+                    xPath, xPathText, cenPath, assignedValue);
         }
     }
 }

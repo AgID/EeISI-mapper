@@ -1,5 +1,5 @@
-# This is the folder where you have to cop the converter data to make the app run from wihin the IDE
-converterdata/
+# This is the folder where you have to copy the converter data to make the app run from within the IDE
+/converterdata
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Maven template
@@ -114,3 +114,6 @@ local.properties
 # Code Recommenders
 .recommenders/
 .~lock.*
+
+
+eigor-cli/consoleOutputDump

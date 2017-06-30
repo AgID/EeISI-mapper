@@ -72,6 +72,13 @@
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron</directory>
         </fileSet>
         <fileSet>
+        <outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
+        <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/xsd</directory>
+        <includes>
+        <include>*.xsd</include>
+        </includes>
+        </fileSet>
+        <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
             <includes>

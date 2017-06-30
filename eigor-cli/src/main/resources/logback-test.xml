@@ -8,9 +8,9 @@
     </appender>
 
     <root level="off">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="it.infocert" level="debug" />
+    <logger name="it.infocert" level="info" />
 
 </configuration>

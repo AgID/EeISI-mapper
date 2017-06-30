@@ -3,7 +3,7 @@ package it.infocert.eigor.cli.commands;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
-import it.infocert.eigor.model.core.dump.DumpVisitor;
+import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
 import it.infocert.eigor.model.core.rules.Rule;
@@ -13,7 +13,10 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -206,7 +209,7 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
-        Visitor v = new DumpVisitor();
+        Visitor v = new CsvDumpVisitor();
         cenInvoice.accept(v);
         FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
     }

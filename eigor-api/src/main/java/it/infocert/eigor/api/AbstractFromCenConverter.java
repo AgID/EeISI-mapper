@@ -5,7 +5,6 @@ import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
-import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.output.XMLOutputter;
@@ -44,24 +43,25 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @throws SyntaxErrorInInvoiceFormatException
      */
     protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
-        byte[] bytes = null;
-        try {
-            InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections));
-            Multimap<String, String> mapping = mapper.getMapping(getMappingPath());
 
-            for (Map.Entry<String, String> entry : mapping.entries()) {
+        String pathOfMappingConfFile = getMappingPath();
+        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
+
+        byte[] targetXml = null;
+        try {
+            for (Map.Entry<String, String> entry : mappings.entries()) {
                 String key = entry.getKey();
                 GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry);
                 transformer.transformCenToXml(invoice, document, errors);
             }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new XMLOutputter().output(document, bos);
-            bytes = bos.toByteArray();
+            targetXml = bos.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             errors.add(ConversionIssue.newError(e, e.getMessage()));
         }
-        return new BinaryConversionResult(bytes, errors);
+        return new BinaryConversionResult(targetXml, errors);
     }
 
     /**

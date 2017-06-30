@@ -512,7 +512,7 @@
 
         <pattern name="CIUS-VD-59">
             <rule context="cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch">
-                <assert test="string-length(cbc:ID) &lt;= 11 and string-length(cbc:ID) &gt;= 8" flag="fatal">
+                <assert test="string-length(cac:ID) &lt;= 11 and string-length(cac:ID) &gt;= 8" flag="fatal">
                     [CIUS-VD-59]-BT minimum length shall be 8 maximum length shall be 11 chars.
                 </assert>
             </rule>
@@ -811,7 +811,7 @@
 
         <pattern name="CIUS-VD-95">
             <rule context="cac:InvoiceLine/cac:Price">
-                <assert test="matches(cac:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
+                <assert test="matches(cbc:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')" flag="fatal">
                     [CIUS-VD-95]-BT allowed fraction digits shall be 8.
                 </assert>
             </rule>
