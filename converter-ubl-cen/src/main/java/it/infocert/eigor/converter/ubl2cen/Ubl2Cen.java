@@ -75,7 +75,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     public Ubl2Cen(Reflections reflections) {
         super(reflections, conversionRegistry);
-        setMappingRegex("/(BG|BT)[0-9]{4}(-[0-9]{1})?");
+        setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
     }
 
     /**
