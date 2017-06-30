@@ -60,7 +60,7 @@ public class Ubl2CenTest {
         assertFalse(bt0002InvoiceIssueDates.isEmpty());
         assertEquals("TOSL108", bt0001InvoiceNumbers.get(0).getValue());
         assertEquals("2009-12-15", bt0002InvoiceIssueDates.get(0).getValue().toString("yyyy-MM-dd"));
-        assertEquals("Test Legal Form", invoice.getBG0004Seller(0).getBT0033SellerAdditionalLegalInformation(0).getValue());
+        assertEquals("Ordered in our booth at the convention.", invoice.getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode(0).getValue());
         //// TODO: 6/28/17 check manytoone output after getting examples from Sara 
     }
 
