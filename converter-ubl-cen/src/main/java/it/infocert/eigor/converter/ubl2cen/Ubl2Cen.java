@@ -49,6 +49,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new StringToUntdid4461PaymentMeansCode(),
             new UnitOfMeasureCodesToStringConverter(),
 
+            new CodeAsStringToUntdid5189TypeConverter(),
+
             // dates
             new StringToJavaLocalDateConverter("dd-MMM-yy"),
             new StringToJavaLocalDateConverter("yyyy-MM-dd"),
