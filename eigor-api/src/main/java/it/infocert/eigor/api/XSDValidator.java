@@ -43,7 +43,13 @@ public class XSDValidator implements IXMLValidator {
 
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
-                    errors.add(ConversionIssue.newError(exception, "XSD validation error."));
+
+                    int lineNumber = exception.getLineNumber();
+                    int columnNumber = exception.getColumnNumber();
+                    String message = String.format( "XSD validation error at %d:%d. %s",
+                            lineNumber, columnNumber,
+                            exception.getMessage() );
+                    errors.add(ConversionIssue.newError(exception, message));
                 }
 
                 @Override

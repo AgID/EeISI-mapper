@@ -58,7 +58,7 @@ public class Eigor {
         try {
             properties.load(resource.openStream());
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error("Resource '{}' not found.", resource, e.getMessage(), e);
         }
         return new CardinalityRulesRepository(properties);
     }
