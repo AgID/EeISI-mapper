@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.impl;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Mapper;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -8,7 +10,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class InMemoryRuleReport implements RuleReport {
 
@@ -18,11 +19,45 @@ public class InMemoryRuleReport implements RuleReport {
         items.add(new AbstractMap.SimpleEntry<>(ruleOutcome, rule) );
     }
 
+    @Override
+    public boolean hasFailures() {
+        for(Map.Entry<RuleOutcome, Rule> item : items){
+            RuleOutcome.Outcome outcome = item.getKey().outcome();
+            if(outcome == RuleOutcome.Outcome.FAILED || outcome == RuleOutcome.Outcome.ERROR){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return the items in the report that are {@link RuleOutcome.Outcome#ERROR errors} or {@link RuleOutcome.Outcome#FAILED failues}.
+     */
+    public List<Map.Entry<RuleOutcome, Rule>> getErrorsAndFailures() {
+        ArrayList<Map.Entry<RuleOutcome, Rule>> list = new ArrayList<>();
+        for (Map.Entry<RuleOutcome, Rule> item : items) {
+            if(item.getKey().outcome()== RuleOutcome.Outcome.ERROR || item.getKey().outcome()== RuleOutcome.Outcome.FAILED){
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
     public String dump() {
-        Map.Entry<RuleOutcome, Rule> k;
-        return "Outcome,Reason\n" +
-                items.stream()
-                        .map(x -> x.getKey().outcome() + "," + x.getKey().description())
-                        .collect(Collectors.joining("\n"));
+
+        Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
+            @Override public String map(Map.Entry<RuleOutcome, Rule> x) {
+                return x.getKey().outcome() + "," + x.getKey().description();
+            }
+        };
+        List<String> stringPieces = Stream.create( items ).map( mapper ).toList();
+
+        StringBuffer sb = new StringBuffer("Outcome,Reason\n");
+        for(int i = 0; i<stringPieces.size(); i++){
+            sb.append(stringPieces.get(i));
+            if(i<stringPieces.size()-1) sb.append("\n");
+        }
+        return sb.toString();
+
     }
 }

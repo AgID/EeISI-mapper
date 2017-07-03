@@ -3,9 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>eigor</artifactId>
+        <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.6</version>
+        <version>0.0.7-SNAPSHOT</version>
+        <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,6 +19,11 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+
 
         <!-- TEST -->
         <dependency>
@@ -26,6 +32,83 @@
         </dependency>
 
     </dependencies>
-
+    <build>
+        <resources>
+            <resource>
+                <directory>converterdata/**</directory>
+                <excludes>
+                    <exclude>**</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>converterdata/converter-ubl-cen/cius/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>ph-sch2xslt-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>ubl-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>cius-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

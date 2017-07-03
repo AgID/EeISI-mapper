@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -10,27 +12,29 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Cen2FattPAConverter implements FromCenConversion {
 
     private ObjectFactory factory = new ObjectFactory();
+    private static final String FORMAT = "fatturapa";
+
 
     /**
      * Create XML based on Cen2FattPAConverter
      * Apply XSD validation on resulting XML
+     *
      * @param invoice
-     * @return BinaryConversionResult object wrapping xml data and resulting errors from converting and XSD validation
+     * @return BinaryConversionResult object wrapping xml data and resulting issues from converting and XSD validation
      */
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) {
 
-            List<Exception> errors = new ArrayList<Exception>();
-            byte[] xml = makeXML(invoice, errors);
-            Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, errors);
+        List<ConversionIssue> errors = new ArrayList<>();
+        byte[] xml = makeXML(invoice, errors);
+        Cen2FattPAConverterUtils.validateXmlAgainstSchemaDefinition(xml, errors);
 
-            return new BinaryConversionResult(xml, errors);
+        return new BinaryConversionResult(xml, errors);
     }
 
     @Override
@@ -39,16 +43,22 @@ public class Cen2FattPAConverter implements FromCenConversion {
     }
 
     @Override
-    public String getSupportedFormats() {
-        return IConstants.SUPPORTED_FORMATS;
+    public Set<String> getSupportedFormats() {
+        return new HashSet<>(Collections.singletonList(FORMAT));
     }
+
 
     @Override
     public String extension() {
         return "xml";
     }
 
-    private byte[] makeXML(BG0000Invoice invoice, List<Exception> errors) {
+    @Override
+    public String getMappingRegex() {
+        return null;
+    }
+
+    private byte[] makeXML(BG0000Invoice invoice, List<ConversionIssue> errors) {
 
         StringWriter xmlOutput = new StringWriter();
 
@@ -75,11 +85,12 @@ public class Cen2FattPAConverter implements FromCenConversion {
         JAXBContext context;
         try {
             context = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
+
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE); // neat formatting, for now
             marshaller.marshal(fatturaElettronicaXML, xmlOutput);
         } catch (JAXBException e) {
-            errors.add(new RuntimeException(IConstants.ERROR_XML_GENERATION));
+            errors.add(ConversionIssue.newError(new RuntimeException(IConstants.ERROR_XML_GENERATION)));
         }
         return xmlOutput.toString().getBytes();
     }

@@ -1,11 +1,11 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
-import it.infocert.eigor.model.core.model.BT0040SellerCountryCode;
+import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -14,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import static it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes.DKK;
+import static it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode.Code380;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -28,6 +30,52 @@ public class CsvCen2CenTest {
     @Before
     public void setUp() {
         sut = new CsvCen2Cen(new Reflections("it.infocert"));
+    }
+
+    @Test
+    public void executeACompleteMapping() {
+
+        // given
+        InputStream invoiceStream = Preconditions.checkNotNull( getClass().getResourceAsStream("/examples/cen/samplecen_simple.csv"), "invoice not found");
+
+        // when
+        ConversionResult<BG0000Invoice> conversion;
+        BG0000Invoice invoice = null;
+        try {
+            conversion = sut.convert(invoiceStream);
+            invoice = conversion.getResult();
+        }catch (Exception e){
+            it.infocert.eigor.test.Failures.failForException(e);
+        }
+
+        // then
+        // ...the corresponding field should be null
+
+        assertThat(invoice.getBT0001InvoiceNumber().get(0).getValue(), is("TOSL110"));
+        assertThat(invoice.getBT0002InvoiceIssueDate().get(0).getValue().toString(), is("2013-04-10"));
+        assertThat(invoice.getBT0003InvoiceTypeCode().get(0).getValue(), is(Code380));
+        assertThat(invoice.getBT0005InvoiceCurrencyCode().get(0).getValue(), is(DKK));
+        assertThat(invoice.getBT0009PaymentDueDate().get(0).getValue().toString(), is("2013-05-10"));
+        BG0002ProcessControl bg0002ProcessControl = invoice.getBG0002ProcessControl().get(0);
+        assertThat(bg0002ProcessControl.getBT0024SpecificationIdentifier().get(0).getValue().toString(), is("urn:cen.eu:en16931:2017"));
+        BG0004Seller bg0004Seller = invoice.getBG0004Seller().get(0);
+        assertThat(bg0004Seller.getBT0027SellerName(0).getValue().toString(), is("SellerCompany"));
+        assertThat(bg0004Seller.getBT0031SellerVatIdentifier(0).getValue().toString(), is("IE123456789"));
+        BG0005SellerPostalAddress bg0005SellerPostalAddress = bg0004Seller.getBG0005SellerPostalAddress(0);
+        assertThat(bg0005SellerPostalAddress.getBT0035SellerAddressLine1(0).getValue(), is("Indirizzo obbligatorio"));
+        assertThat(bg0005SellerPostalAddress.getBT0037SellerCity(0).getValue(), is("comune obbligatorio"));
+        assertThat(bg0005SellerPostalAddress.getBT0038SellerPostCode(0).getValue(), is("20100"));
+        assertThat(bg0005SellerPostalAddress.getBT0040SellerCountryCode(0).getValue(), is(Iso31661CountryCodes.DK));
+        BG0007Buyer bg0007Buyer = invoice.getBG0007Buyer(0);
+        assertThat(bg0007Buyer.getBT0044BuyerName(0).getValue(), is("Buyercompany ltd"));
+        assertThat(bg0007Buyer.getBT0048BuyerVatIdentifier(0).getValue(), is("DK12345678"));
+        assertThat(bg0007Buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0).getValue(), is("UFF123"));
+        BG0008BuyerPostalAddress postal = bg0007Buyer.getBG0008BuyerPostalAddress(0);
+        assertThat(postal.getBT0050BuyerAddressLine1(0).getValue(), is("Indirizzo obbligatorio"));
+        assertThat(postal.getBT0052BuyerCity(0).getValue(), is("comune obbligatorio"));
+        assertThat(postal.getBT0053BuyerPostCode(0).getValue(), is("20100"));
+        assertThat(postal.getBT0055BuyerCountryCode(0).getValue(), is(Iso31661CountryCodes.DK));
+
     }
 
     @Test
@@ -49,8 +97,8 @@ public class CsvCen2CenTest {
         // then
         // ...the corresponding field should be null
         assertThat( conversion.getResult().getBT0003InvoiceTypeCode(), hasSize(0) );
-        assertThat( conversion.getErrors(), hasSize(1) );
-        assertThat( conversion.getErrors().get(0), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
+        assertThat( conversion.getIssues(), hasSize(1) );
+        assertThat( conversion.getIssues().get(0).getCause(), instanceOf(SyntaxErrorInInvoiceFormatException.class) );
 
     }
 
@@ -132,7 +180,7 @@ public class CsvCen2CenTest {
     public void shouldConvertA7MinimumContentStandardExample() throws SyntaxErrorInInvoiceFormatException {
 
         // given
-        InputStream inputStream = getClass().getResourceAsStream("/cen-a7-minimum-content-with-std-values.csv");
+        InputStream inputStream = getClass().getResourceAsStream("/examples/cen/cen-a7-minimum-content-with-std-values.csv");
 
         // when
         BG0000Invoice invoice = sut.convert(inputStream).getResult();
@@ -190,7 +238,7 @@ public class CsvCen2CenTest {
     }
 
     private InputStream asStream(String... lines) {
-        String join = String.join("\n", asList(lines));
+        String join = Joiner.on("\n").join(asList(lines));
         return new ByteArrayInputStream(join.getBytes());
     }
 

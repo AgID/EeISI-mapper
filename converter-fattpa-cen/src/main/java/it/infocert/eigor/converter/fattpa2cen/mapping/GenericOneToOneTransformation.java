@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -23,19 +25,16 @@ public class GenericOneToOneTransformation {
     private final String xPathExpression;
     private final String btPath;
 
-
     public GenericOneToOneTransformation(String xPathExpression, String btPath) {
         this.xPathExpression = xPathExpression;
         this.btPath = btPath;
     }
 
-
-
     public void transform(Document document, FatturaElettronicaType fattura, BG0000Invoice invoice) {
         InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
 
         NodeList nodeList = CommonConversionModule.evaluateXpath(document, xPathExpression);
-        Node item = nodeList.item(0);
+        final Node item = nodeList.item(0);
 
         if (item != null) {
             String bgPath = btPath.substring(0, btPath.lastIndexOf("/"));
@@ -47,28 +46,35 @@ public class GenericOneToOneTransformation {
                 if (!invoiceUtils.hasChild(btPath, invoice)) { //FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
                     Constructor<?>[] constructors = btClass.getConstructors();
                     final ArrayList<BTBG> bt = new ArrayList<>(1);
-                    Arrays.stream(constructors).forEach(constructor -> {
-                        try {
-                        if (constructor.getParameterCount() == 0) {
-                            bt.add((BTBG) constructor.newInstance());
-                        } else {
-                            Class<?>[] parameterTypes = constructor.getParameterTypes();
-                            Arrays.stream(parameterTypes).forEach(paramType -> {
-                                if (String.class.equals(paramType)) {
-                                    try {
-                                        bt.add((BTBG) constructor.newInstance(item.getTextContent()));
-                                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                        e.printStackTrace();
-                                    }
+
+                    Stream.create(Arrays.asList(constructors)).forEach(new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
+                        @Override public void consume(final Constructor<?> constructor) {
+                            try {
+                                if (constructor.getParameterTypes().length == 0) {
+                                    bt.add((BTBG) constructor.newInstance());
+                                } else {
+                                    Class<?>[] parameterTypes = constructor.getParameterTypes();
+                                    Stream.create(Arrays.asList(parameterTypes)).forEach(new Consumer<Class<?>>() {
+                                                                                             @Override public void consume(Class<?> paramType) {
+                                                                                                 if (String.class.equals(paramType)) {
+                                                                                                     try {
+                                                                                                         bt.add((BTBG) constructor.newInstance(item.getTextContent()));
+                                                                                                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                                                                                                         e.printStackTrace();
+                                                                                                     }
+                                                                                                 }
+                                                                                             }
+                                                                                         }
+
+                                    );
                                 }
-                            });
+                            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                                log.error(e.getMessage(), e);
+                            }
                         }
-                    } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                        log.error(e.getMessage(), e);
-                    }
                     });
 
-                    if(!bt.isEmpty()) {
+                    if (!bt.isEmpty()) {
                         invoiceUtils.addChild(bg, bt.get(0));
                     }
                 }

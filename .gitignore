@@ -1,6 +1,10 @@
+# This is the folder where you have to copy the converter data to make the app run from within the IDE
+/converterdata
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Maven template
 target/
+public/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -17,10 +21,10 @@ buildNumber.properties
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/
 *.iml
+*.log
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -110,3 +114,6 @@ local.properties
 # Code Recommenders
 .recommenders/
 .~lock.*
+
+
+eigor-cli/consoleOutputDump

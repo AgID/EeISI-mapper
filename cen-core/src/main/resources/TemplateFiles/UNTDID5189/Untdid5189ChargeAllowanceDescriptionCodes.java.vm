@@ -6,13 +6,13 @@ public enum Untdid5189ChargeAllowanceDescriptionCodes {
     // 2: ID
     // 3: ShortDescription
     // 4: LongDescription
-    #foreach( $row in $File )
+    #foreach( $row in $rows )
         /**
-         * Code ${row.ID}
-         * <p>${row.ShortDescription}</p>
-         * <p>${row.LongDescription}</p>
+         * Code ${row.data.ID}
+         * <p>${row.data.ShortDescription}</p>
+         * <p>${row.data.LongDescription}</p>
          */
-        Code${row.ID}("${row.Sign}",${row.ID}, "${row.ShortDescription}", "${row.LongDescription}")#if($LastIndex==$row.RowIndex);#else,#end
+        Code${row.data.ID}("${row.data.Sign}",${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
     private String sign;

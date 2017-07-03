@@ -1,11 +1,12 @@
 package it.infocert.eigor.model.core.dump;
 
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
-import it.infocert.eigor.model.core.enums.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 
 public class DumpTest {
 

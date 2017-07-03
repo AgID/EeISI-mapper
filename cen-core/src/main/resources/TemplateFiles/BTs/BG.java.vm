@@ -1,55 +1,78 @@
-#set( $row0 = $File[0] )
-#set( $rows = $File.sublist(1,$File.size()) )
-#set( $clzName = ${row0.BTBGClassName} )
+#set( $row0 = $rows[0] )
+#set( $rows = $rows.sublist(1,$rows.size()) )
+#set( $clzName = ${row0.data.BTBGClassName} )
 package it.infocert.eigor.model.core.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import static java.util.Comparator.comparing;
-
+/**
+${rows[0].data.BusinessTerm}
+#if( !${row0.data.BTBGClassName.startsWith("BG0000")} )
+child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
+#end
+<p>${rows[0].data.Description}</p>
+<strong>Automatically generated, please don't change.</strong>
+ */
 public class ${clzName} extends AbstractBTBG {
 
-    #foreach( $row in $File )
-    #if( !$clzName.equals( $row.BTBGClassName ) )
-    private List<${row.BTBGClassName}> ${row.BTBGClassName} = new ParentAwareList<>(0, this);
+    #foreach( $row in $rows )
+    #if( !$clzName.equals( $row.data.BTBGClassName ) )
+    private List<${row.data.BTBGClassName}> ${row.data.BTBGClassName} = new ParentAwareList<>(0, this);
     #end
     #end
 
-    public ${row0.BTBGClassName}() {
+    public ${row0.data.BTBGClassName}() {
     }
 
-    #foreach( $row in $File )
-    #if( !$clzName.equals( $row.BTBGClassName ) )
-    public List<${row.BTBGClassName}> get${row.BTBGClassName}() {
-        return ${row.BTBGClassName};
+    #foreach( $row in $rows )
+    #if( !$clzName.equals( $row.data.BTBGClassName ) )
+    public List<${row.data.BTBGClassName}> get${row.data.BTBGClassName}() {
+        return ${row.data.BTBGClassName};
+    }
+    #end
+    #end
+
+    #foreach( $row in $rows )
+    #if( !$clzName.equals( $row.data.BTBGClassName ) )
+    public ${row.data.BTBGClassName} get${row.data.BTBGClassName}(int index) {
+            return ${row.data.BTBGClassName}.get(index);
     }
     #end
     #end
 
     @Override
     public int order() {
-        return ${row0.OrderInCEN};
+        return ${row0.data.OrderInCEN};
     }
 
     @Override
     public void accept(Visitor v) {
-        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        #if( ${row0.data.BTBGClassName.startsWith("BG0000")} )
         v.startInvoice(this);
         #else
         v.startBTBG(this);
         #end
 
         List<BTBG> list = new ArrayList<>();
-        #foreach( $row in $File )
-        #if( !$clzName.equals( $row.BTBGClassName ) )
-        list.addAll(this.${row.BTBGClassName});
+        #foreach( $row in $rows )
+        #if( !$clzName.equals( $row.data.BTBGClassName ) )
+        list.addAll(this.${row.data.BTBGClassName});
         #end
         #end
-        list.sort( comparing( o -> o.order() ) );
-        list.forEach( o -> o.accept(v) );
+        Collections.sort(list, new Comparator<BTBG>() {
+            @Override
+            public int compare(BTBG o1, BTBG o2) {
+                return o1.order() - o2.order();
+            }
+        });
+        for (BTBG btbg : list) {
+            btbg.accept(v);
+        }
 
-        #if( ${row0.BTBGClassName.startsWith("BG0000")} )
+        #if( ${row0.data.BTBGClassName.startsWith("BG0000")} )
         v.endInvoice(this);
         #else
         v.endBTBG(this);
@@ -59,6 +82,6 @@ public class ${clzName} extends AbstractBTBG {
 
     @Override
     public String toString() {
-        return "${row0.IdNormalized}";
+        return "${row0.data.IdSanitized}";
     }
 }

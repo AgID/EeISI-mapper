@@ -1,6 +1,7 @@
 package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,7 +10,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
@@ -18,8 +18,9 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,7 +31,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     @Mock
     FromCenConversionRepository fromCenRepo;
     @Mock
-    RuleRepository repo3;
+    RuleRepository ruleRepository;
 
     public @Rule
     TemporaryFolder tmp = new TemporaryFolder();
@@ -52,7 +53,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
         outputDir = tmp.newFolder(test.getMethodName(), "output");
 
         //...let's copy an input invoice in the input folder
-        plainFattPa = TestUtils.copyResourceToFolder("/fatt-pa-plain-vanilla.xml", inputDir);
+        plainFattPa = TestUtils.copyResourceToFolder("/examples/fattpa/fatt-pa-plain-vanilla.xml", inputDir);
 
     }
 
@@ -60,11 +61,11 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     public void shouldReportAllSupportedFormatsInCaseUserProvideAnUnsupportedFormat() throws Exception {
 
         // given
-        given( fromCenRepo.findConversionFromCen(Mockito.anyString()) ).willReturn(null);
-        given( fromCenRepo.supportedFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("frm1", "frm2") ) );
-        given( toCenRepo.findConversionToCen(Mockito.anyString()) ).willReturn(mock(ToCenConversion.class));
+        given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(null);
+        given( fromCenRepo.supportedFromCenFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("frm1", "frm2") ) );
+        given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, repo3);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
 
         // when
         ReportFailuereCommand cliCommand = (ReportFailuereCommand)(sut.parseCommandLine(new String[]{
@@ -80,12 +81,12 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     public void shouldReportAllSupportedSourceFormatsInCaseUserProvideAnUnsupportedSourceFormat() throws Exception {
 
         // given
-        given( toCenRepo.findConversionToCen(Mockito.anyString()) ).willReturn(null);
+        given( toCenRepo.findConversionToCen(anyString()) ).willReturn(null);
         given( toCenRepo.supportedToCenFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("src1", "src2") ) );
 
-        given( fromCenRepo.findConversionFromCen(Mockito.anyString()) ).willReturn(mock(FromCenConversion.class));
+        given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, repo3);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
 
         // when
         ReportFailuereCommand cliCommand = (ReportFailuereCommand)(sut.parseCommandLine(new String[]{
@@ -96,6 +97,40 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
 
         // then
         assertThat( cliCommand.getErrorMessage(), is("Source format 'aaa' is not supported. Please choose one among: [src1, src2].") );
+
+    }
+
+    @Test
+    public void shouldAcceptForceParameter() throws Exception {
+
+        // given
+        given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
+        given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
+
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+
+        // when
+        ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[] { "--input", plainFattPa.getAbsolutePath(), "--source", "aaa", "--target", "ooo", "--output", outputDir.getAbsolutePath(), "--force" });;
+
+        // then
+        assertThat( cliCommand.isForceConversion(), is(true) );
+
+    }
+
+    @Test
+    public void shouldNotForceConversionByDefault() throws Exception {
+
+        // given
+        given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
+        given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
+
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+
+        // when
+        ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[] { "--input", plainFattPa.getAbsolutePath(), "--source", "aaa", "--target", "ooo", "--output", outputDir.getAbsolutePath() });;
+
+        // then
+        assertThat( cliCommand.isForceConversion(), is(false) );
 
     }
 

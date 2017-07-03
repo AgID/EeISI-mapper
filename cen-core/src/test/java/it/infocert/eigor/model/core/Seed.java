@@ -4,7 +4,6 @@ import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0006VatAccountingCurrencyCode;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import org.junit.Test;
 

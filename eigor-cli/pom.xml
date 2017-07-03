@@ -3,9 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>eigor</artifactId>
+        <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.6</version>
+        <version>0.0.7-SNAPSHOT</version>
+        <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -61,10 +62,6 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-rules</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test</artifactId>
         </dependency>
     </dependencies>
 
@@ -172,7 +169,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <version>3.0.0</version>
                         <configuration>
-                            <finalName>${cli.main.jar}</finalName>
+                            <finalName>${cli.main.jar}-${project.version}</finalName>
                             <descriptors>
                                 <descriptor>src/assembly/bin.xml</descriptor>
                             </descriptors>
@@ -193,7 +190,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>1.4.1</version>
                         <executions>
                             <execution>
                                 <id>enforce-files-exist</id>
@@ -224,7 +220,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

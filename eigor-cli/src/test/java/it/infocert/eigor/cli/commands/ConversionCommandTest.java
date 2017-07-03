@@ -15,8 +15,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
+import static it.infocert.eigor.test.Files.findFirstFileByNameOrNull;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -29,9 +29,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ConversionCommandTest {
 
-    @Mock ToCenConversion toCen;
-    @Mock FromCenConversion fromCen;
-    @Mock RuleRepository ruleRepository;
+    @Mock
+    ToCenConversion toCen;
+    @Mock
+    FromCenConversion fromCen;
+    @Mock
+    RuleRepository ruleRepository;
 
     @Rule
     public TemporaryFolder tmpRule = new TemporaryFolder();
@@ -57,9 +60,9 @@ public class ConversionCommandTest {
     @Before
     public void setUpOutputMocks() throws IOException, SyntaxErrorInInvoiceFormatException {
         BinaryConversionResult t = new BinaryConversionResult("result".getBytes());
-        when(fromCen.convert(any())).thenReturn(t);
-        when(toCen.convert(any())).thenReturn(
-                new ConversionResult<BG0000Invoice>( new BG0000Invoice() )
+        when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(t);
+        when(toCen.convert(any(InputStream.class))).thenReturn(
+                new ConversionResult<>(new BG0000Invoice())
         );
     }
 
@@ -67,60 +70,114 @@ public class ConversionCommandTest {
     public void shouldUseTheExtensionSpecifiedFromTheFromCenConverterAsOutputExtension() throws Exception {
 
         // given
-        given( fromCen.extension() ).willReturn(".json");
+        given(fromCen.extension()).willReturn(".json");
 
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
         InputStream invoiceSourceFormat = null;
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat);
-        PrintStream err = new PrintStream( new ByteArrayOutputStream() );
-        PrintStream out = new PrintStream( new ByteArrayOutputStream() );
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false);
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
         // when
         sut.execute(out, err);
 
         // then
-        assertThat(asList(outputFolderFile.list()), hasItem("invoice-source.txt") );
-        assertThat(asList(outputFolderFile.list()), hasItem("invoice-target.json") );
-        assertThat(asList(outputFolderFile.list()), hasItem("invoice-cen.csv") );
-        assertThat(asList(outputFolderFile.list()), hasItem("rule-report.csv") );
-        assertThat(asList(outputFolderFile.list()), hasItem("invoice-transformation.log") );
+        assertThat(asList(outputFolderFile.list()), hasItem("invoice-source.txt"));
+        assertThat(asList(outputFolderFile.list()), hasItem("invoice-target.json"));
+        assertThat(asList(outputFolderFile.list()), hasItem("invoice-cen.csv"));
+        assertThat(asList(outputFolderFile.list()), hasItem("rule-report.csv"));
+        assertThat(asList(outputFolderFile.list()), hasItem("invoice-transformation.log"));
 
     }
 
-    @Test public void fromCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException {
+    @Test
+    public void fromCenConversionShouldCreateCsvIfConversionResultHasErrorsAndForceFlag() throws Exception {
 
         // given
-        given( fromCen.extension() ).willReturn(".xml");
+        given(fromCen.extension()).willReturn(".xml");
 
-        List<Exception> myErrors = Arrays.asList(new IllegalArgumentException("test exception"));
-        when(fromCen.convert(any())).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
+        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
-        // when converting a mock invoice, errors should occur
+        // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
         InputStream invoiceSourceFormat = null;
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat);
-        PrintStream err = new PrintStream( new ByteArrayOutputStream() );
-        PrintStream out = new PrintStream( new ByteArrayOutputStream() );
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
         // when
         sut.execute(out, err);
 
-        // then a fromcen-errors.csv should be created for the errors along with the other files
-        List<File> files = asList( outputFolderFile.listFiles() );
+        // then a fromcen-errors.csv should be created for the issues along with the other files
+        List<File> files = asList(outputFolderFile.listFiles());
 
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-source.txt")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-cen.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-target.xml")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("rule-report.csv")), notNullValue() );
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("invoice-transformation.log")), notNullValue() );
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.txt"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
 
-        assertThat( files + " found", findFirstFileOrNull(outputFolderFile, f -> f.getName().equals("fromcen-errors.csv")), notNullValue() );
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "fromcen-errors.csv"), notNullValue());
 
     }
 
-    private File findFirstFileOrNull(File outputDir, Predicate<File> col) {
-        return Arrays.stream(outputDir.listFiles()).filter(col).findFirst().orElse(null);
+    @Test
+    public void toCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException, SyntaxErrorInInvoiceFormatException {
+
+
+        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
+
+        // given
+        given(fromCen.extension()).willReturn(".xml");
+
+        // when converting a mock invoice, issues should occur
+        Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+        InputStream invoiceSourceFormat = null;
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false);
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+
+        // when
+        sut.execute(out, err);
+
+        // then a fromcen-errors.csv should be created for the issues along with the other files
+        List<File> files = asList(outputFolderFile.listFiles());
+
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "tocen-errors.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
     }
 
+    @Test
+    public void toCenConversionShouldCreateCsvAndAllFilesIfConversionResultHasErrorsButForceIsTrue() throws IOException, SyntaxErrorInInvoiceFormatException {
+
+
+        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
+
+        // given
+        given(fromCen.extension()).willReturn(".xml");
+
+        // when converting a mock invoice, issues should occur
+        Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+        InputStream invoiceSourceFormat = null;
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+
+        // when
+        sut.execute(out, err);
+
+        // then a fromcen-errors.csv should be created for the issues along with the other files
+        List<File> files = asList(outputFolderFile.listFiles());
+
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "tocen-errors.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.txt"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
+        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
+    }
 
 }

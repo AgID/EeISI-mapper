@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.fattpa2cen.mapping.probablyDeprecated;
 
 import it.infocert.eigor.converter.fattpa2cen.models.*;
 import it.infocert.eigor.model.core.model.*;
+import org.joda.time.LocalDate;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
 import java.util.List;
 
 public class FattPA2CenMapper {
@@ -148,7 +148,7 @@ public class FattPA2CenMapper {
 
     private static LocalDate mapBT02(DatiGeneraliType dati) {
         XMLGregorianCalendar data = dati.getDatiGeneraliDocumento().getData();
-        return data.toGregorianCalendar().toZonedDateTime().toLocalDate();
+        return new LocalDate(data.toGregorianCalendar());
     }
 
     private static String mapBT03(DatiGeneraliType dati) {

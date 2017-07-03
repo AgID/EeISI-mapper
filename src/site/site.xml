@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Eigor">
+    <bannerLeft>
+        <name>Eigor</name>
+        <src>https://cdn.meme.am/cache/images/folder492/50x50/9501492.jpg</src>
+        <href>https://tgi-infocert-eigor.gitlab.io/eigor/</href>
+    </bannerLeft>
+    <publishDate position="left" format="yyyy-MM-dd HH:mm:ss" />
+    <body>
+        <!-- these links appear in the "tool bar". -->
+        <links>
+            <item name="Infocert" href="https://www.infocert.it/" />
+            <item name="TechGap" href="http://www.techgap.it/"/>
+        </links>
+
+        <menu name="Eigor App">
+            <item name="Configuration" href="configuration/configuration.html"/>
+        </menu>
+
+        <menu name="Formats">
+            <item name="UBL" href="https://en.wikipedia.org/wiki/Universal_Business_Language"/>
+            <item name="CII" href="http://tfig.unece.org/contents/cross-industry-invoice-cii.htm"/>
+            <item name="CEN" href="http://tfig.unece.org/contents/cen-e-invocie.htm"/>
+            <item name="Fattua PA" href="http://www.fatturapa.gov.it/export/fatturazione/it/index.htm"/>
+        </menu>
+
+        <menu ref="reports"/>
+
+    </body>
+</project>

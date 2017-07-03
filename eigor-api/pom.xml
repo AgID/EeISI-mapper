@@ -3,9 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>eigor</artifactId>
+        <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.6</version>
+        <version>0.0.7-SNAPSHOT</version>
+        <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,6 +24,10 @@
             <artifactId>ph-schematron</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>
@@ -30,6 +35,21 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+        </dependency>
     </dependencies>
-
 </project>

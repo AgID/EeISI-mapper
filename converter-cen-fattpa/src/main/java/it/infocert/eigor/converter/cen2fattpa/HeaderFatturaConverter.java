@@ -1,7 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.*;
 
 import java.util.List;
 
@@ -10,10 +11,10 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private FatturaElettronicaHeaderType fatturaElettronicaHeader;
     private BG0000Invoice invoice;
-    private List<Exception> errors;
+    private List<ConversionIssue> errors;
 
 
-    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<Exception> errors) {
+    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         fatturaElettronicaHeader = factory.createFatturaElettronicaHeaderType();
@@ -29,6 +30,28 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
         setDatiTrasmissione();
         setCedentePrestatore();
         setCessionarioCommittente();
+        setRappresentanteFiscale();
+    }
+
+    private void setRappresentanteFiscale() {
+        if (!invoice.getBG0011SellerTaxRepresentativeParty().isEmpty()) {
+            RappresentanteFiscaleType rappresentanteFiscale = factory.createRappresentanteFiscaleType();
+            DatiAnagraficiRappresentanteType datiAnagraficiRappresentante = factory.createDatiAnagraficiRappresentanteType();
+            AnagraficaType anagrafica = factory.createAnagraficaType();
+            IdFiscaleType idFiscale = factory.createIdFiscaleType();
+            datiAnagraficiRappresentante.setIdFiscaleIVA(idFiscale);
+            datiAnagraficiRappresentante.setAnagrafica(anagrafica);
+            rappresentanteFiscale.setDatiAnagrafici(datiAnagraficiRappresentante);
+            fatturaElettronicaHeader.setRappresentanteFiscale(rappresentanteFiscale);
+
+            BG0011SellerTaxRepresentativeParty sellerTaxRepresentativeParty = invoice.getBG0011SellerTaxRepresentativeParty().get(0);
+
+            anagrafica.setDenominazione(sellerTaxRepresentativeParty.getBT0062SellerTaxRepresentativeName().get(0).getValue());
+
+            String value = sellerTaxRepresentativeParty.getBT0063SellerTaxRepresentativeVatIdentifier().get(0).getValue();
+            idFiscale.setIdPaese(value.substring(0, 2));
+            idFiscale.setIdCodice(value.substring(2));
+        }
     }
 
     private void setCessionarioCommittente() {
@@ -39,52 +62,139 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
         IdFiscaleType idFiscaleBuyer = factory.createIdFiscaleType();
         datiAnagraficiCessionario.setIdFiscaleIVA(idFiscaleBuyer);
         cessionarioCommittente.setDatiAnagrafici(datiAnagraficiCessionario);
-        IndirizzoType sedoCessionario = factory.createIndirizzoType();
-        cessionarioCommittente.setSede(sedoCessionario);
+        IndirizzoType sedeCessionario = factory.createIndirizzoType();
+        cessionarioCommittente.setSede(sedeCessionario);
         fatturaElettronicaHeader.setCessionarioCommittente(cessionarioCommittente);
 
         try {
-            anagraficaCessionario.setDenominazione(invoice.getBG0007Buyer().get(0).getBT0044BuyerName().get(0).getValue());
+            BG0007Buyer buyer = invoice.getBG0007Buyer().get(0);
+            anagraficaCessionario.setDenominazione(buyer.getBT0044BuyerName().get(0).getValue());
 
-            String buyerVatId = invoice.getBG0007Buyer().get(0).getBT0048BuyerVatIdentifier().get(0).getValue();
+            String buyerVatId = buyer.getBT0048BuyerVatIdentifier().get(0).getValue();
             idFiscaleBuyer.setIdCodice(Cen2FattPAConverterUtils.getCodeFromVATString(buyerVatId));
             idFiscaleBuyer.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(buyerVatId));
 
-            sedoCessionario.setIndirizzo(invoice.getBG0007Buyer().get(0).getBG0008BuyerPostalAddress().get(0).getBT0050BuyerAddressLine1().get(0).getValue());
-            sedoCessionario.setCAP(invoice.getBG0007Buyer().get(0).getBG0008BuyerPostalAddress().get(0).getBT0053BuyerPostCode().get(0).getValue());
-            sedoCessionario.setComune(invoice.getBG0007Buyer().get(0).getBG0008BuyerPostalAddress().get(0).getBT0052BuyerCity().get(0).getValue());
-            sedoCessionario.setNazione(invoice.getBG0007Buyer().get(0).getBG0008BuyerPostalAddress().get(0).getBT0055BuyerCountryCode().get(0).getValue().getIso2charCode());
+
+            if (!buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
+                for (BT0046BuyerIdentifierAndSchemeIdentifier identifier : buyer.getBT0046BuyerIdentifierAndSchemeIdentifier()) {
+                    cessionarioCommittente.getDatiAnagrafici().setCodiceFiscale(identifier.getValue());
+                }
+            }
+
+            BG0008BuyerPostalAddress buyerPostalAddress = buyer.getBG0008BuyerPostalAddress().get(0);
+            StringBuilder sb = new StringBuilder();
+
+            if (!buyerPostalAddress.getBT0050BuyerAddressLine1().isEmpty()) {
+                sb.append(buyerPostalAddress.getBT0050BuyerAddressLine1().get(0).getValue());
+            }
+
+            if (!buyerPostalAddress.getBT0051BuyerAddressLine2().isEmpty()) {
+                sb.append(", ").append(buyerPostalAddress.getBT0051BuyerAddressLine2().get(0).getValue());
+            }
+
+            if (!buyerPostalAddress.getBT0163BuyerAddressLine3().isEmpty()) {
+                sb.append(", ").append(buyerPostalAddress.getBT0163BuyerAddressLine3().get(0).getValue());
+            }
+
+            sedeCessionario.setIndirizzo(sb.toString());
+
+            if (!buyerPostalAddress.getBT0052BuyerCity().isEmpty()) {
+                sedeCessionario.setComune(buyerPostalAddress.getBT0052BuyerCity().get(0).getValue());
+            }
+            if (!buyerPostalAddress.getBT0053BuyerPostCode().isEmpty()) {
+                sedeCessionario.setCAP(buyerPostalAddress.getBT0053BuyerPostCode().get(0).getValue());
+            }
+
+            if (!buyerPostalAddress.getBT0054BuyerCountrySubdivision().isEmpty()) {
+                sedeCessionario.setProvincia(buyerPostalAddress.getBT0054BuyerCountrySubdivision().get(0).getValue());
+            }
+            sedeCessionario.setNazione(buyerPostalAddress.getBT0055BuyerCountryCode().get(0).getValue().getIso2charCode());
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_BUYER_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_BUYER_INFORMATION));
         }
     }
 
     private void setCedentePrestatore() {
-        CedentePrestatoreType cedentePrestatoreType = factory.createCedentePrestatoreType();
-        DatiAnagraficiCedenteType datiAnagraficiCedenteType = factory.createDatiAnagraficiCedenteType();
+        CedentePrestatoreType cedentePrestatore = factory.createCedentePrestatoreType();
+        DatiAnagraficiCedenteType datiAnagraficiCedente = factory.createDatiAnagraficiCedenteType();
         AnagraficaType anagraficaCedente = factory.createAnagraficaType();
-        datiAnagraficiCedenteType.setAnagrafica(anagraficaCedente);
+        datiAnagraficiCedente.setAnagrafica(anagraficaCedente);
         IdFiscaleType idFiscaleSeller = factory.createIdFiscaleType();
-        datiAnagraficiCedenteType.setIdFiscaleIVA(idFiscaleSeller);
-        datiAnagraficiCedenteType.setRegimeFiscale(RegimeFiscaleType.RF_01);
-        cedentePrestatoreType.setDatiAnagrafici(datiAnagraficiCedenteType);
-        IndirizzoType sedoCedente = factory.createIndirizzoType();
-        cedentePrestatoreType.setSede(sedoCedente);
-        fatturaElettronicaHeader.setCedentePrestatore(cedentePrestatoreType);
+        datiAnagraficiCedente.setIdFiscaleIVA(idFiscaleSeller);
+        datiAnagraficiCedente.setRegimeFiscale(RegimeFiscaleType.RF_01);
+        cedentePrestatore.setDatiAnagrafici(datiAnagraficiCedente);
+        IndirizzoType sedeCedente = factory.createIndirizzoType();
+        cedentePrestatore.setSede(sedeCedente);
+        fatturaElettronicaHeader.setCedentePrestatore(cedentePrestatore);
 
         try {
-            anagraficaCedente.setDenominazione(invoice.getBG0004Seller().get(0).getBT0027SellerName().get(0).getValue());
+            List<BT0019BuyerAccountingReference> accountingReferences = invoice.getBT0019BuyerAccountingReference();
+            if (!accountingReferences.isEmpty()) {
+                cedentePrestatore.setRiferimentoAmministrazione(accountingReferences.get(0).getValue());
+            }
+            BG0004Seller seller = invoice.getBG0004Seller().get(0);
+            anagraficaCedente.setDenominazione(seller.getBT0027SellerName().get(0).getValue());
 
-            String sellerVatId = invoice.getBG0004Seller().get(0).getBT0031SellerVatIdentifier().get(0).getValue();
-            idFiscaleSeller.setIdCodice(Cen2FattPAConverterUtils.getCodeFromVATString(sellerVatId));
-            idFiscaleSeller.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(sellerVatId));
+            List<BT0031SellerVatIdentifier> sellerVatIdentifiers = seller.getBT0031SellerVatIdentifier();
+            if (!sellerVatIdentifiers.isEmpty()) {
+                String sellerVatId = sellerVatIdentifiers.get(0).getValue();
+                idFiscaleSeller.setIdCodice(Cen2FattPAConverterUtils.getCodeFromVATString(sellerVatId));
+                idFiscaleSeller.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(sellerVatId));
+            }
 
-            sedoCedente.setIndirizzo(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0035SellerAddressLine1().get(0).getValue());
-            sedoCedente.setCAP(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0038SellerPostCode().get(0).getValue());
-            sedoCedente.setComune(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0037SellerCity().get(0).getValue());
-            sedoCedente.setNazione(invoice.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0).getValue().getIso2charCode());
+            List<BT0029SellerIdentifierAndSchemeIdentifier> sellerIdentifiers = seller.getBT0029SellerIdentifierAndSchemeIdentifier();
+            if (!sellerIdentifiers.isEmpty()) {
+                for (BT0029SellerIdentifierAndSchemeIdentifier identifier : sellerIdentifiers) {
+                    datiAnagraficiCedente.setCodiceFiscale(identifier.getValue());
+                }
+            }
+
+            List<BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier> registrationIdentifiers = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier();
+            if (!registrationIdentifiers.isEmpty()) {
+                for (BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier : registrationIdentifiers) {
+                    IscrizioneREAType iscrizioneREA = factory.createIscrizioneREAType();
+                    iscrizioneREA.setUfficio(registrationIdentifier.getValue());
+                    cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                }
+            }
+
+            BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress().get(0);
+
+            if (!sellerPostalAddress.getBT0035SellerAddressLine1().isEmpty()) {
+                sedeCedente.setIndirizzo(sellerPostalAddress.getBT0035SellerAddressLine1().get(0).getValue());
+            }
+            if (!sellerPostalAddress.getBT0036SellerAddressLine2().isEmpty()) {
+                sedeCedente.setIndirizzo(sellerPostalAddress.getBT0036SellerAddressLine2().get(0).getValue());
+            }
+
+            if (!sellerPostalAddress.getBT0162SellerAddressLine3().isEmpty()) {
+                sedeCedente.setIndirizzo(sellerPostalAddress.getBT0162SellerAddressLine3().get(0).getValue());
+            }
+            if (!sellerPostalAddress.getBT0038SellerPostCode().isEmpty()) {
+                sedeCedente.setCAP(sellerPostalAddress.getBT0038SellerPostCode().get(0).getValue());
+            }
+            if (!sellerPostalAddress.getBT0037SellerCity().isEmpty()) {
+                sedeCedente.setComune(sellerPostalAddress.getBT0037SellerCity().get(0).getValue());
+            }
+            if (!sellerPostalAddress.getBT0039SellerCountrySubdivision().isEmpty()) {
+                sedeCedente.setProvincia(sellerPostalAddress.getBT0039SellerCountrySubdivision().get(0).getValue());
+            }
+            sedeCedente.setNazione(sellerPostalAddress.getBT0040SellerCountryCode().get(0).getValue().getIso2charCode());
+
+            List<BG0006SellerContact> sellerContacts = seller.getBG0006SellerContact();
+            ContattiType contatti = cedentePrestatore.getContatti();
+            BG0006SellerContact sellerContact = sellerContacts.get(0);
+            if (!sellerContacts.isEmpty()) {
+                if (!sellerContact.getBT0042SellerContactTelephoneNumber().isEmpty()) {
+                    contatti.setTelefono(sellerContact.getBT0042SellerContactTelephoneNumber().get(0).getValue());
+                }
+                if (!sellerContact.getBT0043SellerContactEmailAddress().isEmpty()) {
+                    contatti.setEmail(sellerContact.getBT0043SellerContactEmailAddress().get(0).getValue());
+                }
+            }
+
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_SELLER_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_SELLER_INFORMATION));
         }
     }
 
@@ -102,7 +212,7 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
             idFiscaleSeller.setIdPaese(Cen2FattPAConverterUtils.getCountryFromVATString(sellerVatId));
             datiTrasmissioneType.setCodiceDestinatario(invoice.getBG0007Buyer().get(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().get(0).getValue());
         } catch (Exception e) {
-            errors.add(new RuntimeException(IConstants.ERROR_TRANSMISSION_INFORMATION, e));
+            errors.add(ConversionIssue.newError(e, IConstants.ERROR_TRANSMISSION_INFORMATION));
         }
     }
 

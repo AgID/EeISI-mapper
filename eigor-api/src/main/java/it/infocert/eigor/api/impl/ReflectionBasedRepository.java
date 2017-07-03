@@ -1,6 +1,10 @@
 package it.infocert.eigor.api.impl;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 
@@ -14,33 +18,44 @@ import java.util.*;
 public class ReflectionBasedRepository implements RuleRepository, FromCenConversionRepository, ToCenConversionRepository {
 
     private Set<Rule> rules = null;
-    private Set<FromCenConversion> fromCenConversions = null;
-    private Set<ToCenConversion> toCENConverters = null;
+    private Set<AbstractFromCenConverter> fromCenConversions = null;
+    private Set<Abstract2CenConverter> toCENConverters = null;
     private final Reflections reflections;
 
     public ReflectionBasedRepository(Reflections reflections) {
         this.reflections = reflections;
     }
 
-    @Override public List<Rule> rules() {
+    @Override
+    public List<Rule> rules() {
         if (rules == null) {
             this.rules = findImplementation(Rule.class);
         }
         return new ArrayList<>(rules);
     }
 
-    @Override public FromCenConversion findConversionFromCen(String format) {
+    @Override
+    public FromCenConversion findConversionFromCen(final String format) {
         if (fromCenConversions == null) {
-            this.fromCenConversions = findImplementation(FromCenConversion.class);
+            this.fromCenConversions = findImplementation(AbstractFromCenConverter.class);
         }
-        return fromCenConversions.stream().filter(c -> c.support(format)).findFirst().orElse(null);
+
+        Filter<AbstractFromCenConverter> filter = new Filter<AbstractFromCenConverter>() {
+            @Override
+            public boolean apply(AbstractFromCenConverter c) {
+                return c.support(format);
+            }
+        };
+
+        return Stream.create(fromCenConversions).filter(filter).first();
+
     }
 
     @Override
-    public Set<String> supportedFormats() {
+    public Set<String> supportedFromCenFormats() {
         LinkedHashSet<String> result = new LinkedHashSet<>();
         for (FromCenConversion fromCenConversion : fromCenConversions) {
-            result.add( fromCenConversion.getSupportedFormats() );
+            result.addAll(fromCenConversion.getSupportedFormats());
         }
         return result;
     }
@@ -48,7 +63,7 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
     @Override
     public Set<String> supportedToCenFormats() {
         LinkedHashSet<String> result = new LinkedHashSet<>();
-        if(toCENConverters!=null) {
+        if (toCENConverters != null) {
             for (ToCenConversion conversion : toCENConverters) {
                 result.addAll(conversion.getSupportedFormats());
             }
@@ -56,34 +71,48 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
         return result;
     }
 
-    @Override public ToCenConversion findConversionToCen(String sourceFormat) {
+    @Override
+    public ToCenConversion findConversionToCen(final String sourceFormat) {
         if (toCENConverters == null) {
-            this.toCENConverters = findImplementation(ToCenConversion.class);
+            this.toCENConverters = findImplementation(Abstract2CenConverter.class);
         }
-        return toCENConverters.stream().filter(c -> c.support(sourceFormat)).findFirst().orElse(null);
+
+        Filter<Abstract2CenConverter> f = new Filter<Abstract2CenConverter>() {
+            @Override
+            public boolean apply(Abstract2CenConverter c) {
+                return c.support(sourceFormat);
+            }
+        };
+        return Stream.create(toCENConverters).filter(f).first();
+
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Set<T> findImplementation(Class<T> classToFind) {
         Set<T> myRules = new HashSet<>();
-        Set<Class<? extends T>> ruleClasses = reflections.getSubTypesOf(classToFind);
-        ruleClasses.forEach(ruleClass -> {
+        Set<Class<? extends T>> subClasses = reflections.getSubTypesOf(classToFind);
+
+        for (Class<? extends T> subClass : subClasses) {
             try {
-                Constructor constrWithReflections = null;
-                for (Constructor c: ruleClass.getConstructors()) {
-                    if (c.getParameterCount() == 1 &&
-                            Reflections.class.equals(c.getParameterTypes()[0])) {
-                        constrWithReflections = c;
+                Constructor constrWithReflectionsAndRegistry = null;
+                for (Constructor c : subClass.getConstructors()) {
+                    if (c.getParameterTypes().length == 1) {
+                        Class aClass = c.getParameterTypes()[0];
+                        if (Reflections.class.equals(aClass)) {
+                            constrWithReflectionsAndRegistry = c;
+                        }
                     }
                 }
-                if (constrWithReflections == null) {
-                    myRules.add(ruleClass.newInstance());
+                if (constrWithReflectionsAndRegistry == null) {
+                    myRules.add(subClass.newInstance());
                 } else {
-                    myRules.add( (T)constrWithReflections.newInstance(reflections));
+                    myRules.add((T) constrWithReflectionsAndRegistry.newInstance(reflections));
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("An error occurred instantiating class '" + ruleClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
+                throw new RuntimeException("An error occurred instantiating class '" + subClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);
             }
-        });
+        }
+
         return myRules;
     }
 

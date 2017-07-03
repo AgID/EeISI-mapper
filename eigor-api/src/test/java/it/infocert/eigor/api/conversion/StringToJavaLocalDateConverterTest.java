@@ -1,11 +1,11 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -13,25 +13,38 @@ import static org.junit.Assert.assertEquals;
 public class StringToJavaLocalDateConverterTest {
 
     @Test public void testDates() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH);
+        DateTimeFormatter dateTimeFormatter = formatterFor("dd-MMM-yy");
         StringToJavaLocalDateConverter sut = new StringToJavaLocalDateConverter(dateTimeFormatter);
         LocalDate convert = sut.convert("18-Jan-75");
+        assertEquals( 18, convert.getDayOfMonth() );
+        assertEquals( 1, convert.getMonthOfYear() );
+        assertEquals( 1975, convert.getYear() );
     }
 
     @Test public void playingAroundWithDatesInEnglish() {
-        LocalDate parsed = LocalDate.parse("18-Jan-2017", DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH));
+        LocalDate parsed = LocalDate.parse("18-Jan-2017", formatterFor("dd-MMM-yyyy", Locale.ENGLISH));
         assertEquals( "2017-01-18", parsed.toString() );
     }
 
     @Test public void playingAroundWithDatesInItalian() {
-        LocalDate parsed = LocalDate.parse("23-gen-2017", DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ITALIAN));
+        LocalDate parsed = LocalDate.parse("23-gen-2017", formatterFor("dd-MMM-yyyy", Locale.ITALIAN));
         assertEquals( "2017-01-23", parsed.toString() );
     }
 
     @Test public void playingAroundWithDatesInItalian2() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ITALIAN);
-        LocalDate of = LocalDate.of(2017, Month.JANUARY, 18);
-        assertEquals( "18-gen-2017", formatter.format(of));
+        DateTimeFormatter formatter = formatterFor("dd-MMM-yyyy", Locale.ITALIAN);
+        LocalDate of = new LocalDate(2017, Calendar.JANUARY + 1, 18);
+        assertEquals( "18-gen-2017", formatter.print(of));
+    }
+
+    private DateTimeFormatter formatterFor(String s) {
+        Locale english = Locale.ENGLISH;
+        return formatterFor(s, english);
+    }
+
+    private DateTimeFormatter formatterFor(String s, Locale english) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(s).withLocale(english);
+        return dateTimeFormatter;
     }
 
 }

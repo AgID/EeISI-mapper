@@ -12,40 +12,54 @@ public class ConversionResult<R> {
 
     protected final R result;
     protected boolean successful;
-    protected List<Exception> errors;
+    protected boolean hasErrors;
+    protected List<ConversionIssue> issues;
 
     /**
-     * Immutable object constructed with data result and not null but possible empty array of errors
-     * The other flags, successful and hasResult are set automatically based on the result and errors parameters
+     * Immutable object constructed with data result and not null but possible empty array of issues
+     * The other flags, successful and hasResult are set automatically based on the result and issues parameters
      *
      * @param result
-     * @param errors
+     * @param issues
      */
-    public ConversionResult(List<Exception> errors, R result) {
-        this.errors = Collections.unmodifiableList(errors);
+    public ConversionResult(List<ConversionIssue> issues, R result) {
+        this.issues = Collections.unmodifiableList(issues);
         this.result = result;
+        for (ConversionIssue issue : issues) {
+            if (issue.isError()) {
+                hasErrors = true;
+                break;
+            }
+        }
     }
 
     /**
-     * A conversion without errors.
+     * A conversion without issues.
      */
     public ConversionResult(R result) {
         this.result = result;
-        this.errors = Collections.unmodifiableList(new ArrayList<>());
+        this.issues = Collections.unmodifiableList(new ArrayList<ConversionIssue>());
     }
 
     /**
-     * @return TRUE if conversion completed successfully, meaning error list is empty and result (if any) is valid.
+     * @return TRUE if conversion completed successfully, meaning issue list is empty and result (if any) is valid.
      */
     public boolean isSuccessful() {
-        return errors.isEmpty();
+        return issues.isEmpty();
     }
 
     /**
-     * @return List of exceptions caught during conversion.
+     * @return TRUE if the issue list is contains one or more ConversionIssue that is an error.
      */
-    public List<Exception> getErrors() {
-        return errors;
+    public boolean hasErrors() {
+        return hasErrors;
+    }
+
+    /**
+     * @return List of issues caught during conversion.
+     */
+    public List<ConversionIssue> getIssues() {
+        return issues;
     }
 
     /**

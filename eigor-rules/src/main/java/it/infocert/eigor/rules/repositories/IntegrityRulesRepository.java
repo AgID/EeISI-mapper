@@ -16,9 +16,8 @@ import java.util.*;
  */
 public class IntegrityRulesRepository implements RuleRepository {
     private static final Logger log = LoggerFactory.getLogger(IntegrityRulesRepository.class);
-    private List<Rule> ruleList;
     private final Properties properties;
-    private final List<Rule> validRules = new ArrayList<>(0);
+    private List<Rule> validRules;
     private final Map<String, String> invalidRules = new HashMap<>();
 
     public IntegrityRulesRepository(Properties properties) {
@@ -33,9 +32,10 @@ public class IntegrityRulesRepository implements RuleRepository {
      */
     @Override
     public List<Rule> rules() {
-        if (ruleList != null) {
-            return ruleList;
+        if (validRules != null) {
+            return validRules;
         } else {
+            validRules = new ArrayList<>(0);
             Map<String, Map<String, Object>> collected = new HashMap<>();
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 String key = (String) entry.getKey();
@@ -55,11 +55,14 @@ public class IntegrityRulesRepository implements RuleRepository {
 
             }
             List<Rule> rules = new ArrayList<>();
-            collected.forEach((key, entry) -> {
+            for (Map.Entry<String, Map<String, Object>> entry : collected.entrySet()) {
+
                 Rule rule;
-                if (entry.containsKey("items")) {
-                    String items = (String) entry.get("items");
-                    String body = (String) entry.get("body");
+                Map<String, Object> value = entry.getValue();
+                String key = entry.getKey();
+                if (value.containsKey("items")) {
+                    String items = (String) value.get("items");
+                    String body = (String) value.get("body");
                     Map<String, Object> itemsResult = validateExpression(items);
                     Map<String, Object> bodyResult = validateExpression(body);
 
@@ -69,7 +72,7 @@ public class IntegrityRulesRepository implements RuleRepository {
                         rule = new IteratingIntegrityRule(items, body, key);
                         validRules.add(rule);
                         rules.add(rule);
-                    } else {
+                    }else {
                         if (!itemR) {
                             invalidRules.put(String.format("%s.items", key), (String) itemsResult.get("expression"));
                         }
@@ -78,7 +81,7 @@ public class IntegrityRulesRepository implements RuleRepository {
                         }
                     }
                 } else {
-                    String body = (String) entry.get("body");
+                    String body = (String) value.get("body");
                     Map<String, Object> bodyResult = validateExpression(body);
                     if (((boolean) bodyResult.get("result"))) {
                         rule = new IntegrityRule(body, key);
@@ -88,13 +91,11 @@ public class IntegrityRulesRepository implements RuleRepository {
                         invalidRules.put(String.format("%s.body", key), (String) bodyResult.get("expression"));
                     }
                 }
-
-            });
+            }
             if (!invalidRules.isEmpty()) {
                 throw new MalformedRuleException("There are invalid rules in the configuration.", Collections.unmodifiableMap(invalidRules), validRules);
             }
-            this.ruleList = rules;
-            return ruleList;
+            return rules;
         }
     }
 

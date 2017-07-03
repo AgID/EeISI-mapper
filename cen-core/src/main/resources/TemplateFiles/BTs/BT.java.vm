@@ -1,23 +1,25 @@
 ## ============================
-#set( $ClassName = ${BTBGClassName} )
+#set( $ClassName = ${rows[0].data.BTBGClassName} )
 ## ============================
 package it.infocert.eigor.model.core.model;
-
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.model.core.datatypes.*;
 import it.infocert.eigor.model.core.enums.*;
+import java.util.*;
+import com.google.common.base.Preconditions;
 
 import java.util.Objects;
 
 /**
-* ${BusinessTerm} (${ClassName})
-* <p>${Description}</p>
+* ${rows[0].data.BusinessTerm}
+* child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
+* <p>${rows[0].data.Description}</p>
+* <strong>Automatically generated, please don't change.</strong>
 */
 public class ${ClassName} extends AbstractBTBG {
 
-    private final ${AttributeFQN} attribute;
+    private final ${rows[0].data.AttributeFQN} attribute;
 
-    public ${ClassName}(final ${AttributeFQN} attribute) {
+    public ${ClassName}(final ${rows[0].data.AttributeFQN} attribute) {
         this.attribute = Preconditions.checkNotNull( attribute );
     }
 
@@ -26,13 +28,13 @@ public class ${ClassName} extends AbstractBTBG {
         return attribute.toString();
     }
 
-    public ${AttributeFQN} getValue() {
+    public ${rows[0].data.AttributeFQN} getValue() {
         return this.attribute;
     }
 
     @Override
     public int order() {
-        return ${OrderInCEN};
+        return ${rows[0].data.OrderInCEN};
     }
 
     public void accept(final Visitor v) {
