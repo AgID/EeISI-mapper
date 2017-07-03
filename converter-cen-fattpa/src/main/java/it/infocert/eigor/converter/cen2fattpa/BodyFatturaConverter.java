@@ -855,14 +855,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     .get(i);
 
 
-            if (!(invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
-                    invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty())) {
+            if (!(invoiceLine.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty() &&
+                    invoiceLine.getBG0029PriceDetails(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty())) {
 
                 try {
-                    Double bt0129 = invoiceLine.getBT0129InvoicedQuantity().get(0).getValue();
-                    String bt0130 = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
-                    Double bt0149 = invoiceLine.getBG0029PriceDetails().get(0).getBT0149ItemPriceBaseQuantity().get(0).getValue();
-                    String bt0150 = invoiceLine.getBG0029PriceDetails().get(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().get(0).getValue().getCommonCode();
+                    Double bt0129 = invoiceLine.getBT0129InvoicedQuantity(0).getValue();
+                    String bt0130 = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
+                    Double bt0149 = invoiceLine.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
+                    String bt0150 = invoiceLine.getBG0029PriceDetails(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0129 / bt0149));
                     dettaglioLinee.setUnitaMisura(bt0149.toString() + " " + bt0130);
@@ -877,10 +877,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
                     altriDatiGestionaliUnit.setRiferimentoTesto(bt0150);
                     altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(bt0149));
+                } catch (IndexOutOfBoundsException e) {
+                    log.warn("Invoice Line number {} is missing some elements", invoiceLine.getBT0126InvoiceLineIdentifier());
+                    return;
                 } catch (Exception e) {
-                    errors.add(ConversionIssue.newError(e, IConstants.ERROR_BASE_QUANTITY_TRANSFORM));
+                    errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
+                    log.error(e.getMessage(), e);
+                    return;
                 }
-
             }
         }
     }
