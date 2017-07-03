@@ -5,6 +5,8 @@ import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
@@ -34,6 +36,12 @@ public class Eigor {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
         ApplicationContextProvider.setApplicationContext(ctx);
         ctx.getBean(EigorCli.class).run(args);
+    }
+
+    @Bean
+    EigorConfiguration configuration() {
+        EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
+        return eigorConfiguration;
     }
 
     @Bean

@@ -7,7 +7,10 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Properties;
+
+import static java.lang.String.format;
 
 public class DefaultEigorConfigurationLoader {
 
@@ -15,11 +18,14 @@ public class DefaultEigorConfigurationLoader {
 
     public EigorConfiguration loadConfiguration() {
 
+        ArrayList<String> tentatives = new ArrayList();
+
         EigorConfiguration eigorConfiguration = null;
 
         // if the system property is defined, try to load from it.
         String location = System.getProperty("eigor.configurationFile");
         if(location!=null){
+            tentatives.add(location);
             Resource resource = new DefaultResourceLoader().getResource(location);
             if(resource.exists()){
                 try {
@@ -35,6 +41,7 @@ public class DefaultEigorConfigurationLoader {
         // then try to load 'eigor-test.properties' from classpath
         String resourcePath = "/eigor-test.properties";
         try {
+            tentatives.add(resourcePath);
             eigorConfiguration = fromClasspath(resourcePath);
             if(eigorConfiguration==null) {
                 log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
@@ -49,6 +56,7 @@ public class DefaultEigorConfigurationLoader {
         // try to load 'eigor.properties' from classpath
         resourcePath = "/eigor.properties";
         try {
+            tentatives.add(resourcePath);
             eigorConfiguration = fromClasspath(resourcePath);
             if(eigorConfiguration==null) {
                 log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
@@ -58,8 +66,11 @@ public class DefaultEigorConfigurationLoader {
             log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
         }
 
-        return eigorConfiguration;
+        if(eigorConfiguration == null){
+            throw new RuntimeException( format("Unable to find an eigor configuration file in any of those locations: %s.", tentatives) );
+        }
 
+        return eigorConfiguration;
 
     }
 
