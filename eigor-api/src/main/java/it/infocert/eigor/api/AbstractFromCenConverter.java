@@ -45,7 +45,8 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         String pathOfMappingConfFile = getMappingPath();
-        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
+        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections))
+                .getMapping(pathOfMappingConfFile);
 
         byte[] targetXml = null;
         try {

@@ -4,12 +4,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 import java.io.*;
 import java.util.Properties;
 
 /**
- * This class stores the invoice path mappings for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
+ * This class stores the invoice path mappings
+ * for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
  */
 public class InputInvoiceXpathMap {
     private static final Logger log = LoggerFactory.getLogger(InputInvoiceXpathMap.class);
@@ -22,13 +25,29 @@ public class InputInvoiceXpathMap {
         mapping = null;
     }
 
-
     /**
      * Gets the mappings for GenericOneToOneTransformations.
      *
      * @return the mapping map
      */
+    public Multimap<String,String> getMapping(Resource r) {
+        try {
+            mapping = loadMapFromInputStream(r.getInputStream());
+            return mapping;
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load mapping file from resource: '" + r + "'.");
+        }
+    }
+
+    /**
+     * Gets the mappings for GenericOneToOneTransformations.
+     *
+     * @return the mapping map
+     * @deprecated Use {@link InputInvoiceXpathMap#getMapping(Resource)} instead.
+     */
+    @Deprecated
     public Multimap<String, String> getMapping(String path) {
+
         if (mapping == null) {
             // try #1, from filesystem
             try {
@@ -100,5 +119,6 @@ public class InputInvoiceXpathMap {
         }
         return mappings;
     }
+
 
 }
