@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -69,13 +70,13 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     );
 
-    public static final String ONE2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
-    public static final String MANY2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/many_to_one.properties";
-    public static final String ONE2MANY_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_many.properties";
+    public static final String ONE2ONE_MAPPING_PATH = "converter-ubl-cen/mappings/one_to_one.properties";
+    public static final String MANY2ONE_MAPPING_PATH = "converter-ubl-cen/mappings/many_to_one.properties";
+    public static final String ONE2MANY_MAPPING_PATH = "converter-ubl-cen/mappings/one_to_many.properties";
 
 
-    public Ubl2Cen(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry,  configuration);
         setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
     }
 
@@ -146,5 +147,10 @@ public class Ubl2Cen extends Abstract2CenConverter {
     @Override
     public String getMany2OneMappingPath() {
         return MANY2ONE_MAPPING_PATH;
+    }
+
+    @Override
+    public String getName() {
+        return "ubl-cen";
     }
 }

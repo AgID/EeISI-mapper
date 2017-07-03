@@ -95,5 +95,9 @@ public class Cen2FattPAConverter implements FromCenConversion {
         return xmlOutput.toString().getBytes();
     }
 
+    @Override
+    public String getName() {
+        return "cen-fatturapa";
+    }
 }
 

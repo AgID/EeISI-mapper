@@ -13,7 +13,7 @@ import java.util.Set;
  * </p>
  * @see ToCenConversion
  */
-public interface FromCenConversion {
+public interface FromCenConversion extends Named {
 
     /**
      * The return object should contain a byte[] result and a not null but possible empty array of issues

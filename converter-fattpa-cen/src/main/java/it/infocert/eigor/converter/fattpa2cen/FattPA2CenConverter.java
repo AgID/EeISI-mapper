@@ -2,8 +2,8 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.Abstract2CenConverter;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -27,8 +27,8 @@ public class FattPA2CenConverter extends Abstract2CenConverter {
     private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
     private static final ConversionRegistry conversionRegistry = new ConversionRegistry();
 
-    public FattPA2CenConverter(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public FattPA2CenConverter(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
     }
 
     public ConversionResult<BG0000Invoice> convert(InputStream input) {
@@ -73,5 +73,10 @@ public class FattPA2CenConverter extends Abstract2CenConverter {
     @Override
     public Set<String> getSupportedFormats() {
         return new HashSet<>( Arrays.asList("fattpa") );
+    }
+
+    @Override
+    public String getName() {
+        return "cen-fatturapa";
     }
 }

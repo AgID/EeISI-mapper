@@ -154,4 +154,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         datiTrasmissione.addContent(formatoTrasmissione);
         doc.getRootElement().getChild("FatturaElettronicaHeader").addContent(datiTrasmissione);
     }
+
+    @Override
+    public String getName() {
+        return "cen-fatturapa";
+    }
 }

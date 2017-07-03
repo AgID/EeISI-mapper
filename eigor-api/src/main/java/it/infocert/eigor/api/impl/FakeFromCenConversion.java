@@ -70,4 +70,9 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     public String getMappingPath() {
         return "/tmp/fake.properties";
     }
+
+    @Override
+    public String getName() {
+        return "fake";
+    }
 }

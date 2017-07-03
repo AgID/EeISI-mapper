@@ -17,7 +17,7 @@ import java.util.Set;
  *     {@link BG0000Invoice CEN invoice}.
  * </p>
  */
-public interface ToCenConversion {
+public interface ToCenConversion extends Named {
 
     /**
      * Convert the given invoice in a {@link BG0000Invoice CEN invoice}.

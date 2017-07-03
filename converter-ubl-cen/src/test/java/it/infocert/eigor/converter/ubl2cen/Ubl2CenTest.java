@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.XSDValidator;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
@@ -28,6 +29,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class Ubl2CenTest {
 
@@ -37,7 +39,10 @@ public class Ubl2CenTest {
 
     @Before
     public void setUp() {
-        sut = new Ubl2Cen(new Reflections("it.infocert"));
+        sut = new Ubl2Cen(
+                new Reflections("it.infocert"),
+                mock(EigorConfiguration.class)
+        );
     }
     
     @Test

@@ -84,10 +84,10 @@ public class Eigor {
     }
 
     @Bean
-    ToCenConversionRepository toCenConversionRepository(Reflections reflections) {
+    ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
-                new Ubl2Cen(reflections),
-                new FattPA2CenConverter(reflections),
+                new Ubl2Cen(reflections, configuration),
+                new FattPA2CenConverter(reflections, configuration),
                 new CsvCen2Cen(reflections)
         );
     }
