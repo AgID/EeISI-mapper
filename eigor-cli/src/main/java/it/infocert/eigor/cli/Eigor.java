@@ -33,8 +33,6 @@ import javax.crypto.CipherInputStream;
 public class Eigor {
 
     public static Logger log = LoggerFactory.getLogger(Eigor.class);
-    
-    private ConversionRegistry conversionRegistry = new ConversionRegistry();
 
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
@@ -87,7 +85,7 @@ public class Eigor {
                 new Ubl2Cen(reflections),
                 new FattPA2CenConverter(reflections),
                 new CsvCen2Cen(reflections),
-                new Cii2Cen(reflections, conversionRegistry)
+                new Cii2Cen(reflections)
         );
     }
 

@@ -17,11 +17,10 @@ public class Cii2CenTest {
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenTest.class);
 
 	private Cii2Cen sut;
-	private ConversionRegistry conversionRegistry = new ConversionRegistry();
 	
 	@Before
 	public void setUp() throws Exception {
-		sut = new Cii2Cen(new Reflections("it.infocert"), conversionRegistry);
+		sut = new Cii2Cen(new Reflections("it.infocert"));
 	}
 		
 	@Test

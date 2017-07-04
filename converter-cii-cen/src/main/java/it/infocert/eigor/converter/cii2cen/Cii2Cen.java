@@ -20,8 +20,9 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 public class Cii2Cen extends Abstract2CenConverter{
 	
 	public static final String FORMAT = "cii";
+	private static final ConversionRegistry conversionRegistry = new ConversionRegistry();
  
-	public Cii2Cen(Reflections reflections, ConversionRegistry conversionRegistry) {
+	public Cii2Cen(Reflections reflections) {
 		super(reflections, conversionRegistry);
 		// TODO Auto-generated constructor stub
 	}
