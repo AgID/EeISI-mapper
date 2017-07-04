@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -19,12 +21,12 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 @SuppressWarnings("unchecked")
 public class Cii2Cen extends Abstract2CenConverter{
 	
-	public static final String FORMAT = "cii";
+	private static final Logger log = LoggerFactory.getLogger(Cii2Cen.class);
+	private static final String FORMAT = "cii";
 	private static final ConversionRegistry conversionRegistry = new ConversionRegistry();
  
 	public Cii2Cen(Reflections reflections) {
 		super(reflections, conversionRegistry);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -38,6 +40,10 @@ public class Cii2Cen extends Abstract2CenConverter{
 
 	@Override
 	public boolean support(String format) {
+		if(format == null){
+			log.error("Format is null!");
+			return false;
+		}
 		return FORMAT.equals(format.toLowerCase().trim());
 	}
 
