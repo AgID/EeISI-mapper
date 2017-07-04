@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>eigor-parent</artifactId>
+		<groupId>it.infocert.eigor</groupId>
+		<version>0.0.7-SNAPSHOT</version>
+		<relativePath>../eigor-parent</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<artifactId>converter-cii-cen</artifactId>
+	
+	<name>Eigor :: Converter :: CII - CEN</name>
+	
+	<dependencies>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
+
+    </dependencies>
+    <build>
+    	 <resources>
+            <resource>
+                <directory>converterdata/**</directory>
+                <excludes>
+                    <exclude>**</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <plugins>
+        	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+             </plugin>
+        </plugins>
+    </build>
+</project>
