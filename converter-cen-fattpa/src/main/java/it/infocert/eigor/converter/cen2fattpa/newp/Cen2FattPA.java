@@ -31,7 +31,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
-    private String mappingPath = "converter-cen-fattpa/mappings/one_to_one.properties";
+    private String ONE2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_one.properties";
+    private String MANY2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/many_to_one.properties";
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -69,7 +70,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
      * @param mappingPath the new configuration file path
      */
     public void setMappingFile(String mappingPath) {
-        this.mappingPath = mappingPath;
+        this.ONE2ONE_MAPPING_PATH = mappingPath;
     }
 
     @Override
@@ -80,7 +81,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         setFormatoTrasmissione(document);
         //TODO Add here hardcoded conversion
         BinaryConversionResult oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        byte[] xml = oneToOneResult.getResult();
+        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, document, oneToOneResult.getIssues());
+
+        byte[] xml = result.getResult();
         FatturaElettronicaType jaxbFattura = null;
         JAXBContext jaxbContext = null;
         try {
@@ -112,7 +115,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             errors.add(ConversionIssue.newError(e));
             log.error(e.getMessage(), e);
         }
-        return xmlOutput != null ? new BinaryConversionResult(xmlOutput.toString().getBytes(), errors) : oneToOneResult;
+        return xmlOutput != null ? new BinaryConversionResult(xmlOutput.toString().getBytes(), errors) : result;
     }
 
     @Override
@@ -131,8 +134,13 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     }
 
     @Override
-    public String getMappingPath() {
-        return mappingPath;
+    protected String getOne2OneMappingPath() {
+        return ONE2ONE_MAPPING_PATH;
+    }
+
+    @Override
+    protected String getMany2OneMappingPath() {
+        return MANY2ONE_MAPPING_PATH;
     }
 
     private void createRootNode(Document doc) {
