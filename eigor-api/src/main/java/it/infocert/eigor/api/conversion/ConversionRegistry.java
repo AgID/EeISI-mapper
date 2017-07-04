@@ -62,58 +62,6 @@ public class ConversionRegistry {
                         converter.getSourceClass().getName(),
                         sourceClz.getName());
             }
-
-       /*     log.trace("Trying to convert value '{}' with converter '{}'.", value, converter);
-
-            Type[] genericInterfaces = converter.getClass().getGenericInterfaces();
-
-            if (genericInterfaces == null || genericInterfaces.length == 0) {
-
-                try {
-                    Method method = converter.getClass().getMethod("convert", sourceClz);
-                    Object convertedValue = method.invoke(converter, value);
-                    if (!targetClz.isAssignableFrom(convertedValue.getClass())) {
-                        log.trace("Skipped converter '{}' because it converted to '{}' of type '{}' but required target is '{}'.",
-                                converter,
-                                convertedValue,
-                                convertedValue.getClass().getName(),
-                                targetClz.getName());
-                        continue;
-                    }
-
-                    return (T) convertedValue;
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassCastException e) {
-                    log.trace("Skipped converter '{}' because of error.", converter, e);
-                }
-
-            } else {
-
-//                ParameterizedType typeConverterIface = (ParameterizedType) genericInterfaces[0];
-//                Type sourceType = typeConverterIface.getActualTypeArguments()[0];
-//                Type targetType = typeConverterIface.getActualTypeArguments()[1];
-                // let's test the converter is a good candidate.
-                try {
-                    final TypeConverter<S, T> check = (TypeConverter<S, T>) converter;
-                    try {
-                        Object convertedValue = check.convert(value);
-
-                        if (!targetClz.isAssignableFrom(convertedValue.getClass())) {
-                            log.trace("Skipped converter '{}' because it converted to '{}' of type '{}' but required target is '{}'.",
-                                    converter,
-                                    convertedValue,
-                                    convertedValue.getClass().getName(),
-                                    targetClz.getName());
-                            continue;
-                        }
-
-                        return (T) convertedValue;
-                    } catch (RuntimeException e) {
-                        log.trace("Skipped converter '{}' because of error.", converter, e);
-                    }
-                } catch (ClassCastException e) {
-                    log.trace("Skipped converter '{}' because not matching source '{}', target '{}'.", converter, sourceClz, targetClz);
-                }
-            }*/
         }
         throw new IllegalArgumentException(
                 format("Cannot convert value '%s' of declared type '%s' to the desired type '%s'.",

@@ -46,6 +46,7 @@ public abstract class GenericTransformer {
 
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
+        log.error(bgPath);
         invoiceUtils.ensurePathExists(bgPath, invoice);
         BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
         log.trace(cenPath + " has BG parent: " + bg);

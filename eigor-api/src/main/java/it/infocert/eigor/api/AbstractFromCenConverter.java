@@ -46,7 +46,6 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
         String pathOfMappingConfFile = getMappingPath();
         Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
-
         byte[] targetXml = null;
         try {
             for (Map.Entry<String, String> entry : mappings.entries()) {
