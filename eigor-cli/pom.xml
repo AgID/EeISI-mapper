@@ -19,21 +19,10 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>net.sf.jopt-simple</groupId>
-            <artifactId>jopt-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+        <!-- eigor -->
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
@@ -53,8 +42,14 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-rules</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-ubl-cen</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cii-cen</artifactId>
