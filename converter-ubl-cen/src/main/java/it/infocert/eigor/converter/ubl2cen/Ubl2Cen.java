@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -49,6 +48,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new Iso31661CountryCodesToStringConverter(),
             new StringToUntdid4461PaymentMeansCode(),
             new UnitOfMeasureCodesToStringConverter(),
+
+            new CodeAsStringToUntdid5189TypeConverter(),
 
             // dates
             new StringToJavaLocalDateConverter("dd-MMM-yy"),
@@ -122,7 +123,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
         Document document = getDocument(clonedInputStream);
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
-        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, result.getIssues());
+        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         
         return result;
     }
