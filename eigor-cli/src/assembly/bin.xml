@@ -39,6 +39,10 @@
             <outputDirectory>examples/ubl</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/ubl</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/cii</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/cii</directory>
+        </fileSet>
         <!-- invoice examples -->
 
         <fileSet>
@@ -72,11 +76,11 @@
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron</directory>
         </fileSet>
         <fileSet>
-        <outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
-        <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/xsd</directory>
-        <includes>
-        <include>*.xsd</include>
-        </includes>
+        	<outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
+        	<directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/xsd</directory>
+        	<includes>
+        		<include>*.xsd</include>
+        	</includes>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
@@ -84,6 +88,13 @@
             <includes>
                 <include>*.properties</include>
             </includes>
+        </fileSet>
+        <fileSet>
+        	<outputDirectory>converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</outputDirectory>
+        	<directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</directory>
+        	<includes>
+        		<include>*.xsd</include>
+        	</includes>
         </fileSet>
         <fileSet>
             <outputDirectory>conf</outputDirectory>
