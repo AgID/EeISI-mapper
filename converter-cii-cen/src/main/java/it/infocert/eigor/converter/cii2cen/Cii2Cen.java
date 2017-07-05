@@ -42,7 +42,6 @@ public class Cii2Cen extends Abstract2CenConverter{
 		List<ConversionIssue> issues = null;
 		
 		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
-		System.out.println("ABSOLUTE: "+xsdFile.getAbsolutePath());
 		XSDValidator xsdValidator = new XSDValidator(xsdFile);
 		
 		try {
