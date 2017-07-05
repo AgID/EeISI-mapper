@@ -7,15 +7,29 @@ import org.springframework.core.io.Resource;
 
 import java.util.Properties;
 
-class PropertiesBackedConfiguration implements EigorConfiguration {
+public class PropertiesBackedConfiguration implements EigorConfiguration {
 
     private final Properties properties;
     private final DefaultResourceLoader drl;
 
+    public PropertiesBackedConfiguration() {
+        this.properties = new Properties();
+        this.drl = new DefaultResourceLoader(PropertiesBackedConfiguration.class.getClassLoader());
+    }
+
     public PropertiesBackedConfiguration(final Properties properties) {
         Preconditions.checkNotNull(properties);
-        this.properties = properties;
+        this.properties = new Properties( properties );
         this.drl = new DefaultResourceLoader(PropertiesBackedConfiguration.class.getClassLoader());
+    }
+
+    public Object setProperty(String property, String value) {
+        return properties.setProperty(property, value);
+    }
+
+    public PropertiesBackedConfiguration addProperty(String property, String value) {
+        properties.setProperty(property, value);
+        return this;
     }
 
     @Override
@@ -23,6 +37,12 @@ class PropertiesBackedConfiguration implements EigorConfiguration {
         String basePath = getMandatoryProperty("eigor.converters.basePath");
         String location = joinTokens(basePath, named.getName(), path);
         return drl.getResource(location);
+    }
+
+    @Override public String getMandatoryString(String property) {
+        String theProperty = properties.getProperty(property);
+        if(theProperty == null) throw MissingMandatoryPropertyException.missingProperty(property);
+        return theProperty;
     }
 
     private String joinTokens(String... tokens) {

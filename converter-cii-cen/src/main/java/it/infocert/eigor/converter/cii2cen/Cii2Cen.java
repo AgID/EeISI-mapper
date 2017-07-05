@@ -1,19 +1,19 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import static org.hamcrest.CoreMatchers.is;
+import it.infocert.eigor.api.Abstract2CenConverter;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 /**
  * The CII to CEN format converter
@@ -25,8 +25,8 @@ public class Cii2Cen extends Abstract2CenConverter{
 	private static final String FORMAT = "cii";
 	private static final ConversionRegistry conversionRegistry = new ConversionRegistry();
  
-	public Cii2Cen(Reflections reflections) {
-		super(reflections, conversionRegistry);
+	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
+		super(reflections, conversionRegistry, configuration);
 	}
 
 	@Override
@@ -51,7 +51,8 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public Set<String> getSupportedFormats() {
 		return new HashSet<>(Arrays.asList(FORMAT));
 	}
-	
-	
-	
+
+	@Override public String getName() {
+		return "cii-cen";
+	}
 }

@@ -4,8 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +22,8 @@ public class Cii2CenTest {
 	
 	@Before
 	public void setUp() {
-		sut = new Cii2Cen(new Reflections("it.infocert"));
+		EigorConfiguration conf = new PropertiesBackedConfiguration();
+		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
 	}
 		
 	@Test

@@ -10,9 +10,10 @@ import org.jdom2.Document;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -25,6 +26,8 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
     private static final String FORMAT = "ubl";
+    private final DefaultResourceLoader drl = new DefaultResourceLoader();
+    private final EigorConfiguration configuration;
     private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
 
             // enums
@@ -77,6 +80,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry,  configuration);
+        this.configuration = configuration;
         setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
     }
 
@@ -93,9 +97,9 @@ public class Ubl2Cen extends Abstract2CenConverter {
         List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
-        File ublSchemaFile = new File("converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt");
-        File ciusSchemaFile = new File("converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt");
-        File xsdFile = new File("converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd");
+        Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
+        Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
+        Resource xsdFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.xsd") );
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
@@ -104,17 +108,17 @@ public class Ubl2Cen extends Abstract2CenConverter {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
             
-            XSDValidator xsdValidator = new XSDValidator(xsdFile);
+            XSDValidator xsdValidator = new XSDValidator( xsdFile.getInputStream() );
             List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
             	log.info("Xsd validation succesful!");
             }
 			errors.addAll(validationErrors);
 
-            ublValidator = new SchematronValidator(ublSchemaFile, true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
             errors.addAll(ublValidator.validate(bytes));
 
-            ciusValidator = new SchematronValidator(ciusSchemaFile, true);
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
             errors.addAll(ciusValidator.validate(bytes));
 
         } catch (IOException | IllegalArgumentException e) {
