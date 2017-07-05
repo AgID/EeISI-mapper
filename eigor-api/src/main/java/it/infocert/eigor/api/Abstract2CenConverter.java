@@ -70,7 +70,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
 
             // Stop at each something.target key
             if (key.contains("target")){
-                if (existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
+                if (!existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
                     continue;
                 }
                 String bgBtPath = mapping.get(key).iterator().next();
@@ -89,17 +89,12 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
 
                     }
                     index++;
+                    sourceKey = key.replace(".target", ".source."+index);
                 }
 
                 GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, reflections, conversionRegistry);
                 transformer.transformXmlToCen(document, partialInvoice, errors);
             }
-//            mapBt33.type=concatenation
-//            mapBt33.xml.source.1=**/CapitaleSociale
-//            mapBt33.xml.source.2=**/SocioUnico
-//            mapBt33.xml.source.3=**/StatoLiquidazione
-//            mapBt33.cen.target=BT-33
-//            mapBt33.cen.expression=%1-%2 %3
         }
         return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
     }

@@ -27,7 +27,10 @@ public interface ToCenConversion extends Named {
      *                                  to convert the source invoice in the CEN format is found.
      */
     ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
-
+    
+    /**
+     * Returns true if the format is supported, false otherwise
+     */
     boolean support(String format);
 
     /**

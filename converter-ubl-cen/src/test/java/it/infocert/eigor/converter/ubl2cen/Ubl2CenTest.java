@@ -101,7 +101,7 @@ public class Ubl2CenTest {
     	List<ConversionIssue> errors = validate(sourceInvoiceStream);
     	assertFalse(errors.isEmpty());
     }
-    
+
     
     private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);

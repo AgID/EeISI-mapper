@@ -124,7 +124,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
         Document document = getDocument(clonedInputStream);
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
-        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, result.getIssues());
+        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         
         return result;
     }
