@@ -31,8 +31,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
+
     private String ONE2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_one.properties";
     private String MANY2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/many_to_one.properties";
+    private String ONE2MANY_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_many.properties";
+
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -141,6 +144,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     @Override
     protected String getMany2OneMappingPath() {
         return MANY2ONE_MAPPING_PATH;
+    }
+
+    @Override
+    protected String getOne2ManyMappingPath() {
+        return ONE2MANY_MAPPING_PATH;
     }
 
     private void createRootNode(Document doc) {

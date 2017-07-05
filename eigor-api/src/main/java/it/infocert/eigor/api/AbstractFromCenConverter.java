@@ -121,6 +121,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return the path to the file
      */
     protected abstract String getOne2OneMappingPath();
+    // TODO Will all the from cen converters have this kind of mapping? If so, make methods abstrac
     protected String getMany2OneMappingPath() {
         return null;
     }
