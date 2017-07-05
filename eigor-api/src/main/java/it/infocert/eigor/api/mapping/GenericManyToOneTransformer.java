@@ -1,20 +1,23 @@
 package it.infocert.eigor.api.mapping;
 
 
-import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
+import org.jdom2.Document;
 import org.jdom2.Element;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generic class to transform both cen objects in XML elements and viceversa,
+ * based on a n-1 configurable mapping
+ * Use string concat expression
+ */
 public class GenericManyToOneTransformer extends GenericTransformer {
     private final String combinationExpression;
     private final String targetPath;
@@ -86,7 +89,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
             errors.add(ConversionIssue.newWarning(new RuntimeException("Source element missing to complete expression: " + combinationExpression + "; Result: " + finalValue)));
         } else {
             List<Element> elements = getAllXmlElements(targetPath, document, 1, sourcePaths.toString(), errors);
-            if (elements == null) return;
+            if (elements == null || elements.size() == 0) return;
             if (elements.size() > 1) {
                 errors.add(ConversionIssue.newError(new RuntimeException("More than one element for " + targetPath + ": " + elements)));
                 return;
