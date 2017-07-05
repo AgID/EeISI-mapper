@@ -1,8 +1,9 @@
 package it.infocert.eigor.converter.cen2fattpa.newp;
 
 import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -26,7 +27,8 @@ public class Cen2FattPATest {
 
     @Before
     public void setUp() {
-        converter = new Cen2FattPA(new Reflections("it.infocert"));
+        EigorConfiguration conf = new PropertiesBackedConfiguration();
+        converter = new Cen2FattPA(new Reflections("it.infocert"), conf);
     }
 
     @Test

@@ -95,9 +95,9 @@ public class Eigor {
     }
 
     @Bean
-    FromCenConversionRepository fromCenConversionRepository(Reflections reflections) {
+    FromCenConversionRepository fromCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
-                new Cen2FattPA(reflections)
+                new Cen2FattPA(reflections, configuration)
         );
     }
 

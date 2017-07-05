@@ -42,7 +42,7 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     );
 
     public FakeFromCenConversion(Reflections reflections) {
-        super(reflections, conversionRegistry);
+        super(reflections, conversionRegistry, null);
     }
 
     @Override
@@ -69,6 +69,14 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     @Override
     public String getOne2OneMappingPath() {
         return "/tmp/fake.properties";
+    }
+
+    @Override protected String getMany2OneMappingPath() {
+        return null;
+    }
+
+    @Override protected String getOne2ManyMappingPath() {
+        return null;
     }
 
     @Override

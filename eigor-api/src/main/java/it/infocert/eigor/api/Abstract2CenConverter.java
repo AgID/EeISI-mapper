@@ -14,6 +14,7 @@ import org.jdom2.input.SAXBuilder;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -29,11 +30,13 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     private String regex;
     private final ConversionRegistry conversionRegistry;
     private final EigorConfiguration configuration;
+    private final DefaultResourceLoader drl;
 
     public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;
+        this.drl = new DefaultResourceLoader();
     }
 
 
@@ -48,7 +51,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
         BG0000Invoice invoice = new BG0000Invoice();
         InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(getMappingRegex(), reflections));
 
-        Resource thePathOfOneOneMappingFile = configuration.pathForModuleResource( this, getOne2OneMappingPath() );
+        Resource thePathOfOneOneMappingFile = drl.getResource( getOne2OneMappingPath() );
 
 
         Multimap<String, String> mapping = mapper.getMapping(thePathOfOneOneMappingFile);
@@ -63,7 +66,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
 
         InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
 
-        Resource thePathOfOneOneMappingFile = configuration.pathForModuleResource( this, getMany2OneMappingPath() );
+        Resource thePathOfOneOneMappingFile = drl.getResource( getMany2OneMappingPath() );
 
         Multimap<String, String> mapping = mapper.getMapping(thePathOfOneOneMappingFile);
         for (String key: mapping.keySet()) {

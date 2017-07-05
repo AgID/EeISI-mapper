@@ -4,6 +4,7 @@ import it.infocert.eigor.api.AbstractFromCenConverter;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.converter.cen2fattpa.BodyFatturaConverter;
 import it.infocert.eigor.converter.cen2fattpa.IConstants;
@@ -31,8 +32,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
-    private String ONE2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_one.properties";
-    private String MANY2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/many_to_one.properties";
+    private String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-one";
+    private String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.many-to-one";
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -59,18 +60,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     );
     private final ObjectFactory factory = new ObjectFactory();
 
-    public Cen2FattPA(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
         setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
-    }
-
-    /**
-     * Override the default mapping configuration file path
-     *
-     * @param mappingPath the new configuration file path
-     */
-    public void setMappingFile(String mappingPath) {
-        this.ONE2ONE_MAPPING_PATH = mappingPath;
     }
 
     @Override
@@ -80,8 +72,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         createRootNode(document);
         setFormatoTrasmissione(document);
         //TODO Add here hardcoded conversion
+
         BinaryConversionResult oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, document, oneToOneResult.getIssues());
+        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, document, new ArrayList<ConversionIssue>( oneToOneResult.getIssues()) );
 
         byte[] xml = result.getResult();
         FatturaElettronicaType jaxbFattura = null;
@@ -141,6 +134,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     @Override
     protected String getMany2OneMappingPath() {
         return MANY2ONE_MAPPING_PATH;
+    }
+
+    @Override protected String getOne2ManyMappingPath() {
+        return null;
     }
 
     private void createRootNode(Document doc) {

@@ -4,7 +4,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 import java.io.*;
@@ -31,12 +30,21 @@ public class InputInvoiceXpathMap {
      * @return the mapping map
      */
     public Multimap<String,String> getMapping(Resource r) {
+
+        InputStream inputStream = null;
         try {
-            mapping = loadMapFromInputStream(r.getInputStream());
-            return mapping;
+            inputStream = r.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException("Unable to load mapping file from resource: '" + r + "'.");
         }
+
+        return getMapping(inputStream);
+
+    }
+
+    public Multimap<String, String> getMapping(InputStream inputStream) {
+        mapping = loadMapFromInputStream(inputStream);
+        return mapping;
     }
 
     /**

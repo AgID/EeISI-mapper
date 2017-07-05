@@ -28,54 +28,11 @@ public class Ubl2Cen extends Abstract2CenConverter {
     private static final String FORMAT = "ubl";
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
-    private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
+    private static final ConversionRegistry conversionRegistry = initConversionStrategy();
 
-            // enums
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-
-            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-
-            new StringToUnitOfMeasureConverter(),
-            new LookUpEnumConversion(UnitOfMeasureCodes.class),
-
-            new LookUpEnumConversion(VatExemptionReasonsCodes.class),
-
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new Iso31661CountryCodesToStringConverter(),
-            new StringToUntdid4461PaymentMeansCode(),
-            new UnitOfMeasureCodesToStringConverter(),
-
-            new CodeAsStringToUntdid5189TypeConverter(),
-
-            // dates
-            new StringToJavaLocalDateConverter("dd-MMM-yy"),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new JavaLocalDateToStringConverter(),
-            new JavaLocalDateToStringConverter("dd-MMM-yy"),
-
-            // numbers
-            new StringToDoubleConverter(),
-            new DoubleToStringConverter("#.00"),
-
-            // binaries
-            new Base64StringToBinaryConverter(),
-
-            // string
-            new StringToStringConverter()
-
-    );
-
-    public static final String ONE2ONE_MAPPING_PATH = "converter-ubl-cen/mappings/one_to_one.properties";
-    public static final String MANY2ONE_MAPPING_PATH = "converter-ubl-cen/mappings/many_to_one.properties";
-    public static final String ONE2MANY_MAPPING_PATH = "converter-ubl-cen/mappings/one_to_many.properties";
+    public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one";
+    public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
+    public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
 
 
     public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
@@ -145,16 +102,68 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     @Override
     public String getOne2OneMappingPath() {
-        return ONE2ONE_MAPPING_PATH;
+        return configuration.getMandatoryString(ONE2ONE_MAPPING_PATH);
     }
 
     @Override
     public String getMany2OneMappingPath() {
-        return MANY2ONE_MAPPING_PATH;
+        return configuration.getMandatoryString(MANY2ONE_MAPPING_PATH);
+    }
+
+    @Override
+    public String getOne2ManyMappingPath() {
+        return configuration.getMandatoryString(ONE2MANY_MAPPING_PATH);
     }
 
     @Override
     public String getName() {
         return "ubl-cen";
+    }
+
+    private static ConversionRegistry initConversionStrategy(){
+        return new ConversionRegistry(
+
+                // enums
+                new CountryNameToIso31661CountryCodeConverter(),
+                new LookUpEnumConversion(Iso31661CountryCodes.class),
+
+                new StringToUntdid1001InvoiceTypeCodeConverter(),
+                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+
+                new StringToIso4217CurrenciesFundsCodesConverter(),
+                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+
+                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+
+                new StringToUnitOfMeasureConverter(),
+                new LookUpEnumConversion(UnitOfMeasureCodes.class),
+
+                new LookUpEnumConversion(VatExemptionReasonsCodes.class),
+
+                new Iso4217CurrenciesFundsCodesToStringConverter(),
+                new Iso31661CountryCodesToStringConverter(),
+                new StringToUntdid4461PaymentMeansCode(),
+                new UnitOfMeasureCodesToStringConverter(),
+
+                new CodeAsStringToUntdid5189TypeConverter(),
+
+                // dates
+                new StringToJavaLocalDateConverter("dd-MMM-yy"),
+                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+                new JavaLocalDateToStringConverter(),
+                new JavaLocalDateToStringConverter("dd-MMM-yy"),
+
+                // numbers
+                new StringToDoubleConverter(),
+                new DoubleToStringConverter("#.00"),
+
+                // binaries
+                new Base64StringToBinaryConverter(),
+
+                // string
+                new StringToStringConverter()
+
+        );
     }
 }

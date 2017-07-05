@@ -1,6 +1,8 @@
 package it.infocert.eigor.api;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
@@ -12,9 +14,12 @@ import org.jdom2.output.XMLOutputter;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +30,18 @@ import java.util.Map;
 public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractFromCenConverter.class);
+    private final EigorConfiguration configuration;
     private Reflections reflections;
     private ConversionRegistry conversionRegistry;
     private String regex;
+    private final DefaultResourceLoader drl;
 
 
-    protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
+    protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
+        this.drl = new DefaultResourceLoader();
+        this.configuration = Preconditions.checkNotNull( configuration );
     }
 
     /**
@@ -46,8 +55,15 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      */
     protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        String pathOfMappingConfFile = getOne2OneMappingPath();
-        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
+        InputStream inputStream;
+        Resource resource = drl.getResource( configuration.getMandatoryString( getOne2OneMappingPath() ) );
+        try {
+            inputStream = resource.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(inputStream);
 
         for (Map.Entry<String, String> entry : mappings.entries()) {
             String key = entry.getKey();
@@ -72,8 +88,18 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     protected BinaryConversionResult applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
+        InputStream inputStream = null;
+        try {
+            inputStream = drl.getResource(
+                    configuration.getMandatoryString(
+                    getMany2OneMappingPath()
+                    )
+            ).getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
-        Multimap<String, String> mapping = mapper.getMapping(getMany2OneMappingPath());
+        Multimap<String, String> mapping = mapper.getMapping(inputStream);
         for (String key: mapping.keySet()) {
 
             // Stop at each something.target key
@@ -121,12 +147,10 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return the path to the file
      */
     protected abstract String getOne2OneMappingPath();
-    protected String getMany2OneMappingPath() {
-        return null;
-    }
-    protected String getOne2ManyMappingPath() {
-        return null;
-    }
+
+    protected abstract String getMany2OneMappingPath();
+
+    protected abstract String getOne2ManyMappingPath();
 
     public void setMappingRegex(String regex) {
         this.regex = regex;

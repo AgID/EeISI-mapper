@@ -9,7 +9,7 @@ public class MissingMandatoryPropertyException extends RuntimeException {
     }
 
     public static MissingMandatoryPropertyException missingProperty(String missingProperty){
-        return new MissingMandatoryPropertyException( String.format("Mandatory configuration property '%s'.", valueOf(missingProperty)) );
+        return new MissingMandatoryPropertyException( String.format("Mandatory configuration property '%s' is missing.", valueOf(missingProperty)) );
     }
 
 }

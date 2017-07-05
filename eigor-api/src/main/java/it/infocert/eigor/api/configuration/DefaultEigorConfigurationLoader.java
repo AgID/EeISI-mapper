@@ -30,6 +30,7 @@ public class DefaultEigorConfigurationLoader {
             if(resource.exists()){
                 try {
                     eigorConfiguration = fromInputstream(resource.getInputStream());
+                    log.debug("Successfully loaded Eigor configuration from '{}'", location);
                 } catch (IOException ioe) {
                     log.debug("Skipping loading Eigor configuration from '{}' because of: {}", location, ioe.getMessage());
                 }
@@ -47,6 +48,7 @@ public class DefaultEigorConfigurationLoader {
                 log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
                         resourcePath);
             }else{
+                log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", resourcePath);
                 return eigorConfiguration;
             }
         } catch (IOException ioe) {
@@ -61,6 +63,8 @@ public class DefaultEigorConfigurationLoader {
             if(eigorConfiguration==null) {
                 log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
                         resourcePath);
+            }else{
+                log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", location);
             }
         } catch (IOException ioe) {
             log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
