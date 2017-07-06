@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.io.ByteStreams;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IXMLValidator;
+import it.infocert.eigor.api.SchematronValidator;
 import it.infocert.eigor.api.XSDValidator;
 
 public class Cii2CenTest {
@@ -54,23 +56,45 @@ public class Cii2CenTest {
 	@Test
 	public void testShouldValidateXsd() throws IOException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
-		List<ConversionIssue> errors = validate(sourceInvoiceStream);
+		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
 	
 	@Test
 	public void testShouldNotValidateXsd() throws IOException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
-		List<ConversionIssue> errors = validate(sourceInvoiceStream);
+		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertFalse(errors.isEmpty());
 	}
 	
-	private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
+	@Test
+	public void testShouldValidateSchematron() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
+		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
+	   	assertTrue(errors.isEmpty());
+	}
+	
+	@Test
+	public void testShouldNotValidateSchematron() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
+		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
+		assertFalse(errors.isEmpty());
+	}
+	
+	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
 	   	File xsdFile = new File(filePath);
 	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
 	   	return xsdValidator.validate(bytes);
-   }
+	}
+	
+	private List<ConversionIssue> validateSchematron(InputStream sourceInvoiceStream) throws IOException {
+		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+		String filePath = getClass().getClassLoader().getResource("schematron-xslt/EN16931-CII-validation.xslt").getFile();
+		File schematronFile = new File(filePath);
+		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true);
+		return ciiValidator.validate(bytes);
+	}
 
 }

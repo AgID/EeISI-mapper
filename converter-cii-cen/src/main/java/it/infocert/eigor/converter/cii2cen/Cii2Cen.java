@@ -39,17 +39,23 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
-		List<ConversionIssue> issues = null;
+		List<ConversionIssue> issues = new ArrayList<>();
 		
+		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xlst/EN16931-CII-validation.xslt");
 		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
+		
 		XSDValidator xsdValidator = new XSDValidator(xsdFile);
+		IXMLValidator ciiValidator = new SchematronValidator(ciiSchemaFile, true);
 		
 		try {
 			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-			issues = xsdValidator.validate(bytes);
+			
+			issues.addAll(xsdValidator.validate(bytes));
 			if(issues.isEmpty()){
 				log.info("Cii2Cen xsd validation succesful!");
 			}
+			
+			issues.addAll(ciiValidator.validate(bytes));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
