@@ -83,6 +83,13 @@
         	</includes>
         </fileSet>
         <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa/fattpa/xsd</outputDirectory>
+            <directory>../converter-cen-fattpa/converterdata/converter-cen-fattpa/fattpa/xsd</directory>
+            <includes>
+                <include>*.xsd</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
             <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
             <includes>

@@ -7,6 +7,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +43,10 @@ public abstract class GenericTransformer {
     }
 
     protected Object getBtValue(BTBG btbg, List<ConversionIssue> errors) {
-        try {
-            Method getValue = btbg.getClass().getDeclaredMethod("getValue");
-            return getValue.invoke(btbg);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            errors.add(ConversionIssue.newError(e));
+        if (btbg instanceof AbstractBT) {
+            return ((AbstractBT) btbg).getValue();
+        } else {
+            errors.add(ConversionIssue.newError(new IllegalAccessException(btbg.denomination() + " is not a BT")));
             return null;
         }
     }
@@ -58,14 +57,18 @@ public abstract class GenericTransformer {
 
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
-        log.error(bgPath);
-        invoiceUtils.ensurePathExists(bgPath, invoice);
-        BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
+        invoiceUtils.ensurePathExists(cenPath, invoice);
+        BTBG bg;
+        if (cenPath.startsWith("/BT")) {
+            bg = invoice;
+        } else {
+            bg = invoiceUtils.getFirstChild(bgPath, invoice);
+        }
         log.trace(cenPath + " has BG parent: " + bg);
 
         // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
         // if there no child? what?
-        if (!invoiceUtils.hasChild(cenPath, invoice)) {
+        if (!invoiceUtils.hasChild(invoice, cenPath)) {
             try {
                 // create BT element
                 String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
@@ -116,7 +119,7 @@ public abstract class GenericTransformer {
 
                 log.trace(cenPath + " - bt element created: " + bt);
 
-                // add BT element to BG parent
+                // add BTelement to BG parent
                 if (!bt.isEmpty()) {
                     invoiceUtils.addChild(bg, bt.get(0));
                 }
