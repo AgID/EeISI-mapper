@@ -1,6 +1,10 @@
 package it.infocert.eigor.cli;
 
-import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.api.FromCenConversionRepository;
+import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,8 +42,13 @@ public class ITEigorTest {
         Properties properties = new Properties();
         ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
+
+        EigorConfiguration conf = new PropertiesBackedConfiguration();
+        ToCenConversionRepository genericRepo1 = new ToCenListBakedRepository(new FakeToCenConversion(reflections, conf));
+        FromCenConversionRepository genericRepo2 = new FromCenListBakedRepository(new FakeFromCenConversion(reflections, conf));
+
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo, genericRepo, integrityRepo
+                genericRepo1, genericRepo2, integrityRepo
         );
     }
 

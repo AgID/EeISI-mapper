@@ -88,11 +88,15 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             }
         }
 
+        configurableSupport.configure();
 
     }
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
+
         List<ConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);

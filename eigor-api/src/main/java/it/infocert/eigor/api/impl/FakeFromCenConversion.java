@@ -2,6 +2,7 @@ package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -42,8 +43,8 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
             new UnitOfMeasureCodesToStringConverter()
     );
 
-    public FakeFromCenConversion(Reflections reflections) {
-        super(reflections, conversionRegistry, null);
+    public FakeFromCenConversion(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
     }
 
     @Override

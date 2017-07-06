@@ -1,7 +1,7 @@
 package it.infocert.eigor.api;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Base class with utility methods for CEN-XML conversion
  */
@@ -39,12 +41,14 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     private final DefaultResourceLoader drl;
     private Multimap<String, String> mappings;
     private Multimap<String, String> many2oneMappings;
+    protected final ConfigurableSupport configurableSupport;
 
     protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.drl = new DefaultResourceLoader();
-        this.configuration = Preconditions.checkNotNull( configuration );
+        this.configuration = checkNotNull( configuration );
+        this.configurableSupport = new ConfigurableSupport(this);
     }
 
     protected final ResourceLoader getResourceLoader() {

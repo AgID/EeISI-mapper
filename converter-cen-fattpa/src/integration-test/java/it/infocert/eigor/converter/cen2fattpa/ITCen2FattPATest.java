@@ -1,7 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -33,9 +34,10 @@ public class ITCen2FattPATest {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before
-    public void setUp() {
+    public void setUp() throws ConfigurationException {
         csvCen2Cen = new CsvCen2Cen(reflections);
-        cen2FattPA = new Cen2FattPA(reflections, new PropertiesBackedConfiguration());
+        cen2FattPA = new Cen2FattPA(reflections, new DefaultEigorConfigurationLoader().loadConfiguration());
+        cen2FattPA.configure();
         xPathfactory = XPathFactory.newInstance();
     }
 
