@@ -1,6 +1,7 @@
 package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -34,12 +35,14 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     private final DefaultResourceLoader drl;
     private Multimap<String, String> oneToOneMappings;
     private Multimap<String, String> manyToOne;
+    protected final ConfigurableSupport configurableSupport;
 
     public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;
         this.drl = new DefaultResourceLoader();
+        this.configurableSupport = new ConfigurableSupport(this);
     }
 
     @Override public void configure() throws ConfigurationException {
@@ -83,6 +86,8 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
      */
     protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
+        configurableSupport.checkConfigurationOccurred();
+
         BG0000Invoice invoice = new BG0000Invoice();
 
         if(oneToOneMappings == null) {
@@ -99,6 +104,8 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     }
 
     protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
 
         if(manyToOne == null) return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
 

@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
@@ -34,11 +35,48 @@ public class Ubl2Cen extends Abstract2CenConverter {
     public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
     public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
 
+    private XSDValidator xsdValidator;
+    private IXMLValidator ublValidator;
+    private IXMLValidator ciusValidator;
 
     public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry,  configuration);
         this.configuration = configuration;
         setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        super.configure();
+
+        // load the XSD.
+        {
+            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.ubl-cen.xsd");
+            xsdValidator = null;
+            try {
+                Resource xsdFile = drl.getResource(mandatoryString);
+                xsdValidator = new XSDValidator(xsdFile.getInputStream());
+            } catch (Exception e) {
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
+            }
+        }
+
+        // load the UBL schematron vlaidator.
+        try {
+            Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
+        // load the CIUS schematron vlaidator.
+        try {
+            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
+        configurableSupport.configure();
     }
 
     /**
@@ -51,29 +89,21 @@ public class Ubl2Cen extends Abstract2CenConverter {
      */
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
+
         List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
 
-        String mandatoryString = this.configuration.getMandatoryString("eigor.converter.ubl-cen.xsd");
 
-        // load the XSD.
-        XSDValidator xsdValidator = null;
+
+
+
+
         try {
-            Resource xsdFile = drl.getResource(mandatoryString);
-            xsdValidator = new XSDValidator( xsdFile.getInputStream() );
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
-        }
-
-        Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
-        Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
-
-        IXMLValidator ublValidator;
-        IXMLValidator ciusValidator;
-        try {
-
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+
             clonedInputStream = new ByteArrayInputStream(bytes);
 
             List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
@@ -81,11 +111,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
             	log.info("Xsd validation succesful!");
             }
 			errors.addAll(validationErrors);
-
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
             errors.addAll(ublValidator.validate(bytes));
-
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
             errors.addAll(ciusValidator.validate(bytes));
 
         } catch (IOException | IllegalArgumentException e) {
