@@ -9,6 +9,7 @@ import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.reflections.Reflections;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class GenericOneToManyTransformer extends GenericTransformer{
         this.targetPaths = targetPaths;
         this.sourcePath = sourcePath;
         this.splittingBoundsForTargetPath = splittingBoundsForTargetPath;
+        log = LoggerFactory.getLogger(GenericOneToManyTransformer.class);
     }
 
     @Override

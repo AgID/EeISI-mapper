@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 
 public class GenericOneToOneTransformerTest {
 
-    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
+    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformerTest.class);
     private BG0000Invoice invoice;
     private ArrayList<ConversionIssue> errors;
     private Reflections reflections;
