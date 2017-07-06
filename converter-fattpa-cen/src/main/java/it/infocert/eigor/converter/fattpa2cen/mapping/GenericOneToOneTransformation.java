@@ -43,7 +43,7 @@ public class GenericOneToOneTransformation {
             BTBG bg = invoiceUtils.getFirstChild(bgPath, invoice);
             Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
             try {
-                if (!invoiceUtils.hasChild(btPath, invoice)) { //FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
+                if (!invoiceUtils.hasChild(invoice, btPath)) { //FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
                     Constructor<?>[] constructors = btClass.getConstructors();
                     final ArrayList<BTBG> bt = new ArrayList<>(1);
 

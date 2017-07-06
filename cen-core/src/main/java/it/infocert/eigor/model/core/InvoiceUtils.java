@@ -2,6 +2,8 @@ package it.infocert.eigor.model.core;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
@@ -27,13 +29,15 @@ public class InvoiceUtils {
     }
 
     /**
+     * Ensure that all the BGs specified in the {@code path} are present ( and created if absent)
+     * in the provided invoice.
+     *
      * @param path    A path like "/BG0025/BG0026".
      * @param invoice The invoice where the path should be guaranteed.
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
 
-        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
-        namesOfBGs.remove(0);
+        List<String> namesOfBGs = Lists.newArrayList((path.substring(1)).split("/"));
 
         BTBG current = invoice;
 
@@ -68,7 +72,11 @@ public class InvoiceUtils {
     }
 
     /**
-     * Return the children of a parent by name.
+     * Returns the children of a parent given their name
+     *
+     * @param parent    the parent BG
+     * @param childName the name of the children to look for
+     * @return a {@link List} of children matching the given name
      */
     public List<BTBG> getChildrenAsList(BTBG parent, final String childName) {
         List<Method> methods = Arrays.asList(parent.getClass().getMethods());
@@ -95,6 +103,12 @@ public class InvoiceUtils {
         }
     }
 
+    /**
+     * Return the class implementing a particular CEN element given the name
+     *
+     * @param name a {@link String} containing the name of the element
+     * @return the {@link Class} corresponding to the wanted element
+     */
     public Class<? extends BTBG> getBtBgByName(final String name) {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
@@ -111,6 +125,12 @@ public class InvoiceUtils {
 
     }
 
+    /**
+     * Return the class implementing a particular CEN element given the name
+     *
+     * @param name a {@link BtBgName} representing the name of the element
+     * @return the {@link Class} corresponding to the wanted element
+     */
     public Class<? extends BTBG> getBtBgByName(final BtBgName name) {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
@@ -134,10 +154,20 @@ public class InvoiceUtils {
 
     }
 
+    /**
+     * Get the first child of an invoice at the given path
+     *
+     * @param path the path of the child to return
+     * @param invoice the invoice to traverse
+     * @return the first child found
+     */
     public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
-        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(path.split("/")));
-        namesOfBGs.remove(0);
+        if (path.length() < 1) {
+            throw new IllegalArgumentException("Wrong path: [" + path + "] is not a valid cen path");
+        }
+
+        List<String> namesOfBGs = Lists.newArrayList((path.substring(1)).split("/"));
 
         BTBG current = invoice;
 
@@ -175,9 +205,8 @@ public class InvoiceUtils {
     }
 
     //TODO Try to simplify duplicate code between this and getFirstChild()
-    public boolean hasChild(String invoicePath, BG0000Invoice invoice) {
-        List<String> namesOfBGs = new ArrayList<>(Arrays.asList(invoicePath.split("/")));
-        namesOfBGs.remove(0);
+    public boolean hasChild(BG0000Invoice invoice, String path) {
+        List<String> namesOfBGs = Lists.newArrayList((path.substring(1)).split("/"));
 
         BTBG current = invoice;
 
@@ -186,11 +215,50 @@ public class InvoiceUtils {
             if (children != null && children.size() != 0) {
                 current = children.get(0);
             }
-            if (current.denomination().equals(namesOfBGs.get(namesOfBGs.size() - 1))) {
+            if (current.denomination().equals(BtBgName.format(namesOfBGs.get(namesOfBGs.size() - 1)))) {
                 return true;
             }
         }
 
         return false;
     }
+
+    /**
+     * Returns all the existent BTs given a CEN path
+     *
+     * @param parent the parent BG into which to search
+     * @param cenPath the path to the BT
+     * @param bts    the list of found bts to populate
+     * @return the populated bts list
+     */
+    public List<AbstractBT> getBtRecursively(BTBG parent, String cenPath, final List<AbstractBT> bts) {
+        if (cenPath.startsWith("/")) {
+            cenPath = cenPath.substring(1);
+        }
+        ArrayList<String> steps = Lists.newArrayList(cenPath.split("/"));
+
+        return getBtRecursively(parent, steps, bts);
+    }
+
+    /**
+     * Returns all the existent BTs given a chain of bg/bt
+     *
+     * @param parent the parent BG into which to search
+     * @param steps  the list of subsequents steps of the chain
+     * @param bts    the list of found bts to populate
+     * @return the populated bts list
+     */
+    public List<AbstractBT> getBtRecursively(BTBG parent, final ArrayList<String> steps, final List<AbstractBT> bts) {
+        List<BTBG> childrenAsList = getChildrenAsList(parent, steps.remove(0));
+        for (BTBG btbg : childrenAsList) {
+            if (btbg.getClass().getSimpleName().startsWith("BG")) {
+                getBtRecursively(btbg, (ArrayList<String>) steps.clone(), bts);
+            } else {
+                bts.add((AbstractBT) btbg);
+            }
+        }
+
+        return bts;
+    }
+
 }
