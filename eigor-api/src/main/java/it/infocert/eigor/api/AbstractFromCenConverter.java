@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,6 +45,14 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         this.conversionRegistry = conversionRegistry;
         this.drl = new DefaultResourceLoader();
         this.configuration = Preconditions.checkNotNull( configuration );
+    }
+
+    protected final ResourceLoader getResourceLoader() {
+        return drl;
+    }
+
+    protected final EigorConfiguration getConfiguration() {
+        return configuration;
     }
 
     @Override public void configure() throws ConfigurationException {
@@ -95,7 +104,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * Move values from a {@link BG0000Invoice} to an XML {@link Document} and serialize it in a byte array
      *
      * @param invoice  the {@link BG0000Invoice} from which to take the values
-     * @param document the {@link Document} to populate with BT values
+     * @param document the {@link Document} to populate with BTvalues
      * @param errors   a list of {@link ConversionIssue}, to be filled if an error occurs during the conversion
      * @return a {@link ConversionResult} of {@link BinaryConversionResult} containing both the XML byte array and the error list
      * @throws SyntaxErrorInInvoiceFormatException

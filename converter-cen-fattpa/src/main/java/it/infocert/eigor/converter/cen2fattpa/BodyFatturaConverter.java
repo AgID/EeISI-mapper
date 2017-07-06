@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
@@ -9,6 +11,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +30,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
     private ObjectFactory factory;
+    private ConversionRegistry conversionRegistry;
 
     public BodyFatturaConverter(FatturaElettronicaBodyType fatturaElettronicaBody, ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.invoice = invoice;
@@ -37,14 +41,14 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         invoiceCorrectionAmount = 0d;
     }
 
-    public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
+   /* public BodyFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         this.errors = errors;
         this.fatturaElettronicaBody = factory.createFatturaElettronicaBodyType();
         invoiceDiscountAmount = 0d;
         invoiceCorrectionAmount = 0d;
-    }
+    }*/
 
     public FatturaElettronicaBodyType getFatturaElettronicaBody() {
         return fatturaElettronicaBody;
@@ -622,12 +626,12 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     private void calculateCorrectionForTotalAmount() {
 
         // let's check if we have all the info we need.
-        if( ! (fatturaElettronicaBody!=null &&
+        if (!(fatturaElettronicaBody != null &&
                 fatturaElettronicaBody
-                        .getDatiBeniServizi()!=null &&
+                        .getDatiBeniServizi() != null &&
                 fatturaElettronicaBody
                         .getDatiBeniServizi()
-                        .getDettaglioLinee() != null )) return;
+                        .getDettaglioLinee() != null)) return;
 
         Double invoiceTotal = 0d;
         try {
@@ -639,7 +643,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     invoiceTotal += line.getPrezzoTotale().doubleValue();
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             errors.add(ConversionIssue.newError(e));
             log.error(e.getMessage(), e);
         }
@@ -784,6 +788,34 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         addDiscountLine();
         calculateCorrectionForTotalAmount();
         addCorrectionLine();
+        addAttachment();
+    }
+
+    private void addAttachment() {
+        FattPaAttachmentConverter attachmentConverter = FattPaAttachmentConverter.builder(conversionRegistry, new Reflections("it.infocert.eigor"), invoice, errors).pathsList(Lists.newArrayList(
+                "/BT0007",
+                "/BT0010",
+                "/BT0014",
+                "/BT0018",
+                "/BG0002/BT0023",
+                "/BG0004/BT0028",
+                "/BG0004/BT0033",
+                "/BG0004/BT0034",
+                "/BG0007/BT0045",
+                "/BG0007/BT0047",
+                "/BG0007/BG0009/BT0057",
+                "/BG0007/BG0009/BT0058"
+        )).build();
+
+        String attachment = attachmentConverter.createAttachment();
+        if (!"".equals(attachment)) {
+            List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+            AllegatiType allegato = new AllegatiType();
+            allegato.setNomeAttachment("unmapped-cen-elements"); //TODO How to name it?
+            allegato.setFormatoAttachment("txt");
+            allegato.setAttachment(attachment.getBytes());
+            allegati.add(allegato);
+        }
     }
 
     private void transformInvoiceLinesWithItemPriceBaseQuantity() {
@@ -846,7 +878,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
         for (int i = 0; i < invoiceLineList.size(); i++) {
             BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
 
-            if(fatturaElettronicaBody.getDatiBeniServizi() == null ||
+            if (fatturaElettronicaBody.getDatiBeniServizi() == null ||
                     fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee() == null) continue;
 
             DettaglioLineeType dettaglioLinee = fatturaElettronicaBody
@@ -895,6 +927,10 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
     }
 
     private void logBt(int bt, String name) {
-        log.debug("Converted BT-{} into {}" , bt, name);
+        log.debug("Converted BT-{} into {}", bt, name);
+    }
+
+    public void setConversionRegistry(ConversionRegistry conversionRegistry) {
+        this.conversionRegistry = conversionRegistry;
     }
 }

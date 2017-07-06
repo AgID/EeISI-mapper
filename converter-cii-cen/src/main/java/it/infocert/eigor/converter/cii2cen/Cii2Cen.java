@@ -10,10 +10,25 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.io.ByteStreams;
+
+import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.xml.sax.SAXException;
 
 /**
  * The CII to CEN format converter
@@ -33,8 +48,29 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
+		List<ConversionIssue> issues = null;
+
+		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
+        XSDValidator xsdValidator = null;
+        try {
+            xsdValidator = new XSDValidator(xsdFile);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+			issues = xsdValidator.validate(bytes);
+			if(issues.isEmpty()){
+				log.info("Cii2Cen xsd validation succesful!");
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		BG0000Invoice x = new BG0000Invoice();
-		ConversionResult<BG0000Invoice> result = new ConversionResult<>(x);
+		ConversionResult<BG0000Invoice> result = new ConversionResult<>(issues, x);
 		return result;
 	}
 

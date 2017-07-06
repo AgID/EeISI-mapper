@@ -43,7 +43,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
     /**
      * 1. read document (from xml to Document obj)
-     * 2. maps each path into BG/BT obj
+     * 2. maps each path into BTBG obj
      *
      * @param sourceInvoiceStream The stream containing the representation of the invoice to be converted.
      * @return ConversionResult<BG0000Invoice>

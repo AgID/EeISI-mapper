@@ -52,7 +52,7 @@ public class Ubl2CenTest {
 
         ConversionResult<BG0000Invoice> conversionResult = sut.convert(sourceInvoiceStream);
 
-        assertThat(conversionResult.getResult(), is(IsNull.notNullValue()));
+        assertNotNull(conversionResult.getResult());
     }
 
     @Test

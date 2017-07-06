@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2fattpa.newp;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
