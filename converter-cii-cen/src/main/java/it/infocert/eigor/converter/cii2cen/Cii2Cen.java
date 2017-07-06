@@ -39,9 +39,9 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
-		List<ConversionIssue> issues = new ArrayList<>();
+		List<ConversionIssue> errors = new ArrayList<>();
 		
-		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xlst/EN16931-CII-validation.xslt");
+		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
 		
 		XSDValidator xsdValidator = new XSDValidator(xsdFile);
@@ -50,19 +50,24 @@ public class Cii2Cen extends Abstract2CenConverter{
 		try {
 			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 			
-			issues.addAll(xsdValidator.validate(bytes));
-			if(issues.isEmpty()){
+			List<ConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
+			if(xsdValidationErrors.isEmpty()){
 				log.info("Cii2Cen xsd validation succesful!");
 			}
+			errors.addAll(xsdValidationErrors);
 			
-			issues.addAll(ciiValidator.validate(bytes));
+			List<ConversionIssue> schematronValidationErrors = ciiValidator.validate(bytes);
+			if(schematronValidationErrors.isEmpty()){
+				log.info("Cii2Cen schematron validation succesful!");
+			}
+			errors.addAll(schematronValidationErrors);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BG0000Invoice x = new BG0000Invoice();
-		ConversionResult<BG0000Invoice> result = new ConversionResult<>(issues, x);
+		ConversionResult<BG0000Invoice> result = new ConversionResult<>(errors, x);
 		return result;
 	}
 
@@ -79,7 +84,5 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public Set<String> getSupportedFormats() {
 		return new HashSet<>(Arrays.asList(FORMAT));
 	}
-	
-	
 	
 }
