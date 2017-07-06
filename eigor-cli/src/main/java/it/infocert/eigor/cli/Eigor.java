@@ -5,11 +5,10 @@ import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
-import it.infocert.eigor.converter.cen2fattpa.newp.Cen2FattPA;
+import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPA2CenConverter;
@@ -27,8 +26,6 @@ import org.springframework.context.annotation.Bean;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
-
-import javax.crypto.CipherInputStream;
 
 public class Eigor {
 

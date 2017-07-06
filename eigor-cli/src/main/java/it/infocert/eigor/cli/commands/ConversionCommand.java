@@ -13,6 +13,9 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -215,7 +218,6 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
-
         String extension = fromCen.extension();
         while (!extension.isEmpty() && extension.startsWith(".")) {
             extension = extension.substring(1);
