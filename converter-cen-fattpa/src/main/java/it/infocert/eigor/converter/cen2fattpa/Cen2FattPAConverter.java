@@ -2,8 +2,8 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
@@ -98,6 +98,10 @@ public class Cen2FattPAConverter implements FromCenConversion {
     @Override
     public String getName() {
         return "cen-fatturapa";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // nothing to do
     }
 }
 

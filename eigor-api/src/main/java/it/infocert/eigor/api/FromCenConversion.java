@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
  * </p>
  * @see ToCenConversion
  */
-public interface FromCenConversion extends Named {
+public interface FromCenConversion extends Named, Configurable {
 
     /**
      * The return object should contain a byte[] result and a not null but possible empty array of issues

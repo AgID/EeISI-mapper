@@ -1,6 +1,7 @@
 package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
@@ -31,6 +32,8 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     private final ConversionRegistry conversionRegistry;
     private final EigorConfiguration configuration;
     private final DefaultResourceLoader drl;
+    private Multimap<String, String> oneToOneMappings;
+    private Multimap<String, String> manyToOne;
 
     public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
@@ -39,6 +42,37 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
         this.drl = new DefaultResourceLoader();
     }
 
+    @Override public void configure() throws ConfigurationException {
+
+        // configure one-one mappings
+        {
+            InputInvoiceXpathMap mapper;
+            String mappingRegex = getMappingRegex();
+            if(mappingRegex!=null){
+                mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(mappingRegex, reflections));
+            }else{
+                mapper = new InputInvoiceXpathMap();
+            }
+
+            String one2OneMappingPath = getOne2OneMappingPath();
+            if(one2OneMappingPath!=null){
+                Resource thePathOfOneOneMappingFile = drl.getResource(one2OneMappingPath);
+                oneToOneMappings = mapper.getMapping(thePathOfOneOneMappingFile);
+            }
+
+        }
+
+        // configure many-one mappings
+        {
+            InputInvoiceXpathMap mapper = new InputInvoiceXpathMap();
+            String many2OneMappingPath = getMany2OneMappingPath();
+            if(many2OneMappingPath!=null){
+                Resource thePathOfOneOneMappingFile = drl.getResource(many2OneMappingPath);
+                manyToOne = mapper.getMapping(thePathOfOneOneMappingFile);
+            }
+        }
+
+    }
 
     /**
      * Apply 1to1 transformations into BG0000Invoice.
@@ -48,47 +82,46 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
      * @return the BG0000Invoice
      */
     protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+
         BG0000Invoice invoice = new BG0000Invoice();
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(getMappingRegex(), reflections));
 
-        Resource thePathOfOneOneMappingFile = drl.getResource( getOne2OneMappingPath() );
+        if(oneToOneMappings == null) {
+            return new ConversionResult<BG0000Invoice>(errors, invoice);
+        }
 
 
-        Multimap<String, String> mapping = mapper.getMapping(thePathOfOneOneMappingFile);
-        for (Map.Entry<String, String> entry : mapping.entries()) {
+        for (Map.Entry<String, String> entry : oneToOneMappings.entries()) {
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
             transformer.transformXmlToCen(document, invoice, errors);
         }
         return new ConversionResult<>(errors, invoice);
+
     }
 
     protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+        if(manyToOne == null) return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
 
-        Resource thePathOfOneOneMappingFile = drl.getResource( getMany2OneMappingPath() );
-
-        Multimap<String, String> mapping = mapper.getMapping(thePathOfOneOneMappingFile);
-        for (String key: mapping.keySet()) {
+        for (String key: manyToOne.keySet()) {
 
             // Stop at each something.target key
             if (key.contains("target")){
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
+                if (!existsValueForKeyInMany2OneMultiMap(manyToOne, key, errors)) {
                     continue;
                 }
-                String bgBtPath = mapping.get(key).iterator().next();
+                String bgBtPath = manyToOne.get(key).iterator().next();
                 String expressionKey = key.replace(".target", ".expression");
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, expressionKey, errors)) {
+                if (!existsValueForKeyInMany2OneMultiMap(manyToOne, expressionKey, errors)) {
                     continue;
                 }
-                String combinationExpression = mapping.get(expressionKey).iterator().next();
+                String combinationExpression = manyToOne.get(expressionKey).iterator().next();
 
                 int index = 1;
                 List<String> xPaths = new ArrayList<>();
                 String sourceKey = key.replace("cen.target", "xml.expression."+index);
-                while (mapping.containsKey(sourceKey)){
-                    if (existsValueForKeyInMany2OneMultiMap(mapping, sourceKey, errors)) {
-                        xPaths.add(mapping.get(sourceKey).iterator().next());
+                while (manyToOne.containsKey(sourceKey)){
+                    if (existsValueForKeyInMany2OneMultiMap(manyToOne, sourceKey, errors)) {
+                        xPaths.add(manyToOne.get(sourceKey).iterator().next());
 
                     }
                     index++;

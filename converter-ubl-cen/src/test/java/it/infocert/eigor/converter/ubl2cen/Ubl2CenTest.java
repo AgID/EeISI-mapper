@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.io.ByteStreams;
 
 import org.jdom2.Document;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,21 +90,21 @@ public class Ubl2CenTest {
     }
     
     @Test
-    public void shouldValidateXsd() throws IOException {
+    public void shouldValidateXsd() throws Exception {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
     	List<ConversionIssue> errors = validate(sourceInvoiceStream);
     	assertTrue(errors.isEmpty());
     }
 
     @Test
-    public void shouldNotValidateXsd() throws IOException {
+    public void shouldNotValidateXsd() throws Exception {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
     	List<ConversionIssue> errors = validate(sourceInvoiceStream);
     	assertFalse(errors.isEmpty());
     }
 
     
-    private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException {
+    private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd").getFile();
 	   	File xsdFile = new File(filePath);

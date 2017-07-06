@@ -49,15 +49,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -75,7 +66,7 @@
                 <configuration>
                     <packageName>it.infocert.eigor.converter.cen2fattpa.models</packageName>
                     <sources>
-                        <source>src/main/resources/xsd</source>
+                        <source>src/main/resources/converterdata/converter-cen-fattpa/xsd</source>
                     </sources>
                 </configuration>
             </plugin>

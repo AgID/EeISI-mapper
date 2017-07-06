@@ -19,8 +19,15 @@ public class InputInvoiceXpathMap {
     private Multimap<String, String> mapping;
     private final InvoiceMappingValidator validator;
 
+    /** Creates an {@link InputInvoiceXpathMap} that validates the loaded file. */
     public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
+        mapping = null;
+    }
+
+    /** Creates an {@link InputInvoiceXpathMap} that does not validates the loaded file. */
+    public InputInvoiceXpathMap() {
+        this.validator = null;
         mapping = null;
     }
 

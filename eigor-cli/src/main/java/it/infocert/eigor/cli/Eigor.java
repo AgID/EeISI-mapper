@@ -84,7 +84,7 @@ public class Eigor {
         return new IntegrityRulesRepository(properties);
     }
 
-    @Bean
+    @Bean(initMethod = "configure")
     ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
@@ -94,7 +94,7 @@ public class Eigor {
         );
     }
 
-    @Bean
+    @Bean(initMethod = "configure")
     FromCenConversionRepository fromCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
                 new Cen2FattPA(reflections, configuration)

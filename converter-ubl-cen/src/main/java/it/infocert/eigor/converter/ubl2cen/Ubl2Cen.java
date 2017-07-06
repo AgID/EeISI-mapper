@@ -54,9 +54,20 @@ public class Ubl2Cen extends Abstract2CenConverter {
         List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
+
+        String mandatoryString = this.configuration.getMandatoryString("eigor.converter.ubl-cen.xsd");
+
+        // load the XSD.
+        XSDValidator xsdValidator = null;
+        try {
+            Resource xsdFile = drl.getResource(mandatoryString);
+            xsdValidator = new XSDValidator( xsdFile.getInputStream() );
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
+        }
+
         Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
         Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
-        Resource xsdFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.xsd") );
 
         IXMLValidator ublValidator;
         IXMLValidator ciusValidator;
@@ -64,8 +75,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
 
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
-            
-            XSDValidator xsdValidator = new XSDValidator( xsdFile.getInputStream() );
+
             List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
             	log.info("Xsd validation succesful!");

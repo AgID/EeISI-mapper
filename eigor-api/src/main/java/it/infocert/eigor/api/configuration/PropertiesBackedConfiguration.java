@@ -1,9 +1,10 @@
 package it.infocert.eigor.api.configuration;
 
-import com.google.common.base.Preconditions;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import java.util.Properties;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PropertiesBackedConfiguration implements EigorConfiguration {
 
@@ -16,8 +17,7 @@ public class PropertiesBackedConfiguration implements EigorConfiguration {
     }
 
     public PropertiesBackedConfiguration(final Properties properties) {
-        Preconditions.checkNotNull(properties);
-        this.properties = new Properties( properties );
+        this.properties = new Properties( checkNotNull(properties) );
         this.drl = new DefaultResourceLoader(PropertiesBackedConfiguration.class.getClassLoader());
     }
 
