@@ -124,9 +124,15 @@
             <includes>
                 <include>eigor.bat</include>
                 <include>eigor.sh</include>
-                <include>eigor.properties</include>
             </includes>
             <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>env/release</directory>
+            <includes>
+                <include>eigor.properties</include>
+            </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>logs</outputDirectory>
