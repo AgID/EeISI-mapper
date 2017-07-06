@@ -40,34 +40,36 @@ public class DefaultEigorConfigurationLoader {
         }
 
         // then try to load 'eigor-test.properties' from classpath
-        String resourcePath = "/eigor-test.properties";
-        try {
-            tentatives.add(resourcePath);
-            eigorConfiguration = fromClasspath(resourcePath);
-            if(eigorConfiguration==null) {
-                log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
-                        resourcePath);
-            }else{
-                log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", resourcePath);
-                return eigorConfiguration;
+        if(eigorConfiguration==null) {
+            String resourcePath = "/eigor-test.properties";
+            try {
+                tentatives.add(resourcePath);
+                eigorConfiguration = fromClasspath(resourcePath);
+                if (eigorConfiguration == null) {
+                    log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.", resourcePath);
+                } else {
+                    log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", resourcePath);
+                    return eigorConfiguration;
+                }
+            } catch (IOException ioe) {
+                log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
             }
-        } catch (IOException ioe) {
-            log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
         }
 
         // try to load 'eigor.properties' from classpath
-        resourcePath = "/eigor.properties";
-        try {
-            tentatives.add(resourcePath);
-            eigorConfiguration = fromClasspath(resourcePath);
-            if(eigorConfiguration==null) {
-                log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.",
-                        resourcePath);
-            }else{
-                log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", location);
+        if(eigorConfiguration==null) {
+            String resourcePath = "/eigor.properties";
+            try {
+                tentatives.add(resourcePath);
+                eigorConfiguration = fromClasspath(resourcePath);
+                if (eigorConfiguration == null) {
+                    log.debug("Skipping loading Eigor configuration from classpath resource '{}' that does not exist.", resourcePath);
+                } else {
+                    log.debug("Successfully loaded Eigor configuration from classpath resource '{}'", resourcePath);
+                }
+            } catch (IOException ioe) {
+                log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
             }
-        } catch (IOException ioe) {
-            log.debug("Skipping loading Eigor configuration from classpath resource '{}' because of: {}", resourcePath, ioe.getMessage());
         }
 
         if(eigorConfiguration == null){

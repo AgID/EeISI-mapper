@@ -45,64 +45,71 @@
         </fileSet>
         <!-- invoice examples -->
 
+        <!-- UBL/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>
             <includes>
                 <include>*.xslt</include>
             </includes>
         </fileSet>
         <fileSet>
-            <outputDirectory>converterdata/converter-cen-fattpa/mappings</outputDirectory>
-            <directory>../converter-cen-fattpa/src/main/resources/converter-cen-fattpa/mappings</directory>
-        </fileSet>
-        <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/mappings</directory>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/ubl/schematron</directory>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron-xslt</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/cius/schematron-xslt</directory>
             <includes>
                 <include>*.xslt</include>
             </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/cius/schematron</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/cius/schematron</directory>
         </fileSet>
         <fileSet>
-        	<outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
-        	<directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/xsd</directory>
-        	<includes>
-        		<include>*.xsd</include>
-        	</includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>converterdata/converter-cen-fattpa/fattpa/xsd</outputDirectory>
-            <directory>../converter-cen-fattpa/converterdata/converter-cen-fattpa/fattpa/xsd</directory>
+            <outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/ubl/xsd</directory>
             <includes>
                 <include>*.xsd</include>
             </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/mappings</directory>
             <includes>
                 <include>*.properties</include>
             </includes>
         </fileSet>
+
+        <!-- CEN/FATTPA -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa/mappings</outputDirectory>
+            <directory>../converter-cen-fattpa/src/main/resources/converterdata/converter-cen-fattpa/mappings</directory>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa/fattpa/xsd</outputDirectory>
+            <directory>../converter-cen-fattpa/src/main/resources/converterdata/converter-cen-fattpa/xsd</directory>
+            <includes>
+                <include>*.xsd</include>
+            </includes>
+        </fileSet>
+
+        <!-- CII/CEN -->
         <fileSet>
         	<outputDirectory>converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</outputDirectory>
-        	<directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</directory>
+        	<directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</directory>
         	<includes>
         		<include>*.xsd</include>
         	</includes>
         </fileSet>
+
+        <!-- rules -->
         <fileSet>
             <outputDirectory>conf</outputDirectory>
             <directory>../eigor-rules/src/main/resources</directory>
@@ -110,12 +117,14 @@
                 <include>*.properties</include>
             </includes>
         </fileSet>
+
         <fileSet>
             <outputDirectory>/</outputDirectory>
             <directory>env/release</directory>
             <includes>
                 <include>eigor.bat</include>
                 <include>eigor.sh</include>
+                <include>eigor.properties</include>
             </includes>
             <fileMode>0755</fileMode>
         </fileSet>

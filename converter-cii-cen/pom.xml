@@ -32,15 +32,6 @@
 
     </dependencies>
     <build>
-    	 <resources>
-            <resource>
-                <directory>converterdata/**</directory>
-                <excludes>
-                    <exclude>**</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <plugins>
         	<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
