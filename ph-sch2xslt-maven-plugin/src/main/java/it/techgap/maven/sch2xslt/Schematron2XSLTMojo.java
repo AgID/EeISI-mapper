@@ -242,7 +242,7 @@ public final class Schematron2XSLTMojo extends AbstractMojo
         if (aXSLTFile.exists () && !overwriteWithoutQuestion)
         {
           // 3.1 Not overwriting the existing file
-          getLog ().debug ("Skipping XSLT file '" + aXSLTFile.getPath () + "' because it already exists!");
+          getLog ().info ("Skipping XSLT file '" + aXSLTFile.getPath () + "' because it already exists!");
         }
         else
         {

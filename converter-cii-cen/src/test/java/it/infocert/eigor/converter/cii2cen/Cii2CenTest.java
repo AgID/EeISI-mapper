@@ -64,7 +64,7 @@ public class Cii2CenTest {
 	public void testShouldNotValidateXsd() throws IOException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
-		assertFalse(errors.isEmpty());
+		assertEquals("XSD validation error at 17:22. cvc-complex-type.2.4.a: contenuto non valido che inizia con l'elemento \"ram:IssueDateTime\". È previsto un elemento \"{\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\":ID}\".", errors.get(0).getMessage());
 	}
 	
 	@Test
@@ -78,7 +78,9 @@ public class Cii2CenTest {
 	public void testShouldNotValidateSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
-		assertFalse(errors.isEmpty());
+		assertEquals("Schematron failed assert '[BR-02]-An Invoice shall have an Invoice number.' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(0).getMessage());
+		assertEquals("Schematron failed assert '[BR-04]-An Invoice shall have an Invoice type code.' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(1).getMessage());
+		assertEquals("Schematron failed assert '[CII-SR-014] - TypeCode must exist exactly once' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]/*:ExchangedDocument[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(2).getMessage());
 	}
 	
 	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {
