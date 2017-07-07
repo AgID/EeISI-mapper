@@ -77,7 +77,7 @@ public class GenericOneToManyTransformer extends GenericTransformer{
 
             // extract substring from converted
             Integer beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getFirst();
-            if (beginIndex != null) {
+            if (beginIndex == null) {
                 errors.add(ConversionIssue.newError(new RuntimeException("Start index for " + targetPaths.get(i) + "is null!")));
                 return;
             }

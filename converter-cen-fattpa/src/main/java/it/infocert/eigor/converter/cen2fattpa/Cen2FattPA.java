@@ -118,7 +118,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
-            return oneToOneResult;
+            return result;
         } else {
             File xsdFile = new File("converterdata/converter-cen-fattpa/fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
             byte[] jaxml = xmlOutput.toString().getBytes();
