@@ -1,8 +1,10 @@
 package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
+import com.helger.commons.collection.pair.Pair;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
+import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,12 +81,12 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
             // Stop at each something.target key
             if (key.contains("target")){
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
+                if (!existsValueForKeyInMultiMap(mapping, key, errors, "many2one")) {
                     continue;
                 }
                 String xPath = mapping.get(key).iterator().next();
                 String expressionKey = key.replace(".target", ".expression");
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, expressionKey, errors)) {
+                if (!existsValueForKeyInMultiMap(mapping, expressionKey, errors, "many2one")) {
                     continue;
                 }
                 String combinationExpression = mapping.get(expressionKey).iterator().next();
@@ -92,7 +95,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                 List<String> btPaths = new ArrayList<>();
                 String sourceKey = key.replace(".target", ".source."+index);
                 while (mapping.containsKey(sourceKey)){
-                    if (existsValueForKeyInMany2OneMultiMap(mapping, sourceKey, errors)) {
+                    if (existsValueForKeyInMultiMap(mapping, sourceKey, errors, "many2one")) {
                         btPaths.add(mapping.get(sourceKey).iterator().next());
 
                     }
@@ -107,9 +110,61 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         return new BinaryConversionResult(createXmlFromDocument(partialDocument, errors), errors);
     }
 
-    private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors) {
+    protected BinaryConversionResult applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+        Multimap<String, String> mapping = mapper.getMapping(getOne2ManyMappingPath());
+        for (String key: mapping.keySet()) {
+
+            // Stop at each something.target key
+            if (key.contains("cen.source")){
+                if (!existsValueForKeyInMultiMap(mapping, key, errors, "one2many")) {
+                    continue;
+                }
+                String cenPath = mapping.get(key).iterator().next();
+
+                int index = 1;
+                List<String> xPaths = new ArrayList<>();
+                Map<String,Pair<Integer,Integer>> splitIndexPairs = new HashMap<>();
+                String sourceKey = key.replace("cen.source", "xml.target."+index);
+                while (mapping.containsKey(sourceKey)){
+
+                    if (existsValueForKeyInMultiMap(mapping, sourceKey, errors, "one2many")) {
+                        String indexBeginString = null, indexEndString = null;
+                        try {
+                            Integer indexBegin = null;
+                            if (existsValueForKeyInMultiMap(mapping, sourceKey.concat(".start"), errors, "one2many")) {
+                                indexBeginString = mapping.get(sourceKey.concat(".start")).iterator().next();
+                                indexBegin = Integer.parseInt(indexBeginString);
+                            }
+                            Integer indexEnd = null;
+                            if (existsValueForKeyInMultiMap(mapping, sourceKey.concat(".end"), errors, "one2many")) {
+                                indexEndString = mapping.get(sourceKey.concat(".end")).iterator().next();
+                                indexEnd = Integer.parseInt(indexEndString);
+                            }
+
+                            Pair<Integer,Integer> pair = new Pair<>(indexBegin, indexEnd);
+                            String xPath = mapping.get(sourceKey).iterator().next();
+                            xPaths.add(xPath);
+                            splitIndexPairs.put(xPath,pair);
+                        } catch (NumberFormatException e) {
+                            errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
+                        }
+                    }
+                    index++;
+                    sourceKey = key.replace("cen.source", "xml.target."+index);
+                }
+
+                GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
+                transformer.transformCenToXml(invoice, partialDocument, errors);
+            }
+        }
+        return new BinaryConversionResult(createXmlFromDocument(partialDocument, errors), errors);
+    }
+
+    private boolean existsValueForKeyInMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors, String mappingType) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            errors.add(ConversionIssue.newError(new RuntimeException("No value in many2one mapping properties for key: " + key)));
+            errors.add(ConversionIssue.newError(new RuntimeException(String.format("No value in %s mapping properties for key %s!",  mappingType, key))));
             return false;
         }
         return true;

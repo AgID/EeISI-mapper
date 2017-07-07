@@ -76,9 +76,13 @@ public class GenericOneToManyTransformer extends GenericTransformer{
             }
 
             // extract substring from converted
-            int beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getFirst();
-            int endIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getSecond();
-            String subStringValue = converted.substring(beginIndex, endIndex);
+            Integer beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getFirst();
+            if (beginIndex != null) {
+                errors.add(ConversionIssue.newError(new RuntimeException("Start index for " + targetPaths.get(i) + "is null!")));
+                return;
+            }
+            Integer endIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getSecond();
+            String subStringValue = (endIndex == null) ? converted.substring(beginIndex) : converted.substring(beginIndex, endIndex);
 
             elements.get(0).setText(subStringValue);
         }
