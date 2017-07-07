@@ -2,7 +2,10 @@ package it.infocert.eigor.converter.cii2cen;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXParseException;
 
 import com.google.common.io.ByteStreams;
 
@@ -64,7 +68,11 @@ public class Cii2CenTest {
 	public void testShouldNotValidateXsd() throws IOException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
-		assertEquals("XSD validation error at 17:22. cvc-complex-type.2.4.a: contenuto non valido che inizia con l'elemento \"ram:IssueDateTime\". È previsto un elemento \"{\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\":ID}\".", errors.get(0).getMessage());
+		assertTrue(errors.size() == 1);
+		ConversionIssue issue = errors.get(0);
+		assertTrue(issue.getCause() instanceof SAXParseException);
+		assertTrue(issue.isError());
+		assertTrue(issue.getMessage().startsWith("XSD validation error"));
 	}
 	
 	@Test
