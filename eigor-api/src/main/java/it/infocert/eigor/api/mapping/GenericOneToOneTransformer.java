@@ -3,6 +3,7 @@ package it.infocert.eigor.api.mapping;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
@@ -50,8 +51,8 @@ public class GenericOneToOneTransformer extends GenericTransformer{
         if (elements == null) return;
 
         for (int i = 0; i < bts.size(); i++) {
-            BTBG btbg = bts.get(i);
-            Object value = getBtValue(btbg, errors);
+            AbstractBT btbg = (AbstractBT) bts.get(i);
+            Object value = btbg.getValue();
             Element element = elements.get(i);
             if (value != null) {
                 Class<?> aClass = value.getClass();
