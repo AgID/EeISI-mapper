@@ -8,6 +8,7 @@ import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.mapping.toCen.OneCen2ManyXpathMappingValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.output.XMLOutputter;
@@ -112,12 +113,12 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     protected BinaryConversionResult applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator());
         Multimap<String, String> mapping = mapper.getMapping(getOne2ManyMappingPath());
         for (String key: mapping.keySet()) {
 
             // Stop at each something.target key
-            if (key.contains("cen.source")){
+            if (key.endsWith("cen.source")){
                 if (!existsValueForKeyInMultiMap(mapping, key, errors, "one2many")) {
                     continue;
                 }

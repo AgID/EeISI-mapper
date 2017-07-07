@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,8 @@ public class InputInvoiceXpathMap {
                 mapping = loadMapFromInputStream(fileInputStream);
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from file '{}'.", path, e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -57,6 +60,8 @@ public class InputInvoiceXpathMap {
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from resource '{}'.", path, e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -70,6 +75,8 @@ public class InputInvoiceXpathMap {
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from resource '{}'.", path, e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -80,7 +87,7 @@ public class InputInvoiceXpathMap {
         return mapping;
     }
 
-    private Multimap<String, String> loadMapFromInputStream(InputStream inputStream) {
+    private Multimap<String, String> loadMapFromInputStream(InputStream inputStream) throws SyntaxErrorInMappingFileException {
         Multimap<String, String> mappings = HashMultimap.create();
         Properties properties = new Properties();
         try {
