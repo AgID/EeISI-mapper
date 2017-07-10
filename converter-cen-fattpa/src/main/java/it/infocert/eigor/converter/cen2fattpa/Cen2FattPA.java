@@ -80,9 +80,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         setFormatoTrasmissione(document);
         setProgressivoInvio(document);
         //TODO Add here hardcoded conversion
-        BinaryConversionResult result = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        result = applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
-        result = applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
+
+        applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
+        applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
+        BinaryConversionResult result = applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
 
         byte[] xml = result.getResult();
         FatturaElettronicaType jaxbFattura = null;

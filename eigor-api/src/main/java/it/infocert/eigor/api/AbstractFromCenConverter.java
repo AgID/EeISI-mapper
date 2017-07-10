@@ -113,7 +113,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     protected BinaryConversionResult applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator());
+        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
         Multimap<String, String> mapping = mapper.getMapping(getOne2ManyMappingPath());
         for (String key: mapping.keySet()) {
 
