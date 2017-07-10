@@ -25,6 +25,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IXMLValidator;
 import it.infocert.eigor.api.SchematronValidator;
 import it.infocert.eigor.api.XSDValidator;
+import it.infocert.eigor.converter.cii2cen.IConstants;
 
 public class Cii2CenTest {
 
@@ -72,7 +73,7 @@ public class Cii2CenTest {
 		ConversionIssue issue = errors.get(0);
 		assertTrue(issue.getCause() instanceof SAXParseException);
 		assertTrue(issue.isError());
-		assertTrue(issue.getMessage().startsWith("XSD validation error"));
+		assertTrue(issue.getMessage().startsWith(IConstants.ERROR_XML_VALIDATION_ERROR));
 	}
 	
 	@Test
@@ -86,9 +87,11 @@ public class Cii2CenTest {
 	public void testShouldNotValidateSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
-		assertEquals("Schematron failed assert '[BR-02]-An Invoice shall have an Invoice number.' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(0).getMessage());
-		assertEquals("Schematron failed assert '[BR-04]-An Invoice shall have an Invoice type code.' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(1).getMessage());
-		assertEquals("Schematron failed assert '[CII-SR-014] - TypeCode must exist exactly once' on XML element at '/*:CrossIndustryInvoice[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]/*:ExchangedDocument[namespace-uri()='urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100'][1]'.", errors.get(2).getMessage());
+		String temp = null;
+		for(ConversionIssue conversionIssue : errors){
+			temp = conversionIssue.getMessage();
+			assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[CII-SR-014]"));
+		}
 	}
 	
 	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {

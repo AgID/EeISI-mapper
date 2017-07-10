@@ -52,13 +52,13 @@ public class Cii2Cen extends Abstract2CenConverter{
 			
 			List<ConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
 			if(xsdValidationErrors.isEmpty()){
-				log.info("Cii2Cen xsd validation succesful!");
+				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
 			errors.addAll(xsdValidationErrors);
 			
 			List<ConversionIssue> schematronValidationErrors = ciiValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
-				log.info("Cii2Cen schematron validation succesful!");
+				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}
 			errors.addAll(schematronValidationErrors);
 			
@@ -66,15 +66,15 @@ public class Cii2Cen extends Abstract2CenConverter{
 			e.printStackTrace();
 		}
 		
-		BG0000Invoice x = new BG0000Invoice();
-		ConversionResult<BG0000Invoice> result = new ConversionResult<>(errors, x);
+		BG0000Invoice invoice = new BG0000Invoice();
+		ConversionResult<BG0000Invoice> result = new ConversionResult<>(errors, invoice);
 		return result;
 	}
 
 	@Override
 	public boolean support(String format) {
 		if(format == null){
-			log.error("Format is null!");
+			log.error(IConstants.NULL_FORMAT);
 			return false;
 		}
 		return FORMAT.equals(format.toLowerCase().trim());
