@@ -8,49 +8,85 @@
 		<relativePath>../eigor-parent</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<artifactId>converter-cii-cen</artifactId>
-	
+
 	<name>Eigor :: Converter :: CII - CEN</name>
-	
+
 	<dependencies>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.amoerie</groupId>
-            <artifactId>jstreams</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>eigor-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.amoerie</groupId>
+			<artifactId>jstreams</artifactId>
+		</dependency>
 
 
-        <!-- TEST -->
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test</artifactId>
-        </dependency>
+		<!-- TEST -->
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>eigor-test</artifactId>
+		</dependency>
 
-    </dependencies>
-    <build>
-    	 <resources>
-            <resource>
-                <directory>converterdata/**</directory>
-                <excludes>
-                    <exclude>**</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <plugins>
-        	<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-             </plugin>
-        </plugins>
-    </build>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>converterdata/**</directory>
+				<excludes>
+					<exclude>**</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>converterdata/converter-cii-cen/cii/schematron-xslt</directory>
+							<includes>
+								<include>*.xslt</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>it.infocert.eigor</groupId>
+				<artifactId>ph-sch2xslt-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>cii-xlst-generation</id>
+						<configuration>
+							<xsltDirectory>converterdata/converter-cii-cen/cii/schematron-xslt</xsltDirectory>
+							<schematronDirectory>converterdata/converter-cii-cen/cii/schematron</schematronDirectory>
+							<schematronPattern>*.sch</schematronPattern>
+							<overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+						</configuration>
+						<goals>
+							<goal>convert</goal>
+						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

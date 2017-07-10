@@ -13,14 +13,16 @@
 		<ram:ID>12115118</ram:ID>
 		<ram:TypeCode>380</ram:TypeCode>
 		<ram:IssueDateTime>
-			<udt:DateTimeString format="102">20150109</udt:DateTimeString>
+			<udt:DateTimeString format="102">20150109
+			</udt:DateTimeString>
 		</ram:IssueDateTime>
 		<ram:IncludedNote>
 			<ram:Content>Alle leveringen zijn franco. Alle prijzen zijn incl.
 				BTW. Betalingstermijn: 14 dagen netto. Prijswijzigingen
 				voorbehouden. Op al onze aanbiedingen, leveringen en overeenkomsten
 				zijn van toepassing in de algemene verkoop en leveringsvoorwaarden.
-				Gedeponeerd bij de K.v.K. te Amsterdam 25-04-'85.</ram:Content>
+				Gedeponeerd bij de K.v.K. te Amsterdam 25-04-'85.
+			</ram:Content>
 			<ram:SubjectCode>AAR</ram:SubjectCode>
 		</ram:IncludedNote>
 	</rsm:ExchangedDocument>
@@ -39,7 +41,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -66,7 +69,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -93,7 +97,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -120,7 +125,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -147,7 +153,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -174,7 +181,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -201,7 +209,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -228,7 +237,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -255,7 +265,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">3</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">3
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -282,7 +293,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -309,7 +321,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -336,7 +349,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -363,7 +377,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -390,7 +405,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -417,7 +433,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -444,7 +461,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -471,7 +489,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">2</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">2
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -498,7 +517,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">1</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">1
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -525,7 +545,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">6</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">6
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -552,7 +573,8 @@
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="H87">6</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="H87">6
+				</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -597,7 +619,8 @@
 		</ram:ApplicableHeaderTradeAgreement>
 		<ram:ApplicableHeaderTradeDelivery />
 		<ram:ApplicableHeaderTradeSettlement>
-			<ram:PaymentReference>Deb. 10202 / Fact. 12115118</ram:PaymentReference>
+			<ram:PaymentReference>Deb. 10202 / Fact. 12115118
+			</ram:PaymentReference>
 			<ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>30</ram:TypeCode>
@@ -627,13 +650,15 @@
 			</ram:ApplicableTradeTax>
 			<ram:SpecifiedTradePaymentTerms>
 				<ram:DueDateDateTime>
-					<udt:DateTimeString format="102">20150109</udt:DateTimeString>
+					<udt:DateTimeString format="102">20150109
+					</udt:DateTimeString>
 				</ram:DueDateDateTime>
 			</ram:SpecifiedTradePaymentTerms>
 			<ram:SpecifiedTradeSettlementHeaderMonetarySummation>
 				<ram:LineTotalAmount>229.6</ram:LineTotalAmount>
 				<ram:TaxBasisTotalAmount>229.6</ram:TaxBasisTotalAmount>
-				<ram:TaxTotalAmount currencyID="EUR">20.73</ram:TaxTotalAmount>
+				<ram:TaxTotalAmount currencyID="EUR">20.73
+				</ram:TaxTotalAmount>
 				<ram:GrandTotalAmount>250.33</ram:GrandTotalAmount>
 				<ram:DuePayableAmount>250.33</ram:DuePayableAmount>
 			</ram:SpecifiedTradeSettlementHeaderMonetarySummation>
