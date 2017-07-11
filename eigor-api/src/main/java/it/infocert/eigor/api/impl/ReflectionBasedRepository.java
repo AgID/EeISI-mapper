@@ -3,8 +3,6 @@ package it.infocert.eigor.api.impl;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 
@@ -19,7 +17,7 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
 
     private Set<Rule> rules = null;
     private Set<AbstractFromCenConverter> fromCenConversions = null;
-    private Set<Abstract2CenConverter> toCENConverters = null;
+    private Set<AbstractToCenConverter> toCENConverters = null;
     private final Reflections reflections;
 
     public ReflectionBasedRepository(Reflections reflections) {
@@ -74,12 +72,12 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
     @Override
     public ToCenConversion findConversionToCen(final String sourceFormat) {
         if (toCENConverters == null) {
-            this.toCENConverters = findImplementation(Abstract2CenConverter.class);
+            this.toCENConverters = findImplementation(AbstractToCenConverter.class);
         }
 
-        Filter<Abstract2CenConverter> f = new Filter<Abstract2CenConverter>() {
+        Filter<AbstractToCenConverter> f = new Filter<AbstractToCenConverter>() {
             @Override
-            public boolean apply(Abstract2CenConverter c) {
+            public boolean apply(AbstractToCenConverter c) {
                 return c.support(sourceFormat);
             }
         };

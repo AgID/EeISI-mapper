@@ -816,6 +816,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             allegato.setAttachment(attachment.getBytes());
             allegati.add(allegato);
         }
+        setAllegati();
     }
 
     private void transformInvoiceLinesWithItemPriceBaseQuantity() {
@@ -861,8 +862,6 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                     BT0098DocumentLevelAllowanceReasonCode reasonCode = documentLevelAllowance.getBT0098DocumentLevelAllowanceReasonCode().get(0);
                     sb.append(" ").append(reasonCode.getValue());
                 }
-
-                dettaglioLinee.setDescrizione(sb.toString());
 
                 dettaglioLinee.setQuantita(BigDecimal.valueOf(documentLevelAllowance.getBT0092DocumentLevelAllowanceAmount().get(0).getValue()));
 

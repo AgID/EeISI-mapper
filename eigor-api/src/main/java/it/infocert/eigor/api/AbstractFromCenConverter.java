@@ -6,6 +6,7 @@ import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.output.XMLOutputter;
@@ -44,7 +45,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return a {@link ConversionResult} of {@link BinaryConversionResult} containing both the XML byte array and the error list
      * @throws SyntaxErrorInInvoiceFormatException
      */
-    protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<ConversionIssue>> applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         String pathOfMappingConfFile = getOne2OneMappingPath();
         Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
@@ -54,8 +55,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry);
             transformer.transformCenToXml(invoice, document, errors);
         }
-
-        return new BinaryConversionResult(createXmlFromDocument(document, errors), errors);
+        return new Pair<>(document, errors);
     }
 
     private byte[] createXmlFromDocument(Document document, List<ConversionIssue> errors) {
