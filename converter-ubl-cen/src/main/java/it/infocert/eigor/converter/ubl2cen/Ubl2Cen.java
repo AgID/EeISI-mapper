@@ -20,7 +20,7 @@ import java.util.*;
  * The UBL to CEN format converter
  */
 @SuppressWarnings("unchecked")
-public class Ubl2Cen extends Abstract2CenConverter {
+public class Ubl2Cen extends AbstractToCenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
     private static final String FORMAT = "ubl";
@@ -49,7 +49,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
             new StringToUntdid4461PaymentMeansCode(),
             new UnitOfMeasureCodesToStringConverter(),
 
-            new CodeAsStringToUntdid5189TypeConverter(),
+            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
 
             // dates
             new StringToJavaLocalDateConverter("dd-MMM-yy"),

@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Abstract2CenConverter implements ToCenConversion {
+public abstract class AbstractToCenConverter implements ToCenConversion {
 
-    private static final Logger log = LoggerFactory.getLogger(Abstract2CenConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractToCenConverter.class);
     private Reflections reflections;
     private String regex;
     private ConversionRegistry conversionRegistry;
 
-    public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
+    public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
     }

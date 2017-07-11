@@ -25,7 +25,7 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
  * The CII to CEN format converter
  */
 @SuppressWarnings("unchecked")
-public class Cii2Cen extends Abstract2CenConverter{
+public class Cii2Cen extends AbstractToCenConverter {
 	
 	private static final Logger log = LoggerFactory.getLogger(Cii2Cen.class);
 	private static final String FORMAT = "cii";
