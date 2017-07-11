@@ -7,12 +7,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
 
-public class CodeAsStringToUntdid5189TypeConverterTest {
+public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverterTest {
 
     @Test
     public void shouldConvertCodeIntoEnum() {
 
-        CodeAsStringToUntdid5189TypeConverter sut = new CodeAsStringToUntdid5189TypeConverter();
+        StringToUntdid5189ChargeAllowanceDescriptionCodesConverter sut = new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter();
         Untdid5189ChargeAllowanceDescriptionCodes converted = sut.convert("45");
         assertThat( converted, equalTo( Untdid5189ChargeAllowanceDescriptionCodes.Code45 ) );
 

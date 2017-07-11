@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * The CII to CEN format converter
  */
 @SuppressWarnings("unchecked")
-public class Cii2Cen extends Abstract2CenConverter{
+public class Cii2Cen extends AbstractToCenConverter {
 	
 	private static final Logger log = LoggerFactory.getLogger(Cii2Cen.class);
 	private static final String FORMAT = "cii";
@@ -48,36 +48,47 @@ public class Cii2Cen extends Abstract2CenConverter{
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
-		List<ConversionIssue> issues = null;
+		List<ConversionIssue> errors = new ArrayList<>();
 
+		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
+
         XSDValidator xsdValidator = null;
         try {
             xsdValidator = new XSDValidator(xsdFile);
         } catch (SAXException e) {
             throw new RuntimeException(e);
         }
-
-        try {
+		IXMLValidator ciiValidator = new SchematronValidator(ciiSchemaFile, true);
+		
+		try {
 			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-			issues = xsdValidator.validate(bytes);
-			if(issues.isEmpty()){
-				log.info("Cii2Cen xsd validation succesful!");
+
+			List<ConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
+			if(xsdValidationErrors.isEmpty()){
+				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
+			errors.addAll(xsdValidationErrors);
+
+			List<ConversionIssue> schematronValidationErrors = ciiValidator.validate(bytes);
+			if(schematronValidationErrors.isEmpty()){
+				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
+			}
+			errors.addAll(schematronValidationErrors);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		BG0000Invoice x = new BG0000Invoice();
-		ConversionResult<BG0000Invoice> result = new ConversionResult<>(issues, x);
+		
+		BG0000Invoice invoice = new BG0000Invoice();
+		ConversionResult<BG0000Invoice> result = new ConversionResult<>(errors, invoice);
 		return result;
 	}
 
 	@Override
 	public boolean support(String format) {
 		if(format == null){
-			log.error("Format is null!");
+			log.error(IConstants.NULL_FORMAT);
 			return false;
 		}
 		return FORMAT.equals(format.toLowerCase().trim());
@@ -91,4 +102,5 @@ public class Cii2Cen extends Abstract2CenConverter{
 	@Override public String getName() {
 		return "cii-cen";
 	}
+
 }

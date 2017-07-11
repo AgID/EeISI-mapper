@@ -1,6 +1,9 @@
 package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.RuleRepository;
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 

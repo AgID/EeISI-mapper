@@ -4,8 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
@@ -56,7 +58,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new DoubleToStringConverter("#.00"),
             new UnitOfMeasureCodesToStringConverter(),
             new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString()
+            new Untdid4461PaymentMeansCodeToItalianCodeString(),
+            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
@@ -103,8 +106,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         setFormatoTrasmissione(document);
         setProgressivoInvio(document);
         //TODO Add here hardcoded conversion
-        BinaryConversionResult oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, document, new ArrayList<ConversionIssue>( oneToOneResult.getIssues()) );
+        Pair<Document, List<ConversionIssue>> oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
+        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, oneToOneResult.getLeft(), oneToOneResult.getRight());
 
         byte[] xml = result.getResult();
         FatturaElettronicaType jaxbFattura = null;
@@ -140,7 +143,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
-            return oneToOneResult;
+            return result;
         } else {
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<ConversionIssue> validationErrors = validator.validate(jaxml);

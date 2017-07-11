@@ -80,6 +80,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa/fattpa/xsd</outputDirectory>
+            <directory>../converter-cen-fattpa/converterdata/converter-cen-fattpa/fattpa/xsd</directory>
+            <includes>
+                <include>*.xsd</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
             <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/mappings</directory>
             <includes>
@@ -101,6 +108,17 @@
         </fileSet>
 
         <!-- CII/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cii-cen/cii/schematron-xslt</outputDirectory>
+            <directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/schematron-xslt</directory>
+            <includes>
+                <include>*.xslt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-cii-cen/cii/schematron</outputDirectory>
+            <directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/schematron</directory>
+        </fileSet>
         <fileSet>
         	<outputDirectory>converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</outputDirectory>
         	<directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</directory>

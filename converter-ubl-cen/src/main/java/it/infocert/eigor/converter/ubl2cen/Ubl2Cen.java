@@ -15,6 +15,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -23,7 +24,7 @@ import java.util.*;
  * The UBL to CEN format converter
  */
 @SuppressWarnings("unchecked")
-public class Ubl2Cen extends Abstract2CenConverter {
+public class Ubl2Cen extends AbstractToCenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
     private static final String FORMAT = "ubl";
@@ -38,10 +39,57 @@ public class Ubl2Cen extends Abstract2CenConverter {
     private XSDValidator xsdValidator;
     private IXMLValidator ublValidator;
     private IXMLValidator ciusValidator;
+    private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
+
+            // enums
+            new CountryNameToIso31661CountryCodeConverter(),
+            new LookUpEnumConversion(Iso31661CountryCodes.class),
+
+            new StringToUntdid1001InvoiceTypeCodeConverter(),
+            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new StringToIso4217CurrenciesFundsCodesConverter(),
+            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+
+            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+
+            new StringToUnitOfMeasureConverter(),
+            new LookUpEnumConversion(UnitOfMeasureCodes.class),
+
+            new LookUpEnumConversion(VatExemptionReasonsCodes.class),
+
+            new Iso4217CurrenciesFundsCodesToStringConverter(),
+            new Iso31661CountryCodesToStringConverter(),
+            new StringToUntdid4461PaymentMeansCode(),
+            new UnitOfMeasureCodesToStringConverter(),
+
+            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
+
+            // dates
+            new StringToJavaLocalDateConverter("dd-MMM-yy"),
+            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+            new JavaLocalDateToStringConverter(),
+            new JavaLocalDateToStringConverter("dd-MMM-yy"),
+
+            // numbers
+            new StringToDoubleConverter(),
+            new DoubleToStringConverter("#.00"),
+
+            // binaries
+            new Base64StringToBinaryConverter(),
+
+            // string
+            new StringToStringConverter()
+
+    );
+
+    public static final String ONE2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_one.properties";
+    public static final String MANY2ONE_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/many_to_one.properties";
+    public static final String ONE2MANY_MAPPING_PATH = "converterdata/converter-ubl-cen/mappings/one_to_many.properties";
+
 
     public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry,  configuration);
-        this.configuration = configuration;
         setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
     }
 
@@ -95,11 +143,6 @@ public class Ubl2Cen extends Abstract2CenConverter {
         List<ConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
-
-
-
-
-
 
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
@@ -182,7 +225,7 @@ public class Ubl2Cen extends Abstract2CenConverter {
                 new StringToUntdid4461PaymentMeansCode(),
                 new UnitOfMeasureCodesToStringConverter(),
 
-                new CodeAsStringToUntdid5189TypeConverter(),
+                new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
 
                 // dates
                 new StringToJavaLocalDateConverter("dd-MMM-yy"),

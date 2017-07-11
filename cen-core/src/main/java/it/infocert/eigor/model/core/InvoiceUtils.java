@@ -45,6 +45,10 @@ public class InvoiceUtils {
 
         try {
             for (String name : namesOfBGs) {
+                if (name.startsWith("BT")) {
+                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
+                    continue;
+                }
                 List<BTBG> children = getChildrenAsList(current, name);
 
                 if (children == null) {

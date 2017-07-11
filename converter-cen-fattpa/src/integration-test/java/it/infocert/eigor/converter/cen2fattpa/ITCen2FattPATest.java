@@ -169,11 +169,14 @@ public class ITCen2FattPATest {
 
         String line2UnitPrice = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/PrezzoUnitario/text()");
         assertThat("line2UnitPrice", line2UnitPrice, is("2.00"));
+
+        String causale = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Causale[1]/text()");
+        assertThat("Causale", causale, is("Terms Code Note prova@pec.it buyer@mail.com Credit Card"));
     }
 
 
     private void dumpInvoice(BG0000Invoice invoice) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             Visitor v = new DumpVisitor();
             invoice.accept(v);
             log.debug(v.toString());

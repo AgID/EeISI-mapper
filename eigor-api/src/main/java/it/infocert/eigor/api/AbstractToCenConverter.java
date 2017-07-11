@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Abstract2CenConverter implements ToCenConversion {
+public abstract class AbstractToCenConverter implements ToCenConversion {
 
-    private static final Logger log = LoggerFactory.getLogger(Abstract2CenConverter.class);
-    private final Reflections reflections;
+    private static final Logger log = LoggerFactory.getLogger(AbstractToCenConverter.class);
+    private Reflections reflections;
     private String regex;
     private final ConversionRegistry conversionRegistry;
     private final EigorConfiguration configuration;
@@ -37,7 +37,7 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
     private Multimap<String, String> manyToOne;
     protected final ConfigurableSupport configurableSupport;
 
-    public Abstract2CenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;
@@ -100,7 +100,6 @@ public abstract class Abstract2CenConverter implements ToCenConversion {
             transformer.transformXmlToCen(document, invoice, errors);
         }
         return new ConversionResult<>(errors, invoice);
-
     }
 
     protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {

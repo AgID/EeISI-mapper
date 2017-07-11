@@ -77,7 +77,8 @@ public class InputInvoiceXpathMap {
 
                 mapping = loadMapFromInputStream(fileInputStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from file '{}'.", path, e);
+                log.warn("Unable to load mapping from file '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
             }
         }
 
@@ -90,7 +91,8 @@ public class InputInvoiceXpathMap {
                 }
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from resource '{}'.", path, e);
+                log.warn("Unable to load mapping from resource '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
             }
         }
 
@@ -103,7 +105,8 @@ public class InputInvoiceXpathMap {
                 }
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from resource '{}'.", path, e);
+                log.warn("Unable to load mapping from resource '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
             }
         }
 
