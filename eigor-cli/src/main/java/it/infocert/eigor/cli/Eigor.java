@@ -5,6 +5,8 @@ import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
@@ -35,6 +37,12 @@ public class Eigor {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
         ApplicationContextProvider.setApplicationContext(ctx);
         ctx.getBean(EigorCli.class).run(args);
+    }
+
+    @Bean
+    EigorConfiguration configuration() {
+        EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
+        return eigorConfiguration;
     }
 
     @Bean
@@ -76,20 +84,20 @@ public class Eigor {
         return new IntegrityRulesRepository(properties);
     }
 
-    @Bean
-    ToCenConversionRepository toCenConversionRepository(Reflections reflections) {
+    @Bean(initMethod = "configure")
+    ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
-                new Ubl2Cen(reflections),
-                new FattPA2CenConverter(reflections),
+                new Ubl2Cen(reflections, configuration),
+                new FattPA2CenConverter(reflections, configuration),
                 new CsvCen2Cen(reflections),
-                new Cii2Cen(reflections)
+                new Cii2Cen(reflections, configuration)
         );
     }
 
-    @Bean
-    FromCenConversionRepository fromCenConversionRepository(Reflections reflections) {
+    @Bean(initMethod = "configure")
+    FromCenConversionRepository fromCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
-                new Cen2FattPA(reflections)
+                new Cen2FattPA(reflections, configuration)
         );
     }
 

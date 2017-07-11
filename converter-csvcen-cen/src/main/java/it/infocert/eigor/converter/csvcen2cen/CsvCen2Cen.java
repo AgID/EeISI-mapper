@@ -7,6 +7,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -234,4 +235,12 @@ public class CsvCen2Cen implements ToCenConversion {
         return new HashSet<>(Arrays.asList("csvcen"));
     }
 
+    @Override
+    public String getName() {
+        return "csvcen-cen";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // nothing to configure
+    }
 }

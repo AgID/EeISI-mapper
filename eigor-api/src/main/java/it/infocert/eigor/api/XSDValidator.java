@@ -13,6 +13,7 @@ import javax.xml.validation.Validator;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,17 @@ public class XSDValidator implements IXMLValidator {
 
     private Schema schema;
 
-    public XSDValidator(File schemaFile) {
+    public XSDValidator(File schemaFile) throws SAXException {
+        this(new StreamSource(schemaFile));
+    }
+
+    public XSDValidator(InputStream schemaFile) throws SAXException {
+        this(new StreamSource(schemaFile));
+    }
+
+    public XSDValidator(Source schemaSource) throws SAXException {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        try {
-            schema = schemaFactory.newSchema(schemaFile);
-        } catch (SAXException e) {
-            throw new RuntimeException("Invalid XSD!", e);
-        }
+        schema = schemaFactory.newSchema( schemaSource );
     }
 
     @Override
