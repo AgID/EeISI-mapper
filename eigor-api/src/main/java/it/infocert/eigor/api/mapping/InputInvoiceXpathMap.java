@@ -5,12 +5,14 @@ import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.io.*;
 import java.util.Properties;
 
 /**
- * This class stores the invoice path mappings for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
+ * This class stores the invoice path mappings
+ * for {@link it.infocert.eigor.api.mapping.GenericOneToOneTransformer}
  */
 public class InputInvoiceXpathMap {
     private static final Logger log = LoggerFactory.getLogger(InputInvoiceXpathMap.class);
@@ -18,18 +20,50 @@ public class InputInvoiceXpathMap {
     private Multimap<String, String> mapping;
     private final InvoiceMappingValidator validator;
 
+    /** Creates an {@link InputInvoiceXpathMap} that validates the loaded file. */
     public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
         mapping = null;
     }
 
+    /** Creates an {@link InputInvoiceXpathMap} that does not validates the loaded file. */
+    public InputInvoiceXpathMap() {
+        this.validator = null;
+        mapping = null;
+    }
 
     /**
      * Gets the mappings for GenericOneToOneTransformations.
      *
      * @return the mapping map
      */
+    public Multimap<String,String> getMapping(Resource r) {
+
+        InputStream inputStream = null;
+        try {
+            inputStream = r.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load mapping file from resource: '" + r + "'.");
+        }
+
+        return getMapping(inputStream);
+
+    }
+
+    public Multimap<String, String> getMapping(InputStream inputStream) {
+        mapping = loadMapFromInputStream(inputStream);
+        return mapping;
+    }
+
+    /**
+     * Gets the mappings for GenericOneToOneTransformations.
+     *
+     * @return the mapping map
+     * @deprecated Use {@link InputInvoiceXpathMap#getMapping(Resource)} instead.
+     */
+    @Deprecated
     public Multimap<String, String> getMapping(String path) {
+
         if (mapping == null) {
             // try #1, from filesystem
             try {
@@ -44,7 +78,8 @@ public class InputInvoiceXpathMap {
 
                 mapping = loadMapFromInputStream(fileInputStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from file '{}'.", path, e);
+                log.warn("Unable to load mapping from file '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
             } catch (SyntaxErrorInMappingFileException e) {
                 log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
@@ -59,7 +94,8 @@ public class InputInvoiceXpathMap {
                 }
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from resource '{}'.", path, e);
+                log.warn("Unable to load mapping from resource '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
             } catch (SyntaxErrorInMappingFileException e) {
                 log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
@@ -74,8 +110,9 @@ public class InputInvoiceXpathMap {
                 }
                 mapping = loadMapFromInputStream(resourceAsStream);
             } catch (RuntimeException e) {
-                log.warn("Unable to load mapping from resource '{}'.", path, e);
-            } catch (SyntaxErrorInMappingFileException e) {
+                log.warn("Unable to load mapping from resource '{}'.", path);
+                log.debug(e.getClass().getSimpleName(), e);
+           } catch (SyntaxErrorInMappingFileException e) {
                 log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
@@ -107,5 +144,6 @@ public class InputInvoiceXpathMap {
         }
         return mappings;
     }
+
 
 }

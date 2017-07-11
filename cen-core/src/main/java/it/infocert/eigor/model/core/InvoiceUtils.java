@@ -37,16 +37,27 @@ public class InvoiceUtils {
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
 
-        List<String> namesOfBGs = Lists.newArrayList((path.substring(1)).split("/"));
+        //checkArgument(path!=null && path.startsWith("/"), "Illegal path '%s'.", path);
+
+        List<String> namesOfBGs = Lists.newArrayList(path.substring(1).split("/"));
 
         BTBG current = invoice;
 
         try {
             for (String name : namesOfBGs) {
+                if (name.startsWith("BT")) {
+                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
+                    continue;
+                }
                 List<BTBG> children = getChildrenAsList(current, name);
 
                 if (children == null) {
-                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child.", path, current.denomination(), name));
+                    throw new IllegalArgumentException(format("'%s' is wrong, '%s' doesn't have '%s' as child. Possible children of '%s' are: %s.",
+                            path,
+                            current.denomination(),
+                            name,
+                            current.denomination(),
+                            children));
                 }
 
 

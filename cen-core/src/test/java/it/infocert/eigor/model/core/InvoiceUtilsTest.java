@@ -45,23 +45,10 @@ public class InvoiceUtilsTest {
 
     @Test
     public void ensurePathExistsShouldNotCreateIfCreatingBTs() throws Exception {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        final Appender mockAppender = mock(Appender.class);
-        when(mockAppender.getName()).thenReturn("MOCK");
-        root.addAppender(mockAppender);
+        BG0000Invoice invoice = sut.ensurePathExists("/BG-4/BT-27", this.invoice);
 
-        BG0000Invoice invoice = sut.ensurePathExists("/BT-1", this.invoice);
-
-        verify(mockAppender).doAppend(argThat(new ArgumentMatcher() {
-            @Override
-            public boolean matches(final Object argument) {
-                LoggingEvent event = (LoggingEvent) argument;
-
-                return event.getFormattedMessage().contains("it.infocert.eigor.model.core.model.BT0001InvoiceNumber");
-            }
-        }));
-
-        assertTrue(invoice.getBT0001InvoiceNumber().isEmpty());
+        assertFalse(invoice.getBG0004Seller().isEmpty());
+        assertTrue(invoice.getBG0004Seller(0).getBT0027SellerName().isEmpty());
     }
 
     @Test

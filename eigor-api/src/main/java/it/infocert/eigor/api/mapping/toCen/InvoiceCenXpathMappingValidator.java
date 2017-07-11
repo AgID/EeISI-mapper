@@ -29,29 +29,36 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
     @Override
     public void validate(Multimap<String, String> map) throws SyntaxErrorInMappingFileException {
         for (String key : map.keySet()) {
-            if (validateKey(key)) {
-                for (String value : map.get(key)) {
-                    if (!validateValue(value)) {
-                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key);
-                    }
+            checkKey(key);
+            for (String value : map.get(key)) {
+                try {
+                    checkValue(value);
+                } catch (XPathExpressionException e) {
+                    throw new SyntaxErrorInMappingFileException("Mapping '" + key + "' => '" + value + "' is wrong due to:" +  e.getMessage(),e);
                 }
-            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
+            }
         }
     }
 
 
-    private boolean validateKey(String key) {
-        return pattern.matcher(key).matches() && validateBTsBGs(key);
+    private void checkKey(String key) {
+        // TODO: CONFIG - CHECK THIS PATTERN MATCHING
+        // if(!pattern.matcher(key).matches()){
+        //     throw new RuntimeException("'" + key + "' does not match '" + pattern.pattern() + "'.");
+        // }
+        if(!validateBTsBGs(key)){
+            throw new SyntaxErrorInMappingFileException("There isn't any BG / BT at path '" + key + "'.");
+        }
     }
 
-    private boolean validateValue(String value) {
+    /**
+     * Check the value, throw an exception if the value is not valid.
+     * The exception contains an explication why the value is wrong.
+     * @return {@literal null} when the value is valid.
+     */
+    private void checkValue(String value) throws XPathExpressionException {
         XPath xpath = XPathFactory.newInstance().newXPath();
-        try {
-            xpath.compile(value);
-        } catch (XPathExpressionException e) {
-            return false;
-        }
-        return true;
+        xpath.compile(value);
     }
 
     private boolean validateBTsBGs(String key) {

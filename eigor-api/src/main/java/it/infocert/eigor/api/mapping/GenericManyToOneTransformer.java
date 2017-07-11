@@ -42,14 +42,14 @@ public class GenericManyToOneTransformer extends GenericTransformer {
     @Override
     public void transformXmlToCen(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + sourcePaths + " - " + targetPath + ") ";
-        log.info(logPrefix + "resolving");
+        log.trace(logPrefix + "resolving");
 
         String finalValue = combinationExpression;
-        for (int idx = 0; idx< sourcePaths.size(); idx++){
+        for (int i = 0; i< sourcePaths.size(); i++){
 
-            String xPathText = getNodeTextFromXPath(document, sourcePaths.get(idx));
+            String xPathText = getNodeTextFromXPath(document, sourcePaths.get(i));
             if (xPathText != null) {
-                finalValue = finalValue.replace("%"+(idx+1), xPathText);
+                finalValue = finalValue.replace("%"+(i+1), xPathText);
             }
         }
 
@@ -69,7 +69,10 @@ public class GenericManyToOneTransformer extends GenericTransformer {
         for (int idx = 0; idx< sourcePaths.size(); idx++){
 
             List<BTBG> bts = getAllBTs(sourcePaths.get(idx), invoice, errors);
-            if (bts == null || bts.size() == 0) return;
+            if (bts == null || bts.size() == 0) {
+                log.warn("No BT found for {} when trying to map to {}", sourcePaths.get(idx), targetPath);
+                return;
+            }
             if (bts.size() > 1) {
                 errors.add(ConversionIssue.newError(new RuntimeException("More than one BT for " + sourcePaths.get(idx) + ": " + bts)));
                 return;

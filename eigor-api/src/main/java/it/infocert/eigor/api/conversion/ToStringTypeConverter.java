@@ -5,4 +5,5 @@ public abstract class ToStringTypeConverter<T> implements TypeConverter<T, Strin
     public Class<String> getTargetClass() {
         return String.class;
     }
+
 }

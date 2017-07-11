@@ -1,9 +1,13 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
@@ -14,10 +18,13 @@ import org.jdom2.Namespace;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
 import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -28,9 +35,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
     private static final String FPA_VERSION = "FPA12";
 
-    private String ONE2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_one.properties";
-    private String MANY2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/many_to_one.properties";
-    private String ONE2MANY_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_many.properties";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-many";
 
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
@@ -54,32 +61,56 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new DoubleToStringConverter("#.00"),
             new UnitOfMeasureCodesToStringConverter(),
             new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString()
+            new Untdid4461PaymentMeansCodeToItalianCodeString(),
+            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
+    private XSDValidator validator;
 
-    public Cen2FattPA(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
         setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
-    /**
-     * Override the default mapping configuration file path
-     *
-     * @param mappingPath the new configuration file path
-     */
-    public void setMappingFile(String mappingPath) {
-        this.ONE2ONE_MAPPING_PATH = mappingPath;
+    @Override public void configure() throws ConfigurationException {
+        super.configure();
+
+        String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
+        Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
+
+        InputStream xsdStream = null;
+        try {
+            xsdStream = xsdFile.getInputStream();
+            validator = new XSDValidator(xsdStream);
+        } catch (IOException | SAXException e) {
+            throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
+        } finally {
+            if(xsdStream!=null) {
+                try {
+                    xsdStream.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close stream for resource '{}'.", pathOfXsd);
+                }
+            }
+        }
+
+        configurableSupport.configure();
+
     }
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
+
         List<ConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);
         setFormatoTrasmissione(document);
         setProgressivoInvio(document);
         //TODO Add here hardcoded conversion
+        Pair<Document, List<ConversionIssue>> oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
+        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, oneToOneResult.getLeft(), oneToOneResult.getRight());
 
         applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
         applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
@@ -121,9 +152,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         if (xmlOutput == null) {
             return result;
         } else {
-            File xsdFile = new File("converterdata/converter-cen-fattpa/fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
             byte[] jaxml = xmlOutput.toString().getBytes();
-            XSDValidator validator = new XSDValidator(xsdFile);
             List<ConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
@@ -189,5 +218,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Element progressivoInvio = new Element("ProgressivoInvio");
         progressivoInvio.setText("00001");
         doc.getRootElement().getChild("FatturaElettronicaHeader").getChild("DatiTrasmissione").addContent(progressivoInvio);
+    }
+
+    @Override
+    public String getName() {
+        return "cen-fatturapa";
     }
 }
