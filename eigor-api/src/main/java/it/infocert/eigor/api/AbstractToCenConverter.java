@@ -31,8 +31,8 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     private Reflections reflections;
     private String regex;
     private final ConversionRegistry conversionRegistry;
-    private final EigorConfiguration configuration;
-    private final DefaultResourceLoader drl;
+    protected final EigorConfiguration configuration;
+    protected final DefaultResourceLoader drl;
     private Multimap<String, String> oneToOneMappings;
     private Multimap<String, String> manyToOne;
     protected final ConfigurableSupport configurableSupport;
