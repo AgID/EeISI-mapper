@@ -1,13 +1,11 @@
 package it.infocert.eigor.api.impl;
 
-import it.infocert.eigor.api.Abstract2CenConverter;
+import it.infocert.eigor.api.AbstractToCenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
-import net.sf.saxon.functions.Abs;
 import org.reflections.Reflections;
 
 import java.io.InputStream;
@@ -18,7 +16,7 @@ import java.util.Set;
 /**
  * A fake conversion used to lay out the API general structure.
  */
-public class FakeToCenConversion extends Abstract2CenConverter {
+public class FakeToCenConversion extends AbstractToCenConverter {
 
     public FakeToCenConversion(Reflections reflections) {
         super(reflections, new ConversionRegistry(

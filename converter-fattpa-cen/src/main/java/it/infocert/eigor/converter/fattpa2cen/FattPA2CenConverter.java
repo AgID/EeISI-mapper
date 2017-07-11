@@ -1,9 +1,8 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
-import it.infocert.eigor.api.Abstract2CenConverter;
+import it.infocert.eigor.api.AbstractToCenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FattPA2CenConverter extends Abstract2CenConverter {
+public class FattPA2CenConverter extends AbstractToCenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(FattPA2CenConverter.class);
     private static final ConversionRegistry conversionRegistry = new ConversionRegistry();
