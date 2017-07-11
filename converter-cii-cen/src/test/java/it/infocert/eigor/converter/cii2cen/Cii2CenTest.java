@@ -12,8 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,7 @@ import it.infocert.eigor.api.IXMLValidator;
 import it.infocert.eigor.api.SchematronValidator;
 import it.infocert.eigor.api.XSDValidator;
 import it.infocert.eigor.converter.cii2cen.IConstants;
+import org.xml.sax.SAXException;
 
 public class Cii2CenTest {
 
@@ -35,7 +40,8 @@ public class Cii2CenTest {
 	
 	@Before
 	public void setUp() {
-		sut = new Cii2Cen(new Reflections("it.infocert"));
+		EigorConfiguration conf = new PropertiesBackedConfiguration();
+		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
 	}
 		
 	@Test
@@ -57,16 +63,16 @@ public class Cii2CenTest {
 	public void testNullFormat() {
 		assertFalse(sut.support(null));
 	}
-	
+
 	@Test
-	public void testShouldValidateXsd() throws IOException {
+	public void testShouldValidateXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
-	
+
 	@Test
-	public void testShouldNotValidateXsd() throws IOException {
+	public void testShouldNotValidateXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.size() == 1);
@@ -82,7 +88,7 @@ public class Cii2CenTest {
 		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.isEmpty());
 	}
-	
+
 	@Test
 	public void testShouldNotValidateSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
@@ -93,15 +99,15 @@ public class Cii2CenTest {
 			assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[CII-SR-014]"));
 		}
 	}
-	
-	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {
+
+	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
 	   	File xsdFile = new File(filePath);
 	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
 	   	return xsdValidator.validate(bytes);
 	}
-	
+
 	private List<ConversionIssue> validateSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		String filePath = getClass().getClassLoader().getResource("schematron-xslt/EN16931-CII-validation.xslt").getFile();

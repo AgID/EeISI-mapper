@@ -35,7 +35,10 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
     private final FromCenConversionRepository fromCenConversionRepository;
     private final RuleRepository ruleRepository;
 
-    public JoptsimpleBasecCommandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository ruleRepository) {
+    public JoptsimpleBasecCommandLineInterpreter(
+            ToCenConversionRepository toCenConversionRepository,
+            FromCenConversionRepository fromCenConversionRepository,
+            RuleRepository ruleRepository) {
         this.toCenConversionRepository = toCenConversionRepository;
         this.fromCenConversionRepository = fromCenConversionRepository;
         this.ruleRepository = ruleRepository;

@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.mapping;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FattPaXpathMap {
 
-    private Multimap<String, String> mapping = HashMultimap.create();
+    private Multimap<String, String> mapping = LinkedListMultimap.create();
 
     private final List<String> italianPaths = new ArrayList<>(Arrays.asList(
             "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero",

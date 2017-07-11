@@ -119,7 +119,7 @@ public abstract class GenericTransformer {
 
                 log.trace(cenPath + " - bt element created: " + bt);
 
-                // add BTelement to BG parent
+                // add BT element to BG parent
                 if (!bt.isEmpty()) {
                     invoiceUtils.addChild(bg, bt.get(0));
                 }

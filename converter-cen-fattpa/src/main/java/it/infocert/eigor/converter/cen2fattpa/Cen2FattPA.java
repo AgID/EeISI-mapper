@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
@@ -16,10 +18,13 @@ import org.jdom2.Namespace;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
 import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -29,8 +34,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
-    private String ONE2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/one_to_one.properties";
-    private String MANY2ONE_MAPPING_PATH = "converter-cen-fattpa/mappings/many_to_one.properties";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.many-to-one";
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -57,23 +62,44 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
+    private XSDValidator validator;
 
-    public Cen2FattPA(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
         setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
-    /**
-     * Override the default mapping configuration file path
-     *
-     * @param mappingPath the new configuration file path
-     */
-    public void setMappingFile(String mappingPath) {
-        this.ONE2ONE_MAPPING_PATH = mappingPath;
+    @Override public void configure() throws ConfigurationException {
+        super.configure();
+
+        String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
+        Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
+
+        InputStream xsdStream = null;
+        try {
+            xsdStream = xsdFile.getInputStream();
+            validator = new XSDValidator(xsdStream);
+        } catch (IOException | SAXException e) {
+            throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
+        } finally {
+            if(xsdStream!=null) {
+                try {
+                    xsdStream.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close stream for resource '{}'.", pathOfXsd);
+                }
+            }
+        }
+
+        configurableSupport.configure();
+
     }
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
+
         List<ConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);
@@ -119,9 +145,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         if (xmlOutput == null) {
             return result;
         } else {
-            File xsdFile = new File("converterdata/converter-cen-fattpa/fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
             byte[] jaxml = xmlOutput.toString().getBytes();
-            XSDValidator validator = new XSDValidator(xsdFile);
             List<ConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
@@ -158,6 +182,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         return MANY2ONE_MAPPING_PATH;
     }
 
+    @Override protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
     private void createRootNode(Document doc) {
         Element root = new Element(ROOT_TAG, Namespace.getNamespace("nx" , "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("ds" , "http://www.w3.org/2000/09/xmldsig#"));
@@ -182,5 +210,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Element progressivoInvio = new Element("ProgressivoInvio");
         progressivoInvio.setText("00001");
         doc.getRootElement().getChild("FatturaElettronicaHeader").getChild("DatiTrasmissione").addContent(progressivoInvio);
+    }
+
+    @Override
+    public String getName() {
+        return "cen-fatturapa";
     }
 }

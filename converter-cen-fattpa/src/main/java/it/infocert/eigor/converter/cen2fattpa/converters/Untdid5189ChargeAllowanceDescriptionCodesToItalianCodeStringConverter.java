@@ -3,6 +3,8 @@ package it.infocert.eigor.converter.cen2fattpa.converters;
 import it.infocert.eigor.api.conversion.ToStringTypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 
+
+
 public class Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter extends ToStringTypeConverter<Untdid5189ChargeAllowanceDescriptionCodes> {
     @Override
     public String convert(Untdid5189ChargeAllowanceDescriptionCodes code) {

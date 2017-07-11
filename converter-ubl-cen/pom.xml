@@ -35,7 +35,7 @@
     <build>
         <resources>
             <resource>
-                <directory>converterdata/**</directory>
+                <directory>src/main/resources/converterdata/**</directory>
                 <excludes>
                     <exclude>**</exclude>
                 </excludes>
@@ -83,8 +83,8 @@
                     <execution>
                         <id>ubl-xslt-generation</id>
                         <configuration>
-                            <xsltDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
-                            <schematronDirectory>converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
+                            <xsltDirectory>src/main/resources/converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
                         </configuration>
@@ -96,8 +96,8 @@
                     <execution>
                         <id>cius-xslt-generation</id>
                         <configuration>
-                            <xsltDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
-                            <schematronDirectory>converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
+                            <xsltDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
                         </configuration>

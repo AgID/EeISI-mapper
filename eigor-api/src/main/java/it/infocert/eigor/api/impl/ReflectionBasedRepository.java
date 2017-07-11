@@ -1,5 +1,6 @@
 package it.infocert.eigor.api.impl;
 
+import it.infocert.eigor.api.RuleRepository;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.*;
@@ -8,16 +9,17 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Repository based on <a href="https://github.com/ronmamo/reflections">Reflections</a>.
  */
-public class ReflectionBasedRepository implements RuleRepository, FromCenConversionRepository, ToCenConversionRepository {
+public class ReflectionBasedRepository implements RuleRepository {
 
     private Set<Rule> rules = null;
-    private Set<AbstractFromCenConverter> fromCenConversions = null;
-    private Set<AbstractToCenConverter> toCENConverters = null;
     private final Reflections reflections;
 
     public ReflectionBasedRepository(Reflections reflections) {
@@ -30,59 +32,6 @@ public class ReflectionBasedRepository implements RuleRepository, FromCenConvers
             this.rules = findImplementation(Rule.class);
         }
         return new ArrayList<>(rules);
-    }
-
-    @Override
-    public FromCenConversion findConversionFromCen(final String format) {
-        if (fromCenConversions == null) {
-            this.fromCenConversions = findImplementation(AbstractFromCenConverter.class);
-        }
-
-        Filter<AbstractFromCenConverter> filter = new Filter<AbstractFromCenConverter>() {
-            @Override
-            public boolean apply(AbstractFromCenConverter c) {
-                return c.support(format);
-            }
-        };
-
-        return Stream.create(fromCenConversions).filter(filter).first();
-
-    }
-
-    @Override
-    public Set<String> supportedFromCenFormats() {
-        LinkedHashSet<String> result = new LinkedHashSet<>();
-        for (FromCenConversion fromCenConversion : fromCenConversions) {
-            result.addAll(fromCenConversion.getSupportedFormats());
-        }
-        return result;
-    }
-
-    @Override
-    public Set<String> supportedToCenFormats() {
-        LinkedHashSet<String> result = new LinkedHashSet<>();
-        if (toCENConverters != null) {
-            for (ToCenConversion conversion : toCENConverters) {
-                result.addAll(conversion.getSupportedFormats());
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public ToCenConversion findConversionToCen(final String sourceFormat) {
-        if (toCENConverters == null) {
-            this.toCENConverters = findImplementation(AbstractToCenConverter.class);
-        }
-
-        Filter<AbstractToCenConverter> f = new Filter<AbstractToCenConverter>() {
-            @Override
-            public boolean apply(AbstractToCenConverter c) {
-                return c.support(sourceFormat);
-            }
-        };
-        return Stream.create(toCENConverters).filter(f).first();
-
     }
 
     @SuppressWarnings("unchecked")
