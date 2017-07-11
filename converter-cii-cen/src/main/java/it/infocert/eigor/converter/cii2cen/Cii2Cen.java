@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import it.infocert.eigor.api.Abstract2CenConverter;
+import it.infocert.eigor.api.AbstractToCenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;

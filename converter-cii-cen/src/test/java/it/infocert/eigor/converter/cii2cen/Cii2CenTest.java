@@ -100,7 +100,7 @@ public class Cii2CenTest {
 		}
 	}
 
-	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {
+	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
 	   	File xsdFile = new File(filePath);
