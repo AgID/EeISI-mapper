@@ -1,10 +1,9 @@
-<rsm:CrossIndustryInvoice
-	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
-	xmlns:qdt="urn:un:unece:uncefact:data:Standard:QualifiedDataType:100"
+<rsm:CrossIndustryInvoice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../validator/uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd"
+	xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
 	xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd">
+	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
 	<rsm:ExchangedDocumentContext>
 		<ram:GuidelineSpecifiedDocumentContextParameter>
 			<ram:ID>urn:cen.eu:en16931:2017</ram:ID>
@@ -14,10 +13,8 @@
 		<ram:ID>20150483</ram:ID>
 		<ram:TypeCode>380</ram:TypeCode>
 		<ram:IssueDateTime>
-			<udt:DateTimeString format="102">20150401
-			</udt:DateTimeString>
+			<udt:DateTimeString format="102">20150401</udt:DateTimeString>
 		</ram:IssueDateTime>
-		<ram:LanguageID>dut</ram:LanguageID>
 		<ram:IncludedNote>
 			<ram:Content>Vriendelijk verzoeken wij u ervoor te zorgen dat het
 				bedrag voor de vervaldatum op onze rekening staat onder vermelding
@@ -44,13 +41,11 @@
 			<ram:SpecifiedLineTradeAgreement>
 				<ram:NetPriceProductTradePrice>
 					<ram:ChargeAmount>49</ram:ChargeAmount>
-					<ram:BasisQuantity unitCode="MON">49
-					</ram:BasisQuantity>
+					<ram:BasisQuantity unitCode="MON">49</ram:BasisQuantity>
 				</ram:NetPriceProductTradePrice>
 			</ram:SpecifiedLineTradeAgreement>
 			<ram:SpecifiedLineTradeDelivery>
-				<ram:BilledQuantity unitCode="MON">3
-				</ram:BilledQuantity>
+				<ram:BilledQuantity unitCode="MON">3</ram:BilledQuantity>
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
@@ -60,12 +55,10 @@
 				</ram:ApplicableTradeTax>
 				<ram:BillingSpecifiedPeriod>
 					<ram:StartDateTime>
-						<udt:DateTimeString format="102">20160401
-						</udt:DateTimeString>
+						<udt:DateTimeString format="102">20160401</udt:DateTimeString>
 					</ram:StartDateTime>
 					<ram:EndDateTime>
-						<udt:DateTimeString format="102">20160401
-						</udt:DateTimeString>
+						<udt:DateTimeString format="102">20160401</udt:DateTimeString>
 					</ram:EndDateTime>
 				</ram:BillingSpecifiedPeriod>
 				<ram:SpecifiedTradeSettlementLineMonetarySummation>
@@ -137,13 +130,14 @@
 				<ram:RateApplicablePercent>21</ram:RateApplicablePercent>
 			</ram:ApplicableTradeTax>
 			<ram:SpecifiedTradePaymentTerms>
-				<ram:DueDateDateTime />
+				<ram:DueDateDateTime>
+					<udt:DateTimeString format="102">20150415</udt:DateTimeString>
+				</ram:DueDateDateTime>
 			</ram:SpecifiedTradePaymentTerms>
 			<ram:SpecifiedTradeSettlementHeaderMonetarySummation>
 				<ram:LineTotalAmount>147</ram:LineTotalAmount>
 				<ram:TaxBasisTotalAmount>147</ram:TaxBasisTotalAmount>
-				<ram:TaxTotalAmount currencyID="EUR">30.87
-				</ram:TaxTotalAmount>
+				<ram:TaxTotalAmount currencyID="EUR">30.87</ram:TaxTotalAmount>
 				<ram:GrandTotalAmount>177.87</ram:GrandTotalAmount>
 				<ram:DuePayableAmount>177.87</ram:DuePayableAmount>
 			</ram:SpecifiedTradeSettlementHeaderMonetarySummation>

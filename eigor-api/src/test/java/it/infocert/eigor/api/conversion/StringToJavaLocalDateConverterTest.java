@@ -30,6 +30,11 @@ public class StringToJavaLocalDateConverterTest {
         LocalDate parsed = LocalDate.parse("23-gen-2017", formatterFor("dd-MMM-yyyy", Locale.ITALIAN));
         assertEquals( "2017-01-23", parsed.toString() );
     }
+    
+    @Test public void shouldCovertDateWithTrailingSpaces() {
+        LocalDate parsed = LocalDate.parse("23-gen-2017                          ".trim(), formatterFor("dd-MMM-yyyy", Locale.ITALIAN));
+        assertEquals( "2017-01-23", parsed.toString() );
+    }
 
     @Test public void playingAroundWithDatesInItalian2() {
         DateTimeFormatter formatter = formatterFor("dd-MMM-yyyy", Locale.ITALIAN);

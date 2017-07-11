@@ -1,10 +1,9 @@
-<rsm:CrossIndustryInvoice
-	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
-	xmlns:qdt="urn:un:unece:uncefact:data:Standard:QualifiedDataType:100"
+<rsm:CrossIndustryInvoice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../validator/uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd"
+	xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
 	xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd">
+	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
 	<rsm:ExchangedDocumentContext>
 		<ram:GuidelineSpecifiedDocumentContextParameter>
 			<ram:ID>urn:cen.eu:en16931:2017</ram:ID>
@@ -17,7 +16,6 @@
 			<udt:DateTimeString format="102">20141110
 			</udt:DateTimeString>
 		</ram:IssueDateTime>
-		<ram:LanguageID>dut</ram:LanguageID>
 		<ram:IncludedNote>
 			<ram:Content>Periodieke afrekening
 				U vindt een toelichting op uw factuur via
@@ -500,7 +498,10 @@
 					laat betaalde
 					facturen. Kijk voor informatie op www.enexis.nl/rentenota
 				</ram:Description>
-				<ram:DueDateDateTime />
+				<ram:DueDateDateTime>
+					<udt:DateTimeString format="102">20141124
+					</udt:DateTimeString>
+				</ram:DueDateDateTime>
 			</ram:SpecifiedTradePaymentTerms>
 			<ram:SpecifiedTradeSettlementHeaderMonetarySummation>
 				<ram:LineTotalAmount>908.91</ram:LineTotalAmount>

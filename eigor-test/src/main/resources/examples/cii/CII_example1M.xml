@@ -1,10 +1,9 @@
-<rsm:CrossIndustryInvoice
-	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
-	xmlns:qdt="urn:un:unece:uncefact:data:Standard:QualifiedDataType:100"
+<rsm:CrossIndustryInvoice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../validator/uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd"
+	xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
 	xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd">
+	xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+	xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
 	<rsm:ExchangedDocumentContext>
 		<ram:GuidelineSpecifiedDocumentContextParameter>
 			<ram:ID>urn:cen.eu:en16931:2017</ram:ID>
@@ -17,14 +16,14 @@
 			<udt:DateTimeString format="102">20150109
 			</udt:DateTimeString>
 		</ram:IssueDateTime>
-		<ram:LanguageID>dut</ram:LanguageID>
 		<ram:IncludedNote>
-			<ram:SubjectCode>AAR</ram:SubjectCode>
 			<ram:Content>Alle leveringen zijn franco. Alle prijzen zijn incl.
 				BTW. Betalingstermijn: 14 dagen netto. Prijswijzigingen
 				voorbehouden. Op al onze aanbiedingen, leveringen en overeenkomsten
 				zijn van toepassing in de algemene verkoop en leveringsvoorwaarden.
-				Gedeponeerd bij de K.v.K. te Amsterdam 25-04-'85.</ram:Content>
+				Gedeponeerd bij de K.v.K. te Amsterdam 25-04-'85.
+			</ram:Content>
+			<ram:SubjectCode>AAR</ram:SubjectCode>
 		</ram:IncludedNote>
 	</rsm:ExchangedDocument>
 	<rsm:SupplyChainTradeTransaction>
@@ -626,13 +625,13 @@
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>30</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
-					<ram:IBANID>NL57RABO0107307510</ram:IBANID>
+					<ram:IBANID>NL57 RABO 0107307510</ram:IBANID>
 				</ram:PayeePartyCreditorFinancialAccount>
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>30</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
-					<ram:IBANID>NL57RABO0107307510</ram:IBANID>
+					<ram:IBANID>NL57 RABO 0107307510</ram:IBANID>
 				</ram:PayeePartyCreditorFinancialAccount>
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:ApplicableTradeTax>
@@ -650,7 +649,10 @@
 				<ram:RateApplicablePercent>21</ram:RateApplicablePercent>
 			</ram:ApplicableTradeTax>
 			<ram:SpecifiedTradePaymentTerms>
-				<ram:DueDateDateTime />
+				<ram:DueDateDateTime>
+					<udt:DateTimeString format="102">20150109
+					</udt:DateTimeString>
+				</ram:DueDateDateTime>
 			</ram:SpecifiedTradePaymentTerms>
 			<ram:SpecifiedTradeSettlementHeaderMonetarySummation>
 				<ram:LineTotalAmount>229.6</ram:LineTotalAmount>
