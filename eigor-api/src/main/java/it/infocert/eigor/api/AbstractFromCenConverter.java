@@ -1,23 +1,33 @@
 package it.infocert.eigor.api;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.configuration.ConfigurableSupport;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.output.XMLOutputter;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Base class with utility methods for CEN-XML conversion
@@ -25,14 +35,74 @@ import java.util.Map;
 public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractFromCenConverter.class);
+    private final EigorConfiguration configuration;
     private Reflections reflections;
     private ConversionRegistry conversionRegistry;
     private String regex;
+    private final DefaultResourceLoader drl;
+    private Multimap<String, String> mappings;
+    private Multimap<String, String> many2oneMappings;
+    protected final ConfigurableSupport configurableSupport;
 
-
-    protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
+    protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
+        this.drl = new DefaultResourceLoader();
+        this.configuration = checkNotNull( configuration );
+        this.configurableSupport = new ConfigurableSupport(this);
+    }
+
+    protected final ResourceLoader getResourceLoader() {
+        return drl;
+    }
+
+    protected final EigorConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    @Override public void configure() throws ConfigurationException {
+
+        // load one to one mappings
+        {
+            String one2OneMappingPath = getOne2OneMappingPath();
+            InputStream inputStream = null;
+            Resource resource = drl.getResource(this.configuration.getMandatoryString(one2OneMappingPath));
+            try {
+                inputStream = resource.getInputStream();
+                InputInvoiceXpathMap inputInvoiceXpathMap = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections));
+                mappings = inputInvoiceXpathMap.getMapping(inputStream);
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            } finally {
+                try {
+                    if (inputStream != null)
+                        inputStream.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close resource {}.", resource);
+                }
+            }
+        }
+
+        // load many to one mappings
+        {
+            InputStream inputStream = null;
+            String resource = getMany2OneMappingPath();
+            try {
+                inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+                many2oneMappings = mapper.getMapping(inputStream);
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            } finally {
+                try {
+                    if (inputStream != null)
+                        inputStream.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close resource {}.", resource);
+                }
+            }
+        }
+
     }
 
     /**
@@ -44,18 +114,15 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return a {@link ConversionResult} of {@link BinaryConversionResult} containing both the XML byte array and the error list
      * @throws SyntaxErrorInInvoiceFormatException
      */
-    protected BinaryConversionResult applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<ConversionIssue>> applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        String pathOfMappingConfFile = getOne2OneMappingPath();
-        Multimap<String, String> mappings = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections)).getMapping(pathOfMappingConfFile);
-
+        // apply the mappings
         for (Map.Entry<String, String> entry : mappings.entries()) {
             String key = entry.getKey();
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry);
             transformer.transformCenToXml(invoice, document, errors);
         }
-
-        return new BinaryConversionResult(createXmlFromDocument(document, errors), errors);
+        return new Pair<>(document, errors);
     }
 
     private byte[] createXmlFromDocument(Document document, List<ConversionIssue> errors) {
@@ -72,28 +139,27 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     protected BinaryConversionResult applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
-        Multimap<String, String> mapping = mapper.getMapping(getMany2OneMappingPath());
-        for (String key: mapping.keySet()) {
+
+        for (String key: many2oneMappings.keySet()) {
 
             // Stop at each something.target key
             if (key.contains("target")){
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, key, errors)) {
+                if (!existsValueForKeyInMany2OneMultiMap(many2oneMappings, key, errors)) {
                     continue;
                 }
-                String xPath = mapping.get(key).iterator().next();
+                String xPath = many2oneMappings.get(key).iterator().next();
                 String expressionKey = key.replace(".target", ".expression");
-                if (!existsValueForKeyInMany2OneMultiMap(mapping, expressionKey, errors)) {
+                if (!existsValueForKeyInMany2OneMultiMap(many2oneMappings, expressionKey, errors)) {
                     continue;
                 }
-                String combinationExpression = mapping.get(expressionKey).iterator().next();
+                String combinationExpression = many2oneMappings.get(expressionKey).iterator().next();
 
                 int index = 1;
                 List<String> btPaths = new ArrayList<>();
                 String sourceKey = key.replace(".target", ".source."+index);
-                while (mapping.containsKey(sourceKey)){
-                    if (existsValueForKeyInMany2OneMultiMap(mapping, sourceKey, errors)) {
-                        btPaths.add(mapping.get(sourceKey).iterator().next());
+                while (many2oneMappings.containsKey(sourceKey)){
+                    if (existsValueForKeyInMany2OneMultiMap(many2oneMappings, sourceKey, errors)) {
+                        btPaths.add(many2oneMappings.get(sourceKey).iterator().next());
 
                     }
                     index++;
@@ -121,12 +187,10 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return the path to the file
      */
     protected abstract String getOne2OneMappingPath();
-    protected String getMany2OneMappingPath() {
-        return null;
-    }
-    protected String getOne2ManyMappingPath() {
-        return null;
-    }
+
+    protected abstract String getMany2OneMappingPath();
+
+    protected abstract String getOne2ManyMappingPath();
 
     public void setMappingRegex(String regex) {
         this.regex = regex;

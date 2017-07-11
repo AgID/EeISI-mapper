@@ -2,8 +2,8 @@ package it.infocert.eigor.api;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
-import it.infocert.eigor.api.impl.InMemoryRuleReport;
-import it.infocert.eigor.api.impl.ReflectionBasedRepository;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -20,10 +20,17 @@ public class ApiTest {
     @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
-        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.api"));
+        Reflections reflections = new Reflections("it.infocert.eigor.api");
+        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
         RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
-        ToCenConversionRepository conversionRepository = reflectionBasedRepository;
-        FromCenConversionRepository fromCenConversionRepository = reflectionBasedRepository;
+        PropertiesBackedConfiguration configuration = new PropertiesBackedConfiguration();
+
+        ToCenConversionRepository conversionRepository = new ToCenListBakedRepository(
+                new FakeToCenConversion(reflections, configuration)
+        );
+        FromCenConversionRepository fromCenConversionRepository = new FromCenListBakedRepository(
+                new FakeFromCenConversion(reflections, configuration)
+        );
 
         // arguments
         String soureFormat = "fake";

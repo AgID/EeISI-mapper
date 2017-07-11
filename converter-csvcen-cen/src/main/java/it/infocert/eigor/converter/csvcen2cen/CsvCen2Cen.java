@@ -7,6 +7,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -31,28 +32,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
-
 public class CsvCen2Cen implements ToCenConversion {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                new StringToUnitOfMeasureConverter(),
-                new StringToDoublePercentageConverter(),
-                new StringToDoubleConverter(),
-                new StringToStringConverter()
-        );
+            new CountryNameToIso31661CountryCodeConverter(),
+            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new StringToJavaLocalDateConverter("dd-MMM-yy"),
+            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+            new StringToUntdid1001InvoiceTypeCodeConverter(),
+            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new StringToIso4217CurrenciesFundsCodesConverter(),
+            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+            new StringToUnitOfMeasureConverter(),
+            new StringToDoublePercentageConverter(),
+            new StringToDoubleConverter(),
+            new StringToStringConverter(),
+            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter()
+    );
 
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
 
@@ -234,4 +235,12 @@ public class CsvCen2Cen implements ToCenConversion {
         return new HashSet<>(Arrays.asList("csvcen"));
     }
 
+    @Override
+    public String getName() {
+        return "csvcen-cen";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // nothing to configure
+    }
 }

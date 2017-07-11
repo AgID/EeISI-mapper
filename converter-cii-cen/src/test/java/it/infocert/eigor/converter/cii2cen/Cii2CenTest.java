@@ -16,9 +16,13 @@ import java.util.List;
 
 import org.jdom2.Document;
 import org.joda.time.LocalDate;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +41,12 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
 import it.infocert.eigor.model.core.model.BT0009PaymentDueDate;
+import org.xml.sax.SAXException;
 
 public class Cii2CenTest extends Cii2Cen {
 	
 	public Cii2CenTest() {
-		super(new Reflections("it.infocert"));
-		// Could it be ok?
+		super(new Reflections("it.infocert"), null);
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenTest.class);
@@ -51,38 +55,39 @@ public class Cii2CenTest extends Cii2Cen {
 	
 	@Before
 	public void setUp() {
-		sut = new Cii2Cen(new Reflections("it.infocert"));
+		EigorConfiguration conf = new PropertiesBackedConfiguration();
+		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
 	}
-	@Ignore	
+	
 	@Test
 	public void shouldSupportCii() {
 		assertThat(sut.support("cii"), is(true));
 	}
-	@Ignore
+	
 	@Test
 	public void shouldNotSupportCii() {
 		assertThat(sut.support("fake"), is(false));
 	}
-	@Ignore
+	
 	@Test
 	public void shouldSupportedFormatsCii() {
 		assertThat(sut.getSupportedFormats(), contains("cii"));
 	}
-	@Ignore
+	
 	@Test
 	public void testNullFormat() {
 		assertFalse(sut.support(null));
 	}
-	@Ignore
+
 	@Test
-	public void testShouldValidateXsd() throws IOException {
+	public void testShouldValidateXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
-	@Ignore
+
 	@Test
-	public void testShouldNotValidateXsd() throws IOException {
+	public void testShouldNotValidateXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.size() == 1);
@@ -91,14 +96,14 @@ public class Cii2CenTest extends Cii2Cen {
 		assertTrue(issue.isError());
 		assertTrue(issue.getMessage().startsWith(IConstants.ERROR_XML_VALIDATION_ERROR));
 	}
-	@Ignore
+	
 	@Test
 	public void testShouldValidateSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
 		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.isEmpty());
 	}
-	@Ignore
+	
 	@Test
 	public void testShouldNotValidateSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
@@ -127,7 +132,7 @@ public class Cii2CenTest extends Cii2Cen {
 		assertTrue(invoice.getBT0001InvoiceNumber().isEmpty());
 	}
 	
-	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException {
+	private List<ConversionIssue> validateXSD(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
 	   	File xsdFile = new File(filePath);

@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import java.util.Set;
  *     {@link BG0000Invoice CEN invoice}.
  * </p>
  */
-public interface ToCenConversion {
+public interface ToCenConversion extends Named, Configurable {
 
     /**
      * Convert the given invoice in a {@link BG0000Invoice CEN invoice}.

@@ -1,13 +1,12 @@
 package it.infocert.eigor.api.impl;
 
-import it.infocert.eigor.api.Abstract2CenConverter;
+import it.infocert.eigor.api.AbstractToCenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
-import net.sf.saxon.functions.Abs;
 import org.reflections.Reflections;
 
 import java.io.InputStream;
@@ -18,9 +17,9 @@ import java.util.Set;
 /**
  * A fake conversion used to lay out the API general structure.
  */
-public class FakeToCenConversion extends Abstract2CenConverter {
+public class FakeToCenConversion extends AbstractToCenConverter {
 
-    public FakeToCenConversion(Reflections reflections) {
+    public FakeToCenConversion(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),
@@ -42,7 +41,7 @@ public class FakeToCenConversion extends Abstract2CenConverter {
                 new Iso31661CountryCodesToStringConverter(),
                 new DoubleToStringConverter("#.00"),
                 new UnitOfMeasureCodesToStringConverter()
-        ));
+        ), configuration);
     }
 
     @Override public ConversionResult convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
@@ -85,4 +84,8 @@ public class FakeToCenConversion extends Abstract2CenConverter {
         return "/tmp/fakeone2many.properties";
     }
 
+    @Override
+    public String getName() {
+        return "fake-cen";
+    }
 }

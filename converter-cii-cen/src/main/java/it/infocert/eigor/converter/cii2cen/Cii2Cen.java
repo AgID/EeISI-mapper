@@ -1,6 +1,14 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import static org.hamcrest.CoreMatchers.is;
+import it.infocert.eigor.api.AbstractToCenConverter;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,12 +37,13 @@ import it.infocert.eigor.api.conversion.StringToUntdid1001InvoiceTypeCodeConvert
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.xml.sax.SAXException;
 
 /**
  * The CII to CEN format converter
  */
 @SuppressWarnings("unchecked")
-public class Cii2Cen extends Abstract2CenConverter{
+public class Cii2Cen extends AbstractToCenConverter {
 	
 	private static final Logger log = LoggerFactory.getLogger(Cii2Cen.class);
 	private static final String FORMAT = "cii";
@@ -55,8 +64,8 @@ public class Cii2Cen extends Abstract2CenConverter{
 	
 	public static final String ONE2ONE_MAPPING_PATH = "converterdata/converter-cii-cen/mappings/one_to_one.properties";
  
-	public Cii2Cen(Reflections reflections) {
-		super(reflections, conversionRegistry);
+	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
+		super(reflections, conversionRegistry, configuration);
 		setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
 	}
 
@@ -69,7 +78,12 @@ public class Cii2Cen extends Abstract2CenConverter{
 		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
 		
-		XSDValidator xsdValidator = new XSDValidator(xsdFile);
+        XSDValidator xsdValidator = null;
+        try {
+            xsdValidator = new XSDValidator(xsdFile);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        }
 		IXMLValidator ciiValidator = new SchematronValidator(ciiSchemaFile, true);
 		
 		InputStream clonedInputStream = null;
@@ -120,4 +134,8 @@ public class Cii2Cen extends Abstract2CenConverter{
 		return ONE2ONE_MAPPING_PATH;
 	}
 	
+	@Override public String getName() {
+		return "cii-cen";
+	}
+
 }

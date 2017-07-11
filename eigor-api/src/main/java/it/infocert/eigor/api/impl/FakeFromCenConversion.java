@@ -1,6 +1,8 @@
 package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -41,8 +43,8 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
             new UnitOfMeasureCodesToStringConverter()
     );
 
-    public FakeFromCenConversion(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public FakeFromCenConversion(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
     }
 
     @Override
@@ -71,4 +73,20 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
         return "/tmp/fake.properties";
     }
 
+    @Override protected String getMany2OneMappingPath() {
+        return null;
+    }
+
+    @Override protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return "fake";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // really nothing to do here
+    }
 }
