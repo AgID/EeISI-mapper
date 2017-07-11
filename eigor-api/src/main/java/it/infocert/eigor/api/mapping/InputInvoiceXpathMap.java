@@ -47,11 +47,15 @@ public class InputInvoiceXpathMap {
         }
 
         return getMapping(inputStream);
-
     }
 
     public Multimap<String, String> getMapping(InputStream inputStream) {
-        mapping = loadMapFromInputStream(inputStream);
+        try {
+            mapping = loadMapFromInputStream(inputStream);
+        } catch (SyntaxErrorInMappingFileException e) {
+            e.printStackTrace();
+            log.error("Validation error '{}' for inputStream ",e.getMessage(), e);
+        }
         return mapping;
     }
 

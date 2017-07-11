@@ -41,7 +41,7 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
     }
 
 
-    private void checkKey(String key) {
+    private void checkKey(String key) throws SyntaxErrorInMappingFileException {
         // TODO: CONFIG - CHECK THIS PATTERN MATCHING
         // if(!pattern.matcher(key).matches()){
         //     throw new RuntimeException("'" + key + "' does not match '" + pattern.pattern() + "'.");

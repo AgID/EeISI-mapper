@@ -1,11 +1,12 @@
 package it.infocert.eigor.api.mapping;
 
-import com.google.common.io.Resources;
-import com.helger.commons.collection.pair.Pair;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.*;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0004Seller;
+import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -15,13 +16,9 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class GenericOneToManyTransformerTest {
 

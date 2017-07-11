@@ -4,7 +4,6 @@ import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import com.helger.commons.collection.pair.Pair;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
@@ -46,6 +45,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     private final DefaultResourceLoader drl;
     private Multimap<String, String> mappings;
     private Multimap<String, String> many2oneMappings;
+    private Multimap<String, String> one2ManyMappings;
     protected final ConfigurableSupport configurableSupport;
 
     protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
@@ -107,6 +107,26 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             }
         }
 
+        // load one to many mappings
+        {
+            InputStream inputStream = null;
+            String resource = getOne2ManyMappingPath();
+            try {
+                inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
+                one2ManyMappings = mapper.getMapping(inputStream);
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            } finally {
+                try {
+                    if (inputStream != null)
+                        inputStream.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close resource {}.", resource);
+                }
+            }
+        }
+
     }
 
     /**
@@ -129,7 +149,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         return new Pair<>(document, errors);
     }
 
-    private byte[] createXmlFromDocument(Document document, List<ConversionIssue> errors) {
+    protected byte[] createXmlFromDocument(Document document, List<ConversionIssue> errors) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new XMLOutputter().output(document, bos);
@@ -141,7 +161,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         }
     }
 
-    protected BinaryConversionResult applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<ConversionIssue>> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
 
         for (String key: many2oneMappings.keySet()) {
@@ -171,47 +191,45 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                 }
 
                 GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, reflections, conversionRegistry);
-                transformer.transformCenToXml(invoice, partialDocument, errors);
+                transformer.transformCenToXml(invoice, document, errors);
             }
         }
-        return new BinaryConversionResult(createXmlFromDocument(partialDocument, errors), errors);
+        return new Pair<>(document, errors);
     }
 
-    protected BinaryConversionResult applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document partialDocument, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<ConversionIssue>> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
-        Multimap<String, String> mapping = mapper.getMapping(getOne2ManyMappingPath());
-        for (String key: mapping.keySet()) {
+        for (String key: one2ManyMappings.keySet()) {
 
             // Stop at each something.target key
             if (key.endsWith("cen.source")){
-                if (!existsValueForKeyInMultiMap(mapping, key, errors, "one2many")) {
+                if (!existsValueForKeyInMultiMap(one2ManyMappings, key, errors, "one2many")) {
                     continue;
                 }
-                String cenPath = mapping.get(key).iterator().next();
+                String cenPath = one2ManyMappings.get(key).iterator().next();
 
                 int index = 1;
                 List<String> xPaths = new ArrayList<>();
                 Map<String,Pair<Integer,Integer>> splitIndexPairs = new HashMap<>();
                 String sourceKey = key.replace("cen.source", "xml.target."+index);
-                while (mapping.containsKey(sourceKey)){
+                while (one2ManyMappings.containsKey(sourceKey)){
 
-                    if (existsValueForKeyInMultiMap(mapping, sourceKey, errors, "one2many")) {
+                    if (existsValueForKeyInMultiMap(one2ManyMappings, sourceKey, errors, "one2many")) {
                         String indexBeginString = null, indexEndString = null;
                         try {
                             Integer indexBegin = null;
-                            if (existsValueForKeyInMultiMap(mapping, sourceKey.concat(".start"), errors, "one2many")) {
-                                indexBeginString = mapping.get(sourceKey.concat(".start")).iterator().next();
+                            if (existsValueForKeyInMultiMap(one2ManyMappings, sourceKey.concat(".start"), errors, "one2many")) {
+                                indexBeginString = one2ManyMappings.get(sourceKey.concat(".start")).iterator().next();
                                 indexBegin = Integer.parseInt(indexBeginString);
                             }
                             Integer indexEnd = null;
-                            if (existsValueForKeyInMultiMap(mapping, sourceKey.concat(".end"), errors, "one2many")) {
-                                indexEndString = mapping.get(sourceKey.concat(".end")).iterator().next();
+                            if (existsValueForKeyInMultiMap(one2ManyMappings, sourceKey.concat(".end"), errors, "one2many")) {
+                                indexEndString = one2ManyMappings.get(sourceKey.concat(".end")).iterator().next();
                                 indexEnd = Integer.parseInt(indexEndString);
                             }
 
                             Pair<Integer,Integer> pair = new Pair<>(indexBegin, indexEnd);
-                            String xPath = mapping.get(sourceKey).iterator().next();
+                            String xPath = one2ManyMappings.get(sourceKey).iterator().next();
                             xPaths.add(xPath);
                             splitIndexPairs.put(xPath,pair);
                         } catch (NumberFormatException e) {
@@ -223,10 +241,10 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                 }
 
                 GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
-                transformer.transformCenToXml(invoice, partialDocument, errors);
+                transformer.transformCenToXml(invoice, document, errors);
             }
         }
-        return new BinaryConversionResult(createXmlFromDocument(partialDocument, errors), errors);
+        return new Pair<>(document, errors);
     }
 
     private boolean existsValueForKeyInMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors, String mappingType) {

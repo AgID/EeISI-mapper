@@ -1,9 +1,9 @@
 package it.infocert.eigor.api.mapping;
 
-import com.helger.commons.collection.pair.Pair;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
@@ -76,12 +76,12 @@ public class GenericOneToManyTransformer extends GenericTransformer{
             }
 
             // extract substring from converted
-            Integer beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getFirst();
+            Integer beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getLeft();
             if (beginIndex == null) {
                 errors.add(ConversionIssue.newError(new RuntimeException("Start index for " + targetPaths.get(i) + "is null!")));
                 return;
             }
-            Integer endIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getSecond();
+            Integer endIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getRight();
             String subStringValue = (endIndex == null) ? converted.substring(beginIndex) : converted.substring(beginIndex, endIndex);
 
             elements.get(0).setText(subStringValue);
