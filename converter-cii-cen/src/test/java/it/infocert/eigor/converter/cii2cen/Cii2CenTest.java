@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import org.jdom2.Document;
 import org.joda.time.LocalDate;
+
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import org.junit.Before;
@@ -45,8 +48,12 @@ import org.xml.sax.SAXException;
 
 public class Cii2CenTest extends Cii2Cen {
 	
-	public Cii2CenTest() {
-		super(new Reflections("it.infocert"), null);
+	public Cii2CenTest() throws ConfigurationException {
+		super(new Reflections("it.infocert"), new PropertiesBackedConfiguration()
+				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
+				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
+				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt"));
+		super.configure();
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenTest.class);
@@ -54,9 +61,13 @@ public class Cii2CenTest extends Cii2Cen {
 	private Cii2Cen sut;
 	
 	@Before
-	public void setUp() {
-		EigorConfiguration conf = new PropertiesBackedConfiguration();
+	public void setUp() throws ConfigurationException {
+		EigorConfiguration conf = new PropertiesBackedConfiguration()
+				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
+				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
+				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
+		sut.configure();
 	}
 	
 	@Test
@@ -81,7 +92,7 @@ public class Cii2CenTest extends Cii2Cen {
 
 	@Test
 	public void testShouldValidateXsd() throws IOException, SAXException {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
 		List<ConversionIssue> errors = validateXSD(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
@@ -99,7 +110,7 @@ public class Cii2CenTest extends Cii2Cen {
 	
 	@Test
 	public void testShouldValidateSchematron() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
 		List<ConversionIssue> errors = validateSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.isEmpty());
 	}
@@ -117,7 +128,7 @@ public class Cii2CenTest extends Cii2Cen {
 	
 	@Test
 	public void testOneToOneTrasformationMapping() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
 		ConversionResult<BG0000Invoice> result = oneToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
 		BT0005InvoiceCurrencyCode expected = new BT0005InvoiceCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
