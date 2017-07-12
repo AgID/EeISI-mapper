@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class GenericManyToOneTransformerTest {
-    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
+    private static Logger log = LoggerFactory.getLogger(GenericManyToOneTransformerTest.class);
     private BG0000Invoice invoice;
     private ArrayList<ConversionIssue> errors;
     private Reflections reflections;

@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -26,27 +27,27 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
     }
 
     @Override
-    public void validate(Multimap<String, String> map) {
+    public void validate(Multimap<String, String> map) throws SyntaxErrorInMappingFileException {
         for (String key : map.keySet()) {
             checkKey(key);
             for (String value : map.get(key)) {
                 try {
                     checkValue(value);
                 } catch (XPathExpressionException e) {
-                    throw new RuntimeException("Mapping '" + key + "' => '" + value + "' is wrong due to:" +  e.getMessage(),e);
+                    throw new SyntaxErrorInMappingFileException("Mapping '" + key + "' => '" + value + "' is wrong due to:" +  e.getMessage(),e);
                 }
             }
         }
     }
 
 
-    private void checkKey(String key) {
+    private void checkKey(String key) throws SyntaxErrorInMappingFileException {
         // TODO: CONFIG - CHECK THIS PATTERN MATCHING
         // if(!pattern.matcher(key).matches()){
         //     throw new RuntimeException("'" + key + "' does not match '" + pattern.pattern() + "'.");
         // }
         if(!validateBTsBGs(key)){
-            throw new RuntimeException("There isn't any BG / BT at path '" + key + "'.");
+            throw new SyntaxErrorInMappingFileException("There isn't any BG / BT at path '" + key + "'.");
         }
     }
 

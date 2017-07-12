@@ -126,6 +126,10 @@
         		<include>*.xsd</include>
         	</includes>
         </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-cii-cen/mappings</outputDirectory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/mappings</directory>
+        </fileSet>
 
         <!-- rules -->
         <fileSet>

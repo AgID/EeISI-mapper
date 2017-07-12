@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -46,11 +47,15 @@ public class InputInvoiceXpathMap {
         }
 
         return getMapping(inputStream);
-
     }
 
     public Multimap<String, String> getMapping(InputStream inputStream) {
-        mapping = loadMapFromInputStream(inputStream);
+        try {
+            mapping = loadMapFromInputStream(inputStream);
+        } catch (SyntaxErrorInMappingFileException e) {
+            e.printStackTrace();
+            log.error("Validation error '{}' for inputStream ",e.getMessage(), e);
+        }
         return mapping;
     }
 
@@ -79,6 +84,8 @@ public class InputInvoiceXpathMap {
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from file '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -93,6 +100,8 @@ public class InputInvoiceXpathMap {
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from resource '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -107,6 +116,8 @@ public class InputInvoiceXpathMap {
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from resource '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
+           } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
             }
         }
 
@@ -117,7 +128,7 @@ public class InputInvoiceXpathMap {
         return mapping;
     }
 
-    private Multimap<String, String> loadMapFromInputStream(InputStream inputStream) {
+    private Multimap<String, String> loadMapFromInputStream(InputStream inputStream) throws SyntaxErrorInMappingFileException {
         Multimap<String, String> mappings = HashMultimap.create();
         Properties properties = new Properties();
         try {

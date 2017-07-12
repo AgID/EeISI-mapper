@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -41,6 +42,8 @@ import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 /**
@@ -71,7 +74,8 @@ public class Cii2Cen extends AbstractToCenConverter {
 	public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
 	
 	private XSDValidator xsdValidator;
-	private IXMLValidator ciiValidator;
+	private SchematronValidator schematronValidator;
+
  
 	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
@@ -90,7 +94,6 @@ public class Cii2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
                 xsdValidator = new XSDValidator(xsdFile.getFile());
-//                System.out.println(xsdFile.getFile().getName());
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for CII2CEN from '" + mandatoryString + "'.", e);
             }
@@ -99,7 +102,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 		// load the CII schematron validator.
         try {
             Resource ciiSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.schematron") );
-            ciiValidator = new SchematronValidator(ciiSchemaFile.getFile(), true);
+            schematronValidator = new SchematronValidator(ciiSchemaFile.getFile(), true);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -112,18 +115,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 			throws SyntaxErrorInInvoiceFormatException {
 		
 		List<ConversionIssue> errors = new ArrayList<>();
-		
-//		File ciiSchemaFile = new File("converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
-//		File xsdFile = new File("converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd");
-		
-//        XSDValidator xsdValidator = null;
-//        try {
-//            xsdValidator = new XSDValidator(xsdFile);
-//        } catch (SAXException e) {
-//            throw new RuntimeException(e);
-//        }
-//		IXMLValidator ciiValidator = new SchematronValidator(ciiSchemaFile, true);
-		
+				
 		InputStream clonedInputStream = null;
 		
 		try {
@@ -136,7 +128,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 			}
 			errors.addAll(xsdValidationErrors);
 			
-			List<ConversionIssue> schematronValidationErrors = ciiValidator.validate(bytes);
+			List<ConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}
