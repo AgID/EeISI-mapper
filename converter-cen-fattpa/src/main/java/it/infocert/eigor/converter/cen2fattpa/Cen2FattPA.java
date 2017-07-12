@@ -34,8 +34,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final Logger log = LoggerFactory.getLogger(Cen2FattPA.class);
 
     private static final String FPA_VERSION = "FPA12";
+
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-one";
     private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-many";
+
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -105,9 +108,12 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         createRootNode(document);
         setFormatoTrasmissione(document);
         setProgressivoInvio(document);
-        //TODO Add here hardcoded conversion
-        Pair<Document, List<ConversionIssue>> oneToOneResult = applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
-        BinaryConversionResult result = applyMany2OneTransformationsBasedOnMapping(invoice, oneToOneResult.getLeft(), oneToOneResult.getRight());
+
+        applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
+        applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
+        applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
+        byte[] documentByteArray = createXmlFromDocument(document, errors);
+        BinaryConversionResult result = new BinaryConversionResult(documentByteArray, errors);
 
         byte[] xml = result.getResult();
         FatturaElettronicaType jaxbFattura = null;
@@ -182,8 +188,9 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         return MANY2ONE_MAPPING_PATH;
     }
 
-    @Override protected String getOne2ManyMappingPath() {
-        return null;
+    @Override
+    protected String getOne2ManyMappingPath() {
+        return ONE2MANY_MAPPING_PATH;
     }
 
     private void createRootNode(Document doc) {
