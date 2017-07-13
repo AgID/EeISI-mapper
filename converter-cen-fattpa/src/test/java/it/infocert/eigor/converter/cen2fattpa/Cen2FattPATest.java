@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2fattpa.newp;
+package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;

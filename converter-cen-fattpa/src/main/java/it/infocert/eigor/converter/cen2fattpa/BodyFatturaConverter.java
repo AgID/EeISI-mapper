@@ -828,23 +828,25 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             for (int j = 0; j < documentLevelAllowances.size(); j++) {
                 BG0020DocumentLevelAllowances documentLevelAllowance = documentLevelAllowances.get(j);
                 dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee().get(j);
-
-                Untdid5305DutyTaxFeeCategories category = documentLevelAllowance.getBT0095DocumentLevelAllowanceVatCategoryCode().get(0).getValue();
-                switch (category) {
-                    case Z:
-                        dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                        break;
-                    case E:
-                        dettaglioLinee.setNatura(NaturaType.N_4);
-                        break;
-                    case G:
-                        dettaglioLinee.setNatura(NaturaType.N_2);
-                        break;
-                    case O:
-                        dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                        break;
-                    default:
-                        dettaglioLinee.setNatura(null);
+                List<BT0095DocumentLevelAllowanceVatCategoryCode> codes = documentLevelAllowance.getBT0095DocumentLevelAllowanceVatCategoryCode();
+                if (!codes.isEmpty()) {
+                	Untdid5305DutyTaxFeeCategories category = codes.get(0).getValue();
+                	switch (category) {
+                	case Z:
+                		dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                		break;
+                	case E:
+                		dettaglioLinee.setNatura(NaturaType.N_4);
+                		break;
+                	case G:
+                		dettaglioLinee.setNatura(NaturaType.N_2);
+                		break;
+                	case O:
+                		dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
+                		break;
+                	default:
+                		dettaglioLinee.setNatura(null);
+                	}
                 }
 
                 if (!documentLevelAllowance.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
