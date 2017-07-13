@@ -90,6 +90,24 @@ public class GenericManyToOneTransformerTest {
     }
 
     @Test
+    public void mappingToCenWithLessSourceElementsThanInExpression() throws Exception {
+        final String xPathExpression = "/FatturaElettronica/FatturaElettronicaHeader/CedentePrestatore/Sede/Indirizzo";
+
+        final List<String> cenPaths = Arrays.asList("/BG0004/BG0005/BT0035", "/BG0004/BG0005/BT0162");
+
+        BG0004Seller seller = new BG0004Seller();
+        seller.getBG0005SellerPostalAddress().add(new BG0005SellerPostalAddress());
+        seller.getBG0005SellerPostalAddress(0).getBT0035SellerAddressLine1().add(new BT0035SellerAddressLine1("Grafton street"));
+        seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
+        invoice.getBG0004Seller().add(seller);
+
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        transformer.transformCenToXml(invoice, document, errors);
+        Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
+        assertEquals("Grafton street 3rd Floor, Room 5", item.getText());
+    }
+
+    @Test
     public void shouldConvertDeepBT() throws Exception {
         final String xPathExpression = "/FatturaElettronica/FatturaElettronicaHeader/CedentePrestatore/Sede/Indirizzo";
 

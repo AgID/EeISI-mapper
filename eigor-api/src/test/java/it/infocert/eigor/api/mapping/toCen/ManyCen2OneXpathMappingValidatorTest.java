@@ -38,6 +38,18 @@ public class ManyCen2OneXpathMappingValidatorTest {
         validator.validate(mappings);
     }
 
+    @Test
+    public void shouldPassIfLessSourceElemsThanInExpression() throws Exception {
+        Multimap<String, String> mappings = HashMultimap.create();
+        mappings.put("mapping.1221_Indirizzo.type", "concatenation");
+        mappings.put("mapping.1221_Indirizzo.source.1", "/BG0004/BG0005/BT0035");
+        mappings.put("mapping.1221_Indirizzo.source.3", "/BG0004/BG0005/BT0162");
+        mappings.put("mapping.1221_Indirizzo.target", "/FatturaElettronica/FatturaElettronicaHeader/CedentePrestatore/Sede/Indirizzo");
+        mappings.put("mapping.1221_Indirizzo.expression", "%1 %2 %3");
+
+        validator.validate(mappings);
+    }
+
     @Test(expected = SyntaxErrorInMappingFileException.class)
     public void shouldThrowExceptionIfTypeKeyValueDoesNotMatch() throws Exception {
         Multimap<String, String> mappings = HashMultimap.create();
