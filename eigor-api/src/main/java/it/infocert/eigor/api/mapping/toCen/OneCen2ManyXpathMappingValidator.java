@@ -44,8 +44,12 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
                 startKeyExist.put(key.substring(0, key.length()-6), true);
             }
             if (key.endsWith(".type")){
-                mappingSource.put(key, null);
-                mappingTarget.put(key, null);
+                if (!mappingSource.containsKey(key)) {
+                    mappingSource.put(key, null);
+                }
+                if (!mappingTarget.containsKey(key)) {
+                    mappingTarget.put(key, null);
+                }
             }
             if (key.endsWith(".cen.source")){
                 int idx = key.indexOf(".cen.source");
