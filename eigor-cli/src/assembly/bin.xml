@@ -110,14 +110,14 @@
         <!-- CII/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-cii-cen/cii/schematron-xslt</outputDirectory>
-            <directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/schematron-xslt</directory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/cii/schematron-xslt</directory>
             <includes>
                 <include>*.xslt</include>
             </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>converterdata/converter-cii-cen/cii/schematron</outputDirectory>
-            <directory>../converter-cii-cen/converterdata/converter-cii-cen/cii/schematron</directory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/cii/schematron</directory>
         </fileSet>
         <fileSet>
         	<outputDirectory>converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard</outputDirectory>
@@ -125,6 +125,10 @@
         	<includes>
         		<include>*.xsd</include>
         	</includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>converterdata/converter-cii-cen/mappings</outputDirectory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen/mappings</directory>
         </fileSet>
 
         <!-- rules -->
