@@ -56,9 +56,12 @@ public class GenericManyToOneTransformer extends GenericTransformer {
         }
 
         if (finalValue.contains("%")){
-            String elem = finalValue.substring(finalValue.indexOf("%"), 3);
-            errors.add(ConversionIssue.newWarning(new RuntimeException(
-                    String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
+            finalValue = removePlaceHoldersFromExpression(finalValue);
+            if (finalValue.contains("%")) {
+                String elem = finalValue.substring(finalValue.indexOf("%"), 3);
+                errors.add(ConversionIssue.newWarning(new RuntimeException(
+                        String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
+            }
         } else {
             addNewCenObjectFromStringValueToInvoice(targetPath, invoice, finalValue, errors);
         }
@@ -93,9 +96,13 @@ public class GenericManyToOneTransformer extends GenericTransformer {
         }
 
         if (finalValue.contains("%")){
-            String elem = finalValue.substring(finalValue.indexOf("%"), 3);
-            errors.add(ConversionIssue.newWarning(new RuntimeException(
-                    String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
+
+            finalValue = removePlaceHoldersFromExpression(finalValue);
+            if (finalValue.contains("%")) {
+                String elem = finalValue.substring(finalValue.indexOf("%"), 3);
+                errors.add(ConversionIssue.newWarning(new RuntimeException(
+                        String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
+            }
         } else {
             List<Element> elements = getAllXmlElements(targetPath, document, 1, sourcePaths.toString(), errors);
             if (elements == null || elements.size() == 0) return;
@@ -105,5 +112,18 @@ public class GenericManyToOneTransformer extends GenericTransformer {
             }
             elements.get(0).setText(finalValue);
         }
+    }
+
+    private String removePlaceHoldersFromExpression(String finalValue) {
+        while (finalValue.contains("%")){
+            int idxPlaceholder = finalValue.indexOf("%");
+            String toReplace = "%";
+            while (finalValue.charAt(idxPlaceholder+1) >= '0' && finalValue.charAt(idxPlaceholder+1) <= '9'){
+                toReplace += finalValue.charAt(idxPlaceholder+1);
+                idxPlaceholder++;
+            }
+            finalValue = finalValue.replace(toReplace, "");
+        }
+        return finalValue.trim();
     }
 }
