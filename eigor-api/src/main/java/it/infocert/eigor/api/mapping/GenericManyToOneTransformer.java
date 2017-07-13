@@ -22,6 +22,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
     private final String combinationExpression;
     private final String targetPath;
     private final List<String> sourcePaths;
+    private final String mappingId;
 
 
     /**
@@ -29,11 +30,12 @@ public class GenericManyToOneTransformer extends GenericTransformer {
      *
      * @param targetPath the CEN invoice path
      */
-    public GenericManyToOneTransformer(String targetPath, String combinationExpression, List<String> sourcePaths, Reflections reflections, ConversionRegistry conversionRegistry) {
+    public GenericManyToOneTransformer(String targetPath, String combinationExpression, List<String> sourcePaths, String mappingId, Reflections reflections, ConversionRegistry conversionRegistry) {
         super(reflections, conversionRegistry);
         this.targetPath = targetPath;
         this.combinationExpression = combinationExpression;
         this.sourcePaths = sourcePaths;
+        this.mappingId = mappingId;
         log = LoggerFactory.getLogger(GenericManyToOneTransformer.class);
     }
 
@@ -54,7 +56,9 @@ public class GenericManyToOneTransformer extends GenericTransformer {
         }
 
         if (finalValue.contains("%")){
-            errors.add(ConversionIssue.newWarning(new RuntimeException("Source element missing to complete expression: " + combinationExpression + "; Result: " + finalValue)));
+            String elem = finalValue.substring(finalValue.indexOf("%"), 3);
+            errors.add(ConversionIssue.newWarning(new RuntimeException(
+                    String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
         } else {
             addNewCenObjectFromStringValueToInvoice(targetPath, invoice, finalValue, errors);
         }
@@ -89,7 +93,9 @@ public class GenericManyToOneTransformer extends GenericTransformer {
         }
 
         if (finalValue.contains("%")){
-            errors.add(ConversionIssue.newWarning(new RuntimeException("Source element missing to complete expression: " + combinationExpression + "; Result: " + finalValue)));
+            String elem = finalValue.substring(finalValue.indexOf("%"), 3);
+            errors.add(ConversionIssue.newWarning(new RuntimeException(
+                    String.format("Source element %s, missing to complete many to one mapping %s with expression : %s; Result: %s", elem, mappingId, combinationExpression, finalValue))));
         } else {
             List<Element> elements = getAllXmlElements(targetPath, document, 1, sourcePaths.toString(), errors);
             if (elements == null || elements.size() == 0) return;

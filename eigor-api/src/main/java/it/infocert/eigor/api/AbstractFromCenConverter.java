@@ -191,7 +191,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                     sourceKey = key.replace(".target", ".source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
                 transformer.transformCenToXml(invoice, document, errors);
             }
         }

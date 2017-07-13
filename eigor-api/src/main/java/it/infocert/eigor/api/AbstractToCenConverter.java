@@ -134,7 +134,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                     sourceKey = key.replace(".target", ".source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
                 transformer.transformXmlToCen(document, partialInvoice, errors);
             }
         }

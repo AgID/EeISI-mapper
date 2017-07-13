@@ -83,6 +83,9 @@ public class ManyCen2OneXpathMappingValidator implements InvoiceMappingValidator
             if (mappingSource.get(key) == null){
                 throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key);
             }
+            if (!mappingExpr.containsKey(key)) {
+                throw new SyntaxErrorInMappingFileException("Missign expression key for mapping: " + key);
+            }
             /*
                 mappingSource contains maximum index in source fields
                 i search to see if index present in expression
