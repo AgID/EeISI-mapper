@@ -82,11 +82,29 @@ public class GenericManyToOneTransformerTest {
         final String cenPath = "/BG0004/BT0033";
         final String combinationExpression = "%1-%3 %2";
 
-        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, reflections, conversionRegistry);
+        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, "testMapping", reflections, conversionRegistry);
         transformator.transformXmlToCen(doc, invoice, errors);
 
         assertThat(invoice.getBG0004Seller().get(0).getBT0033SellerAdditionalLegalInformation(), hasSize(1));
         assertEquals("TOSL108-380 2009-12-15", invoice.getBG0004Seller().get(0).getBT0033SellerAdditionalLegalInformation().get(0).toString());
+    }
+
+    @Test
+    public void mappingToCenWithLessSourceElementsThanInExpression() throws Exception {
+        final String xPathExpression = "/FatturaElettronica/FatturaElettronicaHeader/CedentePrestatore/Sede/Indirizzo";
+
+        final List<String> cenPaths = Arrays.asList("/BG0004/BG0005/BT0035", "/BG0004/BG0005/BT0162");
+
+        BG0004Seller seller = new BG0004Seller();
+        seller.getBG0005SellerPostalAddress().add(new BG0005SellerPostalAddress());
+        seller.getBG0005SellerPostalAddress(0).getBT0035SellerAddressLine1().add(new BT0035SellerAddressLine1("Grafton street"));
+        seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
+        invoice.getBG0004Seller().add(seller);
+
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        transformer.transformCenToXml(invoice, document, errors);
+        Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
+        assertEquals("Grafton street 3rd Floor, Room 5", item.getText());
     }
 
     @Test
@@ -102,7 +120,7 @@ public class GenericManyToOneTransformerTest {
         seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
         invoice.getBG0004Seller().add(seller);
 
-        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, reflections, conversionRegistry);
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
         transformer.transformCenToXml(invoice, document, errors);
         Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
         assertEquals("Grafton street Building 5 3rd Floor, Room 5", item.getText());
