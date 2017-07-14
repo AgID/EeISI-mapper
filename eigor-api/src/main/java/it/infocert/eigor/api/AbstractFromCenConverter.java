@@ -10,6 +10,7 @@ import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
 import it.infocert.eigor.api.mapping.toCen.OneCen2ManyXpathMappingValidator;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -93,7 +94,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             String resource = getMany2OneMappingPath();
             try {
                 inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
-                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(null);
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new ManyCen2OneXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
                 many2oneMappings = mapper.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);
@@ -190,7 +191,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                     sourceKey = key.replace(".target", ".source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
                 transformer.transformCenToXml(invoice, document, errors);
             }
         }
