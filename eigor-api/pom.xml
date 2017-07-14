@@ -16,6 +16,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>cen-core</artifactId>
         </dependency>
@@ -50,6 +54,18 @@
         <dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.infocert.eigor.test.xxxxx</groupId>
+            <artifactId>yyyyy</artifactId>
+            <version>${project.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/test-jar/cii-schematron.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

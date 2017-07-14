@@ -1,6 +1,5 @@
 package it.infocert.eigor.converter.ubl2cen;
 
-import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
@@ -9,6 +8,7 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
+import org.jdom2.JDOMException;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,6 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -117,7 +116,12 @@ public class Ubl2Cen extends AbstractToCenConverter {
             errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
-        Document document = getDocument(clonedInputStream);
+        Document document = null;
+        try {
+            document = getDocument(clonedInputStream);
+        } catch (JDOMException | IOException e) {
+            throw new RuntimeException(e);
+        }
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
