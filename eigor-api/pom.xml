@@ -60,6 +60,13 @@
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
+
+        <!--
+        This strange dependency is here to make the 'cii-schematron.jar' available
+        in the classpath. This is a jar made on purpose to test whether reading a composed
+        XML from a jar works or not. Since it is system-scoped, it does not end up in the released
+        jars.
+        -->
         <dependency>
             <groupId>org.infocert.eigor.test.xxxxx</groupId>
             <artifactId>yyyyy</artifactId>
