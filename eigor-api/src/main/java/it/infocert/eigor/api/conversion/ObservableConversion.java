@@ -10,12 +10,14 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,24 +39,26 @@ public class ObservableConversion {
     private final RuleRepository ruleRepository;
     private final ToCenConversion toCen;
     private final FromCenConversion fromCen;
-    private final InputStream invoiceInSourceFormat;
+    private final String invoiceFileName;
+    private byte[] invoiceInSourceFormat;
     private final Boolean forceConversion;
     private final ArrayList<ConversionCallback> listeners;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public ObservableConversion(
-            RuleRepository ruleRepository,
-            ToCenConversion toCen,
-            FromCenConversion fromCen,
-            InputStream invoiceInSourceFormat,
-            boolean forceConversion,
-            List<ConversionCallback> listeners) {
+    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCen, FromCenConversion fromCen, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, List<ConversionCallback> listeners) {
         this.ruleRepository = checkNotNull( ruleRepository );
         this.toCen = checkNotNull( toCen );
         this.fromCen = checkNotNull( fromCen );
-        this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
+        checkNotNull( invoiceInSourceFormat );
+        try {
+            this.invoiceInSourceFormat = IOUtils.toByteArray(invoiceInSourceFormat);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.forceConversion = checkNotNull( forceConversion );
         this.listeners = new ArrayList<>( checkNotNull( listeners ) );
+        checkArgument(invoiceFileName!=null && !invoiceFileName.isEmpty());
+        this.invoiceFileName = invoiceFileName;
     }
 
     public void conversion() {
@@ -67,6 +71,8 @@ public class ObservableConversion {
 
         ConversionContext ctx = new ConversionContext();
         ctx.setForceConversion(forceConversion.booleanValue());
+        ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
+        ctx.setInvoiceFileName(invoiceFileName);
 
         // The rule report
         InMemoryRuleReport ruleReport = null;
@@ -74,13 +80,12 @@ public class ObservableConversion {
         // conversion start
 
         try {
-            ctx.setInvoiceInSourceFormat(IOUtils.toByteArray(invoiceInSourceFormat));
             fireOnStartingConverionEvent(ctx);
 
             // 1st step XML -> CEN
             fireOnStartingToCenTranformationEvent(ctx);
 
-            ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
+            ConversionResult<BG0000Invoice> toCenResult = toCen.convert(new ByteArrayInputStream(invoiceInSourceFormat));
             ctx.setToCenResult(toCenResult);
 
             if (!toCenResult.hasErrors()) {
@@ -121,7 +126,7 @@ public class ObservableConversion {
                         keepOnGoing = false;
                 }
             }
-        } catch (SyntaxErrorInInvoiceFormatException | IOException e) {
+        } catch (SyntaxErrorInInvoiceFormatException e) {
             fireOnUnexpectedException(e, ctx);
         }
 
@@ -347,6 +352,7 @@ public class ObservableConversion {
         private BinaryConversionResult fromCenResult;
         private byte[] invoiceInSourceFormat;
         private boolean forceConversion;
+        private String invoiceFileName;
 
         /**
          * If XML->CEN transformation has already taken place, this returns the related conversion result,
@@ -404,6 +410,17 @@ public class ObservableConversion {
 
         private void setForceConversion(boolean forceConversion) {
             this.forceConversion = forceConversion;
+        }
+
+        private void setInvoiceFileName(String invoiceFileName) {
+            this.invoiceFileName = invoiceFileName;
+        }
+
+        /**
+         * The name of the original file being converted.
+         */
+        public String getSourceInvoiceFileName() {
+            return invoiceFileName;
         }
     }
 

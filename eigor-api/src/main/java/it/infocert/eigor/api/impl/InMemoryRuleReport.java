@@ -42,5 +42,12 @@ public class InMemoryRuleReport implements RuleReport {
         return list;
     }
 
+    @Override public List<Map.Entry<RuleOutcome, Rule>> getAll() {
+        ArrayList<Map.Entry<RuleOutcome, Rule>> list = new ArrayList<>();
+        for (Map.Entry<RuleOutcome, Rule> item : items) {
+            list.add(item);
+        }
+        return list;
+    }
 
 }

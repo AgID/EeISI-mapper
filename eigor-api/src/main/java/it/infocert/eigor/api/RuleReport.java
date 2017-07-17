@@ -14,4 +14,6 @@ public interface RuleReport {
     boolean hasFailures();
 
     List<Map.Entry<RuleOutcome, Rule>> getErrorsAndFailures();
+
+    List<Map.Entry<RuleOutcome, Rule>> getAll();
 }

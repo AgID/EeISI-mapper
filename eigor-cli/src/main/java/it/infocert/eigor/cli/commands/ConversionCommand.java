@@ -62,12 +62,8 @@ public class ConversionCommand implements CliCommand {
      */
     @Override
     public int execute(PrintStream out, PrintStream err) {
-        
         InMemoryRuleReport ruleReport = new InMemoryRuleReport();
-        File outputFolderFile;
-        outputFolderFile = outputFolder.toFile();
-
-
+        File outputFolderFile = outputFolder.toFile();
 
         // Execute the conversion
         try {
@@ -76,11 +72,8 @@ public class ConversionCommand implements CliCommand {
             log.error(e.getMessage(), e);
             return 1;
         } finally {
-
+            out.println("Conversion file stored in folder " + outputFolderFile.getAbsolutePath());
         }
-
-        out.println("Conversion file stored in folder " + outputFolderFile.getAbsolutePath());
-
         return 0;
     }
 
@@ -88,8 +81,16 @@ public class ConversionCommand implements CliCommand {
 
         List<ObservableConversion.ConversionCallback> conversionCallbacks = new ArrayList<>();
         conversionCallbacks.add(new ConsoleOutputConversionCallback(this, out));
-        conversionCallbacks.add(new DebugConversionCallback(outputFolderFile, ruleReport));
-        new ObservableConversion(ruleRepository, toCen, fromCen, invoiceInSourceFormat, this.forceConversion.booleanValue(), conversionCallbacks)
+        conversionCallbacks.add(new DebugConversionCallback(outputFolderFile));
+
+        String invoiceFileName = inputInvoice.toFile().getName();
+
+        new ObservableConversion(
+                ruleRepository,
+                toCen,
+                fromCen,
+                invoiceInSourceFormat,
+                this.forceConversion.booleanValue(), invoiceFileName, conversionCallbacks)
                 .conversion();
 
     }

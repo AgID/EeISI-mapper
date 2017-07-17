@@ -42,10 +42,6 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-rules</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-ubl-cen</artifactId>
         </dependency>
 

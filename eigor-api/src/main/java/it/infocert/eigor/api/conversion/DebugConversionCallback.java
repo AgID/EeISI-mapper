@@ -1,16 +1,13 @@
 package it.infocert.eigor.api.conversion;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Mapper;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.RuleReport;
+import it.infocert.eigor.api.utils.RuleReports;
 import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
-import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +41,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
-        cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile);
+        cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
         logSupport = new LogSupport();
         logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
     }
@@ -82,17 +78,24 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
         String invoiceName = invoiceFile.toFile().getName();
+        invoiceName = nameOfFileForClonedInvoice(invoiceName);
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
+    }
+
+    private String nameOfFileForClonedInvoice(String invoiceName) {
         int lastDotPosition = invoiceName.lastIndexOf('.');
         String extension = null;
         if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
             extension = invoiceName.substring(lastDotPosition + 1);
         }
         invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
-        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
+        return invoiceName;
     }
 
-    private void cloneSourceInvoice(byte[] invoiceFile, File outputFolder) throws IOException {
-        FileUtils.writeByteArrayToFile(new File(outputFolder, "invoice-source.xml"), invoiceFile);
+    private void cloneSourceInvoice(byte[] invoiceFile, File outputFolder, String originalInvoiceFileName) throws IOException {
+        FileUtils.writeByteArrayToFile(
+                new File(outputFolder, nameOfFileForClonedInvoice(originalInvoiceFileName)),
+                invoiceFile);
     }
 
     private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
@@ -129,18 +132,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     public String dump(RuleReport ruleReport) {
 
-        Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
-            @Override public String map(Map.Entry<RuleOutcome, Rule> x) {
-                return x.getKey().outcome() + "," + x.getKey().description();
-            }
-        };
-        List<String> stringPieces = Stream.create( ruleReport.getErrorsAndFailures() ).map( mapper ).toList();
-        StringBuffer sb = new StringBuffer("Outcome,Reason\n");
-        for(int i = 0; i<stringPieces.size(); i++){
-            sb.append(stringPieces.get(i));
-            if(i<stringPieces.size()-1) sb.append("\n");
-        }
-        return sb.toString();
+        return RuleReports.dump(ruleReport);
 
     }
 

@@ -22,6 +22,7 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -101,10 +102,11 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        InputStream invoiceSourceFormat = null;
+        InputStream invoiceSourceFormat = new ByteArrayInputStream("<invoice>the-invoice</invoice>".getBytes());
+
         ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
-        PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
 
         // when
         sut.execute(out, err);
@@ -112,6 +114,7 @@ public class ConversionCommandTest {
         // then a fromcen-errors.csv should be created for the issues along with the other files
         List<File> files = asList(outputFolderFile.listFiles());
 
+        assertTrue(outputFolderFile.exists());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.txt"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
