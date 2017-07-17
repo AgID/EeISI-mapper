@@ -91,12 +91,22 @@ public class ConversionCommand implements CliCommand {
     }
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
+
+        // ===============================================================================
+        // 1st step XML -> CEN
+        // ===============================================================================
         ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
-        BG0000Invoice cenInvoice = toCenResult.getResult();
+
+        // to be moved to a custom listener => output stream is just for CLI
         writeToCenErrorsToOutputStream(out, toCenResult, outputFolderFile);
+
+        // to be moved to the "debug" listener => errors is good for bugfixing
         writeToCenErrorsToFile(toCenResult, outputFolderFile);
+
+        // to be moved to the "debug" listener => errors is good for bugfixing
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
 
+        // to be moved to a custom listener !!HARD!!
         if (toCenResult.hasErrors()) {
             if (isForceConversion()) {
                 out.println("Conversion to CEN has encountered errors but will continue anyway.");
@@ -106,8 +116,20 @@ public class ConversionCommand implements CliCommand {
             }
         }
 
+        BG0000Invoice cenInvoice = toCenResult.getResult();
+
+        // ===============================================================================
+        // 2nd step CEN RULES
+        // ===============================================================================
         applyRulesToCenObject(cenInvoice, ruleReport);
-        writeRuleReport(ruleReport, outputFolderFile, out);
+
+        // to be moved to a "debug" listener
+        writeRuleReportToFile(ruleReport, outputFolderFile);
+
+        // to be moved to a "custom" listener
+        writeRuleReportToOutputStream(ruleReport, out);
+
+        // to be moved to a custom listener !!HARD!!
         if (ruleReport.hasFailures()){
             if (isForceConversion()) {
                 out.println("CEN rules validation has encountered errors but will continue anyway.");
@@ -117,13 +139,22 @@ public class ConversionCommand implements CliCommand {
             }
         }
 
+        // ===============================================================================
+        // 3rd step CEN->XML
+        // ===============================================================================
         BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
-        
-        writeFromCenErrors(out, conversionResult, outputFolderFile);
-        
+
+        // to be moved to the "debug" listener
+        writeFromCenErrorsToFile(conversionResult, outputFolderFile);
+
+        // to be moved to a custom listener
+        writeFromCenErrorsToOutStream(out, conversionResult);
+
+        // to be moved to the "debug" listener
         writeCenInvoice(cenInvoice, outputFolderFile);
 
+        // to be moved to a custom listener !!HARD!!
         if (conversionResult.hasErrors()) {
             if (isForceConversion()) {
                 out.println("Conversion from CEN has encountered errors but will continue anyway.");
@@ -132,6 +163,8 @@ public class ConversionCommand implements CliCommand {
                 return;
             }
         }
+
+        // to be moved to the "debug" listener
         writeTargetInvoice(converted, outputFolderFile);
     }
 
@@ -187,23 +220,28 @@ public class ConversionCommand implements CliCommand {
         }
     }
 
-
-    private void writeFromCenErrors(PrintStream out, BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
+    private void writeFromCenErrorsToOutStream(PrintStream out, BinaryConversionResult conversionResult) {
+        // writes to output stream
         if (conversionResult.isSuccessful()) {
             out.println("From Cen Conversion was successful!");
         } else {
             out.println("From Cen Conversion finished, but some issues have occured:");
             List<ConversionIssue> errors = conversionResult.getIssues();
-
-            // writes from-cen errors csv
-            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
-            FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors));
-
             for (ConversionIssue e : errors) {
                 out.println("Error: " + e.getMessage());
             }
             out.println("For more information see 'fromcen-errors.csv'.");
 
+        }
+    }
+
+    private void writeFromCenErrorsToFile(BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
+        // writes to file
+        if (!conversionResult.isSuccessful()) {
+            // writes from-cen errors csv
+            List<ConversionIssue> errors = conversionResult.getIssues();
+            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+            FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors));
         }
     }
 
@@ -222,15 +260,19 @@ public class ConversionCommand implements CliCommand {
         FileUtils.writeByteArrayToFile(outfile, targetInvoice);
     }
 
-    private void writeRuleReport(InMemoryRuleReport ruleReport, File outputFolderFile, PrintStream out) throws IOException {
-        File outreport = new File(outputFolderFile, "rule-report.csv");
-        FileUtils.writeStringToFile(outreport, ruleReport.dump());
-
+    private void writeRuleReportToOutputStream(InMemoryRuleReport ruleReport, PrintStream out) {
+        // output stream
         List<Map.Entry<RuleOutcome, Rule>> errors = ruleReport.getErrorsAndFailures();
         for (int i = 0; i < errors.size(); i++) {
             Map.Entry<RuleOutcome, Rule> e = errors.get(i);
             out.println( String.format("%d) Rule: %s", i+1, e.getKey().description()));
         }
+    }
+
+    private void writeRuleReportToFile(InMemoryRuleReport ruleReport, File outputFolderFile) throws IOException {
+        // file
+        File outreport = new File(outputFolderFile, "rule-report.csv");
+        FileUtils.writeStringToFile(outreport, ruleReport.dump());
     }
 
     private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
