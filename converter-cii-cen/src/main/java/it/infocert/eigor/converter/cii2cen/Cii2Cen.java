@@ -3,7 +3,8 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -32,11 +33,6 @@ import com.google.common.io.ByteStreams;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
-import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-import it.infocert.eigor.api.conversion.StringToIso4217CurrenciesFundsCodesConverter;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.StringToStringConverter;
-import it.infocert.eigor.api.conversion.StringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -57,7 +53,10 @@ public class Cii2Cen extends AbstractToCenConverter {
 	private final DefaultResourceLoader drl = new DefaultResourceLoader();
 	private final EigorConfiguration configuration;
 	private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
+
 			// enums
+			new CountryNameToIso31661CountryCodeConverter(),
+			new LookUpEnumConversion(Iso31661CountryCodes.class),
 
             new StringToUntdid1001InvoiceTypeCodeConverter(),
             new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
@@ -65,7 +64,17 @@ public class Cii2Cen extends AbstractToCenConverter {
             new StringToIso4217CurrenciesFundsCodesConverter(),
             new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
 
+			new Iso4217CurrenciesFundsCodesToStringConverter(),
+			new Iso31661CountryCodesToStringConverter(),
+			new UnitOfMeasureCodesToStringConverter(),
+
+			new StringToUntdid4461PaymentMeansCode(),
+
+            // date
             new StringToJavaLocalDateConverter("yyyyMMdd"),
+
+			// numbers
+			new StringToDoubleConverter(),
             
 			// string
             new StringToStringConverter()
