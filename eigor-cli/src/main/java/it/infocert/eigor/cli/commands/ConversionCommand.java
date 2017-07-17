@@ -1,6 +1,8 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.DebugConversionCallback;
+import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
 import org.slf4j.Logger;
@@ -84,10 +86,10 @@ public class ConversionCommand implements CliCommand {
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
 
-        List<OriginalConversionCommand.ConversionCallback> conversionCallbacks = new ArrayList<>();
+        List<ObservableConversion.ConversionCallback> conversionCallbacks = new ArrayList<>();
         conversionCallbacks.add(new ConsoleOutputConversionCallback(this, out));
         conversionCallbacks.add(new DebugConversionCallback(outputFolderFile, ruleReport));
-        new OriginalConversionCommand(ruleRepository, toCen, fromCen, invoiceInSourceFormat, this.forceConversion.booleanValue(), conversionCallbacks)
+        new ObservableConversion(ruleRepository, toCen, fromCen, invoiceInSourceFormat, this.forceConversion.booleanValue(), conversionCallbacks)
                 .conversion();
 
     }

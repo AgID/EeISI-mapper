@@ -1,4 +1,4 @@
-package it.infocert.eigor.cli.commands;
+package it.infocert.eigor.api.conversion;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Mapper;
@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     <li>A log related to the operations executed by the thread that took in charge this conversion.</li>
  * </ul>
  */
-public class DebugConversionCallback extends OriginalConversionCommand.AbstractConversionCallback {
+public class DebugConversionCallback extends ObservableConversion.AbstractConversionCallback {
 
     public static final Charset ENCODING = checkNotNull( Charset.forName("UTF-8") );
     private final File outputFolderFile;
@@ -44,39 +44,39 @@ public class DebugConversionCallback extends OriginalConversionCommand.AbstractC
         this.outputFolderFile = outputFolderFile;
     }
 
-    @Override public void onStartingConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile);
         logSupport = new LogSupport();
         logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
     }
 
-    @Override public void onSuccessfullToCenTranformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
     }
 
-    @Override public void onFailedToCenConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
     }
 
-    @Override public void onSuccessfullyVerifiedCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
-    @Override public void onFailedVerifingCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
-    @Override public void onSuccessfullFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
     }
 
-    @Override public void onFailedFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
     }
 
-    @Override public void onTerminatedConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         logSupport.removeLogger();
     }
 

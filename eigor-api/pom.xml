@@ -16,6 +16,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-rules</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>

@@ -1,4 +1,4 @@
-package it.infocert.eigor.cli.commands;
+package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
@@ -18,7 +18,21 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class OriginalConversionCommand {
+/**
+ * This is the core algorithm that converts a given invoice to the desired format.
+ * <h2>Callbacks</h2>
+ * <p>
+ * It is possible to attach an unlimited number of callbacks that get informed
+ * about meaningful events such, among others:
+ * <ul>
+ *      <li>a conversion being started,</li>
+ *      <li>a conversion completed with errors</li>
+ *      <li>etc...</li>
+ * </ul>
+ * For details, please check {@link ConversionCallback}.
+ * </p>
+ */
+public class ObservableConversion {
 
     private final RuleRepository ruleRepository;
     private final ToCenConversion toCen;
@@ -28,7 +42,7 @@ public class OriginalConversionCommand {
     private final ArrayList<ConversionCallback> listeners;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public OriginalConversionCommand(
+    public ObservableConversion(
             RuleRepository ruleRepository,
             ToCenConversion toCen,
             FromCenConversion fromCen,
@@ -334,24 +348,16 @@ public class OriginalConversionCommand {
         private byte[] invoiceInSourceFormat;
         private boolean forceConversion;
 
-        private void setToCenResult(ConversionResult<BG0000Invoice> toCenResult) {
-            this.toCenResult = toCenResult;
-        }
-
-        private void setRuleReport(InMemoryRuleReport ruleReport) {
-            this.ruleReport = ruleReport;
-        }
-
-        private void setFromCenResult(BinaryConversionResult fromCenResult) {
-            this.fromCenResult = fromCenResult;
-        }
-
         /**
          * If XML->CEN transformation has already taken place, this returns the related conversion result,
          * {@literal null} otherwise.
          */
         public ConversionResult<BG0000Invoice> getToCenResult() {
             return toCenResult;
+        }
+
+        private void setToCenResult(ConversionResult<BG0000Invoice> toCenResult) {
+            this.toCenResult = toCenResult;
         }
 
         /**
@@ -362,6 +368,10 @@ public class OriginalConversionCommand {
             return ruleReport;
         }
 
+        private void setRuleReport(InMemoryRuleReport ruleReport) {
+            this.ruleReport = ruleReport;
+        }
+
         /**
          * If CEN rule verification has already taken place, this returns the related result,
          * {@literal null} otherwise.
@@ -370,8 +380,8 @@ public class OriginalConversionCommand {
             return fromCenResult;
         }
 
-        private void setInvoiceInSourceFormat(byte[] invoiceInSourceFormat) {
-            this.invoiceInSourceFormat = invoiceInSourceFormat;
+        private void setFromCenResult(BinaryConversionResult fromCenResult) {
+            this.fromCenResult = fromCenResult;
         }
 
         /**
@@ -381,8 +391,8 @@ public class OriginalConversionCommand {
             return invoiceInSourceFormat;
         }
 
-        private void setForceConversion(boolean forceConversion) {
-            this.forceConversion = forceConversion;
+        private void setInvoiceInSourceFormat(byte[] invoiceInSourceFormat) {
+            this.invoiceInSourceFormat = invoiceInSourceFormat;
         }
 
         /**
@@ -390,6 +400,10 @@ public class OriginalConversionCommand {
          */
         public boolean isForceConversion() {
             return forceConversion;
+        }
+
+        private void setForceConversion(boolean forceConversion) {
+            this.forceConversion = forceConversion;
         }
     }
 

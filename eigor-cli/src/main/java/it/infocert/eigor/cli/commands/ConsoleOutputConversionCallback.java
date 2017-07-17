@@ -5,6 +5,7 @@ import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.RuleReport;
+import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 
@@ -14,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A {@link it.infocert.eigor.cli.commands.OriginalConversionCommand.ConversionCallback conversion callback}
+ * A {@link ObservableConversion.ConversionCallback conversion callback}
  * that prints out useful information about the ongoing conversion.
  */
-class ConsoleOutputConversionCallback extends OriginalConversionCommand.AbstractConversionCallback {
+class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConversionCallback {
 
     private final PrintStream out;
 
@@ -25,15 +26,15 @@ class ConsoleOutputConversionCallback extends OriginalConversionCommand.Abstract
         this.out = Preconditions.checkNotNull(out);
     }
 
-    @Override public void onStartingConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         out.println("Starting conversion.");
     }
 
-    @Override public void onSuccessfullToCenTranformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
         out.println("Conversion to CEN completed successfully.");
     }
 
-    @Override public void onFailedToCenConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToOutputStream(out, ctx.getToCenResult());
         if (ctx.isForceConversion()) {
             out.println("Conversion to CEN has encountered errors but will continue anyway.");
@@ -42,12 +43,12 @@ class ConsoleOutputConversionCallback extends OriginalConversionCommand.Abstract
         }
     }
 
-    @Override public void onSuccessfullyVerifiedCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         out.println("CEN rules validation completed successfully.");
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
     }
 
-    @Override public void onFailedVerifingCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
         if (ctx.getRuleReport().hasFailures()) {
             if (ctx.isForceConversion()) {
@@ -59,11 +60,11 @@ class ConsoleOutputConversionCallback extends OriginalConversionCommand.Abstract
         }
     }
 
-    @Override public void onSuccessfullFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         out.println("Conversion from CEN completed successfully.");
     }
 
-    @Override public void onFailedFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+    @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         BinaryConversionResult conversionResult = ctx.getFromCenResult();
         writeFromCenErrorsToOutStream(out, conversionResult);
         if (conversionResult.hasErrors()) {

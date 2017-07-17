@@ -1,4 +1,4 @@
-package it.infocert.eigor.cli.commands;
+package it.infocert.eigor.api.conversion;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
