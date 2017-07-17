@@ -134,7 +134,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                     sourceKey = key.replace(".target", ".source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
                 transformer.transformXmlToCen(document, partialInvoice, errors);
             }
         }
@@ -156,7 +156,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
      * @return the document
      * @throws SyntaxErrorInInvoiceFormatException syntax error in invoice format exception
      */
-    public Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+    protected Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException, JDOMException, IOException {
         Document doc;
         try {
             SAXBuilder saxBuilder = new SAXBuilder();

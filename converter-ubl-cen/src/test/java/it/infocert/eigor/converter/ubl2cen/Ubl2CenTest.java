@@ -2,11 +2,8 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.XSDValidator;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import org.hamcrest.core.IsNull;
-import org.jdom2.Document;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -15,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,15 +33,6 @@ public class Ubl2CenTest {
                 new Reflections("it.infocert"),
                 mock(EigorConfiguration.class)
         );
-    }
-
-    @Test
-    public void canReadDocument() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
-        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
-
-        Document document = sut.getDocument(sourceInvoiceStream);
-
-        assertThat(document, is(IsNull.notNullValue()));
     }
 
     @Test
