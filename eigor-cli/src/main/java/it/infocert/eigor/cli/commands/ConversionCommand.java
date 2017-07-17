@@ -95,7 +95,13 @@ public class ConversionCommand implements CliCommand {
         // ===============================================================================
         // 1st step XML -> CEN
         // ===============================================================================
+
+        // -> onStartingConverion()
+
+        // -> onStartingToCenTransformation()
         ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
+        // -> onFailedToCenConversion();
+        // -> onSuccessfullToCenConversion();
 
         // to be moved to a custom listener => output stream is just for CLI
         writeToCenErrorsToOutputStream(out, toCenResult, outputFolderFile);
@@ -121,7 +127,10 @@ public class ConversionCommand implements CliCommand {
         // ===============================================================================
         // 2nd step CEN RULES
         // ===============================================================================
+        // -> onStartingVerifyingCenRules()
         applyRulesToCenObject(cenInvoice, ruleReport);
+        // -> onSuccessfullCenRulesVerification()
+        // -> onFailedCenRulesVerification()
 
         // to be moved to a "debug" listener
         writeRuleReportToFile(ruleReport, outputFolderFile);
@@ -142,8 +151,11 @@ public class ConversionCommand implements CliCommand {
         // ===============================================================================
         // 3rd step CEN->XML
         // ===============================================================================
+        // -> onStartingFromCenTransformation()
         BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
         byte[] converted = conversionResult.getResult();
+        // -> onSuccessfullFromCenTransformation()
+        // -> onFailedFromCenTransformation()
 
         // to be moved to the "debug" listener
         writeFromCenErrorsToFile(conversionResult, outputFolderFile);
@@ -166,6 +178,8 @@ public class ConversionCommand implements CliCommand {
 
         // to be moved to the "debug" listener
         writeTargetInvoice(converted, outputFolderFile);
+
+        // -> onTerminatedConverion()
     }
 
     public boolean isForceConversion() {
