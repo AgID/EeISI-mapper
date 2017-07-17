@@ -13,9 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,16 +76,12 @@ public class ConversionCommand implements CliCommand {
         logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
 
         // Execute the conversion
-        // ===================================================
         try {
-            
             conversion(outputFolderFile, ruleReport, out);
         } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
-            
             log.error(e.getMessage(), e);
             return 1;
         } finally {
-            
             logSupport.removeLogger();
         }
 
@@ -100,7 +93,8 @@ public class ConversionCommand implements CliCommand {
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
         ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
         BG0000Invoice cenInvoice = toCenResult.getResult();
-        writeToCenErrorsToOutputStreamAndFile(out, toCenResult, outputFolderFile);
+        writeToCenErrorsToOutputStream(out, toCenResult, outputFolderFile);
+        writeToCenErrorsToFile(toCenResult, outputFolderFile);
         cloneSourceInvoice(this.inputInvoice, outputFolderFile);
 
         if (toCenResult.hasErrors()) {
@@ -145,24 +139,26 @@ public class ConversionCommand implements CliCommand {
         return forceConversion;
     }
 
-    private void writeToCenErrorsToOutputStreamAndFile(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
+    private void writeToCenErrorsToOutputStream(PrintStream out, ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (conversionResult.isSuccessful()) {
             out.println("To Cen Conversion was successful!");
         } else {
             out.println( String.format("To Cen Conversion finished, but %d issues have occured.", conversionResult.getIssues().size()) );
             List<ConversionIssue> errors = conversionResult.getIssues();
-
-            String data = toCsvFileContent(errors);
-
-            // writes to-cen issues csv
-            File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
-            FileUtils.writeStringToFile(toCenErrors, data);
-
             for (int i = 0; i < errors.size(); i++) {
                 ConversionIssue e = errors.get(i);
                 out.println( String.format("%d) Error: %s", i+1, e.getMessage()));
             }
             out.println("For more information see 'tocen-errors.csv'.");
+        }
+    }
+
+    private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
+        if (!conversionResult.isSuccessful()) {
+            List<ConversionIssue> errors = conversionResult.getIssues();
+            String data = toCsvFileContent(errors);
+            File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
+            FileUtils.writeStringToFile(toCenErrors, data);
         }
     }
 

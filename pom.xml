@@ -38,6 +38,7 @@
         <module>converter-ubl-cen</module>
         <module>eigor-api-api</module>
         <module>converter-cii-cen</module>
+        <module>eigor-api-client</module>
     </modules>
 
     <reporting>
