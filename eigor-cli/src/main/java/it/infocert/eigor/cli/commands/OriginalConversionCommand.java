@@ -1,0 +1,396 @@
+package it.infocert.eigor.cli.commands;
+
+import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.impl.InMemoryRuleReport;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.rules.Rule;
+import it.infocert.eigor.model.core.rules.RuleOutcome;
+import it.infocert.eigor.rules.MalformedRuleException;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class OriginalConversionCommand {
+
+    private final RuleRepository ruleRepository;
+    private final ToCenConversion toCen;
+    private final FromCenConversion fromCen;
+    private final InputStream invoiceInSourceFormat;
+    private final Boolean forceConversion;
+    private final ArrayList<ConversionCallback> listeners;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    public OriginalConversionCommand(
+            RuleRepository ruleRepository,
+            ToCenConversion toCen,
+            FromCenConversion fromCen,
+            InputStream invoiceInSourceFormat,
+            boolean forceConversion,
+            List<ConversionCallback> listeners) {
+        this.ruleRepository = checkNotNull( ruleRepository );
+        this.toCen = checkNotNull( toCen );
+        this.fromCen = checkNotNull( fromCen );
+        this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
+        this.forceConversion = checkNotNull( forceConversion );
+        this.listeners = new ArrayList<>( checkNotNull( listeners ) );
+    }
+
+    public void conversion() {
+
+        // Whether to go on to the next step. When false, we should stop executing subsequent operations.
+        boolean keepOnGoing = true;
+
+        // The intermediate CEN invoice.
+        BG0000Invoice cenInvoice = null;
+
+        ConversionContext ctx = new ConversionContext();
+        ctx.setForceConversion(forceConversion.booleanValue());
+
+        // The rule report
+        InMemoryRuleReport ruleReport = null;
+
+        // conversion start
+
+        try {
+            ctx.setInvoiceInSourceFormat(IOUtils.toByteArray(invoiceInSourceFormat));
+            fireOnStartingConverionEvent(ctx);
+
+            // 1st step XML -> CEN
+            fireOnStartingToCenTranformationEvent(ctx);
+
+            ConversionResult<BG0000Invoice> toCenResult = toCen.convert(invoiceInSourceFormat);
+            ctx.setToCenResult(toCenResult);
+
+            if (!toCenResult.hasErrors()) {
+                fireOnSuccessfullToCenTranformationEvent(ctx);
+            } else {
+                fireOnFailedToCenConversion(ctx);
+                if (!forceConversion)
+                    keepOnGoing = false;
+            }
+
+            // 2nd step CEN verification
+            if (keepOnGoing) {
+
+                fireOnStartingVerifyingCenRules(ctx);
+                cenInvoice = toCenResult.getResult();
+                ruleReport = new InMemoryRuleReport();
+                applyRulesToCenObject(cenInvoice, ruleReport);
+                ctx.setRuleReport(ruleReport);
+                if (!ruleReport.hasFailures()) {
+                    fireOnSuccessfullyVerifiedCenRules(ctx);
+                } else {
+                    fireOnFailedVerifyingCenRules(ctx);
+                    if (!forceConversion)
+                        keepOnGoing = false;
+                }
+            }
+
+            // 3rd step CEN -> XML
+            if (keepOnGoing) {
+                fireOnStartingFromCenTransformation(ctx);
+                BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
+                ctx.setFromCenResult(conversionResult);
+                if (!conversionResult.hasErrors()) {
+                    fireOnSuccessfullFromCenTransformation(ctx);
+                } else {
+                    fireOnFailedFromCenTransformation(ctx);
+                    if (!forceConversion)
+                        keepOnGoing = false;
+                }
+            }
+        } catch (SyntaxErrorInInvoiceFormatException | IOException e) {
+            fireOnUnexpectedException(e, ctx);
+        }
+
+        // anyhow, we inform the listeners we completed the transformation
+        fireOnTerminatedConverion(ctx);
+    }
+
+    private void applyRulesToCenObject(BG0000Invoice cenInvoice, InMemoryRuleReport ruleReport) {
+        List<Rule> rules;
+        try {
+            rules = ruleRepository.rules();
+        } catch (MalformedRuleException e) {
+            Map<String, String> invalidRules = e.getInvalidRules();
+
+            for (Map.Entry<String, String> entry : invalidRules.entrySet()) {
+                log.error(
+                        String.format("Rule %s is malformed: %s. Rule expression should follow the pattern ${ expression } without any surrounding quotes,", entry.getKey(), entry.getValue())
+                );
+            }
+
+            rules = e.getValidRules();
+        }
+        if (rules != null) {
+            for (Rule rule : rules) {
+                RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
+                ruleReport.store(ruleOutcome, rule);
+            }
+
+        }
+    }
+    
+    private void fireOnStartingConverionEvent(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onStartingConversion(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnStartingToCenTranformationEvent(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onStartingToCenTranformation(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnSuccessfullToCenTranformationEvent(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onSuccessfullToCenTranformation(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnFailedToCenConversion(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onFailedToCenConversion(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }        
+    }
+
+    private void fireOnStartingVerifyingCenRules(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onStartingVerifyingCenRules(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnSuccessfullyVerifiedCenRules(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onSuccessfullyVerifiedCenRules(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnFailedVerifyingCenRules(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onFailedVerifingCenRules(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnStartingFromCenTransformation(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onStartingFromCenTransformation(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnSuccessfullFromCenTransformation(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onSuccessfullFromCenTransformation(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnFailedFromCenTransformation(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onFailedFromCenTransformation(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnUnexpectedException(Exception theE, ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onUnexpectedException(theE, ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+    private void fireOnTerminatedConverion(ConversionContext ctx) {
+        for (ConversionCallback listener : listeners) {
+            try{
+                listener.onTerminatedConversion(ctx);
+            }catch (Exception e){
+                log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
+            }
+        }
+    }
+
+
+
+
+    public interface ConversionCallback {
+
+        void onStartingConversion(ConversionContext ctx) throws Exception;
+
+        void onStartingToCenTranformation(ConversionContext ctx) throws Exception;
+
+        void onSuccessfullToCenTranformation(ConversionContext ctx) throws Exception;
+
+        void onFailedToCenConversion(ConversionContext ctx) throws Exception;
+
+        void onStartingVerifyingCenRules(ConversionContext ctx) throws Exception;
+
+        void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception;
+
+        void onFailedVerifingCenRules(ConversionContext ctx) throws Exception;
+
+        void onStartingFromCenTransformation(ConversionContext ctx) throws Exception;
+
+        void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception;
+
+        void onFailedFromCenTransformation(ConversionContext ctx) throws Exception;
+
+        void onUnexpectedException(Exception e, ConversionContext ctx) throws Exception;
+
+        void onTerminatedConversion(ConversionContext ctx) throws Exception;
+
+    }
+
+    public static abstract class AbstractConversionCallback implements ConversionCallback {
+
+        @Override
+        public void onStartingConversion(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onStartingToCenTranformation(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onSuccessfullToCenTranformation(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onFailedToCenConversion(ConversionContext ctx) throws Exception {}
+
+        @Override public void onStartingVerifyingCenRules(ConversionContext ctx) throws Exception {}
+
+        @Override public void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception {}
+
+        @Override public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {}
+
+        @Override public void onStartingFromCenTransformation(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onFailedFromCenTransformation(ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onUnexpectedException(Exception e, ConversionContext ctx) throws Exception {}
+
+        @Override
+        public void onTerminatedConversion(ConversionContext ctx) throws Exception {}
+
+    }
+
+    public static class ConversionContext {
+
+        private ConversionResult<BG0000Invoice> toCenResult;
+        private InMemoryRuleReport ruleReport;
+        private BinaryConversionResult fromCenResult;
+        private byte[] invoiceInSourceFormat;
+        private boolean forceConversion;
+
+        private void setToCenResult(ConversionResult<BG0000Invoice> toCenResult) {
+            this.toCenResult = toCenResult;
+        }
+
+        private void setRuleReport(InMemoryRuleReport ruleReport) {
+            this.ruleReport = ruleReport;
+        }
+
+        private void setFromCenResult(BinaryConversionResult fromCenResult) {
+            this.fromCenResult = fromCenResult;
+        }
+
+        /**
+         * If XML->CEN transformation has already taken place, this returns the related conversion result,
+         * {@literal null} otherwise.
+         */
+        public ConversionResult<BG0000Invoice> getToCenResult() {
+            return toCenResult;
+        }
+
+        /**
+         * If CEN rule verification has already taken place, this returns the related report,
+         * {@literal null} otherwise.
+         */
+        public RuleReport getRuleReport() {
+            return ruleReport;
+        }
+
+        /**
+         * If CEN rule verification has already taken place, this returns the related result,
+         * {@literal null} otherwise.
+         */
+        public BinaryConversionResult getFromCenResult() {
+            return fromCenResult;
+        }
+
+        private void setInvoiceInSourceFormat(byte[] invoiceInSourceFormat) {
+            this.invoiceInSourceFormat = invoiceInSourceFormat;
+        }
+
+        /**
+         * Get the input invoice in source format. Always available.
+         */
+        public byte[] getInvoiceInSourceFormat() {
+            return invoiceInSourceFormat;
+        }
+
+        private void setForceConversion(boolean forceConversion) {
+            this.forceConversion = forceConversion;
+        }
+
+        /**
+         * Whether the conversion will goes on until the end or will stop at the first error.
+         */
+        public boolean isForceConversion() {
+            return forceConversion;
+        }
+    }
+
+}

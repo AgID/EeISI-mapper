@@ -1,0 +1,158 @@
+package it.infocert.eigor.cli.commands;
+
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Mapper;
+import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.RuleReport;
+import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.Visitor;
+import it.infocert.eigor.model.core.rules.Rule;
+import it.infocert.eigor.model.core.rules.RuleOutcome;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * This callback can be used to collect info that can result priceless in investigating conversion problems.
+ * In a given folder it writes:
+ * <ul>
+ *     <li>A copy of the original inoice to be converted.</li>
+ *     <li>A list of errors occurred during the ->CEN transformation.</li>
+ *     <li>A list of CEN validation errors.</li>
+ *     <li>A list of errors occurred during the CEN-> transformation.</li>
+ *     <li>The resulting transformed invoice.</li>
+ *     <li>A log related to the operations executed by the thread that took in charge this conversion.</li>
+ * </ul>
+ */
+public class DebugConversionCallback extends OriginalConversionCommand.AbstractConversionCallback {
+
+    public static final Charset ENCODING = checkNotNull( Charset.forName("UTF-8") );
+    private final File outputFolderFile;
+    private LogSupport logSupport = null;
+
+    public DebugConversionCallback(File outputFolderFile) {
+        this.outputFolderFile = outputFolderFile;
+    }
+
+    @Override public void onStartingConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile);
+        logSupport = new LogSupport();
+        logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
+    }
+
+    @Override public void onSuccessfullToCenTranformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
+    }
+
+    @Override public void onFailedToCenConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
+    }
+
+    @Override public void onSuccessfullyVerifiedCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
+    }
+
+    @Override public void onFailedVerifingCenRules(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
+    }
+
+    @Override public void onSuccessfullFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
+        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
+    }
+
+    @Override public void onFailedFromCenTransformation(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
+        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
+    }
+
+    @Override public void onTerminatedConversion(OriginalConversionCommand.ConversionContext ctx) throws Exception {
+        logSupport.removeLogger();
+    }
+
+    private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {
+        String invoiceName = invoiceFile.toFile().getName();
+        int lastDotPosition = invoiceName.lastIndexOf('.');
+        String extension = null;
+        if (lastDotPosition != -1 && lastDotPosition < invoiceName.length() - 1) {
+            extension = invoiceName.substring(lastDotPosition + 1);
+        }
+        invoiceName = "invoice-source" + ((extension != null) ? "." + extension : "");
+        FileUtils.copyFile(invoiceFile.toFile(), new File(outputFolder, invoiceName));
+    }
+
+    private void cloneSourceInvoice(byte[] invoiceFile, File outputFolder) throws IOException {
+        FileUtils.writeByteArrayToFile(new File(outputFolder, "invoice-source.xml"), invoiceFile);
+    }
+
+    private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
+        if (!conversionResult.isSuccessful()) {
+            List<ConversionIssue> errors = conversionResult.getIssues();
+            String data = toCsvFileContent(errors);
+            File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
+            FileUtils.writeStringToFile(toCenErrors, data);
+        }
+    }
+
+    private void writeFromCenErrorsToFile(BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
+        // writes to file
+        if (!conversionResult.isSuccessful()) {
+            // writes from-cen errors csv
+            List<ConversionIssue> errors = conversionResult.getIssues();
+            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+            FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
+        }
+    }
+
+    private String toCsvFileContent(List<ConversionIssue> errors) {
+        StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
+        for (ConversionIssue e : errors) {
+            toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
+        }
+        return toCenErrorsCsv.toString();
+    }
+
+    private void writeRuleReportToFile(RuleReport ruleReport, File outputFolderFile) throws IOException {
+        File outreport = new File(outputFolderFile, "rule-report.csv");
+        FileUtils.writeStringToFile(outreport, dump(ruleReport), ENCODING);
+    }
+
+    public String dump(RuleReport ruleReport) {
+
+        Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
+            @Override public String map(Map.Entry<RuleOutcome, Rule> x) {
+                return x.getKey().outcome() + "," + x.getKey().description();
+            }
+        };
+        List<String> stringPieces = Stream.create( ruleReport.getErrorsAndFailures() ).map( mapper ).toList();
+        StringBuffer sb = new StringBuffer("Outcome,Reason\n");
+        for(int i = 0; i<stringPieces.size(); i++){
+            sb.append(stringPieces.get(i));
+            if(i<stringPieces.size()-1) sb.append("\n");
+        }
+        return sb.toString();
+
+    }
+
+    private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
+        Visitor v = new CsvDumpVisitor();
+        cenInvoice.accept(v);
+        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
+    }
+
+    private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
+        File outfile = new File(outputFolderFile, "invoice-target.xml");
+        FileUtils.writeByteArrayToFile(outfile, targetInvoice);
+    }
+
+}
