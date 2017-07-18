@@ -24,7 +24,7 @@ echo "Using JDK at ${JAVA_HOME:?Please set JAVA_HOME environment variable}"
 echo ${CLASSPATH}
 cd ${APP_HOME}
 mkdir -p reports
-#JAVA_OPTS="-server -Xmx512m -Dapp=${APP_NAME} -Dlogback.configurationFile=${APP_HOME}/config/logback.xml"
+#JAVA_OPTS="-server -Xmx512m -Dapp=${APP_NAME} -Dlogback.configurationFile=${APP_HOME}/config/logback.xml -Deigor.configurationFile=${APP_HOME}/conf/eigor.properties"
 JAVA_OPTS="-Xmx512m  -Dlogback.configurationFile=${APP_HOME}/conf/logback.xml"
 START_CLASS=it.infocert.eigor.cli.Eigor
 JAVA_ARGS="$1 $2 $3 $4 $5 $6 $7 $8 $9"
