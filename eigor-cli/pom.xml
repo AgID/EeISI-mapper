@@ -5,12 +5,12 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.8-SNAPSHOT</version>
+        <version>0.0.9-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: CLI :: Client</name>
+    <name>Eigor :: CLI :: ${project.artifactId}</name>
     <artifactId>eigor-cli</artifactId>
 
     <properties>

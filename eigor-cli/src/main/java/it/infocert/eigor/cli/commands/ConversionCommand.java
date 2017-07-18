@@ -90,7 +90,7 @@ public class ConversionCommand implements CliCommand {
                 toCen,
                 fromCen,
                 invoiceInSourceFormat,
-                this.forceConversion.booleanValue(), invoiceFileName, conversionCallbacks)
+                forceConversion.booleanValue(), invoiceFileName, conversionCallbacks)
                 .conversion();
 
     }

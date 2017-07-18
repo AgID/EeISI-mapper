@@ -49,12 +49,14 @@ public class ObservableConversion {
         this.ruleRepository = checkNotNull( ruleRepository );
         this.toCen = checkNotNull( toCen );
         this.fromCen = checkNotNull( fromCen );
-        checkNotNull( invoiceInSourceFormat );
+
+        checkNotNull( invoiceInSourceFormat, "The binary version of the invoice is mandatory." );
         try {
             this.invoiceInSourceFormat = IOUtils.toByteArray(invoiceInSourceFormat);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         this.forceConversion = checkNotNull( forceConversion );
         this.listeners = new ArrayList<>( checkNotNull( listeners ) );
         checkArgument(invoiceFileName!=null && !invoiceFileName.isEmpty());
@@ -73,6 +75,7 @@ public class ObservableConversion {
         ctx.setForceConversion(forceConversion.booleanValue());
         ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
         ctx.setInvoiceFileName(invoiceFileName);
+        ctx.setTargetInvoiceExtension(fromCen.extension());
 
         // The rule report
         InMemoryRuleReport ruleReport = null;
@@ -353,6 +356,7 @@ public class ObservableConversion {
         private byte[] invoiceInSourceFormat;
         private boolean forceConversion;
         private String invoiceFileName;
+        private String targetInvoiceExtension;
 
         /**
          * If XML->CEN transformation has already taken place, this returns the related conversion result,
@@ -421,6 +425,15 @@ public class ObservableConversion {
          */
         public String getSourceInvoiceFileName() {
             return invoiceFileName;
+        }
+
+        /** The preferred extension for the destination invoice. */
+        public String getTargetInvoiceExtension() {
+            return targetInvoiceExtension;
+        }
+
+        private void setTargetInvoiceExtension(String targetInvoiceExtension) {
+            this.targetInvoiceExtension = targetInvoiceExtension;
         }
     }
 

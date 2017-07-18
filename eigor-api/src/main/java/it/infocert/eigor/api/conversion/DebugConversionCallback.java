@@ -41,17 +41,22 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
-        cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
+
+        // attach the logging for this conversion
         logSupport = new LogSupport();
         logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
+
+        cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
     }
 
     @Override public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
+        writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
+        writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
@@ -64,12 +69,14 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     @Override public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
-        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
+        String targetExtension = ctx.getTargetInvoiceExtension();
+        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
     @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
-        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile);
+        String targetExtension = ctx.getTargetInvoiceExtension();
+        writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
     @Override public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
@@ -131,9 +138,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     public String dump(RuleReport ruleReport) {
-
         return RuleReports.dump(ruleReport);
-
     }
 
     private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
@@ -142,8 +147,11 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
     }
 
-    private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile) throws IOException {
-        File outfile = new File(outputFolderFile, "invoice-target.xml");
+    private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile, String targetInvoiceExtension) throws IOException {
+
+        while(targetInvoiceExtension.startsWith(".")) targetInvoiceExtension = targetInvoiceExtension.substring(1);
+
+        File outfile = new File(outputFolderFile, "invoice-target." + targetInvoiceExtension);
         FileUtils.writeByteArrayToFile(outfile, targetInvoice);
     }
 
