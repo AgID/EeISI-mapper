@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class EigorCli {
 
-    public static Logger log = LoggerFactory.getLogger(EigorCli.class);
+    private final static Logger log = LoggerFactory.getLogger(EigorCli.class);
 
     private final CommandLineInterpreter cli;
 

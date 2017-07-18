@@ -39,7 +39,9 @@ public class ITCli {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Test(timeout = 50000) public void shouldUnzipAndRunOnWindowsWithForce() throws Exception {
+//    @Test(timeout = 50000)
+    @Test
+    public void shouldUnzipAndRunOnWindowsWithForce() throws Exception {
 
         assumeTrue("Run only on Win.", OS.isWindows());
 

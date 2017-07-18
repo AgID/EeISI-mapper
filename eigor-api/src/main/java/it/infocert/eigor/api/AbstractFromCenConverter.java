@@ -11,7 +11,7 @@ import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
 import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
-import it.infocert.eigor.api.mapping.toCen.OneCen2ManyXpathMappingValidator;
+import it.infocert.eigor.api.mapping.fromCen.OneCen2ManyXpathMappingValidator;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
