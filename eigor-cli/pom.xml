@@ -5,12 +5,12 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.8-SNAPSHOT</version>
+        <version>0.0.9-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: CLI :: Client</name>
+    <name>Eigor :: CLI :: ${project.artifactId}</name>
     <artifactId>eigor-cli</artifactId>
 
     <properties>
@@ -39,10 +39,6 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-fattpa-cen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-rules</artifactId>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
@@ -206,11 +202,11 @@
                                         <requireFilesExist>
                                             <files>
                                                 <file>../eigor-test/src/main/resources</file>
-                                                <file>../eigor-rules/src/main/resources</file>
+                                                <file>../eigor-api/src/main/resources</file>
                                                 <file>env/release/eigor.sh</file>
                                                 <file>env/release/eigor.bat</file>
-                                                <file>../eigor-rules/src/main/resources/cardinality.properties</file>
-                                                <file>../eigor-rules/src/main/resources/rules.properties</file>
+                                                <file>../eigor-api/src/main/resources/cardinality.properties</file>
+                                                <file>../eigor-api/src/main/resources/rules.properties</file>
                                                 <file>env/release/logback.xml</file>
                                             </files>
                                         </requireFilesExist>

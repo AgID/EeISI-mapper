@@ -16,6 +16,15 @@ public class DefaultEigorConfigurationLoader {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Load the Eigor configuration from a well-well knows list of location:
+     * <ul>
+     *     <li>If the {@code eigor.configurationFile} system property is set, it tries to load the configuration from a file which path is the value of that system variable.</li>
+     *     <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor-test.properties}.</li>
+     *     <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor.properties}.</li>
+     * </ul>
+     * This is highly inspired by how logback loads its cofiguration.
+     */
     public EigorConfiguration loadConfiguration() {
 
         ArrayList<String> tentatives = new ArrayList();
