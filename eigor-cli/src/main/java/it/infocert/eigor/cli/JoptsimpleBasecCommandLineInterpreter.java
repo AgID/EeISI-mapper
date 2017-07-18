@@ -61,7 +61,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // Validates all params
         // ===================================================
 
-        // if all params are missing the print the help
+        // if all params are missing then print the help
         if (!options.hasOptions()) {
             return new HelpCommand();
         }

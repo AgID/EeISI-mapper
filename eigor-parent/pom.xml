@@ -11,7 +11,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.9-SNAPSHOT</version>
     <name>Eigor</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -40,6 +40,7 @@
         <plexus-utils.version>3.0.24</plexus-utils.version>
         <jdom.version>2.0.6</jdom.version>
         <jaxen.version>1.1.6</jaxen.version>
+        <commons-io.version>2.5</commons-io.version>
 
         <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
@@ -78,6 +79,11 @@
         <dependencies>
 
             <!-- Libs -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.sf.jopt-simple</groupId>
                 <artifactId>jopt-simple</artifactId>
@@ -187,17 +193,22 @@
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
-                <artifactId>eigor-rules</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>it.infocert.eigor</groupId>
                 <artifactId>converter-ubl-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>converter-cii-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
