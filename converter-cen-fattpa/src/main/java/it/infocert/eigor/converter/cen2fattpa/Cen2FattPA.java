@@ -4,7 +4,6 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
@@ -103,7 +102,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
         configurableSupport.checkConfigurationOccurred();
 
-        List<ConversionIssue> errors = new ArrayList<>(0);
+        List<IConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);
         setFormatoTrasmissione(document);
@@ -152,7 +151,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             return result;
         } else {
             byte[] jaxml = xmlOutput.toString().getBytes();
-            List<ConversionIssue> validationErrors = validator.validate(jaxml);
+            List<IConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }

@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.XSDValidator;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import org.junit.Before;
@@ -48,19 +48,19 @@ public class Ubl2CenTest {
     @Test
     public void shouldValidateXsd() throws Exception {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example.xml");
-    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
+    	List<IConversionIssue> errors = validate(sourceInvoiceStream);
     	assertTrue(errors.isEmpty());
     }
 
     @Test
     public void shouldNotValidateXsd() throws Exception {
     	InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-Invoice-2.1-Example-KO.xml");
-    	List<ConversionIssue> errors = validate(sourceInvoiceStream);
+    	List<IConversionIssue> errors = validate(sourceInvoiceStream);
     	assertFalse(errors.isEmpty());
     }
 
     
-    private List<ConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
+    private List<IConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd").getFile();
 	   	File xsdFile = new File(filePath);

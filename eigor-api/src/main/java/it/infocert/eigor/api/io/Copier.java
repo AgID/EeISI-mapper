@@ -19,13 +19,29 @@ public class Copier {
         this.dest = dest;
     }
 
-    public void gogoInClasspath(String resourceDir) throws IOException {
+    public void copyFrom(String resource) {
+        boolean done = false;
+        try{
+            copyFromJar(resource);
+            done = true;
+        }catch(Exception e1){
+            try{
+                copyFromClasspath(resource);
+                done = true;
+            }catch(Exception e2){
+
+            }
+        }
+        if(!done) throw new IllegalArgumentException("Unable to copy from '" + resource + "'.");
+    }
+
+    public void copyFromClasspath(String resourceDir) throws IOException {
         URL resource = getClass().getResource(resourceDir);
         File sourceDir = new File(resource.getFile());
         FileUtils.copyDirectoryToDirectory(sourceDir, dest);
     }
 
-    public void gogoInJar(String s) throws IOException {
+    public void copyFromJar(String s) throws IOException {
         URL resource = getClass().getResource(s);
 
         String fullPath = resource.toString();
@@ -33,7 +49,7 @@ public class Copier {
         // jar:file:/workspace/repos/infocert/eigor/eigor-api/src/test/test-jar/cii-schematron.jar!/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/
 
 
-        if(!fullPath.contains(".jar!")) throw new IllegalArgumentException("Not a jar");
+        if(!fullPath.contains(".jar!")) throw new IllegalArgumentException("Not a jar: " + fullPath);
 
         String[] split = fullPath.split("\\.jar!/");
         String pathOfJar = (split[0] + ".jar").substring("jar:file:".length());

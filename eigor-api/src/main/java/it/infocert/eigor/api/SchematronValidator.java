@@ -40,8 +40,8 @@ public class SchematronValidator implements IXMLValidator {
     }
 
     @Override
-    public List<ConversionIssue> validate(byte[] xml) {
-        List<ConversionIssue> errors = new ArrayList<>();
+    public List<IConversionIssue> validate(byte[] xml) {
+        List<IConversionIssue> errors = new ArrayList<>();
         SchematronOutputType schematronOutput = null;
 
         try {

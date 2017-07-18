@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping;
 
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -42,7 +43,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
 
 
     @Override
-    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + sourcePaths + " - " + targetPath + ") ";
         log.trace(logPrefix + "resolving");
 
@@ -68,7 +69,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
     }
 
     @Override
-    public void transformCenToXml(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformCenToXml(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + sourcePaths + " - " + targetPath + ") ";
         log.trace(logPrefix + "resolving");
 

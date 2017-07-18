@@ -8,16 +8,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PropertiesBackedConfiguration implements EigorConfiguration {
 
-    private final Properties properties;
+    private final PropertiesWithReplacement properties;
     private final DefaultResourceLoader drl;
 
     public PropertiesBackedConfiguration() {
-        this.properties = new Properties();
+        this.properties = new PropertiesWithReplacement();
         this.drl = new DefaultResourceLoader(PropertiesBackedConfiguration.class.getClassLoader());
     }
 
     public PropertiesBackedConfiguration(final Properties properties) {
-        this.properties = new Properties( checkNotNull(properties) );
+        this.properties = new PropertiesWithReplacement( checkNotNull(properties) );
         this.drl = new DefaultResourceLoader(PropertiesBackedConfiguration.class.getClassLoader());
     }
 

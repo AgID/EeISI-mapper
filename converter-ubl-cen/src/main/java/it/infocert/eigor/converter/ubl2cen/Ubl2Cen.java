@@ -95,7 +95,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
         configurableSupport.checkConfigurationOccurred();
 
-        List<ConversionIssue> errors = new ArrayList<>();
+        List<IConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
 
@@ -104,7 +104,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
             clonedInputStream = new ByteArrayInputStream(bytes);
 
-            List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
             	log.info("Xsd validation succesful!");
             }

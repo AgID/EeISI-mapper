@@ -9,7 +9,7 @@
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>Eigor :: API :: Client</name>
+    <name>Eigor :: API :: Client Examples (${project.artifactId})</name>
     <artifactId>eigor-api-client</artifactId>
 
     <dependencies>

@@ -16,16 +16,14 @@ public class CopierTest {
     @Test
     public void justShowHowItIsSupposedToBeUsed() throws IOException {
         File dest = tmp.newFolder("dest");
-        new Copier(dest).gogoInClasspath("/it/infocert/eigor/api/io");
+        new Copier(dest).copyFromClasspath("/it/infocert/eigor/api/io");
     }
 
     @Test
     public void shouldCopyAcontentTakenFromAJar() throws IOException {
         File dest = tmp.newFolder("dest");
-        new Copier(dest).gogoInJar("/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/");
-
+        new Copier(dest).copyFromJar("/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/");
         System.out.println(Arrays.asList( dest.listFiles() ));
-
     }
 
 }

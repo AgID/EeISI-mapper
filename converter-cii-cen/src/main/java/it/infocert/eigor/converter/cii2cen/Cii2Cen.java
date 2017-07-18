@@ -105,7 +105,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 
 		InputStream clonedInputStream = null;
 
@@ -113,13 +113,13 @@ public class Cii2Cen extends AbstractToCenConverter {
 			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 			clonedInputStream = new ByteArrayInputStream(bytes);
 
-			List<ConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
+			List<IConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
 			if(xsdValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
 			errors.addAll(xsdValidationErrors);
 
-			List<ConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
+			List<IConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}

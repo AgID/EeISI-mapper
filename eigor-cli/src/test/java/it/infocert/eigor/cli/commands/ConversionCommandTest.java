@@ -110,7 +110,7 @@ public class ConversionCommandTest {
         // given
         given(fromCen.extension()).willReturn(".xml");
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
         when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
         // when converting a mock invoice, issues should occur
@@ -142,7 +142,7 @@ public class ConversionCommandTest {
     public void toCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException, SyntaxErrorInInvoiceFormatException {
 
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
         // given
@@ -168,7 +168,7 @@ public class ConversionCommandTest {
     public void toCenConversionShouldCreateCsvAndAllFilesIfConversionResultHasErrorsButForceIsTrue() throws IOException, SyntaxErrorInInvoiceFormatException {
 
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
         // given
