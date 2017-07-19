@@ -5,9 +5,9 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -83,7 +83,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 			assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[CII-SR-014]"));
 		}
 	}
-	
+
 	@Test
 	public void testOneToOneTrasformationMapping() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
@@ -92,7 +92,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BT0005InvoiceCurrencyCode expected = new BT0005InvoiceCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
 		assertEquals(expected, invoice.getBT0005InvoiceCurrencyCode(0));
 	}
-	
+
 	@Test
 	public void testFailOneToOneTrasformationMapping() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
@@ -103,10 +103,13 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 	@Test
 	public void testManyToOneTrasformationMapping() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		ConversionResult<BG0000Invoice> result = manyToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
-		assertTrue(true);
+		BT0011ProjectReference expectedBT0011 = new BT0011ProjectReference("Project345 Project reference");
+		BT0060PayeeIdentifierAndSchemeIdentifier expectedBT0060 = new BT0060PayeeIdentifierAndSchemeIdentifier("DK16356608 123456");
+		assertEquals(expectedBT0011, invoice.getBT0011ProjectReference(0));
+		assertEquals(expectedBT0060, invoice.getBG0010Payee().get(0).getBT0060PayeeIdentifierAndSchemeIdentifier(0));
 	}
 
 	@Test
@@ -114,8 +117,24 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
 		ConversionResult<BG0000Invoice> result = manyToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
-		assertTrue(true);
+		assertTrue(invoice.getBT0011ProjectReference().isEmpty());
 	}
+
+	//TODO
+//	@Test
+//	public void testOneToManyTrasformationMapping() throws Exception {
+//		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
+//		Pair<Document, List<ConversionIssue>> result = oneToManyMapping(sourceInvoiceStream);
+//		assertTrue(result.getRight().isEmpty());
+//	}
+//
+//	@Test
+//	public void testFailOneToManyTrasformationMapping() throws Exception {
+//		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M_KO.xml");
+//		Pair<Document, List<ConversionIssue>> result = oneToManyMapping(sourceInvoiceStream);
+//		assertTrue(!result.getRight().isEmpty());
+//	}
+
 	
 	private List<ConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
@@ -149,6 +168,15 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
 		return sut.applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
 	}
+	
+	private Pair<Document, List<ConversionIssue>> oneToManyMapping(InputStream sourceInvoiceStream) throws Exception {
+		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
+		InputStream clonedInputStream = new ByteArrayInputStream(bytes);
+		Document document = getDocument(clonedInputStream);
+		List<ConversionIssue> errors = new ArrayList<>();
+		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
+		return sut.applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
+	}
 
 	public Document getDocument(InputStream sourceInvoiceStream) throws JDOMException, IOException {
 		SAXBuilder saxBuilder = new SAXBuilder();
@@ -168,6 +196,10 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
+		}
+		
+		@Override public Pair<Document, List<ConversionIssue>> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+			return super.applyOne2ManyTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
 	}
 

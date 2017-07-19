@@ -5,6 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
@@ -64,7 +65,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 	public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
 	public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.many-to-one";
-	public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cli-cen.mapping.one-to-many";
+	public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-many";
 
 	private XSDValidator xsdValidator;
 	private SchematronValidator schematronValidator;
@@ -140,6 +141,10 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 			result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 			result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
+			
+//			Pair<Document, List<ConversionIssue>> resultOne2Many = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
+//			List<ConversionIssue> resList = resultOne2Many.getRight()
+//			result = new ConversionResult(resList, result);
 
 		} catch (JDOMException | IOException e) {
 			throw new RuntimeException(e);
