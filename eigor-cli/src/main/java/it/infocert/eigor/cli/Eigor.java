@@ -31,7 +31,7 @@ import java.util.Properties;
 
 public class Eigor {
 
-    public static Logger log = LoggerFactory.getLogger(Eigor.class);
+    private static final Logger log = LoggerFactory.getLogger(Eigor.class);
 
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);

@@ -129,7 +129,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 			errors.addAll(schematronValidationErrors);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		Document document = null;

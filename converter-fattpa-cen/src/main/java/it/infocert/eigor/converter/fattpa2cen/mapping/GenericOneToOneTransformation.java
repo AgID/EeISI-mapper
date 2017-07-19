@@ -50,19 +50,21 @@ public class GenericOneToOneTransformation {
                     final ArrayList<BTBG> bt = new ArrayList<>(1);
 
                     Stream.create(Arrays.asList(constructors)).forEach(new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
-                        @Override public void consume(final Constructor<?> constructor) {
+                        @Override
+                        public void consume(final Constructor<?> constructor) {
                             try {
                                 if (constructor.getParameterTypes().length == 0) {
                                     bt.add((BTBG) constructor.newInstance());
                                 } else {
                                     Class<?>[] parameterTypes = constructor.getParameterTypes();
                                     Stream.create(Arrays.asList(parameterTypes)).forEach(new Consumer<Class<?>>() {
-                                                                                             @Override public void consume(Class<?> paramType) {
+                                                                                             @Override
+                                                                                             public void consume(Class<?> paramType) {
                                                                                                  if (String.class.equals(paramType)) {
                                                                                                      try {
                                                                                                          bt.add((BTBG) constructor.newInstance(item.getTextContent()));
                                                                                                      } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                                                                                         e.printStackTrace();
+                                                                                                         log.error(e.getMessage(), e);
                                                                                                      }
                                                                                                  }
                                                                                              }

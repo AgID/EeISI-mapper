@@ -1,4 +1,4 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping.fromCen;
 
 
 import com.google.common.collect.Multimap;
