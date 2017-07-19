@@ -41,7 +41,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
-				.addProperty("eigor.converter.cii-cen.mapping.one-to-many", "converterdata/converter-cii-cen/mappings/one_to_many.properties")
 				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		sut = new MyCiiToCenConverter(new Reflections("it.infocert"), conf);
@@ -120,22 +119,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		assertTrue(invoice.getBT0011ProjectReference().isEmpty());
 	}
 
-	//TODO
-//	@Test
-//	public void testOneToManyTrasformationMapping() throws Exception {
-//		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
-//		Pair<Document, List<ConversionIssue>> result = oneToManyMapping(sourceInvoiceStream);
-//		assertTrue(result.getRight().isEmpty());
-//	}
-//
-//	@Test
-//	public void testFailOneToManyTrasformationMapping() throws Exception {
-//		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M_KO.xml");
-//		Pair<Document, List<ConversionIssue>> result = oneToManyMapping(sourceInvoiceStream);
-//		assertTrue(!result.getRight().isEmpty());
-//	}
-
-	
 	private List<ConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
@@ -168,15 +151,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
 		return sut.applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
 	}
-	
-	private Pair<Document, List<ConversionIssue>> oneToManyMapping(InputStream sourceInvoiceStream) throws Exception {
-		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-		InputStream clonedInputStream = new ByteArrayInputStream(bytes);
-		Document document = getDocument(clonedInputStream);
-		List<ConversionIssue> errors = new ArrayList<>();
-		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
-		return sut.applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
-	}
 
 	public Document getDocument(InputStream sourceInvoiceStream) throws JDOMException, IOException {
 		SAXBuilder saxBuilder = new SAXBuilder();
@@ -196,10 +170,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
-		}
-		
-		@Override public Pair<Document, List<ConversionIssue>> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
-			return super.applyOne2ManyTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
 	}
 
