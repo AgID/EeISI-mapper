@@ -22,7 +22,7 @@ public class CopierTest {
     @Test
     public void shouldCopyAcontentTakenFromAJar() throws IOException {
         File dest = tmp.newFolder("dest");
-        new Copier(dest).copyFromJar("/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/");
+        new Copier(dest).copyFromJar("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/");
         System.out.println(Arrays.asList( dest.listFiles() ));
     }
 

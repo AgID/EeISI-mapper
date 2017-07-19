@@ -14,22 +14,22 @@ public class ConversionIssue implements IConversionIssue {
     private final boolean fatal;
 
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
-    public static IConversionIssue newWarning(Exception e) {
+    public static ConversionIssue newWarning(Exception e) {
         return new ConversionIssue(null, e, false);
     }
 
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
-    public static IConversionIssue newWarning(Exception e, String message) {
+    public static ConversionIssue newWarning(Exception e, String message) {
         return new ConversionIssue(message, e, false);
     }
 
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
-    public static IConversionIssue newError(Exception e) {
+    public static ConversionIssue newError(Exception e) {
         return new ConversionIssue(null, e, true);
     }
 
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
-    public static IConversionIssue newError(Exception e, String message) {
+    public static ConversionIssue newError(Exception e, String message) {
         return new ConversionIssue(message, e, true);
     }
 

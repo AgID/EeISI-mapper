@@ -2,6 +2,8 @@ package it.infocert.eigor.api.io;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +14,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class Copier {
+
+    private final Logger log = LoggerFactory.getLogger(Copier.class);
 
     private final File dest;
 
@@ -38,13 +42,17 @@ public class Copier {
     public void copyFromClasspath(String resourceDir) throws IOException {
         URL resource = getClass().getResource(resourceDir);
         File sourceDir = new File(resource.getFile());
+        log.trace("Copying from filesystem dir '{}' to '{}'.", sourceDir.getAbsolutePath(), dest.getAbsolutePath());
         FileUtils.copyDirectoryToDirectory(sourceDir, dest);
+        log.trace("Copied from filesystem dir '{}' to '{}'.", sourceDir.getAbsolutePath(), dest.getAbsolutePath());
     }
 
     public void copyFromJar(String s) throws IOException {
         URL resource = getClass().getResource(s);
 
         String fullPath = resource.toString();
+
+        log.trace("Copying from jar dir '{}' to '{}'.", fullPath, dest.getAbsolutePath());
 
         // jar:file:/workspace/repos/infocert/eigor/eigor-api/src/test/test-jar/cii-schematron.jar!/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/
 
@@ -85,12 +93,11 @@ public class Copier {
 
                 }
             }
+
+
         }
 
-
-
-
-
+        log.trace("Copied from jar dir '{}' to '{}'.", fullPath, dest.getAbsolutePath());
 
     }
 }

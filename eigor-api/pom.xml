@@ -92,8 +92,9 @@
             <artifactId>yyyyy</artifactId>
             <version>${project.version}</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/test/test-jar/cii-schematron.jar</systemPath>
+            <systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>
         </dependency>
     </dependencies>
+
 
 </project>

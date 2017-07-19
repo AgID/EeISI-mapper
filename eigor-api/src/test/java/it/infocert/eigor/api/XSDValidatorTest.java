@@ -32,7 +32,7 @@ public class XSDValidatorTest {
         // ...a copy of the jar content in the workdir
         File workdir = new File(config.getProperty("workdir"));
         Copier copier = new Copier(workdir);
-        copier.copyFromJar("/converterdata/converter-cii-cen/cii");
+        copier.copyFromJar("/test-converterdata/test-converter-cii-cen/cii");
 
         // ...then the instantiation should complete without failure
         File xsd = new File(workdir.getAbsolutePath() + "/xsd/uncoupled/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd".replace("/", File.separator));
@@ -43,7 +43,7 @@ public class XSDValidatorTest {
     @Test
     public void shouldLoadXSDFromJar() throws IOException, SAXException {
         DefaultResourceLoader drl = new DefaultResourceLoader();
-        Resource resource = drl.getResource("classpath:converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd");
+        Resource resource = drl.getResource("classpath:test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd");
         URI uri = resource.getURI();
 
         // try to use it as a stream.

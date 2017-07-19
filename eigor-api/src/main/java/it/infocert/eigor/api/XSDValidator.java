@@ -1,5 +1,7 @@
 package it.infocert.eigor.api;
 
+import com.helger.commons.xml.ls.LoggingLSResourceResolver;
+import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -31,6 +33,21 @@ public class XSDValidator implements IXMLValidator {
 
     public XSDValidator(Source schemaSource) throws SAXException {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+        // this can probably improve the time spens downloading XSD.
+        // XMLCatalogResolver cr = new XMLCatalogResolver();
+        // Please, read the very interesting http://xmlresolver.org/
+        LSResourceResolver originalResourceResolver = schemaFactory.getResourceResolver();
+        LSResourceResolver newResolver = null;
+        if(originalResourceResolver!=null) {
+            LoggingLSResourceResolver anotherResolver = new LoggingLSResourceResolver();
+            anotherResolver.setWrappedResourceResolver(originalResourceResolver);
+            newResolver = anotherResolver;
+        }else{
+            newResolver = new LoggingLSResourceResolver();
+        }
+        schemaFactory.setResourceResolver(newResolver);
+
         schema = schemaFactory.newSchema( schemaSource );
     }
 

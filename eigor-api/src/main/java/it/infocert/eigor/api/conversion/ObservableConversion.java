@@ -145,7 +145,7 @@ public class ObservableConversion {
         // anyhow, we inform the listeners we completed the transformation
         fireOnTerminatedConverion(ctx);
 
-        return new BinaryConversionResult(conversionResult.getResult(), issues);
+        return new BinaryConversionResult(conversionResult!=null ? conversionResult.getResult() : null, issues);
 
     }
 
