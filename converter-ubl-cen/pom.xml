@@ -87,6 +87,7 @@
                     <execution>
                         <id>cius-xslt-generation</id>
                         <configuration>
+                            <!--multipart- -->
                             <xsltDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
                             <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>

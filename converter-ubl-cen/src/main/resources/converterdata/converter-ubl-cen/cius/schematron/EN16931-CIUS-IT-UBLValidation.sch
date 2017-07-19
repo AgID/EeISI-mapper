@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+            UBL syntax binding to the CIUS ITALIA  
+            Created by Validex Schematron Generator. (2015) Midran Ltd.
+            Timestamp: 2016-06-13 11:56:05 +0200
+     -->
 
 <schema xmlns="http://purl.oclc.org/dsdl/schematron"
         xmlns:cn="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
@@ -12,19 +18,22 @@
     <ns prefix="cn" uri="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"/>
     <ns prefix="ubl" uri="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"/>
     <ns prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/>
-    <phase id="EN16931model_phase">
-        <active pattern="UBL-model"/>
-    </phase>
-    <phase id="codelist_phase">
-        <active pattern="Codesmodel"/>
+
+    <phase id="EN_16931_CIUS">
+        <active pattern="CIUS-IT"/>
     </phase>
     <!-- Abstract CEN BII patterns -->
     <!-- ========================= -->
-    <include href="abstract/EN16931-model.sch"/>
+    <include href="abstract/CIUS-IT-Validation.sch"/>
     <!-- Data Binding parameters -->
     <!-- ======================= -->
-    <include href="UBL/EN16931-UBL-model.sch"/>
+    <include href="CIUS-IT/CIUS-IT-UBL-Validation.sch"/>
     <!-- Code Lists Binding rules -->
     <!-- ======================== -->
-    <include href="codelist/EN16931-UBL-codes.sch"/>
+
+
+
+
+
+
 </schema>
