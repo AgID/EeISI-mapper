@@ -419,7 +419,6 @@
             </plugin>
 
             <!-- Jacoco currently disabled because it seems its reports are not used at all -->
-            <!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -431,9 +430,9 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                 </executions>
             </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>

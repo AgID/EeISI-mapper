@@ -161,11 +161,12 @@ class SchematronXSLTFileUpdater {
                         final XMLWriterSettings xmlWriterSettings = new XMLWriterSettings();
                         xmlWriterSettings.setNamespaceContext(aNSContext).setPutNamespaceContextPrefixesInRoot(true);
 
-                        final OutputStream xsltOS = FileHelper.getOutputStream(xsltFile);
-                        if (xsltOS == null)
-                            throw new IllegalStateException("Failed to open output stream for file " +
-                                    xsltFile.getAbsolutePath());
-                        XMLWriter.writeToStream(xsltProvider.getXSLTDocument(), xsltOS, xmlWriterSettings);
+                        try (final OutputStream xsltOS = FileHelper.getOutputStream(xsltFile)) {
+                            if (xsltOS == null)
+                                throw new IllegalStateException("Failed to open output stream for file " +
+                                        xsltFile.getAbsolutePath());
+                            XMLWriter.writeToStream(xsltProvider.getXSLTDocument(), xsltOS, xmlWriterSettings);
+                        }
                     } else {
                         throw new RuntimeException("Failed to convert '" + schFile.getPath() +
                                 "': the Schematron resource is invalid");
@@ -174,6 +175,7 @@ class SchematronXSLTFileUpdater {
                     throw new RuntimeException("Failed to convert '" + schFile.getPath() + "' to XSLT file '" +
                             xsltFile.getPath() + "'", ex);
                 }
+
             }
         }
     }
