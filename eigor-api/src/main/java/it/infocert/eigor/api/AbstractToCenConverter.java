@@ -124,14 +124,14 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 
                 int index = 1;
                 List<String> xPaths = new ArrayList<>();
-                String sourceKey = key.replace("cen.target", "xml.expression."+index);
+                String sourceKey = key.replace("cen.target", "xml.source."+index);
                 while (manyToOne.containsKey(sourceKey)){
                     if (existsValueForKeyInMany2OneMultiMap(manyToOne, sourceKey, errors)) {
                         xPaths.add(manyToOne.get(sourceKey).iterator().next());
 
                     }
                     index++;
-                    sourceKey = key.replace(".target", ".source."+index);
+                    sourceKey = key.replace("cen.target", "xml.source."+index);
                 }
 
                 GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);

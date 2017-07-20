@@ -343,6 +343,7 @@
 			<ram:InvoiceCurrencyCode>DKK</ram:InvoiceCurrencyCode>
 			<ram:PayeeTradeParty>
 				<ram:ID>DK16356608</ram:ID>
+				<ram:GlobalID>123456</ram:GlobalID>
 				<ram:Name>Dagobert Duck</ram:Name>
 				<ram:SpecifiedLegalOrganization>
 					<ram:ID>DK16356608</ram:ID>
