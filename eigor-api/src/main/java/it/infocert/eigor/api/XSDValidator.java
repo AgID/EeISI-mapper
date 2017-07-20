@@ -1,10 +1,10 @@
 package it.infocert.eigor.api;
 
-import com.helger.commons.xml.ls.LoggingLSResourceResolver;
+import it.infocert.eigor.api.xml.CacheResourceValidator;
+import it.infocert.eigor.api.xml.LoggingResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
-import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -40,7 +40,11 @@ public class XSDValidator implements IXMLValidator {
         // - we have a CacheResourceValidator under development
         // - there is http://xmlresolver.org/ but it breaks with a NPE with the schemas used in Eigor
         // - there is LoggingLSResourceResolver, useful for logging the requested schemas
-        LSResourceResolver newResolver = new LoggingLSResourceResolver();
+
+        CacheResourceValidator cacheResourceValidator = new CacheResourceValidator(new File("C:\\Users\\danidemi\\tmp\\eigor\\xsdcache"));
+
+        LoggingResourceResolver newResolver = new LoggingResourceResolver();
+        newResolver.setWrappedResourceResolver(cacheResourceValidator);
         schemaFactory.setResourceResolver(newResolver);
     }
 
