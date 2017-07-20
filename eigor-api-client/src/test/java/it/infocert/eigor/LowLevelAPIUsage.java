@@ -13,6 +13,7 @@ import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -66,18 +66,39 @@ public class LowLevelAPIUsage {
         if(!dest.exists()) dest.mkdirs();
         {
             String pathSegment = "converter-cen-fattpa";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
         {
             String pathSegment = "converter-cii-cen";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
         {
             String pathSegment = "converter-ubl-cen";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
 
         // set up the rule repository
@@ -121,14 +142,14 @@ public class LowLevelAPIUsage {
         if(outcome.hasResult()){
             sb.append(format("Result follows:\n" + new String(outcome.getResult())));
         }else{
-            sb.append(format("Result is not available, please check the errors."));
+            sb.append(format("Result is not available, please check the errors.\n"));
         }
 
         if(outcome.hasErrors()){
             List<IConversionIssue> issues = outcome.getIssues();
             for (int i=0; i<issues.size(); i++) {
                 IConversionIssue iConversionIssue = issues.get(i);
-                sb.append( format( "%d)\n\tmessage: %s\n\ttype:    %s",
+                sb.append( format( "%d)\n\tmessage: %s\n\ttype:    %s\n",
                         i+1,
                         iConversionIssue.getMessage(),
                         iConversionIssue.isError() ? "ERROR" : "warn" ) );
@@ -142,28 +163,28 @@ public class LowLevelAPIUsage {
     @Test public void lowLevelApiUsageMultipleConversion() throws IOException, ConfigurationException, InterruptedException {
 
         List<String> ublInvoices = Arrays.asList(
-"/examples/ubl/ubl-tc434-example2-ita-cius-compliant.xml",
-"/examples/ubl/ubl-tc434-example9.1.xml",
-"/examples/ubl/ubl-tc434-example6.xml",
-"/examples/ubl/UBL-Invoice-2.1-Example-KO.xml",
-"/examples/ubl/ubl-tc434-example4.xml",
-"/examples/ubl/UBL-Invoice-2.1-Example-Trivial.xml",
-"/examples/ubl/ubl-tc434-example9-ita-cius-compliant.xml",
-"/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml",
-"/examples/ubl/ubl-tc434-example7.xml",
-"/examples/ubl/ubl-oasis.xml",
-"/examples/ubl/UBL-Invoice-2.1-Example-ita-cius-compliant.xml",
-"/examples/ubl/ubl-tc434-example2.xml",
-"/examples/ubl/ubl-tc434-example5.xml",
-"/examples/ubl/ubl-tc434-example9.xml",
-"/examples/ubl/ubl-tc434-example9.1-ita-cius-compliant.xml",
-"/examples/ubl/ubl-tc434-example8-ita-cius-compliant.xml",
-"/examples/ubl/ubl-tc434-example8.xml",
-"/examples/ubl/UBL-Invoice-2.1-Example.xml",
-"/examples/ubl/ubl-tc434-example7-ita-cius-compliant.xml",
-"/examples/ubl/ubl-plain.xml",
-"/examples/ubl/ubl-tc434-example3.xml",
-"/examples/ubl/ubl-tc434-example1.xml"
+            "/examples/ubl/ubl-tc434-example2-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-tc434-example9.1.xml",
+            "/examples/ubl/ubl-tc434-example6.xml",
+            "/examples/ubl/UBL-Invoice-2.1-Example-KO.xml",
+            "/examples/ubl/ubl-tc434-example4.xml",
+            "/examples/ubl/UBL-Invoice-2.1-Example-Trivial.xml",
+            "/examples/ubl/ubl-tc434-example9-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml",
+            "/examples/ubl/ubl-tc434-example7.xml",
+            "/examples/ubl/ubl-oasis.xml",
+            "/examples/ubl/UBL-Invoice-2.1-Example-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-tc434-example2.xml",
+            "/examples/ubl/ubl-tc434-example5.xml",
+            "/examples/ubl/ubl-tc434-example9.xml",
+            "/examples/ubl/ubl-tc434-example9.1-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-tc434-example8-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-tc434-example8.xml",
+            "/examples/ubl/UBL-Invoice-2.1-Example.xml",
+            "/examples/ubl/ubl-tc434-example7-ita-cius-compliant.xml",
+            "/examples/ubl/ubl-plain.xml",
+            "/examples/ubl/ubl-tc434-example3.xml",
+            "/examples/ubl/ubl-tc434-example1.xml"
         );
 
         // needed support classes
@@ -177,18 +198,39 @@ public class LowLevelAPIUsage {
         if(!dest.exists()) dest.mkdirs();
         {
             String pathSegment = "converter-cen-fattpa";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
         {
             String pathSegment = "converter-cii-cen";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
         {
             String pathSegment = "converter-ubl-cen";
-            Copier copier = new Copier( dest );
-            copier.copyFrom("/converterdata/" + pathSegment);
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
         }
 
         // set up the rule repository
@@ -217,7 +259,7 @@ public class LowLevelAPIUsage {
         final ToCenConversion toCen = conversionRepository.findConversionToCen("ubl");
         final FromCenConversion fromCen = conversionRepository.findConversionFromCen("fatturapa");
 
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ExecutorService executor = Executors.newFixedThreadPool(1);
 
         for (final String ublInvoice : ublInvoices) {
 
@@ -226,39 +268,45 @@ public class LowLevelAPIUsage {
                 public void run() {
 
                     long elapsed = System.currentTimeMillis();
-
-                    // this is, finally, the actual conversion
-                    InputStream invoiceStream = getClass().getResourceAsStream(ublInvoice);
-                    assertThat( "Could not be null.", invoiceStream, notNullValue() );
-
-                    BinaryConversionResult outcome = new ObservableConversion(
-                            ruleRepository,
-                            toCen,
-                            fromCen,
-                            invoiceStream,
-                            false,
-                            "invoice",
-                            Arrays.asList(callback)).conversion();
-
                     StringBuffer sb = new StringBuffer();
-                    if(outcome.hasResult()){
-                        sb.append(format("Result follows:\n" + new String(outcome.getResult())));
-                    }else{
-                        sb.append(format("Result is not available, please check the errors."));
-                    }
 
-                    if(outcome.hasErrors()){
-                        List<IConversionIssue> issues = outcome.getIssues();
-                        for (int i=0; i<issues.size(); i++) {
-                            IConversionIssue iConversionIssue = issues.get(i);
-                            sb.append( format( "%d)\n\tmessage: %s\n\ttype:    %s",
-                                    i+1,
-                                    iConversionIssue.getMessage(),
-                                    iConversionIssue.isError() ? "ERROR" : "warn" ) );
+                    try {
+                        // this is, finally, the actual conversion
+                        InputStream invoiceStream = getClass().getResourceAsStream(ublInvoice);
+                        assertThat( "Could not be null.", invoiceStream, notNullValue() );
+
+                        BinaryConversionResult outcome = new ObservableConversion(
+                                ruleRepository,
+                                toCen,
+                                fromCen,
+                                invoiceStream,
+                                false,
+                                "invoice",
+                                Arrays.asList(callback)).conversion();
+
+                        sb = new StringBuffer();
+                        if(outcome.hasResult()){
+                            sb.append(format("Result follows:\n" + new String(outcome.getResult())));
+                        }else{
+                            sb.append(format("Result is not available, please check the errors.\n"));
                         }
-                    }
 
-                    elapsed = System.currentTimeMillis() - elapsed;
+                        if(outcome.hasErrors()){
+                            List<IConversionIssue> issues = outcome.getIssues();
+                            for (int i=0; i<issues.size(); i++) {
+                                IConversionIssue iConversionIssue = issues.get(i);
+                                sb.append( format( "%d)\n\tmessage: %s\n\ttype:    %s\n",
+                                        i+1,
+                                        iConversionIssue.getMessage(),
+                                        iConversionIssue.isError() ? "ERROR" : "warn" ) );
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        log.error("An error occurred.", e);
+                    } finally {
+                        elapsed = System.currentTimeMillis() - elapsed;
+                    }
 
                     log.info(sb.toString());
                     log.info("Conversion of {} completed in {}ms", ublInvoice, elapsed);

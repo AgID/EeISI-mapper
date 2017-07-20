@@ -1,6 +1,9 @@
 package it.infocert.eigor.api;
 
 import com.helger.commons.xml.ls.LoggingLSResourceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -19,9 +22,27 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class XSDValidator implements IXMLValidator {
 
     private Schema schema;
+    private static final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    private static final Logger log = LoggerFactory.getLogger(XSDValidator.class);
+    static {
+
+        // TODO: caching schemas
+        // this can probably improve the time spent downloading XSD.
+        // XMLCatalogResolver cr = new XMLCatalogResolver();
+        // Please, read the very interesting http://xmlresolver.org/
+        //
+        // - in schemaFactory you can set a resource resolver that has the responsibility to download the schemas
+        // - the default resource resolver is null.
+        // - we have a CacheResourceValidator under development
+        // - there is http://xmlresolver.org/ but it breaks with a NPE with the schemas used in Eigor
+        // - there is LoggingLSResourceResolver, useful for logging the requested schemas
+        LSResourceResolver newResolver = new LoggingLSResourceResolver();
+        schemaFactory.setResourceResolver(newResolver);
+    }
 
     public XSDValidator(File schemaFile) throws SAXException {
         this(new StreamSource(schemaFile));
@@ -32,23 +53,13 @@ public class XSDValidator implements IXMLValidator {
     }
 
     public XSDValidator(Source schemaSource) throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-        // this can probably improve the time spens downloading XSD.
-        // XMLCatalogResolver cr = new XMLCatalogResolver();
-        // Please, read the very interesting http://xmlresolver.org/
-        LSResourceResolver originalResourceResolver = schemaFactory.getResourceResolver();
-        LSResourceResolver newResolver = null;
-        if(originalResourceResolver!=null) {
-            LoggingLSResourceResolver anotherResolver = new LoggingLSResourceResolver();
-            anotherResolver.setWrappedResourceResolver(originalResourceResolver);
-            newResolver = anotherResolver;
-        }else{
-            newResolver = new LoggingLSResourceResolver();
+        long delta = System.currentTimeMillis();
+        try {
+            schema = schemaFactory.newSchema(schemaSource);
+        }finally {
+            delta = System.currentTimeMillis() - delta;
+            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
         }
-        schemaFactory.setResourceResolver(newResolver);
-
-        schema = schemaFactory.newSchema( schemaSource );
     }
 
     @Override
