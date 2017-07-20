@@ -24,6 +24,12 @@ import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +81,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
-    @Override public void configure() throws ConfigurationException {
+    @Override
+    public void configure() throws ConfigurationException {
         super.configure();
 
         String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
@@ -88,7 +95,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         } finally {
-            if(xsdStream!=null) {
+            if (xsdStream != null) {
                 try {
                     xsdStream.close();
                 } catch (IOException e) {
@@ -149,6 +156,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             if (jaxbContext != null) {
                 xmlOutput = new StringWriter();
                 Marshaller marshaller = jaxbContext.createMarshaller();
+                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(fatturaElettronicaXML, xmlOutput);
             }
         } catch (JAXBException e) {
@@ -158,6 +166,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         if (xmlOutput == null) {
             return result;
         } else {
+
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<ConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
@@ -201,10 +210,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     }
 
     private void createRootNode(Document doc) {
-        Element root = new Element(ROOT_TAG, Namespace.getNamespace("nx" , "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("ds" , "http://www.w3.org/2000/09/xmldsig#"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("xsi" , "http://www.w3.org/2001/XMLSchema-instance"));
-        root.setAttribute("versione" , "FPA12");
+        Element root = new Element(ROOT_TAG, Namespace.getNamespace("nx", "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("ds", "http://www.w3.org/2000/09/xmldsig#"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+        root.setAttribute("versione", "FPA12");
         root.addContent(new Element("FatturaElettronicaHeader"));
         root.addContent(new Element("FatturaElettronicaBody"));
         doc.setRootElement(root);

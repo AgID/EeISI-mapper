@@ -7,6 +7,7 @@ import java.util.Objects;
 */
 public enum ErrorCodes {
 
+    GENERIC_ERROR("0", "00", "0"),
     TO_CEN_SCHEMATRON_ERROR("1", "10", "99"),
     TO_CEN_XSD_ERROR("1", "10", "77");
 

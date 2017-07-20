@@ -125,7 +125,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     private String toCsvFileContent(List<ConversionIssue> errors) {
-        StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
+        StringBuilder toCenErrorsCsv = new StringBuilder("Error,Reason\n");
         for (ConversionIssue e : errors) {
             toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
         }
