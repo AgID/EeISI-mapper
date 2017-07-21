@@ -16,7 +16,6 @@
  */
 package it.infocert.eigor.api.xml;
 
-import com.helger.commons.xml.ls.AbstractLSResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;

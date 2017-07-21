@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: API</name>
+    <name>Eigor :: API (${project.artifactId})</name>
     <description>The Eigor API allows to programmatically convert invoices between formats.</description>
     <artifactId>eigor-api</artifactId>
 
