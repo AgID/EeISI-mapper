@@ -63,6 +63,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 			);
 
 	public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
+	public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.many-to-one";
 
 	private XSDValidator xsdValidator;
 	private SchematronValidator schematronValidator;
@@ -135,7 +136,10 @@ public class Cii2Cen extends AbstractToCenConverter {
 			document = getDocument(clonedInputStream);
 			BG0000Invoice invoice = new BG0000Invoice();
 			result = new ConversionResult<>(errors, invoice);
+
 			result = applyOne2OneTransformationsBasedOnMapping(document, errors);
+			result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
+
 		} catch (JDOMException | IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -159,6 +163,11 @@ public class Cii2Cen extends AbstractToCenConverter {
 	@Override
 	protected String getOne2OneMappingPath() {
 		return configuration.getMandatoryString(ONE2ONE_MAPPING_PATH);
+	}
+
+	@Override
+	protected String getMany2OneMappingPath() {
+		return configuration.getMandatoryString(MANY2ONE_MAPPING_PATH);
 	}
 
 	@Override public String getName() {

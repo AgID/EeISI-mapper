@@ -24,6 +24,7 @@ public class Cii2CenTest {
 	public void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
+				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
 		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
