@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
@@ -37,7 +38,13 @@ public class LineConverterTest {
 
     @Test
     public void shouldConvertWithError() throws Exception {
-        Pair<FatturaElettronicaBodyType, List<ConversionIssue>> converted = new LineConverter(mock(ConversionRegistry.class)).convert(invoice, null, Lists.<ConversionIssue>newArrayList());
+        Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted =
+                new LineConverter(
+                        mock(ConversionRegistry.class)
+                ).convert(
+                        invoice,
+                        null,
+                        Lists.<IConversionIssue>newArrayList());
         assertNull(converted.getLeft());
         assertFalse(converted.getRight().isEmpty());
     }
@@ -96,7 +103,7 @@ public class LineConverterTest {
 
     }
 
-    private Pair<FatturaElettronicaBodyType, List<ConversionIssue>> convert() {
+    private Pair<FatturaElettronicaBodyType, List<IConversionIssue>> convert() {
         return new LineConverter(
                 new ConversionRegistry(
                         new CountryNameToIso31661CountryCodeConverter(),
@@ -122,7 +129,7 @@ public class LineConverterTest {
                         new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
                         new Untdid7161SpecialServicesCodesToItalianCodeStringConverter()
                 )
-        ).convert(invoice, body, Lists.<ConversionIssue>newArrayList());
+        ).convert(invoice, body, Lists.<IConversionIssue>newArrayList());
     }
 
     private void populateWithBG20() {

@@ -148,7 +148,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		InputStream clonedInputStream = new ByteArrayInputStream(bytes);
 		Document document = getDocument(clonedInputStream);
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
 		return sut.applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
 	}
@@ -169,7 +169,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 			return super.applyOne2OneTransformationsBasedOnMapping(document, errors);
 		}
 
-		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
 	}
