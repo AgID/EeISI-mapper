@@ -20,134 +20,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Examples
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:un:unece:uncefact:data:standard:QualifiedDataType:100,
- PublicId=null,
- SystemId=CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd,
- BaseURI=file:/C:/Users/danidemi/AppData/Local/Temp/eigor/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100,
- PublicId=null,
- SystemId=CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd,
- BaseURI=file:/C:/Users/danidemi/AppData/Local/Temp/eigor/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100,
- PublicId=null,
- SystemId=CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd,
- BaseURI=file:/C:/Users/danidemi/AppData/Local/Temp/eigor/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2,
- PublicId=null,
- SystemId=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonAggregateComponents-2.1.xsd,
- BaseURI=null
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2,
- PublicId=null,
- SystemId=UBL-CommonBasicComponents-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonAggregateComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2,
- PublicId=null,
- SystemId=UBL-QualifiedDataTypes-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonBasicComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2,
- PublicId=null,
- SystemId=UBL-UnqualifiedDataTypes-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-QualifiedDataTypes-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2,
- PublicId=null,
- SystemId=CCTS_CCT_SchemaModule-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-UnqualifiedDataTypes-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2,
- PublicId=null,
- SystemId=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonExtensionComponents-2.1.xsd,
- BaseURI=null
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2,
- PublicId=null,
- SystemId=UBL-ExtensionContentDataType-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonExtensionComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2,
- PublicId=null,
- SystemId=UBL-CommonSignatureComponents-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-ExtensionContentDataType-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:SignatureAggregateComponents-2,
- PublicId=null,
- SystemId=UBL-SignatureAggregateComponents-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-CommonSignatureComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=urn:oasis:names:specification:ubl:schema:xsd:SignatureBasicComponents-2,
- PublicId=null,
- SystemId=UBL-SignatureBasicComponents-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-SignatureAggregateComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=http://www.w3.org/2000/09/xmldsig#,
- PublicId=null,
- SystemId=UBL-xmldsig-core-schema-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-SignatureAggregateComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=http://uri.etsi.org/01903/v1.3.2#,
- PublicId=null,
- SystemId=UBL-XAdESv132-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-SignatureAggregateComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=http://uri.etsi.org/01903/v1.4.1#,
- PublicId=null,
- SystemId=UBL-XAdESv141-2.1.xsd,
- BaseURI=http://docs.oasis-open.org/ubl/prd3-UBL-2.1/xsd/common/UBL-SignatureAggregateComponents-2.1.xsd
-
- Type=http://www.w3.org/2001/XMLSchema,
- NamespaceURI=http://www.w3.org/2000/09/xmldsig#,
- PublicId=null,
- SystemId=http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd,
- BaseURI=null
-
- Type=http://www.w3.org/TR/REC-xml,
- NamespaceURI=null,
- PublicId=-//W3C//DTD XMLSchema 200102//EN,
- SystemId=http://www.w3.org/2001/XMLSchema.dtd,
- BaseURI=http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd
-
- Type=http://www.w3.org/TR/REC-xml,
- NamespaceURI=null,
- PublicId=datatypes,
- SystemId=datatypes.dtd,
- BaseURI=http://www.w3.org/2001/XMLSchema.dtd
-
- */
-public class CacheResourceValidator implements LSResourceResolver
+ * Retrieve XSDs anc cache them to the file system for quicker later retrieval.
+ * <p>
+ * <pre>
+ *     CachedResourceResolver cachedResourceResolver = new CachedResourceResolver(new File("cachefolder"));
+ *     LoggingResourceResolver newResolver = new LoggingResourceResolver();
+ *     newResolver.setWrappedResourceResolver(cachedResourceResolver);
+ *     schemaFactoryToUse().setResourceResolver(newResolver);
+ * </pre>
+ * </p>
+*/
+public class CachedResourceResolver implements LSResourceResolver
 {
 
     private final File folder;
-    private Logger log = LoggerFactory.getLogger(CacheResourceValidator.class);
+    private Logger log = LoggerFactory.getLogger(CachedResourceResolver.class);
 
     /** Internal debug flag for console debugging */
     protected static final boolean DEBUG_RESOLVE = false;
 
     private LSResourceResolver m_aWrappedResourceResolver;
 
-    public CacheResourceValidator(File folder)
+    public CachedResourceResolver(File folder)
     {
         if(folder == null || !folder.exists() || !folder.isDirectory()) throw new IllegalArgumentException("Folder '"+folder.getAbsolutePath()+"' does not exist.");
         this.folder = folder;

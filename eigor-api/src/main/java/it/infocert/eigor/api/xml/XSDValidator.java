@@ -1,7 +1,8 @@
-package it.infocert.eigor.api;
+package it.infocert.eigor.api.xml;
 
-import it.infocert.eigor.api.xml.CacheResourceValidator;
-import it.infocert.eigor.api.xml.LoggingResourceResolver;
+import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.IXMLValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
@@ -26,40 +27,52 @@ import java.util.List;
 public class XSDValidator implements IXMLValidator {
 
     private Schema schema;
-    private static final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    private static final SchemaFactory DEFAULT_SCHEMA_FACTORY;
     private static final Logger log = LoggerFactory.getLogger(XSDValidator.class);
+    private final SchemaFactory overriddenSchemaFactory;
+
     static {
+        DEFAULT_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        DEFAULT_SCHEMA_FACTORY.setResourceResolver(new LoggingResourceResolver());
+    }
 
-        // TODO: caching schemas
-        // this can probably improve the time spent downloading XSD.
-        // XMLCatalogResolver cr = new XMLCatalogResolver();
-        // Please, read the very interesting http://xmlresolver.org/
-        //
-        // - in schemaFactory you can set a resource resolver that has the responsibility to download the schemas
-        // - the default resource resolver is null.
-        // - we have a CacheResourceValidator under development
-        // - there is http://xmlresolver.org/ but it breaks with a NPE with the schemas used in Eigor
-        // - there is LoggingLSResourceResolver, useful for logging the requested schemas
+    public XSDValidator(File schemaFile, SchemaFactory schemaFactory) throws SAXException {
+        this(new StreamSource(schemaFile), schemaFactory);
+    }
 
-        CacheResourceValidator cacheResourceValidator = new CacheResourceValidator(new File("C:\\Users\\danidemi\\tmp\\eigor\\xsdcache"));
+    public XSDValidator(InputStream schemaFile, SchemaFactory schemaFactory) throws SAXException {
+        this(new StreamSource(schemaFile), schemaFactory);
+    }
 
-        LoggingResourceResolver newResolver = new LoggingResourceResolver();
-        newResolver.setWrappedResourceResolver(cacheResourceValidator);
-        schemaFactory.setResourceResolver(newResolver);
+    public XSDValidator(Source schemaSource, SchemaFactory schemaFactory) throws SAXException {
+        overriddenSchemaFactory = null;
+        long delta = System.currentTimeMillis();
+        try {
+            schema = schemaFactoryToUse().newSchema(schemaSource);
+        }finally {
+            delta = System.currentTimeMillis() - delta;
+            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
+        }
     }
 
     public XSDValidator(File schemaFile) throws SAXException {
         this(new StreamSource(schemaFile));
     }
 
+    /**
+     * Loads an XSD from an {@link InputStream}.
+     * Please, keep in mind that you cannot load XSDs that import other XSD as an inputstream because the parser would not be
+     * able to resolve the imports, since the inputstream does not carry any info about the location it has been loaded from.
+     */
     public XSDValidator(InputStream schemaFile) throws SAXException {
         this(new StreamSource(schemaFile));
     }
 
     public XSDValidator(Source schemaSource) throws SAXException {
+        overriddenSchemaFactory = null;
         long delta = System.currentTimeMillis();
         try {
-            schema = schemaFactory.newSchema(schemaSource);
+            schema = schemaFactoryToUse().newSchema(schemaSource);
         }finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
@@ -99,5 +112,9 @@ public class XSDValidator implements IXMLValidator {
             errors.add(ConversionIssue.newError(e, "XSD validation failed!"));
         }
         return errors;
+    }
+
+    private SchemaFactory schemaFactoryToUse() {
+        return this.overriddenSchemaFactory!=null ? overriddenSchemaFactory : DEFAULT_SCHEMA_FACTORY;
     }
 }

@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.XSDValidator;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import org.junit.Before;
 import org.junit.Test;

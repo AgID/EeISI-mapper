@@ -14,7 +14,7 @@ import java.io.IOException;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-public class CacheResourceValidatorTest {
+public class CachedResourceResolverTest {
 
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -235,7 +235,7 @@ public class CacheResourceValidatorTest {
     private File checkThatNoCacheIsUsed(String type, String namespaceURI, String publicId, String systemId, String baseUri) throws IOException {
         // given
         File cacheFolder = tmp.newFolder();
-        CacheResourceValidator sut = new CacheResourceValidator(cacheFolder);
+        CachedResourceResolver sut = new CachedResourceResolver(cacheFolder);
 
         // when
         LSInput lsInput1 = sut.resolveResource(type, namespaceURI, publicId, systemId, baseUri);
@@ -250,7 +250,7 @@ public class CacheResourceValidatorTest {
     private File checkThatCacheIsQuicker(String type, String namespaceURI, String publicId, String systemId, String baseUri) throws IOException {
         // given
         File cacheFolder = tmp.newFolder();
-        CacheResourceValidator sut = new CacheResourceValidator(cacheFolder);
+        CachedResourceResolver sut = new CachedResourceResolver(cacheFolder);
 
         // when
         long deltaWithoutCache = System.currentTimeMillis();

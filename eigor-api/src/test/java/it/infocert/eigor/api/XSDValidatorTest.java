@@ -2,6 +2,7 @@ package it.infocert.eigor.api;
 
 import it.infocert.eigor.api.configuration.PropertiesWithReplacement;
 import it.infocert.eigor.api.io.Copier;
+import it.infocert.eigor.api.xml.XSDValidator;
 import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
