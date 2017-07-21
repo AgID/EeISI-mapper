@@ -71,6 +71,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
         for (BG0025InvoiceLine invoiceLine : invoiceLineList) {
             DettaglioLineeType dettaglioLinee = factory.createDettaglioLineeType();
+            datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             dettaglioLinee.setNumeroLinea(Integer.parseInt(invoiceLine.getBT0126InvoiceLineIdentifier().get(0).getValue()));
 
             if (!invoiceLine.getBT0127InvoiceLineNote().isEmpty()) {
@@ -176,7 +177,6 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
                 logBt(131, "DettaglioLinee.PrezzoTotale");
                 dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0).getValue()));
                 logBt(152, "DettaglioLinee.AliquotaIVA");
-                datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             } catch (Exception e) {
                 errors.add(ConversionIssue.newError(e, IConstants.ERROR_LINE_PROCESSING));
                 log.error(e.getMessage());
@@ -784,11 +784,11 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     @Override
     public void computeMultipleCenElements2FpaField() {
-        transformInvoiceLinesWithItemPriceBaseQuantity(); // This must be first, order is important
-        calculateDiscount();
-        addDiscountLine();
-        calculateCorrectionForTotalAmount();
-        addCorrectionLine();
+//        transformInvoiceLinesWithItemPriceBaseQuantity(); // This must be first, order is important
+//        calculateDiscount();
+//        addDiscountLine();
+//        calculateCorrectionForTotalAmount();
+//        addCorrectionLine();
         addAttachment();
     }
 
@@ -881,7 +881,7 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
             BG0025InvoiceLine invoiceLine = invoiceLineList.get(i);
 
             if (fatturaElettronicaBody.getDatiBeniServizi() == null ||
-                    fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee() == null) continue;
+                    fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee() == null) break;
 
             DettaglioLineeType dettaglioLinee = fatturaElettronicaBody
                     .getDatiBeniServizi()

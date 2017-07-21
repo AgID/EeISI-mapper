@@ -7,6 +7,8 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid7161SpecialServicesCodesToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
@@ -62,7 +64,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new UnitOfMeasureCodesToStringConverter(),
             new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
             new Untdid4461PaymentMeansCodeToItalianCodeString(),
-            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter()
+            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
+            new Untdid7161SpecialServicesCodesToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
@@ -131,7 +134,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             BodyFatturaConverter bfc = new BodyFatturaConverter(jaxbFattura.getFatturaElettronicaBody().remove(0), factory, invoice, errors);
             bfc.setConversionRegistry(conversionRegistry);
             bfc.computeMultipleCenElements2FpaField();
-            jaxbFattura.getFatturaElettronicaBody().add(bfc.getFatturaElettronicaBody());
+
+            FatturaElettronicaBodyType fatturaElettronicaBody = bfc.getFatturaElettronicaBody();
+            LineConverter lineConverter = new LineConverter(conversionRegistry);
+            Pair<FatturaElettronicaBodyType, List<ConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
+            jaxbFattura.getFatturaElettronicaBody().add(converted.getLeft());
         }
 
         JAXBElement<FatturaElettronicaType> fatturaElettronicaXML = factory.createFatturaElettronica(jaxbFattura);

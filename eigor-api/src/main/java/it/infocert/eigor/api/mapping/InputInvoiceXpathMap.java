@@ -20,13 +20,17 @@ public class InputInvoiceXpathMap {
     private Multimap<String, String> mapping;
     private final InvoiceMappingValidator validator;
 
-    /** Creates an {@link InputInvoiceXpathMap} that validates the loaded file. */
+    /**
+     * Creates an {@link InputInvoiceXpathMap} that validates the loaded file.
+     */
     public InputInvoiceXpathMap(InvoiceMappingValidator validator) {
         this.validator = validator;
         mapping = null;
     }
 
-    /** Creates an {@link InputInvoiceXpathMap} that does not validates the loaded file. */
+    /**
+     * Creates an {@link InputInvoiceXpathMap} that does not validates the loaded file.
+     */
     public InputInvoiceXpathMap() {
         this.validator = null;
         mapping = null;
@@ -37,24 +41,22 @@ public class InputInvoiceXpathMap {
      *
      * @return the mapping map
      */
-    public Multimap<String,String> getMapping(Resource r) {
+    public Multimap<String, String> getMapping(Resource r) {
 
-        InputStream inputStream = null;
         try {
-            inputStream = r.getInputStream();
+            InputStream inputStream = r.getInputStream();
+            return getMapping(inputStream);
         } catch (IOException e) {
             throw new RuntimeException("Unable to load mapping file from resource: '" + r + "'.");
         }
 
-        return getMapping(inputStream);
     }
 
     public Multimap<String, String> getMapping(InputStream inputStream) {
         try {
             mapping = loadMapFromInputStream(inputStream);
         } catch (SyntaxErrorInMappingFileException e) {
-            e.printStackTrace();
-            log.error("Validation error '{}' for inputStream ",e.getMessage(), e);
+            log.error("Validation error '{}' for inputStream ", e.getMessage(), e);
         }
         return mapping;
     }
@@ -85,11 +87,11 @@ public class InputInvoiceXpathMap {
                 log.warn("Unable to load mapping from file '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
             } catch (SyntaxErrorInMappingFileException e) {
-                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
+                log.error("Validation error '{}' for resource '{}'", e.getMessage(), path, e);
             }
         }
 
-        if(mapping == null) {
+        if (mapping == null) {
             // try #2, from classpath with path not changed
             try {
                 InputStream resourceAsStream = this.getClass().getResourceAsStream(path);
@@ -101,11 +103,11 @@ public class InputInvoiceXpathMap {
                 log.warn("Unable to load mapping from resource '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
             } catch (SyntaxErrorInMappingFileException e) {
-                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
+                log.error("Validation error '{}' for resource '{}'", e.getMessage(), path, e);
             }
         }
 
-        if(mapping == null) {
+        if (mapping == null) {
             // try #3, from classpath with path with "/" prepended
             try {
                 InputStream resourceAsStream = this.getClass().getResourceAsStream("/" + path);
@@ -116,12 +118,12 @@ public class InputInvoiceXpathMap {
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from resource '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);
-           } catch (SyntaxErrorInMappingFileException e) {
-                log.error("Validation error '{}' for resource '{}'",e.getMessage(), path, e);
+            } catch (SyntaxErrorInMappingFileException e) {
+                log.error("Validation error '{}' for resource '{}'", e.getMessage(), path, e);
             }
         }
 
-        if(mapping==null){
+        if (mapping == null) {
             throw new RuntimeException("Unable to load mapping file from resource: '" + path + "'.");
         }
 

@@ -1,9 +1,9 @@
-package it.infocert.eigor.api.mapping.toCen;
+package it.infocert.eigor.api.mapping.fromCen;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
-import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
+import it.infocert.eigor.api.mapping.fromCen.OneCen2ManyXpathMappingValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
