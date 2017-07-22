@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.utils.Pair;
@@ -37,12 +38,12 @@ public class GenericOneToManyTransformer extends GenericTransformer{
     }
 
     @Override
-    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         throw new RuntimeException("Not yet implemented!");
     }
 
     @Override
-    public void transformCenToXml(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformCenToXml(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + sourcePath + " - " + targetPaths + ") ";
         log.trace(logPrefix + "resolving");
 
@@ -65,7 +66,7 @@ public class GenericOneToManyTransformer extends GenericTransformer{
         }
     }
 
-    private void splitCenValueAndApplyToXmlFields(String converted, Document document, List<ConversionIssue> errors) {
+    private void splitCenValueAndApplyToXmlFields(String converted, Document document, List<IConversionIssue> errors) {
         for (int i = 0; i< targetPaths.size(); i++){
 
             List<Element> elements = getAllXmlElements(targetPaths.get(i), document, 1, sourcePath, errors);

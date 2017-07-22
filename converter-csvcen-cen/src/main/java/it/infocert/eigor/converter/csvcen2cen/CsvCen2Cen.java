@@ -3,10 +3,7 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -66,7 +63,7 @@ public class CsvCen2Cen implements ToCenConversion {
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
-        List<ConversionIssue> errors = new ArrayList<>();
+        List<IConversionIssue> errors = new ArrayList<>();
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 

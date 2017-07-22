@@ -4,6 +4,7 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -42,7 +43,7 @@ public abstract class GenericTransformer {
         return item;
     }
 
-    protected Object getBtValue(BTBG btbg, List<ConversionIssue> errors) {
+    protected Object getBtValue(BTBG btbg, List<IConversionIssue> errors) {
         if (btbg instanceof AbstractBT) {
             return ((AbstractBT) btbg).getValue();
         } else {
@@ -51,7 +52,7 @@ public abstract class GenericTransformer {
         }
     }
 
-    protected Object addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+    protected Object addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<IConversionIssue> errors) {
 
         final Object[] constructorParam = new Object[]{null};
 
@@ -144,13 +145,13 @@ public abstract class GenericTransformer {
         return bts;
     }
 
-    protected List<Element> getAllXmlElements (String xPath, Document document, int btsSize, String cenPath, List<ConversionIssue> errors) {
+    protected List<Element> getAllXmlElements (String xPath, Document document, int btsSize, String cenPath, List<IConversionIssue> errors) {
         ArrayList<String> xmlSteps = Lists.newArrayList(xPath.substring(1).split("/"));
         String remove //keep it that way, there were some access races without it that still need to be investigated
                 = xmlSteps.remove(0);
         List<Element> elements = createXmlPathRecursively(document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
         if (btsSize > elements.size()) {
-            ConversionIssue e = ConversionIssue.newError(
+            IConversionIssue e = ConversionIssue.newError(
                     new IllegalArgumentException("BTs can not be more than XML elements"),
                     String.format("Found %d %s but only %d %s XML elements were created. " +
                                     "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
@@ -168,7 +169,7 @@ public abstract class GenericTransformer {
         return elements;
     }
 
-    protected List<BTBG> getAllBTs(String cenPath, BG0000Invoice invoice, final List<ConversionIssue> errors) {
+    protected List<BTBG> getAllBTs(String cenPath, BG0000Invoice invoice, final List<IConversionIssue> errors) {
         String[] cenSteps = cenPath.substring(1).split("/");
         List<BTBG> bts;
         try {
@@ -233,6 +234,6 @@ public abstract class GenericTransformer {
         return leafs;
     }
 
-    public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
-    public abstract void transformCenToXml(BG0000Invoice invoice, Document document, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
+    public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
+    public abstract void transformCenToXml(BG0000Invoice invoice, Document document, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
 }

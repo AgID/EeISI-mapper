@@ -6,6 +6,7 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
+import it.infocert.eigor.rules.RuleOutcomeAsConversionIssueAdapter;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class ObservableConversion {
         this.invoiceFileName = invoiceFileName;
     }
 
-    public void conversion() {
+    public BinaryConversionResult conversion() {
 
         // Whether to go on to the next step. When false, we should stop executing subsequent operations.
         boolean keepOnGoing = true;
@@ -71,7 +72,10 @@ public class ObservableConversion {
         // The intermediate CEN invoice.
         BG0000Invoice cenInvoice = null;
 
-        ConversionContext ctx = new ConversionContext();
+        // The final converted invoice
+        BinaryConversionResult conversionResult = null;
+
+        final ConversionContext ctx = new ConversionContext();
         ctx.setForceConversion(forceConversion.booleanValue());
         ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
         ctx.setInvoiceFileName(invoiceFileName);
@@ -80,28 +84,28 @@ public class ObservableConversion {
         // The rule report
         InMemoryRuleReport ruleReport = null;
 
-        // conversion start
+        List<IConversionIssue> issues = new ArrayList<>();
+
 
         try {
+            // conversion start
             fireOnStartingConverionEvent(ctx);
 
             // 1st step XML -> CEN
             fireOnStartingToCenTranformationEvent(ctx);
-
             ConversionResult<BG0000Invoice> toCenResult = toCen.convert(new ByteArrayInputStream(invoiceInSourceFormat));
             ctx.setToCenResult(toCenResult);
-
             if (!toCenResult.hasErrors()) {
                 fireOnSuccessfullToCenTranformationEvent(ctx);
             } else {
                 fireOnFailedToCenConversion(ctx);
+                issues.addAll( toCenResult.getIssues() );
                 if (!forceConversion)
                     keepOnGoing = false;
             }
 
             // 2nd step CEN verification
             if (keepOnGoing) {
-
                 fireOnStartingVerifyingCenRules(ctx);
                 cenInvoice = toCenResult.getResult();
                 ruleReport = new InMemoryRuleReport();
@@ -110,6 +114,11 @@ public class ObservableConversion {
                 if (!ruleReport.hasFailures()) {
                     fireOnSuccessfullyVerifiedCenRules(ctx);
                 } else {
+
+                    for (Map.Entry<RuleOutcome, Rule> errorsAndFailure : ruleReport.getErrorsAndFailures()) {
+                        issues.add( new RuleOutcomeAsConversionIssueAdapter(errorsAndFailure.getKey()) );
+                    }
+
                     fireOnFailedVerifyingCenRules(ctx);
                     if (!forceConversion)
                         keepOnGoing = false;
@@ -119,22 +128,25 @@ public class ObservableConversion {
             // 3rd step CEN -> XML
             if (keepOnGoing) {
                 fireOnStartingFromCenTransformation(ctx);
-                BinaryConversionResult conversionResult = fromCen.convert(cenInvoice);
+                conversionResult = fromCen.convert(cenInvoice);
                 ctx.setFromCenResult(conversionResult);
                 if (!conversionResult.hasErrors()) {
                     fireOnSuccessfullFromCenTransformation(ctx);
                 } else {
                     fireOnFailedFromCenTransformation(ctx);
-                    if (!forceConversion)
-                        keepOnGoing = false;
+                    issues.addAll( toCenResult.getIssues() );
                 }
             }
         } catch (SyntaxErrorInInvoiceFormatException e) {
+            issues.add(ConversionIssue.newError(e));
             fireOnUnexpectedException(e, ctx);
         }
 
         // anyhow, we inform the listeners we completed the transformation
         fireOnTerminatedConverion(ctx);
+
+        return new BinaryConversionResult(conversionResult!=null ? conversionResult.getResult() : null, issues);
+
     }
 
     private void applyRulesToCenObject(BG0000Invoice cenInvoice, InMemoryRuleReport ruleReport) {

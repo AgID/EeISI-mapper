@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -9,17 +9,13 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jdom2.Document;
-import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class GenericOneToOneTransformerTest {
 
     private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformerTest.class);
     private BG0000Invoice invoice;
-    private ArrayList<ConversionIssue> errors;
+    private ArrayList<IConversionIssue> errors;
     private Reflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;

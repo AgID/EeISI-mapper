@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0010Payee;
@@ -21,7 +21,7 @@ public class FattPaAttachmentConverterTest {
 
     private List<String> bts;
     private Reflections reflections;
-    private ArrayList<ConversionIssue> errors;
+    private ArrayList<IConversionIssue> errors;
     private ConversionRegistry conversionRegistry;
 
     @Before

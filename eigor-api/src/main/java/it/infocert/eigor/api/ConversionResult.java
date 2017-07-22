@@ -13,7 +13,7 @@ public class ConversionResult<R> {
     protected final R result;
     protected boolean successful;
     protected boolean hasErrors;
-    protected List<ConversionIssue> issues;
+    protected List<IConversionIssue> issues;
 
     /**
      * Immutable object constructed with data result and not null but possible empty array of issues
@@ -22,10 +22,10 @@ public class ConversionResult<R> {
      * @param result
      * @param issues
      */
-    public ConversionResult(List<ConversionIssue> issues, R result) {
+    public ConversionResult(List<IConversionIssue> issues, R result) {
         this.issues = Collections.unmodifiableList(issues);
         this.result = result;
-        for (ConversionIssue issue : issues) {
+        for (IConversionIssue issue : issues) {
             if (issue.isError()) {
                 hasErrors = true;
                 break;
@@ -38,7 +38,7 @@ public class ConversionResult<R> {
      */
     public ConversionResult(R result) {
         this.result = result;
-        this.issues = Collections.unmodifiableList(new ArrayList<ConversionIssue>());
+        this.issues = Collections.unmodifiableList(new ArrayList<IConversionIssue>());
     }
 
     /**
@@ -58,7 +58,7 @@ public class ConversionResult<R> {
     /**
      * @return List of issues caught during conversion.
      */
-    public List<ConversionIssue> getIssues() {
+    public List<IConversionIssue> getIssues() {
         return issues;
     }
 

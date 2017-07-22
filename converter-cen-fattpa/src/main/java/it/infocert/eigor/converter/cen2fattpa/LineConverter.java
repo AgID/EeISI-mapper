@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
@@ -24,7 +25,7 @@ public class LineConverter {
         this.conversionRegistry = conversionRegistry;
     }
 
-    public Pair<FatturaElettronicaBodyType, List<ConversionIssue>> convert(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    public Pair<FatturaElettronicaBodyType, List<IConversionIssue>> convert(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (fatturaElettronicaBody == null) {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("Missing FatturaElettronicaBody")));
             return new Pair<>(null, errors);
@@ -38,7 +39,7 @@ public class LineConverter {
         return new Pair<>(fatturaElettronicaBody, errors);
     }
 
-    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         log.debug("Mapping BG20 to FattPA line");
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -112,7 +113,7 @@ public class LineConverter {
         }
     }
 
-    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         log.debug("Mapping BG21 to FattPA line");
         if (!invoice.getBG0021DocumentLevelCharges().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -185,7 +186,7 @@ public class LineConverter {
     }
 
 
-    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
 
         DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
         for (BG0025InvoiceLine invoiceLine : invoice.getBG0025InvoiceLine()) {

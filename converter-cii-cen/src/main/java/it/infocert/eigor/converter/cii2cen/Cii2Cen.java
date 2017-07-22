@@ -5,6 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
@@ -106,7 +107,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
 		
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 
 		InputStream clonedInputStream = null;
 
@@ -114,13 +115,13 @@ public class Cii2Cen extends AbstractToCenConverter {
 			byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 			clonedInputStream = new ByteArrayInputStream(bytes);
 
-			List<ConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
+			List<IConversionIssue> xsdValidationErrors = xsdValidator.validate(bytes);
 			if(xsdValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
 			errors.addAll(xsdValidationErrors);
 
-			List<ConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
+			List<IConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}

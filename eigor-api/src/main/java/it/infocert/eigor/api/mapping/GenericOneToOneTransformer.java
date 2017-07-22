@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.AbstractBT;
@@ -38,7 +39,7 @@ public class GenericOneToOneTransformer extends GenericTransformer{
      * @throws SyntaxErrorInInvoiceFormatException
      */
 
-    public void transformCenToXml(BG0000Invoice invoice, Document document, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformCenToXml(BG0000Invoice invoice, Document document, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         final String logPrefix = "(" + cenPath + " - " + xPath + ") ";
         log.trace(logPrefix + "resolving");
@@ -72,7 +73,7 @@ public class GenericOneToOneTransformer extends GenericTransformer{
      * @param errors   a list of {@link ConversionIssue}, to be filled if an error occurs during the conversion
      * @throws SyntaxErrorInInvoiceFormatException
      */
-    public void transformXmlToCen(Document document, BG0000Invoice invoice, final List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
         log.trace(logPrefix + "resolving");
 

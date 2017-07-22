@@ -139,7 +139,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      * @return a {@link ConversionResult} of {@link BinaryConversionResult} containing both the XML byte array and the error list
      * @throws SyntaxErrorInInvoiceFormatException
      */
-    protected Pair<Document, List<ConversionIssue>> applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<IConversionIssue>> applyOne2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         // apply the mappings
         for (Map.Entry<String, String> entry : mappings.entries()) {
@@ -150,7 +150,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         return new Pair<>(document, errors);
     }
 
-    protected byte[] createXmlFromDocument(Document document, List<ConversionIssue> errors) {
+    protected byte[] createXmlFromDocument(Document document, List<IConversionIssue> errors) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new XMLOutputter().output(document, bos);
@@ -162,7 +162,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         }
     }
 
-    protected Pair<Document, List<ConversionIssue>> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<IConversionIssue>> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
 
         for (String key: many2oneMappings.keySet()) {
@@ -198,7 +198,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         return new Pair<>(document, errors);
     }
 
-    protected Pair<Document, List<ConversionIssue>> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected Pair<Document, List<IConversionIssue>> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         for (String key: one2ManyMappings.keySet()) {
 
@@ -248,7 +248,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         return new Pair<>(document, errors);
     }
 
-    private boolean existsValueForKeyInMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors, String mappingType) {
+    private boolean existsValueForKeyInMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors, String mappingType) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
             errors.add(ConversionIssue.newError(new RuntimeException(String.format("No value in %s mapping properties for key %s!",  mappingType, key))));
             return false;
