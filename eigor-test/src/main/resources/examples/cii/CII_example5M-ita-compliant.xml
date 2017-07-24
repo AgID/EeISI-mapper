@@ -449,6 +449,12 @@
 					<qdt:DateTimeString format="102">20130310</qdt:DateTimeString>
 				</ram:FormattedIssueDateTime>
 			</ram:InvoiceReferencedDocument>
+			<ram:InvoiceReferencedDocument>
+				<ram:IssuerAssignedID>PROVASECOND</ram:IssuerAssignedID>
+				<ram:FormattedIssueDateTime>
+					<qdt:DateTimeString format="102">20170724</qdt:DateTimeString>
+				</ram:FormattedIssueDateTime>
+			</ram:InvoiceReferencedDocument>
 			<ram:ReceivableSpecifiedTradeAccountingAccount>
 				<ram:ID>67543</ram:ID>
 			</ram:ReceivableSpecifiedTradeAccountingAccount>
