@@ -5,6 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -57,7 +58,8 @@ public class Ubl2Cen extends AbstractToCenConverter {
             xsdValidator = null;
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
-                xsdValidator = new XSDValidator(xsdFile.getInputStream());
+
+                xsdValidator = new XSDValidator(xsdFile.getFile());
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
             }
@@ -95,7 +97,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
         configurableSupport.checkConfigurationOccurred();
 
-        List<ConversionIssue> errors = new ArrayList<>();
+        List<IConversionIssue> errors = new ArrayList<>();
 
         InputStream clonedInputStream = null;
 
@@ -104,7 +106,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
             clonedInputStream = new ByteArrayInputStream(bytes);
 
-            List<ConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
             	log.info("Xsd validation succesful!");
             }

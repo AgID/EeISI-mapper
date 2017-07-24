@@ -84,7 +84,10 @@
                 <configuration>
                     <packageName>it.infocert.eigor.converter.fattpa2cen.models</packageName>
                     <sources>
+                        <source>src/main/resources/converterdata/converter-fattpa-cen/xsdstatic</source>
+                        <!--
                         <source>src/main/resources</source>
+                        -->
                     </sources>
                 </configuration>
             </plugin>

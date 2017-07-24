@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 public class GenericManyToOneTransformerTest {
     private static Logger log = LoggerFactory.getLogger(GenericManyToOneTransformerTest.class);
     private BG0000Invoice invoice;
-    private ArrayList<ConversionIssue> errors;
+    private ArrayList<IConversionIssue> errors;
     private Reflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;

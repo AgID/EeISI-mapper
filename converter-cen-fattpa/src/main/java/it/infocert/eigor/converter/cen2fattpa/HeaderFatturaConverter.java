@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.model.*;
 
@@ -11,10 +12,10 @@ public class HeaderFatturaConverter implements ICen2FattPAConverter {
     private ObjectFactory factory;
     private FatturaElettronicaHeaderType fatturaElettronicaHeader;
     private BG0000Invoice invoice;
-    private List<ConversionIssue> errors;
+    private List<IConversionIssue> errors;
 
 
-    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public HeaderFatturaConverter(ObjectFactory factory, BG0000Invoice invoice, List<IConversionIssue> errors) {
         this.factory = factory;
         this.invoice = invoice;
         fatturaElettronicaHeader = factory.createFatturaElettronicaHeaderType();

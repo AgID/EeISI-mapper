@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
@@ -25,7 +26,7 @@ public class LineConverter {
         this.conversionRegistry = conversionRegistry;
     }
 
-    public Pair<FatturaElettronicaBodyType, List<ConversionIssue>> convert(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    public Pair<FatturaElettronicaBodyType, List<IConversionIssue>> convert(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (fatturaElettronicaBody == null) {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("Missing FatturaElettronicaBody")));
             return new Pair<>(null, errors);
@@ -125,7 +126,7 @@ public class LineConverter {
         }
     }
 
-    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (!invoice.getBG0021DocumentLevelCharges().isEmpty()) {
             log.info("Mapping BG21 to FattPA line");
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -211,13 +212,13 @@ public class LineConverter {
     }
 
 
-    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
             log.info("Mapping BG25 to FattPA line");
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             for (BG0025InvoiceLine invoiceLine : invoice.getBG0025InvoiceLine()) {
                 DettaglioLineeType dettaglioLinee = new DettaglioLineeType();
-                
+
                 if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
                     BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue());
                     dettaglioLinee.setPrezzoTotale(value);
@@ -235,9 +236,8 @@ public class LineConverter {
                 log.trace("Set ScontoMaggiorazione with type {}", TipoScontoMaggiorazioneType.SC);
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
 
-                if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
-                    log.info("Mapping BG27 to FattPA line");
-                    for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
+            if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
+                for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
 
                         Double discountValue = 0d;
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
@@ -333,7 +333,7 @@ public class LineConverter {
                     BG0029PriceDetails priceDetails = invoiceLine.getBG0029PriceDetails(0);
 
                     DettaglioLineeType dettaglioLinee3 = new DettaglioLineeType();
-                    
+
                     dettaglioLinee3.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
                     Double bt0146 = priceDetails.getBT0146ItemNetPrice().isEmpty() ? 0 : priceDetails.getBT0146ItemNetPrice(0).getValue();
                     String bt0130 = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty() ? "" : invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode();

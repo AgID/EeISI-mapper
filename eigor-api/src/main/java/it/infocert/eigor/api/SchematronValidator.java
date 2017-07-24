@@ -6,6 +6,9 @@ import com.helger.schematron.xslt.SchematronResourceSCH;
 import com.helger.schematron.xslt.SchematronResourceXSLT;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
 
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
@@ -16,32 +19,40 @@ import java.util.List;
 public class SchematronValidator implements IXMLValidator {
 
     private ISchematronResource schematronResource;
+    private static final Logger log = LoggerFactory.getLogger(SchematronValidator.class);
 
     public SchematronValidator(File schemaFile, boolean isXSLT) {
 
-        Preconditions.checkArgument(schemaFile != null, "Provide a Schematron file.");
-        Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
+        long delta = System.currentTimeMillis();
+        try {
+            Preconditions.checkArgument(schemaFile != null, "Provide a Schematron file.");
+            Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
 
-        if (isXSLT) {
-            // we check if relative path ../schematron contains newer .sch files
-            SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
-                    schemaFile.getParent(),
-                    schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron");
+            if (isXSLT) {
+                // we check if relative path ../schematron contains newer .sch files
+                SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
+                        schemaFile.getParent(),
+                        schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron");
 
-            if (xsltFileUpdater.checkForUpdatedSchematron()) {
-                xsltFileUpdater.updateXSLTfromSch();
+                if (xsltFileUpdater.checkForUpdatedSchematron()) {
+                    xsltFileUpdater.updateXSLTfromSch();
+                }
+                schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
+            } else {
+                schematronResource = SchematronResourceSCH.fromFile(schemaFile);
             }
-            schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
-        } else {
-            schematronResource = SchematronResourceSCH.fromFile(schemaFile);
+            if (!schematronResource.isValidSchematron())
+                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT?"XSLT":"SCH", schemaFile, schemaFile.getAbsolutePath()));
+        }finally {
+            delta = System.currentTimeMillis() - delta;
+            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaFile.getAbsolutePath(), delta);
         }
-        if (!schematronResource.isValidSchematron())
-            throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT?"XSLT":"SCH", schemaFile, schemaFile.getAbsolutePath()));
+
     }
 
     @Override
-    public List<ConversionIssue> validate(byte[] xml) {
-        List<ConversionIssue> errors = new ArrayList<>();
+    public List<IConversionIssue> validate(byte[] xml) {
+        List<IConversionIssue> errors = new ArrayList<>();
         SchematronOutputType schematronOutput = null;
 
         try {

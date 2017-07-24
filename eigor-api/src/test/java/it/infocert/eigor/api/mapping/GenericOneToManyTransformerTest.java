@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.mapping;
 
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.*;
@@ -24,7 +24,7 @@ public class GenericOneToManyTransformerTest {
 
     private static Logger log = LoggerFactory.getLogger(GenericOneToManyTransformerTest.class);
     private BG0000Invoice invoice;
-    private ArrayList<ConversionIssue> errors;
+    private ArrayList<IConversionIssue> errors;
     private Reflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;

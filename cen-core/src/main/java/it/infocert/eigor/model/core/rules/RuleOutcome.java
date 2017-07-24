@@ -18,11 +18,6 @@ public class RuleOutcome {
     private final Outcome outcome;
     private final String description;
 
-    private RuleOutcome(Outcome success, String description) {
-        this.outcome = Preconditions.checkNotNull( success );
-        this.description = Preconditions.checkNotNull( description );
-    }
-
     public static RuleOutcome newOutcome(Outcome outcome, String stringFormat, Object... params) {
         return new RuleOutcome(
                 outcome, String.format(stringFormat, params)
@@ -52,6 +47,11 @@ public class RuleOutcome {
 
     public static RuleOutcome newErrorOutcome(String stringFormat, Object... params) {
         return newOutcome(Outcome.ERROR, stringFormat, params);
+    }
+
+    private RuleOutcome(Outcome success, String description) {
+        this.outcome = Preconditions.checkNotNull( success );
+        this.description = Preconditions.checkNotNull( description );
     }
 
     public Outcome outcome() {

@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Binary;
@@ -26,13 +27,13 @@ public class BodyFatturaConverter implements ICen2FattPAConverter {
 
     private BG0000Invoice invoice;
     private FatturaElettronicaBodyType fatturaElettronicaBody;
-    private List<ConversionIssue> errors;
+    private List<IConversionIssue> errors;
     private Double invoiceDiscountAmount;
     private Double invoiceCorrectionAmount;
     private ObjectFactory factory;
     private ConversionRegistry conversionRegistry;
 
-    public BodyFatturaConverter(FatturaElettronicaBodyType fatturaElettronicaBody, ObjectFactory factory, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public BodyFatturaConverter(FatturaElettronicaBodyType fatturaElettronicaBody, ObjectFactory factory, BG0000Invoice invoice, List<IConversionIssue> errors) {
         this.invoice = invoice;
         this.errors = errors;
         this.fatturaElettronicaBody = fatturaElettronicaBody;

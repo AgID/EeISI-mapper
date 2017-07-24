@@ -1,12 +1,10 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BTBG;
-import org.assertj.core.util.Lists;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +19,9 @@ public class FattPaAttachmentConverter {
     private final List<String> cenPaths;
     private final InvoiceUtils invoiceUtils;
     private final BG0000Invoice invoice;
-    private final List<ConversionIssue> errors;
+    private final List<IConversionIssue> errors;
 
-    private FattPaAttachmentConverter(ConversionRegistry conversionRegistry, List<String> cenPaths, InvoiceUtils invoiceUtils, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    private FattPaAttachmentConverter(ConversionRegistry conversionRegistry, List<String> cenPaths, InvoiceUtils invoiceUtils, BG0000Invoice invoice, List<IConversionIssue> errors) {
         this.conversionRegistry = conversionRegistry;
         this.cenPaths = cenPaths;
         this.invoiceUtils = invoiceUtils;
@@ -46,7 +44,7 @@ public class FattPaAttachmentConverter {
         return sb.toString();
     }
 
-    public static Builder builder(ConversionRegistry conversionRegistry, Reflections reflections, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public static Builder builder(ConversionRegistry conversionRegistry, Reflections reflections, BG0000Invoice invoice, List<IConversionIssue> errors) {
         return new Builder(conversionRegistry, reflections, invoice, errors);
     }
 
@@ -55,10 +53,10 @@ public class FattPaAttachmentConverter {
         private List<String> cenPaths;
         private final InvoiceUtils invoiceUtils;
         private final BG0000Invoice invoice;
-        private final List<ConversionIssue> errors;
+        private final List<IConversionIssue> errors;
         private final ConversionRegistry conversionRegistry;
 
-        private Builder(ConversionRegistry conversionRegistry, Reflections reflections, BG0000Invoice invoice, List<ConversionIssue> errors) {
+        private Builder(ConversionRegistry conversionRegistry, Reflections reflections, BG0000Invoice invoice, List<IConversionIssue> errors) {
             this.conversionRegistry = conversionRegistry;
             this.invoiceUtils = new InvoiceUtils(reflections);
             this.invoice = invoice;

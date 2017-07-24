@@ -5,11 +5,12 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid7161SpecialServicesCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
@@ -113,7 +114,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
         configurableSupport.checkConfigurationOccurred();
 
-        List<ConversionIssue> errors = new ArrayList<>(0);
+        List<IConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);
         setFormatoTrasmissione(document);
@@ -144,7 +145,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
             FatturaElettronicaBodyType fatturaElettronicaBody = bfc.getFatturaElettronicaBody();
             LineConverter lineConverter = new LineConverter(conversionRegistry);
-            Pair<FatturaElettronicaBodyType, List<ConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
+            Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
             jaxbFattura.getFatturaElettronicaBody().add(converted.getLeft());
         }
 
@@ -168,7 +169,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         } else {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
-            List<ConversionIssue> validationErrors = validator.validate(jaxml);
+            List<IConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }

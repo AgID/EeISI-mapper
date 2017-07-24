@@ -1,15 +1,23 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.configuration.Configurable;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ConversionRepository implements ToCenConversionRepository, FromCenConversionRepository {
+public class ConversionRepository implements ToCenConversionRepository, FromCenConversionRepository, Configurable {
 
-    private final ToCenConversionRepository toCenConversionRepository;
-    private final FromCenConversionRepository fromCenConversionRepository;
+    private final ToCenListBakedRepository toCenConversionRepository;
+    private final FromCenListBakedRepository fromCenConversionRepository;
+
+    @Override
+    public void configure() throws ConfigurationException {
+        toCenConversionRepository.configure();
+        fromCenConversionRepository.configure();
+    }
 
     private ConversionRepository(ToCenListBakedRepository toConversions, FromCenListBakedRepository fromConversions) {
         this.fromCenConversionRepository = fromConversions;
