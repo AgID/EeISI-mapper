@@ -83,8 +83,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
         InputStream xsdStream = null;
         try {
-            xsdStream = xsdFile.getInputStream();
-            validator = new XSDValidator(xsdStream);
+            validator = new XSDValidator(xsdFile.getFile());
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         } finally {

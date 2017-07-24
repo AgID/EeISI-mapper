@@ -21,6 +21,7 @@ import org.junit.rules.TemporaryFolder;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -43,7 +44,7 @@ public class LowLevelAPIUsage {
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    Logger log = LoggerFactory.getLogger(getClass().getClass());
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     File outputFolderFile;
 
@@ -259,10 +260,9 @@ public class LowLevelAPIUsage {
         final ToCenConversion toCen = conversionRepository.findConversionToCen("ubl");
         final FromCenConversion fromCen = conversionRepository.findConversionFromCen("fatturapa");
 
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+        ExecutorService executor = Executors.newFixedThreadPool(10);
 
         for (final String ublInvoice : ublInvoices) {
-
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -302,6 +302,8 @@ public class LowLevelAPIUsage {
                             }
                         }
 
+                        log.info("Conversion completed:\n{}", sb.toString());
+
                     } catch (Exception e) {
                         log.error("An error occurred.", e);
                     } finally {
@@ -309,7 +311,7 @@ public class LowLevelAPIUsage {
                     }
 
                     log.info(sb.toString());
-                    log.info("Conversion of {} completed in {}ms", ublInvoice, elapsed);
+                    log.info(MarkerFactory.getMarker("PERFORMANCE"), "Conversion of '{}' completed in {}ms", ublInvoice, elapsed);
                 }
             });
 
