@@ -40,7 +40,7 @@ public class LineConverter {
         return new Pair<>(fatturaElettronicaBody, errors);
     }
 
-    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<ConversionIssue> errors) {
+    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             log.info("Mapping BG20 to FattPA line");
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
