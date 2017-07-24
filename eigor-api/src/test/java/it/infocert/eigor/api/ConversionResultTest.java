@@ -38,7 +38,7 @@ public class ConversionResultTest {
                 errors, hasItem(issueToReturn));
         assertThat(sut.hasResult(), is(true));
         assertThat(sut.isSuccessful(), is(false));
-        assertThat(sut.hasErrors(), is(true));
+        assertThat(sut.hasIssues(), is(true));
 
     }
 

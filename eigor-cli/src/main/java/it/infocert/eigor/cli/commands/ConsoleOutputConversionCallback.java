@@ -64,7 +64,7 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
     @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         BinaryConversionResult conversionResult = ctx.getFromCenResult();
         writeFromCenErrorsToOutStream(out, conversionResult);
-        if (conversionResult.hasErrors()) {
+        if (conversionResult.hasIssues()) {
             if (ctx.isForceConversion()) {
                 out.println("Conversion from CEN has encountered errors but will continue anyway.");
             } else {

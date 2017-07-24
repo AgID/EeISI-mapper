@@ -1,4 +1,4 @@
-package it.infocert.eigor;
+package com.infocert.eigor.api;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
@@ -146,7 +146,7 @@ public class LowLevelAPIUsage {
             sb.append(format("Result is not available, please check the errors.\n"));
         }
 
-        if(outcome.hasErrors()){
+        if(outcome.hasIssues()){
             List<IConversionIssue> issues = outcome.getIssues();
             for (int i=0; i<issues.size(); i++) {
                 IConversionIssue iConversionIssue = issues.get(i);
@@ -291,7 +291,7 @@ public class LowLevelAPIUsage {
                             sb.append(format("Result is not available, please check the errors.\n"));
                         }
 
-                        if(outcome.hasErrors()){
+                        if(outcome.hasIssues()){
                             List<IConversionIssue> issues = outcome.getIssues();
                             for (int i=0; i<issues.size(); i++) {
                                 IConversionIssue iConversionIssue = issues.get(i);

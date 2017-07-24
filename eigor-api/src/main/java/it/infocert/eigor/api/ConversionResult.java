@@ -51,7 +51,7 @@ public class ConversionResult<R> {
     /**
      * @return TRUE if the issue list is contains one or more ConversionIssue that is an error.
      */
-    public boolean hasErrors() {
+    public boolean hasIssues() {
         return hasErrors;
     }
 

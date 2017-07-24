@@ -158,7 +158,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     public String getName() {
-        return "ubl-cen";
+        return "converter-ubl-cen";
     }
 
     private static ConversionRegistry initConversionStrategy(){
