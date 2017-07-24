@@ -27,9 +27,19 @@ public enum Untdid2005DateTimePeriodQualifiers {
         this.longDescription = longDescription;
     }
 
+    public static Untdid2005DateTimePeriodQualifiers fromCode(String s) {
+        Integer code = Integer.valueOf(s);
+        for (Untdid2005DateTimePeriodQualifiers q : values()) {
+            if (q.code == code) {
+                return q;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " " + shortDescritpion;
     }
 
-    }
+}

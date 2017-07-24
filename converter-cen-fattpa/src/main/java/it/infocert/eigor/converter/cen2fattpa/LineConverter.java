@@ -6,7 +6,6 @@ import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
-import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
@@ -42,7 +41,6 @@ public class LineConverter {
     }
 
     private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
-        log.debug("Mapping BG20 to FattPA line");
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             log.info("Mapping BG20 to FattPA line");
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -117,11 +115,11 @@ public class LineConverter {
 
                     String des = sb.toString();
                     dettaglioLinee.setDescrizione(des);
-                    log.trace("Set '{}' as Descrizione", des);
+                    log.trace("Set \"{}\" as Descrizione", des);
                     ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
                     scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
                     dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione);
-                    log.trace("Set ScontoMaggiorazione with type '{}'", TipoScontoMaggiorazioneType.SC);
+                    log.trace("Set ScontoMaggiorazione with type {}", TipoScontoMaggiorazioneType.SC);
                     dettaglioLineeList.add(dettaglioLinee);
                 }
             }
@@ -138,6 +136,7 @@ public class LineConverter {
                     DettaglioLineeType dettaglioLinee = new DettaglioLineeType();
                     int number = datiBeniServizi.getDettaglioLinee().size() + 1;
                     dettaglioLinee.setNumeroLinea(number);
+                    dettaglioLinee.setDescrizione("Descrizione"); //FIXME HOW????
                     log.trace("Set NumeroLinea with value {}", number);
 
                     if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
@@ -206,6 +205,7 @@ public class LineConverter {
                     ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
                     scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
                     dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione);
+                    log.trace("Set ScontoMaggiorazione with type {}", TipoScontoMaggiorazioneType.SC);
                     dettaglioLineeList.add(dettaglioLinee);
                 }
             }
@@ -219,6 +219,7 @@ public class LineConverter {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             for (BG0025InvoiceLine invoiceLine : invoice.getBG0025InvoiceLine()) {
                 DettaglioLineeType dettaglioLinee = new DettaglioLineeType();
+                dettaglioLinee.setDescrizione("Descrizione"); //FIXME Again, how?
 
                 if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
                     BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue());
@@ -231,45 +232,12 @@ public class LineConverter {
                 int number = datiBeniServizi.getDettaglioLinee().size() + 1;
                 dettaglioLinee.setNumeroLinea(number);
                 log.trace("Set NumeroLinea with value {}", number);
-                ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
 
-                if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
-
-                    DatiRiepilogoType datiRiepilogo = new DatiRiepilogoType();
-
-                    if(!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
-                        Untdid2005DateTimePeriodQualifiers code = invoice.getBT0008ValueAddedTaxPointDateCode(0).getValue();
-                        EsigibilitaIVAType value = conversionRegistry.convert(Untdid2005DateTimePeriodQualifiers.class, EsigibilitaIVAType.class, code);
-                        datiRiepilogo.setEsigibilitaIVA(value);
-                        log.trace("Set BT8 as EsigibilitaIVA with value {}", value);
-                    }
-
-                    if (!vatBreakdown.getBT0116VatCategoryTaxableAmount().isEmpty()) {
-                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0116VatCategoryTaxableAmount(0).getValue());
-                        datiRiepilogo.setImponibileImporto(value);
-                        log.trace("Set BT116 as ImponibileImporto with value {}", value);
-                    }
-
-                    if(!vatBreakdown.getBT0117VatCategoryTaxAmount().isEmpty()) {
-                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0117VatCategoryTaxAmount(0).getValue());
-                        datiRiepilogo.setImposta(value);
-                        log.trace("Set BT117 as Imposta with value {}", value);
-                    }
-
-                    if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
-                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
-                        datiRiepilogo.setAliquotaIVA(value);
-                        log.trace("Set BT119 as AliquotaIva with value {}", value);
-                    }
-                    datiBeniServizi.getDatiRiepilogo().add(datiRiepilogo);
-                }
-
                 if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
-                    log.info("Mapping BG27 to FattPA line");
                     for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
 
+                        ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
                         Double discountValue = 0d;
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         Double baseAmount = invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
@@ -283,41 +251,41 @@ public class LineConverter {
                         }
 
 
-                        DettaglioLineeType dettaglioLinee1 = new DettaglioLineeType();
+                        if (discountValue < 0) {
+                            DettaglioLineeType dettaglioLinee1 = new DettaglioLineeType();
 
-                        int number2 = datiBeniServizi.getDettaglioLinee().size() + 1;
-                        dettaglioLinee1.setNumeroLinea(number2);
-                        log.trace("Set NumeroLinea with value {}", number2);
+                            int number2 = datiBeniServizi.getDettaglioLinee().size() + 1;
+                            dettaglioLinee1.setNumeroLinea(number2);
+                            log.trace("Set NumeroLinea with value {}", number2);
 
-                        String desc = String.format("%s %s", reason, code);
-                        dettaglioLinee1.setDescrizione(desc);
-                        log.trace("Set Descrizione with value {}", desc);
-                        BigDecimal quantityBd = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity);
-                        dettaglioLinee1.setQuantita(quantityBd);
-                        log.trace("Set Quantita with value {}", quantityBd);
-                        BigDecimal unit = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(discountValue);
-                        dettaglioLinee1.setPrezzoUnitario(unit);
-                        log.trace("Set PrezzoUnitario with value {}", unit);
-                        BigDecimal tot = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(allowanceAmount);
-                        dettaglioLinee1.setPrezzoTotale(tot);
-                        log.trace("Set PrezzoTotale with value {}", tot);
+                            String desc = String.format("%s %s", reason, code);
+                            dettaglioLinee1.setDescrizione(desc);
+                            log.trace("Set Descrizione with value {}", desc);
+                            BigDecimal quantityBd = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity);
+                            dettaglioLinee1.setQuantita(quantityBd);
+                            log.trace("Set Quantita with value {}", quantityBd);
+                            BigDecimal unit = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(discountValue);
+                            dettaglioLinee1.setPrezzoUnitario(unit);
+                            log.trace("Set PrezzoUnitario with value {}", unit);
+                            BigDecimal tot = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(allowanceAmount);
+                            dettaglioLinee1.setPrezzoTotale(tot);
+                            log.trace("Set PrezzoTotale with value {}", tot);
 
-                        if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+                            if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+                                BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
 
-                            if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
-                                BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
-                                dettaglioLinee1.setAliquotaIVA(value);
-                                log.trace("Set BT119 as AliquotaIVA with value {}", value);
+                                if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
+                                    BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
+                                    dettaglioLinee1.setAliquotaIVA(value);
+                                    log.trace("Set BT119 as AliquotaIVA with value {}", value);
+                                }
                             }
+                            scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
+                            dettaglioLinee1.getScontoMaggiorazione().add(scontoMaggiorazione);
+                            datiBeniServizi.getDettaglioLinee().add(dettaglioLinee1);
                         }
-                        ScontoMaggiorazioneType scontoMaggiorazione2 = new ScontoMaggiorazioneType();
-                        scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
-                        dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione2);
-                        datiBeniServizi.getDettaglioLinee().add(dettaglioLinee1);
                     }
                 }
-
 
                 if (!invoiceLine.getBG0028InvoiceLineCharges().isEmpty()) {
                     log.info("Mapping BG28 to FattPA line");
@@ -335,9 +303,9 @@ public class LineConverter {
                         surchargeValue = baseAmount * percentage;
                     }
 
-                    ScontoMaggiorazioneType scontoMaggiorazione3 = new ScontoMaggiorazioneType();
-                    scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.MG);
-                    dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione3);
+                    ScontoMaggiorazioneType scontoMaggiorazione1 = new ScontoMaggiorazioneType();
+                    scontoMaggiorazione1.setTipo(TipoScontoMaggiorazioneType.MG);
+                    dettaglioLinee2.getScontoMaggiorazione().add(scontoMaggiorazione1);
                     String bt0144 = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione Linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
                     String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? "" : conversionRegistry.convert(Untdid7161SpecialServicesCodes.class, String.class, invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue());
                     if (surchargeValue > 0) {
@@ -346,6 +314,12 @@ public class LineConverter {
                         dettaglioLinee2.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
                         dettaglioLinee2.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(surchargeValue));
                         dettaglioLinee2.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount * quantity));
+                        if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+                            if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
+                                dettaglioLinee2.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue()));
+                            }
+                        }
 
                         datiBeniServizi.getDettaglioLinee().add(dettaglioLinee2);
                     }
@@ -402,9 +376,7 @@ public class LineConverter {
                 mapBG31(invoiceLine, datiBeniServizi);
             }
         }
-
     }
-
 
     private void mapBG31(BG0025InvoiceLine invoiceLine, DatiBeniServiziType datiBeniServizi) {
         if (!invoiceLine.getBG0031ItemInformation().isEmpty()) {
