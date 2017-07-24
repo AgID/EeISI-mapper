@@ -6,10 +6,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid7161SpecialServicesCodesToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
@@ -72,7 +69,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
             new Untdid4461PaymentMeansCodeToItalianCodeString(),
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
-            new Untdid7161SpecialServicesCodesToItalianCodeStringConverter()
+            new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
