@@ -5,8 +5,13 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+<<<<<<< HEAD
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+=======
+import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.api.utils.Pair;
+>>>>>>> develop
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.*;
@@ -53,16 +58,16 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	@Test
 	public void shouldAcceptACiiInvoiceMatchingTheCiiXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
-		List<ConversionIssue> errors = validateXmlWithCiiXsd(sourceInvoiceStream);
+		List<IConversionIssue> errors = validateXmlWithCiiXsd(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
 	@Ignore
 	@Test
 	public void shouldRefuseACiiInvoiceNotValidAccordingToCiiXsd() throws IOException, SAXException {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
-		List<ConversionIssue> errors = validateXmlWithCiiXsd(sourceInvoiceStream);
+		List<IConversionIssue> errors = validateXmlWithCiiXsd(sourceInvoiceStream);
 		assertTrue(errors.size() == 1);
-		ConversionIssue issue = errors.get(0);
+		IConversionIssue issue = errors.get(0);
 		assertTrue(issue.getCause() instanceof SAXParseException);
 		assertTrue(issue.isError());
 		assertTrue(issue.getMessage().startsWith(IConstants.ERROR_XML_VALIDATION_ERROR));
@@ -71,16 +76,16 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	@Test
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
-		List<ConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
+		List<IConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.isEmpty());
 	}
 	@Ignore
 	@Test
 	public void shouldRefuseACiiInvoiceThatDoesNotSatisfyTheCiiSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1_KO.xml");
-		List<ConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
+		List<IConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
 		String temp;
-		for(ConversionIssue conversionIssue : errors){
+		for(IConversionIssue conversionIssue : errors){
 			temp = conversionIssue.getMessage();
 			assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[CII-SR-014]"));
 		}
@@ -171,7 +176,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	}
 
 
-	private List<ConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
+	private List<IConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
 	   	File xsdFile = new File(filePath);
@@ -179,7 +184,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	   	return xsdValidator.validate(bytes);
 	}
 	
-	private List<ConversionIssue> validateXmlWithCiiSchematron(InputStream sourceInvoiceStream) throws IOException {
+	private List<IConversionIssue> validateXmlWithCiiSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		String filePath = getClass().getClassLoader().getResource("schematron-xslt/EN16931-CII-validation.xslt").getFile();
 		File schematronFile = new File(filePath);
@@ -191,7 +196,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		InputStream clonedInputStream = new ByteArrayInputStream(bytes);
 		Document document = getDocument(clonedInputStream);
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 		return sut.applyOne2OneTransformationsBasedOnMapping(document, errors);
 	}
 
@@ -199,7 +204,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		InputStream clonedInputStream = new ByteArrayInputStream(bytes);
 		Document document = getDocument(clonedInputStream);
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 		BG0000Invoice invoice = sut.applyOne2OneTransformationsBasedOnMapping(document, errors).getResult();
 		return sut.applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
 	}
@@ -216,11 +221,11 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 			super(reflections, configuration);
 		}
 
-		@Override public ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+		@Override public ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyOne2OneTransformationsBasedOnMapping(document, errors);
 		}
 
-		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
 	}

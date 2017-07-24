@@ -49,7 +49,7 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) {
-        BinaryConversionResult binaryConversionResult = new BinaryConversionResult("this is a fake invoice".getBytes(), new ArrayList<ConversionIssue>());
+        BinaryConversionResult binaryConversionResult = new BinaryConversionResult("this is a fake invoice".getBytes(), new ArrayList<IConversionIssue>());
         return binaryConversionResult;
     }
 

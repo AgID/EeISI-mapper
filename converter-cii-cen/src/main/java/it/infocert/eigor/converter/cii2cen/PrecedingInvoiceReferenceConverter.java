@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -21,7 +22,7 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverter {
 
     //BG0003
     //TODO verifica  per elementi multipli
-    public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         String xPathBT0025 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeSettlement/InvoiceReferencedDocument/IssuerAssignedID";
         String xPathBT0026 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeSettlement/InvoiceReferencedDocument/FormattedIssueDateTime/DateTimeString";
 

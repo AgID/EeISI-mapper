@@ -1,9 +1,6 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.RuleReport;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.utils.RuleReports;
 import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -107,7 +104,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
         if (!conversionResult.isSuccessful()) {
-            List<ConversionIssue> errors = conversionResult.getIssues();
+            List<IConversionIssue> errors = conversionResult.getIssues();
             String data = toCsvFileContent(errors);
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
             FileUtils.writeStringToFile(toCenErrors, data);
@@ -118,15 +115,15 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         // writes to file
         if (!conversionResult.isSuccessful()) {
             // writes from-cen errors csv
-            List<ConversionIssue> errors = conversionResult.getIssues();
+            List<IConversionIssue> errors = conversionResult.getIssues();
             File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
             FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
         }
     }
 
-    private String toCsvFileContent(List<ConversionIssue> errors) {
+    private String toCsvFileContent(List<IConversionIssue> errors) {
         StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
-        for (ConversionIssue e : errors) {
+        for (IConversionIssue e : errors) {
             toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
         }
         return toCenErrorsCsv.toString();

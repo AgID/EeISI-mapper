@@ -4,6 +4,7 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -39,7 +40,7 @@ public class CustomConverter extends Cii2Cen {
     }
 
     //BT0017
-    public ConversionResult<BG0000Invoice> toBT0017(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBT0017(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         String xPath1 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/AdditionalReferencedDocument/IssuerAssignedID";
         String xPath2 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/AdditionalReferencedDocument/TypeCode";
 
@@ -66,7 +67,7 @@ public class CustomConverter extends Cii2Cen {
     }
 
     //BT0018
-    public ConversionResult<BG0000Invoice> toBT0018(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBT0018(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         String xPath1 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/AdditionalReferencedDocument/IssuerAssignedID";
         String xPath2 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/AdditionalReferencedDocument/TypeCode";
         String xPath3 = "/CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/AdditionalReferencedDocument/ReferenceTypeCode";
@@ -109,7 +110,7 @@ public class CustomConverter extends Cii2Cen {
 
     //CONVERTER GENERALE
 //    PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
-    public ConversionResult<BG0000Invoice> convert(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> convert(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
         InvoiceNoteConverter bg0001 = new InvoiceNoteConverter(new Reflections("it.infocert"), conversionRegistry);
 
@@ -123,7 +124,7 @@ public class CustomConverter extends Cii2Cen {
     /*
     TRANSFORMER
      */
-    public Object transformer(String cenPath, BG0000Invoice invoice, final String xPathText, final List<ConversionIssue> errors) {
+    public Object transformer(String cenPath, BG0000Invoice invoice, final String xPathText, final List<IConversionIssue> errors) {
         final Object[] constructorParam = new Object[]{null};
 
         // find the parent BG

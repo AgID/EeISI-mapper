@@ -1,10 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.RuleReport;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -82,9 +79,9 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
             out.println("To Cen Conversion was successful!");
         } else {
             out.println(String.format("To Cen Conversion finished, but %d issues have occured.", conversionResult.getIssues().size()));
-            List<ConversionIssue> errors = conversionResult.getIssues();
+            List<IConversionIssue> errors = conversionResult.getIssues();
             for (int i = 0; i < errors.size(); i++) {
-                ConversionIssue e = errors.get(i);
+                IConversionIssue e = errors.get(i);
                 out.println(String.format("%d) Error: %s", i + 1, e.getMessage()));
             }
             out.println("For more information see 'tocen-errors.csv'.");
@@ -106,8 +103,8 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
             out.println("From Cen Conversion was successful!");
         } else {
             out.println("From Cen Conversion finished, but some issues have occured:");
-            List<ConversionIssue> errors = conversionResult.getIssues();
-            for (ConversionIssue e : errors) {
+            List<IConversionIssue> errors = conversionResult.getIssues();
+            for (IConversionIssue e : errors) {
                 out.println("Error: " + e.getMessage());
             }
             out.println("For more information see 'fromcen-errors.csv'.");

@@ -84,7 +84,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
      * @param errors   the errors list
      * @return the BG0000Invoice
      */
-    protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected ConversionResult<BG0000Invoice> applyOne2OneTransformationsBasedOnMapping(Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         configurableSupport.checkConfigurationOccurred();
 
@@ -102,7 +102,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
         return new ConversionResult<>(errors, invoice);
     }
 
-    protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<ConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    protected ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         configurableSupport.checkConfigurationOccurred();
 
@@ -141,7 +141,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
         return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
     }
 
-    private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<ConversionIssue> errors) {
+    private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
             errors.add(ConversionIssue.newError(new RuntimeException("No value in many2one mapping properties for key: " + key)));
             return false;

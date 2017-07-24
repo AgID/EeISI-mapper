@@ -23,6 +23,10 @@
             <groupId>com.amoerie</groupId>
             <artifactId>jstreams</artifactId>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
 
 
         <!-- TEST -->

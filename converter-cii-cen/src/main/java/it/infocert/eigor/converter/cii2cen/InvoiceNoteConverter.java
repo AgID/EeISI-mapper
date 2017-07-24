@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -20,7 +21,7 @@ public class InvoiceNoteConverter extends CustomConverter {
     }
 
     //BG0001
-    public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<ConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         String xPathBT0021 = "/CrossIndustryInvoice/ExchangedDocument/IncludedNote/SubjectCode";
         String xPathBT0022 = "/CrossIndustryInvoice/ExchangedDocument/IncludedNote/Content";
 

@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: API</name>
+    <name>Eigor :: API (${project.artifactId})</name>
     <description>The Eigor API allows to programmatically convert invoices between formats.</description>
     <artifactId>eigor-api</artifactId>
 
@@ -92,8 +92,9 @@
             <artifactId>yyyyy</artifactId>
             <version>${project.version}</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/test/test-jar/cii-schematron.jar</systemPath>
+            <systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>
         </dependency>
     </dependencies>
+
 
 </project>

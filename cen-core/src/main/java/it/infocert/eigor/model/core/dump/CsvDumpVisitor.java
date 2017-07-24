@@ -10,6 +10,7 @@ import it.infocert.eigor.model.core.model.Visitor;
 public class CsvDumpVisitor implements Visitor {
 
     private final StringBuilder sb = new StringBuilder();
+    private final char separator = ',';
 
     @Override
     public void startInvoice(BG0000Invoice invoice) {
@@ -21,7 +22,7 @@ public class CsvDumpVisitor implements Visitor {
 
         String name = String.valueOf(btbg.denomination());
         String value = btbg.toString();
-        sb.append(String.format("%s;%s\n", name, value));
+        sb.append(String.format("%s%c%s\n", name, separator, value));
     }
 
     @Override

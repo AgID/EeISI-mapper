@@ -2,12 +2,28 @@ package it.infocert.eigor.api.configuration;
 
 import java.util.*;
 
+/**
+ * A {@link Properties} that is able to replace placeholders.
+ * <h2>Supported Placeholders</h2>
+ * <ul>
+ *     <li>{@code k1=${k2}}: the value of {@code k1} is the value of {@code k2}.</li>
+ *     <li>{@code k1=Hi ${name}}: the value of {@code k1} is the value obtained concatenating {@code "Hi "} and the value of the {@code name} key.</li>
+ *     <li>{@code k1=${env.PATH}}: the value of {@code k1} is the value of the environment variable {@code PATH}.</li>
+ *     <li>{@code k1=${prop.java.io.tmpdir}}: the value of {@code k1} is the value of the Java system property {@code java.io.tmpdir}.</li>
+ * </ul>
+ */
 public class PropertiesWithReplacement extends Properties {
 
+    /**
+     * @see it.infocert.eigor.api.configuration.PropertiesWithReplacement
+     */
     public PropertiesWithReplacement(Properties properties) {
         super(properties);
     }
 
+    /**
+     * @see it.infocert.eigor.api.configuration.PropertiesWithReplacement
+     */
     public PropertiesWithReplacement() {
         super();
     }
@@ -47,6 +63,7 @@ public class PropertiesWithReplacement extends Properties {
             if (delimitedPlaceholder.startsWith("${env.") && delimitedPlaceholder.length() > "${env.}".length()) {
                 String envVariableName = delimitedPlaceholder.substring("${env.".length(), delimitedPlaceholder.length() - 1);
                 String envVariableValue = System.getenv(envVariableName);
+                if(envVariableValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
                 value = envVariableValue;
             }
 
@@ -54,12 +71,15 @@ public class PropertiesWithReplacement extends Properties {
             if (delimitedPlaceholder.startsWith("${prop.") && delimitedPlaceholder.length() > "${prop.}".length()) {
                 String propName = delimitedPlaceholder.substring("${prop.".length(), delimitedPlaceholder.length() - 1);
                 String propValue = System.getProperty(propName);
+                if(propValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
                 value = propValue;
             }
 
             // resolve the property value among other keys
             if (value == null) {
-                value = _getProperty(delimitedPlaceholder.substring(2, delimitedPlaceholder.length() - 1), alreadyLookedUpKeys);
+                String newPlaceholder = delimitedPlaceholder.substring(2, delimitedPlaceholder.length() - 1);
+                value = _getProperty(newPlaceholder, alreadyLookedUpKeys);
+                if(value==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
             }
 
             placeholderWithReplacement.put(delimitedPlaceholder, value);

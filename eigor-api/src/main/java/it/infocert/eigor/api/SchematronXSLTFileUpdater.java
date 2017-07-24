@@ -60,6 +60,7 @@ class SchematronXSLTFileUpdater {
         long xsltLastModifiedTimestamp = 0;
         long schLastModifiedTimestamp = 0;
 
+
         // Find highest (most recent) last modified timestamp file in XSLT directory
         final String[] xsltFilenames = getXSLTFileList();
         if (xsltFilenames != null) {
