@@ -45,9 +45,8 @@ public class CachedResourceResolverTest {
         String baseUri = "http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd";
 
         File cacheFolder = checkThatCacheIsQuicker(type, namespaceURI, publicId, systemId, baseUri);
-
-        String expectedContent = IOUtils.toString(getClass().getResourceAsStream("/expected-xmldsig-core-schema.xsd"), "UTF-8");
-        String actualContent = FileUtils.readFileToString(cacheFolder.listFiles()[0], "UTF-8");
+        String expectedContent = IOUtils.toString(getClass().getResourceAsStream("/expected-xmldsig-core-schema.xsd"), "UTF-8").replaceAll("[\t\r\n]", "");
+        String actualContent = FileUtils.readFileToString(cacheFolder.listFiles()[0], "UTF-8").replaceAll("[\t\r\n]", "");
         assertThat(expectedContent, equalTo(actualContent));
 
     }
