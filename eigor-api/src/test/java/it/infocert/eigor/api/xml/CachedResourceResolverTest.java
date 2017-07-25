@@ -88,7 +88,7 @@ public class CachedResourceResolverTest {
         // then
         assertThat(lsInput2, Matchers.notNullValue());
         assertThat(cacheFolder.listFiles().length, is(1));
-        assertThat("elapsed:" + deltaWithoutCache + "," + deltaWithCache, deltaWithCache, lessThan(deltaWithoutCache / 10));
+        assertThat("elapsed:" + deltaWithoutCache + "," + deltaWithCache, deltaWithCache, lessThan(deltaWithoutCache));
         return cacheFolder;
     }
 

@@ -32,7 +32,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     public static final Charset ENCODING = checkNotNull( Charset.forName("UTF-8") );
     private final File outputFolderFile;
     private LogSupport logSupport = null;
-    private final boolean enableLog = false;
+    private final boolean enableLog = true;
 
     public DebugConversionCallback(File outputFolderFile) {
         this.outputFolderFile = outputFolderFile;
