@@ -7,10 +7,7 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaHeaderType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
-import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
+import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -136,6 +133,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             bfc.computeMultipleCenElements2FpaField();
 
             FatturaElettronicaBodyType fatturaElettronicaBody = bfc.getFatturaElettronicaBody();
+            setCondizioniPagamento(fatturaElettronicaBody);
             LineConverter lineConverter = new LineConverter(conversionRegistry);
             Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
             jaxbFattura.getFatturaElettronicaBody().add(converted.getLeft());
@@ -226,6 +224,15 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Element progressivoInvio = new Element("ProgressivoInvio");
         progressivoInvio.setText("00001");
         doc.getRootElement().getChild("FatturaElettronicaHeader").getChild("DatiTrasmissione").addContent(progressivoInvio);
+    }
+
+    private void setCondizioniPagamento(FatturaElettronicaBodyType body) {
+        List<DatiPagamentoType> datiPagamento = body.getDatiPagamento();
+        if (!datiPagamento.isEmpty()) {
+            for (DatiPagamentoType dati : datiPagamento) {
+                dati.setCondizioniPagamento(CondizioniPagamentoType.TP_02);
+            }
+        }
     }
 
     @Override
