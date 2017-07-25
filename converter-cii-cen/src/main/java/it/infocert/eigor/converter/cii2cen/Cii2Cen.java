@@ -172,7 +172,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	}
 
 	@Override public String getName() {
-		return "cii-cen";
+		return "converter-cii-cen";
 	}
 
 }

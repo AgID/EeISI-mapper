@@ -5,10 +5,7 @@ import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ToCenListBakedRepository implements ToCenConversionRepository, Configurable {
 
@@ -44,5 +41,10 @@ public class ToCenListBakedRepository implements ToCenConversionRepository, Conf
         for (ToCenConversion converter : converters) {
             converter.configure();
         }
+    }
+
+    @Override
+    public List<ToCenConversion> getToCenConverters() {
+        return new ArrayList<>( converters );
     }
 }

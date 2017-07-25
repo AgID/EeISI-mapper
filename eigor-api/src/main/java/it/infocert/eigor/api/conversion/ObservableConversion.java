@@ -95,7 +95,7 @@ public class ObservableConversion {
             fireOnStartingToCenTranformationEvent(ctx);
             ConversionResult<BG0000Invoice> toCenResult = toCen.convert(new ByteArrayInputStream(invoiceInSourceFormat));
             ctx.setToCenResult(toCenResult);
-            if (!toCenResult.hasErrors()) {
+            if (!toCenResult.hasIssues()) {
                 fireOnSuccessfullToCenTranformationEvent(ctx);
             } else {
                 fireOnFailedToCenConversion(ctx);
@@ -130,7 +130,7 @@ public class ObservableConversion {
                 fireOnStartingFromCenTransformation(ctx);
                 conversionResult = fromCen.convert(cenInvoice);
                 ctx.setFromCenResult(conversionResult);
-                if (!conversionResult.hasErrors()) {
+                if (!conversionResult.hasIssues()) {
                     fireOnSuccessfullFromCenTransformation(ctx);
                 } else {
                     fireOnFailedFromCenTransformation(ctx);

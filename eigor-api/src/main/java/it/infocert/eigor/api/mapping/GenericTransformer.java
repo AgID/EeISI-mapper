@@ -103,7 +103,6 @@ public abstract class GenericTransformer {
                                                 errors.add(ConversionIssue.newError(e));
                                             }
                                         } catch (IllegalArgumentException e) {
-                                            log.error("There is no converter registered for: " + paramType, e);
                                             errors.add(ConversionIssue.newError(e));
                                         }
                                     }
