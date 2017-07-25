@@ -22,20 +22,20 @@
         <cbc:ID>iExpress 20110412</cbc:ID>
     </cac:ContractDocumentReference>
     <cac:AdditionalDocumentReference>
-        <cbc:ID>Doc1</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-        <cac:Attachment>
-            <cac:ExternalReference>
-                <cbc:URI>http://www.suppliersite.eu/sheet001.html</cbc:URI>
-            </cac:ExternalReference>
-        </cac:Attachment>
-    </cac:AdditionalDocumentReference>
+<cbc:ID>Doc1</cbc:ID>
+		<cbc:DocumentType>Timesheet</cbc:DocumentType>
+		<cac:Attachment>
+			<cac:ExternalReference>
+				<cbc:URI>http://www.suppliersite.eu/sheet001.html</cbc:URI>
+			</cac:ExternalReference>
+		</cac:Attachment>
+	</cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
         <cac:Party>
             <cac:PostalAddress>
                 <cbc:StreetName>Lindeboomseweg 41</cbc:StreetName>
                 <cbc:CityName>Amersfoort</cbc:CityName>
-                <cbc:PostalZone>38250</cbc:PostalZone>
+                <cbc:PostalZone>3825 AL</cbc:PostalZone>
                 <cac:Country>
                     <cbc:IdentificationCode>NL</cbc:IdentificationCode>
                 </cac:Country>
@@ -100,7 +100,7 @@
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
             </cac:TaxCategory>
-        </cac:TaxSubtotal>
+</cac:TaxSubtotal>
     </cac:TaxTotal>
     <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="EUR">147.00</cbc:LineExtensionAmount>
