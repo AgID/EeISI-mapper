@@ -28,15 +28,26 @@ public class InvoiceNoteConverter extends CustomConverter {
         List<Element> xPathBT0021elementList = CommonConversionModule.evaluateXpath(document, xPathBT0021);
         List<Element> xPathBT0022elementList = CommonConversionModule.evaluateXpath(document, xPathBT0022);
 
-        if (!xPathBT0021elementList.isEmpty()) {
-            for(Element elem : xPathBT0021elementList) {
-                Object assignedSubjectCode = transformer("/BG0001/BT0021", invoice, elem.getText(), errors);
+        int index = 0;
+        int maxElem = 0;
+        int sizeListBT0021 = xPathBT0021elementList.size();
+        int sizeListBT0022 = xPathBT0022elementList.size();
+
+        if (sizeListBT0021 != 0 || sizeListBT0022 != 0) {
+            if (sizeListBT0021 >= sizeListBT0022) {
+                maxElem = sizeListBT0021;
+            } else {
+                maxElem = sizeListBT0022;
             }
         }
-        if (!xPathBT0022elementList.isEmpty()) {
-            for(Element elem : xPathBT0022elementList) {
-                Object assignedContent = transformer("/BG0001/BT0022", invoice, elem.getText(), errors);
+        while(maxElem > index) {
+            if(xPathBT0021elementList.size() > index){
+                transformer("/BG0001/BT0021", invoice, xPathBT0021elementList.get(index).getText(), errors);
             }
+            if(xPathBT0022elementList.size() > index){
+                transformer("/BG0001/BT0022", invoice, xPathBT0022elementList.get(index).getText(), errors);
+            }
+            index++;
         }
 
         return new ConversionResult<>(errors, invoice);

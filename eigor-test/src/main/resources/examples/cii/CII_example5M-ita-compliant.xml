@@ -22,6 +22,10 @@
 			<ram:Content>Ordered through our website</ram:Content>
 			<ram:SubjectCode>AAI</ram:SubjectCode>
 		</ram:IncludedNote>
+		<ram:IncludedNote>
+			<ram:Content>Prova Secondo BG1 content</ram:Content>
+			<ram:SubjectCode>PPP</ram:SubjectCode>
+		</ram:IncludedNote>
 	</rsm:ExchangedDocument>
 	<rsm:SupplyChainTradeTransaction>
 		<ram:IncludedSupplyChainTradeLineItem>
@@ -198,6 +202,7 @@
 		<ram:ApplicableHeaderTradeAgreement>
 			<ram:BuyerReference>qwerty</ram:BuyerReference>
 			<ram:SellerTradeParty>
+				<ram:ID>123</ram:ID>
 				<ram:GlobalID schemeID="0088">5790000436101</ram:GlobalID>
 				<ram:Name>SellerCompany</ram:Name>
 				<ram:Description>Export</ram:Description>

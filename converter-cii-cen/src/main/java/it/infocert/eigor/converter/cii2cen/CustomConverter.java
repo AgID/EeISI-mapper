@@ -111,11 +111,17 @@ public class CustomConverter extends Cii2Cen {
     //CONVERTER GENERALE
 //    PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
     public ConversionResult<BG0000Invoice> convert(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
-        PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
-        InvoiceNoteConverter bg0001 = new InvoiceNoteConverter(new Reflections("it.infocert"), conversionRegistry);
 
-        bg0003.toBG0003(document, invoice, errors);
+        InvoiceNoteConverter bg0001 = new InvoiceNoteConverter(new Reflections("it.infocert"), conversionRegistry);
+        PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
+        SellerConverter bt0029 = new SellerConverter(new Reflections("it.infocert"), conversionRegistry);
+        BuyerIdentifier bt0046 = new BuyerIdentifier(new Reflections("it.infocert"), conversionRegistry);
+
         bg0001.toBG0001(document, invoice, errors);
+        bg0003.toBG0003(document, invoice, errors);
+        bt0029.toBT0029(document, invoice, errors);
+        bt0046.toBT0046(document, invoice, errors);
+
 
         return new ConversionResult<>(errors, invoice);
     }

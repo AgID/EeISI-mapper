@@ -5,13 +5,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-<<<<<<< HEAD
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-=======
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.api.utils.Pair;
->>>>>>> develop
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.*;
@@ -142,7 +139,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		Document document = getDocument(sourceInvoiceStream);
 
 		BG0000Invoice invoice = new BG0000Invoice();
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 		ConversionResult<BG0000Invoice> result = customConverter.toBT0017(document, invoice, errors);
 
 		BT0017TenderOrLotReference expectedBT0017 = new BT0017TenderOrLotReference("Lot567 50");
@@ -166,7 +163,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		Document document = getDocument(sourceInvoiceStream);
 
 		BG0000Invoice invoice = new BG0000Invoice();
-		List<ConversionIssue> errors = new ArrayList<>();
+		List<IConversionIssue> errors = new ArrayList<>();
 		ConversionResult<BG0000Invoice> result = customConverter.convert(document, invoice, errors);
 
 		System.out.println("PROVA 1-25: "+invoice.getBG0003PrecedingInvoiceReference(0).getBT0025PrecedingInvoiceReference(0));
