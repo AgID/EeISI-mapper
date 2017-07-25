@@ -32,6 +32,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     public static final Charset ENCODING = checkNotNull( Charset.forName("UTF-8") );
     private final File outputFolderFile;
     private LogSupport logSupport = null;
+    private final boolean enableLog = true;
 
     public DebugConversionCallback(File outputFolderFile) {
         this.outputFolderFile = outputFolderFile;
@@ -40,9 +41,10 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
 
         // attach the logging for this conversion
-        logSupport = new LogSupport();
-        logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
-
+        if(enableLog) {
+            logSupport = new LogSupport();
+            logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
+        }
         cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
     }
 
@@ -77,7 +79,9 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     @Override public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
-        logSupport.removeLogger();
+        if(logSupport!=null) {
+            logSupport.removeLogger();
+        }
     }
 
     private void cloneSourceInvoice(Path invoiceFile, File outputFolder) throws IOException {

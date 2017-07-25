@@ -6,6 +6,7 @@ import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ConversionRepository implements ToCenConversionRepository, FromCenConversionRepository, Configurable {
@@ -39,6 +40,11 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
         return fromCenConversionRepository.supportedFromCenFormats();
     }
 
+    @Override
+    public List<FromCenConversion> getFromCenConverters() {
+        return fromCenConversionRepository.getFromCenConverters();
+    }
+
     /**
      * Return the {@link ToCenConversion} that knows how to convert an invoice expressed in the given format.
      * @param sourceFormat The format of the original invoice.
@@ -50,6 +56,11 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
 
     @Override public Set<String> supportedToCenFormats() {
         return toCenConversionRepository.supportedToCenFormats();
+    }
+
+    @Override
+    public List<ToCenConversion> getToCenConverters() {
+        return toCenConversionRepository.getToCenConverters();
     }
 
     public static class Builder {
