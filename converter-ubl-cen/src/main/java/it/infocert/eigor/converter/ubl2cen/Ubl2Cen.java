@@ -188,6 +188,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
                 new UnitOfMeasureCodesToStringConverter(),
 
                 new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
+                new StringToUntdid2005DateTimePeriodQualifiers(),
 
                 // dates
                 new StringToJavaLocalDateConverter("dd-MMM-yy"),
@@ -204,6 +205,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
                 // string
                 new StringToStringConverter()
+
 
         );
     }

@@ -7,9 +7,7 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
-import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
+import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -22,6 +20,12 @@ import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +68,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid4461PaymentMeansCodeToItalianCodeString(),
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
             new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter()
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
@@ -81,19 +86,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
-        InputStream xsdStream = null;
         try {
             validator = new XSDValidator(xsdFile.getFile());
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
-        } finally {
-            if (xsdStream != null) {
-                try {
-                    xsdStream.close();
-                } catch (IOException e) {
-                    log.warn("Unable to close stream for resource '{}'.", pathOfXsd);
-                }
-            }
         }
 
         configurableSupport.configure();
@@ -130,11 +126,14 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         }
 
         if (jaxbFattura != null) {
+            CedentePrestatoreCustomConverter cedentePrestatoreCustomConverter = new CedentePrestatoreCustomConverter();
+            cedentePrestatoreCustomConverter.convert(invoice, jaxbFattura.getFatturaElettronicaHeader(), errors);
             BodyFatturaConverter bfc = new BodyFatturaConverter(jaxbFattura.getFatturaElettronicaBody().remove(0), factory, invoice, errors);
             bfc.setConversionRegistry(conversionRegistry);
             bfc.computeMultipleCenElements2FpaField();
 
             FatturaElettronicaBodyType fatturaElettronicaBody = bfc.getFatturaElettronicaBody();
+            setCondizioniPagamento(fatturaElettronicaBody);
             LineConverter lineConverter = new LineConverter(conversionRegistry);
             Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
             jaxbFattura.getFatturaElettronicaBody().add(converted.getLeft());
@@ -158,6 +157,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         if (xmlOutput == null) {
             return result;
         } else {
+
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
@@ -224,6 +224,15 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Element progressivoInvio = new Element("ProgressivoInvio");
         progressivoInvio.setText("00001");
         doc.getRootElement().getChild("FatturaElettronicaHeader").getChild("DatiTrasmissione").addContent(progressivoInvio);
+    }
+
+    private void setCondizioniPagamento(FatturaElettronicaBodyType body) {
+        List<DatiPagamentoType> datiPagamento = body.getDatiPagamento();
+        if (!datiPagamento.isEmpty()) {
+            for (DatiPagamentoType dati : datiPagamento) {
+                dati.setCondizioniPagamento(CondizioniPagamentoType.TP_02);
+            }
+        }
     }
 
     @Override
