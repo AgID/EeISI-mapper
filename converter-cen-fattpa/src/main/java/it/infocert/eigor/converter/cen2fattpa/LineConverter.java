@@ -136,6 +136,7 @@ public class LineConverter {
                     DettaglioLineeType dettaglioLinee = new DettaglioLineeType();
                     int number = datiBeniServizi.getDettaglioLinee().size() + 1;
                     dettaglioLinee.setNumeroLinea(number);
+                    dettaglioLinee.setDescrizione("Descrizione"); //FIXME HOW????
                     log.trace("Set NumeroLinea with value {}", number);
 
                     if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
@@ -218,6 +219,7 @@ public class LineConverter {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             for (BG0025InvoiceLine invoiceLine : invoice.getBG0025InvoiceLine()) {
                 DettaglioLineeType dettaglioLinee = new DettaglioLineeType();
+                dettaglioLinee.setDescrizione("Descrizione"); //FIXME Again, how?
 
                 if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
                     BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue());
@@ -230,15 +232,12 @@ public class LineConverter {
                 int number = datiBeniServizi.getDettaglioLinee().size() + 1;
                 dettaglioLinee.setNumeroLinea(number);
                 log.trace("Set NumeroLinea with value {}", number);
-                ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
-                scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
-                dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione);
-                log.trace("Set ScontoMaggiorazione with type {}", TipoScontoMaggiorazioneType.SC);
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
 
-            if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
-                for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
+                if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
+                    for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
 
+                        ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
                         Double discountValue = 0d;
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         Double baseAmount = invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
@@ -281,9 +280,8 @@ public class LineConverter {
                                     log.trace("Set BT119 as AliquotaIVA with value {}", value);
                                 }
                             }
-                            ScontoMaggiorazioneType scontoMaggiorazione2 = new ScontoMaggiorazioneType();
                             scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
-                            dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione2);
+                            dettaglioLinee1.getScontoMaggiorazione().add(scontoMaggiorazione);
                             datiBeniServizi.getDettaglioLinee().add(dettaglioLinee1);
                         }
                     }
@@ -305,9 +303,9 @@ public class LineConverter {
                         surchargeValue = baseAmount * percentage;
                     }
 
-                    ScontoMaggiorazioneType scontoMaggiorazione3 = new ScontoMaggiorazioneType();
-                    scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.MG);
-                    dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione3);
+                    ScontoMaggiorazioneType scontoMaggiorazione1 = new ScontoMaggiorazioneType();
+                    scontoMaggiorazione1.setTipo(TipoScontoMaggiorazioneType.MG);
+                    dettaglioLinee2.getScontoMaggiorazione().add(scontoMaggiorazione1);
                     String bt0144 = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione Linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
                     String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? "" : conversionRegistry.convert(Untdid7161SpecialServicesCodes.class, String.class, invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue());
                     if (surchargeValue > 0) {

@@ -8,6 +8,7 @@ import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaHeaderType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.converter.cen2fattpa.models.ObjectFactory;
 import it.infocert.eigor.model.core.enums.*;
@@ -70,7 +71,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid4461PaymentMeansCodeToItalianCodeString(),
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
             new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter()
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
@@ -87,20 +89,10 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
-        InputStream xsdStream = null;
         try {
-            xsdStream = xsdFile.getInputStream();
-            validator = new XSDValidator(xsdStream);
+            validator = new XSDValidator(xsdFile.getFile());
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
-        } finally {
-            if (xsdStream != null) {
-                try {
-                    xsdStream.close();
-                } catch (IOException e) {
-                    log.warn("Unable to close stream for resource '{}'.", pathOfXsd);
-                }
-            }
         }
 
         configurableSupport.configure();
@@ -137,6 +129,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         }
 
         if (jaxbFattura != null) {
+            CedentePrestatoreCustomConverter cedentePrestatoreCustomConverter = new CedentePrestatoreCustomConverter();
+            cedentePrestatoreCustomConverter.convert(invoice, jaxbFattura.getFatturaElettronicaHeader(), errors);
             BodyFatturaConverter bfc = new BodyFatturaConverter(jaxbFattura.getFatturaElettronicaBody().remove(0), factory, invoice, errors);
             bfc.setConversionRegistry(conversionRegistry);
             bfc.computeMultipleCenElements2FpaField();
