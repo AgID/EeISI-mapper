@@ -238,6 +238,14 @@ public class LineConverter {
                     }
                 }
 
+                if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+
+                    if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
+                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
+                        dettaglioLinee.setAliquotaIVA(value); //Even if BG25 doesn't have it, FatturaPA wants it
+                    }
+                }
 
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
 
