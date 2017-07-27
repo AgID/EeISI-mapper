@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class PayeeIdentifierConverter extends CustomConverter {
 
-    public PayeeIdentifierConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public PayeeIdentifierConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBT0060(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

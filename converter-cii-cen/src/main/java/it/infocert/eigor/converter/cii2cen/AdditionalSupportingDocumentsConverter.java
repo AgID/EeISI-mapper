@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class AdditionalSupportingDocumentsConverter extends CustomConverter{
 
-    public AdditionalSupportingDocumentsConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public AdditionalSupportingDocumentsConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     //BG0024

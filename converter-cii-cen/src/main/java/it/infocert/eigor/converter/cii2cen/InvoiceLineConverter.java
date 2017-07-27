@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class InvoiceLineConverter extends CustomConverter {
 
-    public InvoiceLineConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public InvoiceLineConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     //BG0025

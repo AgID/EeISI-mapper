@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class DeliverToLocationIdentifierConverter extends CustomConverter {
 
-    public DeliverToLocationIdentifierConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public DeliverToLocationIdentifierConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBT0071(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

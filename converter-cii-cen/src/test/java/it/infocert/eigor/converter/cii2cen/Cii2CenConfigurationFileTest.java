@@ -108,8 +108,8 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		ConversionResult<BG0000Invoice> result = manyToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
-		BT0011ProjectReference expectedBT0011 = new BT0011ProjectReference("Project345 Project reference");
-		assertEquals(expectedBT0011, invoice.getBT0011ProjectReference(0));
+        BT0041SellerContactPoint expectedBT0041 = new BT0041SellerContactPoint("ciao");
+		assertEquals(expectedBT0041, invoice.getBG0004Seller(0).getBG0006SellerContact(0).getBT0041SellerContactPoint(0));
 	}
 
 	@Test

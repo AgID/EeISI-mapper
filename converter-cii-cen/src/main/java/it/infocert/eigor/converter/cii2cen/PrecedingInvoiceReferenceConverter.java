@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class PrecedingInvoiceReferenceConverter extends CustomConverter {
 
-    public PrecedingInvoiceReferenceConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public PrecedingInvoiceReferenceConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

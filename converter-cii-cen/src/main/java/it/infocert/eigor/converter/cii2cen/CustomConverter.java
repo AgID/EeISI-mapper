@@ -36,20 +36,22 @@ public class CustomConverter extends Cii2Cen implements CustomMapping<Document> 
 
     public ConversionResult<BG0000Invoice> convert(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        TenderRefInvoicedObjectID bt0017_18 = new TenderRefInvoicedObjectID(new Reflections("it.infocert"), conversionRegistry);
-        InvoiceNoteConverter bg0001 = new InvoiceNoteConverter(new Reflections("it.infocert"), conversionRegistry);
-        PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
-        SellerConverter bt0029 = new SellerConverter(new Reflections("it.infocert"), conversionRegistry);
-        BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
-        CreditTransferConverter bg0017 = new CreditTransferConverter(new Reflections("it.infocert"), conversionRegistry);
-        DocumentLevelAllowancesConverter bg0020 = new DocumentLevelAllowancesConverter(new Reflections("it.infocert"), conversionRegistry);
-        DocumentLevelChargesConverter bg0021 = new DocumentLevelChargesConverter(new Reflections("it.infocert"), conversionRegistry);
-        VATBreakdownConverter bg0023 = new VATBreakdownConverter(new Reflections("it.infocert"), conversionRegistry);
-        AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
-        InvoiceLineConverter bg0025 = new InvoiceLineConverter(new Reflections("it.infocert"), conversionRegistry);
-        DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
-        PayeeIdentifierConverter bt0060 = new PayeeIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+        TenderRefInvoicedObjectID bt0017_18 = new TenderRefInvoicedObjectID();
+        InvoiceNoteConverter bg0001 = new InvoiceNoteConverter();
+        PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter();
+        SellerConverter bt0029 = new SellerConverter();
+        BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter();
+        CreditTransferConverter bg0017 = new CreditTransferConverter();
+        DocumentLevelAllowancesConverter bg0020 = new DocumentLevelAllowancesConverter();
+        DocumentLevelChargesConverter bg0021 = new DocumentLevelChargesConverter();
+        VATBreakdownConverter bg0023 = new VATBreakdownConverter();
+        AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
+        InvoiceLineConverter bg0025 = new InvoiceLineConverter();
+        DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter();
+        PayeeIdentifierConverter bt0060 = new PayeeIdentifierConverter();
+        ProjectReferenceConverter bt0011 = new ProjectReferenceConverter();
 
+        bt0011.toBT0011(document, invoice, errors);
         bt0017_18.toBT0017_18(document, invoice, errors);
         bg0001.toBG0001(document, invoice, errors);
         bg0003.toBG0003(document, invoice, errors);

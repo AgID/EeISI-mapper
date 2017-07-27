@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class SellerConverter extends CustomConverter {
 
-    public SellerConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public SellerConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBT0029(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

@@ -208,6 +208,7 @@
 				</ram:SpecifiedLegalOrganization>
 				<ram:DefinedTradeContact>
 					<ram:PersonName>Anthon Larsen</ram:PersonName>
+					<ram:DepartmentName>Prova dep</ram:DepartmentName>
 					<ram:TelephoneUniversalCommunication>
 						<ram:CompleteNumber>+3198989898</ram:CompleteNumber>
 					</ram:TelephoneUniversalCommunication>

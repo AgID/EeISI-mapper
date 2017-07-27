@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class DocumentLevelAllowancesConverter extends CustomConverter {
 
-    public DocumentLevelAllowancesConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public DocumentLevelAllowancesConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

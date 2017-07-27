@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class VATBreakdownConverter extends CustomConverter {
 
-    public VATBreakdownConverter(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public VATBreakdownConverter() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {

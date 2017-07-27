@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class TenderRefInvoicedObjectID extends CustomConverter {
 
-    public TenderRefInvoicedObjectID(Reflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public TenderRefInvoicedObjectID() {
+        super(new Reflections("it.infocert"), new ConversionRegistry());
     }
 
     public ConversionResult<BG0000Invoice> toBT0017_18(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
