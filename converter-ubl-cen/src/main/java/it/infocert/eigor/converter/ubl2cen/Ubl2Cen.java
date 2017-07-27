@@ -172,7 +172,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     protected String getCustomMappingPath() {
-        return configuration.getMandatoryString(CUSTOM_CONVERTER_MAPPING_PATH);
+        return CUSTOM_CONVERTER_MAPPING_PATH;
     }
 
     @Override
