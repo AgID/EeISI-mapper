@@ -104,74 +104,11 @@ BT-153,American Cookies
 
 ## Build
 
-### Development Environment
-This project requires Maven 3 and Java 7. To avoid messing around with `JAVA_HOME` or break other project, you must set a Maven Toolchain that makes use of the right JDK.
-Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the following snippet:
+Please check the [build instructions](BUILD.md).
 
-```
-<toolchains>
-    <toolchain>
-        <type>jdk</type>
-        <provides>
-            <version>1.7.0</version>
-            <vendor>YOUR_VENDOR (openjdk or oracle)</vendor>
-            <id>jdk-1.7.0</id>
-        </provides>
-        <configuration>
-            <jdkHome>/path/to/your/java/home</jdkHome>
-        </configuration>
-    </toolchain>
-</toolchains>
-  ```
+### Run 
 
-***THIS STEP IS MANDATORY EVEN IF THE JDK 7 IS YOUR ONLY INSTALLED JDK***
-
-
-### Compile
-The project uses Maven as its build system. A convenient wrapper is provided to avoid the need
-to install Maven on each system. It accepts all the normal Maven commands and uses the standard configuration
-files and folders (`.m2/`, `settings.xml`, `toolchains.xml` etc...).
-
-You can invoke it in the following ways:   
-*Unix (MacOS, Linux, BSD...)*
-
-    ./mvnw
-    
-*Windows Powershell*
-    
-    ./mvnw.cmd
-    
-*Windows CMD*
-    
-    mvnw
-    
-In the following examples we will use the Unix notation.
-
-To build the project:   
-
-    ./mvnw clean install
-
-    
-To package a distribution zip:
-```bash
-./mvnw package -P release
-```
-
-### Run
-You will find the zip file in `eigor-cli/target/eigor.zip`, unzip the file and run one of the following scripts,
-according to your operative sistem:   
-
-*Windows*
-```powershell
-.\eigor.bat <insert params>
-```
-*Unix (MacOS, Linux, BSD...)*
-```bash
-./eigor.sh <insert params>
-```
-
-Example invoices can be found in `./examples`, configuration files in `./conf` and log files 
-are stored in `./logs`. A `./reports` folder will be automatically created as a potential output results.
+Please check the [run instructions](RUN.md).
 
 ## Release
 1. start a release with gitflow. That places you in a `release/eigor-x.y.z` branch.
@@ -182,7 +119,7 @@ are stored in `./logs`. A `./reports` folder will be automatically created as a 
 6. in local develop executes again `./mvnw versions:set` to set the next `x.y.z+1-SNAPSHOT`
 7. run a `./mvnw install` locally to have all project dependencies updated.
 8. push master TAG inlcuded!
-9. push and develop. 
+9. push and develop.
    
 ## Contributing
 * Make your changes in a new git branch. 
