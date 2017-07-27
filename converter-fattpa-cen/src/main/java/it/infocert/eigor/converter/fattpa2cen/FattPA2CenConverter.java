@@ -77,11 +77,36 @@ public class FattPA2CenConverter extends AbstractToCenConverter {
     }
 
     @Override
+    public String getMappingRegex() {
+        return ".+";
+    }
+
+    @Override
     public String getName() {
         return "cen-fatturapa";
     }
 
     @Override public void configure() throws ConfigurationException {
         // this converter is probably not completely done and it does not support the protocol imposed by the abstract.
+    }
+
+    @Override
+    protected String getOne2OneMappingPath() {
+        return null;
+    }
+
+    @Override
+    protected String getMany2OneMappingPath() {
+        return null;
+    }
+
+    @Override
+    protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
+    @Override
+    protected String getCustomMappingPath() {
+        return null;
     }
 }

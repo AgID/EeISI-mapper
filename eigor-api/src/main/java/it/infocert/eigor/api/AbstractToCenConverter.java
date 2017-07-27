@@ -36,6 +36,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     private Multimap<String, String> oneToOneMappings;
     private Multimap<String, String> manyToOne;
     protected final ConfigurableSupport configurableSupport;
+    private List<CustomMapping<?>> customMappings;
 
     public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
@@ -72,6 +73,19 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
             if(many2OneMappingPath!=null){
                 Resource thePathOfOneOneMappingFile = drl.getResource(many2OneMappingPath);
                 manyToOne = mapper.getMapping(thePathOfOneOneMappingFile);
+            }
+        }
+
+        // load custom mappings
+        {
+            String resource = getCustomMappingPath();
+            if (resource != null) {
+                try (InputStream inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream()) {
+                    CustomMappingLoader cml = new CustomMappingLoader(inputStream);
+                    customMappings = cml.loadCustomMapping();
+                } catch (IllegalAccessException | InstantiationException | IOException | ClassNotFoundException e) {
+                    throw new ConfigurationException(e);
+                }
             }
         }
 
@@ -170,23 +184,36 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     }
 
 
-    protected String getOne2OneMappingPath() {
-        return null;
+    /**
+     * Get the one2one mapping configuration file path
+     *
+     * @return the path to the file
+     */
+    protected abstract String getOne2OneMappingPath();
+
+    /**
+     * Get the many2one mapping configuration file path
+     *
+     * @return the path to the file
+     */
+    protected abstract String getMany2OneMappingPath();
+
+    /**
+     * Get the one2many mapping configuration file path
+     *
+     * @return the path to the file
+     */
+    protected abstract String getOne2ManyMappingPath();
+
+    /**
+     * Get the path for the {@link CustomMapping} configuration file
+     *
+     * @return the path to the file
+     */
+    protected abstract String getCustomMappingPath();
+
+    protected List<CustomMapping<?>> getCustomMapping() {
+        return customMappings;
     }
 
-    protected String getMany2OneMappingPath() {
-        return null;
-    }
-
-    protected String getOne2ManyMappingPath() {
-        return null;
-    }
-
-    public String getMappingRegex() {
-        return regex;
-    }
-
-    public void setMappingRegex(String regex) {
-        this.regex = regex;
-    }
 }

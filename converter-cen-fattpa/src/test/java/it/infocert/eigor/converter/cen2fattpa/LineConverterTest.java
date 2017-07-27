@@ -1,15 +1,12 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2fattpa.converters.Untdid7161SpecialServicesCodesToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
-import it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -21,38 +18,34 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class LineConverterTest {
 
     private BG0000Invoice invoice;
-    private FatturaElettronicaBodyType body;
+    private FatturaElettronicaType fatturaElettronica;
 
     @Before
     public void setUp() throws Exception {
         invoice = new BG0000Invoice();
+        fatturaElettronica = new FatturaElettronicaType();
         FatturaElettronicaBodyType b = new FatturaElettronicaBodyType();
         b.setDatiBeniServizi(new DatiBeniServiziType());
-        body = b;
+        fatturaElettronica.getFatturaElettronicaBody().add(b);
     }
 
     @Test
     public void shouldConvertWithError() throws Exception {
-        Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted =
-                new LineConverter(
-                        mock(ConversionRegistry.class)
-                ).convert(
-                        invoice,
-                        null,
-                        Lists.<IConversionIssue>newArrayList());
-        assertNull(converted.getLeft());
-        assertFalse(converted.getRight().isEmpty());
+        new LineConverter().map(
+                invoice,
+                fatturaElettronica,
+                Lists.<IConversionIssue>newArrayList());
     }
 
     @Test
     public void shouldMapBG20() throws Exception {
         populateWithBG20();
-        FatturaElettronicaBodyType body = convert().getLeft();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
         assertThat(dettaglioLineeList.size(), is(1));
 
@@ -72,7 +65,8 @@ public class LineConverterTest {
     @Test
     public void shouldMapBG21() throws Exception {
         populateWithBG21();
-        FatturaElettronicaBodyType body = convert().getLeft();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
 
 
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
@@ -94,42 +88,16 @@ public class LineConverterTest {
     @Test
     public void shouldMapBG25() throws Exception {
         populateWithBG25();
-
-        FatturaElettronicaBodyType body = convert().getLeft();
-
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
         assertThat(dettaglioLineeList.size(), is(5));
 
 
     }
 
-    private Pair<FatturaElettronicaBodyType, List<IConversionIssue>> convert() {
-        return new LineConverter(
-                new ConversionRegistry(
-                        new CountryNameToIso31661CountryCodeConverter(),
-                        new LookUpEnumConversion(Iso31661CountryCodes.class),
-                        new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                        new StringToUntdid1001InvoiceTypeCodeConverter(),
-                        new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                        new StringToIso4217CurrenciesFundsCodesConverter(),
-                        new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                        new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                        new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                        new StringToUnitOfMeasureConverter(),
-                        new LookUpEnumConversion(UnitOfMeasureCodes.class),
-                        new StringToDoubleConverter(),
-                        new StringToStringConverter(),
-                        new JavaLocalDateToStringConverter(),
-                        new Iso4217CurrenciesFundsCodesToStringConverter(),
-                        new Iso31661CountryCodesToStringConverter(),
-                        new DoubleToStringConverter("#.00"),
-                        new UnitOfMeasureCodesToStringConverter(),
-                        new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
-                        new Untdid4461PaymentMeansCodeToItalianCodeString(),
-                        new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
-                        new Untdid7161SpecialServicesCodesToItalianCodeStringConverter()
-                )
-        ).convert(invoice, body, Lists.<IConversionIssue>newArrayList());
+    private void convert() {
+        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList());
     }
 
     private void populateWithBG20() {

@@ -10,8 +10,8 @@ import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
-import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
 import it.infocert.eigor.api.mapping.fromCen.OneCen2ManyXpathMappingValidator;
+import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
@@ -23,10 +23,12 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,6 +47,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     private Multimap<String, String> many2oneMappings;
     private Multimap<String, String> one2ManyMappings;
     protected final ConfigurableSupport configurableSupport;
+    private List<CustomMapping<?>> customMappings;
 
     protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
@@ -122,6 +125,19 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                         inputStream.close();
                 } catch (IOException e) {
                     log.warn("Unable to close resource {}.", resource);
+                }
+            }
+        }
+
+        // load custom mappings
+        {
+            String resource = getCustomMappingPath();
+            if (resource != null) {
+                try (InputStream inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream()) {
+                    CustomMappingLoader cml = new CustomMappingLoader(inputStream);
+                    customMappings = cml.loadCustomMapping();
+                } catch (IllegalAccessException | InstantiationException | IOException | ClassNotFoundException e) {
+                    throw new ConfigurationException(e);
                 }
             }
         }
@@ -266,16 +282,30 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
      */
     protected abstract String getOne2OneMappingPath();
 
+    /**
+     * Get the many2one mapping configuration file path
+     *
+     * @return the path to the file
+     */
     protected abstract String getMany2OneMappingPath();
 
+    /**
+     * Get the one2many mapping configuration file path
+     *
+     * @return the path to the file
+     */
     protected abstract String getOne2ManyMappingPath();
 
-    public void setMappingRegex(String regex) {
-        this.regex = regex;
-    }
+    /**
+     * Get the path for the {@link CustomMapping} configuration file
+     *
+     * @return the path to the file
+     */
+    protected abstract String getCustomMappingPath();
 
-    @Override
-    public String getMappingRegex() {
-        return regex;
+
+
+    protected List<CustomMapping<?>> getCustomMapping() {
+        return customMappings;
     }
 }

@@ -89,6 +89,11 @@ public class DefaultEigorConfigurationLoader {
 
     }
 
+    /** Shorthand method to get the Eigor configuration. */
+    public static EigorConfiguration configuration() {
+        return new DefaultEigorConfigurationLoader().loadConfiguration();
+    }
+
     private EigorConfiguration fromClasspath(String resourcePath) throws IOException {
         InputStream conf = getClass().getResourceAsStream(resourcePath);
         if(conf == null) return null;
