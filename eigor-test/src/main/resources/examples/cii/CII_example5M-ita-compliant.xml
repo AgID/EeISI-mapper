@@ -22,10 +22,6 @@
 			<ram:Content>Ordered through our website</ram:Content>
 			<ram:SubjectCode>AAI</ram:SubjectCode>
 		</ram:IncludedNote>
-		<ram:IncludedNote>
-			<ram:Content>Prova Secondo BG1 content</ram:Content>
-			<ram:SubjectCode>PPP</ram:SubjectCode>
-		</ram:IncludedNote>
 	</rsm:ExchangedDocument>
 	<rsm:SupplyChainTradeTransaction>
 		<ram:IncludedSupplyChainTradeLineItem>
@@ -202,7 +198,7 @@
 		<ram:ApplicableHeaderTradeAgreement>
 			<ram:BuyerReference>qwerty</ram:BuyerReference>
 			<ram:SellerTradeParty>
-				<ram:ID>123</ram:ID>
+                <ram:ID>123</ram:ID>
 				<ram:GlobalID schemeID="0088">5790000436101</ram:GlobalID>
 				<ram:Name>SellerCompany</ram:Name>
 				<ram:Description>Export</ram:Description>
@@ -368,7 +364,8 @@
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>58</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
-					<ram:IBANID />
+					<ram:IBANID>123</ram:IBANID>
+					<ram:ProprietaryID>456</ram:ProprietaryID>
 				</ram:PayeePartyCreditorFinancialAccount>
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:ApplicableTradeTax>
@@ -452,12 +449,6 @@
 				<ram:IssuerAssignedID>TOSL109</ram:IssuerAssignedID>
 				<ram:FormattedIssueDateTime>
 					<qdt:DateTimeString format="102">20130310</qdt:DateTimeString>
-				</ram:FormattedIssueDateTime>
-			</ram:InvoiceReferencedDocument>
-			<ram:InvoiceReferencedDocument>
-				<ram:IssuerAssignedID>PROVASECOND</ram:IssuerAssignedID>
-				<ram:FormattedIssueDateTime>
-					<qdt:DateTimeString format="102">20170724</qdt:DateTimeString>
 				</ram:FormattedIssueDateTime>
 			</ram:InvoiceReferencedDocument>
 			<ram:ReceivableSpecifiedTradeAccountingAccount>

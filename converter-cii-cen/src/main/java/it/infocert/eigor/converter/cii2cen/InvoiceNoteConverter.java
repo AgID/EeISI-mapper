@@ -1,18 +1,21 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
+import it.infocert.eigor.model.core.model.BT0021InvoiceNoteSubjectCode;
+import it.infocert.eigor.model.core.model.BT0022InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.Namespace;
 import org.reflections.Reflections;
 
 import java.util.List;
 
 /**
- * Created by Marco Basilico on 24/07/2017.
+ * The Invoice Note Custom Converter
  */
 public class InvoiceNoteConverter extends CustomConverter {
 
@@ -20,36 +23,38 @@ public class InvoiceNoteConverter extends CustomConverter {
         super(reflections, conversionRegistry);
     }
 
-    //BG0001
     public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
-        String xPathBT0021 = "/CrossIndustryInvoice/ExchangedDocument/IncludedNote/SubjectCode";
-        String xPathBT0022 = "/CrossIndustryInvoice/ExchangedDocument/IncludedNote/Content";
 
-        List<Element> xPathBT0021elementList = CommonConversionModule.evaluateXpath(document, xPathBT0021);
-        List<Element> xPathBT0022elementList = CommonConversionModule.evaluateXpath(document, xPathBT0022);
+        BG0001InvoiceNote bg0001 = null;
 
-        int index = 0;
-        int maxElem = 0;
-        int sizeListBT0021 = xPathBT0021elementList.size();
-        int sizeListBT0022 = xPathBT0022elementList.size();
+        Element rootElement = document.getRootElement();
+        List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        if (sizeListBT0021 != 0 || sizeListBT0022 != 0) {
-            if (sizeListBT0021 >= sizeListBT0022) {
-                maxElem = sizeListBT0021;
-            } else {
-                maxElem = sizeListBT0022;
+        List<Element> includedNotes = null;
+
+        Element child = findNamespaceChild(rootElement, namespacesInScope, "ExchangedDocument");
+
+        if (child != null) {
+            includedNotes = findNamespaceChildren(child, namespacesInScope, "IncludedNote");
+
+            for(Element elem : includedNotes) {
+                bg0001 = new BG0001InvoiceNote();
+
+                Element subjectCode = findNamespaceChild(elem, namespacesInScope, "SubjectCode");
+                Element content = findNamespaceChild(elem, namespacesInScope, "Content");
+
+                if (subjectCode != null) {
+                    BT0021InvoiceNoteSubjectCode bt0021 = new BT0021InvoiceNoteSubjectCode(subjectCode.getText());
+                    bg0001.getBT0021InvoiceNoteSubjectCode().add(bt0021);
+                }
+                if (content != null) {
+                    BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(content.getText());
+                    bg0001.getBT0022InvoiceNote().add(bt0022);
+                }
+
+                invoice.getBG0001InvoiceNote().add(bg0001);
             }
         }
-        while(maxElem > index) {
-            if(xPathBT0021elementList.size() > index){
-                transformer("/BG0001/BT0021", invoice, xPathBT0021elementList.get(index).getText(), errors);
-            }
-            if(xPathBT0022elementList.size() > index){
-                transformer("/BG0001/BT0022", invoice, xPathBT0022elementList.get(index).getText(), errors);
-            }
-            index++;
-        }
-
         return new ConversionResult<>(errors, invoice);
     }
 }

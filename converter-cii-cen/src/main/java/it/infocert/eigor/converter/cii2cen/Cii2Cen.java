@@ -145,17 +145,8 @@ public class Cii2Cen extends AbstractToCenConverter {
 			throw new RuntimeException(e);
 		}
 
-
-		//PROVA CUSTOM MAPPING
 		CustomConverter customConverter = new CustomConverter(new Reflections("it.infocert"), conversionRegistry);
-
-		result = customConverter.toBT0017(document, result.getResult(), errors);
-		result = customConverter.toBT0018(document, result.getResult(), errors);
-
-		//Suddiviso in classi
 		result = customConverter.convert(document, result.getResult(), errors);
-
-		//FINE PROVA CUSTOM MAPPING
 
 		return result;
 	}
