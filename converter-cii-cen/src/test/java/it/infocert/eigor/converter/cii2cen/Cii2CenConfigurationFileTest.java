@@ -109,9 +109,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		ConversionResult<BG0000Invoice> result = manyToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
 		BT0011ProjectReference expectedBT0011 = new BT0011ProjectReference("Project345 Project reference");
-		BT0060PayeeIdentifierAndSchemeIdentifier expectedBT0060 = new BT0060PayeeIdentifierAndSchemeIdentifier("DK16356608 123456");
 		assertEquals(expectedBT0011, invoice.getBT0011ProjectReference(0));
-		assertEquals(expectedBT0060, invoice.getBG0010Payee().get(0).getBT0060PayeeIdentifierAndSchemeIdentifier(0));
 	}
 
 	@Test
