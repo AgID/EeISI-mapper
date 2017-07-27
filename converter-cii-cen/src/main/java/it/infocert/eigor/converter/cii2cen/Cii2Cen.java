@@ -72,7 +72,6 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
-		setMappingRegex("(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?");
 		this.configuration = checkNotNull(configuration);
 	}
 
@@ -162,6 +161,11 @@ public class Cii2Cen extends AbstractToCenConverter {
 	}
 
 	@Override
+	public String getMappingRegex() {
+		return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
+	}
+
+	@Override
 	protected String getOne2OneMappingPath() {
 		return configuration.getMandatoryString(ONE2ONE_MAPPING_PATH);
 	}
@@ -169,6 +173,16 @@ public class Cii2Cen extends AbstractToCenConverter {
 	@Override
 	protected String getMany2OneMappingPath() {
 		return configuration.getMandatoryString(MANY2ONE_MAPPING_PATH);
+	}
+
+	@Override
+	protected String getOne2ManyMappingPath() {
+		return null;
+	}
+
+	@Override
+	protected String getCustomMappingPath() {
+		return null;
 	}
 
 	@Override public String getName() {
