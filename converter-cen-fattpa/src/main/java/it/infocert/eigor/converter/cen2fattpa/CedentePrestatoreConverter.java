@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -10,13 +11,11 @@ import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
 
 import java.util.List;
 
-public class CedentePrestatoreCustomConverter {
+public class CedentePrestatoreConverter implements CustomMapping<FatturaElettronicaType> {
 
-    public Pair<FatturaElettronicaHeaderType, List<IConversionIssue>> convert(BG0000Invoice invoice, FatturaElettronicaHeaderType header, List<IConversionIssue> errors) {
-
-        addRegimeFiscale(invoice, header, errors);
-
-        return new Pair<>(header, errors);
+    @Override
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+        addRegimeFiscale(invoice, fatturaElettronica.getFatturaElettronicaHeader(), errors);
     }
 
     private void addRegimeFiscale(BG0000Invoice invoice, FatturaElettronicaHeaderType header, List<IConversionIssue> errors) {
@@ -42,4 +41,5 @@ public class CedentePrestatoreCustomConverter {
             }
         }
     }
+
 }

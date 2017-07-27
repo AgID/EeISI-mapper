@@ -69,6 +69,11 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     }
 
     @Override
+    public String getMappingRegex() {
+        return ".+";
+    }
+
+    @Override
     public String getOne2OneMappingPath() {
         return "/tmp/fake.properties";
     }
@@ -78,6 +83,11 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     }
 
     @Override protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
+    @Override
+    protected String getCustomMappingPath() {
         return null;
     }
 

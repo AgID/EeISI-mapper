@@ -13,12 +13,18 @@ import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.*;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -26,12 +32,27 @@ public class Cen2FattPATest {
     private static final Logger log = LoggerFactory.getLogger(Cen2FattPATest.class);
 
     private Cen2FattPA converter;
+    private XPathFactory xPathFactory;
 
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
         converter = new Cen2FattPA(new Reflections("it.infocert"), conf);
         converter.configure();
+        xPathFactory = XPathFactory.newInstance();
+    }
+
+    @Test
+    public void shouldApplyCustomMappings() throws Exception {
+        byte[] fattpaXML = converter.convert(createInvoice()).getResult();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new ByteArrayInputStream(fattpaXML));
+
+        String lineNumber = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/NumeroLinea/text()");
+        assertNotNull(lineNumber);
+        assertEquals("1", lineNumber);
     }
 
     @Test
@@ -66,6 +87,12 @@ public class Cen2FattPATest {
         invoiceLine.getBT0131InvoiceLineNetAmount().add(new BT0131InvoiceLineNetAmount(12d));
         invoice.getBG0025InvoiceLine().add(invoiceLine);
         return invoice;
+    }
+
+    private String getStringByXPath(Document doc, String xpath) throws XPathExpressionException {
+        XPath xPath = xPathFactory.newXPath();
+        XPathExpression xPathExpression = xPath.compile(xpath);
+        return (String) xPathExpression.evaluate(doc, XPathConstants.STRING);
     }
 
 }
