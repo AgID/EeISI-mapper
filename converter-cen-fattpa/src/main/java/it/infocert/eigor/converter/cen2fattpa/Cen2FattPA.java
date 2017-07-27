@@ -4,7 +4,6 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -20,15 +19,8 @@ import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -42,6 +34,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-one";
     private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.many-to-one";
     private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cen-fatturapa.mapping.custom";
+
 
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
@@ -76,7 +70,6 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
     public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
-        setMappingRegex("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*");
     }
 
     @Override
@@ -126,17 +119,13 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         }
 
         if (jaxbFattura != null) {
-            CedentePrestatoreCustomConverter cedentePrestatoreCustomConverter = new CedentePrestatoreCustomConverter();
-            cedentePrestatoreCustomConverter.convert(invoice, jaxbFattura.getFatturaElettronicaHeader(), errors);
-            BodyFatturaConverter bfc = new BodyFatturaConverter(jaxbFattura.getFatturaElettronicaBody().remove(0), factory, invoice, errors);
-            bfc.setConversionRegistry(conversionRegistry);
-            bfc.computeMultipleCenElements2FpaField();
+            applyCustomMapping(invoice, jaxbFattura, errors);
 
-            FatturaElettronicaBodyType fatturaElettronicaBody = bfc.getFatturaElettronicaBody();
-            setCondizioniPagamento(fatturaElettronicaBody);
-            LineConverter lineConverter = new LineConverter(conversionRegistry);
-            Pair<FatturaElettronicaBodyType, List<IConversionIssue>> converted = lineConverter.convert(invoice, fatturaElettronicaBody, errors);
-            jaxbFattura.getFatturaElettronicaBody().add(converted.getLeft());
+            if (jaxbFattura.getFatturaElettronicaBody().size() == 1) {
+                setCondizioniPagamento(jaxbFattura.getFatturaElettronicaBody().get(0));
+            } else {
+                log.error("Wrong number of FatturaElettronicaBody in FatturaElettronica: expected 1, was {}", jaxbFattura.getFatturaElettronicaBody().size());
+            }
         }
 
         JAXBElement<FatturaElettronicaType> fatturaElettronicaXML = factory.createFatturaElettronica(jaxbFattura);
@@ -170,6 +159,28 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         }
     }
 
+    private void applyCustomMapping(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+        List<CustomMapping<FatturaElettronicaType>> customMappings = getFattPACustomMapping();
+
+        for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
+            customMapping.map(invoice, fatturaElettronica, errors);
+        }
+    }
+
+    private List<CustomMapping<FatturaElettronicaType>> getFattPACustomMapping() {
+        List<CustomMapping<?>> customMapping = super.getCustomMapping();
+        List<CustomMapping<FatturaElettronicaType>> fattpaMappings = new ArrayList<>(customMapping.size());
+        for (CustomMapping<?> mapping : customMapping) {
+            try {
+                CustomMapping<FatturaElettronicaType> fattPaMapping = (CustomMapping<FatturaElettronicaType>) mapping;
+                fattpaMappings.add(fattPaMapping);
+            } catch (ClassCastException e) {
+                log.error("{} cannot be cast to CustomMapping<FatturaElettronicaType>, will be ignored");
+            }
+        }
+        return fattpaMappings;
+    }
+
     @Override
     public boolean support(String format) {
         return IConstants.CONVERTER_SUPPORT.equals(format.toLowerCase().trim());
@@ -186,6 +197,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     }
 
     @Override
+    public String getMappingRegex() {
+        return "\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*";
+    }
+
+    @Override
     protected String getOne2OneMappingPath() {
         return ONE2ONE_MAPPING_PATH;
     }
@@ -198,6 +214,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     @Override
     protected String getOne2ManyMappingPath() {
         return ONE2MANY_MAPPING_PATH;
+    }
+
+    @Override
+    protected String getCustomMappingPath() {
+        return CUSTOM_CONVERTER_MAPPING_PATH;
     }
 
     private void createRootNode(Document doc) {
@@ -226,6 +247,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         doc.getRootElement().getChild("FatturaElettronicaHeader").getChild("DatiTrasmissione").addContent(progressivoInvio);
     }
 
+    //FIXME move to custom converter
     private void setCondizioniPagamento(FatturaElettronicaBodyType body) {
         List<DatiPagamentoType> datiPagamento = body.getDatiPagamento();
         if (!datiPagamento.isEmpty()) {

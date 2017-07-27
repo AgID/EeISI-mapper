@@ -233,6 +233,11 @@ public class CsvCen2Cen implements ToCenConversion {
     }
 
     @Override
+    public String getMappingRegex() {
+        return ".+";
+    }
+
+    @Override
     public String getName() {
         return "csvcen-cen";
     }

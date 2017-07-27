@@ -32,7 +32,7 @@ public class ITCen2FattPATest {
     private final Reflections reflections = new Reflections("it.infocert");
     private CsvCen2Cen csvCen2Cen;
     private Cen2FattPA cen2FattPA;
-    private XPathFactory xPathfactory;
+    private XPathFactory xPathFactory;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before
@@ -40,7 +40,7 @@ public class ITCen2FattPATest {
         csvCen2Cen = new CsvCen2Cen(reflections);
         cen2FattPA = new Cen2FattPA(reflections, new DefaultEigorConfigurationLoader().loadConfiguration());
         cen2FattPA.configure();
-        xPathfactory = XPathFactory.newInstance();
+        xPathFactory = XPathFactory.newInstance();
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ITCen2FattPATest {
     }
 
     private String getStringByXPath(Document doc, String xpath) throws XPathExpressionException {
-        XPath xPath = xPathfactory.newXPath();
+        XPath xPath = xPathFactory.newXPath();
         XPathExpression xPathExpression = xPath.compile(xpath);
         return (String) xPathExpression.evaluate(doc, XPathConstants.STRING);
     }
