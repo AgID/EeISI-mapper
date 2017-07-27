@@ -48,12 +48,14 @@ public class CustomConverter extends Cii2Cen implements CustomMapping<Document> 
         AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
         InvoiceLineConverter bg0025 = new InvoiceLineConverter(new Reflections("it.infocert"), conversionRegistry);
         DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+        PayeeIdentifierConverter bt0060 = new PayeeIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
 
         bt0017_18.toBT0017_18(document, invoice, errors);
         bg0001.toBG0001(document, invoice, errors);
         bg0003.toBG0003(document, invoice, errors);
         bt0029.toBT0029(document, invoice, errors);
         bt0046.toBT0046(document, invoice, errors);
+        bt0060.toBT0060(document, invoice, errors);
         bt0071.toBT0071(document, invoice, errors);
         bg0017.toBG0017(document, invoice, errors);
         bg0020.toBG0020(document, invoice, errors);
