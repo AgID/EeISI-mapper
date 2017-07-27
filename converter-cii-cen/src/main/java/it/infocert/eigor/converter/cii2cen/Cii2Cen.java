@@ -63,12 +63,13 @@ public class Cii2Cen extends AbstractToCenConverter {
             new StringToStringConverter()
 			);
 
-	public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
-	public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.many-to-one";
+	private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-many";
+	private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
+	private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.many-to-one";
+	private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cii-cen.mapping.custom";
 
 	private XSDValidator xsdValidator;
 	private SchematronValidator schematronValidator;
-
 
 	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
@@ -139,12 +140,20 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 			result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 			result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
-
+            applyCustomMapping(result.getResult(), document, errors);
 		} catch (JDOMException | IOException e) {
 			throw new RuntimeException(e);
 		}
 		return result;
 	}
+
+	private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+        List<CustomMapping<Document>> mappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
+
+        for (CustomMapping<Document> mapping : mappings) {
+            mapping.map(invoice, document, errors);
+        }
+    }
 
 	@Override
 	public boolean support(String format) {
@@ -176,13 +185,11 @@ public class Cii2Cen extends AbstractToCenConverter {
 	}
 
 	@Override
-	protected String getOne2ManyMappingPath() {
-		return null;
-	}
+	protected String getOne2ManyMappingPath() { return configuration.getMandatoryString(ONE2MANY_MAPPING_PATH);}
 
 	@Override
 	protected String getCustomMappingPath() {
-		return null;
+		return CUSTOM_CONVERTER_MAPPING_PATH;
 	}
 
 	@Override public String getName() {
