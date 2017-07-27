@@ -292,6 +292,7 @@
 			</ram:ContractReferencedDocument>
 			<ram:AdditionalReferencedDocument>
 				<ram:IssuerAssignedID>Lot567</ram:IssuerAssignedID>
+				<ram:URIID>123456</ram:URIID>
 				<ram:TypeCode>50</ram:TypeCode>
 			</ram:AdditionalReferencedDocument>
 			<ram:AdditionalReferencedDocument>
@@ -365,14 +366,17 @@
 				<ram:TypeCode>58</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
 					<ram:IBANID>123</ram:IBANID>
+					<ram:AccountName>Nome account</ram:AccountName>
 					<ram:ProprietaryID>456</ram:ProprietaryID>
 				</ram:PayeePartyCreditorFinancialAccount>
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:ApplicableTradeTax>
 				<ram:CalculatedAmount>375</ram:CalculatedAmount>
 				<ram:TypeCode>VAT</ram:TypeCode>
+				<ram:ExemptionReason>provaReason</ram:ExemptionReason>
 				<ram:BasisAmount>1500</ram:BasisAmount>
 				<ram:CategoryCode>S</ram:CategoryCode>
+				<ram:ExemptionReasonCode>AAA</ram:ExemptionReasonCode>
 				<ram:TaxPointDate>
 					<udt:DateString format="102">20130410</udt:DateString>
 				</ram:TaxPointDate>

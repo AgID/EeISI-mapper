@@ -65,10 +65,10 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 	public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-one";
 	public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cii-cen.mapping.many-to-one";
+	public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-many";
 
 	private XSDValidator xsdValidator;
 	private SchematronValidator schematronValidator;
-
 
 	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
@@ -180,9 +180,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	}
 
 	@Override
-	protected String getOne2ManyMappingPath() {
-		return null;
-	}
+	protected String getOne2ManyMappingPath() { return configuration.getMandatoryString(ONE2MANY_MAPPING_PATH);}
 
 	@Override
 	protected String getCustomMappingPath() {

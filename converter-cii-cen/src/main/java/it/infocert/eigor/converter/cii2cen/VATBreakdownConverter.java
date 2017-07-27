@@ -50,9 +50,9 @@ public class VATBreakdownConverter extends CustomConverter {
                     Element calculatedAmount = findNamespaceChild(elem, namespacesInScope, "CalculatedAmount");
                     Element typeCode = findNamespaceChild(elem, namespacesInScope, "TypeCode");
                     Element categoryCode = findNamespaceChild(elem, namespacesInScope, "CategoryCode");
+                    Element exemptionReasonCode = findNamespaceChild(elem, namespacesInScope, "ExemptionReasonCode");
                     Element rateApplicablePercent = findNamespaceChild(elem, namespacesInScope, "RateApplicablePercent");
                     Element exemptionReason = findNamespaceChild(elem, namespacesInScope, "ExemptionReason");
-                    Element exemptionReasonCode = findNamespaceChild(elem, namespacesInScope, "ExemptionReasonCode");
 
                     if (basisAmount != null) {
                         try {
@@ -75,8 +75,12 @@ public class VATBreakdownConverter extends CustomConverter {
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
                     }
                     if (rateApplicablePercent != null) {
-                        BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(rateApplicablePercent.getText()));
-                        bg0023.getBT0119VatCategoryRate().add(bt0119);
+                        try {
+                            BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(rateApplicablePercent.getText()));
+                            bg0023.getBT0119VatCategoryRate().add(bt0119);
+                        }catch (NumberFormatException e) {
+                            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                        }
                     }
                     if (exemptionReason != null) {
                         BT0120VatExemptionReasonText bt0120 = new BT0120VatExemptionReasonText(exemptionReason.getText());

@@ -42,9 +42,12 @@ public class SellerConverter extends CustomConverter {
                     Element id =  findNamespaceChild(elem, namespacesInScope, "ID");
                     Element globalID = findNamespaceChild(elem, namespacesInScope, "GlobalID");
 
-                    if (id != null && globalID != null) {
-
-                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(id.getText()+" "+globalID.getText());
+                    if (globalID != null) {
+                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(globalID.getText());
+                        invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
+                    }
+                    else if (id != null) {
+                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(id.getText());
                         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                     }
                 }

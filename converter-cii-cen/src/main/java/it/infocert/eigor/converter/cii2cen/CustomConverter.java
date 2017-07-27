@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marco Basilico on 20/07/2017.
+ * The Custom Converter
  */
 public class CustomConverter extends Cii2Cen {
 
@@ -46,12 +46,14 @@ public class CustomConverter extends Cii2Cen {
         VATBreakdownConverter bg0023 = new VATBreakdownConverter(new Reflections("it.infocert"), conversionRegistry);
         AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
         InvoiceLineConverter bg0025 = new InvoiceLineConverter(new Reflections("it.infocert"), conversionRegistry);
+        DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
 
         bt0017_18.toBT0017_18(document, invoice, errors);
         bg0001.toBG0001(document, invoice, errors);
         bg0003.toBG0003(document, invoice, errors);
         bt0029.toBT0029(document, invoice, errors);
         bt0046.toBT0046(document, invoice, errors);
+        bt0071.toBT0071(document, invoice, errors);
         bg0017.toBG0017(document, invoice, errors);
         bg0020.toBG0020(document, invoice, errors);
         bg0021.toBG0021(document, invoice, errors);

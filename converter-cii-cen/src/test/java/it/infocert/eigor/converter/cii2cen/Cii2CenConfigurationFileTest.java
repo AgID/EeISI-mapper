@@ -8,6 +8,7 @@ import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -136,6 +137,40 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	}
 
 	@Test
+	public void testBuyerIdentifierConverter() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
+		Document document = getDocument(sourceInvoiceStream);
+		ConversionRegistry conversionRegistry = new ConversionRegistry();
+		BG0000Invoice invoice = new BG0000Invoice();
+		List<IConversionIssue> errors = new ArrayList<>();
+
+		BG0007Buyer bg0007 = new BG0007Buyer();
+		invoice.getBG0007Buyer().add(bg0007);
+
+		BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+		ConversionResult<BG0000Invoice> result = bt0046.toBT0046(document, invoice, errors);
+
+		assertEquals("5790000436057", result.getResult().getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue());
+	}
+
+	@Test
+	public void testDeliverTOLocationIdentifierConverter() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
+		Document document = getDocument(sourceInvoiceStream);
+		ConversionRegistry conversionRegistry = new ConversionRegistry();
+		BG0000Invoice invoice = new BG0000Invoice();
+		List<IConversionIssue> errors = new ArrayList<>();
+
+		BG0013DeliveryInformation bg0013 = new BG0013DeliveryInformation();
+		invoice.getBG0013DeliveryInformation().add(bg0013);
+
+		DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+		ConversionResult<BG0000Invoice> result = bt0071.toBT0071(document, invoice, errors);
+
+		assertEquals("5790000436068", result.getResult().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
+	}
+
+	@Test
 	public void testPrecedingInvoiceReferenceConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
@@ -151,7 +186,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	}
 
 	@Test
-	public void testBG0017() throws Exception {
+	public void testCreditTransferConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
 		ConversionRegistry conversionRegistry = new ConversionRegistry();
@@ -163,11 +198,13 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		invoice.getBG0016PaymentInstructions().add(bg0016);
 
 		ConversionResult<BG0000Invoice> result = bg0017.toBG0017(document, invoice, errors);
+
 		assertEquals("123 456", result.getResult().getBG0016PaymentInstructions(0).getBG0017CreditTransfer(0).getBT0084PaymentAccountIdentifier(0).getValue());
+		assertEquals("Nome account", result.getResult().getBG0016PaymentInstructions(0).getBG0017CreditTransfer(0).getBT0085PaymentAccountName(0).getValue());
 	}
 
 	@Test
-	public void testFailAdditionalSupportingDocumentsConverter() throws Exception {
+	public void testAdditionalSupportingDocumentsConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
 		ConversionRegistry conversionRegistry = new ConversionRegistry();
@@ -177,7 +214,36 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
 		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
 
+		assertEquals("123456", invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation(0).getValue());
+	}
+
+	@Test
+	public void testFailAdditionalSupportingDocumentsConverter() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M.xml");
+		Document document = getDocument(sourceInvoiceStream);
+		ConversionRegistry conversionRegistry = new ConversionRegistry();
+		BG0000Invoice invoice = new BG0000Invoice();
+		List<IConversionIssue> errors = new ArrayList<>();
+
+		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+
 		assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation().isEmpty());
+	}
+
+	@Test
+	public void testVATBreakdownConverter() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
+		Document document = getDocument(sourceInvoiceStream);
+		ConversionRegistry conversionRegistry = new ConversionRegistry();
+		BG0000Invoice invoice = new BG0000Invoice();
+		List<IConversionIssue> errors = new ArrayList<>();
+
+		VATBreakdownConverter bg0023 = new VATBreakdownConverter(new Reflections("it.infocert"), conversionRegistry);
+		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors);
+
+		assertEquals("provaReason", invoice.getBG0023VatBreakdown(0).getBT0120VatExemptionReasonText(0).getValue());
+		assertEquals(VatExemptionReasonsCodes.AAA, invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
 	}
 
 	@Test

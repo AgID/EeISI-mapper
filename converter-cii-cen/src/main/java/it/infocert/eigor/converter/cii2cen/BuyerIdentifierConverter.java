@@ -40,10 +40,12 @@ public class BuyerIdentifierConverter extends CustomConverter {
 
                     Element id = findNamespaceChild(elem, namespacesInScope, "ID");
                     Element globalID = findNamespaceChild(elem, namespacesInScope, "GlobalID");
-
-                    if (id != null && globalID != null) {
-
-                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(id.getText() + " " + globalID.getText());
+                    if (globalID != null) {
+                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(globalID.getText());
+                        invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
+                    }
+                    else if (id != null){
+                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(id.getText());
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
                     }
                 }
