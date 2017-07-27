@@ -44,7 +44,9 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
-				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt");
+				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt")
+				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
+				;
 		sut = new MyCiiToCenConverter(new Reflections("it.infocert"), conf);
 		sut.configure();
 	}

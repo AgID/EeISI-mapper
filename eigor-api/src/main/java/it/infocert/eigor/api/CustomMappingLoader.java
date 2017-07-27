@@ -18,6 +18,7 @@ public class CustomMappingLoader {
     private final static Logger log = LoggerFactory.getLogger(CustomMappingLoader.class);
 
     private final InputStream sourceStream;
+    private final String commentSymbol = "#";
     private ArrayList<CustomMapping<?>> customMappers;
 
     /**
@@ -46,8 +47,8 @@ public class CustomMappingLoader {
             BufferedReader bfr = new BufferedReader(new InputStreamReader(sourceStream, StandardCharsets.UTF_8));
             String current;
             while ((current = bfr.readLine()) != null) {
-                current = current.trim();
-                if (current.startsWith("#") || "".equals(current)) {
+                current = cleanFromComments(current);
+                if ("".equals(current)) {
                     continue;
                 }
                 Object m = Class.forName(current).newInstance();
@@ -73,5 +74,24 @@ public class CustomMappingLoader {
             }
         }
         return customMappings;
+    }
+
+    /**
+     * Remove comments from every line so they are ignored
+     * @return the line string without any comment
+     */
+    private String cleanFromComments(String line) {
+        // the line doesn't have any comment
+        if (!line.contains("#")) {
+            return line;
+        }
+
+        // the whole line is a comment
+        if (line.startsWith(commentSymbol)) {
+            return "";
+        } else if (line.contains(commentSymbol)) { // the line has a comment at some point, we have to remove it
+            return line.substring(0, line.indexOf(commentSymbol)).trim();
+        }
+        return null;
     }
 }
