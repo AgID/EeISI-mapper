@@ -30,13 +30,14 @@ public class CustomMappingLoaderTest {
     }
 
     @Test
-    public void converterShouldLoadAListOfClass() throws Exception {
+    public void converterShouldLoadAListOfClassIgnoringComments() throws Exception {
         TestFromCenConverter sut = new TestFromCenConverter(reflections, conversionRegistry, createConfiguration("classpath:custom-test.conf"));
         sut.configure();
         List<CustomMapping<?>> customMapping = sut.getCustomMapping();
         assertFalse(customMapping.isEmpty());
-        assertThat(customMapping.size(), is(1));
+        assertThat(customMapping.size(), is(2));
         assertTrue(customMapping.get(0) instanceof TestCustomMapper);
+        assertTrue(customMapping.get(1) instanceof TestCustomMapper);
     }
 
     @Test
@@ -49,6 +50,7 @@ public class CustomMappingLoaderTest {
             assertTrue(e.getMessage().contains("Invalid Class Name Test"));
         }
     }
+
 
     @Test
     public void converterShouldNotBreakIfAnExistentButNotConverterClassIsSpecified() throws Exception {
