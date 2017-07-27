@@ -38,6 +38,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
     public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one";
     public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
     public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.custom";
 
     private XSDValidator xsdValidator;
     private IXMLValidator ublValidator;
@@ -117,7 +118,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
             errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
-        Document document = null;
+        Document document;
         try {
             document = getDocument(clonedInputStream);
         } catch (JDOMException | IOException e) {
@@ -126,8 +127,17 @@ public class Ubl2Cen extends AbstractToCenConverter {
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
-        
+
+        applyCustomMapping(result.getResult(), document, errors);
         return result;
+    }
+
+    private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+        List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
+
+        for (CustomMapping<Document> customMapping : customMappings) {
+            customMapping.map(invoice, document, errors);
+        }
     }
 
     @Override
@@ -162,7 +172,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     protected String getCustomMappingPath() {
-        return null;
+        return configuration.getMandatoryString(CUSTOM_CONVERTER_MAPPING_PATH);
     }
 
     @Override

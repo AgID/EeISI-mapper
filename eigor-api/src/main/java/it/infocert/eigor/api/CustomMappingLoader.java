@@ -61,4 +61,17 @@ public class CustomMappingLoader {
 
         return customMappers;
     }
+
+    public static <Type> List<CustomMapping<Type>> getSpecificTypeMappings(List<CustomMapping<?>> mappings) {
+        ArrayList<CustomMapping<Type>> customMappings = new ArrayList<>(mappings.size());
+        for (CustomMapping<?> mapping : mappings) {
+            try {
+                CustomMapping<Type> cast = (CustomMapping<Type>) mapping;
+                customMappings.add(cast);
+            } catch (ClassCastException e) {
+                log.error("{} cannot be cast to CustomMapping<{}>, will be ignored", mapping.getClass().getSimpleName(), mapping.getClass().getSimpleName());
+            }
+        }
+        return customMappings;
+    }
 }

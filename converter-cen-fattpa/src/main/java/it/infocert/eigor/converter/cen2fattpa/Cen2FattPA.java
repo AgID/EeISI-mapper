@@ -160,25 +160,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
-        List<CustomMapping<FatturaElettronicaType>> customMappings = getFattPACustomMapping();
+        List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
             customMapping.map(invoice, fatturaElettronica, errors);
         }
-    }
-
-    private List<CustomMapping<FatturaElettronicaType>> getFattPACustomMapping() {
-        List<CustomMapping<?>> customMapping = super.getCustomMapping();
-        List<CustomMapping<FatturaElettronicaType>> fattpaMappings = new ArrayList<>(customMapping.size());
-        for (CustomMapping<?> mapping : customMapping) {
-            try {
-                CustomMapping<FatturaElettronicaType> fattPaMapping = (CustomMapping<FatturaElettronicaType>) mapping;
-                fattpaMappings.add(fattPaMapping);
-            } catch (ClassCastException e) {
-                log.error("{} cannot be cast to CustomMapping<FatturaElettronicaType>, will be ignored");
-            }
-        }
-        return fattpaMappings;
     }
 
     @Override
