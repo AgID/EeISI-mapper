@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
@@ -18,11 +19,7 @@ import java.util.List;
 /**
  * The Document Level Allowances Custom Converter
  */
-public class DocumentLevelAllowancesConverter extends CustomConverter {
-
-    public DocumentLevelAllowancesConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class DocumentLevelAllowancesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -119,5 +116,10 @@ public class DocumentLevelAllowancesConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBG0020(document, cenInvoice, errors);
     }
 }

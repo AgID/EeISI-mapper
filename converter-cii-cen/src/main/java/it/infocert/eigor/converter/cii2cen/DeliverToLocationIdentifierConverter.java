@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -15,11 +16,7 @@ import java.util.List;
 /**
  * The Deliver To Location Identifier Converter
  */
-public class DeliverToLocationIdentifierConverter extends CustomConverter {
-
-    public DeliverToLocationIdentifierConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class DeliverToLocationIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBT0071(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -46,5 +43,10 @@ public class DeliverToLocationIdentifierConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBT0071(document, cenInvoice, errors);
     }
 }

@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -15,11 +16,8 @@ import java.util.List;
 /**
  * The Buyer Identifier Custom Converter
  */
-public class BuyerIdentifierConverter extends CustomConverter {
+public class BuyerIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public BuyerIdentifierConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
 
     public ConversionResult<BG0000Invoice> toBT0046(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         BT0046BuyerIdentifierAndSchemeIdentifier bt0046 = null;
@@ -52,5 +50,10 @@ public class BuyerIdentifierConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBT0046(document, cenInvoice, errors);
     }
 }

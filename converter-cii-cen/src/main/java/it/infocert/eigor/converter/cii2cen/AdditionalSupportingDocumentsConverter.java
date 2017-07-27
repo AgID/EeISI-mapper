@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -16,11 +17,8 @@ import java.util.List;
 /**
  * The Additional Supporting Documents Custom Converter
  */
-public class AdditionalSupportingDocumentsConverter extends CustomConverter{
+public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public AdditionalSupportingDocumentsConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
 
     //BG0024
     public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
@@ -72,5 +70,10 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverter{
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBG0024(document, cenInvoice, errors);
     }
 }

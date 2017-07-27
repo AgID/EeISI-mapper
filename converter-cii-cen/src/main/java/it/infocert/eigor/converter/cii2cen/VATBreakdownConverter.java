@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
@@ -18,11 +19,7 @@ import java.util.List;
 /**
  * The VAT Breakdown Custom Converter
  */
-public class VATBreakdownConverter extends CustomConverter {
-
-    public VATBreakdownConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class VATBreakdownConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -96,5 +93,10 @@ public class VATBreakdownConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBG0023(document, cenInvoice, errors);
     }
 }

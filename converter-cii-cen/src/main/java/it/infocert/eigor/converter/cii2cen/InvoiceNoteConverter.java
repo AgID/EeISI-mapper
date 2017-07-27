@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -17,11 +18,7 @@ import java.util.List;
 /**
  * The Invoice Note Custom Converter
  */
-public class InvoiceNoteConverter extends CustomConverter {
-
-    public InvoiceNoteConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class InvoiceNoteConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -56,5 +53,10 @@ public class InvoiceNoteConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBG0001(document, cenInvoice, errors);
     }
 }

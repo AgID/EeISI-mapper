@@ -1,11 +1,11 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0060PayeeIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0071DeliverToLocationIdentifierAndSchemeIdentifier;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -16,11 +16,7 @@ import java.util.List;
 /**
  * The Payee Identifier Custom Converter
  */
-public class PayeeIdentifierConverter extends CustomConverter {
-
-    public PayeeIdentifierConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class PayeeIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBT0060(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -46,5 +42,10 @@ public class PayeeIdentifierConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBT0060(document, cenInvoice, errors);
     }
 }

@@ -110,7 +110,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		ConversionResult<BG0000Invoice> result = manyToOneMapping(sourceInvoiceStream);
 		BG0000Invoice invoice = result.getResult();
-        BT0041SellerContactPoint expectedBT0041 = new BT0041SellerContactPoint("ciao");
+        BT0041SellerContactPoint expectedBT0041 = new BT0041SellerContactPoint("Anthon Larsen Prova dep");
 		assertEquals(expectedBT0041, invoice.getBG0004Seller(0).getBG0006SellerContact(0).getBT0041SellerContactPoint(0));
 	}
 
@@ -130,7 +130,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		InvoiceNoteConverter bg0001 = new InvoiceNoteConverter(new Reflections("it.infocert"), conversionRegistry);
+		InvoiceNoteConverter bg0001 = new InvoiceNoteConverter();
 		ConversionResult<BG0000Invoice> result = bg0001.toBG0001(document, invoice, errors);
 
 		assertEquals("AAI", result.getResult().getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode().get(0).getValue());
@@ -147,7 +147,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0007Buyer bg0007 = new BG0007Buyer();
 		invoice.getBG0007Buyer().add(bg0007);
 
-		BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+		BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter();
 		ConversionResult<BG0000Invoice> result = bt0046.toBT0046(document, invoice, errors);
 
 		assertEquals("5790000436057", result.getResult().getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue());
@@ -164,7 +164,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0013DeliveryInformation bg0013 = new BG0013DeliveryInformation();
 		invoice.getBG0013DeliveryInformation().add(bg0013);
 
-		DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter(new Reflections("it.infocert"), conversionRegistry);
+		DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter();
 		ConversionResult<BG0000Invoice> result = bt0071.toBT0071(document, invoice, errors);
 
 		assertEquals("5790000436068", result.getResult().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
@@ -178,7 +178,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter(new Reflections("it.infocert"), conversionRegistry);
+		PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter();
 		ConversionResult<BG0000Invoice> result = bg0003.toBG0003(document, invoice, errors);
 
 		assertEquals("TOSL109", result.getResult().getBG0003PrecedingInvoiceReference(0).getBT0025PrecedingInvoiceReference(0).getValue());
@@ -192,7 +192,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
-		CreditTransferConverter bg0017 = new CreditTransferConverter(new Reflections("it.infocert"), conversionRegistry);
+		CreditTransferConverter bg0017 = new CreditTransferConverter();
 
 		BG0016PaymentInstructions bg0016 = new BG0016PaymentInstructions();
 		invoice.getBG0016PaymentInstructions().add(bg0016);
@@ -211,7 +211,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
+		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
 		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
 
 		assertEquals("123456", invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation(0).getValue());
@@ -225,7 +225,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter(new Reflections("it.infocert"), conversionRegistry);
+		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
 		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
 
 		assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation().isEmpty());
@@ -239,7 +239,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		VATBreakdownConverter bg0023 = new VATBreakdownConverter(new Reflections("it.infocert"), conversionRegistry);
+		VATBreakdownConverter bg0023 = new VATBreakdownConverter();
 		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors);
 
 		assertEquals("provaReason", invoice.getBG0023VatBreakdown(0).getBT0120VatExemptionReasonText(0).getValue());
@@ -254,7 +254,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
         BG0000Invoice invoice = new BG0000Invoice();
         List<IConversionIssue> errors = new ArrayList<>();
 
-        InvoiceLineConverter bg0025 = new InvoiceLineConverter(new Reflections("it.infocert"), conversionRegistry);
+        InvoiceLineConverter bg0025 = new InvoiceLineConverter();
         ConversionResult<BG0000Invoice> result = bg0025.toBG0025(document, invoice, errors);
 
         assertEquals("1", result.getResult().getBG0025InvoiceLine(0).getBT0126InvoiceLineIdentifier(0).getValue());
@@ -314,6 +314,8 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
+
+
 	}
 
 }

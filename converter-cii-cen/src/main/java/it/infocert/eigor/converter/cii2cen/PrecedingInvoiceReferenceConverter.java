@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
@@ -15,11 +16,7 @@ import java.util.List;
 /**
  * The Preceding Invoice Reference Custom Converter
  */
-public class PrecedingInvoiceReferenceConverter extends CustomConverter {
-
-    public PrecedingInvoiceReferenceConverter() {
-        super(new Reflections("it.infocert"), new ConversionRegistry());
-    }
+public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -59,5 +56,10 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverter {
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+        toBG0003(document, cenInvoice, errors);
     }
 }
