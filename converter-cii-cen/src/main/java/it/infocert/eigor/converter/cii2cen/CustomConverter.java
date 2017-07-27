@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * The Custom Converter
  */
-public class CustomConverter extends Cii2Cen {
+public class CustomConverter extends Cii2Cen implements CustomMapping<Document> {
 
     protected static Logger log = null;
     protected ConversionRegistry conversionRegistry;
@@ -82,5 +83,11 @@ public class CustomConverter extends Cii2Cen {
             }
         }
         return new ArrayList<>();
+    }
+
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+
     }
 }
