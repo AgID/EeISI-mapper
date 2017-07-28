@@ -65,7 +65,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(strDblConverter.convert(actualAmount.getText()));
                                 bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
                             }catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                errors.add(ConversionIssue.newError(e, e.getMessage()));
                             }
                         }
                         if (basisAmount != null) {
@@ -73,7 +73,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                 bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
                             }catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                errors.add(ConversionIssue.newError(e, e.getMessage()));
                             }
                         }
                         if (calculationPercent != null) {
@@ -81,7 +81,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(strDblConverter.convert(calculationPercent.getText()));
                                 bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
                             }catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                errors.add(ConversionIssue.newError(e, e.getMessage()));
                             }
                         }
                         if (typeCode != null && categoryCode != null) {
@@ -93,7 +93,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                 bg0021.getBT0103DocumentLevelChargeVatRate().add(bt0103);
                             }catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                errors.add(ConversionIssue.newError(e, e.getMessage()));
                             }
                         }
                         if (reason != null) {

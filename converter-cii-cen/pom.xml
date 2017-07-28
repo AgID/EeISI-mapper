@@ -61,6 +61,19 @@
                         </goals>
                         <phase>generate-resources</phase>
                     </execution>
+                    <execution>
+                        <id>cius-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-cii-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-cii-cen/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

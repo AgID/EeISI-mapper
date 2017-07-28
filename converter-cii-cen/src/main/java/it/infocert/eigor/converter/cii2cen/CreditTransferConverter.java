@@ -51,9 +51,11 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                         Element proprietaryID = findNamespaceChild(elem, namespacesInScope, "ProprietaryID");
                         Element accountName = findNamespaceChild(elem, namespacesInScope, "AccountName");
 
-                        if (ibanID != null && proprietaryID != null) {
-
-                            BT0084PaymentAccountIdentifier bt0084 = new BT0084PaymentAccountIdentifier(ibanID.getText() + " " + proprietaryID.getText());
+                        if (ibanID != null) {
+                            BT0084PaymentAccountIdentifier bt0084 = new BT0084PaymentAccountIdentifier(ibanID.getText());
+                            bg0017.getBT0084PaymentAccountIdentifier().add(bt0084);
+                        } else if (proprietaryID != null) {
+                            BT0084PaymentAccountIdentifier bt0084 = new BT0084PaymentAccountIdentifier(proprietaryID.getText());
                             bg0017.getBT0084PaymentAccountIdentifier().add(bt0084);
                         }
                         if (accountName != null) {
@@ -75,7 +77,6 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                                 bg0017.getBT0086PaymentServiceProviderIdentifier().add(bt0086);
                             }
                         }
-
                         invoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer().add(bg0017);
                     }
                 }

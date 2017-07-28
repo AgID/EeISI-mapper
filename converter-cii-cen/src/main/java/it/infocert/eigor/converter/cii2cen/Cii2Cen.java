@@ -70,6 +70,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 	private XSDValidator xsdValidator;
 	private SchematronValidator schematronValidator;
+    private SchematronValidator ciusValidator;
 
 	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
@@ -100,6 +101,14 @@ public class Cii2Cen extends AbstractToCenConverter {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
 
+        // load the CII schematron validator.
+        try {
+            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.cius") );
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
         configurableSupport.configure();
 	}
 
@@ -126,6 +135,12 @@ public class Cii2Cen extends AbstractToCenConverter {
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}
 			errors.addAll(schematronValidationErrors);
+
+			List<IConversionIssue> ciusValidationErrors = ciusValidator.validate(bytes);
+			if(ciusValidationErrors.isEmpty()){
+				log.info(IConstants.SUCCESS_CIUS_VALIDATION);
+            }
+			errors.addAll(ciusValidationErrors);
 
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);

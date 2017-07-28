@@ -5,12 +5,10 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -18,7 +16,6 @@ import java.util.List;
  * The Additional Supporting Documents Custom Converter
  */
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
-
 
     //BG0024
     public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
@@ -61,8 +58,8 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         try {
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(attachmentBinaryObject.getText()));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                        }catch (Exception e) {  //TODO
-                            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                        }catch (Exception e) {
+                            errors.add(ConversionIssue.newError(e, e.getMessage()));
                         }
                     }
                     invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
