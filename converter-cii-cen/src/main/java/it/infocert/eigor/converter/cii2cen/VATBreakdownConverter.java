@@ -56,7 +56,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(basisAmount.getText()));
                             bg0023.getBT0116VatCategoryTaxableAmount().add(bt0116);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                            errors.add(ConversionIssue.newError(e, e.getMessage()));
                         }
                     }
                     if (calculatedAmount != null) {
@@ -64,7 +64,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(strDblConverter.convert(calculatedAmount.getText()));
                             bg0023.getBT0117VatCategoryTaxAmount().add(bt0117);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                            errors.add(ConversionIssue.newError(e, e.getMessage()));
                         }
                     }
                     if (typeCode != null && categoryCode != null) {
@@ -76,7 +76,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(rateApplicablePercent.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                            errors.add(ConversionIssue.newError(e, e.getMessage()));
                         }
                     }
                     if (exemptionReason != null) {

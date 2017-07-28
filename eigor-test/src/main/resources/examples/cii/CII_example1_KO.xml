@@ -604,7 +604,6 @@
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>30</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
-					<ram:IBANID>NL57 RABO 0107307510</ram:IBANID>
 				</ram:PayeePartyCreditorFinancialAccount>
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:SpecifiedTradeSettlementPaymentMeans>

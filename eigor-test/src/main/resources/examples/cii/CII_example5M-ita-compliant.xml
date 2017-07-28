@@ -366,7 +366,7 @@
 			<ram:SpecifiedTradeSettlementPaymentMeans>
 				<ram:TypeCode>58</ram:TypeCode>
 				<ram:PayeePartyCreditorFinancialAccount>
-					<ram:IBANID>123</ram:IBANID>
+					<ram:IBANID>1234567890123456</ram:IBANID>
 					<ram:AccountName>Nome account</ram:AccountName>
 					<ram:ProprietaryID>456</ram:ProprietaryID>
 				</ram:PayeePartyCreditorFinancialAccount>

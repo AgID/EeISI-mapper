@@ -69,7 +69,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(strDblConverter.convert(actualAmount.getValue()));
                                     bg0020.getBT0092DocumentLevelAllowanceAmount().add(bt0092);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
                                 }
                             }
                             if (basisAmount != null) {
@@ -77,7 +77,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                     bg0020.getBT0093DocumentLevelAllowanceBaseAmount().add(bt0093);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
                                 }
                             }
                             if (calculationPercent != null) {
@@ -85,7 +85,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(strDblConverter.convert(calculationPercent.getText()));
                                     bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
                                 }
                             }
                             if (typeCode != null && categoryCode != null) {
@@ -97,7 +97,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                     bg0020.getBT0096DocumentLevelAllowanceVatRate().add(bt0096);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
                                 }
                             }
                             if (reason != null) {

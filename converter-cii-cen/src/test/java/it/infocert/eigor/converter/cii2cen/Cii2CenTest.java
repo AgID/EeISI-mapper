@@ -28,6 +28,7 @@ public class Cii2CenTest {
 				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt")
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
+				.addProperty("eigor.converter.cii-cen.cius", "converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
 				;
 		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
 		sut.configure();
