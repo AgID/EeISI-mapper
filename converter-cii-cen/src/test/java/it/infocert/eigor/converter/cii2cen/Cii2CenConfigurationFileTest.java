@@ -84,7 +84,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		String temp;
 		for(IConversionIssue conversionIssue : errors){
 			temp = conversionIssue.getMessage();
-			assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[CII-SR-014]"));
+            assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[BR-CO-02]") || temp.contains("[CII-SR-014]"));
 		}
 	}
 
