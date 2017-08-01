@@ -7,7 +7,6 @@ import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
-import org.springframework.util.NumberUtils;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;

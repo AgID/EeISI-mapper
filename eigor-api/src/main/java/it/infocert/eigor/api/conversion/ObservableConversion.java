@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Rule;

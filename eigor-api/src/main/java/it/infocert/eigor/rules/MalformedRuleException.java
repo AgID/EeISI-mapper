@@ -1,54 +1,54 @@
 package it.infocert.eigor.rules;
 
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.model.core.rules.Rule;
 
 import java.util.List;
 import java.util.Map;
 
-public class MalformedRuleException extends RuntimeException{
-    
+public class MalformedRuleException extends EigorRuntimeException {
+
     private Map<String, String> invalidRules;
     private List<Rule> validRules;
-
-    public MalformedRuleException() {
-    }
+    private final static String NAME = "MalformedRule";
 
     public MalformedRuleException(String message) {
-        super(message);
+        super(ErrorMessage.builder().message(message).error(NAME).build());
     }
 
     public MalformedRuleException(String message, Throwable cause) {
-        super(message, cause);
+        super(ErrorMessage.builder().message(message).error(NAME).build(), cause);
     }
 
     public MalformedRuleException(Throwable cause) {
-        super(cause);
+        super(ErrorMessage.builder().message(cause.getMessage()).error(NAME).build(), cause);
     }
 
     public MalformedRuleException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        super(ErrorMessage.builder().message(message).error(NAME).build(), cause, enableSuppression, writableStackTrace);
     }
-    
+
     public MalformedRuleException(String message, Map<String, String> invalidRules, List<Rule> validRules) {
-        super(message);
+        super(ErrorMessage.builder().message(message).error(NAME).build());
         this.invalidRules = invalidRules;
         this.validRules = validRules;
     }
 
     public MalformedRuleException(String message, Throwable cause, Map<String, String> invalidRules, List<Rule> validRules) {
-        super(message, cause);
+        super(ErrorMessage.builder().message(message).error(NAME).build(), cause);
         this.invalidRules = invalidRules;
         this.validRules = validRules;
     }
 
     public MalformedRuleException(Throwable cause, Map<String, String> invalidRules, List<Rule> validRules) {
-        super(cause);
+        super(ErrorMessage.builder().message(cause.getMessage()).error(NAME).build(), cause);
         this.invalidRules = invalidRules;
         this.validRules = validRules;
     }
 
     public MalformedRuleException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, Map<String, String> invalidRules, List<Rule> validRules) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        super(ErrorMessage.builder().message(message).error(NAME).build(), cause, enableSuppression, writableStackTrace);
         this.invalidRules = invalidRules;
         this.validRules = validRules;
     }

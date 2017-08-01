@@ -105,7 +105,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
         BG0000Invoice invoice = new BG0000Invoice();
 
         if(oneToOneMappings == null) {
-            return new ConversionResult<BG0000Invoice>(errors, invoice);
+            return new ConversionResult<>(errors, invoice);
         }
 
 

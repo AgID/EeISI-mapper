@@ -100,6 +100,7 @@ public class XSDValidator implements IXMLValidator {
                             lineNumber, columnNumber,
                             exception.getMessage() );
                     errors.add(ConversionIssue.newError(exception, message));
+                    log.error(message, exception);
                 }
 
                 @Override

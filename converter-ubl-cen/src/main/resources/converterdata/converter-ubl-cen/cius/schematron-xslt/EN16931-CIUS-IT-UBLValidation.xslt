@@ -182,6 +182,1299 @@
 
 
 	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M7" priority="1089">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cbc:EndpointID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cbc:EndpointID)">
+          <xsl:attribute name="id">CIUS-BT-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-BT-2] BT-49 (Buyer electronic address) shall contain a legal mail address (PEC) or IndicePA/CodiceUfficio (see the Italian business rules). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme" mode="M7" priority="1088">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CompanyID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CompanyID)">
+          <xsl:attribute name="id">CIUS-BT-98</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-BT-98] BT-32 (Buyer electronic address)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:PaymentMeans/cac:PayeeFinancialAccount" mode="M7" priority="1087">
+    <svrl:fired-rule context="cac:PaymentMeans/cac:PayeeFinancialAccount" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="matches(cbc:ID, '([A-Z,0-9]{15,34})')" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="matches(cbc:ID, '([A-Z,0-9]{15,34})')">
+          <xsl:attribute name="id">CIUS-BT-84</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-BT-84] BT-84 (Payment account identifier)  shall be an IBAN code. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="//ubl:Invoice" mode="M7" priority="1086">
+    <svrl:fired-rule context="//ubl:Invoice" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID)">
+          <xsl:attribute name="id">CIUS-CA-9-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-9-1] BT-31 (Seller VAT identifier) -Mandatory in Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)">
+          <xsl:attribute name="id">CIUS-CA-9-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-9-2] BT-63 (Seller tax representative VAT identifier) -Mandatory in Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1085">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)">
+          <xsl:attribute name="id">CIUS-CA-10-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-10-1] BT-35 (Seller address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)">
+          <xsl:attribute name="id">CIUS-CA-10-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-10-2] BT-37 (Seller city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)">
+          <xsl:attribute name="id">CIUS-CA-10-3</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-10-3] BT-38 (Seller post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1084">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)">
+          <xsl:attribute name="id">CIUS-CA-11-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-11-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)">
+          <xsl:attribute name="id">CIUS-CA-11-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-11-2] BT-52 (Buyer city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)">
+          <xsl:attribute name="id">CIUS-CA-11-3</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-11-3] BT-53 (Buyer post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1083">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:StreetName))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:StreetName))">
+          <xsl:attribute name="id">CIUS-CA-12-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-12-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:CityName))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:CityName))">
+          <xsl:attribute name="id">CIUS-CA-12-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-12-2] BT-77 (Deliver to city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:PostalZone))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:PostalZone))">
+          <xsl:attribute name="id">CIUS-CA-12-3</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-12-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AdditionalDocumentReference" mode="M7" priority="1082">
+    <svrl:fired-rule context="cac:AdditionalDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:Attachment/cbc:EmbeddedDocumentBinaryObject)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:Attachment/cbc:EmbeddedDocumentBinaryObject)">
+          <xsl:attribute name="id">CIUS-CA-71</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CA-71] BT-125 (Attached document) -If BT-124 is empty then the BT-125 should be mandatory as the mapped field is mandatory in Italy. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:InvoiceLine" mode="M7" priority="1081">
+    <svrl:fired-rule context="cac:InvoiceLine" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="number(cbc:ID) > 0" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="number(cbc:ID) > 0">
+          <xsl:attribute name="id">CIUS-SD-73</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-SD-73] BT-126 (Invoice line identifier) -The BT value should be numeric. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="//ubl:Invoice" mode="M7" priority="1080">
+    <svrl:fired-rule context="//ubl:Invoice" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or matches(cbc:TaxCurrencyCode, 'EUR')" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or matches(cbc:TaxCurrencyCode, 'EUR')">
+          <xsl:attribute name="id">CIUS-CI-13</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-CI-13] BT-6 (VAT accounting currency code)  should be € for invoices from EU to IT in accordance with 2006/112/CE art. 9. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="//ubl:Invoice/cac:AccountingCustomerParty/cac:Party" mode="M7" priority="1079">
+    <svrl:fired-rule context="//ubl:Invoice/cac:AccountingCustomerParty/cac:Party" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )">
+          <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-BR-14] BT-48
+BT-46, BT-46-1 (Buyer VAT identifier
+Buyer identifier
+Buyer identifier identification scheme identifier) -1.4.1.1 is not mandatory in Italy (buyer) but VAT number or Fiscal code should be indicated. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:DespatchDocumentReference" mode="M7" priority="1078">
+    <svrl:fired-rule context="cac:DespatchDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="matches(cbc:ID, '/([0-9]{1,9})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})/')" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="matches(cbc:ID, '/([0-9]{1,9})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})/')">
+          <xsl:attribute name="id">CIUS-VD-15</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-15] BT-16 (Despatch advice reference) -BT will be structured as unique ID containing the despatch date as well (e.g. 123456789_2017-03-05) 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:DespatchDocumentReference" mode="M7" priority="1077">
+    <svrl:fired-rule context="cac:DespatchDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 30" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 30">
+          <xsl:attribute name="id">CIUS-VD-16</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-16] BT-16 (Despatch advice reference) -BT maximum length shall be 30 chars (20 digit + YYYY-MM-DD). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1076">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:RegistrationName) &lt;= 80" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:RegistrationName) &lt;= 80">
+          <xsl:attribute name="id">CIUS-VD-17</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-17] BT-27 (Seller name) -BT maximum length shall be 80 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1075">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:RegistrationName) &lt;= 80" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:RegistrationName) &lt;= 80">
+          <xsl:attribute name="id">CIUS-VD-18</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-18] BT-44 (Buyer name) -BT maximum length shall be 80 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:TaxRepresentativeParty/cac:PartyName" mode="M7" priority="1074">
+    <svrl:fired-rule context="cac:TaxRepresentativeParty/cac:PartyName" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Name) &lt;= 80" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Name) &lt;= 80">
+          <xsl:attribute name="id">CIUS-VD-19</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-19] BT-62 (Seller tax representative name) -BT maximum length shall be 80 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1073">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180">
+          <xsl:attribute name="id">CIUS-VD-20</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-20] BT-35, BT-36, BT-162 (Seller address line 1
+Seller address line 2
+Seller address line 3) -The sum of BTs maximum length shall be 180 chars (including separator). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1072">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180">
+          <xsl:attribute name="id">CIUS-VD-21</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-21] BT-50, BT-51, BT-163 (Buyer address line 1
+Buyer address line 2
+Buyer address line 3) -The sum of BTs maximum length shall be 180 chars (including separator). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1071">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 180">
+          <xsl:attribute name="id">CIUS-VD-22</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-22] BT-75, BT-76, BT-165 (Deliver to address line 1
+Deliver to address line 2
+Deliver to address line 3) -The sum of BTs maximum length shall be 180 chars (including separator). 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1070">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CityName) &lt;= 60" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
+          <xsl:attribute name="id">CIUS-VD-23</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-23] BT-37 (Seller city) -BT maximum length shall be 60 characters. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1069">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CityName) &lt;= 60" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
+          <xsl:attribute name="id">CIUS-VD-24</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-24] BT-52 (Buyer city) -BT maximum length shall be 60 characters. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1068">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CityName) &lt;= 60" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
+          <xsl:attribute name="id">CIUS-VD-25</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-25] BT-77 (Deliver to city) -BT maximum length shall be 60 characters. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1067">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:PostalZone) &lt;= 15" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
+          <xsl:attribute name="id">CIUS-VD-26-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-26-1] BT-38 (Seller post code) -BT maximum length shall be 15 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
+          <xsl:attribute name="id">CIUS-VD-26-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-26-2] BT-38 (Seller post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1066">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:PostalZone) &lt;= 15" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
+          <xsl:attribute name="id">CIUS-VD-27-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-27-1] BT-53 (Buyer post code) -BT maximum length shall be 15 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
+          <xsl:attribute name="id">CIUS-VD-27-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-27-2] BT-53 (Buyer post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1065">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:PostalZone) &lt;= 15" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
+          <xsl:attribute name="id">CIUS-VD-28-1</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-28-1] BT-78 (Deliver to post code) -BT maximum length shall be 15 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
+          <xsl:attribute name="id">CIUS-VD-28-2</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-28-2] BT-78 (Deliver to post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1064">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2">
+          <xsl:attribute name="id">CIUS-VD-29</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-29] BT-39 (Seller country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1063">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2">
+          <xsl:attribute name="id">CIUS-VD-30</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-30] BT-54 (Buyer country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1062">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2">
+          <xsl:attribute name="id">CIUS-VD-31</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-31] BT-79 (Deliver to country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="//ubl:Invoice" mode="M7" priority="1061">
+    <svrl:fired-rule context="//ubl:Invoice" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-32</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-32] BT-1 (Invoice number) -BT maximum length shall be 20 digits. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:ProjectReference" mode="M7" priority="1060">
+    <svrl:fired-rule context="cac:ProjectReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 15" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 15">
+          <xsl:attribute name="id">CIUS-VD-33</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-33] BT-11 (Project reference) -BT maximum length shall be 15 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:ContractDocumentReference" mode="M7" priority="1059">
+    <svrl:fired-rule context="cac:ContractDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-34</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-34] BT-12 (Contract reference) -BT maximum length shall be 20 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:OrderReference" mode="M7" priority="1058">
+    <svrl:fired-rule context="cac:OrderReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-35</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-35] BT-13 (Purchase order reference) -BT maximum length shall be 20 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:ReceiptDocumentReference" mode="M7" priority="1057">
+    <svrl:fired-rule context="cac:ReceiptDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-36</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-36] BT-15 (Receiving advice reference) -BT maximum length shall be 20 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:OriginatorDocumentReference" mode="M7" priority="1056">
+    <svrl:fired-rule context="cac:OriginatorDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 15" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 15">
+          <xsl:attribute name="id">CIUS-VD-37</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-37] BT-17 (Tender or lot reference) -BT maximum length shall be 15 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:InvoiceLine" mode="M7" priority="1055">
+    <svrl:fired-rule context="cac:InvoiceLine" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:AccountingCost) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:AccountingCost) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-38</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-38] BT-19 (Buyer accounting reference) -BT maximum length shall be 20 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="//ubl:Invoice" mode="M7" priority="1054">
+    <svrl:fired-rule context="//ubl:Invoice" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Note) &lt;= 200" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Note) &lt;= 200">
+          <xsl:attribute name="id">CIUS-VD-39</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-39] BT-21, BT-22 (Invoice note subject code
+Invoice note) -The sum of BTs maximum length shall be 200 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:BillingReference/cac:InvoiceDocumentReference" mode="M7" priority="1053">
+    <svrl:fired-rule context="cac:BillingReference/cac:InvoiceDocumentReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ID) &lt;= 20" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
+          <xsl:attribute name="id">CIUS-VD-40</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-40] BT-25 (Preceding Invoice number)-BT maximum length shall be 20 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme" mode="M7" priority="1052">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CompanyID) &lt;= 30" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
+          <xsl:attribute name="id">CIUS-VD-41</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-41] BT-31 (Seller VAT identifier) -BT maximum length shall be 30 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:TaxRepresentativeParty/cac:PartyTaxScheme" mode="M7" priority="1051">
+    <svrl:fired-rule context="cac:TaxRepresentativeParty/cac:PartyTaxScheme" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CompanyID) &lt;= 30" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
+          <xsl:attribute name="id">CIUS-VD-42</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-42] BT-63 (Seller tax representative VAT identifier) -BT maximum length shall be 30 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" mode="M7" priority="1050">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:CompanyID) &lt;= 30" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
+          <xsl:attribute name="id">CIUS-VD-43</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-43] BT-48 (Buyer VAT identifier) -BT maximum length shall be 30 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:Contact" mode="M7" priority="1049">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:Contact" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Name) &lt;= 200" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
+          <xsl:attribute name="id">CIUS-VD-44</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-44] BT-41 (Seller contact point)  -BT maximum length shall be 200 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:Contact" mode="M7" priority="1048">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:Contact" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5">
+          <xsl:attribute name="id">CIUS-VD-45</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-45] BT-42 (Seller contact telephone number) -BT minimum length shall be 5 maximum length shall be 12 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:Contact" mode="M7" priority="1047">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:Contact" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7">
+          <xsl:attribute name="id">CIUS-VD-46</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-46] BT-43 (Seller contact email address) -BT minimum length shall be 7 maximum length shall be 256 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1046">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )">
+          <xsl:attribute name="id">CIUS-VD-47</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-47] BT-39 (Seller country subdivision) -If country code=IT it should be coded according to Italian province list. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1045">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )">
+          <xsl:attribute name="id">CIUS-VD-48</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-48] BT-54 (Buyer country subdivision) -If country code=IT it should be coded according to Italian province list. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address" mode="M7" priority="1044">
+    <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )">
+          <xsl:attribute name="id">CIUS-VD-49</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-49] BT-79 (Deliver to country subdivision) -If country code=IT it should be coded according to Italian province list. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:PayeeParty/cac:PartyName" mode="M7" priority="1043">
+    <svrl:fired-rule context="cac:PayeeParty/cac:PartyName" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Name) &lt;= 200" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
+          <xsl:attribute name="id">CIUS-VD-50</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-50] BT-59 (Payee name) -BT maximum length shall be 200 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:Contact" mode="M7" priority="1042">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:Contact" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:Name) &lt;= 200" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
+          <xsl:attribute name="id">CIUS-VD-51</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-51] BT-56 (Buyer contact point) -BT maximum length shall be 200 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M7" priority="1041">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )">
+          <xsl:attribute name="id">CIUS-VD-53</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-53] BT-46, BT-46-1 (Buyer identifier
+Buyer identifier identification scheme identifier) -If BT-48 is empty then one of the buyer identifiers (0..n) should be the FiscalCode in BT-46. BT-46-1 shall contain the scheme. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:PaymentMeans" mode="M7" priority="1040">
+    <svrl:fired-rule context="cac:PaymentMeans" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:InstructionNote) &lt;= 200" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:InstructionNote) &lt;= 200">
+          <xsl:attribute name="id">CIUS-VD-55</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-55] BT-82 (Payment means text) -BT maximum length shall be 200 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:PaymentMeans" mode="M7" priority="1039">
+    <svrl:fired-rule context="cac:PaymentMeans" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="string-length(cbc:PaymentID) &lt;= 60" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="string-length(cbc:PaymentID) &lt;= 60">
+          <xsl:attribute name="id">CIUS-VD-56</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-56] BT-83 (Remittance information) -BT maximum length shall be 60 chars. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
 <xsl:template match="cac:PaymentMeans/cac:PayeeFinancialAccount" mode="M7" priority="1038">
     <svrl:fired-rule context="cac:PaymentMeans/cac:PayeeFinancialAccount" />
 

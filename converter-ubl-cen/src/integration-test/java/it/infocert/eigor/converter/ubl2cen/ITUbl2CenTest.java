@@ -31,11 +31,13 @@ public class ITUbl2CenTest {
     public static void setUp() throws ConfigurationException {
 
         EigorConfiguration conf = new PropertiesBackedConfiguration()
-                .addProperty("eigor.converter.ubl-cen.cius", "classpath:converterdata/converter-ubl-cen/cius/schematron-xslt/CIUS-validation.xslt")
+                .addProperty("eigor.converter.ubl-cen.cius", "classpath:converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
                 .addProperty("eigor.converter.ubl-cen.schematron", "classpath:converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt" )
                 .addProperty("eigor.converter.ubl-cen.xsd", "converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
-                .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties");
+                .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")
+                .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
+                ;
 
         sut = new Ubl2Cen(
                 new Reflections("it.infocert"),
@@ -49,7 +51,6 @@ public class ITUbl2CenTest {
         InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
 
         ConversionResult<BG0000Invoice> conversionResult = sut.convert(sourceInvoiceStream);
-
         assertNotNull(conversionResult.getResult());
     }
 

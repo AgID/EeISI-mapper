@@ -2,7 +2,7 @@
 <param name="CIUS-BT-2_CONTEXT" value="cac:AccountingCustomerParty/cac:Party"/>
 <param name="CIUS-BT-2" value="exists(cbc:EndpointID)"/>
 <param name="CIUS-BT-98_CONTEXT" value="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme"/>
-<param name="CIUS-BT-98" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CompanyID)"/>
+<param name="CIUS-BT-98" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CompanyID)" /> <!--and exists(cbc:CompanyID)"/> -->
 <param name="CIUS-BT-84_CONTEXT" value="cac:PaymentMeans/cac:PayeeFinancialAccount"/>
 <param name="CIUS-BT-84" value="matches(cbc:ID, '([A-Z,0-9]{15,34})')" flag="fatal"/>
 <param name="CIUS-CA-9_CONTEXT" value= "//ubl:Invoice"/>
@@ -20,8 +20,8 @@
 <param name="CIUS-CA-12-1" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:StreetName))"/>
 <param name="CIUS-CA-12-2" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:CityName))"/>
 <param name="CIUS-CA-12-3" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (not(exists(//ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID)) or exists(cbc:PostalZone))"/>
-<param name="CIUS-CA-71_CONTEXT" value="//ubl:Invoice"/>
-<param name="CIUS-CA-71" value="exists(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:AdditionalDocumentReference/cac:Attachment/cbc:EmbeddedDocumentBinaryObject)"/>
+<param name="CIUS-CA-71_CONTEXT" value="cac:AdditionalDocumentReference"/>
+<param name="CIUS-CA-71" value="exists(cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:Attachment/cbc:EmbeddedDocumentBinaryObject)"/>
 <param name="CIUS-SD-73_CONTEXT" value="cac:InvoiceLine"/>
 <param name="CIUS-SD-73" value="number(cbc:ID) &gt; 0"/>
 <param name="CIUS-CI-13_CONTEXT" value="//ubl:Invoice"/>
