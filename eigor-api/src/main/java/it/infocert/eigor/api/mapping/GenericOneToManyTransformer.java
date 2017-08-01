@@ -1,9 +1,11 @@
 package it.infocert.eigor.api.mapping;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -67,25 +69,31 @@ public class GenericOneToManyTransformer extends GenericTransformer{
     }
 
     private void splitCenValueAndApplyToXmlFields(String converted, Document document, List<IConversionIssue> errors) {
-        for (int i = 0; i< targetPaths.size(); i++){
+        for (String targetPath : targetPaths) {
 
-            List<Element> elements = getAllXmlElements(targetPaths.get(i), document, 1, sourcePath, errors);
-            if (elements == null || elements.size() == 0) return;
-            if (elements.size() > 1) {
-                errors.add(ConversionIssue.newError(new RuntimeException("More than one element for " + targetPaths.get(i) + ": " + elements)));
-                return;
-            }
 
             // extract substring from converted
-            Integer beginIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getLeft();
+            Integer beginIndex = splittingBoundsForTargetPath.get(targetPath).getLeft();
             if (beginIndex == null) {
-                errors.add(ConversionIssue.newError(new RuntimeException("Start index for " + targetPaths.get(i) + "is null!")));
+                errors.add(ConversionIssue.newError(new RuntimeException("Start index for " + targetPath + "is null!")));
                 return;
             }
-            Integer endIndex = splittingBoundsForTargetPath.get(targetPaths.get(i)).getRight();
-            String subStringValue = (endIndex == null) ? converted.substring(beginIndex) : converted.substring(beginIndex, endIndex);
+            Integer endIndex = splittingBoundsForTargetPath.get(targetPath).getRight();
 
-            elements.get(0).setText(subStringValue);
+            try {
+                String subStringValue = (endIndex == null) ? converted.substring(beginIndex) : converted.substring(beginIndex, endIndex);
+
+                List<Element> elements = getAllXmlElements(targetPath, document, 1, sourcePath, errors);
+                if (elements == null || elements.size() == 0) return;
+                if (elements.size() > 1) {
+                    errors.add(ConversionIssue.newError(new RuntimeException("More than one element for " + targetPath + ": " + elements)));
+                    return;
+                }
+
+                elements.get(0).setText(subStringValue);
+            } catch (StringIndexOutOfBoundsException e) {
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().action("OneToMany").error("StringIndexOutOfBound").message(e.getMessage()).build())));
+            }
         }
     }
 }

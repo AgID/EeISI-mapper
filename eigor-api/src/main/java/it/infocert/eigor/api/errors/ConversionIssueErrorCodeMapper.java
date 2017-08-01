@@ -21,7 +21,13 @@ public class ConversionIssueErrorCodeMapper {
 
     public IConversionIssue map(IConversionIssue issue) {
         ErrorMessage message = issue.getErrorMessage();
-        Class<? extends Exception> aClass = issue.getCause().getClass();
+        Exception cause = issue.getCause();
+        Class<? extends Exception> aClass;
+        if (cause.getCause() == null) {
+            aClass = cause.getClass();
+        } else {
+            aClass = (Class<? extends Exception>) cause.getCause().getClass();
+        }
         String error;
         if (aClass == Exception.class) {
             error = "Exception";
