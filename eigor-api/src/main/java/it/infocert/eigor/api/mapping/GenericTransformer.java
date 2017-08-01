@@ -5,6 +5,7 @@ import com.amoerie.jstreams.functions.Consumer;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -75,7 +76,7 @@ public abstract class GenericTransformer {
                 String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if(btClass==null) {
-                    throw new RuntimeException("Unable to find BT with name '" + btName + "'");
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
                 }
 
                 Constructor<?>[] constructors = btClass.getConstructors();

@@ -1,6 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Rule;

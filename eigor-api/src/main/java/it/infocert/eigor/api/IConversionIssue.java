@@ -1,5 +1,7 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.errors.ErrorMessage;
+
 /**
  * Represent a problem occurred during invoice conversion and transformation.
  */
@@ -27,4 +29,10 @@ public interface IConversionIssue {
      * issue that does not prevent the completion of the conversion.
      */
     boolean isWarning();
+
+    /**
+     * The {@link ErrorMessage} associated with this issue
+     */
+    ErrorMessage getErrorMessage();
+
 }
