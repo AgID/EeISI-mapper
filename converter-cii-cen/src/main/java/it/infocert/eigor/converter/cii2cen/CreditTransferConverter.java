@@ -3,12 +3,10 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +21,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
         BG0017CreditTransfer bg0017 = null;
 
         Element rootElement = document.getRootElement();
-        List<Namespace> namespacesInScope = rootElement.getNamespacesInScope();
-        List<Namespace> namespacesIntrodueced = rootElement.getNamespacesIntroduced();
-        List<Namespace> namespacesAdditional = rootElement.getAdditionalNamespaces();
-        List<Namespace> tot = new ArrayList<>();
-        tot.addAll(namespacesInScope);
-        tot.addAll(namespacesIntrodueced);
-        tot.addAll(namespacesAdditional);
+        List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
         List<Element> payeePartyCreditorFinancialAccount = null;
         Element child = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");

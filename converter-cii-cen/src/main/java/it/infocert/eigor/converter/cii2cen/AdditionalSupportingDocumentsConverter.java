@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    //BG0024
     public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         BG0024AdditionalSupportingDocuments bg0024 = null;
@@ -58,7 +57,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         try {
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(attachmentBinaryObject.getText()));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                        }catch (Exception e) {
+                        }catch (IllegalArgumentException e) {
                             errors.add(ConversionIssue.newError(e, e.getMessage()));
                         }
                     }

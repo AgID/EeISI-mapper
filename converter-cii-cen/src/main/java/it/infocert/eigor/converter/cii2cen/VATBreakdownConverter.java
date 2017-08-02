@@ -4,7 +4,6 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
@@ -12,7 +11,6 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -87,7 +85,6 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(exemptionReasonCode.getText()));
                         bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                     }
-
                     invoice.getBG0023VatBreakdown().add(bg0023);
                 }
             }

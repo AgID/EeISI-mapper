@@ -4,7 +4,6 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
@@ -12,7 +11,6 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -85,8 +83,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                             }
                         }
                         if (typeCode != null && categoryCode != null) {
-                            BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
-                            bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
+                            try{
+                                BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
+                                bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
+                            }catch (IllegalArgumentException e) {
+                                errors.add(ConversionIssue.newError(e, "Untdid5305DutyTaxFeeCategories non trovato"));
+                            }
                         }
                         if (rateApplicablePercent != null) {
                             try {
@@ -101,8 +103,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                             bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
                         }
                         if (reasonCode != null) {
-                            BT0105DocumentLevelChargeReasonCode bt0105 = new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(reasonCode.getText()));
-                            bg0021.getBT0105DocumentLevelChargeReasonCode().add(bt0105);
+                            try{
+                                BT0105DocumentLevelChargeReasonCode bt0105 = new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(reasonCode.getText()));
+                                bg0021.getBT0105DocumentLevelChargeReasonCode().add(bt0105);
+                            }catch (IllegalArgumentException e) {
+                                errors.add(ConversionIssue.newError(e, "Untdid7161SpecialServicesCodes non trovato"));
+                            }
                         }
 
                         invoice.getBG0021DocumentLevelCharges().add(bg0021);

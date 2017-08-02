@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cii2cen;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -47,8 +48,12 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         bg0003.getBT0025PrecedingInvoiceReference().add(bt0025);
                     }
                     if (dateTimeString != null) {
-                        BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
-                        bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
+                        try{
+                            BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
+                            bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
+                        }catch (IllegalArgumentException e) {
+                            errors.add(ConversionIssue.newError(e, e.getMessage()+ "Formato data non valido"));
+                        }
                     }
 
                     invoice.getBG0003PrecedingInvoiceReference().add(bg0003);

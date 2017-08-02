@@ -127,8 +127,9 @@ public class Ubl2Cen extends AbstractToCenConverter {
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
-
+        result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
+        
         return result;
     }
 
@@ -142,6 +143,10 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     public boolean support(String format) {
+        if(format == null){
+            log.error("NULL FORMAT");
+            return false;
+        }
         return FORMAT.equals(format.toLowerCase().trim());
     }
 

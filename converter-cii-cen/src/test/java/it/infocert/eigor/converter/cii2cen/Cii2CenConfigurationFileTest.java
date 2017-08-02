@@ -43,6 +43,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
+				.addProperty("eigor.converter.cii-cen.mapping.one-to-many", "converterdata/converter-cii-cen/mappings/one_to_many.properties")
 				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt")
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
@@ -145,7 +146,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testInvoiceNoteConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -159,7 +159,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testBuyerIdentifierConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -176,7 +175,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testDeliverTOLocationIdentifierConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -193,7 +191,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testPrecedingInvoiceReferenceConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -208,7 +205,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testCreditTransferConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 		CreditTransferConverter bg0017 = new CreditTransferConverter();
@@ -226,7 +222,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testAdditionalSupportingDocumentsConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -240,7 +235,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testFailAdditionalSupportingDocumentsConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -254,7 +248,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	public void testVATBreakdownConverter() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
 		Document document = getDocument(sourceInvoiceStream);
-		ConversionRegistry conversionRegistry = new ConversionRegistry();
 		BG0000Invoice invoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
@@ -269,7 +262,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
     public void testInvoiceLineConverter() throws Exception {
         InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
         Document document = getDocument(sourceInvoiceStream);
-        ConversionRegistry conversionRegistry = new ConversionRegistry();
         BG0000Invoice invoice = new BG0000Invoice();
         List<IConversionIssue> errors = new ArrayList<>();
 
@@ -341,7 +333,6 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		@Override public ConversionResult<BG0000Invoice> applyMany2OneTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 			return super.applyMany2OneTransformationsBasedOnMapping(partialInvoice, document, errors);
 		}
-
 
 	}
 
