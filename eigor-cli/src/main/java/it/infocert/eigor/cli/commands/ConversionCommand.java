@@ -3,6 +3,7 @@ package it.infocert.eigor.cli.commands;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
 import org.slf4j.Logger;

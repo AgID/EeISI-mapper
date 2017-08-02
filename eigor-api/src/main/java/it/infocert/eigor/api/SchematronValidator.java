@@ -68,7 +68,9 @@ public class SchematronValidator implements IXMLValidator {
 
         if(schematronOutput!=null) {
             try {
-                firedRuleAndFailedAssert.addAll(schematronOutput.getActivePatternAndFiredRuleAndFailedAssert());
+                List<Object> asserts = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
+                firedRuleAndFailedAssert.addAll(asserts);
+                log.trace(asserts.toString());
             } catch (Exception e) {
                 errors.add(ConversionIssue.newError(e));
                 return errors;

@@ -1,23 +1,22 @@
 package it.infocert.eigor.api.configuration;
 
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.EigorException;
+
 /**
  * Thrown by {@link Configurable configurable objects} when the configuration fails for whatever reason.
  */
-public class ConfigurationException extends Exception {
+public class ConfigurationException extends EigorException {
 
-    public ConfigurationException() {
+    public ConfigurationException(String message) {
+        super(new ErrorMessage(message));
     }
 
-    public ConfigurationException(String s) {
-        super(s);
+    public ConfigurationException(String message, Throwable cause) {
+        super(new ErrorMessage(message), cause);
     }
 
-    public ConfigurationException(String s, Throwable throwable) {
-        super(s, throwable);
+    public ConfigurationException(Throwable cause) {
+        super(new ErrorMessage(cause.getMessage()), cause);
     }
-
-    public ConfigurationException(Throwable throwable) {
-        super(throwable);
-    }
-
 }

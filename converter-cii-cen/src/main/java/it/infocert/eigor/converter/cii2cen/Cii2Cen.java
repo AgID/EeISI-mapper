@@ -5,6 +5,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.EigorRuntimeException;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -128,37 +132,36 @@ public class Cii2Cen extends AbstractToCenConverter {
 			if(xsdValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
-			errors.addAll(xsdValidationErrors);
+			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(xsdValidationErrors));
 
 			List<IConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}
-			errors.addAll(schematronValidationErrors);
+			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronValidationErrors));
 
 			List<IConversionIssue> ciusValidationErrors = ciusValidator.validate(bytes);
 			if(ciusValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_CIUS_VALIDATION);
             }
-			errors.addAll(ciusValidationErrors);
+			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidationErrors));
 
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
 
-		Document document = null;
+		Document document;
 		ConversionResult<BG0000Invoice> result;
 		try {
 			document = getDocument(clonedInputStream);
-			BG0000Invoice invoice = new BG0000Invoice();
-			result = new ConversionResult<>(errors, invoice);
 
 			result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 			result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
             applyCustomMapping(result.getResult(), document, errors);
 		} catch (JDOMException | IOException e) {
-			throw new RuntimeException(e);
+			throw new EigorRuntimeException(e.getMessage(), getName(), "Mappings", e);
 		}
+        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 		return result;
 	}
 
