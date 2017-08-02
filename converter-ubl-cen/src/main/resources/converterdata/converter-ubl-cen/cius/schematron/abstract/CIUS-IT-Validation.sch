@@ -274,7 +274,7 @@ Document level charge amount) -BT minimum length shall be 4 maximum length shall
         </assert>
     </rule>
    <rule context="$CIUS-VD-66_CONTEXT">
-       <assert test="$CIUS-VD-66" id="CIUS-VD-66" flag="fatal"> [CIUS-VD-66] BT-116 (VAT category taxable amount) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+       <assert test="$CIUS-VD-66" id="CIUS-VD-66" flag="fatal"> [CIUS-VD-67] BT-116 (VAT category taxable amount) -BT minimum length shall be 4 maximum length shall be 15 chars.
         </assert>
     </rule>
    <rule context="$CIUS-VD-67_CONTEXT">

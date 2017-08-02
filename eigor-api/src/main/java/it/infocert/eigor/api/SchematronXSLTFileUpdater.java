@@ -13,6 +13,7 @@ import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
 import com.helger.schematron.xslt.SCHTransformerCustomizer;
 import com.helger.schematron.xslt.SchematronResourceSCHCache;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -20,6 +21,7 @@ import org.w3c.dom.NamedNodeMap;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.List;
 
 
 /**
@@ -31,6 +33,7 @@ class SchematronXSLTFileUpdater {
     private final String schematronPattern;
     private final String xsltPattern;
     private final String xsltExtension;
+    private final String schematronExtension;
 
     /**
      * Instantiates a new Schematron XSLT file updater.
@@ -42,7 +45,8 @@ class SchematronXSLTFileUpdater {
         this.xsltDirectory = new File(xsltDirectory);
         this.schematronDirectory = new File(schematronDirectory);
         schematronPattern = "*.sch";
-        xsltPattern = "*.xslt";
+        schematronExtension = "sch";
+        xsltPattern = "xslt";
         xsltExtension = ".xslt";
 
         if (this.xsltDirectory.exists() && !this.xsltDirectory.isDirectory())
@@ -62,15 +66,15 @@ class SchematronXSLTFileUpdater {
 
 
         // Find highest (most recent) last modified timestamp file in XSLT directory
-        final String[] xsltFilenames = getXSLTFileList();
-        if (xsltFilenames != null) {
-            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames, xsltDirectory);
+        final List<File> xsltFilenames = getXSLTFileList();
+        if (!xsltFilenames.isEmpty()) {
+            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames);
         }
 
         // Find highest (most recent) last modified timestamp file in Schematron directory
-        final String[] schFilenames = getSchematronFileList();
-        if (schFilenames != null) {
-            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames, schematronDirectory);
+        final List<File> schFilenames = getSchematronFileList();
+        if (!schFilenames.isEmpty()) {
+            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames);
         }
 
         // if there is a more recent timestamped Schematron file, regeneration of XSLT is needed.
@@ -78,20 +82,41 @@ class SchematronXSLTFileUpdater {
     }
 
 
-    private String[] getXSLTFileList() {
+    private List<File> getXSLTFileList() {
         return getDirectoryFileList(xsltDirectory, xsltPattern);
     }
 
-    private String[] getSchematronFileList() {
-        return getDirectoryFileList(schematronDirectory, schematronPattern);
+    private List<File> getSchematronFileList() {
+        return getDirectoryFileList(schematronDirectory, schematronExtension);
     }
 
-    private String[] getDirectoryFileList(File baseDirectory, String pattern) {
+    private String[] getFirstLevelSchematronFileList() {
+        return getFirstDirectoryFileList(schematronDirectory, schematronPattern);
+    }
+
+
+    private List<File> getDirectoryFileList(File baseDirectory, String format) {
+        return (List<File>) FileUtils.listFiles(baseDirectory, new String[]{format}, true);
+    }
+
+    private long getLatestModifiedTimestamp(List<File> fileList) {
+        long highestLastModified = 0;
+        for (File file : fileList) {
+            long lastModified = file.lastModified();
+            if (lastModified > highestLastModified) {
+                highestLastModified = lastModified;
+            }
+        }
+        return highestLastModified;
+    }
+
+    private String[] getFirstDirectoryFileList(File baseDirectory, String pattern) {
         final DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(baseDirectory);
         scanner.setIncludes(new String[]{pattern});
         scanner.setCaseSensitive(true);
         scanner.scan();
+
         return scanner.getIncludedFiles();
     }
 
@@ -115,7 +140,7 @@ class SchematronXSLTFileUpdater {
 
 
         // Find all Schematron files
-        final String[] schFilenames = getSchematronFileList();
+        final String[] schFilenames = getFirstLevelSchematronFileList();
         if (schFilenames != null) {
             // TODO MAYBE use a separate thread for each file
             for (final String schFilename : schFilenames) {
