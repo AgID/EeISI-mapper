@@ -69,7 +69,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
             }
         }
 
-        // load the UBL schematron vlaidator.
+        // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
             ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
@@ -77,7 +77,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
 
-        // load the CIUS schematron vlaidator.
+        // load the CIUS schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
             ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);

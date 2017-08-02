@@ -17,6 +17,7 @@
 package it.techgap.maven.sch2xslt;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.slf4j.impl.StaticLoggerBinder;
+import org.apache.commons.io.FileUtils;
 
 import com.helger.commons.error.IResourceError;
 import com.helger.commons.io.file.FileHelper;
@@ -51,11 +53,12 @@ import org.w3c.dom.Node;
 /**
  * Converts one or more Schematron schema files into XSLT scripts.
  *
+ * @author PEPPOL.AT, BRZ, Philip Helger
  * @goal convert
  * @phase generate-resources
- * @author PEPPOL.AT, BRZ, Philip Helger
  */
 public final class Schematron2XSLTMojo extends AbstractMojo {
+
     public final class PluginErrorListener extends AbstractTransformErrorListener {
         @Override
         protected void internalLog(@Nonnull final IResourceError aResError) {
@@ -80,7 +83,7 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
      * The directory where the Schematron files reside.
      *
      * @parameter property="schematronDirectory"
-     *            default="${basedir}/src/main/schematron"
+     * default="${basedir}/src/main/schematron"
      */
     private File schematronDirectory;
 
@@ -131,6 +134,18 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
      * @parameter property="languageCode"
      */
     private String languageCode;
+
+    /**
+     * Update the XSLT if the Schematron changes? If set to <code>false</code>
+     * they will not be updated even if modified.
+     * @parameter property="updateOnSchematronChanges" default-value="false"
+     */
+    private boolean updateOnSchematronChanges = false;
+
+    public void setUpdateOnSchematronChanges(final boolean updateOnSchematronChanges) {
+        this.updateOnSchematronChanges = updateOnSchematronChanges;
+        getLog().debug("Updating Schematron if modified");
+    }
 
     public void setSchematronDirectory(final File aDir) {
         schematronDirectory = aDir;
@@ -201,6 +216,12 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
         if (!xsltDirectory.exists() && !xsltDirectory.mkdirs())
             throw new MojoExecutionException("Failed to create the XSLT directory " + xsltDirectory);
 
+        boolean update = true;
+
+        if (updateOnSchematronChanges) {
+            update = !checkForUpdatedSchematron();
+        }
+
         // for all Schematron files that match the pattern
         final DirectoryScanner aScanner = new DirectoryScanner();
         aScanner.setBasedir(schematronDirectory);
@@ -224,35 +245,29 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
                 // 2. The Schematron resource
                 final IReadableResource aSchematronResource = new FileSystemResource(aFile);
 
-        // 3. Check if the XSLT file already exists
-        if (aXSLTFile.exists () && !overwriteWithoutQuestion)
-        {
-          // 3.1 Not overwriting the existing file
-          getLog ().info ("Skipping XSLT file '" + aXSLTFile.getPath () + "' because it already exists!");
-        }
-        else
-        {
-          // 3.2 Create the directory, if necessary
-          final File aXsltFileDirectory = aXSLTFile.getParentFile ();
-          if (aXsltFileDirectory != null && !aXsltFileDirectory.exists ())
-          {
-            getLog ().debug ("Creating directory '" + aXsltFileDirectory.getPath () + "'");
-            if (!aXsltFileDirectory.mkdirs ())
-            {
-              final String message = "Failed to convert '" +
-                                     aFile.getPath () +
-                                     "' because directory '" +
-                                     aXsltFileDirectory.getPath () +
-                                     "' could not be created";
-              getLog ().error (message);
-              throw new MojoFailureException (message);
-            }
-          }
-          // 3.3 Okay, write the XSLT file
-          try
-          {
-            // Custom error listener to log to the Mojo logger
-            final ErrorListener aMojoErrorListener = new PluginErrorListener ();
+                // 3. Check if the XSLT file already exists
+                if (update && aXSLTFile.exists() && !overwriteWithoutQuestion) {
+                    // 3.1 Not overwriting the existing file
+                    getLog().info("Skipping XSLT file '" + aXSLTFile.getPath() + "' because it already exists!");
+                } else {
+                    // 3.2 Create the directory, if necessary
+                    final File aXsltFileDirectory = aXSLTFile.getParentFile();
+                    if (aXsltFileDirectory != null && !aXsltFileDirectory.exists()) {
+                        getLog().debug("Creating directory '" + aXsltFileDirectory.getPath() + "'");
+                        if (!aXsltFileDirectory.mkdirs()) {
+                            final String message = "Failed to convert '" +
+                                    aFile.getPath() +
+                                    "' because directory '" +
+                                    aXsltFileDirectory.getPath() +
+                                    "' could not be created";
+                            getLog().error(message);
+                            throw new MojoFailureException(message);
+                        }
+                    }
+                    // 3.3 Okay, write the XSLT file
+                    try {
+                        // Custom error listener to log to the Mojo logger
+                        final ErrorListener aMojoErrorListener = new PluginErrorListener();
 
                         // Custom error listener
                         // No custom URI resolver
@@ -303,5 +318,56 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
                 }
             }
         }
+    }
+
+    /**
+     * Check for updated schematron.
+     *
+     * @return TRUE if any sch file has a newer timestamp than any XSLT file
+     */
+    boolean checkForUpdatedSchematron() {
+        long xsltLastModifiedTimestamp = 0;
+        long schLastModifiedTimestamp = 0;
+
+
+        // Find highest (most recent) last modified timestamp file in XSLT directory
+        final List<File> xsltFilenames = getXSLTFileList();
+        if (!xsltFilenames.isEmpty()) {
+            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames);
+        }
+
+        // Find highest (most recent) last modified timestamp file in Schematron directory
+        final List<File> schFilenames = getSchematronFileList();
+        if (!schFilenames.isEmpty()) {
+            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames);
+        }
+
+        // if there is a more recent timestamped Schematron file, regeneration of XSLT is needed.
+        return schLastModifiedTimestamp > xsltLastModifiedTimestamp;
+    }
+
+
+    private List<File> getXSLTFileList() {
+        return getDirectoryFileList(xsltDirectory, "xslt");
+    }
+
+    private List<File> getSchematronFileList() {
+        return getDirectoryFileList(schematronDirectory, "sch");
+    }
+
+
+    private List<File> getDirectoryFileList(File baseDirectory, String format) {
+        return (List<File>) FileUtils.listFiles(baseDirectory, new String[]{format}, true);
+    }
+
+    private long getLatestModifiedTimestamp(List<File> fileList) {
+        long highestLastModified = 0;
+        for (File file : fileList) {
+            long lastModified = file.lastModified();
+            if (lastModified > highestLastModified) {
+                highestLastModified = lastModified;
+            }
+        }
+        return highestLastModified;
     }
 }

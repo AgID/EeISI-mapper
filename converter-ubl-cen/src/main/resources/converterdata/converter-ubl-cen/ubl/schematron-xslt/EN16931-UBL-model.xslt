@@ -151,7 +151,7 @@
 
 <!--SCHEMA SETUP-->
 <xsl:template match="/">
-    <svrl:schematron-output schemaVersion="" title="EN16931  model bound to UBL">
+    <svrl:schematron-output schemaVersion="" title="EN16931 model bound to UBL">
       <xsl:comment>
         <xsl:value-of select="$archiveDirParameter" />   
 		 <xsl:value-of select="$archiveNameParameter" />  
@@ -185,7 +185,7 @@
   </xsl:template>
 
 <!--SCHEMATRON PATTERNS-->
-<svrl:text>EN16931  model bound to UBL</svrl:text>
+<svrl:text>EN16931 model bound to UBL</svrl:text>
 
 <!--PATTERN UBL-model-->
 
@@ -204,7 +204,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-52]-Each additional supporting document shall contain a Supporting document identifier. </svrl:text>
+          <svrl:text>[BR-52]-Each additional supporting document shall contain a
+            Supporting document identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -225,7 +227,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-25]-In case the Amount due for payment (BT-115) is positive, either the Payment due date (BT-9) or the Payment terms (BT-20) shall be present.</svrl:text>
+          <svrl:text>[BR-CO-25]-In case the Amount due for payment (BT-115) is
+            positive, either the Payment due date (BT-9) or the Payment terms (BT-20) shall be present.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -246,7 +250,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-63]-The Buyer electronic address shall have a Scheme identifier</svrl:text>
+          <svrl:text>[BR-63]-The Buyer electronic address shall have a Scheme
+            identifier
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -267,7 +273,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-11]-A Buyer postal address shall contain a Buyer country code</svrl:text>
+          <svrl:text>[BR-11]-A Buyer postal address shall contain a Buyer country
+            code
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -288,7 +296,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-51]-The last 4 to 6 digits of the Payment card primary account number shall be present if payment card information is provided in the Invoice. </svrl:text>
+          <svrl:text>[BR-51]-The last 4 to 6 digits of the Payment card primary account
+            number shall be present if payment card information is provided in the Invoice.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -309,7 +319,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-57]-Each Deliver to address shall contain a Deliver to country code</svrl:text>
+          <svrl:text>[BR-57]-Each Deliver to address shall contain a Deliver to country
+            code
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -330,7 +342,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-31]-Each document level allowance shall have a Document level allowance amount. </svrl:text>
+          <svrl:text>[BR-31]-Each document level allowance shall have a Document level
+            allowance amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -345,7 +359,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-32]-Each document level allowance shall have a Document level allowance VAT category code. </svrl:text>
+          <svrl:text>[BR-32]-Each document level allowance shall have a Document level
+            allowance VAT category code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -360,7 +376,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-33]-Each document level allowance shall have a Document level allowance reason or a document level allowance reason code.</svrl:text>
+          <svrl:text>[BR-33]-Each document level allowance shall have a Document level
+            allowance reason or a document level allowance reason code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -375,7 +393,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-21]-Each Document level allowance (BG-20) shall contain a Document level allowance reason or a Document level allowance reason code, or both.</svrl:text>
+          <svrl:text>[BR-CO-21]-Each Document level allowance (BG-20) shall
+            contain a Document level allowance reason or a Document level allowance reason code, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -396,7 +416,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-36]-Each document level charge shall have a Document level charge amount. </svrl:text>
+          <svrl:text>[BR-36]-Each document level charge shall have a Document level
+            charge amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -411,7 +433,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-37]-Each document level charge shall have a Document level charge VAT category code. </svrl:text>
+          <svrl:text>[BR-37]-Each document level charge shall have a Document level
+            charge VAT category code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -426,7 +450,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-38]-Each document level charge shall have a Document level charge reason or a Document level charge reason code.</svrl:text>
+          <svrl:text>[BR-38]-Each document level charge shall have a Document level
+            charge reason or a Document level charge reason code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -441,7 +467,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-22]-Each Document level charge (BG-21) shall contain a Document level charge reason or a Document level charge reason code, or both.</svrl:text>
+          <svrl:text>[BR-CO-22]-Each Document level charge (BG-21) shall contain
+            a Document level charge reason or a Document level charge reason code, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -462,7 +490,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-12]-An Invoice shall have the Sum of Invoice line net amount. </svrl:text>
+          <svrl:text>[BR-12]-An Invoice shall have the Sum of Invoice line net
+            amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -477,7 +507,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-13]-An Invoice shall have the Invoice total amount without VAT. </svrl:text>
+          <svrl:text>[BR-13]-An Invoice shall have the Invoice total amount without
+            VAT.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -492,7 +524,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-14]-An Invoice shall have the Invoice total amount with VAT. </svrl:text>
+          <svrl:text>[BR-14]-An Invoice shall have the Invoice total amount with VAT.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -507,7 +540,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-15]-An Invoice shall have the Amount due for payment. </svrl:text>
+          <svrl:text>[BR-15]-An Invoice shall have the Amount due for payment.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -522,7 +555,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-10]-Sum of Invoice line net amount = Σ Invoice line net amount. </svrl:text>
+          <svrl:text>[BR-CO-10]-Sum of Invoice line net amount = Σ Invoice line
+            net amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -537,7 +572,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-11]-Sum of allowances on document level = Σ Document level allowance amount. </svrl:text>
+          <svrl:text>[BR-CO-11]-Sum of allowances on document level = Σ Document
+            level allowance amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -552,7 +589,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-12]-Sum of charges on document level = Σ Document level charge amount. </svrl:text>
+          <svrl:text>[BR-CO-12]-Sum of charges on document level = Σ Document
+            level charge amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -567,7 +606,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-13]-Invoice total amount without VAT = Σ Invoice line net amount - Sum of allowances on document level + Sum of charges on document level. </svrl:text>
+          <svrl:text>[BR-CO-13]-Invoice total amount without VAT = Σ Invoice line
+            net amount - Sum of allowances on document level + Sum of charges on document level.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -582,7 +623,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-16]-Amount due for payment = Invoice total VAT amount-Paid amount + Rounding amount (BT-114).</svrl:text>
+          <svrl:text>[BR-CO-16]-Amount due for payment = Invoice total VAT
+            amount-Paid amount + Rounding amount (BT-114).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -603,7 +646,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-01]-An Invoice shall have a Specification identification. </svrl:text>
+          <svrl:text>[BR-01]-An Invoice shall have a Specification identification.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -618,7 +662,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-02]-An Invoice shall have an Invoice number. </svrl:text>
+          <svrl:text>[BR-02]-An Invoice shall have an Invoice number.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -633,7 +677,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-03]-An Invoice shall have an Invoice issue date. </svrl:text>
+          <svrl:text>[BR-03]-An Invoice shall have an Invoice issue date.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -648,7 +692,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-04]-An Invoice shall have an Invoice type code. </svrl:text>
+          <svrl:text>[BR-04]-An Invoice shall have an Invoice type code.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -663,7 +707,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-05]-An Invoice shall have an Invoice currency code. </svrl:text>
+          <svrl:text>[BR-05]-An Invoice shall have an Invoice currency code.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -678,7 +722,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-06]-An Invoice shall contain Seller name. </svrl:text>
+          <svrl:text>[BR-06]-An Invoice shall contain Seller name.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -693,7 +737,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-07]-An Invoice shall contain Buyer name. </svrl:text>
+          <svrl:text>[BR-07]-An Invoice shall contain Buyer name.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -708,7 +752,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-08]-An Invoice shall contain the Seller postal address. </svrl:text>
+          <svrl:text>[BR-08]-An Invoice shall contain the Seller postal address.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -723,7 +768,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-10]-An Invoice shall contain the Buyer postal address. </svrl:text>
+          <svrl:text>[BR-10]-An Invoice shall contain the Buyer postal address.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -738,7 +784,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-16]-An Invoice shall have at least one Invoice line. </svrl:text>
+          <svrl:text>[BR-16]-An Invoice shall have at least one Invoice line.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -753,7 +799,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-53]-If the VAT accounting currency code is present, then the Invoice total VAT amount in accounting currency shall be provided. </svrl:text>
+          <svrl:text>[BR-53]-If the VAT accounting currency code is present, then the
+            Invoice total VAT amount in accounting currency shall be provided.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -768,7 +816,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Reverse charge” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with "Reverse charge".</svrl:text>
+          <svrl:text>[BR-AE-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Reverse charge” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal
+            with "Reverse charge".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -783,7 +835,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Reverse charge” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buter tax registration identifier.</svrl:text>
+          <svrl:text>[BR-AE-02]-An Invoice that contains a line where the
+            Invoiced item VAT category code (BT-151) is “Reverse charge” shall contain the Sellers VAT Identifier
+            (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier
+            (BT-63) and the Buyer VAT identifier or the Buter tax registration identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -798,7 +854,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Reverse charge” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.</svrl:text>
+          <svrl:text>[BR-AE-03]-An Invoice that contains a document level
+            allowance where the Invoiced item VAT category code (BT-95) is “Reverse charge” shall contain the Sellers
+            VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63) and the Buyer VAT identifier or the Buyer tax registration identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -813,7 +873,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Reverse charge” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).</svrl:text>
+          <svrl:text>[BR-AE-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Reverse charge” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63) and the Buyer VAT identifier (BT-48).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -828,7 +892,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-03]-Value added tax point date and Value added tax point date code are mutually exclusive. </svrl:text>
+          <svrl:text>[BR-CO-03]-Value added tax point date and Value added tax
+            point date code are mutually exclusive.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -843,7 +909,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-15]-Invoice total amount with VAT = Invoice total amount without VAT + Invoice total VAT amount. </svrl:text>
+          <svrl:text>[BR-CO-15]-Invoice total amount with VAT = Invoice total
+            amount without VAT + Invoice total VAT amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -858,7 +926,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-18]-An invoice shall at least have one VAT breakdown group (BG-23)</svrl:text>
+          <svrl:text>[BR-CO-18]-An invoice shall at least have one VAT breakdown
+            group (BG-23)
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -873,7 +943,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Exempt from VAT” shall contain exactly one a VAT breakdown (BG-23) with VAT category code (BT-118) equal to "Exempt from VAT". </svrl:text>
+          <svrl:text>[BR-E-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Exempt from VAT” shall contain exactly one a VAT breakdown (BG-23) with VAT category code (BT-118) equal to
+            "Exempt from VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -888,7 +962,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Exempt from VAT” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-E-02]-An Invoice that contains a line where the Invoiced
+            item VAT category code (BT-151) is “Exempt from VAT” shall contain the Sellers VAT Identifier (BT-31), the
+            Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -903,7 +980,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Exempt from VAT” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-E-03]-An Invoice that contains a document level allowance
+            where the Invoiced item VAT category code (BT-95) is “Exempt from VAT” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -918,7 +999,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Exempt from VAT” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-E-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Exempt from VAT” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -933,7 +1018,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Export outside the EU” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with "Export outside the EU".</svrl:text>
+          <svrl:text>[BR-G-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Export outside the EU” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118)
+            equal with "Export outside the EU".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -948,7 +1037,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Export outside the EU” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-G-02]-An Invoice that contains a line where the Invoiced
+            item VAT category code (BT-151) is “Export outside the EU” shall contain the Sellers VAT Identifier (BT-31)
+            or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -963,7 +1055,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Export outside the EU” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-G-03]-An Invoice that contains a document level allowance
+            where the Invoiced item VAT category code (BT-95) is “Export outside the EU” shall contain the Sellers VAT
+            Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -978,7 +1073,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Export outside the EU” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-G-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Export outside the EU” shall contain the Sellers VAT
+            Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -993,7 +1091,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Intra-community supply” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with "Intra-community supply".</svrl:text>
+          <svrl:text>[BR-IC-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Intra-community supply” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118)
+            equal with "Intra-community supply".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1008,7 +1110,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Intra-community supply” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.</svrl:text>
+          <svrl:text>[BR-IC-02]-An Invoice that contains a line where the
+            Invoiced item VAT category code (BT-151) is “Intra-community supply” shall contain the Sellers VAT
+            Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1023,7 +1128,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Intra-community supply” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier.</svrl:text>
+          <svrl:text>[BR-IC-03]-An Invoice that contains a document level
+            allowance where the Invoiced item VAT category code (BT-95) is “Intra-community supply” shall contain the
+            Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT
+            identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1038,7 +1147,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Intra-community supply” shall contain the Sellers VAT Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48).</svrl:text>
+          <svrl:text>[BR-IC-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Intra-community supply” shall contain the Sellers VAT
+            Identifier (BT-31) or the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier
+            (BT-48).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1053,7 +1166,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-11]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is "Intra-community supply" the actual delivery date (BT-72) or the delivery period (BG-14) shall not be blank.</svrl:text>
+          <svrl:text>[BR-IC-11]-In an Invoice with a VAT breakdown (BG-23) where
+            the VAT category code (BT-118) is "Intra-community supply" the actual delivery date (BT-72) or the delivery
+            period (BG-14) shall not be blank.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1068,7 +1184,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is "Intra-community supply" the deliver to country code (BT-80) shall not be blank.</svrl:text>
+          <svrl:text>[BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where
+            the VAT category code (BT-118) is "Intra-community supply" the deliver to country code (BT-80) shall not be
+            blank.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1083,7 +1202,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “IGIC” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "IGIC".</svrl:text>
+          <svrl:text>[BR-IG-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “IGIC” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "IGIC".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1098,7 +1220,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “IGIC” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IG-02]-An Invoice that contains a line where the
+            Invoiced item VAT category code (BT-151) is “IGIC” shall contain the Sellers VAT Identifier (BT-31), the
+            Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1113,7 +1238,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “IGIC” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IG-03]-An Invoice that contains a document level
+            allowance where the Invoiced item VAT category code (BT-95) is “IGIC” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1128,7 +1257,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “IGIC” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IG-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “IGIC” shall contain the Sellers VAT Identifier
+            (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier
+            (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1143,7 +1276,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “IPSI” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "IPSI".</svrl:text>
+          <svrl:text>[BR-IP-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “IPSI” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "IPSI".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1158,7 +1294,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “IPSI” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IP-02]-An Invoice that contains a line where the
+            Invoiced item VAT category code (BT-151) is “IPSI” shall contain the Sellers VAT Identifier (BT-31), the
+            Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1173,7 +1312,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “IPSI” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IP-03]-An Invoice that contains a document level
+            allowance where the Invoiced item VAT category code (BT-95) is “IPSI” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1188,7 +1331,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “IPSI” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-IP-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “IPSI” shall contain the Sellers VAT Identifier
+            (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier
+            (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1203,7 +1350,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Not subject to VAT” shall contain exactly one VAT breakdown group (BG-23) with category code (BT-118) equal to “Not subject to VAT”.</svrl:text>
+          <svrl:text>[BR-O-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Not subject to VAT” shall contain exactly one VAT breakdown group (BG-23) with category code (BT-118) equal
+            to “Not subject to VAT”.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1218,7 +1369,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Not subject to VAT” shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-46).</svrl:text>
+          <svrl:text>[BR-O-02]-An Invoice that contains a line where the Invoiced
+            item VAT category code (BT-151) is “Not subject to VAT” shall not contain the Seller's VAT identifier
+            (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-46).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1233,7 +1387,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Not subject to VAT” shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).</svrl:text>
+          <svrl:text>[BR-O-03]-An Invoice that contains a document level allowance
+            where the Invoiced item VAT category code (BT-95) is “Not subject to VAT” shall not contain the Seller's VAT
+            identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier
+            (BT-48).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1248,7 +1406,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Not subject to VAT” shall not contain the Seller's VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier (BT-48).</svrl:text>
+          <svrl:text>[BR-O-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Not subject to VAT” shall not contain the Seller's
+            VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) or the Buyer's VAT identifier
+            (BT-48).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1263,7 +1425,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-11]-An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) as "Not subject to VAT" shall not contain other VAT breakdown groups (BG-23).</svrl:text>
+          <svrl:text>[BR-O-11]-An Invoice that contains a VAT breakdown group
+            (BG-23) with a VAT category code (BT-118) as "Not subject to VAT" shall not contain other VAT breakdown
+            groups (BG-23).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1278,7 +1443,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-12]-An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) "Not subject to VAT"  shall not contain lines where the Invoiced item VAT category code (BT-151) is not "Not subject to VAT".</svrl:text>
+          <svrl:text>[BR-O-12]-An Invoice that contains a VAT breakdown group
+            (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain lines where the Invoiced
+            item VAT category code (BT-151) is not "Not subject to VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1293,7 +1461,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-13]-An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain a document level allowances group (BG-20) where document level allowance VAT category code (BT-95) is not "Not subject to VAT".</svrl:text>
+          <svrl:text>[BR-O-13]-An Invoice that contains a VAT breakdown group
+            (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain a document level allowances
+            group (BG-20) where document level allowance VAT category code (BT-95) is not "Not subject to VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1308,7 +1479,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-14]-An Invoice that contains a VAT breakdown group (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain a document Level charge group (BG-21) where document level charge VAT category code (BT-102) is not "Not subject to VAT".</svrl:text>
+          <svrl:text>[BR-O-14]-An Invoice that contains a VAT breakdown group
+            (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain a document Level charge
+            group (BG-21) where document level charge VAT category code (BT-102) is not "Not subject to VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1323,7 +1497,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".</svrl:text>
+          <svrl:text>[BR-S-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Standard rated” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal
+            with "Standard rated".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1338,7 +1516,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Standard rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-S-02]-An Invoice that contains a line where the Invoiced
+            item VAT category code (BT-151) is “Standard rated” shall contain the Sellers VAT Identifier (BT-31), the
+            Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1353,7 +1534,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Standard rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-S-03]-An Invoice that contains a document level allowance
+            where the Invoiced item VAT category code (BT-95) is “Standard rated” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1368,7 +1553,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Standard rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-S-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Standard rated” shall contain the Sellers VAT
+            Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT
+            identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1383,7 +1572,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-01]-An Invoice that contains a line, a document level allowance or a document level  charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is “Zero rated” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with "Zero rated".</svrl:text>
+          <svrl:text>[BR-Z-01]-An Invoice that contains a line, a document level
+            allowance or a document level charge where the Invoiced item VAT category code (BT-151, BT-95 or BT-102) is
+            “Zero rated” shall contain in the VAT breakdown (BG-23) exactly one VAT category code (BT-118) equal with
+            "Zero rated".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1398,7 +1591,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-02]-An Invoice that contains a line where the Invoiced item VAT category code (BT-151) is “Zero rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-Z-02]-An Invoice that contains a line where the Invoiced
+            item VAT category code (BT-151) is “Zero rated” shall contain the Sellers VAT Identifier (BT-31), the Seller
+            Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1413,7 +1609,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-03]-An Invoice that contains a document level allowance where the Invoiced item VAT category code (BT-95) is “Zero rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-Z-03]-An Invoice that contains a document level allowance
+            where the Invoiced item VAT category code (BT-95) is “Zero rated” shall contain the Sellers VAT Identifier
+            (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier
+            (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1428,7 +1628,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-04]-An Invoice that contains a document level charge where the Invoiced item VAT category code (BT-102) is “Zero rated” shall contain the Sellers VAT Identifier (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier (BT-63).</svrl:text>
+          <svrl:text>[BR-Z-04]-An Invoice that contains a document level charge
+            where the Invoiced item VAT category code (BT-102) is “Zero rated” shall contain the Sellers VAT Identifier
+            (BT-31), the Seller Tax registration identifier (BT-32) or the Seller tax representative VAT identifier
+            (BT-63).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1449,7 +1653,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-21]-Each Invoice line shall have an Invoice line identifier. </svrl:text>
+          <svrl:text>[BR-21]-Each Invoice line shall have an Invoice line identifier.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1464,7 +1669,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-22]-Each Invoice line shall have an Invoiced quantity. </svrl:text>
+          <svrl:text>[BR-22]-Each Invoice line shall have an Invoiced quantity.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1479,7 +1685,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-23]-An invoiced quantity shall have an Invoice quantity unit of measure. </svrl:text>
+          <svrl:text>[BR-23]-An invoiced quantity shall have an Invoice quantity unit
+            of measure.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1494,7 +1702,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-24]-Each Invoice line shall have an Invoice line net amount. </svrl:text>
+          <svrl:text>[BR-24]-Each Invoice line shall have an Invoice line net amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1509,7 +1718,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-25]-Each Invoice line shall contain the Item name. </svrl:text>
+          <svrl:text>[BR-25]-Each Invoice line shall contain the Item name.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1524,7 +1733,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-26]-Each Invoice line shall contain the Item net price. </svrl:text>
+          <svrl:text>[BR-26]-Each Invoice line shall contain the Item net price.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1539,7 +1749,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-27]-The item net price shall NOT be negative. </svrl:text>
+          <svrl:text>[BR-27]-The item net price shall NOT be negative.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1554,7 +1764,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-28]-Invoice line item gross price shall NOT be negative. </svrl:text>
+          <svrl:text>[BR-28]-Invoice line item gross price shall NOT be negative.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1569,7 +1780,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-04]-Each Invoice line shall be categorized with an Invoiced item VAT category code. </svrl:text>
+          <svrl:text>[BR-CO-04]-Each Invoice line shall be categorized with an
+            Invoiced item VAT category code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1590,7 +1803,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-41]-Each Invoice line allowance shall have an Invoice line allowance amount. </svrl:text>
+          <svrl:text>[BR-41]-Each Invoice line allowance shall have an Invoice line
+            allowance amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1605,7 +1820,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-42]-Each Invoice line allowance shall have an Invoice line allowance reason or an Invoice line allowance reason code.</svrl:text>
+          <svrl:text>[BR-42]-Each Invoice line allowance shall have an Invoice line
+            allowance reason or an Invoice line allowance reason code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1620,7 +1837,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-23]-Each Invoice line allowance (BG-27) shall contain an Invoice line allowance reason or an Invoice line allowance reason code, or both.</svrl:text>
+          <svrl:text>[BR-CO-23]-Each Invoice line allowance (BG-27) shall contain
+            an Invoice line allowance reason or an Invoice line allowance reason code, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1641,7 +1860,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-43]-Each Invoice line charge shall have an Invoice line charge amount. </svrl:text>
+          <svrl:text>[BR-43]-Each Invoice line charge shall have an Invoice line charge
+            amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1656,7 +1877,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-44]-Each Invoice line charge shall have an Invoice line charge reason or an invoice line allowance reason code. </svrl:text>
+          <svrl:text>[BR-44]-Each Invoice line charge shall have an Invoice line charge
+            reason or an invoice line allowance reason code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1671,7 +1894,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-24]-Each Invoice line charge (BG-28) shall contain an Invoice line charge reason or an Invoice line charge reason code, or both.</svrl:text>
+          <svrl:text>[BR-CO-24]-Each Invoice line charge (BG-28) shall contain an
+            Invoice line charge reason or an Invoice line charge reason code, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1692,7 +1917,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-30]-If both Invoice line period start date and Invoice line period end date are given then the Invoice line period end date shall be later or equal to the Invoice line period start date.</svrl:text>
+          <svrl:text>[BR-30]-If both Invoice line period start date and Invoice line
+            period end date are given then the Invoice line period end date shall be later or equal to the Invoice line
+            period start date.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1707,7 +1935,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-20]-If Invoice line period (BG-26) is used, the Invoice line period start date or the Invoice line period end date shall be filled, or both.</svrl:text>
+          <svrl:text>[BR-CO-20]-If Invoice line period (BG-26) is used, the
+            Invoice line period start date or the Invoice line period end date shall be filled, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1728,7 +1958,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-29]-If both invoicing period start date and invoicing period end date are given then the invoicing period end date shall be later or equal to the invoicing period start date.</svrl:text>
+          <svrl:text>[BR-29]-If both invoicing period start date and invoicing period
+            end date are given then the invoicing period end date shall be later or equal to the invoicing period start
+            date.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1743,7 +1976,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-19]-If Delivery or invoice period (BG-14) is used, the Delivery period start date or the Delivery period end date shall be filled, or both.</svrl:text>
+          <svrl:text>[BR-CO-19]-If Delivery or invoice period (BG-14) is used,
+            the Delivery period start date or the Delivery period end date shall be filled, or both.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1764,7 +1999,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-54]-Each Item attribute shall contain an Item attribute name and an Item attribute value. </svrl:text>
+          <svrl:text>[BR-54]-Each Item attribute shall contain an Item attribute name
+            and an Item attribute value.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1785,7 +2022,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-65]-The Item classification identifier shall have a Scheme identifier</svrl:text>
+          <svrl:text>[BR-65]-The Item classification identifier shall have a Scheme
+            identifier
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1806,7 +2045,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-64]-The Item standard identifier shall have a Scheme identifier</svrl:text>
+          <svrl:text>[BR-64]-The Item standard identifier shall have a Scheme
+            identifier
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1827,7 +2068,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-17]-The Payee name shall be provided in the Invoice, if the Payee is different from the Seller. </svrl:text>
+          <svrl:text>[BR-17]-The Payee name shall be provided in the Invoice, if the
+            Payee is different from the Seller.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1848,7 +2091,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-50]-A payment account identifier shall be present if Credit Transfer identification information is provided in the Invoice. </svrl:text>
+          <svrl:text>[BR-50]-A payment account identifier shall be present if Credit
+            Transfer identification information is provided in the Invoice.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1869,7 +2114,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-49]-A payment instruction shall specify the Payment means type code. </svrl:text>
+          <svrl:text>[BR-49]-A payment instruction shall specify the Payment means type
+            code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1884,7 +2131,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-61]-If the Payment means type is SEPA credit transfer, Local credit transfer or Non-SEPA international credit transfer, the Payment account identifier shall be present.</svrl:text>
+          <svrl:text>[BR-61]-If the Payment means type is SEPA credit transfer, Local
+            credit transfer or Non-SEPA international credit transfer, the Payment account identifier shall be present.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1905,7 +2154,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-55]-Each Preceding invoice reference shall contain a preceding invoice number.</svrl:text>
+          <svrl:text>[BR-55]-Each Preceding invoice reference shall contain a preceding
+            invoice number.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1926,7 +2177,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-26]-In order for the Buyer to automatically identify a supplier, either the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) or the Seller VAT identifier (BT-31) shall be present.</svrl:text>
+          <svrl:text>[BR-CO-26]-In order for the Buyer to automatically identify
+            a supplier, either the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) or the
+            Seller VAT identifier (BT-31) shall be present.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1947,7 +2201,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-62]-The Seller electronic address shall have a Scheme identifier</svrl:text>
+          <svrl:text>[BR-62]-The Seller electronic address shall have a Scheme
+            identifier
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1968,7 +2224,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-09]-A Seller postal address shall contain a Seller country code</svrl:text>
+          <svrl:text>[BR-09]-A Seller postal address shall contain a Seller country
+            code
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1989,7 +2247,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-18]-The Seller tax representative name shall be provided in the Invoice, if the Seller has a tax representative party. </svrl:text>
+          <svrl:text>[BR-18]-The Seller tax representative name shall be provided in
+            the Invoice, if the Seller has a tax representative party.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2004,7 +2264,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-19]-The Seller tax representative postal address shall be provided in the Invoice, if the Seller has a tax representative party. </svrl:text>
+          <svrl:text>[BR-19]-The Seller tax representative postal address shall be
+            provided in the Invoice, if the Seller has a tax representative party.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2019,7 +2281,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-56]-Each Seller tax representative shall have a Seller tax representative VAT identifier</svrl:text>
+          <svrl:text>[BR-56]-Each Seller tax representative shall have a Seller tax
+            representative VAT identifier
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2040,7 +2304,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-20]-The Seller tax representative postal address shall contain a Tax representative country code, if the Seller has a tax representative party.</svrl:text>
+          <svrl:text>[BR-20]-The Seller tax representative postal address shall contain
+            a Tax representative country code, if the Seller has a tax representative party.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2061,7 +2327,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-14]-Invoice total VAT amount = Σ VAT category tax amount. </svrl:text>
+          <svrl:text>[BR-CO-14]-Invoice total VAT amount = Σ VAT category tax
+            amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2082,7 +2350,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-45]-Each VAT breakdown shall have a VAT category taxable amount. </svrl:text>
+          <svrl:text>[BR-45]-Each VAT breakdown shall have a VAT category taxable
+            amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2097,7 +2367,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-46]-Each VAT breakdown shall have a VAT category tax amount. </svrl:text>
+          <svrl:text>[BR-46]-Each VAT breakdown shall have a VAT category tax amount.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2112,7 +2383,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-47]-Each VAT breakdown shall be defined through a VAT category code. </svrl:text>
+          <svrl:text>[BR-47]-Each VAT breakdown shall be defined through a VAT category
+            code.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2127,7 +2400,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-48]-Each VAT breakdown shall have a VAT category rate, except if the Invoice is not subject to VAT. </svrl:text>
+          <svrl:text>[BR-48]-Each VAT breakdown shall have a VAT category rate, except
+            if the Invoice is not subject to VAT.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2142,7 +2417,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-17]-VAT category tax amount = VAT category taxable amount x (VAT category rate / 100), rounded to two decimals. </svrl:text>
+          <svrl:text>[BR-CO-17]-VAT category tax amount = VAT category taxable
+            amount x (VAT category rate / 100), rounded to two decimals.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2163,7 +2440,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CO-09]-The Seller VAT identifier, Seller tax representative VAT identifier, Buyer VAT identifier shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’. </svrl:text>
+          <svrl:text>[BR-CO-09]-The Seller VAT identifier, Seller tax
+            representative VAT identifier, Buyer VAT identifier shall have a prefix in accordance with ISO code ISO
+            3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix
+            ‘EL’.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2184,7 +2465,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Reverse charge" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Reverse charge".</svrl:text>
+          <svrl:text>[BR-AE-08]-In a VAT breakdown (BG-23) where VAT category
+            code (BT-118) is "Reverse charge" the VAT category taxable amount (BT-116) shall equal the sum of Invoice
+            line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts
+            (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Reverse charge".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2199,7 +2484,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-09]-The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is “Reverse charge” shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-AE-09]-The VAT category tax amount (BT-117) in a VAT
+            breakdown (BG-23) where the VAT category code (BT-118) is “Reverse charge” shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2214,7 +2501,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Reverse charge" shall have a VAT Exemption reason code (BT-121), meaning "Reverse charge" or the VAT Exemption reason text (BT-120) "Reverse charge" (or the equivalent standard text in another language).</svrl:text>
+          <svrl:text>[BR-AE-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Reverse charge" shall have a VAT Exemption reason code (BT-121), meaning "Reverse charge" or the
+            VAT Exemption reason text (BT-120) "Reverse charge" (or the equivalent standard text in another language).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2235,7 +2525,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Reverse charge" the Invoiced item VAT rate (BT-96) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-AE-06]-In a document level allowance where the Invoice
+            item VAT category code (BT-95) is "Reverse charge" the Invoiced item VAT rate (BT-96) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2256,7 +2548,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "Reverse charge" the Invoiced item VAT rate (BT-103) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-AE-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Reverse charge" the Invoiced item VAT rate (BT-103) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2277,7 +2571,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-AE-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Reverse charge" the Invoiced item VAT rate (BT-152) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-AE-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Reverse charge" the Invoiced item VAT rate (BT-152) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2298,7 +2594,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Exempt from VAT" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Exempt from VAT".</svrl:text>
+          <svrl:text>[BR-E-08]-In a VAT breakdown (BG-23) where VAT category code
+            (BT-118) is "Exempt from VAT" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line
+            net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts
+            (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Exempt from VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2313,7 +2613,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-09]-The VAT category tax amount (BT-117) In a VAT breakdown (BG-23) where the VAT category code (BT-118) equals "Exempt from VAT" shall equal 0 (zero).</svrl:text>
+          <svrl:text>[BR-E-09]-The VAT category tax amount (BT-117) In a VAT
+            breakdown (BG-23) where the VAT category code (BT-118) equals "Exempt from VAT" shall equal 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2328,7 +2630,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Exempt from VAT" shall have a VAT Exemption reason code (BT-121) or a VAT Exemption reason text (BT-120).</svrl:text>
+          <svrl:text>[BR-E-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Exempt from VAT" shall have a VAT Exemption reason code (BT-121) or a VAT Exemption reason text
+            (BT-120).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2349,7 +2654,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Exempt from VAT", the Invoiced item VAT rate (BT-96) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-E-06]-In a document level allowance where the Invoice item
+            VAT category code (BT-95) is "Exempt from VAT", the Invoiced item VAT rate (BT-96) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2370,7 +2677,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "Exempt from VAT", the Invoiced item VAT rate (BT-103) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-E-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Exempt from VAT", the Invoiced item VAT rate (BT-103) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2391,7 +2700,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-E-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Exempt from VAT", the Invoiced item VAT rate (BT-152) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-E-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Exempt from VAT", the Invoiced item VAT rate (BT-152) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2412,7 +2723,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Export outside the EU" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Export outside the EU".</svrl:text>
+          <svrl:text>[BR-G-08]-In a VAT breakdown (BG-23) where VAT category code
+            (BT-118) is "Export outside the EU" the VAT category taxable amount (BT-116) shall equal the sum of Invoice
+            line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts
+            (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Export outside the EU".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2427,7 +2742,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-09]-The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is “Export outside the EU” shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-G-09]-The VAT category tax amount (BT-117) in a VAT
+            breakdown (BG-23) where the VAT category code (BT-118) is “Export outside the EU” shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2442,7 +2759,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Export outside the EU" shall have a VAT Exemption reason code (BT-121), meaning "Export outside the EU" or the VAT Exemption reason text (BT-120) "Export outside the EU" (or the equivalent standard text in another language).</svrl:text>
+          <svrl:text>[BR-G-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Export outside the EU" shall have a VAT Exemption reason code (BT-121), meaning "Export outside
+            the EU" or the VAT Exemption reason text (BT-120) "Export outside the EU" (or the equivalent standard text
+            in another language).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2463,7 +2784,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Export outside the EU" the Invoiced item VAT rate (BT-96) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-G-06]-In a document level allowance where the Invoice item
+            VAT category code (BT-95) is "Export outside the EU" the Invoiced item VAT rate (BT-96) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2484,7 +2807,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "Export outside the EU" the Invoiced item VAT rate (BT-103) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-G-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Export outside the EU" the Invoiced item VAT rate (BT-103) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2505,7 +2830,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-G-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Export outside the EU" the Invoiced item VAT rate (BT-152) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-G-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Export outside the EU" the Invoiced item VAT rate (BT-152) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2526,7 +2853,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Intra-community supply" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Intra-community supply".</svrl:text>
+          <svrl:text>[BR-IC-08]-In a VAT breakdown (BG-23) where VAT category
+            code (BT-118) is "Intra-community supply" the VAT category taxable amount (BT-116) shall equal the sum of
+            Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge
+            amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Intra-community supply".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2541,7 +2872,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-09]-The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is “Intra-community supply” shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-IC-09]-The VAT category tax amount (BT-117) in a VAT
+            breakdown (BG-23) where the VAT category code (BT-118) is “Intra-community supply” shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2556,7 +2889,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Intra-community supply" shall have a VAT Exemption reason code (BT-121), meaning "Intra-community supply" or the VAT Exemption reason text (BT-120) "Intra-community supply" (or the equivalent standard text in another language).</svrl:text>
+          <svrl:text>[BR-IC-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Intra-community supply" shall have a VAT Exemption reason code (BT-121), meaning "Intra-community
+            supply" or the VAT Exemption reason text (BT-120) "Intra-community supply" (or the equivalent standard text
+            in another language).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2577,7 +2914,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Intra-community supply" the invoiced item VAT rate (BT-96) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-IC-06]-In a document level allowance where the Invoice
+            item VAT category code (BT-95) is "Intra-community supply" the invoiced item VAT rate (BT-96) shall be 0
+            (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2598,7 +2938,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "Intra-community supply" the invoiced item VAT rate (BT-103) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-IC-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Intra-community supply" the invoiced item VAT rate (BT-103) shall be 0
+            (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2619,7 +2962,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IC-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Intra-community supply" the invoiced item VAT rate (BT-152) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-IC-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Intra-community supply" the invoiced item VAT rate (BT-152) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2640,7 +2985,13 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "IGIC", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “IGIC” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-IG-08]-For each different value of VAT category rate
+            (BT-119) where the VAT category code (BT-118) is "IGIC", the VAT category taxable amount (BT-116) in a VAT
+            breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level
+            charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code
+            (BT-151, BT-102, BT-95) is “IGIC” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate
+            (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2655,7 +3006,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-09]-The VAT category tax amount (BT-117) in VAT breakdown (BG-23) where VAT category code (BT-118) is "IGIC" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-IG-09]-The VAT category tax amount (BT-117) in VAT
+            breakdown (BG-23) where VAT category code (BT-118) is "IGIC" shall equal the VAT category taxable amount
+            (BT-116) multiplied by the VAT category rate (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2670,7 +3024,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "IGIC" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).</svrl:text>
+          <svrl:text>[BR-IG-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "IGIC" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2691,7 +3047,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "IGIC" the invoiced item VAT rate (BT-96) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IG-06]-In a document level allowance where the Invoice
+            item VAT category code (BT-95) is "IGIC" the invoiced item VAT rate (BT-96) shall be 0 (zero) or greater
+            than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2712,7 +3071,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "IGIC" the invoiced item VAT rate (BT-103) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IG-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "IGIC" the invoiced item VAT rate (BT-103) shall be 0 (zero) or greater than
+            zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2733,7 +3095,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IG-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "IGIC" the invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IG-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "IGIC" the invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2754,7 +3118,13 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "IPSI", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “IPSI” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-IP-08]-For each different value of VAT category rate
+            (BT-119) where the VAT category code (BT-118) is "IPSI", the VAT category taxable amount (BT-116) in a VAT
+            breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level
+            charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code
+            (BT-151, BT-102, BT-95) is “IPSI” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate
+            (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2769,7 +3139,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-09]-The VAT category tax amount (BT-117) in VAT breakdown (BG-23) where VAT category code (BT-118) is "IPSI" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-IP-09]-The VAT category tax amount (BT-117) in VAT
+            breakdown (BG-23) where VAT category code (BT-118) is "IPSI" shall equal the VAT category taxable amount
+            (BT-116) multiplied by the VAT category rate (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2784,7 +3157,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "IPSI" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).</svrl:text>
+          <svrl:text>[BR-IP-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "IPSI" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2805,7 +3180,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "IPSI" the invoiced item VAT rate (BT-96) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IP-06]-In a document level allowance where the Invoice
+            item VAT category code (BT-95) is "IPSI" the invoiced item VAT rate (BT-96) shall be 0 (zero) or greater
+            than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2826,7 +3204,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-07]-In a document level charge  where the Invoice item VAT category code (BT-102) is "IPSI" the invoiced item VAT rate (BT-103) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IP-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "IPSI" the invoiced item VAT rate (BT-103) shall be 0 (zero) or greater than
+            zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2847,7 +3228,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-IP-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "IPSI" the invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.</svrl:text>
+          <svrl:text>[BR-IP-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "IPSI" the invoiced item VAT rate (BT-152) shall be 0 (zero) or greater than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2868,7 +3251,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Not subject to VAT" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Not subject to VAT".</svrl:text>
+          <svrl:text>[BR-O-08]-In a VAT breakdown (BG-23) where VAT category code
+            (BT-118) is "Not subject to VAT" the VAT category taxable amount (BT-116) shall equal the sum of Invoice
+            line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts
+            (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Not subject to VAT".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2883,7 +3270,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-09]-The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where the VAT category code (BT-118) is “Not subject to VAT” shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-O-09]-The VAT category tax amount (BT-117) in a VAT
+            breakdown (BG-23) where the VAT category code (BT-118) is “Not subject to VAT” shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2898,7 +3287,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Not subject to VAT" shall have a VAT Exemption reason code (BT-121), meaning "Not subject to VAT" or a VAT Exemption reason text (BT-120) "Not subject to VAT" (or the equivalent standard text in another language).</svrl:text>
+          <svrl:text>[BR-O-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Not subject to VAT" shall have a VAT Exemption reason code (BT-121), meaning "Not subject to VAT"
+            or a VAT Exemption reason text (BT-120) "Not subject to VAT" (or the equivalent standard text in another
+            language).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2919,7 +3312,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-06]-A document level  allowance  where VAT category code (BT-95) is "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-96).</svrl:text>
+          <svrl:text>[BR-O-06]-A document level allowance where VAT category code
+            (BT-95) is "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-96).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2940,7 +3335,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-07]-A document level  charge  where VAT category code (BT-102) is "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-103).</svrl:text>
+          <svrl:text>[BR-O-07]-A document level charge where VAT category code
+            (BT-102) is "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-103).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2961,7 +3358,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-O-05]-An Invoice line where VAT category code (BT-151) is "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-152).</svrl:text>
+          <svrl:text>[BR-O-05]-An Invoice line where VAT category code (BT-151) is
+            "Not subject to VAT" shall not contain an invoiced item VAT rate (BT-152).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2982,7 +3381,13 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "Standard rated", the VAT category taxable amount (BT-116) in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “Standard rated” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-S-08]-For each different value of VAT category rate
+            (BT-119) where the VAT category code (BT-118) is "Standard rated", the VAT category taxable amount (BT-116)
+            in a VAT breakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document
+            level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT
+            category code (BT-151, BT-102, BT-95) is “Standard rated” and the VAT rate (BT-152, BT-103, BT-96) equals
+            the VAT category rate (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2997,7 +3402,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-09]-The VAT category tax amount (BT-117) in VAT breakdown (BG-23) where VAT category code (BT-118) is "Standard rated" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).</svrl:text>
+          <svrl:text>[BR-S-09]-The VAT category tax amount (BT-117) in VAT
+            breakdown (BG-23) where VAT category code (BT-118) is "Standard rated" shall equal the VAT category taxable
+            amount (BT-116) multiplied by the VAT category rate (BT-119).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3012,7 +3420,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Standard rate" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).</svrl:text>
+          <svrl:text>[BR-S-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Standard rate" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text
+            (BT-120).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3033,7 +3444,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Standard rated" the Invoiced item VAT rate (BT-96) shall be greater than zero.</svrl:text>
+          <svrl:text>[BR-S-06]-In a document level allowance where the Invoice item
+            VAT category code (BT-95) is "Standard rated" the Invoiced item VAT rate (BT-96) shall be greater than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3054,7 +3467,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-07]-In a document level charge where the Invoice item VAT category code (BT-102) is "Standard rated" the Invoiced item VAT rate (BT-103) shall be greater than zero.</svrl:text>
+          <svrl:text>[BR-S-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Standard rated" the Invoiced item VAT rate (BT-103) shall be greater than
+            zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3075,7 +3491,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Standard rated" the Invoiced item VAT rate (BT-152) shall be greater than zero.</svrl:text>
+          <svrl:text>[BR-S-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Standard rated" the Invoiced item VAT rate (BT-152) shall be greater than zero.
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3096,7 +3514,11 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-08]-In a VAT breakdown (BG-23) where VAT category code (BT-118) is "Zero rated" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99) where the VAT category codes (BT-151, BT-95, BT-102) are “Zero rated".</svrl:text>
+          <svrl:text>[BR-Z-08]-In a VAT breakdown (BG-23) where VAT category code
+            (BT-118) is "Zero rated" the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net
+            amounts (BT-131) minus document level allowance amounts (BT-92) plus document level charge amounts (BT-99)
+            where the VAT category codes (BT-151, BT-95, BT-102) are “Zero rated".
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3111,7 +3533,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-09]-The VAT category tax amount (BT-117) in a VAT breakdown (BG-23) where VAT category code (BT-118) is "Zero rated" shall equal 0 (zero).</svrl:text>
+          <svrl:text>[BR-Z-09]-The VAT category tax amount (BT-117) in a VAT
+            breakdown (BG-23) where VAT category code (BT-118) is "Zero rated" shall equal 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3126,7 +3550,10 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-10]-A VAT Breakdown (BG-23) with VAT Category code (BT-118) "Zero rated" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text (BT-120).</svrl:text>
+          <svrl:text>[BR-Z-10]-A VAT Breakdown (BG-23) with VAT Category code
+            (BT-118) "Zero rated" shall not have a VAT Exemption reason code (BT-121) or VAT Exemption reason text
+            (BT-120).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3147,7 +3574,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-06]-In a document level allowance where the Invoice item VAT category code (BT-95) is "Zero rated" the Invoiced item VAT rate (BT-96) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-Z-06]-In a document level allowance where the Invoice item
+            VAT category code (BT-95) is "Zero rated" the Invoiced item VAT rate (BT-96) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3168,7 +3597,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-07]-In a document level charge where the Invoice item VAT category code (BT-102) is "Zero rated" the Invoiced item VAT rate (BT-103) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-Z-07]-In a document level charge where the Invoice item
+            VAT category code (BT-102) is "Zero rated" the Invoiced item VAT rate (BT-103) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3189,7 +3620,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-Z-05]-In an Invoice line where the Invoice item VAT category code (BT-151) is "Zero rated" the Invoiced item VAT rate (BT-152) shall be 0 (zero).</svrl:text>
+          <svrl:text>[BR-Z-05]-In an Invoice line where the Invoice item VAT
+            category code (BT-151) is "Zero rated" the Invoiced item VAT rate (BT-152) shall be 0 (zero).
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -3210,7 +3643,9 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CL-19]-Invoiced note subject code SHOULD be coded using UNCL4451</svrl:text>
+          <svrl:text>[BR-CL-19]-Invoiced note subject code SHOULD be coded using
+            UNCL4451
+        </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>

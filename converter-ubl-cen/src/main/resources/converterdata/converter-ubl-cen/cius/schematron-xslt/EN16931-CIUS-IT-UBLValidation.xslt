@@ -1689,7 +1689,7 @@ Document level charge amount) -BT minimum length shall be 4 maximum length shall
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-66] BT-116 (VAT category taxable amount) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text> TEST[CIUS-VD-67] BT-116 (VAT category taxable amount) -BT minimum length shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
