@@ -82,6 +82,7 @@
                             <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>
@@ -96,6 +97,7 @@
                             <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>

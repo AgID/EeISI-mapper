@@ -56,7 +56,8 @@ public class SchematronXSLTUpdateTest {
     @Test
     public void ifSchFileIsChangedThenUpdateIsNeeded() throws IOException, InterruptedException {
         fileUpdater.updateXSLTfromSch();
-        schFile.delete();
+        boolean delete = schFile.delete();
+        assertTrue(delete);
 
         // without sleep it sometimes happens that the generated xslt and the newly copied sch files will have
         // the same timestamp (down to the millisecond)

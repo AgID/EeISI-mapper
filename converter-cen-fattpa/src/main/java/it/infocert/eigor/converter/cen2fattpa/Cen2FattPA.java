@@ -116,7 +116,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Unmarhalling").map(ConversionIssue.newError(e)));
+            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Unmarshalling").map(ConversionIssue.newError(e)));
             log.error(e.getMessage(), e);
         }
 
@@ -142,7 +142,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
                 marshaller.marshal(fatturaElettronicaXML, xmlOutput);
             }
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Marhalling").map(ConversionIssue.newError(e)));
+            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Marshalling").map(ConversionIssue.newError(e)));
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
