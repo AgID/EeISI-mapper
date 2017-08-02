@@ -1,10 +1,8 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -58,7 +56,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(attachmentBinaryObject.getText()));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build())));
                         }
                     }
                     invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);

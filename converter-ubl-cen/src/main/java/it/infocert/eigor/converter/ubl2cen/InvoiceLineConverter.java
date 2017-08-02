@@ -1,11 +1,9 @@
 package it.infocert.eigor.converter.ubl2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
@@ -61,7 +59,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(strDblConverter.convert(invoicedQuantity.getText()));
                     bg0025.getBT0129InvoicedQuantity().add(bt0129);
                 }catch (NumberFormatException e) {
-                    errors.add(ConversionIssue.newError(e, e.getMessage()));
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
                 }
                 Attribute invoicedQuantityAttribute = invoicedQuantity.getAttribute("unitCode");
                 if (invoicedQuantityAttribute != null) {
@@ -76,7 +75,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                         bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
                     }catch (NullPointerException e) {
-                        errors.add(ConversionIssue.newError(e, "UnitOfMeasureCodes non trovato"));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
                 }
         	}
@@ -87,7 +87,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
         			BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(strDblConverter.convert(lineExtensionAmount.getText()));
         			bg0025.getBT0131InvoiceLineNetAmount().add(bt0131);
         		}catch (NumberFormatException e) {
-        			errors.add(ConversionIssue.newError(e, e.getMessage()));
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+        			errors.add(ConversionIssue.newError(ere));
         		}
         	}
         	
@@ -116,7 +117,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(startDate.getText()));
                         bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
                     }catch (IllegalArgumentException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()+ "Formato data non valido"));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
         		    }
         		}
         		
@@ -126,7 +128,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
         			    BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDate.getText()));
         			    bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
                     }catch (IllegalArgumentException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()+ "Formato data non valido"));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
         		}
         	}
@@ -149,7 +152,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0136InvoiceLineAllowanceAmount bt0136 = new BT0136InvoiceLineAllowanceAmount(strDblConverter.convert(amount.getText()));
                             bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -159,7 +163,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(strDblConverter.convert(baseAmount.getText()));
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -169,7 +174,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(strDblConverter.convert(multiplierFactorNumeric.getText()));
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -185,7 +191,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0140InvoiceLineAllowanceReasonCode bt0140 = new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code" + allowanceChargeReasonCode.getText()));
                             bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(bt0140);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "Untdid5189ChargeAllowanceDescriptionCodes non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5189ChargeAllowanceDescriptionCodes not found").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -201,7 +208,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0141InvoiceLineChargeAmount bt0141 = new BT0141InvoiceLineChargeAmount(strDblConverter.convert(amount.getText()));
                             bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     Element baseAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BaseAmount");
@@ -210,7 +218,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0142InvoiceLineChargeBaseAmount bt0142 = new BT0142InvoiceLineChargeBaseAmount(strDblConverter.convert(baseAmount.getText()));
                             bg0028.getBT0142InvoiceLineChargeBaseAmount().add(bt0142);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -220,7 +229,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0143InvoiceLineChargePercentage bt0143 = new BT0143InvoiceLineChargePercentage(strDblConverter.convert(multiplierFactorNumeric.getText()));
                             bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -236,7 +246,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0145InvoiceLineChargeReasonCode bt0145 = new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(allowanceChargeReasonCode.getText()));
                             bg0028.getBT0145InvoiceLineChargeReasonCode().add(bt0145);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "Untdid7161SpecialServicesCodes non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid7161SpecialServicesCodes not found").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -255,7 +266,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0146ItemNetPrice bt0146 = new BT0146ItemNetPrice(strDblConverter.convert(priceAmount.getText()));
                         bg0029.getBT0146ItemNetPrice().add(bt0146);
                     } catch (NumberFormatException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
                 }
 
@@ -271,7 +283,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 BT0147ItemPriceDiscount bt0147 = new BT0147ItemPriceDiscount(strDblConverter.convert(amount.getText()));
                                 bg0029.getBT0147ItemPriceDiscount().add(bt0147);
                             } catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                                errors.add(ConversionIssue.newError(ere));
                             }
                         }
 
@@ -281,7 +294,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 BT0148ItemGrossPrice bt0148 = new BT0148ItemGrossPrice(strDblConverter.convert(baseAmount.getText()));
                                 bg0029.getBT0148ItemGrossPrice().add(bt0148);
                             } catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                                errors.add(ConversionIssue.newError(ere));
                             }
                         }
                     }
@@ -293,7 +307,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(strDblConverter.convert(baseQuantity.getText()));
                         bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
                     } catch (NumberFormatException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
 
                     Attribute baseQuantityAttribute = baseQuantity.getAttribute("unitCode");
@@ -310,7 +325,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(unitCode);
                             bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(bt0150);
                         }catch (NullPointerException e) {
-                            errors.add(ConversionIssue.newError(e, "UnitOfMeasureCodes non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                 }
@@ -373,7 +389,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0159ItemCountryOfOrigin bt0159 = new BT0159ItemCountryOfOrigin(Iso31661CountryCodes.valueOf(identificationCode.getText()));
                             bg0031.getBT0159ItemCountryOfOrigin().add(bt0159);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "Iso31661CountryCodes non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Iso31661CountryCodes not found").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                 }
@@ -391,7 +408,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0151InvoicedItemVatCategoryCode bt0151 = new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(idClassified.getText()));
                             bg0030.getBT0151InvoicedItemVatCategoryCode().add(bt0151);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "Untdid5305DutyTaxFeeCategories non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
 
@@ -401,7 +419,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             BT0152InvoicedItemVatRate bt0152 = new BT0152InvoicedItemVatRate(strDblConverter.convert(percent.getText()));
                             bg0030.getBT0152InvoicedItemVatRate().add(bt0152);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     bg0025.getBG0030LineVatInformation().add(bg0030);

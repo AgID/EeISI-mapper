@@ -1,10 +1,8 @@
 package it.infocert.eigor.converter.ubl2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -45,7 +43,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(taxableAmount.getText()));
                         bg0023.getBT0116VatCategoryTaxableAmount().add(bt0116);
                     }catch (NumberFormatException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
                 }
         		
@@ -55,7 +54,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(strDblConverter.convert(taxAmount.getText()));
                         bg0023.getBT0117VatCategoryTaxAmount().add(bt0117);
                     }catch (NumberFormatException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage()));
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
                     }
                 }
         		
@@ -67,7 +67,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(id.getText()));
                             bg0023.getBT0118VatCategoryCode().add(bt0118);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "Untdid5305DutyTaxFeeCategories non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     
@@ -77,7 +78,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(percent.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     
@@ -93,7 +95,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(taxExemptionReasonCode.getText()));
                             bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                         }catch (IllegalArgumentException e) {
-                            errors.add(ConversionIssue.newError(e, "VatExemptionReasonsCodes non trovato"));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("VatExemptionReasonsCodes not found").action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     
