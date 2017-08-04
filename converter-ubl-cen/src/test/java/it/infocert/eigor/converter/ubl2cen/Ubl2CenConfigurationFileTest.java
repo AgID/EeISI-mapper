@@ -1,17 +1,15 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import com.google.common.io.ByteStreams;
-
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-
+import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -28,14 +26,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class Ubl2CenConfigurationFileTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ITUbl2CenTest.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private MyUblToCenConverter sut;
 	private List<ConversionIssue> conversionIssues;

@@ -11,19 +11,21 @@
 
 	<artifactId>converter-cii-cen</artifactId>
 
-	<name>Eigor :: Converter :: CII - CEN</name>
+	<name>Eigor :: Converter :: CII - CEN (${project.artifactId})</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>it.infocert.eigor</groupId>
 			<artifactId>eigor-api</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-spring-core</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.amoerie</groupId>
 			<artifactId>jstreams</artifactId>
 		</dependency>
-
-
 
         <!-- TEST -->
 		<dependency>

@@ -12,14 +12,14 @@ import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;

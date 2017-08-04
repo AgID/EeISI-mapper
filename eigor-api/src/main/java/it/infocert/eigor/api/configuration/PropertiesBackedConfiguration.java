@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.configuration;
 
-import org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 
 import java.util.Properties;
 

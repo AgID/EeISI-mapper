@@ -11,7 +11,7 @@
 
     <artifactId>ph-sch2xslt-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>PH Schematron2XSLT Maven Plugin</name>
+    <name>Eigor :: PH Schematron2XSLT Maven Plugin Java 7 Back Port (${project.artifactId})</name>
     <description>Maven plugin to convert Schematron files to XSLT files at build time</description>
 
 
