@@ -8,6 +8,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -175,7 +176,8 @@ public abstract class GenericTransformer {
         try {
             bts = getBtRecursively(invoice, Lists.newArrayList(cenSteps), new ArrayList<BTBG>(0));
         } catch (Exception e) {
-            errors.add(ConversionIssue.newError(e, e.getMessage()));
+            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("GenericTransformer").build());
+            errors.add(ConversionIssue.newError(ere));
             return null;
         }
         return bts;

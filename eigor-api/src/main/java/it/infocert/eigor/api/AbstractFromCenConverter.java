@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
@@ -170,7 +171,8 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             return bos.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            errors.add(ConversionIssue.newError(e, e.getMessage()));
+            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AbstractFromCenConverter").build());
+            errors.add(ConversionIssue.newError(ere));
             return null;
         }
     }

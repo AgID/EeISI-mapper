@@ -1,18 +1,14 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -56,7 +52,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(basisAmount.getText()));
                             bg0023.getBT0116VatCategoryTaxableAmount().add(bt0116);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     if (calculatedAmount != null) {
@@ -64,7 +61,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(strDblConverter.convert(calculatedAmount.getText()));
                             bg0023.getBT0117VatCategoryTaxAmount().add(bt0117);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     if (typeCode != null && categoryCode != null) {
@@ -76,7 +74,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(rateApplicablePercent.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
                         }catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(e, e.getMessage()));
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
                         }
                     }
                     if (exemptionReason != null) {
@@ -87,7 +86,6 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(exemptionReasonCode.getText()));
                         bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                     }
-
                     invoice.getBG0023VatBreakdown().add(bg0023);
                 }
             }

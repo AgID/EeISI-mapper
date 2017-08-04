@@ -1,18 +1,14 @@
 package it.infocert.eigor.converter.cii2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -69,7 +65,8 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(strDblConverter.convert(actualAmount.getValue()));
                                     bg0020.getBT0092DocumentLevelAllowanceAmount().add(bt0092);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (basisAmount != null) {
@@ -77,7 +74,8 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                     bg0020.getBT0093DocumentLevelAllowanceBaseAmount().add(bt0093);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (calculationPercent != null) {
@@ -85,19 +83,26 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(strDblConverter.convert(calculationPercent.getText()));
                                     bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (typeCode != null && categoryCode != null) {
-                                BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
-                                bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(bt0095);
+                                try{
+                                    BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
+                                    bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(bt0095);
+                                }catch (IllegalArgumentException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
                             }
                             if (rateApplicablePercent != null) {
                                 try {
                                     BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                     bg0020.getBT0096DocumentLevelAllowanceVatRate().add(bt0096);
                                 }catch (NumberFormatException e) {
-                                    errors.add(ConversionIssue.newError(e, e.getMessage()));
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (reason != null) {
@@ -105,8 +110,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 bg0020.getBT0097DocumentLevelAllowanceReason().add(bt0097);
                             }
                             if (reasonCode != null) {
-                                BT0098DocumentLevelAllowanceReasonCode bt0098 = new BT0098DocumentLevelAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code"+reasonCode.getText()));
-                                bg0020.getBT0098DocumentLevelAllowanceReasonCode().add(bt0098);
+                                try{
+                                    BT0098DocumentLevelAllowanceReasonCode bt0098 = new BT0098DocumentLevelAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code"+reasonCode.getText()));
+                                    bg0020.getBT0098DocumentLevelAllowanceReasonCode().add(bt0098);
+                                }catch (IllegalArgumentException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5189ChargeAllowanceDescriptionCodes not found").action("DocumentLevelAllowancesConverter").build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
                             }
 
                             invoice.getBG0020DocumentLevelAllowances().add(bg0020);
