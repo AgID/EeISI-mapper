@@ -1,7 +1,6 @@
 package it.infocert.eigor.cli;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.api.ApplicationContextProvider;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
@@ -35,7 +34,6 @@ public class Eigor {
 
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
-        ApplicationContextProvider.setApplicationContext(ctx);
         ctx.getBean(EigorCli.class).run(args);
     }
 

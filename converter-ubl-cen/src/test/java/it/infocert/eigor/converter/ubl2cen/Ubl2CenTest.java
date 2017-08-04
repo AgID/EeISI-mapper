@@ -19,7 +19,7 @@ public class Ubl2CenTest {
 	private static final Logger log = LoggerFactory.getLogger(Ubl2CenTest.class);
 
 	private Ubl2Cen sut;
-	
+
 	@Before
 	public void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
@@ -34,22 +34,22 @@ public class Ubl2CenTest {
 		sut = new Ubl2Cen(new Reflections("it.infocert"), conf);
 		sut.configure();
 	}
-	
+
 	@Test
 	public void shouldSupportUbl() {
 		assertThat(sut.support("ubl"), is(true));
 	}
-	
+
 	@Test
 	public void shouldNotSupportUbl() {
 		assertThat(sut.support("fake"), is(false));
 	}
-	
+
 	@Test
 	public void shouldSupportedFormatsUbl() {
 		assertThat(sut.getSupportedFormats(), contains("ubl"));
 	}
-	
+
 	@Test
 	public void testNullFormat() {
 		assertFalse(sut.support(null));
