@@ -15,6 +15,8 @@ import com.helger.schematron.xslt.SchematronResourceSCHCache;
 
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -28,6 +30,7 @@ import java.util.List;
  * The type Schematron to XSLT file updater.
  */
 class SchematronXSLTFileUpdater {
+    private final static Logger log = LoggerFactory.getLogger(SchematronXSLTFileUpdater.class);
     private final File xsltDirectory;
     private final File schematronDirectory;
     private final String schematronPattern;
@@ -138,12 +141,12 @@ class SchematronXSLTFileUpdater {
      */
     void updateXSLTfromSch() {
 
-
         // Find all Schematron files
         final String[] schFilenames = getFirstLevelSchematronFileList();
         if (schFilenames != null) {
             // TODO MAYBE use a separate thread for each file
             for (final String schFilename : schFilenames) {
+                log.debug("Updating Schematron file with new version: {}", schFilename);
                 final File schFile = new File(schematronDirectory, schFilename);
 
                 // Create XSLT file name (outputdir + localpath + extension)

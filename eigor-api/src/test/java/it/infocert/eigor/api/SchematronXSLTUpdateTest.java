@@ -1,14 +1,19 @@
 package it.infocert.eigor.api;
 
+import com.helger.schematron.xslt.SchematronResourceSCH;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 
+import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -73,5 +78,7 @@ public class SchematronXSLTUpdateTest {
         File resultXslt = new File(xsltDirectory.getAbsolutePath() + "/simple.xslt");
         assertTrue(resultXslt.exists());
     }
+
+
 
 }

@@ -104,4 +104,8 @@ public class ConversionIssue implements IConversionIssue {
         return errorMessage;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s Fatal: %s", errorMessage, cause, fatal);
+    }
 }
