@@ -79,6 +79,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
         </assert>
   <assert test="$CIUS-VD-48" id="CIUS-VD-48" flag="fatal"> [CIUS-VD-48] BT-54 (Buyer country subdivision) -If country code=IT it should be coded according to Italian province list. 
         </assert>
+   </rule>
+   <rule context="$Accounting_Supplier_Party_Contact">
   <assert test="$CIUS-VD-44" id="CIUS-VD-44" flag="fatal"> [CIUS-VD-44] BT-41 (Seller contact point)  -BT maximum length shall be 200 chars. 
         </assert>
   <assert test="$CIUS-VD-45" id="CIUS-VD-45" flag="fatal"> [CIUS-VD-45] BT-42 (Seller contact telephone number) -BT minimum length shall be 5 maximum length shall be 12 chars. 
@@ -90,14 +92,16 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   <assert test="$CIUS-VD-17" id="CIUS-VD-17" flag="fatal"> [CIUS-VD-17] BT-27 (Seller name) -BT maximum length shall be 80 chars. 
         </assert>
    </rule>
-   <rule context="$Accounting_Supplier_PartyTaxScheme">
-  <assert test="$CIUS-BT-98" id="CIUS-BT-98" flag="fatal"> [CIUS-BT-98] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
+   <rule context="$Accounting_Supplier_TaxScheme">
+  <assert test="$CIUS-BT-98-1" id="CIUS-BT-98-1" flag="fatal"> [CIUS-BT-98-1] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. 
+        </assert>
+  <assert test="$CIUS-VD-99" id="CIUS-VD-99" flag="fatal"> [CIUS-VD-99] BT-32 (Seller tax registration identifier) -In case the seller is Italian this field must contain the codification of RegimeFiscale 
         </assert>
   <assert test="$CIUS-VD-41" id="CIUS-VD-41" flag="fatal"> [CIUS-VD-41] BT-31 (Seller VAT identifier) -BT maximum length shall be 30 chars. 
         </assert>
    </rule>
-   <rule context="$Accounting_Supplier_PartyTaxScheme_CompanyID">
-  <assert test="$CIUS-VD-99" id="CIUS-VD-99" flag="fatal"> [CIUS-VD-99] BT-32 (Seller tax registration identifier) -In case the seller is Italian this field must contain the codification of RegimeFiscale 
+   <rule context="$Accounting_Supplier">
+  <assert test="$CIUS-BT-98-2" id="CIUS-BT-98-2" flag="fatal"> [CIUS-BT-98-2] BT-32 (Seller tax registration identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
         </assert>
    </rule>
    <rule context="$Accounting_Supplier_Party_PostalAddress">
