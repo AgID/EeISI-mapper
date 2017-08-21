@@ -10,19 +10,23 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 
+import javax.print.Doc;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GenericTransformer {
 
@@ -33,6 +37,38 @@ public abstract class GenericTransformer {
     public GenericTransformer(Reflections reflections, ConversionRegistry conversionRegistry) {
         this.invoiceUtils = new InvoiceUtils(reflections);
         this.conversionRegistry = conversionRegistry;
+    }
+
+    protected boolean hasSchemeAttribute(Document document, String xPath) {
+        List<Element> elements = CommonConversionModule.evaluateXpath(document, xPath);
+        if (!elements.isEmpty()) {
+            Element e = elements.get(0);
+            if (e.hasAttributes()) {
+                for (Attribute attribute : e.getAttributes()) {
+                    if (Objects.equals(attribute.getName(), "schemeID")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    protected boolean hasAttribute(Document document, String xPath) {
+        List<Element> elements = CommonConversionModule.evaluateXpath(document, xPath);
+        if (!elements.isEmpty()) {
+            Element element = elements.get(0);
+            return element.hasAttributes();
+        }
+        return false;
+    }
+
+    protected Element getSingleNodeFromXpath(Document document, String xPath) {
+        List<Element> elements = CommonConversionModule.evaluateXpath(document, xPath);
+        if (!elements.isEmpty()) {
+            return elements.get(0);
+        }
+        return null;
     }
 
     protected String getNodeTextFromXPath(Document document, String xPath) {
@@ -52,6 +88,45 @@ public abstract class GenericTransformer {
             errors.add(ConversionIssue.newError(new IllegalAccessException(btbg.denomination() + " is not a BT")));
             return null;
         }
+    }
+
+    protected Object addNewCenObjectWithIdentifierToInvoice(String cenPath, BG0000Invoice invoice, Element node, List<IConversionIssue> errors) {
+        final Object[] constructorParam = new Object[]{null};
+
+        // find the parent BG
+        String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
+        invoiceUtils.ensurePathExists(cenPath, invoice);
+        BTBG bg;
+        if (cenPath.startsWith("/BT")) {
+            bg = invoice;
+        } else {
+            bg = invoiceUtils.getFirstChild(bgPath, invoice);
+        }
+        log.trace(cenPath + " has BG parent: " + bg);
+
+        // FIXME This is not covering cases where there can be multiple BGs or BTs of the same type
+        // if there no child? what?
+        if (!invoiceUtils.hasChild(invoice, cenPath)) {
+            try {
+                // create BT element
+                String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
+                Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
+                if (btClass == null) {
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
+                }
+
+                Constructor<? extends BTBG> constructor = btClass.getConstructor(Identifier.class);
+                Identifier id = new Identifier(node.getAttributeValue("schemeID"), node.getText());
+                BTBG bt = constructor.newInstance(id);
+                invoiceUtils.addChild(bg, bt);
+                return id;
+            } catch (NoSuchMethodException e) {
+                errors.add(ConversionIssue.newError(e));
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     protected Object addNewCenObjectFromStringValueToInvoice(String cenPath, BG0000Invoice invoice, final String xPathText, final List<IConversionIssue> errors) {
@@ -76,7 +151,7 @@ public abstract class GenericTransformer {
                 // create BT element
                 String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
-                if(btClass==null) {
+                if (btClass == null) {
                     throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
                 }
 
@@ -94,7 +169,8 @@ public abstract class GenericTransformer {
                                 Stream<Class<?>> classes1 = Stream.create(classes);
 
                                 classes1.forEach(new Consumer<Class<?>>() {
-                                    @Override public void consume(Class<?> paramType) {
+                                    @Override
+                                    public void consume(Class<?> paramType) {
 
                                         try {
                                             constructorParam[0] = conversionRegistry.convert(String.class, paramType, xPathText);
@@ -146,10 +222,17 @@ public abstract class GenericTransformer {
         return bts;
     }
 
-    protected List<Element> getAllXmlElements (String xPath, Document document, int btsSize, String cenPath, List<IConversionIssue> errors) {
+    protected List<Element> getAllXmlElements(String xPath, Document document, int btsSize, String cenPath, List<IConversionIssue> errors) {
         ArrayList<String> xmlSteps = Lists.newArrayList(xPath.substring(1).split("/"));
         String remove //keep it that way, there were some access races without it that still need to be investigated
                 = xmlSteps.remove(0);
+        boolean attribute = false;
+        String last;
+        if ((last = xmlSteps.get(xmlSteps.size() - 1)).startsWith("@")) {
+            xmlSteps.remove(last);
+            attribute = true;
+        }
+
         List<Element> elements = createXmlPathRecursively(document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
         if (btsSize > elements.size()) {
             IConversionIssue e = ConversionIssue.newError(
@@ -237,5 +320,6 @@ public abstract class GenericTransformer {
     }
 
     public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
+
     public abstract void transformCenToXml(BG0000Invoice invoice, Document document, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
 }

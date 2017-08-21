@@ -38,7 +38,6 @@ public class GenericOneToOneTransformerTest {
     @Before
     public void setUp() throws Exception {
         invoice = new BG0000Invoice();
-
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
@@ -185,4 +184,42 @@ public class GenericOneToOneTransformerTest {
         assertTrue(items.isEmpty());
         assertEquals("null.GenericTransformer.null - Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
     }
+
+    @Test
+    public void shouldSupportCenPathAttributes() throws Exception {
+        final String xPathExpression = "/Invoice/AccountingCustomerParty/Party/EndpointID";
+        final String schemeXPathExpression = "/Invoice/AccountingCustomerParty/Party/EndpointID/@schemeID";
+        final String cenPath = "/BG0007/BT0049";
+        final String schemeCenPath = "/BG0007/BT0049/@schemeID";
+
+        final Document ublInvoice = createUblInvoice();
+        final BG0000Invoice invoice = new BG0000Invoice();
+        //Normal tag
+        GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(xPathExpression, cenPath, reflections, conversionRegistry);
+        transformer.transformXmlToCen(ublInvoice, invoice, errors);
+
+        List<BG0007Buyer> buyers = invoice.getBG0007Buyer();
+        assertFalse(buyers.isEmpty());
+
+        List<BT0049BuyerElectronicAddressAndSchemeIdentifier> identifiers = buyers.get(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier();
+        assertFalse(identifiers.isEmpty());
+
+        BT0049BuyerElectronicAddressAndSchemeIdentifier identifier = identifiers.get(0);
+        assertEquals("Test", identifier.getValue().getIdentifier());
+        assertEquals("ID", identifier.getValue().getIdentificationSchema());
+    }
+
+    private Document createUblInvoice() {
+        Element root = new Element("Invoice");
+        Element acp = new Element("AccountingCustomerParty");
+        Element party = new Element("Party");
+        Element endpointId = new Element("EndpointID");
+        endpointId.setText("Test");
+        endpointId.setAttribute("schemeID", "ID");
+        party.addContent(endpointId);
+        acp.addContent(party);
+        root.addContent(acp);
+        return new Document(root);
+    }
+
 }

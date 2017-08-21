@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0071DeliverToLocationIdentifierAndSchemeIdentifier;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -30,11 +32,17 @@ public class DeliverToLocationIdentifierConverter extends CustomConverterUtils i
                     Element id = findNamespaceChild(shipToTradeParty, namespacesInScope, "ID");
                     Element globalID = findNamespaceChild(shipToTradeParty, namespacesInScope, "GlobalID");
                     if (globalID != null) {
-                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(globalID.getText());
+                        Attribute schemeID = globalID.getAttribute("schemeID");
+                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071 = null;
+                        if (schemeID != null) {
+                            bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(new Identifier(globalID.getAttributeValue("schemeID"), globalID.getText()));
+                        } else {
+                            bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(new Identifier(globalID.getText()));
+                        }
                         invoice.getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().add(bt0071);
                     }
                     else if (id != null) {
-                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(id.getText());
+                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
                         invoice.getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().add(bt0071);
                     }
                 }

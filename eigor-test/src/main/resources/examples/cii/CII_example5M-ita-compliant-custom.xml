@@ -50,7 +50,7 @@
 					<ram:Value>6 mm</ram:Value>
 				</ram:ApplicableProductCharacteristic>
 				<ram:DesignatedProductClassification>
-					<ram:ClassCode listID="ZZZ">12344321</ram:ClassCode>
+					<ram:ClassCode listID="ZZZ" listVersionID="1.0">12344321</ram:ClassCode>
 				</ram:DesignatedProductClassification>
 				<ram:DesignatedProductClassification>
 					<ram:ClassCode listID="ZZZ">12312312</ram:ClassCode>
@@ -141,6 +141,7 @@
 				<ram:AdditionalReferencedDocument>
 					<ram:IssuerAssignedID>Object2</ram:IssuerAssignedID>
 					<ram:TypeCode>130</ram:TypeCode>
+					<ram:ReferenceTypeCode>Prova ref</ram:ReferenceTypeCode>
 				</ram:AdditionalReferencedDocument>
 				<ram:ReceivableSpecifiedTradeAccountingAccount>
 					<ram:ID>ACC7654</ram:ID>
@@ -236,7 +237,7 @@
 				<ram:Name>SellerCompany</ram:Name>
 				<ram:Description>Export</ram:Description>
 				<ram:SpecifiedLegalOrganization>
-					<ram:ID>NL16356706</ram:ID>
+					<ram:ID schemeID="AAA">NL16356706</ram:ID>
 					<ram:TradingBusinessName>SelCo</ram:TradingBusinessName>
 				</ram:SpecifiedLegalOrganization>
 				<ram:DefinedTradeContact>
@@ -259,7 +260,7 @@
 					<ram:CountrySubDivisionName>Overijssel</ram:CountrySubDivisionName>
 				</ram:PostalTradeAddress>
 				<ram:URIUniversalCommunication>
-					<ram:URIID>info@selco.nl</ram:URIID>
+					<ram:URIID schemeID="BBB">info@selco.nl</ram:URIID>
 				</ram:URIUniversalCommunication>
 				<ram:SpecifiedTaxRegistration>
 					<ram:ID schemeID="VA">NL16356706</ram:ID>
@@ -275,7 +276,7 @@
 				<ram:GlobalID schemeID="0088">5456456456456</ram:GlobalID>
 				<ram:Name>Buyercompany ltd</ram:Name>
 				<ram:SpecifiedLegalOrganization>
-					<ram:ID>DK16356607</ram:ID>
+					<ram:ID schemeID="CCC">DK16356607</ram:ID>
 					<ram:TradingBusinessName>Buyco</ram:TradingBusinessName>
 				</ram:SpecifiedLegalOrganization>
 				<ram:DefinedTradeContact>
@@ -297,7 +298,7 @@
 					<ram:CountrySubDivisionName>Jutland</ram:CountrySubDivisionName>
 				</ram:PostalTradeAddress>
 				<ram:URIUniversalCommunication>
-					<ram:URIID>info@buyercompany.dk</ram:URIID>
+					<ram:URIID schemeID="DDD">info@buyercompany.dk</ram:URIID>
 				</ram:URIUniversalCommunication>
 				<ram:SpecifiedTaxRegistration>
 					<ram:ID schemeID="VA">DK16356607</ram:ID>
@@ -385,7 +386,7 @@
 				<ram:GlobalID>123456</ram:GlobalID>
 				<ram:Name>Dagobert Duck</ram:Name>
 				<ram:SpecifiedLegalOrganization>
-					<ram:ID>DK16356608</ram:ID>
+					<ram:ID schemeID="EEE">DK16356608</ram:ID>
 				</ram:SpecifiedLegalOrganization>
 			</ram:PayeeTradeParty>
 			<ram:SpecifiedTradeSettlementPaymentMeans>

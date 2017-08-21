@@ -38,6 +38,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element uriid = findNamespaceChild(elem, namespacesInScope, "URIID");
                     Element attachmentBinaryObject = findNamespaceChild(elem, namespacesInScope, "AttachmentBinaryObject");
 
+                    //TODO concatenation functionality, check
                     if (issuerAssignedID != null && typeCode != null) {
                         BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(issuerAssignedID.getText()+" "+typeCode.getText());
                         bg0024.getBT0122SupportingDocumentReference().add(bt0122);

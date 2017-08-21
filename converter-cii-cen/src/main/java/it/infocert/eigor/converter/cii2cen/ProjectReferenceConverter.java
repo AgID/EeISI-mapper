@@ -32,6 +32,7 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
 
                     if (id != null) {
                         BT0011ProjectReference bt0011 = null;
+                        //TODO concatenation functionality
                         if (name != null) {
                             bt0011 = new BT0011ProjectReference(id.getText()+" "+name.getText());
                         } else {
