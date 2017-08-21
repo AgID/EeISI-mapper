@@ -1,4 +1,4 @@
-<pattern xmlns="http://purl.oclc.org/dsdl/schematron" is-a="syntax" id="CIUS-IT">
+<pattern xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2" is-a="syntax" id="CIUS-IT">
 <param name="Invoice_Root" value= "//ubl:Invoice"/>
 <param name="CIUS-CA-9" value=" exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)"/>
 <param name="CIUS-VD-32" value="string-length(cbc:ID) &lt;= 20"/>
@@ -16,8 +16,8 @@
 <param name="CIUS-VD-102-1" value="not (cbc:ID/@schemeID = 'IT:REA')  or ( (string-length(cbc:CompanyID) &gt;= 3) and (string-length(cbc:CompanyID) &lt;=22) and( contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',substring(cbc:CompanyID,1,2) )))"/>
 <param name="CIUS-VD-102-2" value="not (cbc:ID/@schemeID = 'IT:ALBO')  or (string-length(cbc:CompanyID) &lt;=30)"/>
 <param name="Accounting_Customer_Party" value="cac:AccountingCustomerParty/cac:Party"/>
-<param name="CIUS-BR-14" value="exists(cac:PartyTaxScheme/cbc:CompanyID) or (exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:CF']) or exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:PIVA']))"/>
-<param name="CIUS-CA-2" value="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = ' IT:CODDEST' or cbc:EndpointID/@schemeID = ' IT:PEC' or cbc:EndpointID/@schemeID = ' IT:IPA' )"/>
+<param name="CIUS-BR-14" value="exists(cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:CF') or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:PIVA')"/>
+<param name="CIUS-CA-2" value="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = 'IT:CODDEST' or cbc:EndpointID/@schemeID = 'IT:PEC' or cbc:EndpointID/@schemeID = 'IT:IPA' )"/>
 <param name="CIUS-VD-53" value="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )"/>
 <param name="CIUS-VD-97-1" value="not(cbc:EndpointID/@schemeID = 'IT:PEC') or ( string-length(cbc:EndpointID) &gt;= 7  and string-length(cbc:EndpointID) &lt;= 256 )"/>
 <param name="CIUS-VD-97-2" value="not(cbc:EndpointID/@schemeID = 'IT:IPA') or ( string-length(cbc:EndpointID) = 6 )"/>
@@ -36,18 +36,20 @@
 <param name="CIUS-VD-24" value="string-length(cbc:CityName) &lt;= 60"/>
 <param name="CIUS-VD-27-1" value="string-length(cbc:PostalZone) &lt;= 15"/>
 <param name="CIUS-VD-27-2" value="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) &gt; 0 )"/>
-<param name="CIUS-VD-30" value="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2"/>
+<param name="CIUS-VD-30" value="not(cac:Country/cbc:IdentificationCode = 'IT') or not(exists(cbc:CountrySubentity)) or string-length(cbc:CountrySubentity) = 2"/>
 <param name="CIUS-VD-48" value="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )"/>
+<param name="Accounting_Supplier_Party_Contact" value="cac:AccountingSupplierParty/cac:Party/cac:Contact"/>
 <param name="CIUS-VD-44" value="string-length(cbc:Name) &lt;= 200"/>
-<param name="CIUS-VD-45" value="string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) &gt;= 5"/>
-<param name="CIUS-VD-46" value="string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) &gt;= 7"/>
+<param name="CIUS-VD-45" value="not(exists(cbc:Telephone)) or (string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) &gt;= 5)"/>
+<param name="CIUS-VD-46" value="not(exists(cbc:ElectronicMail)) or (string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) &gt;= 7)"/>
 <param name="Accounting_Supplier_PartyLegalEntity" value="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity"/>
 <param name="CIUS-VD-17" value="string-length(cbc:RegistrationName) &lt;= 80"/>
-<param name="Accounting_Supplier_PartyTaxScheme" value="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme"/>
-<param name="CIUS-BT-98" value="((cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and exists(cbc:CompanyID)) or (not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and not(exists(cbc:CompanyID)))"/>
+<param name="Accounting_Supplier_TaxScheme" value="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme"/>
+<param name="CIUS-BT-98-1" value="(cac:TaxScheme/cbc:ID='VAT') or ((../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and (exists(cbc:CompanyID)))"/>
+<param name="CIUS-VD-99" value="not(../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (cac:TaxScheme/cbc:ID='VAT') or contains( 'RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',cbc:CompanyID)"/>
 <param name="CIUS-VD-41" value="string-length(cbc:CompanyID) &lt;= 30"/>
-<param name="Accounting_Supplier_PartyTaxScheme_CompanyID" value="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID"/>
-<param name="CIUS-VD-99" value="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or ( ( ( not(contains(normalize-space(.),' ')) and contains( ' RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',concat(' ',normalize-space(.),' ') ) ) ) )"/>
+<param name="Accounting_Supplier" value="cac:AccountingSupplierParty/cac:Party"/>
+<param name="CIUS-BT-98-2" value="not(cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or count(cac:PartyTaxScheme/cac:TaxScheme[not(cbc:ID='VAT')]) &gt;=1"/>
 <param name="Accounting_Supplier_Party_PostalAddress" value="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress"/>
 <param name="CIUS-CA-10-1" value="exists(cbc:StreetName)"/>
 <param name="CIUS-CA-10-2" value="exists(cbc:CityName)"/>
@@ -81,9 +83,9 @@
 <param name="CIUS-VD-28-1" value="string-length(cbc:PostalZone) &lt;= 15"/>
 <param name="CIUS-VD-28-2" value="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) &gt; 0 )"/>
 <param name="CIUS-VD-31" value="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2"/>
-<param name="CIUS-VD-49" value="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )"/>
+<param name="CIUS-VD-49" value="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )"/>
 <param name="Despatch_DocumentReference" value="cac:DespatchDocumentReference"/>
-<param name="CIUS-VD-15" value="matches(cbc:ID, '/([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})/')"/>
+<param name="CIUS-VD-15" value="matches(cbc:ID, '([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})')"/>
 <param name="CIUS-VD-16" value="string-length(cbc:ID) &lt;= 31"/>
 <param name="InvoiceLine" value="cac:InvoiceLine"/>
 <param name="CIUS-SD-73" value="number(cbc:ID) &gt; 0 and number(cbc:ID) &lt;=9999"/>
@@ -142,7 +144,7 @@
 <param name="CIUS-VD-55" value="string-length(cbc:InstructionNote) &lt;= 200"/>
 <param name="CIUS-VD-56" value="string-length(cbc:PaymentID) &lt;= 60"/>
 <param name="PaymentMeans_PayeeFinancialAccount" value="cac:PaymentMeans/cac:PayeeFinancialAccount"/>
-<param name="CIUS-BT-84" value="matches(cbc:ID, '([a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})')" flag="fatal"/>
+<param name="CIUS-BT-84" value="matches(cbc:ID, '([a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})')"/>
 <param name="CIUS-VD-57" value="string-length(cbc:ID) &lt;= 34 and string-length(cbc:ID) &gt;= 15"/>
 <param name="CIUS-VD-58" value="string-length(cbc:Name) &lt;= 200"/>
 <param name="PaymentMeans_PayeeFinancialAccount_FinancialInstitutionBranch" value="cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch"/>
