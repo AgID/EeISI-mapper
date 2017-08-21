@@ -218,7 +218,7 @@ Allowed mime codes:
 - text/csv
 - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 - application/vnd.oasis.opendocument. spreadsheet
-",R35,Binary Object,it.infocert.eigor.model.core.datatypes.Binary,,it.infocert.eigor.model.core.datatypes.Binary,BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename,2,,,,,,0,148,110,0,148,BG0024AdditionalSupportingDocuments,
+",R35,Binary Object,it.infocert.eigor.model.core.datatypes.FileReference,,it.infocert.eigor.model.core.datatypes.FileReference,BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename,2,,,,,,0,148,110,0,148,BG0024AdditionalSupportingDocuments,
 BG-0025,153,BG-25,BG-25,,BG,25,+,1..n,INVOICE LINE,A group of business terms providing information on individual Invoice lines., ,"R17
 R23", ,,,,BG0025InvoiceLine,1,,153,,,,0,153,110,0,0,BG0000Invoice,
 BT-0126,154,BT-126,BT-126,,BT,126,++,1..1,Invoice line identifier,A unique identifier for the individual line within the Invoice.,,R44,Identifier,java.lang.String,,java.lang.String,BT0126InvoiceLineIdentifier,2,,,,,,0,153,110,0,153,BG0025InvoiceLine,

@@ -195,7 +195,7 @@ BT-0125,152,BT-125,BT-125,b,BT,125,,1..1,Attached document Mime code and Attache
 - image/jpeg
 - text/csv
 - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-- application/vnd.oasis.opendocument. spreadsheet",,Binary Object,Binary,,Binary,BT0125AttachedDocumentMimeCodeAndAttachedDocumentFilename
+- application/vnd.oasis.opendocument. spreadsheet",,Binary Object,FileReference,,FileReference,BT0125AttachedDocumentMimeCodeAndAttachedDocumentFilename
 BT-0126,154,BT-126,BT-126,,BT,126,++,1..1,Invoice line identifier,A unique identifier for the individual line within the Invoice.,,R44,Identifier,java.lang.String,,java.lang.String,BT0126InvoiceLineIdentifier
 BT-0127,155,BT-127,BT-127,,BT,127,++,0..1,Invoice line note,A textual note that gives unstructured information that is relevant to the Invoice line., ,R28,Text,java.lang.String,,java.lang.String,BT0127InvoiceLineNote
 BT-0128,156,BT-128,BT-128,a,BT,128,++,0..1,Invoice line object identifier,"An identifier for an object on which the invoice line is based, given by the Seller.","It may be a subscription number, telephone number, meter point etc., as applicable. ",R33,Identifier,java.lang.String,,java.lang.String,BT0128InvoiceLineObjectIdentifier
