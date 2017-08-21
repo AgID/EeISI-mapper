@@ -9,13 +9,19 @@ import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Binary;
+import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0024AdditionalSupportingDocuments;
+import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +58,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             setUnmappedCenElements(invoice, fatturaElettronicaBody);
-            forwardExistingAttachments(invoice, fatturaElettronicaBody);
+            forwardExistingAttachments(invoice, fatturaElettronicaBody, errors);
         }
     }
 
@@ -70,6 +76,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
         return sb.toString();
     }
+
     private void setUnmappedCenElements(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody) {
 
         String attachment = createAttachment(invoice);
@@ -83,7 +90,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
         }
     }
 
-    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody) {
+    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         log.info("Starting converting Allegati");
         if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             for (BG0024AdditionalSupportingDocuments documents : invoice.getBG0024AdditionalSupportingDocuments()) {
@@ -97,10 +104,16 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 if (!documents.getBT0124ExternalDocumentLocation().isEmpty() && documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
                     allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
                 } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    Binary file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
-                    allegati.setAttachment(file.getBytes());
-                    allegati.setFormatoAttachment(file.getMimeType().toString());
-                    allegati.setNomeAttachment(file.getFileName());
+                    FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
+
+                    try {
+                        allegati.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
+                        allegati.setFormatoAttachment(file.getMimeType().toString());
+                        allegati.setNomeAttachment(file.getFileName());
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                        errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                    }
                 }
 
                 fatturaElettronicaBody.getAllegati().add(allegati);

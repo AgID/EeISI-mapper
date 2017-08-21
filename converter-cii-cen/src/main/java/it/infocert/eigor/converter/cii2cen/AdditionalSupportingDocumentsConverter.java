@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.*;
@@ -52,9 +53,9 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
                     }
                     if (attachmentBinaryObject != null) {
-                        Base64StringToBinaryConverter strToBinConverter = new Base64StringToBinaryConverter();
+                        AttachmentToFileReferenceConverter attToFileConverter = new AttachmentToFileReferenceConverter();
                         try {
-                            BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(attachmentBinaryObject.getText()));
+                            BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(attToFileConverter.convert(attachmentBinaryObject));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
                         }catch (IllegalArgumentException e) {
                             errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build())));
