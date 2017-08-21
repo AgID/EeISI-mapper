@@ -29,7 +29,8 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
 
         for(Element elem : notes) {
         	bg0001 = new BG0001InvoiceNote();
-        	
+
+        	//TODO check implementation
         	BT0021InvoiceNoteSubjectCode bt0021 = new BT0021InvoiceNoteSubjectCode(elem.getText());
         	bg0001.getBT0021InvoiceNoteSubjectCode().add(bt0021);
         	BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(elem.getText());

@@ -169,7 +169,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		BuyerIdentifierConverter bt0046 = new BuyerIdentifierConverter();
 		ConversionResult<BG0000Invoice> result = bt0046.toBT0046(document, invoice, errors);
 
-		assertEquals("5790000436057", result.getResult().getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue());
+		assertEquals("5790000436057", result.getResult().getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue().getIdentifier());
 	}
 
 	@Test
@@ -185,7 +185,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		DeliverToLocationIdentifierConverter bt0071 = new DeliverToLocationIdentifierConverter();
 		ConversionResult<BG0000Invoice> result = bt0071.toBT0071(document, invoice, errors);
 
-		assertEquals("5790000436068", result.getResult().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
+		assertEquals("5790000436068", result.getResult().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue().getIdentifier());
 	}
 
 	@Test

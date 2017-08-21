@@ -83,6 +83,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
+                        //TODO check implementation
                         if (typeCode != null && categoryCode != null) {
                             try{
                                 BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));

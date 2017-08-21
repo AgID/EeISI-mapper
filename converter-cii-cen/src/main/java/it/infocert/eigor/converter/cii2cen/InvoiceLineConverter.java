@@ -4,12 +4,14 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.w3c.dom.Attr;
 
 import java.util.List;
 
@@ -63,8 +65,15 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     if (childAdditional != null) {
                         Element issuerAssignedID = findNamespaceChild(childAdditional, namespacesInScope, "IssuerAssignedID");
                         Element typeCode = findNamespaceChild(childAdditional, namespacesInScope, "TypeCode");
-                        if (issuerAssignedID != null && typeCode != null) {
-                            BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(issuerAssignedID.getText()+" "+typeCode.getText());
+                        Element referenceTypeCode = findNamespaceChild(childAdditional, namespacesInScope, "ReferenceTypeCode");
+
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = null;
+                        if (issuerAssignedID != null && typeCode != null && typeCode.getText().equals("130")) {
+                            if (referenceTypeCode != null) {
+                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(),issuerAssignedID.getText() + " " + typeCode.getText()));
+                            } else {
+                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText() + " " + typeCode.getText()));
+                            }
                             bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
                         }
                     }
@@ -103,6 +112,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             if (dateTimeString != null) {
 
                                 Attribute dateTimeAttribute = dateTimeString.getAttribute("format");
+                                //TODO check implementation
                                 if (dateTimeAttribute != null && dateTimeAttribute.getValue().equals("102")) {
                                     try{
                                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
@@ -120,6 +130,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             if (dateTimeString != null) {
 
                                 Attribute dateTimeAttribute = dateTimeString.getAttribute("format");
+                                //TODO check implementation
                                 if (dateTimeAttribute != null && dateTimeAttribute.getValue().equals("102")) {
                                     try{
                                         BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
@@ -268,6 +279,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         Element typeCode = findNamespaceChild(applicableTradeTax, namespacesInScope, "TypeCode");
                         Element categoryCode = findNamespaceChild(applicableTradeTax, namespacesInScope, "CategoryCode");
                         if (typeCode != null && categoryCode != null) {
+                            //TODO check implementation
                             try{
                                 BT0151InvoicedItemVatCategoryCode bt0151 = new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
                                 bg0030.getBT0151InvoicedItemVatCategoryCode().add(bt0151);
@@ -388,6 +400,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                         Element grossBasisQuantity = findNamespaceChild(grossPriceProductTradePrice, namespacesInScope, "BasisQuantity");
                         if (grossBasisQuantity != null) {
+                            //TODO check implemetation
                             try {
                                 Double grossBasisQuantityTemp = strDblConverter.convert(grossBasisQuantity.getText());
                                 BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(grossBasisQuantityTemp + netBasisQuantityBT0149);
@@ -448,16 +461,33 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         bg0031.getBT0156ItemBuyerSIdentifier().add(bt0156);
                     }
                     Element globalID = findNamespaceChild(specifiedTradeProduct, namespacesInScope, "GlobalID");
+                    BT0157ItemStandardIdentifierAndSchemeIdentifier bt0157 = null;
                     if (globalID != null) {
-                        BT0157ItemStandardIdentifierAndSchemeIdentifier bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(globalID.getText());
+                        Attribute schemeID = globalID.getAttribute("schemeID");
+                        if (schemeID != null) {
+                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(globalID.getAttributeValue("schemeID"), globalID.getText()));
+                        } else {
+                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(globalID.getText()));
+                        }
                         bg0031.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt0157);
                     }
 
                     List<Element> designatedProductClassification = findNamespaceChildren(specifiedTradeProduct, namespacesInScope, "DesignatedProductClassification");
                     for(Element elemDesProd : designatedProductClassification) {
                         Element classCode = findNamespaceChild(elemDesProd, namespacesInScope, "ClassCode");
+                        BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt0158 = null;
                         if (classCode != null) {
-                            BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(classCode.getText());
+                            Attribute listID = classCode.getAttribute("listID");
+                            Attribute listAgencyID = classCode.getAttribute("listVersionID");
+                            if(listID != null) {
+                                if (listAgencyID != null) {
+                                    bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), classCode.getText()));
+                                } else {
+                                    bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), classCode.getText()));
+                                }
+                            } else {
+                                bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(classCode.getText()));
+                            }
                             bg0031.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add(bt0158);
                         }
                     }

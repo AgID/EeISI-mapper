@@ -45,6 +45,8 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         BT0025PrecedingInvoiceReference bt0025 = new BT0025PrecedingInvoiceReference(issuerAssignedID.getText());
                         bg0003.getBT0025PrecedingInvoiceReference().add(bt0025);
                     }
+
+                    //TODO check for 'format' attribute
                     if (dateTimeString != null) {
                         try{
                             BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));

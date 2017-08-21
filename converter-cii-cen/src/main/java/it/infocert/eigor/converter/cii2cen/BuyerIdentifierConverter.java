@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -35,12 +37,18 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
 
                     Element id = findNamespaceChild(elem, namespacesInScope, "ID");
                     Element globalID = findNamespaceChild(elem, namespacesInScope, "GlobalID");
+
                     if (globalID != null) {
-                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(globalID.getText());
+                        Attribute schemeID = globalID.getAttribute("schemeID");
+                        if (schemeID != null) {
+                            bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(globalID.getAttributeValue("schemeID"), globalID.getText()));
+                        } else {
+                            bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(globalID.getText()));
+                        }
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
                     }
                     else if (id != null){
-                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(id.getText());
+                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
                     }
                 }

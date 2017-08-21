@@ -64,7 +64,8 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
             new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
             new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter()
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
+            new IdentifierToStringConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;

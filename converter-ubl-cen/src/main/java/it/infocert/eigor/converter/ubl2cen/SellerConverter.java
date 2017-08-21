@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.ubl2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -36,7 +38,12 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
 
                 	Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
                     if (id != null) {
-                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(id.getText());
+                        Attribute schemeID = id.getAttribute("schemeID");
+                        if(schemeID != null) {
+                            bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
+                        } else {
+                            bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
+                        }
                         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                     }
                 }

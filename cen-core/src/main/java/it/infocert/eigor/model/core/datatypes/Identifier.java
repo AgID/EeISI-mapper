@@ -26,10 +26,28 @@ public class Identifier {
         this.identifier = checkNotNull( identifier );
     }
 
+    public Identifier(String identificationSchema, String identifier) {
+        this.identificationSchema = checkNotNull(identificationSchema);
+        this.schemaVersion = null;
+        this.identifier = checkNotNull(identifier);
+    }
+
     public Identifier(String identifier) {
         this.identificationSchema = null;
         this.schemaVersion = null;
         this.identifier = checkNotNull( identifier );
+    }
+
+    public String getIdentificationSchema() {
+        return identificationSchema;
+    }
+
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override

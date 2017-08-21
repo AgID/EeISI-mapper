@@ -486,7 +486,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
                 CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue());
+                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue().getIdentifier());
                 dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
             }
@@ -494,7 +494,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
                 for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
                     CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                    codiceArticolo.setCodiceValore(identifier.getValue());
+                    codiceArticolo.setCodiceValore(identifier.getValue().getIdentifier());
                     dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
                 }

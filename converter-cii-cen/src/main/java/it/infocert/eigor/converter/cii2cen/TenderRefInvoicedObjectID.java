@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import it.infocert.eigor.model.core.model.BT0018InvoicedObjectIdentifierAndSchemeIdentifier;
@@ -32,14 +33,22 @@ public class TenderRefInvoicedObjectID extends CustomConverterUtils implements C
 
                     Element issuerAssignedID = findNamespaceChild(elemAddRefDoc, namespacesInScope, "IssuerAssignedID");
                     Element typeCode = findNamespaceChild(elemAddRefDoc, namespacesInScope, "TypeCode");
+                    Element referenceTypeCode = findNamespaceChild(elemAddRefDoc, namespacesInScope, "ReferenceTypeCode");
 
+                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = null;
                     if (issuerAssignedID != null && typeCode != null) {
                         if (typeCode.getText().equals("50")) {
+                            //TODO concatenation functionality
                             BT0017TenderOrLotReference bt0017 = new BT0017TenderOrLotReference(issuerAssignedID.getText() + " " + typeCode.getText());
                             invoice.getBT0017TenderOrLotReference().add(bt0017);
                         }
                         if (typeCode.getText().equals("130")) {
-                            BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(issuerAssignedID.getText() + " " + typeCode.getText());
+                            //TODO concatenation functionality
+                            if (referenceTypeCode != null) {
+                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(), issuerAssignedID.getText() + " " + typeCode.getText()));
+                            } else {
+                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText() + " " + typeCode.getText()));
+                            }
                             invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
                         }
                     }

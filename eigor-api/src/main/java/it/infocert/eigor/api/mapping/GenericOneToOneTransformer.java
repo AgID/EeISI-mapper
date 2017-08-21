@@ -19,7 +19,7 @@ import java.util.List;
  * based on a 1-1 configurable mapping
  */
 @SuppressWarnings("unchecked")
-public class GenericOneToOneTransformer extends GenericTransformer{
+public class GenericOneToOneTransformer extends GenericTransformer {
     private final String xPath;
     private final String cenPath;
 
@@ -77,11 +77,20 @@ public class GenericOneToOneTransformer extends GenericTransformer{
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
         log.trace(logPrefix + "resolving");
 
-        final String xPathText = getNodeTextFromXPath(document, xPath);
-        if (xPathText != null) {
-            Object assignedValue = addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
-            log.info("XML element '{}' with value '{}' mapped to CEN '{}' with value '{}'.",
-                    xPath, xPathText, cenPath, assignedValue);
+        if (hasSchemeAttribute(document, xPath)) {
+            final Element node = getSingleNodeFromXpath(document, xPath);
+            Object assignedValue = addNewCenObjectWithIdentifierToInvoice(cenPath, invoice, node, errors);
+            log.info("XML element '{}' mapped to CEN '{}' with value '{}'.",
+                    xPath, cenPath, assignedValue);
+        } else {
+            final String xPathText = getNodeTextFromXPath(document, xPath);
+            if (xPathText != null) {
+                Object assignedValue = addNewCenObjectFromStringValueToInvoice(cenPath, invoice, xPathText, errors);
+                log.info("XML element '{}' with value '{}' mapped to CEN '{}' with value '{}'.",
+                        xPath, xPathText, cenPath, assignedValue);
+            }
         }
     }
+
+
 }
