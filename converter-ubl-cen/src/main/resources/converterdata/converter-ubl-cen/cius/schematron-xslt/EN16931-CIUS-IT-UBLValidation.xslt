@@ -182,7 +182,7 @@
 
 
 	<!--RULE -->
-<xsl:template match="//ubl:Invoice" mode="M7" priority="1045">
+<xsl:template match="//ubl:Invoice" mode="M7" priority="1046">
     <svrl:fired-rule context="//ubl:Invoice" />
 
 		<!--ASSERT -->
@@ -253,7 +253,7 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" mode="M7" priority="1044">
+<xsl:template match="/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" mode="M7" priority="1045">
     <svrl:fired-rule context="/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" />
 
 		<!--ASSERT -->
@@ -307,7 +307,7 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" mode="M7" priority="1043">
+<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" mode="M7" priority="1044">
     <svrl:fired-rule context="/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" />
 
 		<!--ASSERT -->
@@ -361,7 +361,7 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1042">
+<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1043">
     <svrl:fired-rule context="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
@@ -399,14 +399,14 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M7" priority="1041">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M7" priority="1042">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID) or (exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:CF']) or exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:PIVA']))" />
+      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:CF') or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:PIVA')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or (exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:CF']) or exists(//cac:PartyIdentification/cbc:ID[@schemeID = 'IT:PIVA']))">
+        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:CF') or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:PIVA')">
           <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -421,9 +421,9 @@ BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier ident
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = ' IT:CODDEST' or cbc:EndpointID/@schemeID = ' IT:PEC' or cbc:EndpointID/@schemeID = ' IT:IPA' )" />
+      <xsl:when test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = 'IT:CODDEST' or cbc:EndpointID/@schemeID = 'IT:PEC' or cbc:EndpointID/@schemeID = 'IT:IPA' )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = ' IT:CODDEST' or cbc:EndpointID/@schemeID = ' IT:PEC' or cbc:EndpointID/@schemeID = ' IT:IPA' )">
+        <svrl:failed-assert test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = 'IT:CODDEST' or cbc:EndpointID/@schemeID = 'IT:PEC' or cbc:EndpointID/@schemeID = 'IT:IPA' )">
           <xsl:attribute name="id">CIUS-CA-2</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -503,7 +503,7 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party_Contact" mode="M7" priority="1040">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party_Contact" mode="M7" priority="1041">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party_Contact" />
 
 		<!--ASSERT -->
@@ -525,7 +525,7 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:PartyLegalEntity" mode="M7" priority="1039">
+<xsl:template match="cac:AccountingCustomerParty/cac:PartyLegalEntity" mode="M7" priority="1040">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
@@ -547,7 +547,7 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:PartyTaxScheme" mode="M7" priority="1038">
+<xsl:template match="cac:AccountingCustomerParty/cac:PartyTaxScheme" mode="M7" priority="1039">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:PartyTaxScheme" />
 
 		<!--ASSERT -->
@@ -569,7 +569,7 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1037">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" mode="M7" priority="1038">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress" />
 
 		<!--ASSERT -->
@@ -686,9 +686,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2" />
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or not(exists(cbc:CountrySubentity)) or string-length(cbc:CountrySubentity) = 2" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2">
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or not(exists(cbc:CountrySubentity)) or string-length(cbc:CountrySubentity) = 2">
           <xsl:attribute name="id">CIUS-VD-30</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -715,6 +715,12 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates mode="M7" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:Contact" mode="M7" priority="1037">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:Contact" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -734,9 +740,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5" />
+      <xsl:when test="not(exists(cbc:Telephone)) or (string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5">
+        <svrl:failed-assert test="not(exists(cbc:Telephone)) or (string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5)">
           <xsl:attribute name="id">CIUS-VD-45</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -750,9 +756,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7" />
+      <xsl:when test="not(exists(cbc:ElectronicMail)) or (string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7">
+        <svrl:failed-assert test="not(exists(cbc:ElectronicMail)) or (string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7)">
           <xsl:attribute name="id">CIUS-VD-46</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -794,15 +800,31 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="((cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and exists(cbc:CompanyID)) or (not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and not(exists(cbc:CompanyID)))" />
+      <xsl:when test="(cac:TaxScheme/cbc:ID='VAT') or ((../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and (exists(cbc:CompanyID)))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="((cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and exists(cbc:CompanyID)) or (not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and not(exists(cbc:CompanyID)))">
-          <xsl:attribute name="id">CIUS-BT-98</xsl:attribute>
+        <svrl:failed-assert test="(cac:TaxScheme/cbc:ID='VAT') or ((../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and (exists(cbc:CompanyID)))">
+          <xsl:attribute name="id">CIUS-BT-98-1</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-BT-98] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
+          <svrl:text> [CIUS-BT-98-1] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. 
+        </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (cac:TaxScheme/cbc:ID='VAT') or contains( 'RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',cbc:CompanyID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (cac:TaxScheme/cbc:ID='VAT') or contains( 'RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',cbc:CompanyID)">
+          <xsl:attribute name="id">CIUS-VD-99</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [CIUS-VD-99] BT-32 (Seller tax registration identifier) -In case the seller is Italian this field must contain the codification of RegimeFiscale 
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -827,20 +849,20 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme_CompanyID" mode="M7" priority="1034">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme_CompanyID" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party" mode="M7" priority="1034">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or ( ( ( not(contains(normalize-space(.),' ')) and contains( ' RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',concat(' ',normalize-space(.),' ') ) ) ) )" />
+      <xsl:when test="not(cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or count(cac:PartyTaxScheme/cac:TaxScheme[not(cbc:ID='VAT')]) >=1" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or ( ( ( not(contains(normalize-space(.),' ')) and contains( ' RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',concat(' ',normalize-space(.),' ') ) ) ) )">
-          <xsl:attribute name="id">CIUS-VD-99</xsl:attribute>
+        <svrl:failed-assert test="not(cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or count(cac:PartyTaxScheme/cac:TaxScheme[not(cbc:ID='VAT')]) >=1">
+          <xsl:attribute name="id">CIUS-BT-98-2</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-99] BT-32 (Seller tax registration identifier) -In case the seller is Italian this field must contain the codification of RegimeFiscale 
+          <svrl:text> [CIUS-BT-98-2] BT-32 (Seller tax registration identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -849,8 +871,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1033">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party_Party_PostalAddress" mode="M7" priority="1033">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party_Party_PostalAddress" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1306,9 +1328,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )" />
+      <xsl:when test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )">
+        <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )">
           <xsl:attribute name="id">CIUS-VD-49</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1328,9 +1350,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="matches(cbc:ID, '/([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})/')" />
+      <xsl:when test="matches(cbc:ID, '([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="matches(cbc:ID, '/([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})/')">
+        <svrl:failed-assert test="matches(cbc:ID, '([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})')">
           <xsl:attribute name="id">CIUS-VD-15</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">

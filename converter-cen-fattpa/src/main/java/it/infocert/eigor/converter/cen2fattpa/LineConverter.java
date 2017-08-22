@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2fattpa;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
@@ -52,7 +53,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         int size = bodies.size();
         if (size > 1) {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
-        } else if (size < 1){
+        } else if (size < 1) {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
@@ -134,9 +135,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                         Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                         Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
-                        String converted = converter.convert(code);
-                        sb.append(converted);
-                        log.trace("Appended BT98 to Descrizione");
+                        try {
+                            String converted = converter.convert(code);
+                            sb.append(converted);
+                            log.trace("Appended BT98 to Descrizione");
+                        } catch (EigorRuntimeException e) {
+                            errors.add(ConversionIssue.newError(e));
+                        }
                     }
 
                     String des = sb.toString();

@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.conversion;
 
+import it.infocert.eigor.api.EigorRuntimeException;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import org.apache.commons.io.FileUtils;
 import org.jdom2.Element;
@@ -20,6 +22,10 @@ public class AttachmentToFileReferenceConverter implements TypeConverter<Element
         String content = element.getText();
         String mimeCode = element.getAttributeValue("mimeCode");
         String filename = element.getAttributeValue("filename");
+
+        if (mimeCode == null || filename == null) {
+            throw new EigorRuntimeException(ErrorMessage.builder().message(String.format("Attribute %s is missing", mimeCode == null? "mimeCode": "filename")).action("AttachmentToFileReferenceConversion").build());
+        }
 
         try {
             return new FileReference(

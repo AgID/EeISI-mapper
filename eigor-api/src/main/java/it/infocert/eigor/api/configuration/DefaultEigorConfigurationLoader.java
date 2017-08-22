@@ -27,7 +27,7 @@ public class DefaultEigorConfigurationLoader {
      */
     public EigorConfiguration loadConfiguration() {
 
-        ArrayList<String> tentatives = new ArrayList();
+        ArrayList<String> tentatives = new ArrayList<>();
 
         EigorConfiguration eigorConfiguration = null;
 
