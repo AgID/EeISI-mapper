@@ -86,7 +86,7 @@ public class Ubl2CenConfigurationFileTest {
     }
 
 
-    public Document getDocument(InputStream sourceInvoiceStream) throws JDOMException, IOException {
+    private Document getDocument(InputStream sourceInvoiceStream) throws JDOMException, IOException {
         SAXBuilder saxBuilder = new SAXBuilder();
         saxBuilder.setIgnoringBoundaryWhitespace(true);
         return saxBuilder.build(sourceInvoiceStream);

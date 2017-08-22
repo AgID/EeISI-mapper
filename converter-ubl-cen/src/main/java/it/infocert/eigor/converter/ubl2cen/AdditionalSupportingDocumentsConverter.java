@@ -25,42 +25,44 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
         List<Element> additionalDocumentReferences = findNamespaceChildren(rootElement, namespacesInScope, "AdditionalDocumentReference");
 
-        for(Element elemAdd : additionalDocumentReferences) {
-        	bg0024 = new BG0024AdditionalSupportingDocuments();
-        	
-        	Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
-        	if (id != null) {
+        for (Element elemAdd : additionalDocumentReferences) {
+            bg0024 = new BG0024AdditionalSupportingDocuments();
+
+            Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
+            if (id != null) {
                 BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
                 bg0024.getBT0122SupportingDocumentReference().add(bt0122);
             }
-        	
-        	Element documentType = findNamespaceChild(elemAdd, namespacesInScope, "DocumentType");
-        	if (documentType != null) {
+
+            Element documentType = findNamespaceChild(elemAdd, namespacesInScope, "DocumentType");
+            if (documentType != null) {
                 BT0123SupportingDocumentDescription bt0123 = new BT0123SupportingDocumentDescription(documentType.getText());
                 bg0024.getBT0123SupportingDocumentDescription().add(bt0123);
             }
-        	
-        	Element attachment = findNamespaceChild(elemAdd, namespacesInScope, "Attachment");
-        	if (attachment != null) {
-        		
-        		Element externalReference = findNamespaceChild(attachment, namespacesInScope, "ExternalReference");
-        		if (externalReference != null) {
+
+            Element attachment = findNamespaceChild(elemAdd, namespacesInScope, "Attachment");
+            if (attachment != null) {
+
+                Element externalReference = findNamespaceChild(attachment, namespacesInScope, "ExternalReference");
+                if (externalReference != null) {
                     Element uri = findNamespaceChild(externalReference, namespacesInScope, "URI");
                     if (uri != null) {
                         BT0124ExternalDocumentLocation bt0124 = new BT0124ExternalDocumentLocation(uri.getText());
                         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
                     }
-        		}
-        		
-        		Element embeddedDocumentBinaryObject = findNamespaceChild(attachment, namespacesInScope, "EmbeddedDocumentBinaryObject");
-        		if (embeddedDocumentBinaryObject != null) {
+                }
+
+                Element embeddedDocumentBinaryObject = findNamespaceChild(attachment, namespacesInScope, "EmbeddedDocumentBinaryObject");
+                if (embeddedDocumentBinaryObject != null) {
                     AttachmentToFileReferenceConverter strToBinConverter = new AttachmentToFileReferenceConverter();
                     try {
                         BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(embeddedDocumentBinaryObject));
                         bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                    }catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build());
                         errors.add(ConversionIssue.newError(ere));
+                    } catch (EigorRuntimeException e) {
+                        errors.add(ConversionIssue.newError(e));
                     }
                 }
             }

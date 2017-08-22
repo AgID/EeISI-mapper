@@ -36,6 +36,7 @@ public class ITUbl2CenTest {
                 .addProperty("eigor.converter.ubl-cen.xsd", "converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")
+                .addProperty("eigor.converter.ubl-cen.mapping.one-to-many", "converterdata/converter-ubl-cen/mappings/one_to_many.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
                 ;
 
