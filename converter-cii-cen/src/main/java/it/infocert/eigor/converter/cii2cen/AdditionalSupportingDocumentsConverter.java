@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -53,7 +54,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
                     }
                     if (attachmentBinaryObject != null) {
-                        AttachmentToFileReferenceConverter attToFileConverter = new AttachmentToFileReferenceConverter();
+                        AttachmentToFileReferenceConverter attToFileConverter = new AttachmentToFileReferenceConverter(DefaultEigorConfigurationLoader.configuration());
                         try {
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(attToFileConverter.convert(attachmentBinaryObject));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
