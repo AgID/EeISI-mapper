@@ -31,13 +31,7 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
                     Element name = findNamespaceChild(specifiedProcuringProject, namespacesInScope, "Name");
 
                     if (id != null) {
-                        BT0011ProjectReference bt0011 = null;
-                        //TODO concatenation functionality
-                        if (name != null) {
-                            bt0011 = new BT0011ProjectReference(id.getText()+" "+name.getText());
-                        } else {
-                            bt0011 = new BT0011ProjectReference(id.getText()+" Project reference");
-                        }
+                        BT0011ProjectReference bt0011 =  new BT0011ProjectReference(id.getText());
                         invoice.getBT0011ProjectReference().add(bt0011);
                     }
                 }

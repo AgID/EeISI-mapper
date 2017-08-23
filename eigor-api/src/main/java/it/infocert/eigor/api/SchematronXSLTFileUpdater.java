@@ -23,6 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -63,7 +64,7 @@ class SchematronXSLTFileUpdater {
      *
      * @return TRUE if any sch file has a newer timestamp than any XSLT file
      */
-    boolean checkForUpdatedSchematron() {
+    boolean isSchNewerThanXslt() {
         long xsltLastModifiedTimestamp = 0;
         long schLastModifiedTimestamp = 0;
 
@@ -79,6 +80,9 @@ class SchematronXSLTFileUpdater {
         if (!schFilenames.isEmpty()) {
             schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames);
         }
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS dd-MM-yyyy");
+        log.info("Timestamp of last modified xslt file: {} , Timestamp of last modified sch file: {}. If the first is greater than the second, xslt files must be regenerate",df.format(xsltLastModifiedTimestamp), df.format(schLastModifiedTimestamp));
 
         // if there is a more recent timestamped Schematron file, regeneration of XSLT is needed.
         return schLastModifiedTimestamp > xsltLastModifiedTimestamp;

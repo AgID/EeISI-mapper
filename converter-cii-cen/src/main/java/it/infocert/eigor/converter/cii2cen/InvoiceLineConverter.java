@@ -70,9 +70,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = null;
                         if (issuerAssignedID != null && typeCode != null && typeCode.getText().equals("130")) {
                             if (referenceTypeCode != null) {
-                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(),issuerAssignedID.getText() + " " + typeCode.getText()));
+                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(),issuerAssignedID.getText()));
                             } else {
-                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText() + " " + typeCode.getText()));
+                                bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText()));
                             }
                             bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
                         }
@@ -112,7 +112,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             if (dateTimeString != null) {
 
                                 Attribute dateTimeAttribute = dateTimeString.getAttribute("format");
-                                //TODO check implementation
                                 if (dateTimeAttribute != null && dateTimeAttribute.getValue().equals("102")) {
                                     try{
                                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
@@ -130,7 +129,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             if (dateTimeString != null) {
 
                                 Attribute dateTimeAttribute = dateTimeString.getAttribute("format");
-                                //TODO check implementation
                                 if (dateTimeAttribute != null && dateTimeAttribute.getValue().equals("102")) {
                                     try{
                                         BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
@@ -279,7 +277,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         Element typeCode = findNamespaceChild(applicableTradeTax, namespacesInScope, "TypeCode");
                         Element categoryCode = findNamespaceChild(applicableTradeTax, namespacesInScope, "CategoryCode");
                         if (typeCode != null && categoryCode != null) {
-                            //TODO check implementation
                             try{
                                 BT0151InvoicedItemVatCategoryCode bt0151 = new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
                                 bg0030.getBT0151InvoicedItemVatCategoryCode().add(bt0151);
@@ -349,7 +346,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                     //bg0029
                     BG0029PriceDetails bg0029 = new BG0029PriceDetails();
-                    Double netBasisQuantityBT0149 = null;
+//                    Double netBasisQuantityBT0149 = null;
                     Element netPriceProductTradePrice = findNamespaceChild(childSpecifiedAgree, namespacesInScope, "NetPriceProductTradePrice");
                     if (netPriceProductTradePrice != null) {
                         Element chargeAmount = findNamespaceChild(netPriceProductTradePrice, namespacesInScope, "ChargeAmount");
@@ -363,15 +360,15 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             }
                         }
 
-                        Element netBasisQuantity = findNamespaceChild(netPriceProductTradePrice, namespacesInScope, "BasisQuantity");
-                        if (netBasisQuantity != null) {
-                            try {
-                                netBasisQuantityBT0149 = strDblConverter.convert(netBasisQuantity.getText());
-                            }catch (NumberFormatException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                                errors.add(ConversionIssue.newError(ere));
-                            }
-                        }
+//                        Element netBasisQuantity = findNamespaceChild(netPriceProductTradePrice, namespacesInScope, "BasisQuantity");
+//                        if (netBasisQuantity != null) {
+//                            try {
+//                                netBasisQuantityBT0149 = strDblConverter.convert(netBasisQuantity.getText());
+//                            }catch (NumberFormatException e) {
+//                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+//                                errors.add(ConversionIssue.newError(ere));
+//                            }
+//                        }
                     }
                     Element grossPriceProductTradePrice = findNamespaceChild(childSpecifiedAgree, namespacesInScope, "GrossPriceProductTradePrice");
                     if (grossPriceProductTradePrice != null) {
@@ -400,10 +397,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                         Element grossBasisQuantity = findNamespaceChild(grossPriceProductTradePrice, namespacesInScope, "BasisQuantity");
                         if (grossBasisQuantity != null) {
-                            //TODO check implemetation
                             try {
                                 Double grossBasisQuantityTemp = strDblConverter.convert(grossBasisQuantity.getText());
-                                BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(grossBasisQuantityTemp + netBasisQuantityBT0149);
+                                BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(grossBasisQuantityTemp);
                                 bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
                             }catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());

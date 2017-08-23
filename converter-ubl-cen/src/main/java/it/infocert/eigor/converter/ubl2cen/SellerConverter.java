@@ -6,6 +6,8 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
+import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -18,7 +20,7 @@ import java.util.List;
  */
 public class SellerConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBT0029(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         BT0029SellerIdentifierAndSchemeIdentifier bt0029 = null;
 
@@ -47,6 +49,31 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                     }
                 }
+
+                //BT0031-BT0032
+                List<Element> partyTaxScheme = findNamespaceChildren(party, namespacesInScope, "PartyTaxScheme");
+            	String idValue = null;
+                BT0031SellerVatIdentifier bt0031 = null;
+                BT0032SellerTaxRegistrationIdentifier bt0032 = null;
+            	for (Element elemPartyTax : partyTaxScheme) {
+                    Element taxScheme = findNamespaceChild(elemPartyTax, namespacesInScope, "TaxScheme");
+                    if (taxScheme != null) {
+                        Element id = findNamespaceChild(taxScheme, namespacesInScope, "ID");
+                        if (id != null) {
+                            idValue = id.getText();
+                        }
+                    }
+                    Element companyID = findNamespaceChild(elemPartyTax, namespacesInScope, "CompanyID");
+                    if (companyID != null && idValue != null) {
+                        if (idValue.equals("VAT")) {
+                            bt0031 = new BT0031SellerVatIdentifier(companyID.getText());
+                            invoice.getBG0004Seller(0).getBT0031SellerVatIdentifier().add(bt0031);
+                        } else {
+                            bt0032 = new BT0032SellerTaxRegistrationIdentifier(companyID.getText());
+                            invoice.getBG0004Seller(0).getBT0032SellerTaxRegistrationIdentifier().add(bt0032);
+                        }
+                    }
+                }
             }
         }
         return new ConversionResult<>(errors, invoice);
@@ -54,6 +81,6 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBT0029(document, cenInvoice, errors);
+        toBT0029_31_32(document, cenInvoice, errors);
     }
 }

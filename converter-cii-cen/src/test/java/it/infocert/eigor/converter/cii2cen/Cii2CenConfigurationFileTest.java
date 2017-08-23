@@ -5,9 +5,9 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -273,6 +273,19 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
         assertEquals("C62", result.getResult().getBG0025InvoiceLine(0).getBG0029PriceDetails(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode());
         assertEquals("C62", result.getResult().getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode());
     }
+
+	@Test
+	public void testShouldNotIdentifyAttachedDocumentElement() throws Exception {
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example8.xml");
+		Document document = getDocument(sourceInvoiceStream);
+		BG0000Invoice invoice = new BG0000Invoice();
+		List<IConversionIssue> errors = new ArrayList<>();
+
+		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+
+		assertTrue(result.getResult().getBG0024AdditionalSupportingDocuments(0).getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty());
+	}
 
 	private List<IConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);

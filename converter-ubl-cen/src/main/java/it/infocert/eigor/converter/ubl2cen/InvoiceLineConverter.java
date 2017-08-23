@@ -48,17 +48,19 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
         	Element documentReference = findNamespaceChild(elemInv, namespacesInScope, "DocumentReference");
         	if (documentReference != null) {
-        		Element idRef = findNamespaceChild(documentReference, namespacesInScope, "ID");
-        		if (idRef != null) {
-                    Attribute schemeID = id.getAttribute("schemeID");
-                    //TODO check implementation
-                    if(schemeID != null) {
-                        bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getAttributeValue("schemeID"), idRef.getText()));
-                    } else {
-                        bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getText()));
+        	    Element documentTypeCode = findNamespaceChild(documentReference, namespacesInScope, "DocumentTypeCode");
+        	    if (documentTypeCode != null && documentTypeCode.getText().equals("ATS")) {
+                    Element idRef = findNamespaceChild(documentReference, namespacesInScope, "ID");
+                    if (idRef != null) {
+                        Attribute schemeID = id.getAttribute("schemeID");
+                        if (schemeID != null) {
+                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getAttributeValue("schemeID"), idRef.getText()));
+                        } else {
+                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getText()));
+                        }
+                        bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
                     }
-        			bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
-        		}
+                }
         	}
         	
         	Element invoicedQuantity = findNamespaceChild(elemInv, namespacesInScope, "InvoicedQuantity");

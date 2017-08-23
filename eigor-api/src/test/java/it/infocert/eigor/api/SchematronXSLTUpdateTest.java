@@ -1,19 +1,14 @@
 package it.infocert.eigor.api;
 
-import com.helger.schematron.xslt.SchematronResourceSCH;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 
-import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -49,13 +44,13 @@ public class SchematronXSLTUpdateTest {
 
     @Test
     public void ifXsltDirectoryIsEmptyUpdateIsNeeded() {
-        assertTrue(fileUpdater.checkForUpdatedSchematron());
+        assertTrue(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test
     public void ifXsltUpdateIsRunThenUpdateIsNotNeeded() {
         fileUpdater.updateXSLTfromSch();
-        assertFalse(fileUpdater.checkForUpdatedSchematron());
+        assertFalse(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test
@@ -69,7 +64,7 @@ public class SchematronXSLTUpdateTest {
         Thread.sleep(1000);
         schFile = TestUtils.copyResourceToFolder("/simple.sch", schDirectory);
 
-        assertTrue(fileUpdater.checkForUpdatedSchematron());
+        assertTrue(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test

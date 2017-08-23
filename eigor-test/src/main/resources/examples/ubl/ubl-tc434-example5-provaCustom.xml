@@ -101,7 +101,7 @@
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>
             <cac:PartyTaxScheme>
-                <cbc:CompanyID>NL16356706</cbc:CompanyID>
+                <cbc:CompanyID>NL12345678</cbc:CompanyID>
                 <cac:TaxScheme>
                     <cbc:ID>LOC</cbc:ID>
                 </cac:TaxScheme>
