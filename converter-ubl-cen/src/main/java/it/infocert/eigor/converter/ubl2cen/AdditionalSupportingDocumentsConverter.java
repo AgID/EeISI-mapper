@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.ubl2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
-import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -54,7 +54,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
                 Element embeddedDocumentBinaryObject = findNamespaceChild(attachment, namespacesInScope, "EmbeddedDocumentBinaryObject");
                 if (embeddedDocumentBinaryObject != null) {
-                    AttachmentToFileReferenceConverter strToBinConverter = new AttachmentToFileReferenceConverter();
+                    AttachmentToFileReferenceConverter strToBinConverter = new AttachmentToFileReferenceConverter(DefaultEigorConfigurationLoader.configuration());
                     try {
                         BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(embeddedDocumentBinaryObject));
                         bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);

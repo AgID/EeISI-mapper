@@ -37,9 +37,9 @@ public class Ubl2Cen extends AbstractToCenConverter {
     private final EigorConfiguration configuration;
     private static final ConversionRegistry conversionRegistry = initConversionStrategy();
 
-    public static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one";
-    public static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
-    public static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.custom";
 
     private XSDValidator xsdValidator;

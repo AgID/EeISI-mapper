@@ -53,9 +53,9 @@ public class EigorApiBuilder {
 
         try {
             Properties cardinalityRules = new Properties();
-            cardinalityRules.load(checkNotNull( getClass().getResourceAsStream("/cardinality.properties") ));
+            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
             Properties cardinalityRules2 = new Properties();
-            cardinalityRules2.load(checkNotNull( getClass().getResourceAsStream("/rules.properties") ));
+            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
             ruleRepository = new CompositeRuleRepository(
                     new CardinalityRulesRepository(cardinalityRules),
                     new IntegrityRulesRepository(cardinalityRules2)
@@ -73,25 +73,26 @@ public class EigorApiBuilder {
         RuleRepository ruleRepository = DefaultRuleRepository.newInstance();
 
         // "clone" the resources needed for each converter in a local file system
-        File dest = new File(configuration.getMandatoryString("eigor.converterdata.path"));
-        if(!dest.exists()) {
+        File dest = new File(configuration.getMandatoryString("eigor.workdir") + "/converterdata");
+        if (!dest.exists()) {
             dest.mkdirs();
         }
-            List<Named> converters = new ArrayList<>();
-            converters.addAll(conversionRepository.getFromCenConverters());
-            converters.addAll(conversionRepository.getToCenConverters());
-            for (Named converter : converters) {
-                String pathSegment = converter.getName();
-                new Copier( new File(dest, pathSegment) )
-                        .withCallback(new Copier.Callback() {
-                            @Override public void afterFileCopied(File file) throws IOException {
-                                if(file.isFile() && file.getName().endsWith(".xslt")){
-                                    FileUtils.touch(file);
-                                }
+        List<Named> converters = new ArrayList<>();
+        converters.addAll(conversionRepository.getFromCenConverters());
+        converters.addAll(conversionRepository.getToCenConverters());
+        for (Named converter : converters) {
+            String pathSegment = converter.getName();
+            new Copier(new File(dest, pathSegment))
+                    .withCallback(new Copier.Callback() {
+                        @Override
+                        public void afterFileCopied(File file) throws IOException {
+                            if (file.isFile() && file.getName().endsWith(".xslt")) {
+                                FileUtils.touch(file);
                             }
-                        })
-                        .copyFrom("/converterdata/" + pathSegment);
-            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
+        }
 
         // configure the repo
         conversionRepository.configure();
