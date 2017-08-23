@@ -61,8 +61,9 @@ public abstract class SerializationUtils {
 			return null;
 		}
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-			return ois.readObject();
+			try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+				return ois.readObject();
+			}
 		}
 		catch (IOException ex) {
 			throw new IllegalArgumentException("Failed to deserialize object", ex);
