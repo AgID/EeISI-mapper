@@ -34,7 +34,7 @@ public class SchematronValidator implements IXMLValidator {
                         schemaFile.getParent(),
                         schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron");
 
-                if (xsltFileUpdater.checkForUpdatedSchematron()) {
+                if (xsltFileUpdater.isSchNewerThanXslt()) {
                     xsltFileUpdater.updateXSLTfromSch();
                 }
                 schematronResource = SchematronResourceXSLT.fromFile(schemaFile);

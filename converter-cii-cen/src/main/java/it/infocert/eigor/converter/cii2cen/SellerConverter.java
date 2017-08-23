@@ -4,10 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
-import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -86,7 +83,6 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                             }
                         }
                     }
-
                 }
             }
         }

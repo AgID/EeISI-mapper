@@ -38,16 +38,14 @@ public class TenderRefInvoicedObjectID extends CustomConverterUtils implements C
                     BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = null;
                     if (issuerAssignedID != null && typeCode != null) {
                         if (typeCode.getText().equals("50")) {
-                            //TODO concatenation functionality
-                            BT0017TenderOrLotReference bt0017 = new BT0017TenderOrLotReference(issuerAssignedID.getText() + " " + typeCode.getText());
+                            BT0017TenderOrLotReference bt0017 = new BT0017TenderOrLotReference(issuerAssignedID.getText());
                             invoice.getBT0017TenderOrLotReference().add(bt0017);
                         }
                         if (typeCode.getText().equals("130")) {
-                            //TODO concatenation functionality
                             if (referenceTypeCode != null) {
-                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(), issuerAssignedID.getText() + " " + typeCode.getText()));
+                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(referenceTypeCode.getText(), issuerAssignedID.getText()));
                             } else {
-                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText() + " " + typeCode.getText()));
+                                bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(issuerAssignedID.getText()));
                             }
                             invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
                         }

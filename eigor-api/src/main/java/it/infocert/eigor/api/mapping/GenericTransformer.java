@@ -39,20 +39,6 @@ public abstract class GenericTransformer {
         this.conversionRegistry = conversionRegistry;
     }
 
-    protected boolean hasSchemeAttribute(Document document, String xPath) {
-        List<Element> elements = CommonConversionModule.evaluateXpath(document, xPath);
-        if (!elements.isEmpty()) {
-            Element e = elements.get(0);
-            if (e.hasAttributes()) {
-                for (Attribute attribute : e.getAttributes()) {
-                    if (Objects.equals(attribute.getName(), "schemeID")) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     protected boolean hasAttribute(Document document, String xPath) {
         List<Element> elements = CommonConversionModule.evaluateXpath(document, xPath);

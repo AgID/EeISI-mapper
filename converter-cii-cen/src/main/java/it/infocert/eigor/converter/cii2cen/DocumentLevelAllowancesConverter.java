@@ -87,7 +87,6 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
-                            //TODO check implementation
                             if (typeCode != null && categoryCode != null) {
                                 try{
                                     BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));

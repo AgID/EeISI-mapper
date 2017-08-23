@@ -5,6 +5,7 @@ import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -46,14 +47,16 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         bg0003.getBT0025PrecedingInvoiceReference().add(bt0025);
                     }
 
-                    //TODO check for 'format' attribute
                     if (dateTimeString != null) {
-                        try{
-                            BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
-                            bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
-                        }catch (IllegalArgumentException e) {
-                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
-                            errors.add(ConversionIssue.newError(ere));
+                        Attribute format = dateTimeString.getAttribute("format");
+                        if (format != null && format.getValue().equals("102")) {
+                            try {
+                                BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
+                                bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
+                            } catch (IllegalArgumentException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
+                                errors.add(ConversionIssue.newError(ere));
+                            }
                         }
                     }
 

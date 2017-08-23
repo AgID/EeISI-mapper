@@ -65,10 +65,11 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
-                    //TODO check implementation
                     if (typeCode != null && categoryCode != null) {
-                        BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
-                        bg0023.getBT0118VatCategoryCode().add(bt0118);
+                        if (typeCode.getText().equals("VAT")) {
+                            BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
+                            bg0023.getBT0118VatCategoryCode().add(bt0118);
+                        }
                     }
                     if (rateApplicablePercent != null) {
                         try {

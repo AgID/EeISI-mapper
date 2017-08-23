@@ -1,9 +1,12 @@
 package it.infocert.eigor.api.mapping;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -12,6 +15,7 @@ import org.jdom2.Element;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 /**
@@ -77,11 +81,21 @@ public class GenericOneToOneTransformer extends GenericTransformer {
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
         log.trace(logPrefix + "resolving");
 
-        if (hasSchemeAttribute(document, xPath)) {
+        Class<? extends BTBG> btBgByName = invoiceUtils.getBtBgByName(cenPath.substring(cenPath.lastIndexOf('/')+1));
+        Constructor<?> cons = Stream.create(btBgByName.getConstructors()).filter(new Filter<Constructor<?>>() {
+            @Override
+            public boolean apply(Constructor<?> constructor) {
+                return Identifier.class.equals(constructor.getParameterTypes()[0]);
+            }
+        }).first();
+        if (cons != null) {
             final Element node = getSingleNodeFromXpath(document, xPath);
-            Object assignedValue = addNewCenObjectWithIdentifierToInvoice(cenPath, invoice, node, errors);
-            log.info("XML element '{}' mapped to CEN '{}' with value '{}'.",
-                    xPath, cenPath, assignedValue);
+
+            if (node != null) {
+                Object assignedValue = addNewCenObjectWithIdentifierToInvoice(cenPath, invoice, node, errors);
+                log.info("XML element '{}' mapped to CEN '{}' with value '{}'.",
+                        xPath, cenPath, assignedValue);
+            }
         } else {
             final String xPathText = getNodeTextFromXPath(document, xPath);
             if (xPathText != null) {

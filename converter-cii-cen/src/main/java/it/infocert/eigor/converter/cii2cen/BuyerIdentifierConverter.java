@@ -6,6 +6,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -33,10 +34,10 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
             if (child1 != null) {
                 buyerTradeParties = findNamespaceChildren(child1, namespacesInScope, "BuyerTradeParty");
 
-                for (Element elem : buyerTradeParties) {
+                for (Element elemBuyer : buyerTradeParties) {
 
-                    Element id = findNamespaceChild(elem, namespacesInScope, "ID");
-                    Element globalID = findNamespaceChild(elem, namespacesInScope, "GlobalID");
+                    Element id = findNamespaceChild(elemBuyer, namespacesInScope, "ID");
+                    Element globalID = findNamespaceChild(elemBuyer, namespacesInScope, "GlobalID");
 
                     if (globalID != null) {
                         Attribute schemeID = globalID.getAttribute("schemeID");
