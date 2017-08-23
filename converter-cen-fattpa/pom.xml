@@ -70,7 +70,7 @@
                 <configuration>
                     <packageName>it.infocert.eigor.converter.cen2fattpa.models</packageName>
                     <sources>
-                        <source>src/main/resources/converterdata/converter-cen-fattpa/xsd</source>
+                        <source>src/main/resources/converterdata/converter-cen-fattpa/xsdstatic</source>
                     </sources>
                 </configuration>
             </plugin>
