@@ -520,8 +520,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 log.debug("Mapping BG32 to FattPA line");
                 for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
                     AltriDatiGestionaliType altriDati = new AltriDatiGestionaliType();
-                    altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName(0).getValue());
-                    altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue(0).getValue());
+                    if (!itemAttributes.getBT0160ItemAttributeName().isEmpty()) {
+                        altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName(0).getValue());
+                    }
+                    if (!itemAttributes.getBT0161ItemAttributeValue().isEmpty()) {
+                        altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue(0).getValue());
+                    }
                     dettaglioLinee.getAltriDatiGestionali().add(altriDati);
                 }
             }
