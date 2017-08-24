@@ -52,37 +52,40 @@ public class PropertiesWithReplacement extends Properties {
 
         LinkedHashMap<String, String> placeholderWithReplacement = new LinkedHashMap<>();
 
-        List<int[]> tokensz = tokens(originalValue);
-        for (int[] tokenz : tokensz) {
 
-            String delimitedPlaceholder = originalValue.substring(tokenz[0], tokenz[1]);
+        if (originalValue != null) {
+            List<int[]> tokensz = tokens(originalValue);
+            for (int[] tokenz : tokensz) {
 
-            String value = null;
+                String delimitedPlaceholder = originalValue.substring(tokenz[0], tokenz[1]);
 
-            // resolve the property value among env variable if needed
-            if (delimitedPlaceholder.startsWith("${env.") && delimitedPlaceholder.length() > "${env.}".length()) {
-                String envVariableName = delimitedPlaceholder.substring("${env.".length(), delimitedPlaceholder.length() - 1);
-                String envVariableValue = System.getenv(envVariableName);
-                if(envVariableValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
-                value = envVariableValue;
+                String value = null;
+
+                // resolve the property value among env variable if needed
+                if (delimitedPlaceholder.startsWith("${env.") && delimitedPlaceholder.length() > "${env.}".length()) {
+                    String envVariableName = delimitedPlaceholder.substring("${env.".length(), delimitedPlaceholder.length() - 1);
+                    String envVariableValue = System.getenv(envVariableName);
+                    if(envVariableValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
+                    value = envVariableValue;
+                }
+
+                // resolve the property value among sys prop if needed
+                if (delimitedPlaceholder.startsWith("${prop.") && delimitedPlaceholder.length() > "${prop.}".length()) {
+                    String propName = delimitedPlaceholder.substring("${prop.".length(), delimitedPlaceholder.length() - 1);
+                    String propValue = System.getProperty(propName);
+                    if(propValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
+                    value = propValue;
+                }
+
+                // resolve the property value among other keys
+                if (value == null) {
+                    String newPlaceholder = delimitedPlaceholder.substring(2, delimitedPlaceholder.length() - 1);
+                    value = _getProperty(newPlaceholder, alreadyLookedUpKeys);
+                    if(value==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
+                }
+
+                placeholderWithReplacement.put(delimitedPlaceholder, value);
             }
-
-            // resolve the property value among sys prop if needed
-            if (delimitedPlaceholder.startsWith("${prop.") && delimitedPlaceholder.length() > "${prop.}".length()) {
-                String propName = delimitedPlaceholder.substring("${prop.".length(), delimitedPlaceholder.length() - 1);
-                String propValue = System.getProperty(propName);
-                if(propValue==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
-                value = propValue;
-            }
-
-            // resolve the property value among other keys
-            if (value == null) {
-                String newPlaceholder = delimitedPlaceholder.substring(2, delimitedPlaceholder.length() - 1);
-                value = _getProperty(newPlaceholder, alreadyLookedUpKeys);
-                if(value==null) throw new NullPointerException("Unable to resolve " + delimitedPlaceholder + ".");
-            }
-
-            placeholderWithReplacement.put(delimitedPlaceholder, value);
         }
 
         if (!placeholderWithReplacement.isEmpty()) {
