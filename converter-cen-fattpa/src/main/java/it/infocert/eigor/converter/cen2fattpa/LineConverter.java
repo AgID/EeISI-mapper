@@ -417,7 +417,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
 
                     dettaglioLinee3.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(itemNetPrice));
-                    dettaglioLinee3.setUnitaMisura(baseQuantity.toString() + " " + quantityUnitOfMeasureCode);
+                    if (baseQuantity == 0) {
+                        dettaglioLinee3.setUnitaMisura(quantityUnitOfMeasureCode);
+                    } else {
+                        dettaglioLinee3.setUnitaMisura(baseQuantity.toString() + " " + quantityUnitOfMeasureCode);
+                    }
 
                     AltriDatiGestionaliType altriDatiGestionaliQty = new AltriDatiGestionaliType();
                     AltriDatiGestionaliType altriDatiGestionaliUnit = new AltriDatiGestionaliType();
