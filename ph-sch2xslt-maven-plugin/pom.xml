@@ -4,14 +4,14 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.9-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>ph-sch2xslt-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>ph-sch2xslt-maven-plugin</name>
+    <name>Eigor :: PH Schematron2XSLT Maven Plugin Java 7 Back Port (${project.artifactId})</name>
     <description>Maven plugin to convert Schematron files to XSLT files at build time</description>
 
 
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
         </dependency>
     </dependencies>
 

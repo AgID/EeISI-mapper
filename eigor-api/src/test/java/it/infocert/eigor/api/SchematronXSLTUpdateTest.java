@@ -44,26 +44,27 @@ public class SchematronXSLTUpdateTest {
 
     @Test
     public void ifXsltDirectoryIsEmptyUpdateIsNeeded() {
-        assertTrue(fileUpdater.checkForUpdatedSchematron());
+        assertTrue(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test
     public void ifXsltUpdateIsRunThenUpdateIsNotNeeded() {
         fileUpdater.updateXSLTfromSch();
-        assertFalse(fileUpdater.checkForUpdatedSchematron());
+        assertFalse(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test
     public void ifSchFileIsChangedThenUpdateIsNeeded() throws IOException, InterruptedException {
         fileUpdater.updateXSLTfromSch();
-        schFile.delete();
+        boolean delete = schFile.delete();
+        assertTrue(delete);
 
         // without sleep it sometimes happens that the generated xslt and the newly copied sch files will have
         // the same timestamp (down to the millisecond)
         Thread.sleep(1000);
         schFile = TestUtils.copyResourceToFolder("/simple.sch", schDirectory);
 
-        assertTrue(fileUpdater.checkForUpdatedSchematron());
+        assertTrue(fileUpdater.isSchNewerThanXslt());
     }
 
     @Test
@@ -72,5 +73,7 @@ public class SchematronXSLTUpdateTest {
         File resultXslt = new File(xsltDirectory.getAbsolutePath() + "/simple.xslt");
         assertTrue(resultXslt.exists());
     }
+
+
 
 }

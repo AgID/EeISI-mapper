@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping.fromCen;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -23,15 +24,15 @@ public class InvoiceXpathCenMappingValidator implements InvoiceMappingValidator 
     }
 
     @Override
-    public void validate(Multimap<String, String> map) {
+    public void validate(Multimap<String, String> map) throws SyntaxErrorInMappingFileException {
         for (String key : map.keySet()) {
             if (validateKey(key)) {
                 for (String value : map.get(key)) {
                     if (!validateValue(value)) {
-                        throw new RuntimeException("Bad mapping value for key: " + key);
+                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key);
                     }
                 }
-            } else throw new RuntimeException("Bad mapping key: " + key);
+            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
         }
     }
 

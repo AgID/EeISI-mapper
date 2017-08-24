@@ -2,17 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.2.RELEASE</version>
-    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.7-SNAPSHOT</version>
-    <name>Eigor</name>
+    <version>0.0.9-SNAPSHOT</version>
+    <name>Eigor :: Parent (${project.artifactId})</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
         <name>Infocert</name>
@@ -40,6 +36,7 @@
         <plexus-utils.version>3.0.24</plexus-utils.version>
         <jdom.version>2.0.6</jdom.version>
         <jaxen.version>1.1.6</jaxen.version>
+        <commons-io.version>2.5</commons-io.version>
 
         <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
@@ -49,6 +46,7 @@
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 
         <dependency.locations.enabled>false</dependency.locations.enabled>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <distributionManagement>
@@ -78,6 +76,11 @@
         <dependencies>
 
             <!-- Libs -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.sf.jopt-simple</groupId>
                 <artifactId>jopt-simple</artifactId>
@@ -152,6 +155,12 @@
                 <version>${jaxen.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+
 
             <!-- Eigor modules -->
             <dependency>
@@ -187,12 +196,27 @@
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
-                <artifactId>eigor-rules</artifactId>
+                <artifactId>converter-ubl-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
-                <artifactId>converter-ubl-cen</artifactId>
+                <artifactId>converter-cii-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-api-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>eigor-spring-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -242,14 +266,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>1.5.2.RELEASE</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
 
@@ -403,7 +431,6 @@
             </plugin>
 
             <!-- Jacoco currently disabled because it seems its reports are not used at all -->
-            <!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -415,9 +442,9 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                 </executions>
             </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>

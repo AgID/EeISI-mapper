@@ -1,9 +1,10 @@
 package it.infocert.eigor.model.core.model;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class BTBG {
+public abstract class BTBG implements Serializable{
 
     public abstract BTBG getParent();
 

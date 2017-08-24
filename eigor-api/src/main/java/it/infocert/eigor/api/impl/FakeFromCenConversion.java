@@ -1,6 +1,8 @@
 package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -41,13 +43,13 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
             new UnitOfMeasureCodesToStringConverter()
     );
 
-    public FakeFromCenConversion(Reflections reflections) {
-        super(reflections, conversionRegistry);
+    public FakeFromCenConversion(Reflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration);
     }
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) {
-        BinaryConversionResult binaryConversionResult = new BinaryConversionResult("this is a fake invoice".getBytes(), new ArrayList<ConversionIssue>());
+        BinaryConversionResult binaryConversionResult = new BinaryConversionResult("this is a fake invoice".getBytes(), new ArrayList<IConversionIssue>());
         return binaryConversionResult;
     }
 
@@ -67,7 +69,34 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
     }
 
     @Override
-    public String getMappingPath() {
+    public String getMappingRegex() {
+        return ".+";
+    }
+
+    @Override
+    public String getOne2OneMappingPath() {
         return "/tmp/fake.properties";
+    }
+
+    @Override protected String getMany2OneMappingPath() {
+        return null;
+    }
+
+    @Override protected String getOne2ManyMappingPath() {
+        return null;
+    }
+
+    @Override
+    protected String getCustomMappingPath() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return "fake";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // really nothing to do here
     }
 }

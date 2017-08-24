@@ -5,16 +5,20 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.9-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: API</name>
+    <name>Eigor :: API (${project.artifactId})</name>
     <description>The Eigor API allows to programmatically convert invoices between formats.</description>
     <artifactId>eigor-api</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>cen-core</artifactId>
@@ -40,6 +44,10 @@
             <artifactId>eigor-test</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-spring-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.amoerie</groupId>
             <artifactId>jstreams</artifactId>
         </dependency>
@@ -51,5 +59,51 @@
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>cen-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+
+        <!-- JUEL -->
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-impl</artifactId>
+        </dependency>
+
+
+        <!--
+        This strange dependency is here to make the 'cii-schematron.jar' available
+        in the classpath. This is a jar made on purpose to test whether reading a composed
+        XML from a jar works or not. Since it is system-scoped, it does not end up in the released
+        jars.
+        -->
+        <dependency>
+            <groupId>org.infocert.eigor.test.xxxxx</groupId>
+            <artifactId>yyyyy</artifactId>
+            <version>${project.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-spring-core</artifactId>
+            <version>0.0.9-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+
+
 </project>

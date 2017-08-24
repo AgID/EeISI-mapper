@@ -19,7 +19,7 @@ public class ConversionResultTest {
         ConversionResult<String> sut = new ConversionResult<String>("the result");
 
         // then
-        assertThat(sut.getIssues(), allOf(notNullValue(), emptyCollectionOf(ConversionIssue.class)));
+        assertThat(sut.getIssues(), allOf(notNullValue(), emptyCollectionOf(IConversionIssue.class)));
         assertThat(sut.hasResult(), is(true));
         assertThat(sut.isSuccessful(), is(true));
 
@@ -29,16 +29,16 @@ public class ConversionResultTest {
     public void conversionResultWithErrors() {
 
         // given
-        ConversionIssue issueToReturn = ConversionIssue.newError(new Exception());
+        IConversionIssue issueToReturn = ConversionIssue.newError(new Exception());
         ConversionResult sut = new ConversionResult<String>(asList(issueToReturn), "result with issues");
 
         // then
-        List<ConversionIssue> errors = sut.getIssues();
+        List<IConversionIssue> errors = sut.getIssues();
         assertThat(
                 errors, hasItem(issueToReturn));
         assertThat(sut.hasResult(), is(true));
         assertThat(sut.isSuccessful(), is(false));
-        assertThat(sut.hasErrors(), is(true));
+        assertThat(sut.hasIssues(), is(true));
 
     }
 

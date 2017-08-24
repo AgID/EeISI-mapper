@@ -22,27 +22,32 @@ public class Files {
      * Build a new {@link File} using the provided components and the correct separator.
      */
     public static File newFile(String root, String... pathComponents) {
-        return newFile(new StringBuilder( root ), pathComponents);
+        return newFile(new StringBuilder(root), pathComponents);
     }
 
     /**
      * Build a new {@link File} using the provided components and the correct separator.
      */
     public static File newFile(File folder, String... pathComponents) {
-        return newFile(new StringBuilder( folder.toString() ), pathComponents);
+        return newFile(new StringBuilder(folder.toString()), pathComponents);
     }
 
-    /** Find first file in a given folder, or {@code null}. */
+    /**
+     * Find first file in a given folder, or {@code null}.
+     */
     public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         List<File> files = Arrays.asList(outputDir.listFiles());
         Collection<File> filter = Collections2.filter(files, col);
         return filter != null && !filter.isEmpty() ? filter.iterator().next() : null;
     }
 
-    /** Find first file by name. */
+    /**
+     * Find first file by name.
+     */
     public static File findFirstFileByNameOrNull(File outputDir, final String name) {
         return findFirstFileOrNull(outputDir, new Predicate<File>() {
-            @Override public boolean apply(File input) {
+            @Override
+            public boolean apply(File input) {
                 return input.getName().equals(name);
             }
         });
@@ -50,7 +55,8 @@ public class Files {
 
     /**
      * Unzip a zip file.
-     * @param zipFile Input Zip File
+     *
+     * @param zipFile      Input Zip File
      * @param outputFolder Where the zip will be uncompressed.
      */
     public static void unzip(File zipFile, File outputFolder) throws Exception {
@@ -59,29 +65,31 @@ public class Files {
         ZipInputStream zis = null;
         FileOutputStream fos = null;
         ZipEntry ze = null;
-        try{
+        try {
             byte[] buffer = new byte[1024];
 
 
             //create output directory is not exists
-            if(!outputFolder.exists()){
+            if (!outputFolder.exists()) {
                 outputFolder.mkdir();
             }
 
-            //get the zip file content
-            zis =
-                    new ZipInputStream(new FileInputStream(zipFile));
+            try (FileInputStream in = new FileInputStream(zipFile)) {
+                //get the zip file content
+                zis = new ZipInputStream(in);
+            }
+
             //get the zipped file list entry
             ze = zis.getNextEntry();
 
-            while(ze!=null){
+            while (ze != null) {
 
                 String fileName = ze.getName();
 
-                if(ze.isDirectory()){
+                if (ze.isDirectory()) {
                     File newFolder = new File(outputFolder, fileName);
                     newFolder.mkdirs();
-                }else{
+                } else {
                     File newFile = new File(outputFolder, fileName);
 
                     //create all non exists folders
@@ -95,8 +103,6 @@ public class Files {
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-
-                    fos.close();
                 }
 
 
@@ -104,8 +110,9 @@ public class Files {
             }
 
 
-        }finally {
-            if(zis!=null) zis.closeEntry();
+        } finally {
+            if (zis != null) zis.closeEntry();
+
             IOUtils.closeQuietly(zis);
             IOUtils.closeQuietly(fos);
         }
@@ -116,61 +123,67 @@ public class Files {
 
         /** create a TarArchiveInputStream object. **/
 
-        FileInputStream fin = new FileInputStream(tarGzFile);
-        BufferedInputStream in = new BufferedInputStream(fin);
-        GzipCompressorInputStream gzIn = new GzipCompressorInputStream(in);
-        TarArchiveInputStream tarIn = new TarArchiveInputStream(gzIn);
+        TarArchiveInputStream tarIn = null;
+        try (FileInputStream fin = new FileInputStream(tarGzFile)) {
+            try (BufferedInputStream in = new BufferedInputStream(fin)) {
+                try (GzipCompressorInputStream gzIn = new GzipCompressorInputStream(in)) {
+                    tarIn = new TarArchiveInputStream(gzIn);
 
-        TarArchiveEntry entry = null;
+                    TarArchiveEntry entry;
 
-        /** Read the tar entries using the getNextEntry method **/
+                    /* Read the tar entries using the getNextEntry method **/
 
-        while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+                    while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
 
-            /** If the entry is a directory, create the directory. **/
+                        /* If the entry is a directory, create the directory. **/
 
-            if (entry.isDirectory()) {
+                        if (entry.isDirectory()) {
 
-                String[] theNewFolder = entry.getName().split(File.separator);
-                File f = newFile(outputFolder, theNewFolder);
-                f.mkdirs();
-            }
-            /**
-             * If the entry is a file,write the decompressed file to the disk
-             * and close destination stream.
-             **/
-            else {
-                int count;
-                int buffer = 2048;
-                byte data[] = new byte[buffer];
+                            String[] theNewFolder = entry.getName().split(File.separator);
+                            File f = newFile(outputFolder, theNewFolder);
+                            f.mkdirs();
+                        }
+                        /*
+                          If the entry is a file,write the decompressed file to the disk
+                          and close destination stream.
+                         */
+                        else {
+                            int count;
+                            int buffer = 2048;
+                            byte data[] = new byte[buffer];
 
-                File root = outputFolder.getAbsoluteFile();
-                String fileInTarGz = entry.getName();
-                String[] split = fileInTarGz.split(File.separator);
-                File theNewInflatedFile = newFile(root, split);
+                            File root = outputFolder.getAbsoluteFile();
+                            String fileInTarGz = entry.getName();
+                            String[] split = fileInTarGz.split(File.separator);
+                            File theNewInflatedFile = newFile(root, split);
 
-                File folderOfTheNewInflatedFile = theNewInflatedFile.getParentFile();
-                folderOfTheNewInflatedFile.mkdirs();
+                            File folderOfTheNewInflatedFile = theNewInflatedFile.getParentFile();
+                            folderOfTheNewInflatedFile.mkdirs();
 
-                theNewInflatedFile.createNewFile();
-                FileOutputStream fos = new FileOutputStream(theNewInflatedFile);
-                BufferedOutputStream dest = new BufferedOutputStream(fos,
-                        buffer);
-                while ((count = tarIn.read(data, 0, buffer)) != -1) {
-                    dest.write(data, 0, count);
+                            theNewInflatedFile.createNewFile();
+                            try (FileOutputStream fos = new FileOutputStream(theNewInflatedFile)) {
+                                try (BufferedOutputStream dest = new BufferedOutputStream(fos,
+                                        buffer)) {
+                                    while ((count = tarIn.read(data, 0, buffer)) != -1) {
+                                        dest.write(data, 0, count);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                /* Close the input stream **/
+
+                } finally {
+                    if (tarIn != null) tarIn.close();
                 }
-                dest.close();
             }
         }
-
-        /** Close the input stream **/
-
-        tarIn.close();
 
     }
 
 
-    public static void setPermission(File file, PosixFilePermission... permissions) throws IOException{
+    public static void setPermission(File file, PosixFilePermission... permissions) throws IOException {
 
         Set<PosixFilePermission> perms = new HashSet<>();
 
