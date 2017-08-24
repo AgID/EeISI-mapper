@@ -109,7 +109,7 @@ public abstract class GenericTransformer {
             } catch (NoSuchMethodException e) {
                 errors.add(ConversionIssue.newError(e));
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
+                errors.add(ConversionIssue.newError(e));
             }
         }
         return null;
