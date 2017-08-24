@@ -74,15 +74,12 @@ public class InputInvoiceXpathMap {
             // try #1, from filesystem
             try {
                 File file = new File(path);
-                FileInputStream fileInputStream;
-                try {
-                    fileInputStream = new FileInputStream(file);
-                } catch (FileNotFoundException e) {
+                try (FileInputStream fileInputStream = new FileInputStream(file);) {
+                    log.debug("Reading mapping file from {}", file.getAbsolutePath());
+                    mapping = loadMapFromInputStream(fileInputStream);
+                } catch (IOException e) {
                     throw new RuntimeException("Error on loading mappings file from path '" + path + "' (resolved to '" + file.getAbsolutePath() + "') because of: " + e.getMessage(), e);
                 }
-                log.debug("Reading mapping file from {}", file.getAbsolutePath());
-
-                mapping = loadMapFromInputStream(fileInputStream);
             } catch (RuntimeException e) {
                 log.warn("Unable to load mapping from file '{}'.", path);
                 log.debug(e.getClass().getSimpleName(), e);

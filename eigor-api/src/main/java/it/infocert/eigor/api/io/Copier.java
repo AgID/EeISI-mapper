@@ -126,7 +126,7 @@ public class Copier {
         }
 
         log.trace("Copied from jar dir '{}' to '{}'.", fullPath, dest.getAbsolutePath());
-
+        jarFile.close();
     }
 
     private void fireAfterFileCopied(File file) throws IOException {
