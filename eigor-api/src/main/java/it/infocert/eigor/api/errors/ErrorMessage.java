@@ -1,9 +1,10 @@
 package it.infocert.eigor.api.errors;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorMessage {
+public class ErrorMessage implements Serializable{
 
     private final String message;
     private ErrorCode errorCode;
