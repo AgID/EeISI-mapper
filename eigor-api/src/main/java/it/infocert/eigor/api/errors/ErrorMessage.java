@@ -85,7 +85,7 @@ public class ErrorMessage implements Serializable{
     public String toString() {
         if (errorCode == null) {
             if (message == null) {
-                return null;
+                return "";
             } else {
                 return message;
             }

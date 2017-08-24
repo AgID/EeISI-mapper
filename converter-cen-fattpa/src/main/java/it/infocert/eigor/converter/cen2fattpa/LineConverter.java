@@ -389,7 +389,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Double baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? 0 : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
-
                     try {
                         dettaglioLinee3.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity / baseQuantity));
                     } catch (NumberFormatException e) {
