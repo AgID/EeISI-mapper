@@ -26,23 +26,25 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
             if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
                 DatiTrasmissioneType datiTrasmissione = fatturaElettronicaType.getFatturaElettronicaHeader().getDatiTrasmissione();
                 BT0049BuyerElectronicAddressAndSchemeIdentifier address = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
-                String identifier = address.getValue().getIdentifier();
-                switch (identificationSchema) {
+                if (address.getValue().getIdentificationSchema() != null) {
+                    String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
+                    String identifier = address.getValue().getIdentifier();
+                    switch (identificationSchema) {
 
-                    case pec:
-                        datiTrasmissione.setPECDestinatario(identifier);
-                        datiTrasmissione.setCodiceDestinatario("0000000");
-                        break;
-                    case coddest:
-                    case ipa:
-                        datiTrasmissione.setCodiceDestinatario(identifier);
-                        break;
-                    default:
-                        errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
-                                .message(String.format("BT-49 SchemeID is not a valid value. Shoudl be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
-                                .action("PECorCodDestConversion")
-                                .build())));
+                        case pec:
+                            datiTrasmissione.setPECDestinatario(identifier);
+                            datiTrasmissione.setCodiceDestinatario("0000000");
+                            break;
+                        case coddest:
+                        case ipa:
+                            datiTrasmissione.setCodiceDestinatario(identifier);
+                            break;
+                        default:
+                            errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
+                                    .message(String.format("BT-49 SchemeID is not a valid value. Shoudl be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
+                                    .action("PECorCodDestConversion")
+                                    .build())));
+                    }
                 }
             }
         }

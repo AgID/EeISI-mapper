@@ -389,7 +389,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Double baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? 0 : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
-
                     try {
                         dettaglioLinee3.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity / baseQuantity));
                     } catch (NumberFormatException e) {
@@ -520,8 +519,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 log.debug("Mapping BG32 to FattPA line");
                 for (BG0032ItemAttributes itemAttributes : itemInformation.getBG0032ItemAttributes()) {
                     AltriDatiGestionaliType altriDati = new AltriDatiGestionaliType();
-                    altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName(0).getValue());
-                    altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue(0).getValue());
+                    if (!itemAttributes.getBT0160ItemAttributeName().isEmpty()) {
+                        altriDati.setTipoDato(itemAttributes.getBT0160ItemAttributeName(0).getValue());
+                    }
+                    if (!itemAttributes.getBT0161ItemAttributeValue().isEmpty()) {
+                        altriDati.setRiferimentoTesto(itemAttributes.getBT0161ItemAttributeValue(0).getValue());
+                    }
                     dettaglioLinee.getAltriDatiGestionali().add(altriDati);
                 }
             }

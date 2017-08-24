@@ -43,7 +43,8 @@ public class CachedResourceResolver implements LSResourceResolver
 
     public CachedResourceResolver(File folder)
     {
-        if(folder == null || !folder.exists() || !folder.isDirectory()) throw new IllegalArgumentException("Folder '"+folder.getAbsolutePath()+"' does not exist.");
+        if (folder == null) throw new IllegalArgumentException("Provided folder is null");
+        if(!folder.exists() || !folder.isDirectory()) throw new IllegalArgumentException("Folder '"+folder.getAbsolutePath()+"' does not exist.");
         this.folder = folder;
     }
 

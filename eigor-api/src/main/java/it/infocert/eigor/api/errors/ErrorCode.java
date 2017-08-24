@@ -1,8 +1,9 @@
 package it.infocert.eigor.api.errors;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ErrorCode {
+public class ErrorCode implements Serializable{
 
     /*
      * Where did the error occured?
