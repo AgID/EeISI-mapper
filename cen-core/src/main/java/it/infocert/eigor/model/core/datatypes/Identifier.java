@@ -21,22 +21,40 @@ public class Identifier {
     private final String identifier;
 
     public Identifier(String identificationSchema, String schemaVersion, String identifier) {
-        this.identificationSchema = checkNotNull( identificationSchema );
-        this.schemaVersion = checkNotNull( schemaVersion );
-        this.identifier = checkNotNull( identifier );
+        this.identificationSchema = identificationSchema;
+        this.schemaVersion = schemaVersion;
+        this.identifier = checkNotNull(identifier);
+    }
+
+    public Identifier(String identificationSchema, String identifier) {
+        this.identificationSchema = identificationSchema;
+        this.schemaVersion = null;
+        this.identifier = checkNotNull(identifier);
     }
 
     public Identifier(String identifier) {
         this.identificationSchema = null;
         this.schemaVersion = null;
-        this.identifier = checkNotNull( identifier );
+        this.identifier = checkNotNull(identifier);
+    }
+
+    public String getIdentificationSchema() {
+        return identificationSchema;
+    }
+
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
     public String toString() {
         String identifier = this.identifier;
-        if(schemaVersion!=null) identifier = schemaVersion + ":" + identifier;
-        if(identificationSchema!=null) identifier = identificationSchema + ":" + identifier;
+        if (schemaVersion != null) identifier = schemaVersion + ":" + identifier;
+        if (identificationSchema != null) identifier = identificationSchema + ":" + identifier;
         return identifier;
     }
 

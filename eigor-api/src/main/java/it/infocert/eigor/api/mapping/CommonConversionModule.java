@@ -1,23 +1,15 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Lists;
-import org.jdom2.Namespace;
-import org.jdom2.filter.Filters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.namespace.QName;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.jdom2.xpath.*;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

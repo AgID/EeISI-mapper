@@ -12,22 +12,20 @@ public class ErrorMessageTest {
     @Test
     public void createSimpleErrorMessage() throws Exception {
         String message = "This is a message!";
-        ErrorMessage rootMessage = new ErrorMessage("I'm the first message!", "1", "10", "99");
+        ErrorMessage rootMessage = new ErrorMessage("I'm the first message!", "converter-cen-fattpa", "Schematron", "ValidationError");
         String exceptionMessage = "I'm an exception!";
         RuntimeException relatedException = new RuntimeException(exceptionMessage);
 
         List<ErrorMessage> errorMessages = Arrays.asList(
-                new ErrorMessage(message, "1", "10", "99"),
-                new ErrorMessage(message, ErrorCodes.TO_CEN_SCHEMATRON_ERROR),
-                new ErrorMessage(relatedException, message, "1", "10", "99"),
-                new ErrorMessage(relatedException, message, ErrorCodes.TO_CEN_SCHEMATRON_ERROR),
+                new ErrorMessage(message, "converter-cen-fattpa", "Schematron", "ValidationError"),
+                new ErrorMessage(relatedException, message, new ErrorCode("converter-cen-fattpa", "Schematron", "ValidationError")),
                 new ErrorMessage(rootMessage, message),
                 new ErrorMessage(rootMessage, relatedException, message)
         );
 
         for (ErrorMessage errorMessage : errorMessages) {
             assertEquals(message, errorMessage.getMessage());
-            assertEquals(ErrorCodes.TO_CEN_SCHEMATRON_ERROR, errorMessage.getErrorCode());
+            assertEquals(new ErrorCode("converter-cen-fattpa", "Schematron", "ValidationError"), errorMessage.getErrorCode());
             if (errorMessage.hasRelatedExceptions()) {
                 assertEquals(relatedException, errorMessage.getRelatedException(0));
             }
@@ -39,8 +37,8 @@ public class ErrorMessageTest {
     @Test
     public void toStringTest() throws Exception {
         String message = "I'm the first message!";
-        ErrorMessage errorMessage = new ErrorMessage(message, "1", "10", "99");
+        ErrorMessage errorMessage = new ErrorMessage(message, "Test", "Test", "Error");
 
-        assertEquals("11099 - " + message, errorMessage.toString());
+        assertEquals("Test.Test.Error - " + message, errorMessage.toString());
     }
 }

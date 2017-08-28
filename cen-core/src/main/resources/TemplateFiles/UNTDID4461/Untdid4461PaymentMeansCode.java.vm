@@ -2,26 +2,23 @@ package it.infocert.eigor.model.core.enums;
 
 public enum Untdid4461PaymentMeansCode {
 
-    // 1: Sign
-    // 2: ID
-    // 3: ShortDescription
-    // 4: LongDescription
+    // 1: ID
+    // 2: ShortDescription
+    // 3: LongDescription
     #foreach( $row in $rows )
     /**
      * Code ${row.data.ID}
      * <p>${row.data.ShortDescription}</p>
      * <p>${row.data.LongDescription}</p>
      */
-    Code${row.data.ID}("${row.data.Sign}" ,${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    Code${row.data.ID}(${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
-    private String sign;
     private int code;
     private String shortDescritpion;
     private String longDescription;
 
-    Untdid4461PaymentMeansCode(String sign, int code, String shortDescritpion, String longDescription) {
-        this.sign = sign;
+    Untdid4461PaymentMeansCode(int code, String shortDescritpion, String longDescription) {
         this.code = code;
         this.shortDescritpion = shortDescritpion;
         this.longDescription = longDescription;

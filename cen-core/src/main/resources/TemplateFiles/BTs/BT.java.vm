@@ -15,7 +15,7 @@ import java.util.Objects;
 * <p>${rows[0].data.Description}</p>
 * <strong>Automatically generated, please don't change.</strong>
 */
-public class ${ClassName} extends AbstractBTBG {
+public class ${ClassName} extends AbstractBT {
 
     private final ${rows[0].data.AttributeFQN} attribute;
 
@@ -28,6 +28,7 @@ public class ${ClassName} extends AbstractBTBG {
         return attribute.toString();
     }
 
+    @Override
     public ${rows[0].data.AttributeFQN} getValue() {
         return this.attribute;
     }

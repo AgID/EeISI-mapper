@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,4 +17,6 @@ public interface ToCenConversionRepository {
     ToCenConversion findConversionToCen(String sourceFormat);
 
     Set<String> supportedToCenFormats();
+
+    List<ToCenConversion> getToCenConverters();
 }

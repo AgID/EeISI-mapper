@@ -3,11 +3,10 @@ package it.infocert.eigor.converter.csvcen2cen;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -31,28 +30,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
-
 public class CsvCen2Cen implements ToCenConversion {
 
     private final CenStructure cenStructure;
     private final InvoiceUtils utils;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                new StringToUnitOfMeasureConverter(),
-                new StringToDoublePercentageConverter(),
-                new StringToDoubleConverter(),
-                new StringToStringConverter()
-        );
+            new CountryNameToIso31661CountryCodeConverter(),
+            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new StringToJavaLocalDateConverter("dd-MMM-yy"),
+            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
+            new StringToUntdid1001InvoiceTypeCodeConverter(),
+            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new StringToIso4217CurrenciesFundsCodesConverter(),
+            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
+            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+            new StringToUnitOfMeasureConverter(),
+            new StringToDoublePercentageConverter(),
+            new StringToDoubleConverter(),
+            new StringToStringConverter(),
+            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter()
+    );
 
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
 
@@ -65,7 +64,7 @@ public class CsvCen2Cen implements ToCenConversion {
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
 
-        List<ConversionIssue> errors = new ArrayList<>();
+        List<IConversionIssue> errors = new ArrayList<>();
 
         Iterable<CSVRecord> cenRecordsFromCsv = null;
 
@@ -95,7 +94,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
 
             // verifies that the name of the bgbt read from csv is a well formed name and that it is actually
-            // a BG BT node in the CEN structure.
+            // a BG BTnode in the CEN structure.
             try {
                 btbgName = BtBgName.parse(bgbtIdFromCsv);
             } catch (Exception e) {
@@ -127,7 +126,7 @@ public class CsvCen2Cen implements ToCenConversion {
                     // A BT-XX should be instantiated through its constructor...
                 } else {
 
-                    // double chacks BT has only one single arg constructor
+                    // double chacks BThas only one single arg constructor
                     List<Constructor<?>> constructors = Stream.create(Arrays.asList(btBgClass.getConstructors())).filter(new Filter<Constructor<?>>() {
                         @Override
                         public boolean apply(Constructor<?> c) {
@@ -172,7 +171,7 @@ public class CsvCen2Cen implements ToCenConversion {
             }
 
 
-            // Calculate the path of the BG where we're trying to add the newly created BT/BG.
+            // Calculate the path of the BG where we're trying to add the newly created BTBG.
             // This is done because this information is in the stack and if we're not doing that now,
             // we'll loose that info.
             String pathWhereYouAreTryingToPlaceTheBtBg = "";
@@ -182,7 +181,7 @@ public class CsvCen2Cen implements ToCenConversion {
             pathWhereYouAreTryingToPlaceTheBtBg = pathWhereYouAreTryingToPlaceTheBtBg.replaceAll("/BG-0", "/") + btbgName.toString();
             log.trace("Item will be placed at path '{}'.", pathWhereYouAreTryingToPlaceTheBtBg);
 
-            // It search in the stack a BG that will accept the current BG/BT.
+            // It search in the stack a BG that will accept the current BGBT.
             boolean found = false;
             do {
                 BTBG parentBg = stack.pop();
@@ -203,7 +202,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
 
             // if we browsed the full stack without being able to add
-            // the current BT, then that BT was in the wrong position in the file.
+            // the current BT, then that BTwas in the wrong position in the file.
             if (stack.empty()) {
                 String pathWhereTheBtBgBelongs = cenStructure.findByName(btbgName).path();
                 String umh = btbgName.toString();
@@ -234,4 +233,17 @@ public class CsvCen2Cen implements ToCenConversion {
         return new HashSet<>(Arrays.asList("csvcen"));
     }
 
+    @Override
+    public String getMappingRegex() {
+        return ".+";
+    }
+
+    @Override
+    public String getName() {
+        return "csvcen-cen";
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        // nothing to configure
+    }
 }

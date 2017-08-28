@@ -2,7 +2,7 @@ package it.infocert.eigor.api.mapping.fromCen;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
+import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -33,7 +33,7 @@ public class InvoiceXpathCenMappingValidatorTest {
 
 
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SyntaxErrorInMappingFileException.class)
     public void shouldThrowExceptionIfAKeyValueDoesNotMatchRegex() throws Exception {
         Multimap<String, String> mappings = HashMultimap.create();
         mappings.put("/FatturaElettronica/FatturaElettronicaHeader/CessionarioCommittente/Sede/Comune", "/BG-7/BG-8/BT-52");
@@ -45,7 +45,7 @@ public class InvoiceXpathCenMappingValidatorTest {
         validator.validate(mappings);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SyntaxErrorInMappingFileException.class)
     public void shouldThrowExceptionIfAValueDoesNotExistInCen() throws Exception {
         Multimap<String, String> mappings = HashMultimap.create();
 
@@ -54,7 +54,7 @@ public class InvoiceXpathCenMappingValidatorTest {
         validator.validate(mappings);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SyntaxErrorInMappingFileException.class)
     public void shouldThrowExceptionIfAMappingValueIsEmpty() throws Exception {
         Multimap<String, String> mappings = HashMultimap.create();
         mappings.put("/FatturaElettronica/FatturaElettronicaHeader/CessionarioCommittente/Sede/Comune", "/BG-7/BG-8/BT-52");

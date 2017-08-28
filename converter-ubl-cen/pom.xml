@@ -5,14 +5,14 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.9-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>converter-ubl-cen</artifactId>
 
-    <name>Eigor :: Converter :: UBL - CEN</name>
+    <name>Eigor :: Converter :: UBL - CEN (${project.artifactId})</name>
 
     <dependencies>
         <dependency>
@@ -22,6 +22,10 @@
         <dependency>
             <groupId>com.amoerie</groupId>
             <artifactId>jstreams</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
 
 
@@ -33,15 +37,6 @@
 
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>converterdata/**</directory>
-                <excludes>
-                    <exclude>**</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -83,10 +78,11 @@
                     <execution>
                         <id>ubl-xslt-generation</id>
                         <configuration>
-                            <xsltDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
-                            <schematronDirectory>converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
+                            <xsltDirectory>src/main/resources/converterdata/converter-ubl-cen/ubl/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/ubl/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>
@@ -96,10 +92,12 @@
                     <execution>
                         <id>cius-xslt-generation</id>
                         <configuration>
-                            <xsltDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
-                            <schematronDirectory>converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
+                            <!--multipart- -->
+                            <xsltDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>
