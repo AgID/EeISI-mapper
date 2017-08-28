@@ -13,24 +13,31 @@ import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
 import com.helger.schematron.xslt.SCHTransformerCustomizer;
 import com.helger.schematron.xslt.SchematronResourceSCHCache;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 /**
  * The type Schematron to XSLT file updater.
  */
 class SchematronXSLTFileUpdater {
+    private final static Logger log = LoggerFactory.getLogger(SchematronXSLTFileUpdater.class);
     private final File xsltDirectory;
     private final File schematronDirectory;
     private final String schematronPattern;
     private final String xsltPattern;
     private final String xsltExtension;
+    private final String schematronExtension;
 
     /**
      * Instantiates a new Schematron XSLT file updater.
@@ -42,7 +49,8 @@ class SchematronXSLTFileUpdater {
         this.xsltDirectory = new File(xsltDirectory);
         this.schematronDirectory = new File(schematronDirectory);
         schematronPattern = "*.sch";
-        xsltPattern = "*.xslt";
+        schematronExtension = "sch";
+        xsltPattern = "xslt";
         xsltExtension = ".xslt";
 
         if (this.xsltDirectory.exists() && !this.xsltDirectory.isDirectory())
@@ -56,41 +64,66 @@ class SchematronXSLTFileUpdater {
      *
      * @return TRUE if any sch file has a newer timestamp than any XSLT file
      */
-    boolean checkForUpdatedSchematron() {
+    boolean isSchNewerThanXslt() {
         long xsltLastModifiedTimestamp = 0;
         long schLastModifiedTimestamp = 0;
 
+
         // Find highest (most recent) last modified timestamp file in XSLT directory
-        final String[] xsltFilenames = getXSLTFileList();
-        if (xsltFilenames != null) {
-            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames, xsltDirectory);
+        final List<File> xsltFilenames = getXSLTFileList();
+        if (!xsltFilenames.isEmpty()) {
+            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames);
         }
 
         // Find highest (most recent) last modified timestamp file in Schematron directory
-        final String[] schFilenames = getSchematronFileList();
-        if (schFilenames != null) {
-            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames, schematronDirectory);
+        final List<File> schFilenames = getSchematronFileList();
+        if (!schFilenames.isEmpty()) {
+            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames);
         }
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS dd-MM-yyyy");
+        log.info("Timestamp of last modified xslt file: {} , Timestamp of last modified sch file: {}. If the first is greater than the second, xslt files must be regenerate",df.format(xsltLastModifiedTimestamp), df.format(schLastModifiedTimestamp));
 
         // if there is a more recent timestamped Schematron file, regeneration of XSLT is needed.
         return schLastModifiedTimestamp > xsltLastModifiedTimestamp;
     }
 
 
-    private String[] getXSLTFileList() {
+    private List<File> getXSLTFileList() {
         return getDirectoryFileList(xsltDirectory, xsltPattern);
     }
 
-    private String[] getSchematronFileList() {
-        return getDirectoryFileList(schematronDirectory, schematronPattern);
+    private List<File> getSchematronFileList() {
+        return getDirectoryFileList(schematronDirectory, schematronExtension);
     }
 
-    private String[] getDirectoryFileList(File baseDirectory, String pattern) {
+    private String[] getFirstLevelSchematronFileList() {
+        return getFirstDirectoryFileList(schematronDirectory, schematronPattern);
+    }
+
+
+    private List<File> getDirectoryFileList(File baseDirectory, String format) {
+        return (List<File>) FileUtils.listFiles(baseDirectory, new String[]{format}, true);
+    }
+
+    private long getLatestModifiedTimestamp(List<File> fileList) {
+        long highestLastModified = 0;
+        for (File file : fileList) {
+            long lastModified = file.lastModified();
+            if (lastModified > highestLastModified) {
+                highestLastModified = lastModified;
+            }
+        }
+        return highestLastModified;
+    }
+
+    private String[] getFirstDirectoryFileList(File baseDirectory, String pattern) {
         final DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(baseDirectory);
         scanner.setIncludes(new String[]{pattern});
         scanner.setCaseSensitive(true);
         scanner.scan();
+
         return scanner.getIncludedFiles();
     }
 
@@ -112,12 +145,12 @@ class SchematronXSLTFileUpdater {
      */
     void updateXSLTfromSch() {
 
-
         // Find all Schematron files
-        final String[] schFilenames = getSchematronFileList();
+        final String[] schFilenames = getFirstLevelSchematronFileList();
         if (schFilenames != null) {
             // TODO MAYBE use a separate thread for each file
             for (final String schFilename : schFilenames) {
+                log.debug("Updating Schematron file with new version: {}", schFilename);
                 final File schFile = new File(schematronDirectory, schFilename);
 
                 // Create XSLT file name (outputdir + localpath + extension)
@@ -161,11 +194,12 @@ class SchematronXSLTFileUpdater {
                         final XMLWriterSettings xmlWriterSettings = new XMLWriterSettings();
                         xmlWriterSettings.setNamespaceContext(aNSContext).setPutNamespaceContextPrefixesInRoot(true);
 
-                        final OutputStream xsltOS = FileHelper.getOutputStream(xsltFile);
-                        if (xsltOS == null)
-                            throw new IllegalStateException("Failed to open output stream for file " +
-                                    xsltFile.getAbsolutePath());
-                        XMLWriter.writeToStream(xsltProvider.getXSLTDocument(), xsltOS, xmlWriterSettings);
+                        try (final OutputStream xsltOS = FileHelper.getOutputStream(xsltFile)) {
+                            if (xsltOS == null)
+                                throw new IllegalStateException("Failed to open output stream for file " +
+                                        xsltFile.getAbsolutePath());
+                            XMLWriter.writeToStream(xsltProvider.getXSLTDocument(), xsltOS, xmlWriterSettings);
+                        }
                     } else {
                         throw new RuntimeException("Failed to convert '" + schFile.getPath() +
                                 "': the Schematron resource is invalid");
@@ -174,6 +208,7 @@ class SchematronXSLTFileUpdater {
                     throw new RuntimeException("Failed to convert '" + schFile.getPath() + "' to XSLT file '" +
                             xsltFile.getPath() + "'", ex);
                 }
+
             }
         }
     }

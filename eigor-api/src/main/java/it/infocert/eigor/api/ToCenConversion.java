@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import java.util.Set;
  *     {@link BG0000Invoice CEN invoice}.
  * </p>
  */
-public interface ToCenConversion {
+public interface ToCenConversion extends Named, Configurable {
 
     /**
      * Convert the given invoice in a {@link BG0000Invoice CEN invoice}.
@@ -27,7 +28,10 @@ public interface ToCenConversion {
      *                                  to convert the source invoice in the CEN format is found.
      */
     ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException;
-
+    
+    /**
+     * Returns true if the format is supported, false otherwise
+     */
     boolean support(String format);
 
     /**
@@ -35,4 +39,10 @@ public interface ToCenConversion {
      * If one of this format is passed to {@link ToCenConversion#support(String)} it should return {@code true}.
      */
     Set<String> getSupportedFormats();
+
+    /**
+     *
+     * Regex string for mapping key validation
+     */
+    String getMappingRegex();
 }

@@ -1,7 +1,5 @@
 package it.infocert.eigor.api.impl;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Mapper;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -33,6 +31,7 @@ public class InMemoryRuleReport implements RuleReport {
     /**
      * Return the items in the report that are {@link RuleOutcome.Outcome#ERROR errors} or {@link RuleOutcome.Outcome#FAILED failues}.
      */
+    @Override
     public List<Map.Entry<RuleOutcome, Rule>> getErrorsAndFailures() {
         ArrayList<Map.Entry<RuleOutcome, Rule>> list = new ArrayList<>();
         for (Map.Entry<RuleOutcome, Rule> item : items) {
@@ -43,21 +42,12 @@ public class InMemoryRuleReport implements RuleReport {
         return list;
     }
 
-    public String dump() {
-
-        Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
-            @Override public String map(Map.Entry<RuleOutcome, Rule> x) {
-                return x.getKey().outcome() + "," + x.getKey().description();
-            }
-        };
-        List<String> stringPieces = Stream.create( items ).map( mapper ).toList();
-
-        StringBuffer sb = new StringBuffer("Outcome,Reason\n");
-        for(int i = 0; i<stringPieces.size(); i++){
-            sb.append(stringPieces.get(i));
-            if(i<stringPieces.size()-1) sb.append("\n");
+    @Override public List<Map.Entry<RuleOutcome, Rule>> getAll() {
+        ArrayList<Map.Entry<RuleOutcome, Rule>> list = new ArrayList<>();
+        for (Map.Entry<RuleOutcome, Rule> item : items) {
+            list.add(item);
         }
-        return sb.toString();
-
+        return list;
     }
+
 }

@@ -24,7 +24,7 @@ public class StringToJavaLocalDateConverter extends FromStringTypeConverter<Loca
 
     @Override
     public LocalDate convert(String s) {
-        return LocalDate.parse(s, formatter);
+        return LocalDate.parse(s.trim(), formatter);
     }
 
     @Override

@@ -35,11 +35,11 @@ public enum ErrorCodes {
     * @param code
     * @return the error code that match the given parameters
     */
-    public static ErrorCodes retrieveErrorCode(String location, String type, String code) {
+    public static ErrorCodesEnum retrieveErrorCode(String location, String type, String code) {
 
-        for (ErrorCodes errorCodes : ErrorCodes.values()) {
-            if (Objects.equals(errorCodes.code, code) && Objects.equals(errorCodes.type, type) && Objects.equals(errorCodes.location, location)) {
-                return errorCodes;
+        for (ErrorCodesEnum errorCodesEnum : ErrorCodesEnum.values()) {
+            if (Objects.equals(errorCodesEnum.code, code) && Objects.equals(errorCodesEnum.type, type) && Objects.equals(errorCodesEnum.location, location)) {
+                return errorCodesEnum;
             }
         }
         return null;

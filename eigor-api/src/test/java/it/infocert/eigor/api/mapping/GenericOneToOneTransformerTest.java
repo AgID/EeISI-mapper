@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.io.Resources;
-import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -9,17 +9,13 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jdom2.Document;
-import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,9 +27,9 @@ import static org.junit.Assert.*;
 
 public class GenericOneToOneTransformerTest {
 
-    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
+    private static Logger log = LoggerFactory.getLogger(GenericOneToOneTransformerTest.class);
     private BG0000Invoice invoice;
-    private ArrayList<ConversionIssue> errors;
+    private ArrayList<IConversionIssue> errors;
     private Reflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;
@@ -42,7 +38,6 @@ public class GenericOneToOneTransformerTest {
     @Before
     public void setUp() throws Exception {
         invoice = new BG0000Invoice();
-
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
@@ -169,7 +164,7 @@ public class GenericOneToOneTransformerTest {
         List<Element> items = CommonConversionModule.evaluateXpath(document, xPathExpression);
 
         assertTrue(items.isEmpty());
-        assertEquals("Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
+        assertEquals("null.GenericTransformer.null - Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
     }
 
     @Test
@@ -187,6 +182,44 @@ public class GenericOneToOneTransformerTest {
         List<Element> items = CommonConversionModule.evaluateXpath(document, xPathExpression);
 
         assertTrue(items.isEmpty());
-        assertEquals("Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
+        assertEquals("null.GenericTransformer.null - Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
     }
+
+    @Test
+    public void shouldSupportCenPathAttributes() throws Exception {
+        final String xPathExpression = "/Invoice/AccountingCustomerParty/Party/EndpointID";
+        final String schemeXPathExpression = "/Invoice/AccountingCustomerParty/Party/EndpointID/@schemeID";
+        final String cenPath = "/BG0007/BT0049";
+        final String schemeCenPath = "/BG0007/BT0049/@schemeID";
+
+        final Document ublInvoice = createUblInvoice();
+        final BG0000Invoice invoice = new BG0000Invoice();
+        //Normal tag
+        GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(xPathExpression, cenPath, reflections, conversionRegistry);
+        transformer.transformXmlToCen(ublInvoice, invoice, errors);
+
+        List<BG0007Buyer> buyers = invoice.getBG0007Buyer();
+        assertFalse(buyers.isEmpty());
+
+        List<BT0049BuyerElectronicAddressAndSchemeIdentifier> identifiers = buyers.get(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier();
+        assertFalse(identifiers.isEmpty());
+
+        BT0049BuyerElectronicAddressAndSchemeIdentifier identifier = identifiers.get(0);
+        assertEquals("Test", identifier.getValue().getIdentifier());
+        assertEquals("ID", identifier.getValue().getIdentificationSchema());
+    }
+
+    private Document createUblInvoice() {
+        Element root = new Element("Invoice");
+        Element acp = new Element("AccountingCustomerParty");
+        Element party = new Element("Party");
+        Element endpointId = new Element("EndpointID");
+        endpointId.setText("Test");
+        endpointId.setAttribute("schemeID", "ID");
+        party.addContent(endpointId);
+        acp.addContent(party);
+        root.addContent(acp);
+        return new Document(root);
+    }
+
 }

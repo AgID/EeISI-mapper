@@ -2,26 +2,26 @@ package it.infocert.eigor.model.core.enums;
 
 public enum Untdid5189ChargeAllowanceDescriptionCodes {
 
-    // 1: Sign
-    // 2: ID
-    // 3: ShortDescription
-    // 4: LongDescription
+
+    // 1: ID
+    // 2: ShortDescription
+    // 3: LongDescription
     #foreach( $row in $rows )
-        /**
-         * Code ${row.data.ID}
-         * <p>${row.data.ShortDescription}</p>
-         * <p>${row.data.LongDescription}</p>
-         */
-        Code${row.data.ID}("${row.data.Sign}",${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    /**
+     * Code ${row.data.ID}
+     * <p>${row.data.ShortDescription}</p>
+     * <p>${row.data.LongDescription}</p>
+     */
+    Code${row.data.ID}(${row.data.ID},"${row.data.ShortDescription}","${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,
+
+    #end
     #end
 
-    private String sign;
     private int code;
     private String shortDescritpion;
     private String longDescription;
 
-    Untdid5189ChargeAllowanceDescriptionCodes(String sign, int code, String shortDescritpion, String longDescription) {
-        this.sign = sign;
+    Untdid5189ChargeAllowanceDescriptionCodes(int code, String shortDescritpion, String longDescription) {
         this.code = code;
         this.shortDescritpion = shortDescritpion;
         this.longDescription = longDescription;
@@ -31,4 +31,9 @@ public enum Untdid5189ChargeAllowanceDescriptionCodes {
     public String toString() {
         return super.toString() + " " + shortDescritpion;
     }
+
+    public int getCode() {
+        return code;
+    }
+
 }

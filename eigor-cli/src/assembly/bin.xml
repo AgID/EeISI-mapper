@@ -39,52 +39,41 @@
             <outputDirectory>examples/ubl</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/ubl</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/cii</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/cii</directory>
+        </fileSet>
         <!-- invoice examples -->
 
+        <!-- UBL/CEN -->
         <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron-xslt</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron-xslt</directory>
+            <outputDirectory>converterdata/converter-ubl-cen/</outputDirectory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/</directory>
             <includes>
-                <include>*.xslt</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
+
+
+        <!-- CEN/FATTPA -->
         <fileSet>
-            <outputDirectory>converterdata/converter-cen-fattpa/mappings</outputDirectory>
-            <directory>../converter-cen-fattpa/src/main/resources/converter-cen-fattpa/mappings</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/ubl/schematron</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/schematron</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/cius/schematron-xslt</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron-xslt</directory>
+            <outputDirectory>converterdata/converter-cen-fattpa</outputDirectory>
+            <directory>../converter-cen-fattpa/src/main/resources/converterdata/converter-cen-fattpa</directory>
             <includes>
-                <include>*.xslt</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
+
+        <!-- CII/CEN -->
         <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/cius/schematron</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/cius/schematron</directory>
-        </fileSet>
-        <fileSet>
-        <outputDirectory>converterdata/converter-ubl-cen/ubl/xsd</outputDirectory>
-        <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/ubl/xsd</directory>
-        <includes>
-        <include>*.xsd</include>
-        </includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>converterdata/converter-ubl-cen/mappings</outputDirectory>
-            <directory>../converter-ubl-cen/converterdata/converter-ubl-cen/mappings</directory>
+            <outputDirectory>converterdata/converter-cii-cen</outputDirectory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen</directory>
             <includes>
-                <include>*.properties</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
+
+        <!-- rules -->
         <fileSet>
             <outputDirectory>conf</outputDirectory>
             <directory>../eigor-rules/src/main/resources</directory>
@@ -92,6 +81,7 @@
                 <include>*.properties</include>
             </includes>
         </fileSet>
+
         <fileSet>
             <outputDirectory>/</outputDirectory>
             <directory>env/release</directory>
@@ -100,6 +90,13 @@
                 <include>eigor.sh</include>
             </includes>
             <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>conf</outputDirectory>
+            <directory>env/release</directory>
+            <includes>
+                <include>eigor.properties</include>
+            </includes>
         </fileSet>
         <fileSet>
             <outputDirectory>logs</outputDirectory>

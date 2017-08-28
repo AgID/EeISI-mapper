@@ -1,6 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +23,7 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -39,8 +41,9 @@ public class ConversionCommandTest {
     @Rule
     public TemporaryFolder tmpRule = new TemporaryFolder();
 
-    private File outputFolderFile;
-    private Path inputInvoice;
+    File outputFolderFile;
+    Path inputInvoice;
+    InputStream invoiceSourceFormat;
 
     @Before
     public void setUpOutputFolder() throws IOException, SyntaxErrorInInvoiceFormatException {
@@ -66,6 +69,11 @@ public class ConversionCommandTest {
         );
     }
 
+    @Before
+    public void setUpInvoiceSourceFormat() {
+        invoiceSourceFormat = new ByteArrayInputStream("<invoice>the-invoice</invoice>".getBytes());
+    }
+
     @Test
     public void shouldUseTheExtensionSpecifiedFromTheFromCenConverterAsOutputExtension() throws Exception {
 
@@ -73,8 +81,15 @@ public class ConversionCommandTest {
         given(fromCen.extension()).willReturn(".json");
 
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        InputStream invoiceSourceFormat = null;
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false);
+        InputStream invoiceInSourceFormat = new ByteArrayInputStream( "<invoice>invoice</invoice>".getBytes() );
+        ConversionCommand sut = new ConversionCommand(
+                ruleRepository,
+                toCen,
+                fromCen,
+                inputInvoice,
+                outputFolder,
+                invoiceInSourceFormat,
+                false);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -96,15 +111,18 @@ public class ConversionCommandTest {
         // given
         given(fromCen.extension()).willReturn(".xml");
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(
+                (IConversionIssue)ConversionIssue.newError(new IllegalArgumentException("test exception"))
+        );
         when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        InputStream invoiceSourceFormat = null;
+
+
         ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
-        PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
 
         // when
         sut.execute(out, err);
@@ -112,6 +130,7 @@ public class ConversionCommandTest {
         // then a fromcen-errors.csv should be created for the issues along with the other files
         List<File> files = asList(outputFolderFile.listFiles());
 
+        assertTrue(outputFolderFile.exists());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.txt"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
@@ -126,7 +145,9 @@ public class ConversionCommandTest {
     public void toCenConversionShouldCreateCsvIfConversionResultHasErrors() throws IOException, SyntaxErrorInInvoiceFormatException {
 
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(
+                (IConversionIssue)ConversionIssue.newError(new IllegalArgumentException("test exception"))
+        );
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
         // given
@@ -134,7 +155,6 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        InputStream invoiceSourceFormat = null;
         ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
@@ -153,7 +173,8 @@ public class ConversionCommandTest {
     public void toCenConversionShouldCreateCsvAndAllFilesIfConversionResultHasErrorsButForceIsTrue() throws IOException, SyntaxErrorInInvoiceFormatException {
 
 
-        List<ConversionIssue> myErrors = Arrays.asList(ConversionIssue.newError(new IllegalArgumentException("test exception")));
+        List<IConversionIssue> myErrors = Arrays.asList(
+                (IConversionIssue) ConversionIssue.newError(new IllegalArgumentException("test exception")));
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
         // given
@@ -161,7 +182,6 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        InputStream invoiceSourceFormat = null;
         ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());

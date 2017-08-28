@@ -1,22 +1,72 @@
 package it.infocert.eigor.api;
 
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import it.infocert.eigor.api.errors.ErrorMessage;
 
-public class ConversionIssue {
-    private final String message;
+public class ConversionIssue implements IConversionIssue {
+
+    /** The message describing the issue. */
+    private final ErrorMessage errorMessage;
+
+    /** The exception that caused the problem. */
     private final Exception cause;
-    private final Boolean fatal;
 
-    private ConversionIssue(String message, Exception cause, boolean fatal) {
-        this.message = message;
+    /** If {@literal true} this has to be considered fatal, meaning it prevents the conversion to be completed. */
+    private final boolean fatal;
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
+    public static ConversionIssue newWarning(Exception e) {
+        return new ConversionIssue(e.getMessage(), e, false);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
+    public static ConversionIssue newWarning(Exception e, String message) {
+        return new ConversionIssue(message, e, false);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    public static ConversionIssue newError(Exception e) {
+        return new ConversionIssue(e.getMessage(), e, true);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    public static ConversionIssue newError(EigorException e) {
+        return new ConversionIssue(e.getErrorMessage(), e, true);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    public static ConversionIssue newError(EigorRuntimeException e) {
+        return new ConversionIssue(e.getErrorMessage(), e, true);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    public static ConversionIssue newError(Exception e, String message) {
+        return new ConversionIssue(message, e, true);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code. */
+    public static ConversionIssue newError(Exception e, String message, String location, String action, String error) {
+        return new ConversionIssue(new ErrorMessage(message, location, action, error), e, true);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code with no location or action. */
+    public static ConversionIssue newError(Exception e, String message, String error) {
+        return newError(e, message, null, null, error);
+    }
+
+    private ConversionIssue(ErrorMessage message, Exception cause, boolean fatal) {
+        this.errorMessage = message;
         this.cause = cause;
         this.fatal = fatal;
     }
 
+    private ConversionIssue(String message, Exception cause, boolean fatal) {
+        this(new ErrorMessage(message), cause, fatal);
+    }
+
+    @Override
     public String getMessage() {
+        String message = errorMessage.toString();
         if (message == null) {
 
             StringBuilder sb = new StringBuilder();
@@ -34,34 +84,28 @@ public class ConversionIssue {
         return message;
     }
 
+    @Override
     public Exception getCause() {
         return cause;
     }
 
+    @Override
     public boolean isError() {
         return fatal;
     }
 
+    @Override
     public boolean isWarning() {
         return !fatal;
     }
 
-    public static ConversionIssue newWarning(Exception e) {
-        return new ConversionIssue(null, e, false);
+    @Override
+    public ErrorMessage getErrorMessage() {
+        return errorMessage;
     }
 
-    public static ConversionIssue newError(Exception e) {
-        return new ConversionIssue(null, e, true);
+    @Override
+    public String toString() {
+        return String.format("%s %s Fatal: %s", errorMessage, cause, fatal);
     }
-
-    public static ConversionIssue newWarning(Exception e, String message) {
-        return new ConversionIssue(message, e, false);
-
-    }
-
-    public static ConversionIssue newError(Exception e, String message) {
-        return new ConversionIssue(message, e, true);
-
-    }
-
 }

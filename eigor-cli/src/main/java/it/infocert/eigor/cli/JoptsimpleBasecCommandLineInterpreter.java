@@ -35,7 +35,10 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
     private final FromCenConversionRepository fromCenConversionRepository;
     private final RuleRepository ruleRepository;
 
-    public JoptsimpleBasecCommandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository ruleRepository) {
+    public JoptsimpleBasecCommandLineInterpreter(
+            ToCenConversionRepository toCenConversionRepository,
+            FromCenConversionRepository fromCenConversionRepository,
+            RuleRepository ruleRepository) {
         this.toCenConversionRepository = toCenConversionRepository;
         this.fromCenConversionRepository = fromCenConversionRepository;
         this.ruleRepository = ruleRepository;
@@ -58,7 +61,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // Validates all params
         // ===================================================
 
-        // if all params are missing the print the help
+        // if all params are missing then print the help
         if (!options.hasOptions()) {
             return new HelpCommand();
         }
