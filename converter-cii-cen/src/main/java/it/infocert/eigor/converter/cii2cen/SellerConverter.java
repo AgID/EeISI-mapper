@@ -19,9 +19,9 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
 
     public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BT0029SellerIdentifierAndSchemeIdentifier bt0029 = null;
-        BT0031SellerVatIdentifier bt0031 = null;
-        BT0032SellerTaxRegistrationIdentifier bt0032 = null;
+        BT0029SellerIdentifierAndSchemeIdentifier bt0029;
+        BT0031SellerVatIdentifier bt0031;
+        BT0032SellerTaxRegistrationIdentifier bt0032;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
