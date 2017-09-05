@@ -6,6 +6,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -18,8 +19,9 @@ import java.util.List;
  */
 public class BuyerIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBT0046(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBT0046_BT0048(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         BT0046BuyerIdentifierAndSchemeIdentifier bt0046 = null;
+        BT0048BuyerVatIdentifier bt0048 = null;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -31,19 +33,28 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
             Element party = findNamespaceChild(accountingCustomerParty, namespacesInScope, "Party");
 
             if (party != null) {
-            	List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
-            	
-            	 for(Element elemParty : partyIdentifications) {
-                 	Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
-            	
-                 	if (id != null) {
-                 	    Attribute schemeID = id.getAttribute("schemeID");
-                 	    if(schemeID != null) {
+                List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
+
+                for(Element elemParty : partyIdentifications) {
+                    Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
+
+                    if (id != null) {
+                        Attribute schemeID = id.getAttribute("schemeID");
+                        if(schemeID != null) {
                             bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
                         } else {
                             bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
                         }
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
+                    }
+                }
+
+                Element partyTaxScheme = findNamespaceChild(party, namespacesInScope, "PartyTaxScheme");
+                if (partyTaxScheme != null) {
+                    Element companyID = findNamespaceChild(partyTaxScheme, namespacesInScope, "CompanyID");
+                    if (companyID != null) {
+                        bt0048 = new BT0048BuyerVatIdentifier(new Identifier(companyID.getText()));
+                        invoice.getBG0007Buyer(0).getBT0048BuyerVatIdentifier().add(bt0048);
                     }
                 }
             }
@@ -53,6 +64,6 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBT0046(document, cenInvoice, errors);
+        toBT0046_BT0048(document, cenInvoice, errors);
     }
 }
