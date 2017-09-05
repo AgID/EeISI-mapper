@@ -7,7 +7,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1</version>
+    <version>0.1.4</version>
     <name>Eigor :: Parent (${project.artifactId})</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -76,11 +76,6 @@
         <dependencies>
 
             <!-- Libs -->
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
-            </dependency>
             <dependency>
                 <groupId>net.sf.jopt-simple</groupId>
                 <artifactId>jopt-simple</artifactId>
@@ -176,7 +171,7 @@
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
-                <artifactId>eigor-api</artifactId>
+                <artifactId>eigor-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -211,7 +206,7 @@
             </dependency>
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
-                <artifactId>eigor-api-api</artifactId>
+                <artifactId>eigor-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -603,7 +598,8 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="../target/pit-reports/${project.artifactId}"/>
-                                        <copy todir="../target/pit-reports/${project.artifactId}" failonerror="no" quiet="no">
+                                        <copy todir="../target/pit-reports/${project.artifactId}" failonerror="no"
+                                              quiet="no">
                                             <fileset dir="${project.basedir}/target/pit-reports"/>
                                         </copy>
                                     </target>

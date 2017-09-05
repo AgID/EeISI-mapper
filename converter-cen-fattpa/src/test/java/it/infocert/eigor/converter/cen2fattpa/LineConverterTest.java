@@ -125,13 +125,17 @@ public class LineConverterTest {
     }
 
     private void populateWithBG25() {
-        BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
+        for (int i = 0; i < 5; i++) {
 
-        populateBG25WithBG27(invoiceLine);
-        populateBG25WithBG28(invoiceLine);
-        populateBG25WithBG29(invoiceLine);
-        populateBG25WithBG31(invoiceLine);
-        invoice.getBG0025InvoiceLine().add(invoiceLine);
+
+            BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
+
+            populateBG25WithBG27(invoiceLine);
+            populateBG25WithBG28(invoiceLine);
+            populateBG25WithBG29(invoiceLine);
+            populateBG25WithBG31(invoiceLine);
+            invoice.getBG0025InvoiceLine().add(invoiceLine);
+        }
     }
 
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {

@@ -43,7 +43,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         // attach the logging for this conversion
         if(enableLog) {
             logSupport = new LogSupport();
-            logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
+//            logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log")); //TODO Why is this needed?
         }
         cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
     }
