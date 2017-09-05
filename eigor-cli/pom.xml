@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.0.9-SNAPSHOT</version>
+        <version>0.1.4</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-api</artifactId>
+            <artifactId>eigor-core</artifactId>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
@@ -68,10 +68,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -209,11 +205,11 @@
                                         <requireFilesExist>
                                             <files>
                                                 <file>../eigor-test/src/main/resources</file>
-                                                <file>../eigor-api/src/main/resources</file>
+                                                <file>../eigor-core/src/main/resources</file>
                                                 <file>env/release/eigor.sh</file>
                                                 <file>env/release/eigor.bat</file>
-                                                <file>../eigor-api/src/main/resources/cardinality.properties</file>
-                                                <file>../eigor-api/src/main/resources/rules.properties</file>
+                                                <file>../eigor-core/src/main/resources/cardinality.properties</file>
+                                                <file>../eigor-core/src/main/resources/rules.properties</file>
                                                 <file>env/release/logback.xml</file>
                                             </files>
                                         </requireFilesExist>

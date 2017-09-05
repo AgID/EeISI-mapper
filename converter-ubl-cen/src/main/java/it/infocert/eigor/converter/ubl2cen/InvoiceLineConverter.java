@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * The Invoice Line Custom Converter
  */
+@SuppressWarnings("Duplicates")
 public class InvoiceLineConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
@@ -31,25 +32,25 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
         List<Element> invoiceLines = findNamespaceChildren(rootElement, namespacesInScope, "InvoiceLine");
 
-        for(Element elemInv : invoiceLines) {
+        for (Element elemInv : invoiceLines) {
 
-        	bg0025 = new BG0025InvoiceLine();
+            bg0025 = new BG0025InvoiceLine();
 
-        	Element id = findNamespaceChild(elemInv, namespacesInScope, "ID");
-        	if (id != null) {
-        		BT0126InvoiceLineIdentifier bt0126 = new BT0126InvoiceLineIdentifier(id.getText());
-        		bg0025.getBT0126InvoiceLineIdentifier().add(bt0126);
-        	}
-        	Element note = findNamespaceChild(elemInv, namespacesInScope, "Note");
-        	if (note != null) {
-        		BT0127InvoiceLineNote bt0127 = new BT0127InvoiceLineNote(note.getText());
-        		bg0025.getBT0127InvoiceLineNote().add(bt0127);
-        	}
+            Element id = findNamespaceChild(elemInv, namespacesInScope, "ID");
+            if (id != null) {
+                BT0126InvoiceLineIdentifier bt0126 = new BT0126InvoiceLineIdentifier(id.getText());
+                bg0025.getBT0126InvoiceLineIdentifier().add(bt0126);
+            }
+            Element note = findNamespaceChild(elemInv, namespacesInScope, "Note");
+            if (note != null) {
+                BT0127InvoiceLineNote bt0127 = new BT0127InvoiceLineNote(note.getText());
+                bg0025.getBT0127InvoiceLineNote().add(bt0127);
+            }
 
-        	Element documentReference = findNamespaceChild(elemInv, namespacesInScope, "DocumentReference");
-        	if (documentReference != null) {
-        	    Element documentTypeCode = findNamespaceChild(documentReference, namespacesInScope, "DocumentTypeCode");
-        	    if (documentTypeCode != null && documentTypeCode.getText().equals("ATS")) {
+            Element documentReference = findNamespaceChild(elemInv, namespacesInScope, "DocumentReference");
+            if (documentReference != null) {
+                Element documentTypeCode = findNamespaceChild(documentReference, namespacesInScope, "DocumentTypeCode");
+                if (documentTypeCode != null && documentTypeCode.getText().equals("ATS")) {
                     Element idRef = findNamespaceChild(documentReference, namespacesInScope, "ID");
                     if (idRef != null) {
                         Attribute schemeID = id.getAttribute("schemeID");
@@ -61,21 +62,21 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
                     }
                 }
-        	}
-        	
-        	Element invoicedQuantity = findNamespaceChild(elemInv, namespacesInScope, "InvoicedQuantity");
-        	if (invoicedQuantity != null) {
-        		try {
+            }
+
+            Element invoicedQuantity = findNamespaceChild(elemInv, namespacesInScope, "InvoicedQuantity");
+            if (invoicedQuantity != null) {
+                try {
                     BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(strDblConverter.convert(invoicedQuantity.getText()));
                     bg0025.getBT0129InvoicedQuantity().add(bt0129);
-                }catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                     errors.add(ConversionIssue.newError(ere));
                 }
                 Attribute invoicedQuantityAttribute = invoicedQuantity.getAttribute("unitCode");
                 if (invoicedQuantityAttribute != null) {
+                    String commonCode = invoicedQuantityAttribute.getValue();
                     try {
-                        String commonCode = invoicedQuantityAttribute.getValue();
                         UnitOfMeasureCodes unitCode = null;
                         for (UnitOfMeasureCodes elemUnitCode : UnitOfMeasureCodes.values()) {
                             if (elemUnitCode.getCommonCode().equals(commonCode)) {
@@ -84,72 +85,76 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         }
                         BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                         bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
-                    }catch (NullPointerException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
+                    } catch (NullPointerException e) {
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                .message(String.format("Unit Of Measure Code %s not found in list", commonCode))
+                                .action("InvoiceLineConverter")
+                                .error("UnitOfMeasureNotFound")
+                                .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
                 }
-        	}
-        	
-        	Element lineExtensionAmount = findNamespaceChild(elemInv, namespacesInScope, "LineExtensionAmount");
-        	if (lineExtensionAmount != null) {
-        		try {
-        			BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(strDblConverter.convert(lineExtensionAmount.getText()));
-        			bg0025.getBT0131InvoiceLineNetAmount().add(bt0131);
-        		}catch (NumberFormatException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-        			errors.add(ConversionIssue.newError(ere));
-        		}
-        	}
-        	
-        	Element orderLineReference = findNamespaceChild(elemInv, namespacesInScope, "OrderLineReference");
-        	if (orderLineReference != null) {
-        		Element idOrder = findNamespaceChild(orderLineReference, namespacesInScope, "LineID");
-        		if (idOrder != null) {
-        			BT0132ReferencedPurchaseOrderLineReference bt0132 = new BT0132ReferencedPurchaseOrderLineReference(idOrder.getText());
-        			bg0025.getBT0132ReferencedPurchaseOrderLineReference().add(bt0132);
-        		}
-        	}
-        	
-        	Element accountingCost = findNamespaceChild(elemInv, namespacesInScope, "AccountingCost");
-        	if (accountingCost != null) {
-        		BT0133InvoiceLineBuyerAccountingReference bt0133 = new BT0133InvoiceLineBuyerAccountingReference(accountingCost.getText());
-        		bg0025.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133);
-        	}
+            }
 
-        	//BG0026
-        	BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
-        	Element invoicePeriod = findNamespaceChild(elemInv, namespacesInScope, "InvoicePeriod");
-        	if (invoicePeriod != null) {
-        		Element startDate = findNamespaceChild(invoicePeriod, namespacesInScope, "StartDate");
-        		if (startDate != null) {
-        		    try {
+            Element lineExtensionAmount = findNamespaceChild(elemInv, namespacesInScope, "LineExtensionAmount");
+            if (lineExtensionAmount != null) {
+                try {
+                    BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(strDblConverter.convert(lineExtensionAmount.getText()));
+                    bg0025.getBT0131InvoiceLineNetAmount().add(bt0131);
+                } catch (NumberFormatException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            Element orderLineReference = findNamespaceChild(elemInv, namespacesInScope, "OrderLineReference");
+            if (orderLineReference != null) {
+                Element idOrder = findNamespaceChild(orderLineReference, namespacesInScope, "LineID");
+                if (idOrder != null) {
+                    BT0132ReferencedPurchaseOrderLineReference bt0132 = new BT0132ReferencedPurchaseOrderLineReference(idOrder.getText());
+                    bg0025.getBT0132ReferencedPurchaseOrderLineReference().add(bt0132);
+                }
+            }
+
+            Element accountingCost = findNamespaceChild(elemInv, namespacesInScope, "AccountingCost");
+            if (accountingCost != null) {
+                BT0133InvoiceLineBuyerAccountingReference bt0133 = new BT0133InvoiceLineBuyerAccountingReference(accountingCost.getText());
+                bg0025.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133);
+            }
+
+            //BG0026
+            BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
+            Element invoicePeriod = findNamespaceChild(elemInv, namespacesInScope, "InvoicePeriod");
+            if (invoicePeriod != null) {
+                Element startDate = findNamespaceChild(invoicePeriod, namespacesInScope, "StartDate");
+                if (startDate != null) {
+                    try {
                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(startDate.getText()));
                         bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
-                    }catch (IllegalArgumentException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
-        		    }
-        		}
-        		
-        		Element endDate = findNamespaceChild(invoicePeriod, namespacesInScope, "EndDate");
-        		if (endDate != null) {
-        		    try{
-        			    BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDate.getText()));
-        			    bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
-                    }catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
                         errors.add(ConversionIssue.newError(ere));
                     }
-        		}
-        	}
-        	bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
-        	
-        	//BG0027 - BG0028
-        	BG0027InvoiceLineAllowances bg0027 = null;
-        	BG0028InvoiceLineCharges bg0028 = null;
-        	List<Element> allowanceCharges = findNamespaceChildren(elemInv, namespacesInScope, "AllowanceCharge");
-            for(Element elemInvAll : allowanceCharges) {
+                }
+
+                Element endDate = findNamespaceChild(invoicePeriod, namespacesInScope, "EndDate");
+                if (endDate != null) {
+                    try {
+                        BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDate.getText()));
+                        bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
+                    } catch (IllegalArgumentException e) {
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                        errors.add(ConversionIssue.newError(ere));
+                    }
+                }
+            }
+            bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+
+            //BG0027 - BG0028
+            BG0027InvoiceLineAllowances bg0027 = null;
+            BG0028InvoiceLineCharges bg0028 = null;
+            List<Element> allowanceCharges = findNamespaceChildren(elemInv, namespacesInScope, "AllowanceCharge");
+            for (Element elemInvAll : allowanceCharges) {
 
                 Element chargeIndicator = findNamespaceChild(elemInvAll, namespacesInScope, "ChargeIndicator");
                 if (chargeIndicator != null && chargeIndicator.getText().equals("false")) {
@@ -197,10 +202,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                     Element allowanceChargeReasonCode = findNamespaceChild(elemInvAll, namespacesInScope, "AllowanceChargeReasonCode");
                     if (allowanceChargeReasonCode != null) {
-                        try{
+                        try {
                             BT0140InvoiceLineAllowanceReasonCode bt0140 = new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code" + allowanceChargeReasonCode.getText()));
                             bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(bt0140);
-                        }catch (IllegalArgumentException e) {
+                        } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5189ChargeAllowanceDescriptionCodes not found").action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -252,10 +257,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                     Element allowanceChargeReasonCode = findNamespaceChild(elemInvAll, namespacesInScope, "AllowanceChargeReasonCode");
                     if (allowanceChargeReasonCode != null) {
-                        try{
+                        try {
                             BT0145InvoiceLineChargeReasonCode bt0145 = new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(allowanceChargeReasonCode.getText()));
                             bg0028.getBT0145InvoiceLineChargeReasonCode().add(bt0145);
-                        }catch (IllegalArgumentException e) {
+                        } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid7161SpecialServicesCodes not found").action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -272,7 +277,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                 Element priceAmount = findNamespaceChild(price, namespacesInScope, "PriceAmount");
                 if (priceAmount != null) {
-                    try{
+                    try {
                         BT0146ItemNetPrice bt0146 = new BT0146ItemNetPrice(strDblConverter.convert(priceAmount.getText()));
                         bg0029.getBT0146ItemNetPrice().add(bt0146);
                     } catch (NumberFormatException e) {
@@ -334,7 +339,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             }
                             BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(unitCode);
                             bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(bt0150);
-                        }catch (NullPointerException e) {
+                        } catch (NullPointerException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -381,7 +386,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element idStandard = findNamespaceChild(standardItemIdentification, namespacesInScope, "ID");
                     if (idStandard != null) {
                         Attribute schemeID = id.getAttribute("schemeID");
-                        if(schemeID != null) {
+                        if (schemeID != null) {
                             bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
                         } else {
                             bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(idStandard.getText()));
@@ -391,16 +396,15 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
                 BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt0158 = null;
                 List<Element> commodityClassifications = findNamespaceChildren(item, namespacesInScope, "CommodityClassification");
-                for(Element elemComm : commodityClassifications) {
+                for (Element elemComm : commodityClassifications) {
                     Element itemClassificationCode = findNamespaceChild(elemComm, namespacesInScope, "ItemClassificationCode");
                     if (itemClassificationCode != null) {
                         Attribute listID = id.getAttribute("listID");
                         Attribute listAgencyID = id.getAttribute("listVersionID");
-                        if(listID != null) {
-                            if(listAgencyID != null) {
+                        if (listID != null) {
+                            if (listAgencyID != null) {
                                 bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
-                            }
-                            else{
+                            } else {
                                 bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(itemClassificationCode.getAttributeValue("listID"), itemClassificationCode.getText()));
                             }
                         } else {
@@ -413,10 +417,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 if (originCountry != null) {
                     Element identificationCode = findNamespaceChild(originCountry, namespacesInScope, "IdentificationCode");
                     if (identificationCode != null) {
-                        try{
+                        try {
                             BT0159ItemCountryOfOrigin bt0159 = new BT0159ItemCountryOfOrigin(Iso31661CountryCodes.valueOf(identificationCode.getText()));
                             bg0031.getBT0159ItemCountryOfOrigin().add(bt0159);
-                        }catch (IllegalArgumentException e) {
+                        } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Iso31661CountryCodes not found").action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -432,10 +436,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     bg0030 = new BG0030LineVatInformation();
                     Element idClassified = findNamespaceChild(classifiedTaxCategory, namespacesInScope, "ID");
                     if (idClassified != null) {
-                        try{
+                        try {
                             BT0151InvoicedItemVatCategoryCode bt0151 = new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(idClassified.getText()));
                             bg0030.getBT0151InvoicedItemVatCategoryCode().add(bt0151);
-                        }catch (IllegalArgumentException e) {
+                        } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -446,7 +450,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         try {
                             BT0152InvoicedItemVatRate bt0152 = new BT0152InvoicedItemVatRate(strDblConverter.convert(percent.getText()));
                             bg0030.getBT0152InvoicedItemVatRate().add(bt0152);
-                        }catch (NumberFormatException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -462,7 +466,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                     Element nameAdd = findNamespaceChild(elemAdd, namespacesInScope, "Name");
                     if (nameAdd != null) {
-                        BT0160ItemAttributeName bt0160 = new BT0160ItemAttributeName(elemAdd.getText());
+                        BT0160ItemAttributeName bt0160 = new BT0160ItemAttributeName(nameAdd.getText());
                         bg0032.getBT0160ItemAttributeName().add(bt0160);
                     }
 
