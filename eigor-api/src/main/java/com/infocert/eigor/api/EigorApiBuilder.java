@@ -82,16 +82,16 @@ public class EigorApiBuilder {
         converters.addAll(conversionRepository.getToCenConverters());
         for (Named converter : converters) {
             String pathSegment = converter.getName();
-            new Copier(new File(dest, pathSegment))
-                    .withCallback(new Copier.Callback() {
-                        @Override
-                        public void afterFileCopied(File file) throws IOException {
-                            if (file.isFile() && file.getName().endsWith(".xslt")) {
-                                FileUtils.touch(file);
-                            }
-                        }
-                    })
-                    .copyFrom("/converterdata/" + pathSegment);
+//            new Copier(new File(dest, pathSegment))
+//                    .withCallback(new Copier.Callback() {
+//                        @Override
+//                        public void afterFileCopied(File file) throws IOException {
+//                            if (file.isFile() && file.getName().endsWith(".xslt")) {
+//                                FileUtils.touch(file);
+//                            }
+//                        }
+//                    })
+//                    .copyFrom("/converterdata/" + pathSegment);
         }
 
         // configure the repo
