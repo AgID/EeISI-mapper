@@ -8,6 +8,7 @@ import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -27,10 +28,11 @@ public class ITUbl2CenTest {
 
     private static Ubl2Cen sut;
 
-    @BeforeClass
-    public static void setUp() throws ConfigurationException {
+    @Before
+    public void setUp() throws ConfigurationException {
 
         EigorConfiguration conf = new PropertiesBackedConfiguration()
+                .addProperty("eigor.workdir", "file:${prop.java.io.tmpdir}eigor")
                 .addProperty("eigor.converter.ubl-cen.cius", "classpath:converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
                 .addProperty("eigor.converter.ubl-cen.schematron", "classpath:converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt" )
                 .addProperty("eigor.converter.ubl-cen.xsd", "converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
