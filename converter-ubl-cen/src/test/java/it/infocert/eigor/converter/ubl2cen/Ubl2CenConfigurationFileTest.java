@@ -38,6 +38,7 @@ public class Ubl2CenConfigurationFileTest {
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new PropertiesBackedConfiguration()
+                .addProperty("eigor.workdir", "classpath:")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-many", "converterdata/converter-ubl-cen/mappings/one_to_many.properties")
