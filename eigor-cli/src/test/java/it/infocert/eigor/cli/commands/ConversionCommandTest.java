@@ -101,7 +101,7 @@ public class ConversionCommandTest {
         assertThat(asList(outputFolderFile.list()), hasItem("invoice-target.json"));
         assertThat(asList(outputFolderFile.list()), hasItem("invoice-cen.csv"));
         assertThat(asList(outputFolderFile.list()), hasItem("rule-report.csv"));
-        assertThat(asList(outputFolderFile.list()), hasItem("invoice-transformation.log"));
+//        assertThat(asList(outputFolderFile.list()), hasItem("invoice-transformation.log"));
 
     }
 
@@ -135,7 +135,7 @@ public class ConversionCommandTest {
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
+//        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
 
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "fromcen-errors.csv"), notNullValue());
 
@@ -166,7 +166,7 @@ public class ConversionCommandTest {
         List<File> files = asList(outputFolderFile.listFiles());
 
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "tocen-errors.csv"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
+//        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
     }
 
     @Test
@@ -197,7 +197,7 @@ public class ConversionCommandTest {
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
+//        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
     }
 
 }
