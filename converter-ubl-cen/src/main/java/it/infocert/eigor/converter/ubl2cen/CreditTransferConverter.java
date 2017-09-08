@@ -47,7 +47,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     
             	Element financialInstitutionBranch = findNamespaceChild(elemPayee, namespacesInScope, "FinancialInstitutionBranch");
             	if (financialInstitutionBranch != null) {
-            		Element idBranch = findNamespaceChild(elemPayee, namespacesInScope, "ID");
+            		Element idBranch = findNamespaceChild(financialInstitutionBranch, namespacesInScope, "ID");
                     	
             		if (idBranch != null) {
             			BT0086PaymentServiceProviderIdentifier bt0086 = new BT0086PaymentServiceProviderIdentifier(idBranch.getText());
