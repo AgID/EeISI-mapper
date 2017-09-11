@@ -271,7 +271,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 }
 
                 if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(i);
 
                     if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
                         BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
@@ -343,7 +343,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(surchargeValue));
                         dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount * quantity));
                         if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(i);
                             if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
                                 dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue()));
                             }
