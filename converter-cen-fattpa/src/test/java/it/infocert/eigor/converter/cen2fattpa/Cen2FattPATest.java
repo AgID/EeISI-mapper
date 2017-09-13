@@ -5,6 +5,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliDocumentoType;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
