@@ -270,15 +270,22 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
 
-                if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(i);
+                if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
+                    BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
+                    if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
+                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(lineVatInformation.getBT0152InvoicedItemVatRate(0).getValue());
+                        dettaglioLinee.setAliquotaIVA(value);
+                    } else {
+                        if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
 
-                    if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
-                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
-                        dettaglioLinee.setAliquotaIVA(value); //Even if BG25 doesn't have it, FatturaPA wants it
+                            if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
+                                BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
+                                dettaglioLinee.setAliquotaIVA(value); //Even if BG25 doesn't have it, FatturaPA wants it
+                            }
+                        }
                     }
                 }
-
 
                 if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                     for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
@@ -337,18 +344,26 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String bt0144 = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione Linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
                     String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? "" : " " + conversionRegistry.convert(Untdid7161SpecialServicesCodes.class, String.class, invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue());
                     if (surchargeValue > 0) {
-                        dettaglioLinee.setNumeroLinea(datiBeniServizi.getDettaglioLinee().size() + 1);
                         dettaglioLinee.setDescrizione(String.format("%s%s", bt0144, bt0145));
                         dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
                         dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(surchargeValue));
                         dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount * quantity));
-                        if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-                            BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(i);
-                            if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
-                                dettaglioLinee.setAliquotaIVA(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue()));
+                        if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
+                            BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
+                            if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
+                                BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(lineVatInformation.getBT0152InvoicedItemVatRate(0).getValue());
+                                dettaglioLinee.setAliquotaIVA(value);
+                            } else {
+                                if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+                                    BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
+
+                                    if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
+                                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
+                                        dettaglioLinee.setAliquotaIVA(value); //Even if BG25 doesn't have it, FatturaPA wants it
+                                    }
+                                }
                             }
                         }
-
                     }
                 }
 

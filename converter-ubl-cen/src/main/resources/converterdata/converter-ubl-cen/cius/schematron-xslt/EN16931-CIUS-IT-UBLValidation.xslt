@@ -151,7 +151,7 @@
 
 <!--SCHEMA SETUP-->
 <xsl:template match="/">
-    <svrl:schematron-output schemaVersion="" title="EN16931 UBL CIUS">
+    <svrl:schematron-output schemaVersion="" title="EN16931 UBL CIUS IT">
       <xsl:comment>
         <xsl:value-of select="$archiveDirParameter" />   
 		 <xsl:value-of select="$archiveNameParameter" />  
@@ -176,7 +176,7 @@
   </xsl:template>
 
 <!--SCHEMATRON PATTERNS-->
-<svrl:text>EN16931 UBL CIUS</svrl:text>
+<svrl:text>EN16931 UBL CIUS IT</svrl:text>
 
 <!--PATTERN CIUS-IT-->
 
@@ -361,8 +361,8 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1043">
-    <svrl:fired-rule context="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1043">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -503,8 +503,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party_Contact" mode="M7" priority="1041">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party_Contact" />
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:Contact" mode="M7" priority="1041">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:Contact" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -525,8 +525,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:PartyLegalEntity" mode="M7" priority="1040">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:PartyLegalEntity" />
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1040">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -547,8 +547,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:PartyTaxScheme" mode="M7" priority="1039">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:PartyTaxScheme" />
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" mode="M7" priority="1039">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -773,8 +773,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1036">
-    <svrl:fired-rule context="/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M7" priority="1036">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -871,8 +871,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party_Party_PostalAddress" mode="M7" priority="1033">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party_Party_PostalAddress" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" mode="M7" priority="1033">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1075,14 +1075,14 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AdditionalDocumentReference_Attachment" mode="M7" priority="1031">
-    <svrl:fired-rule context="cac:AdditionalDocumentReference_Attachment" />
+<xsl:template match="cac:AdditionalDocumentReference/cac:Attachment" mode="M7" priority="1031">
+    <svrl:fired-rule context="cac:AdditionalDocumentReference/cac:Attachment" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="string-length(cbc:EmbeddedDocumentBinaryObject) &lt;= 10" />
+      <xsl:when test="string-length(EmbeddedDocumentBinaryObject/@mimeCode) &lt;= 10" />
       <xsl:otherwise>
-        <svrl:failed-assert test="string-length(cbc:EmbeddedDocumentBinaryObject) &lt;= 10">
+        <svrl:failed-assert test="string-length(EmbeddedDocumentBinaryObject/@mimeCode) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-72</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1517,8 +1517,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_AllowanceCharge" mode="M7" priority="1024">
-    <svrl:fired-rule context="cac:InvoiceLine_AllowanceCharge" />
+<xsl:template match="cac:InvoiceLine/cac:AllowanceCharge" mode="M7" priority="1024">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:AllowanceCharge" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1603,8 +1603,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_DocumentReference" mode="M7" priority="1023">
-    <svrl:fired-rule context="cac:InvoiceLine_DocumentReference" />
+<xsl:template match="cac:InvoiceLine/cac:DocumentReference" mode="M7" priority="1023">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:DocumentReference" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1641,8 +1641,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item" mode="M7" priority="1022">
-    <svrl:fired-rule context="cac:InvoiceLine_Item" />
+<xsl:template match="cac:InvoiceLine/cac:Item" mode="M7" priority="1022">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1679,8 +1679,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_AdditionalItemProperty" mode="M7" priority="1021">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_AdditionalItemProperty" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty" mode="M7" priority="1021">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1717,8 +1717,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_BuyersItemIdentification" mode="M7" priority="1020">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_BuyersItemIdentification" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification" mode="M7" priority="1020">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1739,8 +1739,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_CommodityClassification" mode="M7" priority="1019">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_CommodityClassification" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:CommodityClassification" mode="M7" priority="1019">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:CommodityClassification" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1761,8 +1761,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_CommodityClassification_ItemClassificationCode" mode="M7" priority="1018">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_CommodityClassification_ItemClassificationCode" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode" mode="M7" priority="1018">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1799,8 +1799,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_OriginCountry" mode="M7" priority="1017">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_OriginCountry" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:OriginCountry" mode="M7" priority="1017">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:OriginCountry" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1821,8 +1821,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_SellersItemIdentification" mode="M7" priority="1016">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_SellersItemIdentification" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:SellersItemIdentification" mode="M7" priority="1016">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:SellersItemIdentification" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1843,8 +1843,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Item_StandardItemIdentification" mode="M7" priority="1015">
-    <svrl:fired-rule context="cac:InvoiceLine_Item_StandardItemIdentification" />
+<xsl:template match="cac:InvoiceLine/cac:Item/cac:StandardItemIdentification" mode="M7" priority="1015">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Item/cac:StandardItemIdentification" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1881,8 +1881,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_OrderLineReference" mode="M7" priority="1014">
-    <svrl:fired-rule context="cac:InvoiceLine_OrderLineReference" />
+<xsl:template match="cac:InvoiceLine/cac:OrderLineReference" mode="M7" priority="1014">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:OrderLineReference" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -1903,8 +1903,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine_Price" mode="M7" priority="1013">
-    <svrl:fired-rule context="cac:InvoiceLine_Price" />
+<xsl:template match="cac:InvoiceLine/cac:Price" mode="M7" priority="1013">
+    <svrl:fired-rule context="cac:InvoiceLine/cac:Price" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -2099,8 +2099,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:PaymentMeans_PayeeFinancialAccount" mode="M7" priority="1007">
-    <svrl:fired-rule context="cac:PaymentMeans_PayeeFinancialAccount" />
+<xsl:template match="cac:PaymentMeans/cac:PayeeFinancialAccount" mode="M7" priority="1007">
+    <svrl:fired-rule context="cac:PaymentMeans/cac:PayeeFinancialAccount" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -2153,8 +2153,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:PaymentMeans_PayeeFinancialAccount_FinancialInstitutionBranch" mode="M7" priority="1006">
-    <svrl:fired-rule context="cac:PaymentMeans_PayeeFinancialAccount_FinancialInstitutionBranch" />
+<xsl:template match="cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch" mode="M7" priority="1006">
+    <svrl:fired-rule context="cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -2301,8 +2301,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:TaxTotal/cac:TaxSubtotal_TaxCategory" mode="M7" priority="1000">
-    <svrl:fired-rule context="cac:TaxTotal/cac:TaxSubtotal_TaxCategory" />
+<xsl:template match="cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory" mode="M7" priority="1000">
+    <svrl:fired-rule context="cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory" />
 
 		<!--ASSERT -->
 <xsl:choose>

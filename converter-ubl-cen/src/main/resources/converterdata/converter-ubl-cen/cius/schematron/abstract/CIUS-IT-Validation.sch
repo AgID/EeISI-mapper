@@ -2,6 +2,7 @@
    <rule context="$Invoice_Root">
   <assert test="$CIUS-CA-9" id="CIUS-CA-9" flag="fatal"> [CIUS-CA-9] BT-31 (Seller VAT identifier) -Mandatory in Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative). 
         </assert>
+ 
   <assert test="$CIUS-VD-32" id="CIUS-VD-32" flag="fatal"> [CIUS-VD-32] BT-1 (Invoice number) -BT maximum length shall be 20 digits. 
         </assert>
   <assert test="$CIUS-VD-39" id="CIUS-VD-39" flag="fatal"> [CIUS-VD-39] BT-21, BT-22 (Invoice note subject code
