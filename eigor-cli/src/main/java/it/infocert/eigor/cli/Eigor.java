@@ -67,7 +67,8 @@ public class Eigor {
         } catch (IOException e) {
             log.error("Resource '{}' not found.", resource, e.getMessage(), e);
         }
-        return new CardinalityRulesRepository(properties);
+//        return new CardinalityRulesRepository(properties); //DISABLED
+        return new CardinalityRulesRepository(new Properties());
     }
 
     @Bean
@@ -79,7 +80,8 @@ public class Eigor {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        return new IntegrityRulesRepository(properties);
+//        return new IntegrityRulesRepository(properties); //DISABLED
+        return new IntegrityRulesRepository(new Properties());
     }
 
     @Bean(initMethod = "configure")
