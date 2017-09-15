@@ -2,14 +2,16 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
-import it.infocert.eigor.api.AbstractToCenConverter;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
+import org.jdom2.Text;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,22 +32,27 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
-        InputStream clonedInputStream = null;
-
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 
-            clonedInputStream = new ByteArrayInputStream(bytes);
+            InputStream clonedInputStream = new ByteArrayInputStream(bytes);
 
             Document doc = getDocument(clonedInputStream);
 
             BG0000Invoice invoice = new BG0000Invoice();
-            doc.getRootElement()
-            return new ConversionResult<BG0000Invoice>(Lists.newArrayList(), )
-        } catch (IOException | JDOMException e) {
+            String number = getNumber(doc);
+            invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber(number));
+            return new ConversionResult<>(Lists.<IConversionIssue>newArrayList(), invoice);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    private String getNumber(Document doc) {
+        XPathFactory factory = XPathFactory.instance();
+        Text number = factory.compile("//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero/text()", Filters.text()).evaluateFirst(doc);
+        return number.getText();
     }
 
     @Override
