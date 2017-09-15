@@ -10,9 +10,10 @@ import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
+import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
-import it.infocert.eigor.converter.fattpa2cen.FattPA2CenConverter;
+import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
@@ -88,8 +89,8 @@ public class Eigor {
     ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
-                new FattPA2CenConverter(reflections, configuration),
                 new CsvCen2Cen(reflections),
+                new FattPa2Cen(reflections, configuration),
                 new Cii2Cen(reflections, configuration)
         );
     }
@@ -97,7 +98,8 @@ public class Eigor {
     @Bean(initMethod = "configure")
     FromCenConversionRepository fromCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
-                new Cen2FattPA(reflections, configuration)
+                new Cen2FattPA(reflections, configuration),
+                new Cen2Ubl(reflections, configuration)
         );
     }
 

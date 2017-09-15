@@ -7,7 +7,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.6</version>
+    <version>0.2.0</version>
     <name>Eigor :: Parent (${project.artifactId})</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -192,6 +192,10 @@
             <dependency>
                 <groupId>it.infocert.eigor</groupId>
                 <artifactId>converter-ubl-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency><dependency>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>converter-cen-ubl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

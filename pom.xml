@@ -8,7 +8,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.5</version>
+    <version>0.2.0</version>
     <name>Eigor</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -38,6 +38,7 @@
         <module>eigor-api</module>
         <module>converter-cii-cen</module>
         <module>eigor-spring-core</module>
+        <module>converter-cen-ubl</module>
     </modules>
 
     <reporting>
