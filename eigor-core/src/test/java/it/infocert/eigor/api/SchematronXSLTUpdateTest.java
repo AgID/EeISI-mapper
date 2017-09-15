@@ -31,6 +31,7 @@ public class SchematronXSLTUpdateTest {
     @Before
     public void setUpFolders() throws IOException {
 
+
         schDirectory = tmp.newFolder(test.getMethodName(), "schematron");
 
         xsltDirectory = tmp.newFolder(test.getMethodName(), "schematron-xslt");

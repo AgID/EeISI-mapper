@@ -13,7 +13,7 @@ import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
-import it.infocert.eigor.converter.fattpa2cen.FattPA2CenConverter;
+import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
@@ -68,7 +68,8 @@ public class Eigor {
         } catch (IOException e) {
             log.error("Resource '{}' not found.", resource, e.getMessage(), e);
         }
-        return new CardinalityRulesRepository(properties);
+//        return new CardinalityRulesRepository(properties); //DISABLED
+        return new CardinalityRulesRepository(new Properties());
     }
 
     @Bean
@@ -80,15 +81,16 @@ public class Eigor {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        return new IntegrityRulesRepository(properties);
+//        return new IntegrityRulesRepository(properties); //DISABLED
+        return new IntegrityRulesRepository(new Properties());
     }
 
     @Bean(initMethod = "configure")
     ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
-                new FattPA2CenConverter(reflections, configuration),
                 new CsvCen2Cen(reflections),
+                new FattPa2Cen(reflections, configuration),
                 new Cii2Cen(reflections, configuration)
         );
     }
