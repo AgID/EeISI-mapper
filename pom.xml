@@ -38,6 +38,7 @@
         <module>eigor-api</module>
         <module>converter-cii-cen</module>
         <module>eigor-spring-core</module>
+        <module>converter-cen-ubl</module>
     </modules>
 
     <reporting>

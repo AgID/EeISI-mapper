@@ -50,6 +50,10 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cii-cen</artifactId>
             <version>${project.version}</version>
+        </dependency><dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-ubl</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- test -->

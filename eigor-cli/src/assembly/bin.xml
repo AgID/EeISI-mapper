@@ -73,6 +73,16 @@
             </includes>
         </fileSet>
 
+        <!-- CEN/UBL -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-ubl</outputDirectory>
+            <directory>../converter-cen-ubl/src/main/resources/converterdata/converter-cen-ubl</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+
         <!-- rules -->
         <fileSet>
             <outputDirectory>conf</outputDirectory>
