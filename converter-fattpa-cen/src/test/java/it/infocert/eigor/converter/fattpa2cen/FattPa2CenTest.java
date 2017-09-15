@@ -27,7 +27,7 @@ public class FattPa2CenTest {
 
     @Before
     public void setUp() throws Exception {
-        sut = new FattPa2Cen(new Reflections("it.infocert"), mock(ConversionRegistry.class), mock(EigorConfiguration.class));
+        sut = new FattPa2Cen(new Reflections("it.infocert"), mock(EigorConfiguration.class));
         doc = setUpDocument();
         xml = convertXml();
     }

@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
@@ -24,9 +25,10 @@ import java.util.Set;
 public class FattPa2Cen extends AbstractToCenConverter {
 
     private final static Logger log = LoggerFactory.getLogger(FattPa2Cen.class);
-    private final static String FORMAT = "ubl";
+    private final static String FORMAT = "fatturapa";
+    private final static ConversionRegistry conversionRegistry = new ConversionRegistry();
 
-    public FattPa2Cen(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public FattPa2Cen(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
     }
 
@@ -86,7 +88,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public Set<String> getSupportedFormats() {
-        return null;
+        return Sets.newHashSet(FORMAT);
     }
 
     @Override
@@ -96,6 +98,6 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public String getName() {
-        return null;
+        return "converter-fatturapa-cen";
     }
 }
