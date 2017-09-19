@@ -37,19 +37,21 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier identifier = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0);
                 Identifier id = identifier.getValue();
                 String code = id.getIdentifier();
-                switch (id.getIdentificationSchema()) {
-                    case "IT:REA":
-                        final IscrizioneREAType iscrizioneREA;
-                        if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) != null) {
-                            iscrizioneREA.setNumeroREA(code);
-                        }
-                    case "IT:ALBO":
-                        DatiAnagraficiCedenteType datiAnagrafici;
-                        if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
-                            datiAnagrafici.setNumeroIscrizioneAlbo(code);
-                        }
-                    default:
-                        errors.add(ConversionIssue.newError(new IllegalArgumentException("BT-30 schemeId does not match one of 'IT:REA', 'IT:ALBO'")));
+                if (id.getIdentificationSchema() != null) {
+                    switch (id.getIdentificationSchema()) {
+                        case "IT:REA":
+                            final IscrizioneREAType iscrizioneREA;
+                            if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) != null) {
+                                iscrizioneREA.setNumeroREA(code);
+                            }
+                        case "IT:ALBO":
+                            DatiAnagraficiCedenteType datiAnagrafici;
+                            if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
+                                datiAnagrafici.setNumeroIscrizioneAlbo(code);
+                            }
+                        default:
+                            errors.add(ConversionIssue.newError(new IllegalArgumentException("BT-30 schemeId does not match one of 'IT:REA', 'IT:ALBO'")));
+                    }
                 }
             }
         }
