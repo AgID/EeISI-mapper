@@ -687,30 +687,31 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         }
                     }
                     //altridatigestionali
-                    AltriDatiGestionaliType altriDatiGestionaliType = new AltriDatiGestionaliType();
+                    AltriDatiGestionaliType altriDatiGestionaliType = null;
                     if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
                         altriDatiGestionaliType.setTipoDato("BT-93");
-                        BigDecimal bt93Value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
-                        altriDatiGestionaliType.setRiferimentoNumero(bt93Value);
+                        altriDatiGestionaliType.setRiferimentoTesto(String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue()));
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                     }
                     if (!allowances.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
                         altriDatiGestionaliType.setTipoDato("BT-94");
-                        BigDecimal bt94Value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
-                        altriDatiGestionaliType.setRiferimentoNumero(bt94Value);
+                        altriDatiGestionaliType.setRiferimentoTesto(String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue()));
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                     }
                     if (!allowances.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
                         altriDatiGestionaliType.setTipoDato("BT-97");
-//                        BigDecimal bt97Value = new BigDecimal(allowances.getBT0097DocumentLevelAllowanceReason(0).getValue());
-                        System.out.println("********************************** "+allowances.getBT0097DocumentLevelAllowanceReason(0).getValue());
-//                        altriDatiGestionaliType.setRiferimentoNumero(bt97Value);
+                        altriDatiGestionaliType.setRiferimentoTesto(allowances.getBT0097DocumentLevelAllowanceReason(0).getValue());
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                     }
                     if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
                         altriDatiGestionaliType.setTipoDato("BT-98");
-//                        BigDecimal bt98Value = new BigDecimal(converted);
-//                        altriDatiGestionaliType.setRiferimentoNumero(bt98Value);
-                        System.out.println("------------------------------------------ "+converted);
+                        altriDatiGestionaliType.setRiferimentoTesto(converted);
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                     }
-                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
 
                     datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
                 }
@@ -769,15 +770,42 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 dettaglioLinee.setNatura(null);
                         }
                     }
+                    String converted = "";
                     if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
                         Untdid7161SpecialServicesCodes code = charges.getBT0105DocumentLevelChargeReasonCode(0).getValue();
                         Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
                         try {
-                            String converted = converter.convert(code);
+                            converted = converter.convert(code);
                             dettaglioLinee.setRiferimentoAmministrazione(converted);
                         } catch (EigorRuntimeException e) {
                             errors.add(ConversionIssue.newError(e));
                         }
+                    }
+                    //altridatigestionali
+                    AltriDatiGestionaliType altriDatiGestionaliType = null;
+                    if (!charges.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
+                        altriDatiGestionaliType.setTipoDato("BT-100");
+                        altriDatiGestionaliType.setRiferimentoTesto(String.valueOf(charges.getBT0100DocumentLevelChargeBaseAmount(0).getValue()));
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    }
+                    if (!charges.getBT0101DocumentLevelChargePercentage().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
+                        altriDatiGestionaliType.setTipoDato("BT-101");
+                        altriDatiGestionaliType.setRiferimentoTesto(String.valueOf(charges.getBT0101DocumentLevelChargePercentage(0).getValue()));
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    }
+                    if (!charges.getBT0104DocumentLevelChargeReason().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
+                        altriDatiGestionaliType.setTipoDato("BT-104");
+                        altriDatiGestionaliType.setRiferimentoTesto(charges.getBT0104DocumentLevelChargeReason(0).getValue());
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    }
+                    if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                        altriDatiGestionaliType = new AltriDatiGestionaliType();
+                        altriDatiGestionaliType.setTipoDato("BT-105");
+                        altriDatiGestionaliType.setRiferimentoTesto(converted);
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                     }
                     datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
                 }
