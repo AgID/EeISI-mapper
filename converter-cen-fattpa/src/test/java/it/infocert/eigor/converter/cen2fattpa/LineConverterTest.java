@@ -47,7 +47,7 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        assertThat(dettaglioLineeList.size(), is(1));
+        assertThat(dettaglioLineeList.size(), is(2));
 
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
@@ -70,7 +70,7 @@ public class LineConverterTest {
 
 
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        assertThat(dettaglioLineeList.size(), is(1));
+        assertThat(dettaglioLineeList.size(), is(2));
 
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
@@ -91,7 +91,7 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        assertThat(dettaglioLineeList.size(), is(5));
+        assertThat(dettaglioLineeList.size(), is(15));
 
 
     }
