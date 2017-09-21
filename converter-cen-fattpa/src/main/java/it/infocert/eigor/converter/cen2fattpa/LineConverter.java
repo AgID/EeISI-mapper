@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Mapper;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -10,9 +12,11 @@ import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
             new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
             new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter()
+            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
+            new LocalDateToXMLGregorianCalendarConverter()
     );
 
 
@@ -67,7 +72,61 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             mapLineChargesAllowances(invoice, fatturaElettronicaBody, errors);
             mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors);
+
+            mapBt73and74(invoice, fatturaElettronicaBody, errors);
         }
+    }
+
+    private void mapBt73and74(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+        if (!datesAlreadyExistent(invoice)) {
+
+            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
+                if (!bg0013.getBG0014InvoicingPeriod().isEmpty()) {
+                    BG0014InvoicingPeriod bg0014 = bg0013.getBG0014InvoicingPeriod(0);
+                    List<DettaglioLineeType> dettaglioLinee = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
+                    if (dettaglioLinee != null) {
+                        LocalDate startDate =
+                                !bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()
+                                        ? bg0014.getBT0073InvoicingPeriodStartDate(0).getValue()
+                                        : null;
+
+                        LocalDate endDate
+                                = !bg0014.getBT0074InvoicingPeriodEndDate().isEmpty()
+                                ? bg0014.getBT0074InvoicingPeriodEndDate(0).getValue()
+                                : null;
+
+                        for (DettaglioLineeType linea : dettaglioLinee) {
+                            try {
+
+                                if (startDate != null) {
+                                    linea.setDataInizioPeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, startDate));
+                                }
+                                if (endDate != null) {
+                                    linea.setDataFinePeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, endDate));
+                                }
+                            } catch (EigorRuntimeException e) {
+                                errors.add(ConversionIssue.newError(e));
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean datesAlreadyExistent(BG0000Invoice invoice) {
+        Stream<BG0026InvoiceLinePeriod> periodsStream = Stream.create(invoice.getBG0025InvoiceLine())
+                .flatMap(new Mapper<BG0025InvoiceLine, Stream<BG0026InvoiceLinePeriod>>() {
+                    @Override
+                    public Stream<BG0026InvoiceLinePeriod> map(BG0025InvoiceLine invoiceLine) {
+                        List<BG0026InvoiceLinePeriod> periods = invoiceLine.getBG0026InvoiceLinePeriod();
+                        return Stream.create(periods);
+                    }
+                });
+//        periodsStream.map()
+
     }
 
 
@@ -501,7 +560,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
-    private void mapLineChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors){
+    private void mapLineChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
@@ -617,7 +676,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
-    private void mapDocumentChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors){
+    private void mapDocumentChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         //ALLOWANCES
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -640,7 +699,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (!allowances.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
                         percentage = String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
                     }
-                    dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+                    dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
                     BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
                     dettaglioLinee.setQuantita(quantitaCedute);
                     if (!allowances.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
@@ -739,7 +798,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (!charges.getBT0101DocumentLevelChargePercentage().isEmpty()) {
                         percentage = String.valueOf(charges.getBT0101DocumentLevelChargePercentage(0).getValue());
                     }
-                    dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+                    dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
                     BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
                     dettaglioLinee.setQuantita(quantitaCedute);
                     if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
