@@ -90,8 +90,8 @@ public class Eigor {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
                 new CsvCen2Cen(reflections),
-                new FattPa2Cen(reflections, configuration),
-                new Cii2Cen(reflections, configuration)
+                new FattPa2Cen(reflections, configuration)
+//                new Cii2Cen(reflections, configuration)
         );
     }
 
