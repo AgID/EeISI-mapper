@@ -344,6 +344,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
+                } else {
+                    BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(1d);
+                    bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
                 }
                 bg0025.getBG0029PriceDetails().add(bg0029);
             }

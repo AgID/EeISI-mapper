@@ -40,15 +40,20 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 if (id.getIdentificationSchema() != null) {
                     switch (id.getIdentificationSchema()) {
                         case "IT:REA":
-                            final IscrizioneREAType iscrizioneREA;
-                            if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) != null) {
-                                iscrizioneREA.setNumeroREA(code);
+                            IscrizioneREAType iscrizioneREA;
+                            if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
+                                iscrizioneREA = new IscrizioneREAType();
+                                cedentePrestatore.setIscrizioneREA(iscrizioneREA);
                             }
+                            iscrizioneREA.setUfficio(code.substring(0, 2));
+                            iscrizioneREA.setNumeroREA(code.substring(2));
+                            break;
                         case "IT:ALBO":
                             DatiAnagraficiCedenteType datiAnagrafici;
                             if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
                                 datiAnagrafici.setNumeroIscrizioneAlbo(code);
                             }
+                            break;
                         default:
                             errors.add(ConversionIssue.newError(new IllegalArgumentException("BT-30 schemeId does not match one of 'IT:REA', 'IT:ALBO'")));
                     }
