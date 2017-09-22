@@ -64,6 +64,15 @@
             </includes>
         </fileSet>
 
+        <!-- FATTPA/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-fattpa-cen</outputDirectory>
+            <directory>../converter-fattpa-cen/src/main/resources/converterdata/converter-fattpa-cen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- CII/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-cii-cen</outputDirectory>
