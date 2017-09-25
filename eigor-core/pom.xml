@@ -78,13 +78,13 @@
         XML from a jar works or not. Since it is system-scoped, it does not end up in the released
         jars.
         -->
-        <dependency>
-            <groupId>org.infocert.eigor.test.xxxxx</groupId>
-            <artifactId>yyyyy</artifactId>
-            <version>${project.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.infocert.eigor.test.xxxxx</groupId>-->
+            <!--<artifactId>yyyyy</artifactId>-->
+            <!--<version>${project.version}</version>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>-->
+        <!--</dependency>-->
 
     </dependencies>
 

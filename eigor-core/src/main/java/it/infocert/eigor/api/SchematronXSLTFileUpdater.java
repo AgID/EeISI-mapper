@@ -109,12 +109,16 @@ class SchematronXSLTFileUpdater {
     private long getLatestModifiedTimestamp(List<File> fileList) {
         long highestLastModified = 0;
         for (File file : fileList) {
-            long lastModified = file.lastModified();
+            long lastModified = msToSecTruncating(file.lastModified());
             if (lastModified > highestLastModified) {
                 highestLastModified = lastModified;
             }
         }
         return highestLastModified;
+    }
+
+    private long msToSecTruncating(long timestamp) {
+        return (timestamp/1000);
     }
 
     private String[] getFirstDirectoryFileList(File baseDirectory, String pattern) {

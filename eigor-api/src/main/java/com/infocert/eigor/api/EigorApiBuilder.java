@@ -31,6 +31,7 @@ public class EigorApiBuilder {
     private final ConversionRepository conversionRepository;
     private File outputFolderFile;
     private RuleRepository ruleRepository;
+    private boolean copy = false;
 
     public EigorApiBuilder() throws IOException {
 
@@ -82,16 +83,18 @@ public class EigorApiBuilder {
         converters.addAll(conversionRepository.getToCenConverters());
         for (Named converter : converters) {
             String pathSegment = converter.getName();
-//            new Copier(new File(dest, pathSegment))
-//                    .withCallback(new Copier.Callback() {
-//                        @Override
-//                        public void afterFileCopied(File file) throws IOException {
-//                            if (file.isFile() && file.getName().endsWith(".xslt")) {
-//                                FileUtils.touch(file);
-//                            }
-//                        }
-//                    })
-//                    .copyFrom("/converterdata/" + pathSegment);
+            if (copy) {
+                new Copier(new File(dest, pathSegment))
+                        .withCallback(new Copier.Callback() {
+                            @Override
+                            public void afterFileCopied(File file) throws IOException {
+                                if (file.isFile() && file.getName().endsWith(".xslt")) {
+                                    FileUtils.touch(file);
+                                }
+                            }
+                        })
+                        .copyFrom("/converterdata/" + pathSegment);
+            }
         }
 
         // configure the repo
@@ -115,6 +118,11 @@ public class EigorApiBuilder {
 
     public EigorApiBuilder withOutputFolder(File tempDirectory) {
         this.outputFolderFile = tempDirectory;
+        return this;
+    }
+
+    public EigorApiBuilder enableAutoCopy() {
+        this.copy = true;
         return this;
     }
 }
