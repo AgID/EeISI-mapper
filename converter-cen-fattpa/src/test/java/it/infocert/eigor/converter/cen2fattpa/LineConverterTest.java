@@ -2,18 +2,22 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -39,6 +43,86 @@ public class LineConverterTest {
                 invoice,
                 fatturaElettronica,
                 Lists.<IConversionIssue>newArrayList());
+    }
+
+    @Test
+    public void shouldMapBt73And74() throws Exception {
+        final long now = System.currentTimeMillis();
+        final long after = System.currentTimeMillis() + 1000;
+
+        populateWithDates(now, after);
+        populateWithBG20();
+        populateWithBG25();
+        XMLGregorianCalendar nowXml = setupCalendar(now);
+        XMLGregorianCalendar afterXml = setupCalendar(after);
+        convert();
+
+        List<DettaglioLineeType> dettaglioLinee = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiBeniServizi().getDettaglioLinee();
+
+        assertFalse(dettaglioLinee.isEmpty());
+
+        for (DettaglioLineeType linea : dettaglioLinee) {
+            assertEquals(nowXml, linea.getDataInizioPeriodo());
+            assertEquals(afterXml, linea.getDataFinePeriodo());
+        }
+    }
+
+    @Test
+    public void shouldNotMapBt73And74IfOthersArePresent() throws Exception {
+        final long now = System.currentTimeMillis();
+        final long after = System.currentTimeMillis() + 1000;
+
+        populateWithDates(now, after);
+        populateWithBG20();
+        populateWithBG25();
+        setupBG26(now, after);
+
+        convert();
+
+        List<DettaglioLineeType> dettaglioLinee = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiBeniServizi().getDettaglioLinee();
+
+        for (DettaglioLineeType linea : dettaglioLinee) {
+
+            assertNull(linea.getDataInizioPeriodo());
+            assertNull(linea.getDataFinePeriodo());
+        }
+    }
+
+    private void setupBG26(final long start, final long end) {
+        List<BG0025InvoiceLine> invoiceLines = invoice.getBG0025InvoiceLine();
+        for (BG0025InvoiceLine invoiceLine : invoiceLines) {
+            BG0026InvoiceLinePeriod period = new BG0026InvoiceLinePeriod();
+            period.getBT0134InvoiceLinePeriodStartDate().add(new BT0134InvoiceLinePeriodStartDate(new LocalDate(start)));
+            period.getBT0135InvoiceLinePeriodEndDate().add(new BT0135InvoiceLinePeriodEndDate(new LocalDate(end)));
+            invoiceLine.getBG0026InvoiceLinePeriod().add(period);
+        }
+    }
+
+    private XMLGregorianCalendar setupCalendar(final long time) throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+
+        calendar.setTimeInMillis(time);
+
+        XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+
+        xmlCalendar.setHour(0);
+        xmlCalendar.setMinute(0);
+        xmlCalendar.setSecond(0);
+        xmlCalendar.setMillisecond(0);
+
+        return xmlCalendar;
+    }
+
+
+    private void populateWithDates(final long now, final long after) {
+        BG0014InvoicingPeriod invoicingPeriod = new BG0014InvoicingPeriod();
+        invoicingPeriod.getBT0073InvoicingPeriodStartDate().add(new BT0073InvoicingPeriodStartDate(new LocalDate(now)));
+        invoicingPeriod.getBT0074InvoicingPeriodEndDate().add(new BT0074InvoicingPeriodEndDate(new LocalDate(after)));
+
+        BG0013DeliveryInformation deliveryInformation = new BG0013DeliveryInformation();
+        deliveryInformation.getBG0014InvoicingPeriod().add(invoicingPeriod);
+
+        invoice.getBG0013DeliveryInformation().add(deliveryInformation);
     }
 
     @Test
