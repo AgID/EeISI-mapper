@@ -71,19 +71,16 @@
             <artifactId>juel-impl</artifactId>
         </dependency>
 
-
         <!--
-        This strange dependency is here to make the 'cii-schematron.jar' available
+        This dependency is here to make the cii schematron available
         in the classpath. This is a jar made on purpose to test whether reading a composed
-        XML from a jar works or not. Since it is system-scoped, it does not end up in the released
-        jars.
+        XML from a jar works or not.
         -->
         <dependency>
-            <groupId>org.infocert.eigor.test.xxxxx</groupId>
-            <artifactId>yyyyy</artifactId>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test-schemas</artifactId>
             <version>${project.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/test/test-jar/test-cii-schematron.jar</systemPath>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

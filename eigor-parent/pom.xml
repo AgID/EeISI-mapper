@@ -170,53 +170,60 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-csvcen-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-fattpa-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-cen-fattpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-ubl-cen</artifactId>
                 <version>${project.version}</version>
-            </dependency><dependency>
-                <groupId>it.infocert.eigor</groupId>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-cen-ubl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-cii-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-api-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>it.infocert.eigor</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-spring-core</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>eigor-test-schemas</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
