@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: API :: API (${project.artifactId})</name>
+    <name>Eigor :: API (${project.artifactId})</name>
     <description>The API.</description>
      <artifactId>eigor-api</artifactId>
 
