@@ -39,6 +39,7 @@
         <module>converter-cii-cen</module>
         <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
+        <module>eigor-test-schemas</module>
     </modules>
 
     <reporting>
