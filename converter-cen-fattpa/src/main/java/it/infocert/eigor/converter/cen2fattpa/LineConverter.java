@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import com.amoerie.jstreams.functions.Mapper;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
@@ -79,7 +80,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
     private void mapBt73and74(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
         if (!datesAlreadyExistent(invoice)) {
-
             if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
                 BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
                 if (!bg0013.getBG0014InvoicingPeriod().isEmpty()) {
@@ -117,16 +117,54 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     }
 
     private boolean datesAlreadyExistent(BG0000Invoice invoice) {
-        Stream<BG0026InvoiceLinePeriod> periodsStream = Stream.create(invoice.getBG0025InvoiceLine())
-                .flatMap(new Mapper<BG0025InvoiceLine, Stream<BG0026InvoiceLinePeriod>>() {
+        Stream<BG0026InvoiceLinePeriod> notNullPeriodsStream = Stream.create(invoice.getBG0025InvoiceLine())
+                .map(new Mapper<BG0025InvoiceLine, BG0026InvoiceLinePeriod>() {
                     @Override
-                    public Stream<BG0026InvoiceLinePeriod> map(BG0025InvoiceLine invoiceLine) {
+                    public BG0026InvoiceLinePeriod map(BG0025InvoiceLine invoiceLine) {
                         List<BG0026InvoiceLinePeriod> periods = invoiceLine.getBG0026InvoiceLinePeriod();
-                        return Stream.create(periods);
+                        if (!periods.isEmpty()) {
+                            return periods.get(0);
+                        }
+                        return null;
+                    }
+                }).filter(new Filter<BG0026InvoiceLinePeriod>() {
+                    @Override
+                    public boolean apply(BG0026InvoiceLinePeriod period) {
+                        return period != null;
                     }
                 });
-//        periodsStream.map()
 
+        int bt134Counter = notNullPeriodsStream
+                .filter(new Filter<BG0026InvoiceLinePeriod>() {
+                    @Override
+                    public boolean apply(BG0026InvoiceLinePeriod period) {
+                        return !period.getBT0134InvoiceLinePeriodStartDate().isEmpty();
+                    }
+                })
+                .map(new Mapper<BG0026InvoiceLinePeriod, BT0134InvoiceLinePeriodStartDate>() {
+                    @Override
+                    public BT0134InvoiceLinePeriodStartDate map(BG0026InvoiceLinePeriod period) {
+                        return period.getBT0134InvoiceLinePeriodStartDate(0);
+                    }
+                })
+                .length();
+
+        int bt135Counter = notNullPeriodsStream
+                .filter(new Filter<BG0026InvoiceLinePeriod>() {
+                    @Override
+                    public boolean apply(BG0026InvoiceLinePeriod period) {
+                        return !period.getBT0135InvoiceLinePeriodEndDate().isEmpty();
+                    }
+                })
+                .map(new Mapper<BG0026InvoiceLinePeriod, BT0135InvoiceLinePeriodEndDate>() {
+                    @Override
+                    public BT0135InvoiceLinePeriodEndDate map(BG0026InvoiceLinePeriod period) {
+                        return period.getBT0135InvoiceLinePeriodEndDate(0);
+                    }
+                })
+                .length();
+
+        return bt134Counter > 0 && bt135Counter > 0;
     }
 
 

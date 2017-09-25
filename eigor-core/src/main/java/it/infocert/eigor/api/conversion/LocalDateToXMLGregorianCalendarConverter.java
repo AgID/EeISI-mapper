@@ -13,7 +13,7 @@ public class LocalDateToXMLGregorianCalendarConverter implements TypeConverter<L
     public XMLGregorianCalendar convert(LocalDate localDate) {
         GregorianCalendar gcal = new GregorianCalendar(
                 localDate.getYear(),
-                localDate.getMonthOfYear(),
+                localDate.getMonthOfYear() -1 ,
                 localDate.getDayOfMonth()
         );
         try {
