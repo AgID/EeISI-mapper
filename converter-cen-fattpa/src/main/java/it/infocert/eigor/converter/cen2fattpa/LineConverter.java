@@ -94,6 +94,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
                         AltriDatiGestionaliType dati = new AltriDatiGestionaliType();
                         String value = String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
+                        dati.setTipoDato("BT-93");  //???
                         dati.setRiferimentoTesto(value);
                         log.trace("Set BT93 as RiferimentoTesto with value {}", value);
                         dettaglioLinee.getAltriDatiGestionali().add(dati);
@@ -184,6 +185,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (!charges.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
                         AltriDatiGestionaliType dati = new AltriDatiGestionaliType();
                         BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(charges.getBT0100DocumentLevelChargeBaseAmount(0).getValue());
+                        dati.setTipoDato("BT-100"); //???
                         dati.setRiferimentoNumero(value);
                         dettaglioLinee.getAltriDatiGestionali().add(dati);
                         log.trace("Set BT100 as RiferimentoNumero with value {}", value);
@@ -538,6 +540,17 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaSconto = new DettaglioLineeType();
                         lineaSconto.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaSconto.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
+                        String descrizione = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
+                        if (descrizione != null) {
+                            lineaSconto.setDescrizione(descrizione);
+                        } else {
+                            Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
+                            Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
+                            descrizione = converter.convert(code);
+                            if (descrizione != null) {
+                                lineaSconto.setDescrizione(descrizione);
+                            }
+                        }
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         allowanceAmount *= -1.0;
                         BigDecimal prezzo = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(allowanceAmount);
@@ -579,6 +592,17 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaMaggiorazione = new DettaglioLineeType();
                         lineaMaggiorazione.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaMaggiorazione.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
+                        String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
+                        if (descrizione != null) {
+                            lineaMaggiorazione.setDescrizione(descrizione);
+                        } else {
+                            Untdid7161SpecialServicesCodes code = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue();
+                            Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
+                            descrizione = converter.convert(code);
+                            if (descrizione != null) {
+                                lineaMaggiorazione.setDescrizione(descrizione);
+                            }
+                        }
                         Double chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? 0 : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
                         BigDecimal prezzo = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount);
                         lineaMaggiorazione.setPrezzoUnitario(prezzo);
@@ -631,16 +655,31 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String reason = "Sconto Documento";
                     String baseAmount = "N/A";
                     String percentage = "N/A";
+                    String converted = "";
+                    if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                        Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
+                        Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
+                        try {
+                            converted = converter.convert(code);
+                            dettaglioLinee.setRiferimentoAmministrazione(converted);
+                        } catch (EigorRuntimeException e) {
+                            errors.add(ConversionIssue.newError(e));
+                        }
+                    }
                     if (!allowances.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
                         reason = allowances.getBT0097DocumentLevelAllowanceReason(0).getValue();
+                        if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+                            baseAmount = String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
+                        }
+                        if (!allowances.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+                            percentage = String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
+                        }
+                        dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+                    } else if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                        dettaglioLinee.setRiferimentoAmministrazione(converted);
                     }
-                    if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
-                        baseAmount = String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
-                    }
-                    if (!allowances.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-                        percentage = String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
-                    }
-                    dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+
+
                     BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
                     dettaglioLinee.setQuantita(quantitaCedute);
                     if (!allowances.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
@@ -675,17 +714,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 dettaglioLinee.setNatura(null);
                         }
                     }
-                    String converted = "";
-                    if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-                        Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                        Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
-                        try {
-                            converted = converter.convert(code);
-                            dettaglioLinee.setRiferimentoAmministrazione(converted);
-                        } catch (EigorRuntimeException e) {
-                            errors.add(ConversionIssue.newError(e));
-                        }
-                    }
+
                     //altridatigestionali
                     AltriDatiGestionaliType altriDatiGestionaliType = null;
                     if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
@@ -730,16 +759,31 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String reason = "Maggiorazione per XXX";
                     String baseAmount = "N/A";
                     String percentage = "N/A";
+                    String converted = "";
+                    if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                        Untdid7161SpecialServicesCodes code = charges.getBT0105DocumentLevelChargeReasonCode(0).getValue();
+                        Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
+                        try {
+                            converted = converter.convert(code);
+                            dettaglioLinee.setRiferimentoAmministrazione(converted);
+                        } catch (EigorRuntimeException e) {
+                            errors.add(ConversionIssue.newError(e));
+                        }
+                    }
                     if (!charges.getBT0104DocumentLevelChargeReason().isEmpty()) {
                         reason = charges.getBT0104DocumentLevelChargeReason(0).getValue();
+                        if (!charges.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
+                            baseAmount = String.valueOf(charges.getBT0100DocumentLevelChargeBaseAmount(0).getValue());
+                        }
+                        if (!charges.getBT0101DocumentLevelChargePercentage().isEmpty()) {
+                            percentage = String.valueOf(charges.getBT0101DocumentLevelChargePercentage(0).getValue());
+                        }
+                        dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+                    } else if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                        dettaglioLinee.setRiferimentoAmministrazione(converted);
                     }
-                    if (!charges.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
-                        baseAmount = String.valueOf(charges.getBT0100DocumentLevelChargeBaseAmount(0).getValue());
-                    }
-                    if (!charges.getBT0101DocumentLevelChargePercentage().isEmpty()) {
-                        percentage = String.valueOf(charges.getBT0101DocumentLevelChargePercentage(0).getValue());
-                    }
-                    dettaglioLinee.setDescrizione(reason + " - Base Amount: "+ baseAmount +" Percentage " + percentage + "%");
+
+
                     BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
                     dettaglioLinee.setQuantita(quantitaCedute);
                     if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
@@ -768,17 +812,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 break;
                             default:
                                 dettaglioLinee.setNatura(null);
-                        }
-                    }
-                    String converted = "";
-                    if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
-                        Untdid7161SpecialServicesCodes code = charges.getBT0105DocumentLevelChargeReasonCode(0).getValue();
-                        Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
-                        try {
-                            converted = converter.convert(code);
-                            dettaglioLinee.setRiferimentoAmministrazione(converted);
-                        } catch (EigorRuntimeException e) {
-                            errors.add(ConversionIssue.newError(e));
                         }
                     }
                     //altridatigestionali
