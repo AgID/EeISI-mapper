@@ -172,6 +172,6 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public String getName() {
-        return "converter-fatturapa-cen";
+        return "converter-fattpa-cen";
     }
 }

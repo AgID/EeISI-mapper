@@ -9,7 +9,9 @@ import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.io.Copier;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
+import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
+import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
@@ -47,23 +49,25 @@ public class EigorApiBuilder {
                         .register(new Cii2Cen(reflections, configuration))
                         .register(new Ubl2Cen(reflections, configuration))
                         .register(new Cen2FattPA(reflections, configuration))
+                        .register(new Cen2Ubl(reflections, configuration))
+                        .register(new FattPa2Cen(reflections, configuration))
                         .build();
 
         outputFolderFile = FileUtils.getTempDirectory();
 
 
-        try {
+//        try {
             Properties cardinalityRules = new Properties();
-            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
+//            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
             Properties cardinalityRules2 = new Properties();
-            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
+//            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
             ruleRepository = new CompositeRuleRepository(
                     new CardinalityRulesRepository(cardinalityRules),
                     new IntegrityRulesRepository(cardinalityRules2)
             );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 
