@@ -38,7 +38,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             new JavaLocalDateToStringConverter(),
             new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
             new Untdid1001InvoiceTypeCodesToStringConverter(),
-            new DoubleToStringConverter("#.00"),
+            new DoubleToStringConverter("0.00"),
             new Iso31661CountryCodesToStringConverter(),
             new IdentifierToStringConverter(),
             new Untdid4461PaymentMeansCodeToItalianCodeString()
@@ -54,10 +54,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         List<IConversionIssue> errors = new ArrayList<>(0);
         Document document = new Document();
         createRootNode(document);
-
-//        Element root = document.getRootElement();
-//        GenericOneToOneTransformer transformer = new GenericOneToOneTransformer("/Invoice/ID", "/BT-1", null, conversionRegistry);
-//        transformer.transformCenToXml(invoice, document, errors);
 
         applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
         applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
