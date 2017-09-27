@@ -68,9 +68,8 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
-        BinaryConversionResult result = new BinaryConversionResult(documentByteArray, errors);
 
-        return result;
+        return new BinaryConversionResult(documentByteArray, errors);
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
