@@ -7,6 +7,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasmissioneType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.converter.cen2fattpa.models.FormatoTrasmissioneType;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0007Buyer;
 import it.infocert.eigor.model.core.model.BT0049BuyerElectronicAddressAndSchemeIdentifier;
@@ -29,24 +30,40 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 if (address.getValue().getIdentificationSchema() != null) {
                     String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
                     String identifier = address.getValue().getIdentifier();
-                    switch (identificationSchema) {
-
-                        case pec:
-                            datiTrasmissione.setPECDestinatario(identifier);
-                            datiTrasmissione.setCodiceDestinatario("0000000");
-                            break;
-                        case coddest:
-                        case ipa:
-                            datiTrasmissione.setCodiceDestinatario(identifier);
-                            break;
-                        default:
-                            errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
-                                    .message(String.format("BT-49 SchemeID is not a valid value. Shoudl be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
-                                    .action("PECorCodDestConversion")
-                                    .build())));
-                    }
+                    mapDestinatario(errors, datiTrasmissione, identificationSchema, identifier);
+                    mapFormatoTrasmissione(fatturaElettronicaType, identificationSchema);
                 }
             }
+        }
+    }
+
+    private void mapDestinatario(List<IConversionIssue> errors, DatiTrasmissioneType datiTrasmissione, String identificationSchema, String identifier) {
+        switch (identificationSchema) {
+
+            case pec:
+                datiTrasmissione.setPECDestinatario(identifier);
+                datiTrasmissione.setCodiceDestinatario("0000000");
+                break;
+            case coddest:
+            case ipa:
+                datiTrasmissione.setCodiceDestinatario(identifier);
+                break;
+            default:
+                errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
+                        .message(String.format("BT-49 SchemeID is not a valid value. Shoudl be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
+                        .action("PECorCodDestConversion")
+                        .build())));
+        }
+    }
+
+    private void mapFormatoTrasmissione(final FatturaElettronicaType fatturaElettronica, final String identificationSchema) {
+        switch (identificationSchema) {
+            case pec:
+            case coddest:
+                fatturaElettronica.getFatturaElettronicaHeader().getDatiTrasmissione().setFormatoTrasmissione(FormatoTrasmissioneType.FPR_12);
+                fatturaElettronica.setVersione(FormatoTrasmissioneType.FPR_12);
+                break;
+
         }
     }
 }
