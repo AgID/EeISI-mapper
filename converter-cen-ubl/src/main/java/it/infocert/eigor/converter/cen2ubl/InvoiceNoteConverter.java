@@ -20,10 +20,12 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
         if (root != null) {
             List<BG0001InvoiceNote> bg0001 = cenInvoice.getBG0001InvoiceNote();
             for (BG0001InvoiceNote elemBG1 : bg0001) {
-                BT0022InvoiceNote bt0022 = elemBG1.getBT0022InvoiceNote(0);
-                Element note = new Element("Note");
-                note.addContent(bt0022.getValue());
-                root.addContent(note);
+                if (!elemBG1.getBT0022InvoiceNote().isEmpty()) {
+                    BT0022InvoiceNote bt0022 = elemBG1.getBT0022InvoiceNote(0);
+                    Element note = new Element("Note");
+                    note.addContent(bt0022.getValue());
+                    root.addContent(note);
+                }
             }
         }
     }

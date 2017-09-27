@@ -17,10 +17,10 @@ public class BuyerVATIdentifierConverter implements CustomMapping<Document> {
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
         Element root = document.getRootElement();
         if (root != null) {
-            BG0007Buyer bg0007 = cenInvoice.getBG0007Buyer(0);
-            if (bg0007 != null) {
-                BT0048BuyerVatIdentifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0);
-                if (bt0048 != null) {
+            if (!cenInvoice.getBG0007Buyer().isEmpty()) {
+                BG0007Buyer bg0007 = cenInvoice.getBG0007Buyer(0);
+                if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
+                    BT0048BuyerVatIdentifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0);
                     Element companyID = new Element("CompanyID");
                     Identifier identifier = bt0048.getValue();
                     if (identifier.getIdentificationSchema() != null) {
