@@ -129,7 +129,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("ccts", "urn:un:unece:uncefact:documentation:2"));
-//        root.addNamespaceDeclaration(Namespace.getNamespace("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"));
+        root.setNamespace(Namespace.getNamespace("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"));
         doc.setRootElement(root);
     }
 }
