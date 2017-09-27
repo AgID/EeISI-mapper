@@ -27,6 +27,9 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     private static final String FORMAT = "ubl";
 
+    private final String CBC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+    private final String CAC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
+
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new StringToStringConverter(),
             new Iso4217CurrenciesFundsCodesToStringConverter(),
@@ -59,6 +62,8 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
+
+        new XmlNamespaceApplier(CBC_URI, CAC_URI).applyUblNamespaces(document);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
         BinaryConversionResult result = new BinaryConversionResult(documentByteArray, errors);
@@ -122,8 +127,8 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     private void createRootNode(Document doc) {
         Element root = new Element("Invoice");
-        root.addNamespaceDeclaration(Namespace.getNamespace("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("cac", CAC_URI));
+        root.addNamespaceDeclaration(Namespace.getNamespace("cbc", CBC_URI));
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("ccts", "urn:un:unece:uncefact:documentation:2"));
