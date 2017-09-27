@@ -22,7 +22,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
         if (fatturaElettronicaBody != null) {
             List<Element> allegati = fatturaElettronicaBody.getChildren();
             for (Element allegato : allegati) {
-                if (allegato.getName().equals("Allegato")) {
+                if (allegato.getName().equals("Allegati")) {
                     bg0024 = new BG0024AdditionalSupportingDocuments();
                     Element nomeAttachment = allegato.getChild("NomeAttachment");
                     if (nomeAttachment != null) {
