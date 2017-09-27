@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2ubl;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -26,6 +27,9 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cen-ubl.mapping.custom";
 
     private static final String FORMAT = "ubl";
+
+    private final String CBC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+    private final String CAC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new StringToStringConverter(),
@@ -60,10 +64,12 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
 
-        byte[] documentByteArray = createXmlFromDocument(document, errors);
-        BinaryConversionResult result = new BinaryConversionResult(documentByteArray, errors);
+        new XmlNamespaceApplier(CBC_URI, CAC_URI).applyUblNamespaces(document);
+        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
-        return result;
+        byte[] documentByteArray = createXmlFromDocument(document, errors);
+
+        return new BinaryConversionResult(documentByteArray, errors);
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
@@ -122,8 +128,8 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     private void createRootNode(Document doc) {
         Element root = new Element("Invoice");
-        root.addNamespaceDeclaration(Namespace.getNamespace("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("cac", CAC_URI));
+        root.addNamespaceDeclaration(Namespace.getNamespace("cbc", CBC_URI));
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"));
         root.addNamespaceDeclaration(Namespace.getNamespace("ccts", "urn:un:unece:uncefact:documentation:2"));
