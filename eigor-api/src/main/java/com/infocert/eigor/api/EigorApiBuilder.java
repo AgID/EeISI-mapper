@@ -56,18 +56,18 @@ public class EigorApiBuilder {
         outputFolderFile = FileUtils.getTempDirectory();
 
 
-        try {
+//        try {
             Properties cardinalityRules = new Properties();
-            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
+//            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
             Properties cardinalityRules2 = new Properties();
-            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
+//            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
             ruleRepository = new CompositeRuleRepository(
                     new CardinalityRulesRepository(cardinalityRules),
                     new IntegrityRulesRepository(cardinalityRules2)
             );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 
