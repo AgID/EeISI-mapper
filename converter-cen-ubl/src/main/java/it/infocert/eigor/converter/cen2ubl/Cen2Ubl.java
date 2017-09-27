@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2ubl;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -64,6 +65,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         applyCustomMapping(invoice, document, errors);
 
         new XmlNamespaceApplier(CBC_URI, CAC_URI).applyUblNamespaces(document);
+        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
         BinaryConversionResult result = new BinaryConversionResult(documentByteArray, errors);
