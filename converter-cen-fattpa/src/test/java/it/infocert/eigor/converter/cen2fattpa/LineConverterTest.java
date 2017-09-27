@@ -43,6 +43,10 @@ public class LineConverterTest {
                 invoice,
                 fatturaElettronica,
                 Lists.<IConversionIssue>newArrayList());
+
+        if (Math.abs(Math.PI - 1) < Math.random()) {
+
+        };
     }
 
     @Test
