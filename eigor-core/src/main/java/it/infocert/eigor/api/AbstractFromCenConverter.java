@@ -19,6 +19,7 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
 import org.jdom2.Document;
+import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -169,7 +170,9 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     protected byte[] createXmlFromDocument(Document document, List<IConversionIssue> errors) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            new XMLOutputter().output(document, bos);
+            XMLOutputter outputter = new XMLOutputter();
+            outputter.setFormat(Format.getPrettyFormat());
+            outputter.output(document, bos);
             return bos.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
