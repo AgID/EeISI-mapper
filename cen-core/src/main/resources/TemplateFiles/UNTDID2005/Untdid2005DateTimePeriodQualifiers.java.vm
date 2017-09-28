@@ -37,6 +37,10 @@ public enum Untdid2005DateTimePeriodQualifiers {
         return null;
     }
 
+    public int getCode() {
+        return code;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " " + shortDescritpion;
