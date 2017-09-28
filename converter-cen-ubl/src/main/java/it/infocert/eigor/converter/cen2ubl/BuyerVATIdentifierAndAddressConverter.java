@@ -32,43 +32,47 @@ public class BuyerVATIdentifierAndAddressConverter implements CustomMapping<Docu
                         accountingCustomerParty.addContent(party);
                     }
 
-                    BT0048BuyerVatIdentifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0);
-                    if (bt0048 != null) {
-                        Element companyID = new Element("CompanyID");
-                        Identifier identifier = bt0048.getValue();
+                    if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
+                        BT0048BuyerVatIdentifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0);
+                        if (bt0048 != null) {
+                            Element companyID = new Element("CompanyID");
+                            Identifier identifier = bt0048.getValue();
 //                        if (identifier.getIdentificationSchema() != null) {
 //                            companyID.setAttribute("schemeID", identifier.getIdentificationSchema());
 //                        }
 //                        if (identifier.getIdentifier() != null) {
 //                            companyID.addContent(identifier.getIdentifier());
 //                        }
-                        String companyIDValue = "";
-                        if (identifier.getIdentificationSchema() != null) {
-                            companyIDValue += identifier.getIdentificationSchema();
+                            String companyIDValue = "";
+                            if (identifier.getIdentificationSchema() != null) {
+                                companyIDValue += identifier.getIdentificationSchema();
+                            }
+                            if (identifier.getIdentifier() != null) {
+                                companyIDValue += identifier.getIdentifier();
+                            }
+                            companyID.addContent(companyIDValue);
+                            Element partyTaxScheme = party.getChild("PartyTaxScheme");
+                            if (partyTaxScheme == null) {
+                                partyTaxScheme = new Element("PartyTaxScheme");
+                                party.addContent(partyTaxScheme);
+                            }
+                            partyTaxScheme.addContent(companyID);
                         }
-                        if (identifier.getIdentifier() != null) {
-                            companyIDValue += identifier.getIdentifier();
-                        }
-                        companyID.addContent(companyIDValue);
-                        Element partyTaxScheme = party.getChild("PartyTaxScheme");
-                        if (partyTaxScheme == null) {
-                            partyTaxScheme = new Element("PartyTaxScheme");
-                            party.addContent(partyTaxScheme);
-                        }
-                        partyTaxScheme.addContent(companyID);
                     }
 
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                    if (bt0049 != null) {
-                        Element endpointID = new Element("EndpointID");
-                        Identifier identifier = bt0049.getValue();
-                        if (identifier.getIdentificationSchema() != null) {
-                            endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
+                    if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                        if (bt0049 != null) {
+                            Element endpointID = new Element("EndpointID");
+                            Identifier identifier = bt0049.getValue();
+                            if (identifier.getIdentificationSchema() != null) {
+                                endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
+                            }
+                            if (identifier.getIdentifier() != null) {
+                                endpointID.addContent(identifier.getIdentifier());
+                            }
+                            party.addContent(endpointID);
                         }
-                        if (identifier.getIdentifier() != null) {
-                            endpointID.addContent(identifier.getIdentifier());
-                        }
-                        party.addContent(endpointID);
                     }
                 }
             }

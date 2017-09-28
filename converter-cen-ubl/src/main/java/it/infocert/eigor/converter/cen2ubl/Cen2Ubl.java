@@ -1,13 +1,17 @@
 package it.infocert.eigor.converter.cen2ubl;
 
+import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2ubl.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -15,7 +19,11 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Cen2Ubl extends AbstractFromCenConverter {
 
@@ -30,22 +38,65 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     private final String CBC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
     private final String CAC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
+    private final EigorConfiguration configuration;
+    private final DefaultResourceLoader drl = new DefaultResourceLoader();
+
+    private XSDValidator xsdValidator;
+    private IXMLValidator ublValidator;
+    private IXMLValidator ciusValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new StringToStringConverter(),
             new Iso4217CurrenciesFundsCodesToStringConverter(),
             new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
             new JavaLocalDateToStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
+            new Untdid2005DateTimePeriodQualifiersToStringConverter(),
             new Untdid1001InvoiceTypeCodesToStringConverter(),
             new DoubleToStringConverter("0.00"),
             new Iso31661CountryCodesToStringConverter(),
             new IdentifierToStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString()
+            new Untdid4461PaymentMeansCodeToString()
     );
+
+    @Override
+    public void configure() throws ConfigurationException {
+        super.configure();
+        // load the XSD.
+        {
+            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-ubl.xsd");
+            xsdValidator = null;
+            try {
+                Resource xsdFile = drl.getResource(mandatoryString);
+
+                xsdValidator = new XSDValidator(xsdFile.getFile());
+            } catch (Exception e) {
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
+            }
+        }
+
+        // load the UBL schematron validator.
+        try {
+            Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron") );
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
+        // load the CIUS schematron validator.
+        try {
+            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius") );
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
+        configurableSupport.configure();
+
+    }
 
     public Cen2Ubl(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
+        this.configuration = checkNotNull(configuration);
     }
 
 
@@ -64,6 +115,21 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
+
+
+        try {
+
+            List<IConversionIssue> validationErrors = xsdValidator.validate(documentByteArray);
+            if(validationErrors.isEmpty()){
+                log.info("Xsd validation succesful!");
+            }
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(ublValidator.validate(documentByteArray)));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(documentByteArray)));
+
+        } catch (IllegalArgumentException e) {
+            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+        }
 
         return new BinaryConversionResult(documentByteArray, errors);
     }
