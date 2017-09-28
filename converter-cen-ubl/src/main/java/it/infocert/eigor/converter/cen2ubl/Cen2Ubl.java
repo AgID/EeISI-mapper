@@ -8,7 +8,6 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
-import it.infocert.eigor.converter.cen2ubl.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -51,12 +50,12 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             new Iso4217CurrenciesFundsCodesToStringConverter(),
             new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
             new JavaLocalDateToStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
+            new Untdid2005DateTimePeriodQualifiersToStringConverter(),
             new Untdid1001InvoiceTypeCodesToStringConverter(),
             new DoubleToStringConverter("0.00"),
             new Iso31661CountryCodesToStringConverter(),
             new IdentifierToStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString()
+            new Untdid4461PaymentMeansCodeToString()
     );
 
     @Override
