@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
@@ -23,6 +24,13 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0025InvoiceLine().isEmpty()) {
+
+                Iso4217CurrenciesFundsCodes currencyCode = null;
+                if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                    BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+                    currencyCode = bt0005.getValue();
+                }
+
                 List<BG0025InvoiceLine> bg0025 = cenInvoice.getBG0025InvoiceLine();
                 for (BG0025InvoiceLine elemBg25 : bg0025) {
                     Element invoiceLine = new Element("InvoiceLine");
@@ -44,7 +52,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);
                                 if (bt0130 != null) {
                                     UnitOfMeasureCodes unitOfMeasureCodes = bt0130.getValue();
-                                    Attribute unitCode = new Attribute("UnitCode", unitOfMeasureCodes.name());
+                                    Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
                                     invoicedQuantity.setAttribute(unitCode);
                                 }
                             }
@@ -57,6 +65,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         if (bt0131 != null) {
                             Element lineExtensionAmount = new Element("LineExtensionAmount");
                             lineExtensionAmount.addContent(dblStrConverter.convert(bt0131.getValue()));
+                            if (currencyCode != null) {
+                                lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
+                            }
                             invoiceLine.addContent(lineExtensionAmount);
                         }
                     }
@@ -78,6 +89,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 if (bt0146 != null) {
                                     Element priceAmount = new Element("PriceAmount");
                                     priceAmount.addContent(dblStrConverter.convert(bt0146.getValue()));
+                                    if (currencyCode != null) {
+                                        priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
+                                    }
                                     price.addContent(priceAmount);
                                 }
                             }
@@ -91,7 +105,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                         BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
                                         if (bt0150 != null) {
                                             UnitOfMeasureCodes unitOfMeasureCodes = bt0150.getValue();
-                                            Attribute unitCode = new Attribute("UnitCode", unitOfMeasureCodes.name());
+                                            Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
                                             baseQuantity.setAttribute(unitCode);
                                         }
                                     }

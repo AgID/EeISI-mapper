@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.cen2ubl;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -75,6 +77,17 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         Element percent = new Element("Percent");
                         percent.addContent(dblStrConverter.convert(bt0119.getValue()));
                         taxCategory.addContent(percent);
+                    }
+
+                    if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                        BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+                        Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
+
+                        for (Element element : taxSubtotal.getChildren()) {
+                            if (element.getName().equals("TaxableAmount") || element.getName().equals("TaxAmount")) {
+                                element.setAttribute(new Attribute("currencyID", currencyCode.name()));
+                            }
+                        }
                     }
                 }
             }
