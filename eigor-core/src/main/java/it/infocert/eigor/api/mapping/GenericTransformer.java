@@ -135,7 +135,7 @@ public abstract class GenericTransformer {
         if (!invoiceUtils.hasChild(invoice, cenPath)) {
             try {
                 // create BT element
-                String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
+                final String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if (btClass == null) {
                     throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
@@ -162,9 +162,23 @@ public abstract class GenericTransformer {
                                             constructorParam[0] = conversionRegistry.convert(String.class, paramType, xPathText);
                                             try {
                                                 bt.add((BTBG) constructor.newInstance(constructorParam[0]));
-                                            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                                            } catch (InstantiationException | IllegalAccessException e) {
                                                 log.error(e.getMessage(), e);
                                                 errors.add(ConversionIssue.newError(e));
+                                            } catch (InvocationTargetException e) {
+                                                String message = constructorParam[0] == null ?
+                                                        String.format("%s - Constructor parameter conversion yielded null for %s with value %s",
+                                                                btName,
+                                                                paramType.getSimpleName(),
+                                                                xPathText
+                                                        )
+                                                        : e.getClass().getSimpleName();
+                                                log.error(e.getMessage() == null ?
+                                                                message
+                                                                : e.getMessage()
+                                                        , e);
+                                                errors.add(ConversionIssue.newError(e, message, null, "ConstructorParameterConversion", null));
+
                                             }
                                         } catch (IllegalArgumentException e) {
                                             errors.add(ConversionIssue.newError(e));

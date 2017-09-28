@@ -8,10 +8,12 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.fattpa2cen.converters.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.reflections.Reflections;
@@ -55,7 +57,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
     private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many";
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom";
 
-//    private XSDValidator xsdValidator;
+    private XSDValidator xsdValidator;
 
     public FattPa2Cen(Reflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
@@ -65,18 +67,18 @@ public class FattPa2Cen extends AbstractToCenConverter {
     @Override public void configure() throws ConfigurationException {
         super.configure();
 
-//        // load the XSD.
-//        {
-//            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.fatturapa-cen.xsd");
-//            xsdValidator = null;
-//            try {
-//                Resource xsdFile = drl.getResource(mandatoryString);
-//
-//                xsdValidator = new XSDValidator(xsdFile.getFile());
-//            } catch (Exception e) {
-//                throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
-//            }
-//        }
+        // load the XSD.
+        {
+            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.fatturapa-cen.xsd");
+            xsdValidator = null;
+            try {
+                Resource xsdFile = drl.getResource(mandatoryString);
+
+                xsdValidator = new XSDValidator(xsdFile.getFile());
+            } catch (Exception e) {
+                throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
+            }
+        }
         configurableSupport.configure();
     }
 
@@ -93,11 +95,11 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
             clonedInputStream = new ByteArrayInputStream(bytes);
 
-//            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
-//            if (validationErrors.isEmpty()) {
-//                log.info("Xsd validation succesful!");
-//            }
-//            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
+            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            if (validationErrors.isEmpty()) {
+                log.info("Xsd validation succesful!");
+            }
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
         }
