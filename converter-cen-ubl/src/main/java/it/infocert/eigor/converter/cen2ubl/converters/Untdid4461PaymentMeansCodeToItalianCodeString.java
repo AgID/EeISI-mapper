@@ -8,8 +8,7 @@ public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeC
     public String convert(Untdid4461PaymentMeansCode paymentMeansCode) {
         switch (paymentMeansCode) {
             case Code30:
-//                return "MP05";
-                return "30";
+                return "MP05";
             case Code20:
             case Code92:
                 return "MP02";
