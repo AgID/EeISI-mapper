@@ -15,11 +15,19 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.XMLReaderJDOMFactory;
+import org.jdom2.input.sax.XMLReaderSchemaFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -76,7 +84,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
         // load the UBL schematron validator.
         try {
-            Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron") );
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron"));
             ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -84,7 +92,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
         // load the CIUS schematron validator.
         try {
-            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius") );
+            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius"));
             ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -120,7 +128,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         try {
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(documentByteArray);
-            if(validationErrors.isEmpty()){
+            if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
@@ -143,7 +151,9 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     }
 
     @Override
-    public boolean support(String format) { return "ubl".equals(format.toLowerCase().trim()); }
+    public boolean support(String format) {
+        return "ubl".equals(format.toLowerCase().trim());
+    }
 
     @Override
     public Set<String> getSupportedFormats() {
@@ -184,7 +194,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     public String getName() {
         return "converter-cen-ubl";
     }
-
 
 
 
