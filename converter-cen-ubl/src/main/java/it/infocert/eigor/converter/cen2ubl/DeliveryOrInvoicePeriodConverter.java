@@ -62,6 +62,14 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                     }
                 }
             }
+
+            if (!cenInvoice.getBT0012ContractReference().isEmpty()) {
+                Element contractDocumentReference = new Element("ContractDocumentReference");
+                Element id = new Element("ID");
+                contractDocumentReference.addContent(id);
+                id.setText(cenInvoice.getBT0012ContractReference(0).getValue());
+                root.addContent(contractDocumentReference);
+            }
         }
     }
 }
