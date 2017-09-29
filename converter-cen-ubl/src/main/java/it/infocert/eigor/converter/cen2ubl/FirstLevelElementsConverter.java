@@ -69,7 +69,9 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
             convert("DocumentCurrencyCode", converted);
         }
 
-
+        if (!invoice.getBT0012ContractReference().isEmpty()) {
+            convert("ContractDocumentReference", invoice.getBT0012ContractReference(0).getValue());
+        }
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
         try {
             out.output(document, System.out);
