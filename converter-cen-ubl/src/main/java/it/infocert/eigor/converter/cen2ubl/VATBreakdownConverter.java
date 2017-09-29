@@ -60,7 +60,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     if (bt0117 != null) {
                         Element taxAmount = new Element("TaxAmount");
                         taxAmount.addContent(dblStrConverter.convert(bt0117.getValue()));
-                        taxSubtotal.addContent(taxAmount);
+                        taxTotal.addContent(taxAmount);
                     }
 
                     Element taxCategory = new Element("TaxCategory");

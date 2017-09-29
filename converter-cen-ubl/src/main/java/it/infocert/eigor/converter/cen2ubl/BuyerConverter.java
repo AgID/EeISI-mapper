@@ -32,17 +32,18 @@ public class BuyerConverter implements CustomMapping<Document> {
                         accountingCustomerParty.addContent(party);
                     }
 
-                    if (!bg0007.getBT0044BuyerName().isEmpty()) {
-                        BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
-                        if (bt0044 != null) {
-                            Element registrationName = new Element("RegistrationName");
-                            registrationName.addContent(bt0044.getValue());
-                            Element partyLegalEntity = party.getChild("PartyLegalEntity");
-                            if (partyLegalEntity == null) {
-                                partyLegalEntity = new Element("PartyLegalEntity");
-                                party.addContent(partyLegalEntity);
+                    if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                        if (bt0049 != null) {
+                            Element endpointID = new Element("EndpointID");
+                            Identifier identifier = bt0049.getValue();
+                            if (identifier.getIdentificationSchema() != null) {
+                                endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
                             }
-                            partyLegalEntity.addContent(registrationName);
+                            if (identifier.getIdentifier() != null) {
+                                endpointID.addContent(identifier.getIdentifier());
+                            }
+                            party.addContent(endpointID);
                         }
                     }
 
@@ -74,18 +75,17 @@ public class BuyerConverter implements CustomMapping<Document> {
                         }
                     }
 
-                    if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                        if (bt0049 != null) {
-                            Element endpointID = new Element("EndpointID");
-                            Identifier identifier = bt0049.getValue();
-                            if (identifier.getIdentificationSchema() != null) {
-                                endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
+                    if (!bg0007.getBT0044BuyerName().isEmpty()) {
+                        BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
+                        if (bt0044 != null) {
+                            Element registrationName = new Element("RegistrationName");
+                            registrationName.addContent(bt0044.getValue());
+                            Element partyLegalEntity = party.getChild("PartyLegalEntity");
+                            if (partyLegalEntity == null) {
+                                partyLegalEntity = new Element("PartyLegalEntity");
+                                party.addContent(partyLegalEntity);
                             }
-                            if (identifier.getIdentifier() != null) {
-                                endpointID.addContent(identifier.getIdentifier());
-                            }
-                            party.addContent(endpointID);
+                            partyLegalEntity.addContent(registrationName);
                         }
                     }
                 }

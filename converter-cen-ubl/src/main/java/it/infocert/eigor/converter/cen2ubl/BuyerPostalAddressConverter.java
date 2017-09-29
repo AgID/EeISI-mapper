@@ -36,7 +36,15 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
                     Element postalAddress = party.getChild("PostalAddress");
                     if (postalAddress == null) {
                         postalAddress = new Element("PostalAddress");
-                        party.addContent(postalAddress);
+                        List<Element> partyChildren = party.getChildren();
+                        int index = 0;
+                        for (Element endpointID : partyChildren) {
+                            if (endpointID.getName().equals("EndpointID")) {
+                                index = party.indexOf(endpointID);
+                                index++;
+                            }
+                        }
+                        party.addContent(index, postalAddress);
                     }
 
                     if (!bg0008.getBT0050BuyerAddressLine1().isEmpty()) {
