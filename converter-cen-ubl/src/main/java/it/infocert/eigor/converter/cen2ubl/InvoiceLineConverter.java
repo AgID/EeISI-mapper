@@ -80,42 +80,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                     }
 
-                    if (!elemBg25.getBG0029PriceDetails().isEmpty()) {
-                        List<BG0029PriceDetails> bg0029 = elemBg25.getBG0029PriceDetails();
-                        for (BG0029PriceDetails elemBg29 : bg0029) {
-                            Element price = new Element("Price");
-                            if (!elemBg29.getBT0146ItemNetPrice().isEmpty()) {
-                                BT0146ItemNetPrice bt0146 = elemBg29.getBT0146ItemNetPrice(0);
-                                if (bt0146 != null) {
-                                    Element priceAmount = new Element("PriceAmount");
-                                    priceAmount.addContent(dblStrConverter.convert(bt0146.getValue()));
-                                    if (currencyCode != null) {
-                                        priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
-                                    }
-                                    price.addContent(priceAmount);
-                                }
-                            }
-                            if (!elemBg29.getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                                BT0149ItemPriceBaseQuantity bt0149 = elemBg29.getBT0149ItemPriceBaseQuantity(0);
-                                if (bt0149 != null) {
-                                    Element baseQuantity = new Element("BaseQuantity");
-                                    baseQuantity.addContent(dblStrConverter.convert(bt0149.getValue()));
-
-                                    if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                                        BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
-                                        if (bt0150 != null) {
-                                            UnitOfMeasureCodes unitOfMeasureCodes = bt0150.getValue();
-                                            Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
-                                            baseQuantity.setAttribute(unitCode);
-                                        }
-                                    }
-                                    price.addContent(baseQuantity);
-                                }
-                            }
-                            invoiceLine.addContent(price);
-                        }
-                    }
-
                     if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
                         Element item = new Element("Item");
                         invoiceLine.addContent(item);
@@ -139,7 +103,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     classifiedTaxCategory.addContent(percent);
                                 }
                             }
-                            invoiceLine.addContent(classifiedTaxCategory);
+                            item.addContent(classifiedTaxCategory);
                         }
                     }
 
@@ -181,6 +145,42 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             }
 
                             invoiceLine.addContent(item);
+                        }
+                    }
+
+                    if (!elemBg25.getBG0029PriceDetails().isEmpty()) {
+                        List<BG0029PriceDetails> bg0029 = elemBg25.getBG0029PriceDetails();
+                        for (BG0029PriceDetails elemBg29 : bg0029) {
+                            Element price = new Element("Price");
+                            if (!elemBg29.getBT0146ItemNetPrice().isEmpty()) {
+                                BT0146ItemNetPrice bt0146 = elemBg29.getBT0146ItemNetPrice(0);
+                                if (bt0146 != null) {
+                                    Element priceAmount = new Element("PriceAmount");
+                                    priceAmount.addContent(dblStrConverter.convert(bt0146.getValue()));
+                                    if (currencyCode != null) {
+                                        priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
+                                    }
+                                    price.addContent(priceAmount);
+                                }
+                            }
+                            if (!elemBg29.getBT0149ItemPriceBaseQuantity().isEmpty()) {
+                                BT0149ItemPriceBaseQuantity bt0149 = elemBg29.getBT0149ItemPriceBaseQuantity(0);
+                                if (bt0149 != null) {
+                                    Element baseQuantity = new Element("BaseQuantity");
+                                    baseQuantity.addContent(dblStrConverter.convert(bt0149.getValue()));
+
+                                    if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
+                                        BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
+                                        if (bt0150 != null) {
+                                            UnitOfMeasureCodes unitOfMeasureCodes = bt0150.getValue();
+                                            Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
+                                            baseQuantity.setAttribute(unitCode);
+                                        }
+                                    }
+                                    price.addContent(baseQuantity);
+                                }
+                            }
+                            invoiceLine.addContent(price);
                         }
                     }
 
