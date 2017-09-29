@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class BuyerVATIdentifierAndAddressConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(BuyerVATIdentifierAndAddressConverter.class);
+public class BuyerConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(BuyerConverter.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
@@ -30,6 +30,20 @@ public class BuyerVATIdentifierAndAddressConverter implements CustomMapping<Docu
                     if (party == null) {
                         party = new Element("Party");
                         accountingCustomerParty.addContent(party);
+                    }
+
+                    if (!bg0007.getBT0044BuyerName().isEmpty()) {
+                        BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
+                        if (bt0044 != null) {
+                            Element registrationName = new Element("RegistrationName");
+                            registrationName.addContent(bt0044.getValue());
+                            Element partyLegalEntity = party.getChild("PartyLegalEntity");
+                            if (partyLegalEntity == null) {
+                                partyLegalEntity = new Element("PartyLegalEntity");
+                                party.addContent(partyLegalEntity);
+                            }
+                            partyLegalEntity.addContent(registrationName);
+                        }
                     }
 
                     if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
