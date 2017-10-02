@@ -40,6 +40,8 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
 
         this.root = document.getRootElement();
 
+        convert("CustomizationID", "urn:cen.eu:en16931:2017");
+
         if (!invoice.getBG0002ProcessControl().isEmpty()) {
             BG0002ProcessControl processControl = invoice.getBG0002ProcessControl(0);
             if(processControl.getBT0024SpecificationIdentifier().isEmpty()) {

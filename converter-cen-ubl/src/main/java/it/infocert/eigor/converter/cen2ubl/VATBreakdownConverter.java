@@ -93,8 +93,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 {
                     Element taxScheme = new Element("TaxScheme");
                     Element taxSchemeId = new Element("ID");
-                    taxScheme.addContent(taxSchemeId.setText("VAT"));
-
+                    taxCategory.addContent(taxScheme.addContent(taxSchemeId.setText("VAT")));
                 }
 
                 if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
