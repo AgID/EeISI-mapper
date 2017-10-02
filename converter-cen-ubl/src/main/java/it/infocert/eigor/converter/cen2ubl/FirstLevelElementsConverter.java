@@ -6,7 +6,9 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BG0002ProcessControl;
+import it.infocert.eigor.model.core.model.BT0022InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -62,6 +64,17 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
         if (!invoice.getBT0003InvoiceTypeCode().isEmpty()) {
             String converted = conversionRegistry.convert(Untdid1001InvoiceTypeCode.class, String.class, invoice.getBT0003InvoiceTypeCode(0).getValue());
             convert("InvoiceTypeCode", converted);
+        }
+
+        if (!invoice.getBG0001InvoiceNote().isEmpty()) {
+            for (BG0001InvoiceNote bg0001 : invoice.getBG0001InvoiceNote()) {
+                if (!bg0001.getBT0022InvoiceNote().isEmpty()) {
+                    BT0022InvoiceNote bt0022 = bg0001.getBT0022InvoiceNote(0);
+                    Element note = new Element("Note");
+                    note.addContent(bt0022.getValue());
+                    root.addContent(note);
+                }
+            }
         }
 
         if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {

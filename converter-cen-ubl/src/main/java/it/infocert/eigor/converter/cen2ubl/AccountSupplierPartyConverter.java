@@ -39,33 +39,6 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
         BG0004Seller seller = invoice.getBG0004Seller(0);
 
-        Element partyLegalEntity = new Element("PartyLegalEntity");
-        this.party.addContent(partyLegalEntity);
-
-        if (!seller.getBT0027SellerName().isEmpty()) {
-            Element registrationName = new Element("RegistrationName");
-            registrationName.setText(seller.getBT0027SellerName(0).getValue());
-            partyLegalEntity.addContent(registrationName);
-        }
-
-        if (!seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
-            Element companyID = new Element("CompanyID");
-            Identifier id = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0).getValue();
-            companyID.setText(id.getIdentifier());
-            if (id.getIdentificationSchema() != null) {
-                companyID.setAttribute("schemeID", id.getIdentificationSchema());
-            }
-            partyLegalEntity.addContent(companyID);
-        }
-
-        if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
-            Element partyTaxScheme = new Element("PartyTaxScheme");
-            Element companyID = new Element("CompanyID");
-            companyID.setText(seller.getBT0031SellerVatIdentifier(0).getValue());
-            partyTaxScheme.addContent(companyID);
-            this.party.addContent(partyTaxScheme);
-        }
-
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
             BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress(0);
             Element postalAddress = new Element("PostalAddress");
@@ -94,6 +67,51 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 identificationCode.setText(sellerPostalAddress.getBT0038SellerPostCode(0).getValue());
                 postalAddress.addContent(country);
             }
+        }
+
+
+        if (!seller.getBT0031SellerVatIdentifier().isEmpty() || !seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
+            Element partyTaxScheme = new Element("PartyTaxScheme");
+            Element companyID = new Element("CompanyID");
+            Element taxScheme = new Element("TaxScheme");
+            Element taxSchemeId = new Element("ID");
+            String companyIdValue;
+            String taxSchemeIdValue;
+            if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
+                companyIdValue = seller.getBT0031SellerVatIdentifier(0).getValue();
+                taxSchemeIdValue = "VAT";
+            } else {
+                companyIdValue = seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue();
+                taxSchemeIdValue = "NoVAT";
+
+            }
+
+            taxSchemeId.setText(taxSchemeIdValue);
+            companyID.setText(companyIdValue);
+            taxScheme.addContent(taxSchemeId);
+            partyTaxScheme.addContent(companyID);
+            partyTaxScheme.addContent(taxScheme);
+
+            this.party.addContent(partyTaxScheme);
+        }
+
+        Element partyLegalEntity = new Element("PartyLegalEntity");
+        this.party.addContent(partyLegalEntity);
+
+        if (!seller.getBT0027SellerName().isEmpty()) {
+            Element registrationName = new Element("RegistrationName");
+            registrationName.setText(seller.getBT0027SellerName(0).getValue());
+            partyLegalEntity.addContent(registrationName);
+        }
+
+        if (!seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+            Element companyID = new Element("CompanyID");
+            Identifier id = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0).getValue();
+            companyID.setText(id.getIdentifier());
+            if (id.getIdentificationSchema() != null) {
+                companyID.setAttribute("schemeID", id.getIdentificationSchema());
+            }
+            partyLegalEntity.addContent(companyID);
         }
 
         if (!seller.getBG0006SellerContact().isEmpty()) {
