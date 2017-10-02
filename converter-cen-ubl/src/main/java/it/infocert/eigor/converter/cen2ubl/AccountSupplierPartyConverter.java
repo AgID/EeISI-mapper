@@ -52,7 +52,9 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             Element companyID = new Element("CompanyID");
             Identifier id = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0).getValue();
             companyID.setText(id.getIdentifier());
-            companyID.setAttribute("schemeID", id.getIdentificationSchema());
+            if (id.getIdentificationSchema() != null) {
+                companyID.setAttribute("schemeID", id.getIdentificationSchema());
+            }
             partyLegalEntity.addContent(companyID);
         }
 
