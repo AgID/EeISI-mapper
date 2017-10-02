@@ -18,12 +18,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(VATBreakdownConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List errors) {
+    public void map(BG0000Invoice invoice, Document document, List errors) {
         DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#.00");
 
         Element root = document.getRootElement();
         if (root != null) {
-            List<BG0023VatBreakdown> bg0023 = cenInvoice.getBG0023VatBreakdown();
+            List<BG0023VatBreakdown> bg0023 = invoice.getBG0023VatBreakdown();
             for (BG0023VatBreakdown elemBg23 : bg0023) {
                 BT0116VatCategoryTaxableAmount bt0116 = null;
                 if (!elemBg23.getBT0116VatCategoryTaxableAmount().isEmpty()) {
@@ -45,16 +45,21 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 if (bt0116 != null || bt0117 != null || bt0118 != null || bt0119 != null) {
 
                     Element taxTotal = root.getChild("TaxTotal");
-                    if (bt0117 != null) {
-                        Element taxAmount = new Element("TaxAmount");
-                        taxAmount.addContent(dblStrConverter.convert(bt0117.getValue()));
-                        taxTotal.addContent(taxAmount);
-                    }
-
                     if (taxTotal == null) {
                         taxTotal = new Element("TaxTotal");
                         root.addContent(taxTotal);
                     }
+
+                    if (!invoice.getBG0022DocumentTotals().isEmpty()) {
+                        BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals(0);
+                        if (!documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+                            Element taxAmount = new Element("TaxAmount");
+                            Double amount = documentTotals.getBT0110InvoiceTotalVatAmount(0).getValue();
+                            taxAmount.setText(dblStrConverter.convert(amount));
+                            taxTotal.addContent(taxAmount);
+                        }
+                    }
+
                     Element taxSubtotal = new Element("TaxSubtotal");
                     taxTotal.addContent(taxSubtotal);
 
@@ -63,7 +68,11 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         taxableAmount.addContent(dblStrConverter.convert(bt0116.getValue()));
                         taxSubtotal.addContent(taxableAmount);
                     }
-
+                    if (bt0117 != null) {
+                        Element taxAmount = new Element("TaxAmount");
+                        taxAmount.addContent(dblStrConverter.convert(bt0117.getValue()));
+                        taxSubtotal.addContent(taxAmount);
+                    }
 
                     Element taxCategory = new Element("TaxCategory");
                     taxSubtotal.addContent(taxCategory);
@@ -81,18 +90,17 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         taxCategory.addContent(percent);
                     }
 
-                    if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                        BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+                    if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                        BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
                         Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
 
-                        for (Element element : taxSubtotal.getChildren()) {
-                            if (element.getName().equals("TaxableAmount")) {
-                                element.setAttribute(new Attribute("currencyID", currencyCode.name()));
-                            }
-                        }
                         Element taxAmount = taxTotal.getChild("TaxAmount");
-                        if (taxAmount != null) {
-                            taxAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
+                        String currencyName = currencyCode.name();
+                        taxAmount.setAttribute(new Attribute("currencyID", currencyName));
+                        for (Element element : taxSubtotal.getChildren()) {
+                            if (element.getName().equals("TaxableAmount") || element.getName().equals("TaxAmount")) {
+                                element.setAttribute(new Attribute("currencyID", currencyName));
+                            }
                         }
                     }
                 }

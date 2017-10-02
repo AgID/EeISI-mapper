@@ -80,33 +80,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                     }
 
-                    if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
-                        Element item = new Element("Item");
-                        invoiceLine.addContent(item);
-                        List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
-                        for (BG0030LineVatInformation elemBg30 : bg0030) {
-                            Element classifiedTaxCategory = new Element("ClassifiedTaxCategory");
-                            if (!elemBg30.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
-                                BT0151InvoicedItemVatCategoryCode bt0151 = elemBg30.getBT0151InvoicedItemVatCategoryCode(0);
-                                if (bt0151 != null) {
-                                    Element id = new Element("ID");
-                                    Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0151.getValue();
-                                    id.addContent(dutyTaxFeeCategories.name());
-                                    classifiedTaxCategory.addContent(id);
-                                }
-                            }
-                            if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
-                                BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
-                                if (bt0152 != null) {
-                                    Element percent = new Element("Percent");
-                                    percent.addContent(dblStrConverter.convert(bt0152.getValue()));
-                                    classifiedTaxCategory.addContent(percent);
-                                }
-                            }
-                            item.addContent(classifiedTaxCategory);
-                        }
-                    }
-
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
                         for (BG0031ItemInformation elemBg31 : bg0031) {
@@ -117,6 +90,30 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     Element name = new Element("Name");
                                     name.addContent(bt0153.getValue());
                                     item.addContent(name);
+                                }
+                            }
+                            if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
+                                List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
+                                for (BG0030LineVatInformation elemBg30 : bg0030) {
+                                    Element classifiedTaxCategory = new Element("ClassifiedTaxCategory");
+                                    if (!elemBg30.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
+                                        BT0151InvoicedItemVatCategoryCode bt0151 = elemBg30.getBT0151InvoicedItemVatCategoryCode(0);
+                                        if (bt0151 != null) {
+                                            Element id = new Element("ID");
+                                            Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0151.getValue();
+                                            id.addContent(dutyTaxFeeCategories.name());
+                                            classifiedTaxCategory.addContent(id);
+                                        }
+                                    }
+                                    if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
+                                        BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
+                                        if (bt0152 != null) {
+                                            Element percent = new Element("Percent");
+                                            percent.addContent(dblStrConverter.convert(bt0152.getValue()));
+                                            classifiedTaxCategory.addContent(percent);
+                                        }
+                                    }
+                                    item.addContent(classifiedTaxCategory);
                                 }
                             }
 

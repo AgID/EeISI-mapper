@@ -41,14 +41,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             legalMonetaryTotal.addContent(taxExclusiveAmount);
                         }
                     }
-                    if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
-                        BT0110InvoiceTotalVatAmount bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0);
-                        if (bt0110 != null) {
-                            Element taxAmount = new Element("TaxAmount");
-                            taxAmount.addContent(dblStrConverter.convert(bt0110.getValue()));
-                            legalMonetaryTotal.addContent(taxAmount);
-                        }
-                    }
+
                     if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
                         BT0112InvoiceTotalAmountWithVat bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0);
                         if (bt0112 != null) {
