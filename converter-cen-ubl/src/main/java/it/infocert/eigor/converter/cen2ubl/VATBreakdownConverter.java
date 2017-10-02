@@ -45,6 +45,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 if (bt0116 != null || bt0117 != null || bt0118 != null || bt0119 != null) {
 
                     Element taxTotal = root.getChild("TaxTotal");
+                    if (bt0117 != null) {
+                        Element taxAmount = new Element("TaxAmount");
+                        taxAmount.addContent(dblStrConverter.convert(bt0117.getValue()));
+                        taxTotal.addContent(taxAmount);
+                    }
+
                     if (taxTotal == null) {
                         taxTotal = new Element("TaxTotal");
                         root.addContent(taxTotal);
@@ -57,11 +63,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         taxableAmount.addContent(dblStrConverter.convert(bt0116.getValue()));
                         taxSubtotal.addContent(taxableAmount);
                     }
-                    if (bt0117 != null) {
-                        Element taxAmount = new Element("TaxAmount");
-                        taxAmount.addContent(dblStrConverter.convert(bt0117.getValue()));
-                        taxTotal.addContent(taxAmount);
-                    }
+
 
                     Element taxCategory = new Element("TaxCategory");
                     taxSubtotal.addContent(taxCategory);
