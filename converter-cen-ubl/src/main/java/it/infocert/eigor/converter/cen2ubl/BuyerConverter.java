@@ -79,7 +79,7 @@ public class BuyerConverter implements CustomMapping<Document> {
                         BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
                         if (bt0044 != null) {
                             Element registrationName = new Element("RegistrationName");
-                            registrationName.addContent(bt0044.getValue());
+                            registrationName.setText(bt0044.getValue());
                             Element partyLegalEntity = party.getChild("PartyLegalEntity");
                             if (partyLegalEntity == null) {
                                 partyLegalEntity = new Element("PartyLegalEntity");

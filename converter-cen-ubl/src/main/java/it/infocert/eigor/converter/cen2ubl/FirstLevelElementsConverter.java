@@ -71,7 +71,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
                 if (!bg0001.getBT0022InvoiceNote().isEmpty()) {
                     BT0022InvoiceNote bt0022 = bg0001.getBT0022InvoiceNote(0);
                     Element note = new Element("Note");
-                    note.addContent(bt0022.getValue());
+                    note.setText(bt0022.getValue());
                     root.addContent(note);
                 }
             }

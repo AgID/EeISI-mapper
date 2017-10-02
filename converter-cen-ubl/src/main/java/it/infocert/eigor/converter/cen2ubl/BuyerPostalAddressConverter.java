@@ -51,7 +51,7 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
                         BT0050BuyerAddressLine1 bt0050 = bg0008.getBT0050BuyerAddressLine1(0);
                         if (bt0050 != null) {
                             Element streetName = new Element("StreetName");
-                            streetName.addContent(bt0050.getValue());
+                            streetName.setText(bt0050.getValue());
                             postalAddress.addContent(streetName);
                         }
                     }
@@ -60,7 +60,7 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
                         BT0052BuyerCity bt0052 = bg0008.getBT0052BuyerCity(0);
                         if (bt0052 != null) {
                             Element cityName = new Element("CityName");
-                            cityName.addContent(bt0052.getValue());
+                            cityName.setText(bt0052.getValue());
                             postalAddress.addContent(cityName);
                         }
                     }
@@ -69,7 +69,7 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
                         BT0053BuyerPostCode bt0053 = bg0008.getBT0053BuyerPostCode(0);
                         if (bt0053 != null) {
                             Element postalZone = new Element("PostalZone");
-                            postalZone.addContent(bt0053.getValue());
+                            postalZone.setText(bt0053.getValue());
                             postalAddress.addContent(postalZone);
                         }
                     }
@@ -84,7 +84,7 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
                             }
                             Element identificationCode = new Element("IdentificationCode");
                             Iso31661CountryCodes code = bt0055.getValue();
-                            identificationCode.addContent(code.name());
+                            identificationCode.setText(code.name());
                             country.addContent(identificationCode);
                         }
                     }

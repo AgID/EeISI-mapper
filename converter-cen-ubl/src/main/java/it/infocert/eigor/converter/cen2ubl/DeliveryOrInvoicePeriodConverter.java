@@ -37,7 +37,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                         BT0073InvoicingPeriodStartDate bt0073 = bg0014.getBT0073InvoicingPeriodStartDate(0);
                         if (bt0073 != null) {
                             Element startDate = new Element("StartDate");
-                            startDate.addContent(dateConverter.convert(bt0073.getValue()));
+                            startDate.setText(dateConverter.convert(bt0073.getValue()));
                             invoicePeriod.addContent(startDate);
                         }
                     }
@@ -46,7 +46,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                         BT0074InvoicingPeriodEndDate bt0074 = bg0014.getBT0074InvoicingPeriodEndDate(0);
                         if (bt0074 != null) {
                             Element endDate = new Element("EndDate");
-                            endDate.addContent(dateConverter.convert(bt0074.getValue()));
+                            endDate.setText(dateConverter.convert(bt0074.getValue()));
                             invoicePeriod.addContent(endDate);
                         }
                     }
@@ -56,7 +56,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                         if (bt0008 != null) {
                             Element descriptionCode = new Element("DescriptionCode");
                             Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
-                            descriptionCode.addContent(code.name());
+                            descriptionCode.setText(code.name());
                             invoicePeriod.addContent(descriptionCode);
                         }
                     }
