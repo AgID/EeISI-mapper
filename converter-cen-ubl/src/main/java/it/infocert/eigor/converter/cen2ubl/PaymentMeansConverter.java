@@ -33,7 +33,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                     if (bt0081 != null) {
                         Element paymentMeansCode = new Element("PaymentMeansCode");
                         Untdid4461PaymentMeansCode code = bt0081.getValue();
-                        paymentMeansCode.setText(code.name());
+                        paymentMeansCode.setText(String.valueOf(code.getCode()));
                         paymentMeans.addContent(paymentMeansCode);
                     }
                 }

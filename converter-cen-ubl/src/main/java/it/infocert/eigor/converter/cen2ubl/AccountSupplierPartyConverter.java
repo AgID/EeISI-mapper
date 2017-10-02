@@ -64,7 +64,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             if (!sellerPostalAddress.getBT0040SellerCountryCode().isEmpty()) {
                 Element identificationCode = new Element("IdentificationCode");
                 Element country = new Element("Country").addContent(identificationCode);
-                identificationCode.setText(sellerPostalAddress.getBT0038SellerPostCode(0).getValue());
+                identificationCode.setText(sellerPostalAddress.getBT0040SellerCountryCode(0).getValue().getIso2charCode());
                 postalAddress.addContent(country);
             }
         }
