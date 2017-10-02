@@ -33,7 +33,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                     if (bt0081 != null) {
                         Element paymentMeansCode = new Element("PaymentMeansCode");
                         Untdid4461PaymentMeansCode code = bt0081.getValue();
-                        paymentMeansCode.addContent(code.name());
+                        paymentMeansCode.setText(code.name());
                         paymentMeans.addContent(paymentMeansCode);
                     }
                 }
@@ -42,7 +42,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                     BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
                     if (bt0083 != null) {
                         Element paymentID = new Element("PaymentID");
-                        paymentID.addContent(bt0083.getValue());
+                        paymentID.setText(bt0083.getValue());
                         paymentMeans.addContent(paymentID);
                     }
                 }

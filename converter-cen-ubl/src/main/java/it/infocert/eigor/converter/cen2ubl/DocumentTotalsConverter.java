@@ -29,7 +29,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         BT0106SumOfInvoiceLineNetAmount bt0106 = bg0022.getBT0106SumOfInvoiceLineNetAmount(0);
                         if (bt0106 != null) {
                             Element lineExtensionAmount = new Element("LineExtensionAmount");
-                            lineExtensionAmount.addContent(dblStrConverter.convert(bt0106.getValue()));
+                            lineExtensionAmount.setText(dblStrConverter.convert(bt0106.getValue()));
                             legalMonetaryTotal.addContent(lineExtensionAmount);
                         }
                     }
@@ -37,7 +37,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         BT0109InvoiceTotalAmountWithoutVat bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0);
                         if (bt0109 != null) {
                             Element taxExclusiveAmount = new Element("TaxExclusiveAmount");
-                            taxExclusiveAmount.addContent(dblStrConverter.convert(bt0109.getValue()));
+                            taxExclusiveAmount.setText(dblStrConverter.convert(bt0109.getValue()));
                             legalMonetaryTotal.addContent(taxExclusiveAmount);
                         }
                     }
@@ -46,7 +46,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         BT0112InvoiceTotalAmountWithVat bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0);
                         if (bt0112 != null) {
                             Element taxInclusiveAmount = new Element("TaxInclusiveAmount");
-                            taxInclusiveAmount.addContent(dblStrConverter.convert(bt0112.getValue()));
+                            taxInclusiveAmount.setText(dblStrConverter.convert(bt0112.getValue()));
                             legalMonetaryTotal.addContent(taxInclusiveAmount);
                         }
                     }
@@ -54,7 +54,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         BT0115AmountDueForPayment bt0115 = bg0022.getBT0115AmountDueForPayment(0);
                         if (bt0115 != null) {
                             Element payableAmount = new Element("PayableAmount");
-                            payableAmount.addContent(dblStrConverter.convert(bt0115.getValue()));
+                            payableAmount.setText(dblStrConverter.convert(bt0115.getValue()));
                             legalMonetaryTotal.addContent(payableAmount);
                         }
                     }
@@ -62,7 +62,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         BT0114RoundingAmount bt0114 = bg0022.getBT0114RoundingAmount(0);
                         if (bt0114 != null) {
                             Element payableRoundingAmount = new Element("PayableRoundingAmount");
-                            payableRoundingAmount.addContent(dblStrConverter.convert(bt0114.getValue()));
+                            payableRoundingAmount.setText(dblStrConverter.convert(bt0114.getValue()));
                             legalMonetaryTotal.addContent(payableRoundingAmount);
                         }
                     }
