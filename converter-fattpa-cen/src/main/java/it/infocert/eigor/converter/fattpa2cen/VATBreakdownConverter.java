@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -15,9 +17,12 @@ import java.util.List;
  */
 public class VATBreakdownConverter implements CustomMapping<Document> {
 
+    private final static ConversionRegistry conversionRegistry = new ConversionRegistry();
+
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
+        ItalianNaturaToUntdid5305DutyTaxFeeCategories dutyTaxFeeCategories = new ItalianNaturaToUntdid5305DutyTaxFeeCategories();
 
         BG0023VatBreakdown bg0023 = null;
 
@@ -54,7 +59,8 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         Element natura = datiRiepilogo.getChild("Natura");
                         if (natura != null) {
                             try {
-                                BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(natura.getText()));
+                                Untdid5305DutyTaxFeeCategories converted = dutyTaxFeeCategories.convert(natura.getText());
+                                BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(converted);
                                 bg0023.getBT0118VatCategoryCode().add(bt0118);
                             } catch (NullPointerException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
