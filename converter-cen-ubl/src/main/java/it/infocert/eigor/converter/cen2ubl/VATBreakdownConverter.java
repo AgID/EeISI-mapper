@@ -19,7 +19,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List errors) {
-        DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#.00");
+        DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#0.00");
 
         Element root = document.getRootElement();
         if (root != null) {
