@@ -110,11 +110,22 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
-            	log.info("Xsd validation succesful!");
+            	log.info("Xsd validation successful!");
             }
+
+            List<IConversionIssue> schematronErrors = ublValidator.validate(bytes);
+            if (schematronErrors.isEmpty()) {
+                log.info("Schematron validation successful!");
+            }
+
+            List<IConversionIssue> ciusErrors = ciusValidator.validate(bytes);
+            if (ciusErrors.isEmpty()) {
+                log.info("CIUS Schematron validation successful!");
+            }
+
 			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(ublValidator.validate(bytes)));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(bytes)));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusErrors));
 
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
