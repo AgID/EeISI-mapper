@@ -24,31 +24,25 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     root.addContent(additionalDocumentReference);
                     if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
-                        if (bt0122 != null) {
-                            Element id = new Element("ID");
-                            id.setText(bt0122.getValue());
-                            additionalDocumentReference.addContent(id);
-                        }
+                        Element id = new Element("ID");
+                        id.setText(bt0122.getValue());
+                        additionalDocumentReference.addContent(id);
                     }
                     if (!elemBg24.getBT0123SupportingDocumentDescription().isEmpty()) {
                         BT0123SupportingDocumentDescription bt0123 = elemBg24.getBT0123SupportingDocumentDescription(0);
-                        if (bt0123 != null) {
-                            Element documentType = new Element("DocumentType");
-                            documentType.setText(bt0123.getValue());
-                            additionalDocumentReference.addContent(documentType);
-                        }
+                        Element documentType = new Element("DocumentType");
+                        documentType.setText(bt0123.getValue());
+                        additionalDocumentReference.addContent(documentType);
                     }
                     if (!elemBg24.getBT0124ExternalDocumentLocation().isEmpty()) {
                         BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
-                        if (bt0124 != null) {
-                            Element uri = new Element("URI");
-                            uri.setText(bt0124.getValue());
-                            Element attachment = new Element("Attachment");
-                            additionalDocumentReference.addContent(attachment);
-                            Element externalReference = new Element("ExternalReference");
-                            attachment.addContent(externalReference);
-                            externalReference.addContent(uri);
-                        }
+                        Element uri = new Element("URI");
+                        uri.setText(bt0124.getValue());
+                        Element attachment = new Element("Attachment");
+                        additionalDocumentReference.addContent(attachment);
+                        Element externalReference = new Element("ExternalReference");
+                        attachment.addContent(externalReference);
+                        externalReference.addContent(uri);
                     }
                 }
             }

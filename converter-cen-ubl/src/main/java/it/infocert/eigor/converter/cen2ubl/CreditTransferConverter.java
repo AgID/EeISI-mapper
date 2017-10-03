@@ -22,33 +22,28 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                 for (BG0017CreditTransfer elemBg17 : bg0017) {
                     if (!elemBg17.getBT0084PaymentAccountIdentifier().isEmpty()) {
                         BT0084PaymentAccountIdentifier bt0084 = elemBg17.getBT0084PaymentAccountIdentifier(0);
+                        Element id = new Element("ID");
+                        id.setText(bt0084.getValue());
 
-                        if (bt0084 != null) {
-                            Element id = new Element("ID");
-                            id.setText(bt0084.getValue());
+                        Element paymentMeans = root.getChild("PaymentMeans");
+                        if (paymentMeans == null) {
+                            paymentMeans = new Element("PaymentMeans");
+                            root.addContent(paymentMeans);
+                        }
+                        Element payeeFinancialAccount = new Element("PayeeFinancialAccount");
+                        paymentMeans.addContent(payeeFinancialAccount);
 
-                            Element paymentMeans = root.getChild("PaymentMeans");
-                            if (paymentMeans == null) {
-                                paymentMeans = new Element("PaymentMeans");
-                                root.addContent(paymentMeans);
-                            }
-                            Element payeeFinancialAccount = new Element("PayeeFinancialAccount");
-                            paymentMeans.addContent(payeeFinancialAccount);
+                        payeeFinancialAccount.addContent(id);
 
-                            payeeFinancialAccount.addContent(id);
+                        if (!elemBg17.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
+                            BT0086PaymentServiceProviderIdentifier bt0086 = elemBg17.getBT0086PaymentServiceProviderIdentifier(0);
+                            Element branchID = new Element("ID");
+                            branchID.setText(bt0086.getValue());
 
-                            if (!elemBg17.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
-                                BT0086PaymentServiceProviderIdentifier bt0086 = elemBg17.getBT0086PaymentServiceProviderIdentifier(0);
-                                if (bt0086 != null) {
-                                    Element branchID = new Element("ID");
-                                    branchID.setText(bt0086.getValue());
+                            Element financialInstitutionBranch = new Element("FinancialInstitutionBranch");
+                            payeeFinancialAccount.addContent(financialInstitutionBranch);
 
-                                    Element financialInstitutionBranch = new Element("FinancialInstitutionBranch");
-                                    payeeFinancialAccount.addContent(financialInstitutionBranch);
-
-                                    financialInstitutionBranch.addContent(branchID);
-                                }
-                            }
+                            financialInstitutionBranch.addContent(branchID);
                         }
                     }
                 }

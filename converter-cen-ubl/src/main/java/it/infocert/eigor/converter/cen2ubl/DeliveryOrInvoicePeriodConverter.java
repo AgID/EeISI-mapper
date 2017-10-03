@@ -35,30 +35,24 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
 
                     if (!bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()) {
                         BT0073InvoicingPeriodStartDate bt0073 = bg0014.getBT0073InvoicingPeriodStartDate(0);
-                        if (bt0073 != null) {
-                            Element startDate = new Element("StartDate");
-                            startDate.setText(dateConverter.convert(bt0073.getValue()));
-                            invoicePeriod.addContent(startDate);
-                        }
+                        Element startDate = new Element("StartDate");
+                        startDate.setText(dateConverter.convert(bt0073.getValue()));
+                        invoicePeriod.addContent(startDate);
                     }
 
                     if (!bg0014.getBT0074InvoicingPeriodEndDate().isEmpty()) {
                         BT0074InvoicingPeriodEndDate bt0074 = bg0014.getBT0074InvoicingPeriodEndDate(0);
-                        if (bt0074 != null) {
-                            Element endDate = new Element("EndDate");
-                            endDate.setText(dateConverter.convert(bt0074.getValue()));
-                            invoicePeriod.addContent(endDate);
-                        }
+                        Element endDate = new Element("EndDate");
+                        endDate.setText(dateConverter.convert(bt0074.getValue()));
+                        invoicePeriod.addContent(endDate);
                     }
 
                     if (!cenInvoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
                         BT0008ValueAddedTaxPointDateCode bt0008 = cenInvoice.getBT0008ValueAddedTaxPointDateCode(0);
-                        if (bt0008 != null) {
-                            Element descriptionCode = new Element("DescriptionCode");
-                            Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
-                            descriptionCode.setText(code.name());
-                            invoicePeriod.addContent(descriptionCode);
-                        }
+                        Element descriptionCode = new Element("DescriptionCode");
+                        Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
+                        descriptionCode.setText(code.name());
+                        invoicePeriod.addContent(descriptionCode);
                     }
                 }
             }
