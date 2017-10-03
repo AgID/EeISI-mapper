@@ -2,7 +2,10 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.StringToUnitOfMeasureConverter;
+import it.infocert.eigor.api.conversion.UnitOfMeasureCodesToStringConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
@@ -19,6 +22,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
+        ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter taxFeeCategoriesConverter = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
+        StringToUnitOfMeasureConverter strToUnitOfMeasure = new StringToUnitOfMeasureConverter();
 
         BG0025InvoiceLine bg0025 = null;
 
@@ -51,12 +56,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         UnitOfMeasureCodes unitCode = null;
                         if (unitaMisura != null) {
                             try {
-                                String commonCode = unitaMisura.getValue().split(" ")[1];
-                                for (UnitOfMeasureCodes elemUnitCode : UnitOfMeasureCodes.values()) {
-                                    if (elemUnitCode.getCommonCode().equals(commonCode)) {
-                                        unitCode = elemUnitCode;
-                                    }
-                                }
+                                unitCode = strToUnitOfMeasure.convert(unitaMisura.getText());
                                 BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                                 bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
                             } catch (NullPointerException e) {
@@ -107,7 +107,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element natura = dettaglioLinee.getChild("Natura");
                         if (natura != null) {
                             try {
-                                BT0151InvoicedItemVatCategoryCode invoicedItemVatCategoryCode = new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(natura.getText()));
+                                BT0151InvoicedItemVatCategoryCode invoicedItemVatCategoryCode = new BT0151InvoicedItemVatCategoryCode(taxFeeCategoriesConverter.convert(natura.getText()));
                                 bg0030.getBT0151InvoicedItemVatCategoryCode().add(invoicedItemVatCategoryCode);
                             } catch (NullPointerException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());

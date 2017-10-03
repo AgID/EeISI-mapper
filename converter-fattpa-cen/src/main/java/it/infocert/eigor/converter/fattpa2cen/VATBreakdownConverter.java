@@ -4,7 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -22,7 +22,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
-        ItalianNaturaToUntdid5305DutyTaxFeeCategories dutyTaxFeeCategories = new ItalianNaturaToUntdid5305DutyTaxFeeCategories();
+        ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter dutyTaxFeeCategories = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
 
         BG0023VatBreakdown bg0023 = null;
 
