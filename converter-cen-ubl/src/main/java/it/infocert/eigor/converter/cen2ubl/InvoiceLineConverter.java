@@ -19,7 +19,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
-        DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#.00");
+        DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#0.00");
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -38,7 +38,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         BT0126InvoiceLineIdentifier bt0126 = elemBg25.getBT0126InvoiceLineIdentifier(0);
                         if (bt0126 != null) {
                             Element id = new Element("ID");
-                            id.addContent(bt0126.getValue());
+                            id.setText(bt0126.getValue());
                             invoiceLine.addContent(id);
                         }
                     }
@@ -46,7 +46,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         BT0129InvoicedQuantity bt0129 = elemBg25.getBT0129InvoicedQuantity(0);
                         if (bt0129 != null) {
                             Element invoicedQuantity = new Element("InvoicedQuantity");
-                            invoicedQuantity.addContent(dblStrConverter.convert(bt0129.getValue()));
+                            invoicedQuantity.setText(dblStrConverter.convert(bt0129.getValue()));
 
                             if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
                                 BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);
@@ -64,7 +64,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         BT0131InvoiceLineNetAmount bt0131 = elemBg25.getBT0131InvoiceLineNetAmount(0);
                         if (bt0131 != null) {
                             Element lineExtensionAmount = new Element("LineExtensionAmount");
-                            lineExtensionAmount.addContent(dblStrConverter.convert(bt0131.getValue()));
+                            lineExtensionAmount.setText(dblStrConverter.convert(bt0131.getValue()));
                             if (currencyCode != null) {
                                 lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                             }
@@ -80,6 +80,77 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                     }
 
+                    if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
+                        List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
+                        for (BG0031ItemInformation elemBg31 : bg0031) {
+                            Element item = new Element("Item");
+                            if (!elemBg31.getBT0153ItemName().isEmpty()) {
+                                BT0153ItemName bt0153 = elemBg31.getBT0153ItemName(0);
+                                if (bt0153 != null) {
+                                    Element name = new Element("Name");
+                                    name.setText(bt0153.getValue());
+                                    item.addContent(name);
+                                }
+                            }
+                            if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
+                                List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
+                                for (BG0030LineVatInformation elemBg30 : bg0030) {
+                                    Element classifiedTaxCategory = new Element("ClassifiedTaxCategory");
+                                    if (!elemBg30.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
+                                        BT0151InvoicedItemVatCategoryCode bt0151 = elemBg30.getBT0151InvoicedItemVatCategoryCode(0);
+                                        if (bt0151 != null) {
+                                            Element id = new Element("ID");
+                                            Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0151.getValue();
+                                            id.setText(dutyTaxFeeCategories.name());
+                                            classifiedTaxCategory.addContent(id);
+                                        }
+                                    }
+                                    if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
+                                        BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
+                                        if (bt0152 != null) {
+                                            Element percent = new Element("Percent");
+                                            percent.setText(dblStrConverter.convert(bt0152.getValue()));
+                                            classifiedTaxCategory.addContent(percent);
+                                        }
+                                    }
+                                    Element taxScheme = new Element("TaxScheme");
+                                    Element id = new Element("ID");
+                                    id.setText("VAT");
+                                    taxScheme.addContent(id);
+                                    classifiedTaxCategory.addContent(taxScheme);
+
+                                    item.addContent(classifiedTaxCategory);
+                                }
+                            }
+
+                            if (!elemBg31.getBG0032ItemAttributes().isEmpty()) {
+                                List<BG0032ItemAttributes> bg0032 = elemBg31.getBG0032ItemAttributes();
+                                for (BG0032ItemAttributes elemBg32 : bg0032) {
+                                    Element additionalItemProperty = new Element("AdditionalItemProperty");
+                                    if (!elemBg32.getBT0160ItemAttributeName().isEmpty()) {
+                                        BT0160ItemAttributeName bt0160 = elemBg32.getBT0160ItemAttributeName(0);
+                                        if (bt0160 != null) {
+                                            Element name = new Element("Name");
+                                            name.setText(bt0160.getValue());
+                                            additionalItemProperty.addContent(name);
+                                        }
+                                    }
+                                    if (!elemBg32.getBT0161ItemAttributeValue().isEmpty()) {
+                                        BT0161ItemAttributeValue bt0161 = elemBg32.getBT0161ItemAttributeValue(0);
+                                        if (bt0161 != null) {
+                                            Element value = new Element("Value");
+                                            value.setText(bt0161.getValue());
+                                            additionalItemProperty.addContent(value);
+                                        }
+                                    }
+                                    item.addContent(additionalItemProperty);
+                                }
+                            }
+
+                            invoiceLine.addContent(item);
+                        }
+                    }
+
                     if (!elemBg25.getBG0029PriceDetails().isEmpty()) {
                         List<BG0029PriceDetails> bg0029 = elemBg25.getBG0029PriceDetails();
                         for (BG0029PriceDetails elemBg29 : bg0029) {
@@ -88,7 +159,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 BT0146ItemNetPrice bt0146 = elemBg29.getBT0146ItemNetPrice(0);
                                 if (bt0146 != null) {
                                     Element priceAmount = new Element("PriceAmount");
-                                    priceAmount.addContent(dblStrConverter.convert(bt0146.getValue()));
+                                    priceAmount.setText(dblStrConverter.convert(bt0146.getValue()));
                                     if (currencyCode != null) {
                                         priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                                     }
@@ -99,7 +170,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 BT0149ItemPriceBaseQuantity bt0149 = elemBg29.getBT0149ItemPriceBaseQuantity(0);
                                 if (bt0149 != null) {
                                     Element baseQuantity = new Element("BaseQuantity");
-                                    baseQuantity.addContent(dblStrConverter.convert(bt0149.getValue()));
+                                    baseQuantity.setText(dblStrConverter.convert(bt0149.getValue()));
 
                                     if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
                                         BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
@@ -113,74 +184,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 }
                             }
                             invoiceLine.addContent(price);
-                        }
-                    }
-
-                    if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
-                        Element item = new Element("Item");
-                        invoiceLine.addContent(item);
-                        List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
-                        for (BG0030LineVatInformation elemBg30 : bg0030) {
-                            Element classifiedTaxCategory = new Element("ClassifiedTaxCategory");
-                            if (!elemBg30.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
-                                BT0151InvoicedItemVatCategoryCode bt0151 = elemBg30.getBT0151InvoicedItemVatCategoryCode(0);
-                                if (bt0151 != null) {
-                                    Element id = new Element("ID");
-                                    Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0151.getValue();
-                                    id.addContent(dutyTaxFeeCategories.name());
-                                    classifiedTaxCategory.addContent(id);
-                                }
-                            }
-                            if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
-                                BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
-                                if (bt0152 != null) {
-                                    Element percent = new Element("Percent");
-                                    percent.addContent(dblStrConverter.convert(bt0152.getValue()));
-                                    classifiedTaxCategory.addContent(percent);
-                                }
-                            }
-                            invoiceLine.addContent(classifiedTaxCategory);
-                        }
-                    }
-
-                    if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
-                        List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
-                        for (BG0031ItemInformation elemBg31 : bg0031) {
-                            Element item = new Element("Item");
-                            if (!elemBg31.getBT0153ItemName().isEmpty()) {
-                                BT0153ItemName bt0153 = elemBg31.getBT0153ItemName(0);
-                                if (bt0153 != null) {
-                                    Element name = new Element("Name");
-                                    name.addContent(bt0153.getValue());
-                                    item.addContent(name);
-                                }
-                            }
-
-                            if (!elemBg31.getBG0032ItemAttributes().isEmpty()) {
-                                List<BG0032ItemAttributes> bg0032 = elemBg31.getBG0032ItemAttributes();
-                                for (BG0032ItemAttributes elemBg32 : bg0032) {
-                                    Element additionalItemProperty = new Element("AdditionalItemProperty");
-                                    if (!elemBg32.getBT0160ItemAttributeName().isEmpty()) {
-                                        BT0160ItemAttributeName bt0160 = elemBg32.getBT0160ItemAttributeName(0);
-                                        if (bt0160 != null) {
-                                            Element name = new Element("Name");
-                                            name.addContent(bt0160.getValue());
-                                            additionalItemProperty.addContent(name);
-                                        }
-                                    }
-                                    if (!elemBg32.getBT0161ItemAttributeValue().isEmpty()) {
-                                        BT0161ItemAttributeValue bt0161 = elemBg32.getBT0161ItemAttributeValue(0);
-                                        if (bt0161 != null) {
-                                            Element value = new Element("Value");
-                                            value.addContent(bt0161.getValue());
-                                            additionalItemProperty.addContent(value);
-                                        }
-                                    }
-                                    item.addContent(additionalItemProperty);
-                                }
-                            }
-
-                            invoiceLine.addContent(item);
                         }
                     }
 

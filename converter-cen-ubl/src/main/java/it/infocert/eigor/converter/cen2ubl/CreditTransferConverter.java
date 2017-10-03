@@ -25,7 +25,7 @@ public class CreditTransferConverter implements CustomMapping<Document> {
 
                         if (bt0084 != null) {
                             Element id = new Element("ID");
-                            id.addContent(bt0084.getValue());
+                            id.setText(bt0084.getValue());
 
                             Element paymentMeans = root.getChild("PaymentMeans");
                             if (paymentMeans == null) {
@@ -41,7 +41,7 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                                 BT0086PaymentServiceProviderIdentifier bt0086 = elemBg17.getBT0086PaymentServiceProviderIdentifier(0);
                                 if (bt0086 != null) {
                                     Element branchID = new Element("ID");
-                                    branchID.addContent(bt0086.getValue());
+                                    branchID.setText(bt0086.getValue());
 
                                     Element financialInstitutionBranch = new Element("FinancialInstitutionBranch");
                                     payeeFinancialAccount.addContent(financialInstitutionBranch);

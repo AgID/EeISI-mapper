@@ -11,7 +11,8 @@ public class ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter impl
             case "I":
                 return Untdid2005DateTimePeriodQualifiers.Code3;
             case "D":
-                return Untdid2005DateTimePeriodQualifiers.Code35;
+            case "S":
+                return Untdid2005DateTimePeriodQualifiers.Code432;
             default:
                 return null;
         }

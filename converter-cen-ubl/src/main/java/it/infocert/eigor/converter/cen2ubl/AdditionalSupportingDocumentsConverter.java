@@ -26,7 +26,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
                         if (bt0122 != null) {
                             Element id = new Element("ID");
-                            id.addContent(bt0122.getValue());
+                            id.setText(bt0122.getValue());
                             additionalDocumentReference.addContent(id);
                         }
                     }
@@ -34,7 +34,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         BT0123SupportingDocumentDescription bt0123 = elemBg24.getBT0123SupportingDocumentDescription(0);
                         if (bt0123 != null) {
                             Element documentType = new Element("DocumentType");
-                            documentType.addContent(bt0123.getValue());
+                            documentType.setText(bt0123.getValue());
                             additionalDocumentReference.addContent(documentType);
                         }
                     }
@@ -42,7 +42,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
                         if (bt0124 != null) {
                             Element uri = new Element("URI");
-                            uri.addContent(bt0124.getValue());
+                            uri.setText(bt0124.getValue());
                             Element attachment = new Element("Attachment");
                             additionalDocumentReference.addContent(attachment);
                             Element externalReference = new Element("ExternalReference");
