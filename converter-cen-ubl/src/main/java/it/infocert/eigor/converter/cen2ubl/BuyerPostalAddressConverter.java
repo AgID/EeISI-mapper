@@ -49,44 +49,36 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
 
                     if (!bg0008.getBT0050BuyerAddressLine1().isEmpty()) {
                         BT0050BuyerAddressLine1 bt0050 = bg0008.getBT0050BuyerAddressLine1(0);
-                        if (bt0050 != null) {
-                            Element streetName = new Element("StreetName");
-                            streetName.setText(bt0050.getValue());
-                            postalAddress.addContent(streetName);
-                        }
+                        Element streetName = new Element("StreetName");
+                        streetName.setText(bt0050.getValue());
+                        postalAddress.addContent(streetName);
                     }
 
                     if (!bg0008.getBT0052BuyerCity().isEmpty()) {
                         BT0052BuyerCity bt0052 = bg0008.getBT0052BuyerCity(0);
-                        if (bt0052 != null) {
-                            Element cityName = new Element("CityName");
-                            cityName.setText(bt0052.getValue());
-                            postalAddress.addContent(cityName);
-                        }
+                        Element cityName = new Element("CityName");
+                        cityName.setText(bt0052.getValue());
+                        postalAddress.addContent(cityName);
                     }
 
                     if (!bg0008.getBT0053BuyerPostCode().isEmpty()) {
                         BT0053BuyerPostCode bt0053 = bg0008.getBT0053BuyerPostCode(0);
-                        if (bt0053 != null) {
-                            Element postalZone = new Element("PostalZone");
-                            postalZone.setText(bt0053.getValue());
-                            postalAddress.addContent(postalZone);
-                        }
+                        Element postalZone = new Element("PostalZone");
+                        postalZone.setText(bt0053.getValue());
+                        postalAddress.addContent(postalZone);
                     }
 
                     if (!bg0008.getBT0055BuyerCountryCode().isEmpty()) {
                         BT0055BuyerCountryCode bt0055 = bg0008.getBT0055BuyerCountryCode(0);
-                        if (bt0055 != null) {
-                            Element country = postalAddress.getChild("Country");
-                            if (country == null) {
-                                country = new Element("Country");
-                                postalAddress.addContent(country);
-                            }
-                            Element identificationCode = new Element("IdentificationCode");
-                            Iso31661CountryCodes code = bt0055.getValue();
-                            identificationCode.setText(code.name());
-                            country.addContent(identificationCode);
+                        Element country = postalAddress.getChild("Country");
+                        if (country == null) {
+                            country = new Element("Country");
+                            postalAddress.addContent(country);
                         }
+                        Element identificationCode = new Element("IdentificationCode");
+                        Iso31661CountryCodes code = bt0055.getValue();
+                        identificationCode.setText(code.name());
+                        country.addContent(identificationCode);
                     }
                 }
             }
