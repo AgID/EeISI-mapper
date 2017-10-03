@@ -90,13 +90,13 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
 
-        // load the CIUS schematron validator.
-        try {
-            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius"));
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
-        } catch (Exception e) {
-            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
-        }
+//        // load the CIUS schematron validator.
+//        try {
+//            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius"));
+//            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+//        } catch (Exception e) {
+//            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+//        }
 
         configurableSupport.configure();
 
@@ -133,7 +133,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             }
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(ublValidator.validate(documentByteArray)));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(documentByteArray)));
+//            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(documentByteArray)));
 
         } catch (IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));

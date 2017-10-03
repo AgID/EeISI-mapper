@@ -21,7 +21,7 @@ public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends From
                 case N_2:
                     return Untdid5305DutyTaxFeeCategories.G;
                 default:
-                    return null;
+                    return Untdid5305DutyTaxFeeCategories.S;
             }
         }
         return null;

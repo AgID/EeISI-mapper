@@ -44,12 +44,11 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                     if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
                         BT0112InvoiceTotalAmountWithVat bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0);
-                        if (bt0112 != null) {
-                            Element taxInclusiveAmount = new Element("TaxInclusiveAmount");
-                            taxInclusiveAmount.setText(dblStrConverter.convert(bt0112.getValue()));
-                            legalMonetaryTotal.addContent(taxInclusiveAmount);
-                        }
+                        Element taxInclusiveAmount = new Element("TaxInclusiveAmount");
+                        taxInclusiveAmount.setText(dblStrConverter.convert(bt0112.getValue()));
+                        legalMonetaryTotal.addContent(taxInclusiveAmount);
                     }
+
                     if (!bg0022.getBT0115AmountDueForPayment().isEmpty()) {
                         BT0115AmountDueForPayment bt0115 = bg0022.getBT0115AmountDueForPayment(0);
                         if (bt0115 != null) {

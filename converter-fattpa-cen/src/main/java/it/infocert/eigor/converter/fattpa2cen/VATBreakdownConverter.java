@@ -57,16 +57,19 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                             }
                         }
                         Element natura = datiRiepilogo.getChild("Natura");
+                        Untdid5305DutyTaxFeeCategories code = null;
                         if (natura != null) {
                             try {
-                                Untdid5305DutyTaxFeeCategories converted = dutyTaxFeeCategories.convert(natura.getText());
-                                BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(converted);
-                                bg0023.getBT0118VatCategoryCode().add(bt0118);
+                                code = dutyTaxFeeCategories.convert(natura.getText());
                             } catch (NullPointerException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
+                        } else {
+                            code = Untdid5305DutyTaxFeeCategories.S;
                         }
+                        BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(code);
+                        bg0023.getBT0118VatCategoryCode().add(bt0118);
                         Element aliquotaIVA = datiRiepilogo.getChild("AliquotaIVA");
                         try {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(aliquotaIVA.getText()));

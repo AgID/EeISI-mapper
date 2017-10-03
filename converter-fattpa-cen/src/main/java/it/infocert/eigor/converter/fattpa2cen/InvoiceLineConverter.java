@@ -84,8 +84,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element unitaMisuraDett = dettaglioLinee.getChild("UnitaMisura");
                         if (unitaMisuraDett != null) {
                             try {
-                                String commonQuantity = unitaMisuraDett.getValue().split(" ")[0];
-                                BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(strDblConverter.convert(commonQuantity));
+//                                String commonQuantity = unitaMisuraDett.getValue().split(" ")[0];
+//                                BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(strDblConverter.convert(commonQuantity));
+                                BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(1d);
                                 bg0029.getBT0149ItemPriceBaseQuantity().add(itemPriceBaseQuantity);
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
@@ -105,15 +106,20 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
                         BG0030LineVatInformation bg0030 = new BG0030LineVatInformation();
                         Element natura = dettaglioLinee.getChild("Natura");
+                        Untdid5305DutyTaxFeeCategories code = null;
                         if (natura != null) {
                             try {
-                                BT0151InvoicedItemVatCategoryCode invoicedItemVatCategoryCode = new BT0151InvoicedItemVatCategoryCode(taxFeeCategoriesConverter.convert(natura.getText()));
-                                bg0030.getBT0151InvoicedItemVatCategoryCode().add(invoicedItemVatCategoryCode);
+                                code = taxFeeCategoriesConverter.convert(natura.getText());
                             } catch (NullPointerException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
+                        } else {
+                            code = Untdid5305DutyTaxFeeCategories.S;
                         }
+                        BT0151InvoicedItemVatCategoryCode invoicedItemVatCategoryCode = new BT0151InvoicedItemVatCategoryCode(code);
+                        bg0030.getBT0151InvoicedItemVatCategoryCode().add(invoicedItemVatCategoryCode);
+
                         Element aliquotaIVA = dettaglioLinee.getChild("AliquotaIVA");
                         if (aliquotaIVA != null) {
                             try {
