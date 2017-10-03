@@ -132,7 +132,11 @@ public class Cen2Ubl extends AbstractFromCenConverter {
                 log.info("Xsd validation succesful!");
             }
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(ublValidator.validate(documentByteArray)));
+            List<IConversionIssue> schematronErrors = ublValidator.validate(documentByteArray);
+            if (schematronErrors.isEmpty()) {
+                log.info("Schematron validation successful!");
+            }
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
 //            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(documentByteArray)));
 
         } catch (IllegalArgumentException e) {
