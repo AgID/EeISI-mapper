@@ -74,7 +74,7 @@ public class ObservableConversion {
         BG0000Invoice cenInvoice = null;
 
         // The final converted invoice
-        BinaryConversionResult conversionResult = null;
+        BinaryConversionResult fromCenResult = null;
 
         final ConversionContext ctx = new ConversionContext();
         ctx.setForceConversion(forceConversion.booleanValue());
@@ -129,13 +129,13 @@ public class ObservableConversion {
             // 3rd step CEN -> XML
             if (keepOnGoing) {
                 fireOnStartingFromCenTransformation(ctx);
-                conversionResult = fromCen.convert(cenInvoice);
-                ctx.setFromCenResult(conversionResult);
-                if (!conversionResult.hasIssues()) {
+                fromCenResult = fromCen.convert(cenInvoice);
+                ctx.setFromCenResult(fromCenResult);
+                if (!fromCenResult.hasIssues()) {
                     fireOnSuccessfullFromCenTransformation(ctx);
                 } else {
                     fireOnFailedFromCenTransformation(ctx);
-                    issues.addAll( toCenResult.getIssues() );
+                    issues.addAll( fromCenResult.getIssues() );
                 }
             }
         } catch (SyntaxErrorInInvoiceFormatException e) {
@@ -146,7 +146,7 @@ public class ObservableConversion {
         // anyhow, we inform the listeners we completed the transformation
         fireOnTerminatedConverion(ctx);
 
-        return new BinaryConversionResult(conversionResult!=null ? conversionResult.getResult() : null, issues);
+        return new BinaryConversionResult(fromCenResult!=null ? fromCenResult.getResult() : null, issues);
 
     }
 
