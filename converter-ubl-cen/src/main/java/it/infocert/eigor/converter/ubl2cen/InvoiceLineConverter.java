@@ -124,27 +124,48 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
             //BG0026
             BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
-            Element invoicePeriod = findNamespaceChild(elemInv, namespacesInScope, "InvoicePeriod");
-            if (invoicePeriod != null) {
-                Element startDate = findNamespaceChild(invoicePeriod, namespacesInScope, "StartDate");
-                if (startDate != null) {
+            Element invoicePeriodLine = findNamespaceChild(elemInv, namespacesInScope, "InvoicePeriod");
+            if (invoicePeriodLine != null) {
+                Element startDateLine = findNamespaceChild(invoicePeriodLine, namespacesInScope, "StartDate");
+                Element endDateLine = findNamespaceChild(invoicePeriodLine, namespacesInScope, "EndDate");
+                if (startDateLine != null && endDateLine != null) {
                     try {
-                        BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(startDate.getText()));
+                        BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(startDateLine.getText()));
                         bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
                     } catch (IllegalArgumentException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
                         errors.add(ConversionIssue.newError(ere));
                     }
-                }
-
-                Element endDate = findNamespaceChild(invoicePeriod, namespacesInScope, "EndDate");
-                if (endDate != null) {
                     try {
-                        BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDate.getText()));
+                        BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDateLine.getText()));
                         bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
                     } catch (IllegalArgumentException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
                         errors.add(ConversionIssue.newError(ere));
+                    }
+                }
+            } else {
+                Element invoicePeriod = findNamespaceChild(rootElement, namespacesInScope, "InvoicePeriod");
+                if (invoicePeriod != null) {
+                    Element startDate = findNamespaceChild(invoicePeriod, namespacesInScope, "StartDate");
+                    if (startDate != null) {
+                        try {
+                            BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(startDate.getText()));
+                            bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
+                        } catch (IllegalArgumentException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+                    }
+                    Element endDate = findNamespaceChild(invoicePeriod, namespacesInScope, "EndDate");
+                    if (endDate != null) {
+                        try {
+                            BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(endDate.getText()));
+                            bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
+                        } catch (IllegalArgumentException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
                     }
                 }
             }
