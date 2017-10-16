@@ -107,22 +107,18 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
-        if (!conversionResult.isSuccessful()) {
             List<IConversionIssue> errors = conversionResult.getIssues();
             String data = toCsvFileContent(errors);
             File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
             FileUtils.writeStringToFile(toCenErrors, data);
-        }
     }
 
     private void writeFromCenErrorsToFile(BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
         // writes to file
-        if (!conversionResult.isSuccessful()) {
             // writes from-cen errors csv
             List<IConversionIssue> errors = conversionResult.getIssues();
             File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
             FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
-        }
     }
 
     private String toCsvFileContent(List<IConversionIssue> errors) {
