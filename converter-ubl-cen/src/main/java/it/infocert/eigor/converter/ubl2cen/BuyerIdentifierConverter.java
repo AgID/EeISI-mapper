@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class BuyerIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBT0046_BT0048(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
-        BT0046BuyerIdentifierAndSchemeIdentifier bt0046 = null;
-        BT0048BuyerVatIdentifier bt0048 = null;
+    private ConversionResult<BG0000Invoice> toBT0046_BT0048(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+        BT0046BuyerIdentifierAndSchemeIdentifier bt0046;
+        BT0048BuyerVatIdentifier bt0048;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -33,10 +33,10 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
             Element party = findNamespaceChild(accountingCustomerParty, namespacesInScope, "Party");
 
             if (party != null) {
-                List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
+                Element partyIdentification = findNamespaceChild(party, namespacesInScope, "PartyIdentification");
 
-                for(Element elemParty : partyIdentifications) {
-                    Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
+                if (partyIdentification != null) {
+                    Element id = findNamespaceChild(partyIdentification, namespacesInScope, "ID");
 
                     if (id != null) {
                         Attribute schemeID = id.getAttribute("schemeID");

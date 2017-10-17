@@ -25,19 +25,18 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> buyerTradeParties = null;
         Element child = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
 
         if (child != null) {
             Element child1 = findNamespaceChild(child, namespacesInScope, "ApplicableHeaderTradeAgreement");
 
             if (child1 != null) {
-                buyerTradeParties = findNamespaceChildren(child1, namespacesInScope, "BuyerTradeParty");
+               Element buyerTradeParty = findNamespaceChild(child1, namespacesInScope, "BuyerTradeParty");
 
-                for (Element elemBuyer : buyerTradeParties) {
+                if (buyerTradeParty != null) {
 
-                    Element id = findNamespaceChild(elemBuyer, namespacesInScope, "ID");
-                    Element globalID = findNamespaceChild(elemBuyer, namespacesInScope, "GlobalID");
+                    Element id = findNamespaceChild(buyerTradeParty, namespacesInScope, "ID");
+                    Element globalID = findNamespaceChild(buyerTradeParty, namespacesInScope, "GlobalID");
 
                     if (globalID != null) {
                         Attribute schemeID = globalID.getAttribute("schemeID");

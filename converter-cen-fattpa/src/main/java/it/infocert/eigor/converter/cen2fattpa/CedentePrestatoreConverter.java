@@ -6,10 +6,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0004Seller;
-import it.infocert.eigor.model.core.model.BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +23,24 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             mapBt30(invoice, cedentePrestatore, errors);
         } else {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader")));
+        }
+    }
+
+    private void addCodiceFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+        if (!invoice.getBG0007Buyer().isEmpty()) {
+            BG0007Buyer buyer = invoice.getBG0007Buyer(0);
+            if (!buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
+                BT0046BuyerIdentifierAndSchemeIdentifier buyerIdentifier = buyer.getBT0046BuyerIdentifierAndSchemeIdentifier(0);
+                DatiAnagraficiCedenteType datiAnagrafici = cedentePrestatore.getDatiAnagrafici();
+                if (datiAnagrafici == null) {
+                    datiAnagrafici = new DatiAnagraficiCedenteType();
+                }
+                Identifier value = buyerIdentifier.getValue();
+                if (value != null) {
+                    datiAnagrafici.setCodiceFiscale(value.getIdentifier());
+                    cedentePrestatore.setDatiAnagrafici(datiAnagrafici);
+                }
+            }
         }
     }
 
