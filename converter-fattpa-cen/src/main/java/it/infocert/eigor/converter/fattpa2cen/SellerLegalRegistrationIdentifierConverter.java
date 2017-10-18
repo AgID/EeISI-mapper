@@ -15,12 +15,25 @@ import java.util.List;
  */
 public class SellerLegalRegistrationIdentifierConverter implements CustomMapping<Document> {
 
+    private static final String rea = "IT:REA";
+
     public ConversionResult<BG0000Invoice> toBT0030(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaHeader = rootElement.getChild("FatturaElettronicaHeader");
 
         if (fatturaElettronicaHeader != null) {
+            Element cedentePrestatore = fatturaElettronicaHeader.getChild("CedentePrestatore");
+            String nazioneStr = "";
+            if (cedentePrestatore != null) {
+                Element sede = cedentePrestatore.getChild("Sede");
+                if (sede != null) {
+                    Element nazione = sede.getChild("Nazione");
+                    if (nazione != null) {
+                        nazioneStr = nazione.getText();
+                    }
+                }
+            }
             Element cessionarioCommittente = fatturaElettronicaHeader.getChild("CessionarioCommittente");
             if (cessionarioCommittente != null) {
                 Element datiAnagrafici = cessionarioCommittente.getChild("DatiAnagrafici");
@@ -32,20 +45,33 @@ public class SellerLegalRegistrationIdentifierConverter implements CustomMapping
                 if (iscrizioneREA != null) {
                     Element ufficio = iscrizioneREA.getChild("Ufficio");
                     Element numeroREA = iscrizioneREA.getChild("NumeroREA");
-                    if (ufficio != null) {
-                        BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
-                                new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(ufficio.getText()));
-                        if (invoice.getBG0004Seller().isEmpty()) {
-                            invoice.getBG0004Seller().add(new BG0004Seller());
+
+                    if (nazioneStr.equals("IT")) {
+                        if (ufficio != null && numeroREA != null) {
+                            BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
+                                    new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(rea, ufficio.getText()+":"+numeroREA.getText()));
+                            if (invoice.getBG0004Seller().isEmpty()) {
+                                invoice.getBG0004Seller().add(new BG0004Seller());
+                            }
+                            invoice.getBG0004Seller(0).getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerLegalRegistrationIdentifierAndSchemeIdentifier);
                         }
-                        invoice.getBG0004Seller(0).getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerLegalRegistrationIdentifierAndSchemeIdentifier);
-                    } else if (numeroREA != null) {
-                        BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
-                                new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(numeroREA.getText()));
-                        if (invoice.getBG0004Seller().isEmpty()) {
-                            invoice.getBG0004Seller().add(new BG0004Seller());
+                    } else {
+
+                        if (ufficio != null) {
+                            BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
+                                    new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(ufficio.getText()));
+                            if (invoice.getBG0004Seller().isEmpty()) {
+                                invoice.getBG0004Seller().add(new BG0004Seller());
+                            }
+                            invoice.getBG0004Seller(0).getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerLegalRegistrationIdentifierAndSchemeIdentifier);
+                        } else if (numeroREA != null) {
+                            BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
+                                    new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(numeroREA.getText()));
+                            if (invoice.getBG0004Seller().isEmpty()) {
+                                invoice.getBG0004Seller().add(new BG0004Seller());
+                            }
+                            invoice.getBG0004Seller(0).getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerLegalRegistrationIdentifierAndSchemeIdentifier);
                         }
-                        invoice.getBG0004Seller(0).getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerLegalRegistrationIdentifierAndSchemeIdentifier);
                     }
                 } else if (numeroIscrizioneAlbo != null) {
                     BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
