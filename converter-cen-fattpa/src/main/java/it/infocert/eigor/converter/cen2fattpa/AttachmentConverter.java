@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -39,7 +41,6 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             "/BG0004/BT0033",
             "/BG0004/BT0034",
             "/BG0007/BT0045",
-            "/BG0007/BT0047",
             "/BG0007/BG0009/BT0057",
             "/BG0007/BG0009/BT0058"
     );
@@ -81,12 +82,22 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
         String attachment = createAttachment(invoice);
         if (!"".equals(attachment)) {
-            List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
-            AllegatiType allegato = new AllegatiType();
-            allegato.setNomeAttachment("unmapped-cen-elements"); //TODO How to name it?
-            allegato.setFormatoAttachment("txt");
-            allegato.setAttachment(attachment.getBytes());
-            allegati.add(allegato);
+            final List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+            if (allegati.isEmpty()) {
+                AllegatiType allegato = new AllegatiType();
+                allegato.setNomeAttachment("unmapped-cen-elements"); //TODO How to name it?
+                allegato.setFormatoAttachment("txt");
+                allegato.setAttachment(attachment.getBytes());
+                allegati.add(allegato);
+            } else {
+                AllegatiType unmapped = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                    @Override
+                    public boolean apply(AllegatiType allegato) {
+                        return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                    }
+                }).first();
+                unmapped.setAttachment(attachment.getBytes());
+            }
         }
     }
 

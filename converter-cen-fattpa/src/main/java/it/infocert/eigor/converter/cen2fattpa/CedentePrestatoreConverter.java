@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -20,61 +22,151 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
         CedentePrestatoreType cedentePrestatore = fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore();
         if (cedentePrestatore != null) {
             addRegimeFiscale(invoice, cedentePrestatore, errors);
-            mapBt30(invoice, cedentePrestatore, errors);
+            List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
+            if (!bodies.isEmpty()) {
+                FatturaElettronicaBodyType body = bodies.get(0);
+                mapBt29(invoice, body, cedentePrestatore, errors);
+                mapBt30(invoice, body, cedentePrestatore, errors);
+            }
         } else {
             errors.add(ConversionIssue.newError(new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader")));
         }
     }
 
-    private void addCodiceFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
-        if (!invoice.getBG0007Buyer().isEmpty()) {
-            BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-            if (!buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
-                BT0046BuyerIdentifierAndSchemeIdentifier buyerIdentifier = buyer.getBT0046BuyerIdentifierAndSchemeIdentifier(0);
-                DatiAnagraficiCedenteType datiAnagrafici = cedentePrestatore.getDatiAnagrafici();
-                if (datiAnagrafici == null) {
-                    datiAnagrafici = new DatiAnagraficiCedenteType();
-                }
-                Identifier value = buyerIdentifier.getValue();
-                if (value != null) {
-                    datiAnagrafici.setCodiceFiscale(value.getIdentifier());
-                    cedentePrestatore.setDatiAnagrafici(datiAnagrafici);
-                }
-            }
-        }
-    }
 
-    private void mapBt30(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+    private void mapBt30(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller seller = invoice.getBG0004Seller(0);
 
             if (!seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
                 BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier identifier = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0);
                 Identifier id = identifier.getValue();
-                String code = id.getIdentifier();
-                if (id.getIdentificationSchema() != null) {
-                    switch (id.getIdentificationSchema()) {
+                final String code = id.getIdentifier();
+                final String identificationSchema = id.getIdentificationSchema();
+                if (identificationSchema != null) {
+                    switch (identificationSchema) {
                         case "IT:REA":
                             IscrizioneREAType iscrizioneREA;
                             if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
                                 iscrizioneREA = new IscrizioneREAType();
                                 cedentePrestatore.setIscrizioneREA(iscrizioneREA);
                             }
-                            iscrizioneREA.setUfficio(code.substring(0, 2));
-                            iscrizioneREA.setNumeroREA(code.substring(2));
+                            String[] slices = code.split(":");
+                            iscrizioneREA.setUfficio(slices[0]);
+                            iscrizioneREA.setNumeroREA(slices[2]);
                             break;
-                        case "IT:ALBO":
-                            DatiAnagraficiCedenteType datiAnagrafici;
-                            if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
-                                datiAnagrafici.setNumeroIscrizioneAlbo(code);
-                            }
-                            break;
+//                        case "IT:ALBO":
+//                            DatiAnagraficiCedenteType datiAnagrafici;
+//                            if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
+//                                datiAnagrafici.setNumeroIscrizioneAlbo(code);
+//                            }
+//                            break;
                         default:
-                            errors.add(ConversionIssue.newError(new IllegalArgumentException("BT-30 schemeId does not match one of 'IT:REA', 'IT:ALBO'")));
+                            List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+                            String content = "";
+                            AllegatiType allegato;
+                            if (allegati.isEmpty()) {
+                                allegato = new AllegatiType();
+                                allegato.setNomeAttachment("unmapped-cen-elements");
+                                allegato.setFormatoAttachment("txt");
+                                allegati.add(allegato);
+                            } else {
+                                allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                                    @Override
+                                    public boolean apply(AllegatiType allegato) {
+                                        return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                    }
+                                }).first();
+                                content = new String(allegato.getAttachment());
+                            }
+                            String updated = content +
+                                    identifier.denomination() +
+                                    ": " +
+                                    identificationSchema +
+                                    ":" +
+                                    identifier;
+                            allegato.setAttachment(updated.getBytes());
                     }
                 }
             }
         }
+    }
+
+    private void mapBt29(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+        if (!invoice.getBG0004Seller().isEmpty()) {
+            BG0004Seller seller = invoice.getBG0004Seller(0);
+            List<BT0029SellerIdentifierAndSchemeIdentifier> sellerIdentifiers = seller.getBT0029SellerIdentifierAndSchemeIdentifier();
+            if (!sellerIdentifiers.isEmpty()) {
+                for (BT0029SellerIdentifierAndSchemeIdentifier sellerIdentifier : sellerIdentifiers) {
+                    Identifier value = sellerIdentifier.getValue();
+                    if (value != null) {
+                        String identificationSchema = value.getIdentificationSchema();
+                        String identifier = value.getIdentifier();
+
+                        DatiAnagraficiCedenteType datiAnagrafici = cedentePrestatore.getDatiAnagrafici();
+                        if (datiAnagrafici == null) {
+                            datiAnagrafici = new DatiAnagraficiCedenteType();
+                            cedentePrestatore.setDatiAnagrafici(datiAnagrafici);
+                        }
+
+                        AnagraficaType anagrafica = datiAnagrafici.getAnagrafica();
+                        if (anagrafica == null) {
+                            anagrafica = new AnagraficaType();
+                            datiAnagrafici.setAnagrafica(anagrafica);
+                        }
+
+                        switch (identificationSchema) {
+
+                            case "IT:EORI":
+                                anagrafica.setCodEORI(identifier);
+                                break;
+
+                            case "IT:CF":
+                                datiAnagrafici.setCodiceFiscale(identifier);
+                                break;
+
+                            case "IT:ALBO":
+                                String[] slices = identifier.split(":");
+                                if (slices.length == 2) {
+                                    datiAnagrafici.setAlboProfessionale(slices[0]);
+                                    datiAnagrafici.setNumeroIscrizioneAlbo(slices[1]);
+                                }
+                                break;
+
+                            default: {
+                                List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+                                String content = "";
+                                AllegatiType allegato;
+                                if (allegati.isEmpty()) {
+                                    allegato = new AllegatiType();
+                                    allegato.setNomeAttachment("unmapped-cen-elements");
+                                    allegato.setFormatoAttachment("txt");
+                                    allegati.add(allegato);
+                                } else {
+                                    allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                                        @Override
+                                        public boolean apply(AllegatiType allegato) {
+                                            return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                        }
+                                    }).first();
+                                    content = new String(allegato.getAttachment());
+                                }
+                                String updated = content +
+                                        sellerIdentifier.denomination() +
+                                        ": " +
+                                        identificationSchema +
+                                        ":" +
+                                        identifier;
+                                allegato.setAttachment(updated.getBytes());
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+
     }
 
     private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
