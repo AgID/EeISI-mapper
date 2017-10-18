@@ -24,8 +24,13 @@ public class SellerLegalRegistrationIdentifierConverter implements CustomMapping
 
         if (fatturaElettronicaHeader != null) {
             Element cedentePrestatore = fatturaElettronicaHeader.getChild("CedentePrestatore");
-            String nazioneStr = "";
             if (cedentePrestatore != null) {
+                Element datiAnagrafici = cedentePrestatore.getChild("DatiAnagrafici");
+                Element numeroIscrizioneAlbo = null;
+                if (datiAnagrafici != null) {
+                    numeroIscrizioneAlbo = datiAnagrafici.getChild("NumeroIscrizioneAlbo");
+                }
+                String nazioneStr = "";
                 Element sede = cedentePrestatore.getChild("Sede");
                 if (sede != null) {
                     Element nazione = sede.getChild("Nazione");
@@ -33,15 +38,7 @@ public class SellerLegalRegistrationIdentifierConverter implements CustomMapping
                         nazioneStr = nazione.getText();
                     }
                 }
-            }
-            Element cessionarioCommittente = fatturaElettronicaHeader.getChild("CessionarioCommittente");
-            if (cessionarioCommittente != null) {
-                Element datiAnagrafici = cessionarioCommittente.getChild("DatiAnagrafici");
-                Element numeroIscrizioneAlbo = null;
-                if (datiAnagrafici != null) {
-                    numeroIscrizioneAlbo = datiAnagrafici.getChild("NumeroIscrizioneAlbo");
-                }
-                Element iscrizioneREA = cessionarioCommittente.getChild("IscrizioneREA");
+                Element iscrizioneREA = cedentePrestatore.getChild("IscrizioneREA");
                 if (iscrizioneREA != null) {
                     Element ufficio = iscrizioneREA.getChild("Ufficio");
                     Element numeroREA = iscrizioneREA.getChild("NumeroREA");
