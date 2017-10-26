@@ -9,9 +9,8 @@ public class Untdid2005DateTimePeriodQualifiersToItalianCodeConverter implements
     public EsigibilitaIVAType convert(Untdid2005DateTimePeriodQualifiers qualifiers) {
         switch (qualifiers) {
             case Code3:
-                return EsigibilitaIVAType.I;
             case Code35:
-                return EsigibilitaIVAType.D;
+                return EsigibilitaIVAType.I;
             case Code432:
                 return EsigibilitaIVAType.D;
             default:
