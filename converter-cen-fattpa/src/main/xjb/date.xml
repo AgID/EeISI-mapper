@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jxb:bindings version="2.1"
+              xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              schemaLocation="../resources/converterdata/converter-cen-fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+    <jxb:globalBindings>
+        <jxb:javaType name="javax.xml.datatype.XMLGregorianCalendar"
+                      xmlType="xs:date"
+
+                      parseMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateAdapter.unmarshal"
+                      printMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateAdapter.marshal"/>
+    </jxb:globalBindings>
+
+</jxb:bindings>

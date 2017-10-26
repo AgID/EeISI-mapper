@@ -32,6 +32,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             DatiGeneraliType datiGenerali = fatturaElettronicaBody.getDatiGenerali();
             addCausale(invoice, datiGenerali, errors);
             addFattureCollegate(invoice, datiGenerali, errors);
+            addDatiTrasporto(invoice, datiGenerali, errors);
         }
     }
 
@@ -115,6 +116,26 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             }
         }
 
+    }
+
+    private void addDatiTrasporto(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+        if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+            BG0013DeliveryInformation deliveryInformation = invoice.getBG0013DeliveryInformation(0);
+            if (!deliveryInformation.getBT0072ActualDeliveryDate().isEmpty()) {
+                LocalDate actualDeliveryDate = deliveryInformation.getBT0072ActualDeliveryDate(0).getValue();
+                DatiTrasportoType datiTrasporto = datiGenerali.getDatiTrasporto();
+                if (datiTrasporto == null) {
+                    datiTrasporto = new DatiTrasportoType();
+                    datiGenerali.setDatiTrasporto(datiTrasporto);
+                }
+                XMLGregorianCalendar convertedDate = dateConverter.convert(actualDeliveryDate);
+                datiTrasporto.setDataOraConsegna(convertedDate);
+            }
+            if (!deliveryInformation.getBG0015DeliverToAddress().isEmpty()) {
+                BG0015DeliverToAddress deliverToAddress = deliveryInformation.getBG0015DeliverToAddress(0);
+//                if (invoicingPeriod.)
+            }
+        }
     }
 
     private void manageNoteText(DatiGeneraliDocumentoType datiGeneraliDocumento, String noteText) {

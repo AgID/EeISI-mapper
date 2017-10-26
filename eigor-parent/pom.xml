@@ -285,6 +285,11 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>2.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -436,7 +441,7 @@
                         </annotationProcessorPaths>
                         <compilerArgs>
                             <arg>-Xep:NullAway:ERROR</arg>
-                            <arg>-XepOpt:NullAway:AnnotatedPackages=com.uber</arg>
+                            <arg>-XepOpt:NullAway:AnnotatedPackages=it.infocert.disabled</arg>
                         </compilerArgs>
                     </configuration>
                     <dependencies>

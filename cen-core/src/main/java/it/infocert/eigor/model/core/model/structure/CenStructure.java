@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import it.infocert.eigor.model.core.model.CenStructureSource;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -40,6 +41,7 @@ public class CenStructure extends CenStructureSource {
                 Integer.parseInt( item.getNumber() ), this);
     }
 
+    @Nullable
     private Item findItemByBgBtName(final BtBgName name) {
 
         Predicate<Item> predicate = new Predicate<Item>() {
@@ -70,13 +72,14 @@ public class CenStructure extends CenStructureSource {
         return item;
     }
 
+    @Nullable
     private BtBgNode parentOf(BtBgNode btBgNode) {
         Item item = findItemByBgBtName(btBgNode.getName());
 
         Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNode);
 
         String parent = item.getParent();
-        if(parent.isEmpty()){
+        if(parent == null || "".equals(parent)){
             // it's the invoice, no parent at all!
             return null;
         }
@@ -98,7 +101,8 @@ public class CenStructure extends CenStructureSource {
 
             @Override
             public boolean apply(Item item) {
-                return item.getParent().startsWith(key);
+                String parent = item.getParent();
+                return parent != null && parent.startsWith(key);
             }
         });
 

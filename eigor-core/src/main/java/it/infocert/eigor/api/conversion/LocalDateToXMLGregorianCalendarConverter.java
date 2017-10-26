@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 public class LocalDateToXMLGregorianCalendarConverter implements TypeConverter<LocalDate, XMLGregorianCalendar> {
@@ -17,7 +18,7 @@ public class LocalDateToXMLGregorianCalendarConverter implements TypeConverter<L
                 localDate.getDayOfMonth()
         );
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(new SimpleDateFormat("yyyy-MM-dd").format(localDate.toDate()));
         } catch (DatatypeConfigurationException e) {
             throw new EigorRuntimeException(e.getMessage(), e);
         }

@@ -1,11 +1,13 @@
 package it.infocert.eigor.model.core.model;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class BTBG implements Serializable{
 
+    @Nullable
     public abstract BTBG getParent();
 
     public abstract int order();

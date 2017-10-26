@@ -1,5 +1,7 @@
 package it.infocert.eigor.model.core.datatypes;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,36 +18,44 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Identifier {
 
+    @Nullable
     private final String identificationSchema;
+
+    @Nullable
     private final String schemaVersion;
+
+    @Nonnull
     private final String identifier;
 
-    public Identifier(String identificationSchema, String schemaVersion, String identifier) {
+    public Identifier(@Nullable String identificationSchema, @Nullable String schemaVersion, @Nonnull String identifier) {
         this.identificationSchema = identificationSchema;
         this.schemaVersion = schemaVersion;
         this.identifier = checkNotNull(identifier);
     }
 
-    public Identifier(String identificationSchema, String identifier) {
+    public Identifier(@Nullable String identificationSchema, @Nonnull String identifier) {
         this.identificationSchema = identificationSchema;
         this.schemaVersion = null;
         this.identifier = checkNotNull(identifier);
     }
 
-    public Identifier(String identifier) {
+    public Identifier(@Nonnull String identifier) {
         this.identificationSchema = null;
         this.schemaVersion = null;
         this.identifier = checkNotNull(identifier);
     }
 
+    @Nullable
     public String getIdentificationSchema() {
         return identificationSchema;
     }
 
+    @Nullable
     public String getSchemaVersion() {
         return schemaVersion;
     }
 
+    @Nonnull
     public String getIdentifier() {
         return identifier;
     }

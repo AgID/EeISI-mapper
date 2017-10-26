@@ -100,10 +100,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             try {
 
                                 if (startDate != null) {
-                                    linea.setDataInizioPeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, startDate));
+                                    XMLGregorianCalendar converted = conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, startDate);
+                                    linea.setDataInizioPeriodo(converted);
                                 }
                                 if (endDate != null) {
-                                    linea.setDataFinePeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, endDate));
+                                    XMLGregorianCalendar converted = conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, endDate);
+                                    linea.setDataFinePeriodo(converted);
                                 }
                             } catch (EigorRuntimeException e) {
                                 errors.add(ConversionIssue.newError(e));

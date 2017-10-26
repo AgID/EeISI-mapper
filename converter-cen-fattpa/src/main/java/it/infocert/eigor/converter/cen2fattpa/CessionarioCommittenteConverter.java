@@ -78,7 +78,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
     private void addCodiceEori(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
         if (!invoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-            if (buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+            if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
                 BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
                 Identifier identifierI = registrationIdentifier.getValue();
                 if (identifierI != null) {
