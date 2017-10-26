@@ -8,6 +8,7 @@ import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
 
+import javax.annotation.Nonnull;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -63,17 +64,17 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
             } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
         }
         for (String key: startKeyExist.keySet()){
-            if (startKeyExist.get(key) == false){
+            if (key != null && startKeyExist.get(key) == null){
                 throw new SyntaxErrorInMappingFileException("Missign start key for target: " + key);
             }
         }
         for (String key: mappingSource.keySet()){
-            if (mappingSource.get(key) == null){
+            if (key != null && mappingSource.get(key) == null){
                 throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key);
             }
         }
         for (String key: mappingTarget.keySet()){
-            if (mappingTarget.get(key) == null){
+            if (key != null && mappingTarget.get(key) == null){
                 throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key);
             }
         }

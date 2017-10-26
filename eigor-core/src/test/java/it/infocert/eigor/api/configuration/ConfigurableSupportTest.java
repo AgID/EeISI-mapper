@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.configuration;
 
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -46,6 +47,7 @@ public class ConfigurableSupportTest {
 
     }
 
+    @Ignore
     public void shouldNotRaiseAnErrorIfConfigured() throws ConfigurationException {
 
         // given

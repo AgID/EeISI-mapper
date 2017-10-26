@@ -12,6 +12,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CedentePrestatoreConverter implements CustomMapping<FatturaElettronicaType> {
@@ -93,6 +94,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
     }
 
     private void mapBt29(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller seller = invoice.getBG0004Seller(0);
             List<BT0029SellerIdentifierAndSchemeIdentifier> sellerIdentifiers = seller.getBT0029SellerIdentifierAndSchemeIdentifier();

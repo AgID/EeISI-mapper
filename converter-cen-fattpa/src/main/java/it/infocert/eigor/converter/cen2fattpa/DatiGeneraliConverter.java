@@ -44,6 +44,10 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         String noteText = invoiceNoteSubjectCode.getValue();
                         manageNoteText(datiGeneraliDocumento, noteText);
                     }
+                    if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
+                        String note = invoiceNote.getBT0022InvoiceNote(0).getValue();
+                        manageNoteText(datiGeneraliDocumento, note);
+                    }
                 }
                 if (!invoice.getBG0004Seller().isEmpty()) {
                     BG0004Seller seller = invoice.getBG0004Seller(0);

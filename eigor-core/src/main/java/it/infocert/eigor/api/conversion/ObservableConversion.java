@@ -59,7 +59,7 @@ public class ObservableConversion {
             throw new RuntimeException(e);
         }
 
-        this.forceConversion = checkNotNull( forceConversion );
+        this.forceConversion = forceConversion;
         this.listeners = new ArrayList<>( checkNotNull( listeners ) );
         checkArgument(invoiceFileName!=null && !invoiceFileName.isEmpty());
         this.invoiceFileName = invoiceFileName;
