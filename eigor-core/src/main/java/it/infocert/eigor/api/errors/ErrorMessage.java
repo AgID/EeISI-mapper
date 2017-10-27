@@ -1,7 +1,5 @@
 package it.infocert.eigor.api.errors;
 
-import com.google.common.base.Preconditions;
-
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -133,7 +131,6 @@ public class ErrorMessage implements Serializable{
         }
 
         public Builder location(String location) {
-            Preconditions.checkNotNull(location, "ErrorCode location cannot be null");
             this.location = location;
             return this;
         }
@@ -159,7 +156,6 @@ public class ErrorMessage implements Serializable{
         }
 
         public ErrorMessage build() {
-            Preconditions.checkNotNull(location, "ErrorCode location cannot be null");
             if (errorCode == null) {
                 this.errorCode = new ErrorCode(location, action, error);
             }
