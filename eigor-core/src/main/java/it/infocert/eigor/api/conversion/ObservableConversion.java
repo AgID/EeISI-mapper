@@ -61,7 +61,8 @@ public class ObservableConversion {
 
         this.forceConversion = forceConversion;
         this.listeners = new ArrayList<>( checkNotNull( listeners ) );
-        checkArgument(invoiceFileName!=null && !invoiceFileName.isEmpty());
+        checkNotNull(invoiceFileName);
+        checkArgument(!invoiceFileName.isEmpty());
         this.invoiceFileName = invoiceFileName;
     }
 

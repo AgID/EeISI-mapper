@@ -441,7 +441,7 @@
                         </annotationProcessorPaths>
                         <compilerArgs>
                             <arg>-Xep:NullAway:ERROR</arg>
-                            <arg>-XepOpt:NullAway:AnnotatedPackages=it.infocert.disabled</arg>
+                            <arg>-XepOpt:NullAway:AnnotatedPackages=it.infocert</arg>
                         </compilerArgs>
                     </configuration>
                     <dependencies>

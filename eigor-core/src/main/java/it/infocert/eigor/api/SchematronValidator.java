@@ -25,7 +25,8 @@ public class SchematronValidator implements IXMLValidator {
 
         long delta = System.currentTimeMillis();
         try {
-            Preconditions.checkArgument(schemaFile != null, "Provide a Schematron file.");
+            Preconditions.checkNotNull(schemaFile, "Provide a Schematron file.");
+//            Preconditions.checkArgument(schemaFile != null, "Provide a Schematron file.");
             Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
 
             if (isXSLT) {

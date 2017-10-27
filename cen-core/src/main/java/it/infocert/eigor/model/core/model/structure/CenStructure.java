@@ -10,6 +10,7 @@ import java.util.*;
 
 /**
  * Gives access to the CEN structure tree.
+ *
  * @see BtBgNode
  */
 public class CenStructure extends CenStructureSource {
@@ -26,7 +27,7 @@ public class CenStructure extends CenStructureSource {
         Item item = findItemByName(name);
         return new BtBgNode(
                 item.getBtBg(),
-                Integer.parseInt( item.getNumber() ), this);
+                Integer.parseInt(item.getNumber()), this);
     }
 
     /**
@@ -35,17 +36,21 @@ public class CenStructure extends CenStructureSource {
      */
     public BtBgNode findByName(BtBgName name) {
         Item item = findItemByBgBtName(name);
-        Preconditions.checkArgument(item!=null, "Unable to find an element with name '" + name + "'.");
+        Preconditions.checkNotNull(item, "Unable to find an element with name '%s'.", name);
+
+//        Preconditions.checkArgument(item!=null, "Unable to find an element with name '" + name + "'."); //TODO Remove when confirmed that checkNotNull works the same way
+
         return new BtBgNode(
                 item.getBtBg(),
-                Integer.parseInt( item.getNumber() ), this);
+                Integer.parseInt(item.getNumber()), this);
     }
 
     @Nullable
     private Item findItemByBgBtName(final BtBgName name) {
 
         Predicate<Item> predicate = new Predicate<Item>() {
-            @Override public boolean apply(Item i) {
+            @Override
+            public boolean apply(Item i) {
                 return i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals(String.valueOf(name.number()));
             }
         };
@@ -54,12 +59,12 @@ public class CenStructure extends CenStructureSource {
 
         ArrayList<Item> filtered = new ArrayList<>();
         for (Item item : unfiltered) {
-            if( predicate.apply(item) ) filtered.add(item);
+            if (predicate.apply(item)) filtered.add(item);
         }
 
-        if(!filtered.isEmpty()){
+        if (!filtered.isEmpty()) {
             return filtered.get(0);
-        }else{
+        } else {
             return null;
         }
 
@@ -68,18 +73,19 @@ public class CenStructure extends CenStructureSource {
     private Item findItemByName(String btBgNumberName) {
         BtBgName name = BtBgName.parse(btBgNumberName);
         Item item = findItemByBgBtName(name);
-        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNumberName);
+        Preconditions.checkNotNull(item, "Unable to find an element with name '%s'.", btBgNumberName);
+//        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNumberName);
         return item;
     }
 
     @Nullable
     private BtBgNode parentOf(BtBgNode btBgNode) {
         Item item = findItemByBgBtName(btBgNode.getName());
-
-        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNode);
+        Preconditions.checkNotNull(item, "Unable to find an element with name '%s'.", btBgNode);
+//        Preconditions.checkArgument(item!=null, "Unable to find an element with name '%s'.", btBgNode);
 
         String parent = item.getParent();
-        if(parent == null || "".equals(parent)){
+        if (parent == null || "".equals(parent)) {
             // it's the invoice, no parent at all!
             return null;
         }
@@ -88,7 +94,7 @@ public class CenStructure extends CenStructureSource {
 
 
         Item item1 = findItemByBgBtName(nameOfParent);
-        if(item1 == null) return null;
+        if (item1 == null) return null;
 
         return findByName(item1.getBtBg() + item1.getNumber());
 
@@ -106,10 +112,10 @@ public class CenStructure extends CenStructureSource {
             }
         });
 
-        return new LinkedHashSet<>( Collections2.transform(filter, new com.google.common.base.Function<Item, BtBgNode>(){
+        return new LinkedHashSet<>(Collections2.transform(filter, new com.google.common.base.Function<Item, BtBgNode>() {
             @Override
             public BtBgNode apply(Item item) {
-                return new BtBgNode(item,CenStructure.this);
+                return new BtBgNode(item, CenStructure.this);
             }
         }));
 
@@ -126,12 +132,12 @@ public class CenStructure extends CenStructureSource {
 
         private BtBgNode(String btOrBg, int theNumber, CenStructure manager) {
             this.manager = manager;
-            this.btBgName = BtBgName.parse(btOrBg+theNumber);
+            this.btBgName = BtBgName.parse(btOrBg + theNumber);
         }
 
         private BtBgNode(Item i, CenStructure manager) {
             this.manager = manager;
-            this.btBgName = BtBgName.parse(i.getBtBg()+i.getNumber());
+            this.btBgName = BtBgName.parse(i.getBtBg() + i.getNumber());
         }
 
         public String getBtOrBg() {
@@ -146,19 +152,22 @@ public class CenStructure extends CenStructureSource {
             return btBgName;
         }
 
+        @Nullable
         public BtBgNode getParent() {
             return manager.parentOf(this);
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return btBgName.toString();
         }
 
         public Set<BtBgNode> getChildren() {
-            return manager.childrenOf( this );
+            return manager.childrenOf(this);
         }
 
-        @Override public boolean equals(Object o) {
+        @Override
+        public boolean equals(Object o) {
             if (this == o)
                 return true;
             if (o == null || getClass() != o.getClass())
@@ -169,7 +178,8 @@ public class CenStructure extends CenStructureSource {
             return btBgName.equals(btBgNode.btBgName);
         }
 
-        @Override public int hashCode() {
+        @Override
+        public int hashCode() {
             return btBgName.hashCode();
         }
 
@@ -185,11 +195,11 @@ public class CenStructure extends CenStructureSource {
             String path = "";
             BtBgNode btBgNode = this;
             do {
-                if(btBgNode.getParent()!=null) {
+                if (btBgNode.getParent() != null) {
                     path = btBgNode.toString() + (path.isEmpty() ? "" : "/") + path;
                 }
                 btBgNode = btBgNode.getParent();
-            }while(btBgNode!=null);
+            } while (btBgNode != null);
             return "/" + path;
         }
     }

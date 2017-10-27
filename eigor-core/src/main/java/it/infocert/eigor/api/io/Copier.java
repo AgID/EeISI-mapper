@@ -80,8 +80,8 @@ public class Copier {
     }
 
     public void copyFromJar(String pathInJarAsStr) throws IOException {
-
-        Preconditions.checkArgument(pathInJarAsStr!=null && !pathInJarAsStr.trim().isEmpty(), "Invalid path in jar.");
+        Preconditions.checkNotNull(pathInJarAsStr, "Path in jar is null");
+        Preconditions.checkArgument(!pathInJarAsStr.trim().isEmpty(), "Invalid path in jar.");
 
         URL resource = getClass().getResource(pathInJarAsStr);
 
