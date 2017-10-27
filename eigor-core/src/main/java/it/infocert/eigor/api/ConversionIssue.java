@@ -3,6 +3,8 @@ package it.infocert.eigor.api;
 
 import it.infocert.eigor.api.errors.ErrorMessage;
 
+import javax.annotation.Nullable;
+
 public class ConversionIssue implements IConversionIssue {
 
     /** The message describing the issue. */
@@ -45,7 +47,7 @@ public class ConversionIssue implements IConversionIssue {
     }
 
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code. */
-    public static ConversionIssue newError(Exception e, String message, String location, String action, String error) {
+    public static ConversionIssue newError(Exception e, String message, @Nullable String location, @Nullable String action, String error) {
         return new ConversionIssue(new ErrorMessage(message, location, action, error), e, true);
     }
 

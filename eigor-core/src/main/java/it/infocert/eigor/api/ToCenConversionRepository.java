@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ public interface ToCenConversionRepository {
      * @param sourceFormat The format of the original invoice.
      * @return <code>null</code> if no conversions are found.
      */
+    @Nullable
     ToCenConversion findConversionToCen(String sourceFormat);
 
     Set<String> supportedToCenFormats();

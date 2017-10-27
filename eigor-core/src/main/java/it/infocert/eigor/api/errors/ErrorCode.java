@@ -1,39 +1,48 @@
 package it.infocert.eigor.api.errors;
 
+import com.google.common.base.Preconditions;
+
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ErrorCode implements Serializable{
+public class ErrorCode implements Serializable {
 
     /*
      * Where did the error occured?
      */
+    @Nullable
     private final String location;
 
     /*
      * What caused the error?
      */
+    @Nullable
     private final String action;
 
     /*
      * What error did occur?
      */
+    @Nullable
     private final String error;
 
-    public ErrorCode(String location, String action, String error) {
+    public ErrorCode(@Nullable String location, @Nullable String action, @Nullable String error) {
         this.location = location;
         this.action = action;
         this.error = error;
     }
 
+    @Nullable
     public String getLocation() {
         return location;
     }
 
+    @Nullable
     public String getAction() {
         return action;
     }
 
+    @Nullable
     public String getError() {
         return error;
     }

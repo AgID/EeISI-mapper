@@ -1,6 +1,9 @@
 package it.infocert.eigor.api;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Multimaps;
 import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
@@ -21,26 +24,29 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractToCenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractToCenConverter.class);
     private Reflections reflections;
-    private String regex;
     private final ConversionRegistry conversionRegistry;
     protected final EigorConfiguration configuration;
     protected final DefaultResourceLoader drl;
+
+    @Nullable
     private Multimap<String, String> oneToOneMappings;
+
+    @Nullable
     private Multimap<String, String> manyToOne;
+
+    @Nullable
     private Multimap<String, String> oneToMany;
     protected final ConfigurableSupport configurableSupport;
-    private List<CustomMapping<?>> customMappings;
+    private List<CustomMapping<?>> customMappings = Lists.newArrayList();
 
     public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
@@ -93,7 +99,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
         // load custom mappings
         {
             String resource = getCustomMappingPath();
-            if (resource != null) {
+            if (!Objects.equals(resource, "")) {
                 try (InputStream inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream()) {
                     CustomMappingLoader cml = new CustomMappingLoader(inputStream);
                     customMappings = cml.loadCustomMapping();
@@ -174,53 +180,56 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 //        return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
 //    }
     protected ConversionResult<BG0000Invoice> applyOne2ManyTransformationsBasedOnMapping(BG0000Invoice partialInvoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+        if (oneToMany != null) {
+            for (String key : oneToMany.keySet()) {
 
-        for (String key : oneToMany.keySet()) {
-
-            // Stop at each something.target key
-            if (key.endsWith("cen.source")) {
-                if (!existsValueForKeyInOne2ManyMultiMap(oneToMany, key, errors, "one2many")) {
-                    continue;
-                }
-                String cenPath = oneToMany.get(key).iterator().next();
-
-                int index = 1;
-                List<String> xPaths = new ArrayList<>();
-                Map<String, Pair<Integer, Integer>> splitIndexPairs = new HashMap<>();
-                String sourceKey = key.replace("cen.source", "xml.target." + index);
-                while (oneToMany.containsKey(sourceKey)) {
-
-                    if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey, errors, "one2many")) {
-                        String indexBeginString = null, indexEndString = null;
-                        try {
-                            Integer indexBegin = null;
-                            if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey.concat(".start"), errors, "one2many")) {
-                                indexBeginString = oneToMany.get(sourceKey.concat(".start")).iterator().next();
-                                indexBegin = Integer.parseInt(indexBeginString);
-                            }
-                            Integer indexEnd = null;
-                            if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey.concat(".end"), errors, "one2many")) {
-                                indexEndString = oneToMany.get(sourceKey.concat(".end")).iterator().next();
-                                indexEnd = Integer.parseInt(indexEndString);
-                            }
-
-                            Pair<Integer, Integer> pair = new Pair<>(indexBegin, indexEnd);
-                            String xPath = oneToMany.get(sourceKey).iterator().next();
-                            xPaths.add(xPath);
-                            splitIndexPairs.put(xPath, pair);
-                        } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
-                        }
+                // Stop at each something.target key
+                if (key.endsWith("cen.source")) {
+                    if (!existsValueForKeyInOne2ManyMultiMap(oneToMany, key, errors, "one2many")) {
+                        continue;
                     }
-                    index++;
-                    sourceKey = key.replace("cen.source", "xml.target." + index);
-                }
+                    String cenPath = oneToMany.get(key).iterator().next();
 
-                GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
-                transformer.transformCenToXml(partialInvoice, document, errors);
+                    int index = 1;
+                    List<String> xPaths = new ArrayList<>();
+                    Map<String, Pair<Integer, Integer>> splitIndexPairs = new HashMap<>();
+                    String sourceKey = key.replace("cen.source", "xml.target." + index);
+                    while (oneToMany.containsKey(sourceKey)) {
+
+                        if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey, errors, "one2many")) {
+                            String indexBeginString = null, indexEndString = null;
+                            try {
+                                Integer indexBegin = null;
+                                if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey.concat(".start"), errors, "one2many")) {
+                                    indexBeginString = oneToMany.get(sourceKey.concat(".start")).iterator().next();
+                                    indexBegin = Integer.parseInt(indexBeginString);
+                                }
+                                Integer indexEnd = null;
+                                if (existsValueForKeyInOne2ManyMultiMap(oneToMany, sourceKey.concat(".end"), errors, "one2many")) {
+                                    indexEndString = oneToMany.get(sourceKey.concat(".end")).iterator().next();
+                                    indexEnd = Integer.parseInt(indexEndString);
+                                }
+
+                                if (indexBegin != null && indexEnd != null) {
+                                    Pair<Integer, Integer> pair = new Pair<>(indexBegin, indexEnd);
+                                    String xPath = oneToMany.get(sourceKey).iterator().next();
+                                    xPaths.add(xPath);
+                                    splitIndexPairs.put(xPath, pair);
+                                }
+                            } catch (NumberFormatException e) {
+                                errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
+                            }
+                        }
+                        index++;
+                        sourceKey = key.replace("cen.source", "xml.target." + index);
+                    }
+
+                    GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
+                    transformer.transformCenToXml(partialInvoice, document, errors);
+                }
             }
         }
-        return new ConversionResult<BG0000Invoice>(errors, partialInvoice);
+        return new ConversionResult<>(errors, partialInvoice);
     }
 
     private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors) {

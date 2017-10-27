@@ -1,22 +1,27 @@
 package it.infocert.eigor.api.impl;
 
+import com.google.common.collect.Lists;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class FromCenListBakedRepository implements FromCenConversionRepository, Configurable {
 
     private List<FromCenConversion> converters;
+
+    @Nullable
     private Set<String> formats;
 
     public FromCenListBakedRepository(FromCenConversion... converters) {
-        this.converters = Arrays.asList(converters);
+        this.converters = Lists.newArrayList(converters);
     }
 
     @Override
+    @Nullable
     public FromCenConversion findConversionFromCen(String format) {
         for (FromCenConversion converter: converters) {
             if (converter.support(format)) {
@@ -45,6 +50,6 @@ public class FromCenListBakedRepository implements FromCenConversionRepository, 
 
     @Override
     public List<FromCenConversion> getFromCenConverters() {
-        return new ArrayList<>( converters );
+        return converters;
     }
 }

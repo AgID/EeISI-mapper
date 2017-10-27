@@ -2,11 +2,14 @@ package it.infocert.eigor.api.errors;
 
 import it.infocert.eigor.api.IConversionIssue;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConversionIssueErrorCodeMapper {
     private final String location;
+
+    @Nullable
     private final String action;
 
     public ConversionIssueErrorCodeMapper(String location) {

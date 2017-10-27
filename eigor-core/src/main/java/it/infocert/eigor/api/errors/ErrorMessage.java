@@ -1,24 +1,30 @@
 package it.infocert.eigor.api.errors;
 
+import com.google.common.base.Preconditions;
+
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorMessage implements Serializable{
 
+    @Nullable
     private final String message;
+
+    @Nullable
     private ErrorCode errorCode;
     private final List<Exception> relatedExceptions = new ArrayList<>(0);
 
-    public ErrorMessage(String message, String location, String type, String code) {
+    public ErrorMessage(String message, @Nullable String location, @Nullable String type, @Nullable String code) {
         this(message, new ErrorCode(location, type, code));
     }
 
-    public ErrorMessage(String message) {
+    public ErrorMessage(@Nullable String message) {
         this.message = message;
     }
 
-    public ErrorMessage(String message, ErrorCode errorCode) {
+    public ErrorMessage(@Nullable String message, @Nullable ErrorCode errorCode) {
         this.message = message;
         this.errorCode = errorCode;
     }
@@ -27,11 +33,11 @@ public class ErrorMessage implements Serializable{
         this(message, errorMessage.getErrorCode());
     }
 
-    public ErrorMessage(Exception relatedException, String message, String location, String type, String code) {
-        this(relatedException, message, new ErrorCode(location, type, code));
+    public ErrorMessage(Exception relatedException, String message, String location, @Nullable String action, @Nullable String code) {
+        this(relatedException, message, new ErrorCode(location, action, code));
     }
 
-    public ErrorMessage(Exception relatedException, String message, ErrorCode errorCode) {
+    public ErrorMessage(Exception relatedException, String message,@Nullable ErrorCode errorCode) {
         this(message, errorCode);
         this.relatedExceptions.add(relatedException);
     }
@@ -47,10 +53,12 @@ public class ErrorMessage implements Serializable{
         this.relatedExceptions.addAll(builder.exceptions);
     }
 
+    @Nullable
     public String getMessage() {
         return message;
     }
 
+    @Nullable
     public ErrorCode getErrorCode() {
         return errorCode;
     }
@@ -68,7 +76,7 @@ public class ErrorMessage implements Serializable{
         return !relatedExceptions.isEmpty();
     }
 
-    public ErrorCode updateErrorCode(String location, String action, String error) {
+    public ErrorCode updateErrorCode(String location, @Nullable String action, String error) {
         if (this.errorCode != null) {
             this.errorCode = new ErrorCode(
                     location != null ? location : this.errorCode.getLocation(),
@@ -99,11 +107,22 @@ public class ErrorMessage implements Serializable{
     }
 
     public static class Builder {
+
+        @Nullable
         private String message;
+
+        @Nullable
         private String location;
+
+        @Nullable
         private String action;
+
+        @Nullable
         private String error;
+
+        @Nullable
         private ErrorCode errorCode;
+
         private final List<Exception> exceptions = new ArrayList<>(0);
 
         private Builder() {}
@@ -114,6 +133,7 @@ public class ErrorMessage implements Serializable{
         }
 
         public Builder location(String location) {
+            Preconditions.checkNotNull(location, "ErrorCode location cannot be null");
             this.location = location;
             return this;
         }
@@ -139,6 +159,7 @@ public class ErrorMessage implements Serializable{
         }
 
         public ErrorMessage build() {
+            Preconditions.checkNotNull(location, "ErrorCode location cannot be null");
             if (errorCode == null) {
                 this.errorCode = new ErrorCode(location, action, error);
             }
