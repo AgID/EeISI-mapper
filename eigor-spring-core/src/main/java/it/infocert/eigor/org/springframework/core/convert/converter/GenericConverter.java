@@ -21,6 +21,8 @@ import java.util.Set;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.util.Assert;
 
+import javax.annotation.Nullable;
+
 /**
  * Generic converter interface for converting between two or more types.
  *
@@ -62,6 +64,7 @@ public interface GenericConverter {
 	 * @param targetType the type descriptor of the field we are converting to
 	 * @return the converted object
 	 */
+	@Nullable
 	Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
 
 
