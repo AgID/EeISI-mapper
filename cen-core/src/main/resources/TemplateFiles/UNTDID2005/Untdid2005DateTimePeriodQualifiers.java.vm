@@ -1,7 +1,5 @@
 package it.infocert.eigor.model.core.enums;
 
-import javax.annotation.Nullable;
-
 public enum Untdid2005DateTimePeriodQualifiers {
 
     // 1: Sign
@@ -17,15 +15,9 @@ public enum Untdid2005DateTimePeriodQualifiers {
         Code${row.data.ID}("${row.data.Sign}",${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
-    @Nullable
     private String sign;
-
     private int code;
-
-    @Nullable
     private String shortDescritpion;
-
-    @Nullable
     private String longDescription;
 
     Untdid2005DateTimePeriodQualifiers(String sign, int code, String shortDescritpion, String longDescription) {
@@ -35,7 +27,6 @@ public enum Untdid2005DateTimePeriodQualifiers {
         this.longDescription = longDescription;
     }
 
-    @Nullable
     public static Untdid2005DateTimePeriodQualifiers fromCode(String s) {
         Integer code = Integer.valueOf(s);
         for (Untdid2005DateTimePeriodQualifiers q : values()) {
@@ -55,4 +46,4 @@ public enum Untdid2005DateTimePeriodQualifiers {
         return super.toString() + " " + shortDescritpion;
     }
 
-    }
+}

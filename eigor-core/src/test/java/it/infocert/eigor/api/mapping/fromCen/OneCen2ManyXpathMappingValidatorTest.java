@@ -24,7 +24,6 @@ public class OneCen2ManyXpathMappingValidatorTest {
      * mapping.MAPR-SP-11.xml.target.1.end
      * mapping.MAPR-SP-11.xml.target.2
      * mapping.MAPR-SP-11.xml.target.2.start
-     *
      * @throws Exception
      */
     @Test

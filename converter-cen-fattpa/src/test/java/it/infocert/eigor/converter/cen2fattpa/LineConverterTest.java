@@ -17,7 +17,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -66,12 +65,9 @@ public class LineConverterTest {
 
         assertFalse(dettaglioLinee.isEmpty());
 
-            final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String nowS = dateFormat.format(nowXml.toGregorianCalendar().getTime());
-        String afterS = dateFormat.format(afterXml.toGregorianCalendar().getTime());
         for (DettaglioLineeType linea : dettaglioLinee) {
-            assertEquals(nowS, linea.getDataInizioPeriodo().toString());
-            assertEquals(afterS, linea.getDataFinePeriodo().toString());
+            assertEquals(nowXml, linea.getDataInizioPeriodo());
+            assertEquals(afterXml, linea.getDataFinePeriodo());
         }
     }
 

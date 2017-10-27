@@ -11,7 +11,6 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -65,10 +64,8 @@ public class InvoiceUtils {
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
 
-                    if (childType != null) {
-                        BTBG bg = childType.newInstance();
-                        children.add(bg);
-                    }
+                    BTBG bg = childType.newInstance();
+                    children.add(bg);
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
                             format("'%s' is wrong, too many '%s' children found.",
@@ -92,7 +89,6 @@ public class InvoiceUtils {
      * @param childName the name of the children to look for
      * @return a {@link List} of children matching the given name
      */
-    @Nullable
     public List<BTBG> getChildrenAsList(BTBG parent, final String childName) {
         List<Method> methods = Arrays.asList(parent.getClass().getMethods());
         Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
@@ -124,7 +120,6 @@ public class InvoiceUtils {
      * @param name a {@link String} containing the name of the element
      * @return the {@link Class} corresponding to the wanted element
      */
-    @Nullable
     public Class<? extends BTBG> getBtBgByName(final String name) {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
@@ -147,7 +142,6 @@ public class InvoiceUtils {
      * @param name a {@link BtBgName} representing the name of the element
      * @return the {@link Class} corresponding to the wanted element
      */
-    @Nullable
     public Class<? extends BTBG> getBtBgByName(final BtBgName name) {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
@@ -178,7 +172,6 @@ public class InvoiceUtils {
      * @param invoice the invoice to traverse
      * @return the first child found
      */
-    @Nullable
     public BTBG getFirstChild(String path, BG0000Invoice invoice) {
 
         if (path.length() < 1) {

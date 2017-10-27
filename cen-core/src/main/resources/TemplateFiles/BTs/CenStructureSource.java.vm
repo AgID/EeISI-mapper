@@ -1,18 +1,14 @@
 package it.infocert.eigor.model.core.model;
 
-import javax.annotation.Nullable;
-
 public class CenStructureSource {
 
     protected static class Item {
 
         private final String btBg;
         private final String number;
-
-        @Nullable
         private final String parent;
 
-        private Item(String btBg, String number, @Nullable String parent) {
+        private Item(String btBg, String number, String parent) {
             this.btBg = btBg;
             this.number = number;
             this.parent = parent;
@@ -32,7 +28,6 @@ public class CenStructureSource {
             return number;
         }
 
-        @Nullable
         public String getParent() {
             return parent;
         }
