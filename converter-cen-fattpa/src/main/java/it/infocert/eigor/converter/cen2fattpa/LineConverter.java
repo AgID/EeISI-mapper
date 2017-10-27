@@ -658,7 +658,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         lineaSconto.setPrezzoUnitario(prezzo);
                         lineaSconto.setPrezzoTotale(prezzo);
                         lineaSconto.setAliquotaIVA(vatLine);
-                        if (!"0.0".equals(vatLine.toString())) {
+                        if (!"0.0".equals(vatLine.toString()) && !invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
                             BG0020DocumentLevelAllowances allowances = invoice.getBG0020DocumentLevelAllowances(0);
                             if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                                 Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
@@ -709,7 +709,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         lineaMaggiorazione.setPrezzoUnitario(prezzo);
                         lineaMaggiorazione.setPrezzoTotale(prezzo);
                         lineaMaggiorazione.setAliquotaIVA(vatLine);
-                        if (!vatLine.toString().equals("0.0")) {
+                        if (!vatLine.toString().equals("0.0") && !invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
                             BG0020DocumentLevelAllowances allowances = invoice.getBG0020DocumentLevelAllowances(0);
                             if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                                 Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
