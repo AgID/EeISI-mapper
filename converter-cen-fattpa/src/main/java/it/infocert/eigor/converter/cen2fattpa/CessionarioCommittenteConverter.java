@@ -49,14 +49,14 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         AllegatiType allegato;
                         if (allegati.isEmpty()) {
                             allegato = new AllegatiType();
-                            allegato.setNomeAttachment("unmapped-cen-elements");
+                            allegato.setNomeAttachment("not-mapped-values");
                             allegato.setFormatoAttachment("txt");
                             allegati.add(allegato);
                         } else {
                             allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
                                 @Override
                                 public boolean apply(AllegatiType allegato) {
-                                    return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                    return "not-mapped-values".equals(allegato.getNomeAttachment());
                                 }
                             }).first();
                             content = new String(allegato.getAttachment());
@@ -78,7 +78,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
     private void addCodiceEori(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
         if (!invoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-            if (buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+            if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
                 BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
                 Identifier identifierI = registrationIdentifier.getValue();
                 if (identifierI != null) {
@@ -104,14 +104,14 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         AllegatiType allegato;
                         if (allegati.isEmpty()) {
                             allegato = new AllegatiType();
-                            allegato.setNomeAttachment("unmapped-cen-elements");
+                            allegato.setNomeAttachment("not-mapped-values");
                             allegato.setFormatoAttachment("txt");
                             allegati.add(allegato);
                         } else {
                             allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
                                 @Override
                                 public boolean apply(AllegatiType allegato) {
-                                    return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                    return "not-mapped-values".equals(allegato.getNomeAttachment());
                                 }
                             }).first();
                             content = new String(allegato.getAttachment());

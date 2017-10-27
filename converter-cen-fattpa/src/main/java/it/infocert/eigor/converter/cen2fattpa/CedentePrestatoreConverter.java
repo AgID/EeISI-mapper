@@ -68,14 +68,14 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                             AllegatiType allegato;
                             if (allegati.isEmpty()) {
                                 allegato = new AllegatiType();
-                                allegato.setNomeAttachment("unmapped-cen-elements");
+                                allegato.setNomeAttachment("not-mapped-values");
                                 allegato.setFormatoAttachment("txt");
                                 allegati.add(allegato);
                             } else {
                                 allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
                                     @Override
                                     public boolean apply(AllegatiType allegato) {
-                                        return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                        return "not-mapped-values".equals(allegato.getNomeAttachment());
                                     }
                                 }).first();
                                 content = new String(allegato.getAttachment());
@@ -141,14 +141,14 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                 AllegatiType allegato;
                                 if (allegati.isEmpty()) {
                                     allegato = new AllegatiType();
-                                    allegato.setNomeAttachment("unmapped-cen-elements");
+                                    allegato.setNomeAttachment("not-mapped-values");
                                     allegato.setFormatoAttachment("txt");
                                     allegati.add(allegato);
                                 } else {
                                     allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
                                         @Override
                                         public boolean apply(AllegatiType allegato) {
-                                            return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                                            return "not-mapped-values".equals(allegato.getNomeAttachment());
                                         }
                                     }).first();
                                     content = new String(allegato.getAttachment());

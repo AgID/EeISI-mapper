@@ -33,6 +33,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
     private final List<String> cenPaths = Lists.newArrayList(
             "/BT0007",
+            "/BT0006",
             "/BT0010",
             "/BT0014",
             "/BT0018",
@@ -42,10 +43,28 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             "/BG0004/BT0034",
             "/BG0007/BT0045",
             "/BG0007/BG0009/BT0057",
-            "/BG0007/BG0009/BT0058"
+            "/BG0007/BG0009/BT0058",
+            "/BG0010/BT0060",
+            "/BG0010/BT0061",
+            "/BG0011/BG0012/BT0064",
+            "/BG0011/BG0012/BT0065",
+            "/BG0011/BG0012/BT0066",
+            "/BG0011/BG0012/BT0067",
+            "/BG0011/BG0012/BT0068",
+            "/BG0011/BG0012/BT0069",
+            "/BG0011/BG0012/BT0164",
+            "/BG0016/BG0018/BT0087",
+            "/BG0016/BG0018/BT0088",
+            "/BG0016/BG0019/BT0089",
+            "/BG0016/BG0019/BT0090",
+            "/BG0016/BG0019/BT0091",
+            "/BG0022/BT0111",
+            "/BG0022/BT0113"
     );
+    
 
     private final InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert.eigor"));
+    private final String attachmentName = "not-mapped-values";
 
 
     @Override
@@ -75,6 +94,9 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             }
         }
 
+        log.warn("Created attachment {}.txt with unmapped cen elements.", attachmentName);
+        log.debug("{}: {}.", attachmentName, cenPaths);
+
         return sb.toString();
     }
 
@@ -85,7 +107,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             final List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
             if (allegati.isEmpty()) {
                 AllegatiType allegato = new AllegatiType();
-                allegato.setNomeAttachment("unmapped-cen-elements"); //TODO How to name it?
+                allegato.setNomeAttachment(attachmentName); //TODO How to name it?
                 allegato.setFormatoAttachment("txt");
                 allegato.setAttachment(attachment.getBytes());
                 allegati.add(allegato);
@@ -93,7 +115,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 AllegatiType unmapped = Stream.of(allegati).filter(new Filter<AllegatiType>() {
                     @Override
                     public boolean apply(AllegatiType allegato) {
-                        return "unmapped-cen-elements".equals(allegato.getNomeAttachment());
+                        return "not-mapped-values".equals(allegato.getNomeAttachment());
                     }
                 }).first();
                 unmapped.setAttachment(attachment.getBytes());
