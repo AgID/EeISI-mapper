@@ -428,7 +428,7 @@
                     <version>3.6.1</version>
                     <configuration>
                         <compilerId>javac-with-errorprone</compilerId>
-                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        <forceJavacCompilerUse>false</forceJavacCompilerUse>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <showWarnings>true</showWarnings>
@@ -456,7 +456,7 @@
                         <dependency>
                             <groupId>com.google.errorprone</groupId>
                             <artifactId>error_prone_core</artifactId>
-                            <version>2.0.5</version>
+                            <version>2.1.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
