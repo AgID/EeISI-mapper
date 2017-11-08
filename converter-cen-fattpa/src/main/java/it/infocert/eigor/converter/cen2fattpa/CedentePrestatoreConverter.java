@@ -8,6 +8,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,54 +44,78 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier identifier = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0);
                 Identifier id = identifier.getValue();
                 final String code = id.getIdentifier();
-                final String identificationSchema = id.getIdentificationSchema();
-                if (identificationSchema != null) {
-                    switch (identificationSchema) {
-                        case "IT:REA":
-                            IscrizioneREAType iscrizioneREA;
-                            if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
-                                iscrizioneREA = new IscrizioneREAType();
-                                cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                final String identificationSchema = id.getIdentificationSchema() != null ? id.getIdentificationSchema() : "null";
+                if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
+                    BG0005SellerPostalAddress postalAddress = seller.getBG0005SellerPostalAddress(0);
+                    if (!postalAddress.getBT0040SellerCountryCode().isEmpty()) {
+                        Iso31661CountryCodes countryCode = postalAddress.getBT0040SellerCountryCode(0).getValue();
+                        if (Iso31661CountryCodes.IT.equals(countryCode)) {
+                            if (code.startsWith("IT:REA")) {
+                                String[] slices = code.split(":");
+                                IscrizioneREAType iscrizioneREA;
+                                if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
+                                    iscrizioneREA = new IscrizioneREAType();
+                                    cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                                }
+                                iscrizioneREA.setUfficio(slices[2]);
+                                iscrizioneREA.setNumeroREA(slices[3]);
+                                iscrizioneREA.setStatoLiquidazione(StatoLiquidazioneType.LN);
+                            } else {
+                                setAllegato(fatturaElettronicaBody, identifier, identificationSchema);
                             }
-                            String[] slices = code.split(":");
-                            iscrizioneREA.setUfficio(slices[0]);
-                            iscrizioneREA.setNumeroREA(slices[2]);
-                            break;
+                        }
+                    }
+                }
+                switch (identificationSchema) {
+                    case "IT:REA":
+                        IscrizioneREAType iscrizioneREA;
+                        if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
+                            iscrizioneREA = new IscrizioneREAType();
+                            cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                        }
+                        String[] slices = code.split(":");
+                        iscrizioneREA.setUfficio(slices[0]);
+                        iscrizioneREA.setNumeroREA(slices[2]);
+                        iscrizioneREA.setStatoLiquidazione(StatoLiquidazioneType.LN);
+                        break;
 //                        case "IT:ALBO":
 //                            DatiAnagraficiCedenteType datiAnagrafici;
 //                            if ((datiAnagrafici = cedentePrestatore.getDatiAnagrafici()) != null) {
 //                                datiAnagrafici.setNumeroIscrizioneAlbo(code);
 //                            }
 //                            break;
-                        default:
-                            List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
-                            String content = "";
-                            AllegatiType allegato;
-                            if (allegati.isEmpty()) {
-                                allegato = new AllegatiType();
-                                allegato.setNomeAttachment("not-mapped-values");
-                                allegato.setFormatoAttachment("txt");
-                                allegati.add(allegato);
-                            } else {
-                                allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
-                                    @Override
-                                    public boolean apply(AllegatiType allegato) {
-                                        return "not-mapped-values".equals(allegato.getNomeAttachment());
-                                    }
-                                }).first();
-                                content = new String(allegato.getAttachment());
-                            }
-                            String updated = content +
-                                    identifier.denomination() +
-                                    ": " +
-                                    identificationSchema +
-                                    ":" +
-                                    identifier;
-                            allegato.setAttachment(updated.getBytes());
-                    }
+                    default:
+                        setAllegato(fatturaElettronicaBody, identifier, identificationSchema);
                 }
             }
         }
+    }
+
+    private void setAllegato(FatturaElettronicaBodyType fatturaElettronicaBody, AbstractBT identifier, String identificationSchema) {
+        List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+        String content = "";
+        AllegatiType allegato;
+        if (allegati.isEmpty()) {
+            allegato = new AllegatiType();
+            allegato.setNomeAttachment("not-mapped-values");
+            allegato.setFormatoAttachment("txt");
+            allegati.add(allegato);
+        } else {
+            allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                @Override
+                public boolean apply(AllegatiType allegato) {
+                    return "not-mapped-values".equals(allegato.getNomeAttachment());
+                }
+            }).first();
+            content = new String(allegato.getAttachment());
+        }
+        String updated = content +
+                identifier.denomination() +
+                ": " +
+                identificationSchema +
+                ":" +
+                identifier;
+        allegato.setAttachment(updated.getBytes());
     }
 
     private void mapBt29(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
