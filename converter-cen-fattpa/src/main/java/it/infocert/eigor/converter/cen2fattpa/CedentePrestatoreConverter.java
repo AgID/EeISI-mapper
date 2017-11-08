@@ -102,7 +102,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 for (BT0029SellerIdentifierAndSchemeIdentifier sellerIdentifier : sellerIdentifiers) {
                     Identifier value = sellerIdentifier.getValue();
                     if (value != null) {
-                        String identificationSchema = value.getIdentificationSchema();
+                        String identificationSchema = value.getIdentificationSchema() != null ? value.getIdentificationSchema() : "null";
                         String identifier = value.getIdentifier();
 
                         DatiAnagraficiCedenteType datiAnagrafici = cedentePrestatore.getDatiAnagrafici();
@@ -134,7 +134,6 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                     datiAnagrafici.setNumeroIscrizioneAlbo(slices[1]);
                                 }
                                 break;
-
                             default: {
                                 List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
                                 String content = "";
