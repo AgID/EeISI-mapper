@@ -10,6 +10,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -72,9 +73,25 @@ public class Ubl2CenConfigurationFileTest {
         List<IConversionIssue> errors = new ArrayList<>();
 
         InvoiceNoteConverter bg0001 = new InvoiceNoteConverter();
-        ConversionResult<BG0000Invoice> result = bg0001.toBG0001(document, invoice, errors);
+        BG0000Invoice convertedInvoice = bg0001.toBG0001(document, invoice, errors).getResult();
+        assertFalse(convertedInvoice.getBG0001InvoiceNote().isEmpty());
+        int found = 0;
+        for (BG0001InvoiceNote invoiceNote : convertedInvoice.getBG0001InvoiceNote()) {
+            if (!invoiceNote.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
+                String value = invoiceNote.getBT0021InvoiceNoteSubjectCode(0).getValue();
+                if ("Ordered through our website#Ordering information".equals(value)) {
+                    found++;
+                }
+            }
 
-        assertEquals("Ordered through our website#Ordering information", result.getResult().getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode().get(0).getValue());
+            if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
+                String value = invoiceNote.getBT0022InvoiceNote(0).getValue();
+                if ("Ordered through our website#Ordering information".equals(value)) {
+                    found++;
+                }
+            }
+        }
+        assertTrue(found > 0);
     }
 
 
