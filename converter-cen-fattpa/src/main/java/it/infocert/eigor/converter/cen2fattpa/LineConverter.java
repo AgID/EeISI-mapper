@@ -582,7 +582,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             if (!itemInformation.getBT0159ItemCountryOfOrigin().isEmpty()) {
                 AltriDatiGestionaliType altriDati = new AltriDatiGestionaliType();
-                altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin(0).getValue().getCountryNameInEnglish()); //FIXME WTH does this mapping means? (see excel)
+                altriDati.setRiferimentoTesto(itemInformation.getBT0159ItemCountryOfOrigin(0).getValue().getIso2charCode());
+                altriDati.setTipoDato("BT-159");
                 dettaglioLinee.getAltriDatiGestionali().add(altriDati);
 
             }
