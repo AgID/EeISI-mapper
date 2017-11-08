@@ -50,14 +50,18 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         if (Iso31661CountryCodes.IT.equals(countryCode)) {
                             if (code.startsWith("IT:REA")) {
                                 String[] slices = code.split(":");
-                                IscrizioneREAType iscrizioneREA;
-                                if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
-                                    iscrizioneREA = new IscrizioneREAType();
-                                    cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                                if (slices.length > 3) {
+                                    IscrizioneREAType iscrizioneREA;
+                                    if ((iscrizioneREA = cedentePrestatore.getIscrizioneREA()) == null) {
+                                        iscrizioneREA = new IscrizioneREAType();
+                                        cedentePrestatore.setIscrizioneREA(iscrizioneREA);
+                                    }
+                                    iscrizioneREA.setUfficio(slices[2]);
+                                    iscrizioneREA.setNumeroREA(slices[3]);
+                                    iscrizioneREA.setStatoLiquidazione(StatoLiquidazioneType.LN);
+                                } else {
+                                    setAllegato(fatturaElettronicaBody, identifier, identificationSchema);
                                 }
-                                iscrizioneREA.setUfficio(slices[2]);
-                                iscrizioneREA.setNumeroREA(slices[3]);
-                                iscrizioneREA.setStatoLiquidazione(StatoLiquidazioneType.LN);
                             } else {
                                 setAllegato(fatturaElettronicaBody, identifier, identificationSchema);
                             }
