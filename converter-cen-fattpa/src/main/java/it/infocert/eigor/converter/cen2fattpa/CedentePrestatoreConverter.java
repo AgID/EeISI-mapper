@@ -5,7 +5,6 @@ import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -13,7 +12,6 @@ import it.infocert.eigor.model.core.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CedentePrestatoreConverter implements CustomMapping<FatturaElettronicaType> {
@@ -66,6 +64,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         }
                     }
                 }
+                log.info("Mapping BT0030 {} with identification schema {}.", code, identificationSchema);
                 switch (identificationSchema) {
                     case "IT:REA":
                         IscrizioneREAType iscrizioneREA;
@@ -114,7 +113,8 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 ": " +
                 identificationSchema +
                 ":" +
-                identifier;
+                identifier.getValue();
+        log.info("Added {} to Allegati.", updated);
         allegato.setAttachment(updated.getBytes());
     }
 

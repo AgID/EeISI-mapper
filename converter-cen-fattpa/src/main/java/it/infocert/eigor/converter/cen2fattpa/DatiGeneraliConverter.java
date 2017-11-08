@@ -45,15 +45,18 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     datiGeneraliDocumento.getCausale().add(paymentTerms.getValue());
                 }
                 if (!invoice.getBG0001InvoiceNote().isEmpty()) {
-                    BG0001InvoiceNote invoiceNote = invoice.getBG0001InvoiceNote(0);
-                    if (!invoiceNote.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
-                        BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = invoiceNote.getBT0021InvoiceNoteSubjectCode(0);
-                        String noteText = invoiceNoteSubjectCode.getValue();
-                        manageNoteText(datiGeneraliDocumento, noteText);
-                    }
-                    if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
-                        String note = invoiceNote.getBT0022InvoiceNote(0).getValue();
-                        manageNoteText(datiGeneraliDocumento, note);
+                    for (BG0001InvoiceNote invoiceNote: invoice.getBG0001InvoiceNote()){
+                        if (!invoiceNote.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
+                            BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = invoiceNote.getBT0021InvoiceNoteSubjectCode(0);
+                            String noteText = invoiceNoteSubjectCode.getValue();
+                            log.info("Mapping Causale from BT-21 with value: '{}'.", noteText);
+                            manageNoteText(datiGeneraliDocumento, noteText);
+                        }
+                        if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
+                            String note = invoiceNote.getBT0022InvoiceNote(0).getValue();
+                            log.info("Mapping Causale from BT-22 with value: '{}'.", note);
+                            manageNoteText(datiGeneraliDocumento, note);
+                        }
                     }
                 }
                 if (!invoice.getBG0004Seller().isEmpty()) {
@@ -121,6 +124,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         if (noteText.length() > 200) {
             datiGeneraliDocumento.getCausale().add(noteText.substring(0, 200));
             manageNoteText(datiGeneraliDocumento, noteText.substring(200));
+            log.debug("Splitting note message because longer than 200 characters. Message: {}.", noteText);
         } else {
             datiGeneraliDocumento.getCausale().add(noteText);
         }
