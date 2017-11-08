@@ -108,12 +108,15 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             }).first();
             content = new String(allegato.getAttachment());
         }
-        String updated = content +
-                identifier.denomination() +
-                ": " +
-                identificationSchema +
-                ":" +
-                identifier.getValue();
+        StringBuilder sb = new StringBuilder(content + System.lineSeparator())
+                .append(identifier.denomination())
+                .append(": ");
+
+        if (identificationSchema != null && !"null".equals(identificationSchema)) {
+            sb.append(identificationSchema);
+        }
+
+        String updated = sb.append(":").append(identifier.getValue()).append(System.lineSeparator()).toString();
         log.info("Added {} to Allegati.", updated);
         allegato.setAttachment(updated.getBytes());
     }
