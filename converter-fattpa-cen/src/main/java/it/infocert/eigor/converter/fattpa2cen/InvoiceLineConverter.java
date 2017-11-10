@@ -25,7 +25,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
         ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter taxFeeCategoriesConverter = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
         StringToUnitOfMeasureConverter strToUnitOfMeasure = new StringToUnitOfMeasureConverter();
 
-        BG0025InvoiceLine bg0025 = null;
+        BG0025InvoiceLine bg0025;
 
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");

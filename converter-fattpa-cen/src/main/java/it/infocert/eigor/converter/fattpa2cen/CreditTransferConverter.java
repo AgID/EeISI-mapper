@@ -16,7 +16,7 @@ public class CreditTransferConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0017(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BG0017CreditTransfer bg0017 = null;
+        BG0017CreditTransfer bg0017;
 
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
