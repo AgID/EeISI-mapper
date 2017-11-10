@@ -11,7 +11,14 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaType> {
@@ -30,8 +37,29 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             DatiGeneraliType datiGenerali = fatturaElettronicaBody.getDatiGenerali();
+            addDDT(invoice, datiGenerali, errors);
             addCausale(invoice, datiGenerali, errors);
             addFattureCollegate(invoice, datiGenerali, errors);
+        }
+    }
+
+    private void addDDT(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+        try {
+            if (datiGenerali != null) {
+                if (!invoice.getBT0016DespatchAdviceReference().isEmpty()) {
+                    final BT0016DespatchAdviceReference adviceReference = invoice.getBT0016DespatchAdviceReference(0);
+                    final DatiDDTType datiDDT = new DatiDDTType();
+                    datiGenerali.getDatiDDT().add(datiDDT);
+                    datiDDT.setNumeroDDT(adviceReference.getValue());
+                    DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
+                    final Date parsed = new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01");
+                    final GregorianCalendar gc = new GregorianCalendar();
+                    gc.setTimeInMillis(parsed.getTime());
+                    datiDDT.setDataDDT(datatypeFactory.newXMLGregorianCalendar(gc));
+                }
+            }
+        } catch (DatatypeConfigurationException | ParseException e) {
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(e.getMessage(), e)));
         }
     }
 
