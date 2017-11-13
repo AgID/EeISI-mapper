@@ -62,6 +62,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
             new Untdid4461PaymentMeansCodeToItalianCodeString(),
             new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
+            new Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter(),
             new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
             new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
             new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),

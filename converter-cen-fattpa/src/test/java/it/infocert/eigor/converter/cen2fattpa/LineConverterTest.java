@@ -184,6 +184,19 @@ public class LineConverterTest {
 
     }
 
+    @Test
+    public void shouldMapBG30() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+        for (int i=0; i<5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            assertThat(dettaglioLinee.getAliquotaIVA(), is(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0d)));
+            assertEquals(NaturaType.N_4, dettaglioLinee.getNatura());
+        }
+    }
+
     private void convert() {
         new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList());
     }
@@ -215,12 +228,12 @@ public class LineConverterTest {
     private void populateWithBG25() {
         for (int i = 0; i < 5; i++) {
 
-
             BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
 
             populateBG25WithBG27(invoiceLine);
             populateBG25WithBG28(invoiceLine);
             populateBG25WithBG29(invoiceLine);
+            populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
@@ -258,6 +271,14 @@ public class LineConverterTest {
         priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
 
         invoiceLine.getBG0029PriceDetails().add(priceDetails);
+    }
+
+    private void populateBG25WithBG30(BG0025InvoiceLine invoiceLine) {
+        BG0030LineVatInformation lineVatInformation = new BG0030LineVatInformation();
+        lineVatInformation.getBT0151InvoicedItemVatCategoryCode().add(new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.E));
+        lineVatInformation.getBT0152InvoicedItemVatRate().add(new BT0152InvoicedItemVatRate(0d));
+
+        invoiceLine.getBG0030LineVatInformation().add(lineVatInformation);
     }
 
     private void populateBG25WithBG31(BG0025InvoiceLine invoiceLine) {
