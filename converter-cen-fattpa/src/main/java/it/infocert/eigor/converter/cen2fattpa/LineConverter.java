@@ -477,7 +477,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     Double itemNetPrice = priceDetails.getBT0146ItemNetPrice().isEmpty() ? 0 : priceDetails.getBT0146ItemNetPrice(0).getValue();
                     String quantityUnitOfMeasureCode = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty() ? "" : invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
-                    Double baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? 0 : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
+                    Double baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? 1 : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     try {
@@ -511,16 +511,18 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         altriDatiGestionaliQty.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(baseQuantity));
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
 
+
+                        AltriDatiGestionaliType altriDatiGestionaliUnit = new AltriDatiGestionaliType();
+                        altriDatiGestionaliUnit.setTipoDato(IConstants.ITEM_BASE_PRICE);
+
+
+                        if (baseQuantityUnitOfMeasureCode != null) {
+                            altriDatiGestionaliUnit.setRiferimentoTesto(baseQuantityUnitOfMeasureCode);
+                        }
+
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
                     }
-                    AltriDatiGestionaliType altriDatiGestionaliUnit = new AltriDatiGestionaliType();
-                    altriDatiGestionaliUnit.setTipoDato(IConstants.ITEM_BASE_PRICE);
 
-
-                    if (baseQuantityUnitOfMeasureCode != null) {
-                        altriDatiGestionaliUnit.setRiferimentoTesto(baseQuantityUnitOfMeasureCode);
-                    }
-
-                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
                 }
 
                 mapBG31(invoice, invoiceLine, dettaglioLinee);
