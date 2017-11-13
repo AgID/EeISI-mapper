@@ -620,6 +620,26 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 BigDecimal vatLine = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0.0);
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
                     BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
+                    if (!lineVatInformation.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
+                        Untdid5305DutyTaxFeeCategories category = lineVatInformation.getBT0151InvoicedItemVatCategoryCode(0).getValue();
+                        switch (category) {
+                            case Z:
+                                dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                                break;
+                            case E:
+                                dettaglioLinee.setNatura(NaturaType.N_4);
+                                break;
+                            case G:
+                                dettaglioLinee.setNatura(NaturaType.N_2);
+                                break;
+                            case O:
+                                dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
+                                break;
+                            default:
+                                dettaglioLinee.setNatura(null);
+                        }
+                    }
+
                     if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
                         BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(lineVatInformation.getBT0152InvoicedItemVatRate(0).getValue());
                         dettaglioLinee.setAliquotaIVA(value);
