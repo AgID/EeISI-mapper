@@ -10,7 +10,7 @@ DESCRIPTION
         path to the file of the invoice to transform.
 
     --source
-        format of the invoice specified with '--input', as 'fatt-pa', 'ubl', ...
+        format of the invoice specified with '--input', as 'fatturapa', 'ubl', ...
 
     --output
         path of the folder where the converted invoice will be stored along with other files.
@@ -23,9 +23,9 @@ DESCRIPTION
 
 EXAMPLES
 
-    ./eigor.sh --input 012.xml --source fattpa --output ~/transformed --target ubl --force
+    ./eigor.sh --input 012.xml --source fatturapa --output ~/transformed --target ubl --force
 
-    Transform the 'fatt pa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed', without stopping because of errors.
+    Transform the 'fatturapa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed', without stopping because of errors.
 
 
 
