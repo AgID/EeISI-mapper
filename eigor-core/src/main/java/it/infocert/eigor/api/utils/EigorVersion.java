@@ -42,6 +42,26 @@ public class EigorVersion {
         return sb.toString();
     }
 
+    public static String getAsDetailedString() {
+        if (properties == null) {
+            loadFromGitProperties();
+        }
+
+        StringBuilder sb = new StringBuilder("Eigor");
+
+        sb.append("\nmaven-version: ").append(properties.getProperty("git.build.version"));
+        sb.append("\ngit-branch: ").append(properties.getProperty("git.branch"));
+
+        boolean isDirty = Boolean.parseBoolean(properties.getProperty("git.dirty"));
+        if (isDirty){
+            sb.append("-dirty!");
+        }
+        sb.append("\ngit-revision: ").append(properties.getProperty("git.commit.id"));
+        sb.append("\ngit-timestamp: ").append(properties.getProperty("git.commit.time"));
+
+        return sb.toString();
+    }
+
     private static void loadFromGitProperties() {
         properties = new Properties();
         URL resource = Resources.getResource("git.properties");
