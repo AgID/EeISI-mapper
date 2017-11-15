@@ -8,6 +8,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.io.Copier;
+import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
@@ -18,6 +19,8 @@ import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +31,8 @@ import java.util.Properties;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EigorApiBuilder {
+
+    private final static Logger log = LoggerFactory.getLogger(EigorApiBuilder.class);
 
     private final EigorConfiguration configuration;
     private final ConversionRepository conversionRepository;
@@ -73,6 +78,7 @@ public class EigorApiBuilder {
 
 
     public EigorApi build() throws ConfigurationException {
+        log.info(EigorVersion.getAsDetailedString());
 
         // set up the rule repository
         RuleRepository ruleRepository = DefaultRuleRepository.newInstance();

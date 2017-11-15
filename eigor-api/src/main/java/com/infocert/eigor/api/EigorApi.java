@@ -3,6 +3,9 @@ package com.infocert.eigor.api;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
+import it.infocert.eigor.api.utils.EigorVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -14,6 +17,8 @@ import java.util.Date;
  * Convert a given invoice into a given format.
  */
 public class EigorApi {
+
+    private final static Logger log = LoggerFactory.getLogger(EigorApi.class);
 
     private final EigorApiBuilder builder;
 
@@ -29,6 +34,7 @@ public class EigorApi {
      * @return The invoice converted in the given target format.
      */
     public ConversionResult<byte[]> convert(String sourceFormat, String targetFormat, InputStream invoice) {
+        log.debug(EigorVersion.getAsString());
 
         String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
 
