@@ -6,20 +6,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class EigorVersion {
 
-    private static final Logger log = LoggerFactory.getLogger(EigorVersion.class);
-
     private static Properties properties = null;
 
-
-    public static Properties getAsProperties() {
+    public static Map<String, String> getAsMap() {
         if (properties == null) {
             loadFromGitProperties();
         }
-        return properties;
+        return Collections.unmodifiableMap(new HashMap<String,String>((Map)properties));
     }
 
     public static String getAsString() {
@@ -33,7 +33,7 @@ public class EigorVersion {
         sb.append(properties.getProperty("git.branch"));
 
         boolean isDirty = Boolean.parseBoolean(properties.getProperty("git.dirty"));
-        if (isDirty){
+        if (isDirty) {
             sb.append("-dirty!");
         }
         sb.append(" ").append(properties.getProperty("git.commit.id"));
@@ -53,7 +53,7 @@ public class EigorVersion {
         sb.append("\ngit-branch: ").append(properties.getProperty("git.branch"));
 
         boolean isDirty = Boolean.parseBoolean(properties.getProperty("git.dirty"));
-        if (isDirty){
+        if (isDirty) {
             sb.append("-dirty!");
         }
         sb.append("\ngit-revision: ").append(properties.getProperty("git.commit.id"));
@@ -68,7 +68,7 @@ public class EigorVersion {
         try {
             properties.load(resource.openStream());
         } catch (IOException e) {
-            log.error("Unable to load version information from git.properties", e);
+            throw new RuntimeException("Unable to load version information from git.properties", e);
         }
     }
 }
