@@ -1,9 +1,7 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.Untdid4461PaymentMeansCodeToString;
-import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -34,6 +32,10 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                 if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
                     BT0081PaymentMeansTypeCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0);
                     Element paymentMeansCode = new Element("PaymentMeansCode");
+                    if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
+                        BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
+                        paymentMeansCode.setAttribute("Name", bt0082.getValue());
+                    }
                     paymentMeansCode.setText(paymentMeansCodeToStr.convert(bt0081.getValue()));
                     paymentMeans.addContent(paymentMeansCode);
                 }
