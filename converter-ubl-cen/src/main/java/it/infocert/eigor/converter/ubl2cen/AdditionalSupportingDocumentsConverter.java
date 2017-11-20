@@ -34,9 +34,9 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                 bg0024.getBT0122SupportingDocumentReference().add(bt0122);
             }
 
-            Element documentType = findNamespaceChild(elemAdd, namespacesInScope, "DocumentType");
-            if (documentType != null) {
-                BT0123SupportingDocumentDescription bt0123 = new BT0123SupportingDocumentDescription(documentType.getText());
+            Element documentDescription = findNamespaceChild(elemAdd, namespacesInScope, "DocumentDescription");
+            if (documentDescription != null) {
+                BT0123SupportingDocumentDescription bt0123 = new BT0123SupportingDocumentDescription(documentDescription.getText());
                 bg0024.getBT0123SupportingDocumentDescription().add(bt0123);
             }
 
