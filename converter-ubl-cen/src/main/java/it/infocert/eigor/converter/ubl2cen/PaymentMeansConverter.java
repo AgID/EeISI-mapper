@@ -4,10 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0081PaymentMeansTypeCode;
-import it.infocert.eigor.model.core.model.BT0082PaymentMeansText;
-import it.infocert.eigor.model.core.model.BT0083RemittanceInformation;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -21,6 +18,9 @@ public class PaymentMeansConverter extends CustomConverterUtils implements Custo
 
     public ConversionResult<BG0000Invoice> toBG0016(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
+        if (invoice.getBG0016PaymentInstructions().isEmpty()) {
+            invoice.getBG0016PaymentInstructions().add(new BG0016PaymentInstructions());
+        }
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
@@ -31,7 +31,7 @@ public class PaymentMeansConverter extends CustomConverterUtils implements Custo
 
             if (paymentMeansCode != null) {
 
-                BT0081PaymentMeansTypeCode bt0081 = new BT0081PaymentMeansTypeCode(Untdid4461PaymentMeansCode.valueOf(paymentMeansCode.getValue()));
+                BT0081PaymentMeansTypeCode bt0081 = new BT0081PaymentMeansTypeCode(Untdid4461PaymentMeansCode.valueOf("Code" + paymentMeansCode.getValue()));
                 invoice.getBG0016PaymentInstructions(0).getBT0081PaymentMeansTypeCode().add(bt0081);
 
                 String paymentMeansCodeName = paymentMeansCode.getAttributeValue("Name");

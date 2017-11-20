@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--
+        <withJansi>true</withJansi>
+        -->
+        <encoder>
+            <pattern>x %d{mm:ss} elpsd:%8.8relative | %-20(%level %marker) | %20.20thread | %msg | \(%file:%line\) | %logger | %n</pattern>
+        </encoder>
+        <immediateFlush>true</immediateFlush>
+    </appender>
+
+    <root level="error">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="it.infocert.eigor.api.xml" level="info" />
+    <logger name="it.infocert.eigor.api.xml.XSDValidator" level="info" />
+    <logger name="it.infocert.eigor.api.SchematronValidator" level="info" />
+    <logger name="it.infocert.eigor.api.io" level="warn" />
+
+    <logger name="it.infocert.eigor.LowLevelAPIUsage" level="all" />
+
+    <logger name="com.helger.commons.xml.ls" level="info" />
+    <logger name="it.infocert.eigor.api.xml.CachedResourceResolver" level="all" />
+    <logger name="it.infocert.eigor.LowLevelAPIUsage" level="all" />
+
+    <!-- this one spits out an exception stack trace at ERROR level every time a sch validation fails. -->
+    <logger name="com.helger.jaxb.validation.LoggingValidationEventHandler" level="off" />
+    <!--
+    <logger name="it.infocert" level="error" />
+    -->
+
+</configuration>
