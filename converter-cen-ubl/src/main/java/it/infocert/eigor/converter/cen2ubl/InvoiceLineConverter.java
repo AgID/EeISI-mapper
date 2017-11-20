@@ -40,6 +40,20 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         id.setText(bt0126.getValue());
                         invoiceLine.addContent(id);
                     }
+
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element documentReference = new Element("DocumentReference");
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("130");
+                        Element id = new Element("ID");
+                        id.setText(bt0128.getValue().getIdentifier());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
+                        documentReference.addContent(id);
+                        documentReference.addContent(documentTypeCode);
+                        invoiceLine.addContent(documentReference);
+                    }
+
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
                         BT0129InvoicedQuantity bt0129 = elemBg25.getBT0129InvoicedQuantity(0);
                         Element invoicedQuantity = new Element("InvoicedQuantity");

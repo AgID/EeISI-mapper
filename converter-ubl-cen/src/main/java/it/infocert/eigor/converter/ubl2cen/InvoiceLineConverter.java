@@ -50,12 +50,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             Element documentReference = findNamespaceChild(elemInv, namespacesInScope, "DocumentReference");
             if (documentReference != null) {
                 Element documentTypeCode = findNamespaceChild(documentReference, namespacesInScope, "DocumentTypeCode");
-                if (documentTypeCode != null && documentTypeCode.getText().equals("ATS")) {
+                if (documentTypeCode != null && documentTypeCode.getText().equals("130")) {
                     Element idRef = findNamespaceChild(documentReference, namespacesInScope, "ID");
                     if (idRef != null) {
-                        Attribute schemeID = id.getAttribute("schemeID");
+                        Attribute schemeID = idRef.getAttribute("schemeID");
                         if (schemeID != null) {
-                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getAttributeValue("schemeID"), idRef.getText()));
+                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID.getValue(), idRef.getText()));
                         } else {
                             bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getText()));
                         }

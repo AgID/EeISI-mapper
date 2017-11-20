@@ -30,9 +30,9 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     }
                     if (!elemBg24.getBT0123SupportingDocumentDescription().isEmpty()) {
                         BT0123SupportingDocumentDescription bt0123 = elemBg24.getBT0123SupportingDocumentDescription(0);
-                        Element documentType = new Element("DocumentType");
-                        documentType.setText(bt0123.getValue());
-                        additionalDocumentReference.addContent(documentType);
+                        Element documentDescription = new Element("DocumentDescription");
+                        documentDescription.setText(bt0123.getValue());
+                        additionalDocumentReference.addContent(documentDescription);
                     }
                     if (!elemBg24.getBT0124ExternalDocumentLocation().isEmpty()) {
                         BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
