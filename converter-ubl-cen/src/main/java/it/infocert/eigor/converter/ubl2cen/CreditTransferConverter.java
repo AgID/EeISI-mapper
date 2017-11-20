@@ -55,7 +55,9 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
             		}
             	}
 
-            	invoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer().add(bg0017);
+            	if (!invoice.getBT0016DespatchAdviceReference().isEmpty()) {
+					invoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer().add(bg0017);
+				}
             }
         }
 

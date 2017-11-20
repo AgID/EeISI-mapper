@@ -84,6 +84,23 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertUblExampleWithoutErrors() throws Exception {
-
+        Stream.of(testInvoices).filter(new Filter<File>() {
+            @Override
+            public boolean apply(File file) {
+                return file.getName().startsWith("ubl");
+            }
+        }).forEach(new Consumer<File>() {
+            @Override
+            public void consume(File invoice) {
+                try {
+                    final ConversionResult<byte[]> result = api.convert("ubl", "fatturapa", new FileInputStream(invoice));
+                    assertFalse(result.hasIssues());
+                    assertTrue(result.isSuccessful());
+                    assertTrue(result.hasResult());
+                } catch (FileNotFoundException e) {
+                    fail();
+                }
+            }
+        });
     }
 }
