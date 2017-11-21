@@ -5,7 +5,7 @@
   <param name="UBL-SR-01" value="(count(cac:ContractDocumentReference/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-02" value="(count(cac:ReceiptDocumentReference/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-03" value="(count(cac:DespatchDocumentReference/cbc:ID) &lt;= 1)"/>
-  <param name="UBL-SR-04" value="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)"/>
+  <param name="UBL-SR-04" value="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-05" value="(count(cac:PaymentTerms/cbc:Note) &lt;= 1)"/>
   <param name="UBL-SR-06" value="(count(cac:InvoiceDocumentReference) &lt;= 1)"/>
   <param name="UBL-SR-07" value="(cac:InvoiceDocumentReference/cbc:ID)"/>
@@ -183,7 +183,6 @@
   <param name="UBL-CR-117" value="not(cac:AdditionalDocumentReference/cbc:LocaleCode)"/>
   <param name="UBL-CR-118" value="not(cac:AdditionalDocumentReference/cbc:VersionID)"/>
   <param name="UBL-CR-119" value="not(cac:AdditionalDocumentReference/cbc:DocumentStatusCode)"/>
-  <param name="UBL-CR-120" value="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)"/>
   <param name="UBL-CR-121" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:DocumentHash)"/>
   <param name="UBL-CR-122" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:HashAlgorithmMethod)"/>
   <param name="UBL-CR-123" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:ExpiryDate)"/>
