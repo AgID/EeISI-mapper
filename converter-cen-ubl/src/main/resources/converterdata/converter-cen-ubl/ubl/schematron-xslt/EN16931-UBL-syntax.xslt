@@ -2113,21 +2113,6 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)">
-          <xsl:attribute name="id">UBL-CR-120</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[UBL-CR-120]-A UBL invoice should not include the AdditionalDocumentReference DocumentDescription</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
       <xsl:when test="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:DocumentHash)" />
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:DocumentHash)">
@@ -10363,9 +10348,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)" />
+      <xsl:when test="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)">
+        <svrl:failed-assert test="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)">
           <xsl:attribute name="id">UBL-SR-04</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
