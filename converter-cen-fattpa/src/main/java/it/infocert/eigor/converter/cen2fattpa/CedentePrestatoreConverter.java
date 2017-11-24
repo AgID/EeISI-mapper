@@ -16,20 +16,15 @@ import java.util.List;
 
 public class CedentePrestatoreConverter implements CustomMapping<FatturaElettronicaType> {
     private static final Logger log = LoggerFactory.getLogger(CedentePrestatoreConverter.class);
-    private final AttachmentUtil attachmentUtil;
-
-    public CedentePrestatoreConverter() {
-        attachmentUtil = new AttachmentUtil();
-    }
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
         CedentePrestatoreType cedentePrestatore = fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore();
         if (cedentePrestatore != null) {
+            addRegimeFiscale(invoice, cedentePrestatore, errors);
             List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
             if (!bodies.isEmpty()) {
                 FatturaElettronicaBodyType body = bodies.get(0);
-                addRegimeFiscale(invoice, cedentePrestatore, body, errors);
                 mapBt29(invoice, body, cedentePrestatore, errors);
                 mapBt30(invoice, body, cedentePrestatore, errors);
             }
@@ -171,13 +166,32 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                     datiAnagrafici.setNumeroIscrizioneAlbo(slices[1]);
                                 }
                                 break;
-                            default:
-                                attachmentUtil.addToAttachment(fatturaElettronicaBody, sellerIdentifier.denomination() +
+                            default: {
+                                List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+                                String content = "";
+                                AllegatiType allegato;
+                                if (allegati.isEmpty()) {
+                                    allegato = new AllegatiType();
+                                    allegato.setNomeAttachment("not-mapped-values");
+                                    allegato.setFormatoAttachment("txt");
+                                    allegati.add(allegato);
+                                } else {
+                                    allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                                        @Override
+                                        public boolean apply(AllegatiType allegato) {
+                                            return "not-mapped-values".equals(allegato.getNomeAttachment());
+                                        }
+                                    }).first();
+                                    content = new String(allegato.getAttachment());
+                                }
+                                String updated = content +
+                                        sellerIdentifier.denomination() +
                                         ": " +
                                         identificationSchema +
                                         ":" +
-                                        identifier);
-
+                                        identifier;
+                                allegato.setAttachment(updated.getBytes());
+                            }
                         }
 
                     }
@@ -188,9 +202,10 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
     }
 
-    private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller seller = invoice.getBG0004Seller(0);
+
             DatiAnagraficiCedenteType datiAnagrafici = cedentePrestatore.getDatiAnagrafici();
             if (datiAnagrafici != null) {
 
@@ -200,12 +215,11 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(identifier.getValue()));
                         log.debug("Mapped BT0031 to RegimeFiscale with value {}", identifier.getValue());
                     } else {
-                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
-                        attachmentUtil.addToAttachment(fatturaElettronicaBody, identifier.denomination() + ": " + identifier.getValue());
+                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18); //FIXME mapping says "will be by default RF00 (inknown- because it is a mandatory" but no RF_00 is present in the enum
                         log.debug("Mapped BT0031 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
                     }
                 } else {
-                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
+                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18); //FIXME mapping says "will be by default RF00 (inknown- because it is a mandatory" but no RF_00 is present in the enum
                     log.debug("Mapped BT0031 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
                 }
             } else {
