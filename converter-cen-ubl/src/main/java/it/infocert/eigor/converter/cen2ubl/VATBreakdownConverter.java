@@ -100,7 +100,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
                     Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
 
-                    Element taxAmount = taxTotal.getChild("TaxAmount");
+                    Element taxAmount = taxTotal.getChild("TaxAmount") != null ? taxTotal.getChild("TaxAmount") : new Element("TaxAmount");
                     String currencyName = currencyCode.name();
                     taxAmount.setAttribute(new Attribute("currencyID", currencyName));
                     for (Element element : taxSubtotal.getChildren()) {

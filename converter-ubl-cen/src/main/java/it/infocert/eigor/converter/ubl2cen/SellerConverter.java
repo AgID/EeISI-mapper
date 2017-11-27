@@ -9,6 +9,8 @@ import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
  * The Seller Custom Converter
  */
 public class SellerConverter extends CustomConverterUtils implements CustomMapping<Document> {
+    private final static Logger log = LoggerFactory.getLogger(SellerConverter.class);
 
     public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -25,6 +28,9 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
         if (invoice.getBG0004Seller().isEmpty()) {
             invoice.getBG0004Seller().add(new BG0004Seller());
+            log.error("ADDED NEW SELLER");
+        } else {
+            log.error("SELLER ALREADY PRESENT");
         }
 
         Element accountingSupplierParty = findNamespaceChild(rootElement, namespacesInScope, "AccountingSupplierParty");
