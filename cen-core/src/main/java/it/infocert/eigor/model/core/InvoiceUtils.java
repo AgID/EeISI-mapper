@@ -63,9 +63,12 @@ public class InvoiceUtils {
 
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
-
-                    BTBG bg = childType.newInstance();
-                    children.add(bg);
+                    if (childType != null) {
+                        BTBG bg = childType.newInstance();
+                        children.add(bg);
+                    } else {
+                        throw new IllegalArgumentException(format("Name %s didn't return a valid class.", name));
+                    }
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
                             format("'%s' is wrong, too many '%s' children found.",
@@ -124,15 +127,15 @@ public class InvoiceUtils {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
 
-        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
+        Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
             public boolean apply(Class<? extends BTBG> c) {
                 return c.getSimpleName().startsWith(BtBgName.format(name));
             }
         });
 
-        if (filter == null || filter.isEmpty()) return null;
-        else return filter.iterator().next();
+        if (filtered == null || filtered.isEmpty()) return null;
+        else return filtered.iterator().next();
 
     }
 

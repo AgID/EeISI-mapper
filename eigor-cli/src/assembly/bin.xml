@@ -43,6 +43,10 @@
             <outputDirectory>examples/cii</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/cii</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/working-examples</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/working-examples</directory>
+        </fileSet>
         <!-- invoice examples -->
 
         <!-- UBL/CEN -->
