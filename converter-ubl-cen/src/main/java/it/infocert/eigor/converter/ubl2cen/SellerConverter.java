@@ -4,10 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
-import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -22,12 +19,14 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
 
     public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BT0029SellerIdentifierAndSchemeIdentifier bt0029 = null;
+        BT0029SellerIdentifierAndSchemeIdentifier bt0029;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
+        if (invoice.getBG0004Seller().isEmpty()) {
+            invoice.getBG0004Seller().add(new BG0004Seller());
+        }
 
-        List<Element> ids = null;
         Element accountingSupplierParty = findNamespaceChild(rootElement, namespacesInScope, "AccountingSupplierParty");
 
         if (accountingSupplierParty != null) {
@@ -53,8 +52,8 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                 //BT0031-BT0032
                 List<Element> partyTaxScheme = findNamespaceChildren(party, namespacesInScope, "PartyTaxScheme");
             	String idValue = null;
-                BT0031SellerVatIdentifier bt0031 = null;
-                BT0032SellerTaxRegistrationIdentifier bt0032 = null;
+                BT0031SellerVatIdentifier bt0031;
+                BT0032SellerTaxRegistrationIdentifier bt0032;
             	for (Element elemPartyTax : partyTaxScheme) {
                     Element taxScheme = findNamespaceChild(elemPartyTax, namespacesInScope, "TaxScheme");
                     if (taxScheme != null) {
