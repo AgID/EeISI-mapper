@@ -9,10 +9,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Utility class to deal with FattPA Attachment
+ */
 class AttachmentUtil {
     private final static Logger log = LoggerFactory.getLogger(AttachmentUtil.class);
 
-    void addToAttachment(final FatturaElettronicaBodyType body, final String input) {
+    /**
+     * Append the given string to the end of the <i>not-mapped-values.txt</i>
+     * attachment of the given {@link FatturaElettronicaBodyType}
+     * The input string must be in the format BTXXXX: schema : value.
+     * E.G <code>BT0049: IT:PEC : mail@pec.com</code>
+     * @param body a {@link FatturaElettronicaBodyType} body to attach the file to
+     * @param input the string to append
+     */
+    void addToUnmappedValuesAttachment(final FatturaElettronicaBodyType body, final String input) {
         log.debug("Adding string '{}' to FattPA attachment", input);
         List<AllegatiType> allegati = body.getAllegati();
         String content = "";

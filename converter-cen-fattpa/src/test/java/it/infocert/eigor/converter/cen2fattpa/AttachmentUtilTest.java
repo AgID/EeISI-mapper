@@ -33,7 +33,7 @@ public class AttachmentUtilTest {
     public void shouldAddToNewAttachment() throws Exception {
         final String input = "additional: text";
         final FatturaElettronicaBodyType body = new FatturaElettronicaBodyType();
-        sut.addToAttachment(body, input);
+        sut.addToUnmappedValuesAttachment(body, input);
         final List<AllegatiType> allegati = body.getAllegati();
         assertFalse(allegati.isEmpty());
         final AllegatiType allegato = allegati.get(0);
@@ -45,7 +45,7 @@ public class AttachmentUtilTest {
     @Test
     public void shouldAppendToExistingAttachment() throws Exception {
         final String input = "additional: text";
-        sut.addToAttachment(fatturaElettronicaBody, input);
+        sut.addToUnmappedValuesAttachment(fatturaElettronicaBody, input);
         final AllegatiType allegato = fatturaElettronicaBody.getAllegati().get(0);
         final String attachment = new String(allegato.getAttachment());
         assertEquals(startingText + System.lineSeparator() + input, attachment);
