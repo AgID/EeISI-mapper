@@ -162,4 +162,5 @@
 <param name="Accounting_Customer_PartyIdentification" value="/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification"/>
 <param name="Accounting_Customer_Party_Contact" value="cac:AccountingCustomerParty/cac:Party/cac:Contact"/>
 <param name="Accounting_Customer_Party" value="cac:AccountingCustomerParty/cac:Party"/>
+    <param name="CIUS-CA-103" value="exists(cbc:PaymentMeansCode)"/>
 </pattern>

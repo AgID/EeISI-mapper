@@ -329,4 +329,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
   <assert test="$CIUS-VD-68" id="CIUS-VD-68" flag="fatal"> [CIUS-VD-68] BT-120 (VAT exemption reason text) -BT maximum length shall be 100 chars. 
         </assert>
    </rule>
+    <rule context="$PaymentMeans">
+  <assert test="$CIUS-CA-103" id="CIUS-CA-103" flag="fatal"> [CIUS-CA-103] BT-81 (Payment means code) -Mandatory BT when PaymentMeans is present.
+        </assert>
+   </rule>
 </pattern>
