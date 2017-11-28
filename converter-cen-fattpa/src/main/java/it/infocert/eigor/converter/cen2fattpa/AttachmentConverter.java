@@ -61,7 +61,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             "/BG0022/BT0111",
             "/BG0022/BT0113"
     );
-    
+
 
     private final InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert.eigor"));
     private final String attachmentName = "not-mapped-values";
@@ -127,29 +127,39 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
         log.info("Starting converting Allegati");
         if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             for (BG0024AdditionalSupportingDocuments documents : invoice.getBG0024AdditionalSupportingDocuments()) {
-                AllegatiType allegati = new AllegatiType();
-                allegati.setNomeAttachment(documents.getBT0122SupportingDocumentReference().get(0).getValue());
+                if (!documents.getBT0122SupportingDocumentReference().isEmpty()) {
+                    AllegatiType allegati = new AllegatiType();
+                    String documentReference = documents.getBT0122SupportingDocumentReference().get(0).getValue();
 
-                if (!documents.getBT0123SupportingDocumentDescription().isEmpty()) {
-                    allegati.setDescrizioneAttachment(documents.getBT0123SupportingDocumentDescription().get(0).getValue());
-                }
-
-                if (!documents.getBT0124ExternalDocumentLocation().isEmpty() && documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
-                } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
-
-                    try {
-                        allegati.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
-                        allegati.setFormatoAttachment(file.getMimeType().toString());
-                        allegati.setNomeAttachment(file.getFileName());
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                        errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                    if (!documents.getBT0123SupportingDocumentDescription().isEmpty()) {
+                        allegati.setDescrizioneAttachment(documents.getBT0123SupportingDocumentDescription().get(0).getValue());
                     }
-                }
 
-                fatturaElettronicaBody.getAllegati().add(allegati);
+                    if (documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                        if (!documents.getBT0124ExternalDocumentLocation().isEmpty()) {
+                            allegati.setNomeAttachment(documentReference);
+                            allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
+                        } else {
+                            allegati.setAttachment(documentReference.getBytes());
+                            allegati.setFormatoAttachment("csv");
+                            allegati.setNomeAttachment("document-reference");
+                        }
+
+                    } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                        FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
+
+                        try {
+                            allegati.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
+                            allegati.setFormatoAttachment(file.getMimeType().toString());
+                            allegati.setNomeAttachment(file.getFileName());
+                        } catch (IOException e) {
+                            log.error(e.getMessage(), e);
+                            errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                        }
+                    }
+
+                    fatturaElettronicaBody.getAllegati().add(allegati);
+                }
             }
         }
     }
