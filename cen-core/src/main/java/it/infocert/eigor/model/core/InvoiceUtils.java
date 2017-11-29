@@ -36,6 +36,7 @@ public class InvoiceUtils {
      * @param invoice The invoice where the path should be guaranteed.
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
+        log.info("Ensuring path '{}' exists.", path);
 
         //checkArgument(path!=null && path.startsWith("/"), "Illegal path '%s'.", path);
 
@@ -45,10 +46,6 @@ public class InvoiceUtils {
 
         try {
             for (String name : namesOfBGs) {
-                if (name.startsWith("BT")) {
-                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
-                    continue;
-                }
                 List<BTBG> children = getChildrenAsList(current, name);
 
                 if (children == null) {
@@ -60,16 +57,23 @@ public class InvoiceUtils {
                             children));
                 }
 
+                if (name.startsWith("BT")) {
+                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
+                    continue;
+                }
 
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
-
-                    BTBG bg = childType.newInstance();
-                    children.add(bg);
+                    if (childType != null) {
+                        BTBG bg = childType.newInstance();
+                        children.add(bg);
+                    } else {
+                        throw new IllegalArgumentException(format("Name %s didn't return a valid class.", name));
+                    }
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
-                            format("'%s' is wrong, too many '%s' children found.",
-                                    path, current.denomination())
+                            format("'%s' is wrong, too many '%s' found in '%s'.",
+                                    path, children.get(0).denomination(), current.denomination())
                     );
                 }
                 current = children.get(0);
@@ -124,15 +128,15 @@ public class InvoiceUtils {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
 
-        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
+        Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
             public boolean apply(Class<? extends BTBG> c) {
                 return c.getSimpleName().startsWith(BtBgName.format(name));
             }
         });
 
-        if (filter == null || filter.isEmpty()) return null;
-        else return filter.iterator().next();
+        if (filtered == null || filtered.isEmpty()) return null;
+        else return filtered.iterator().next();
 
     }
 

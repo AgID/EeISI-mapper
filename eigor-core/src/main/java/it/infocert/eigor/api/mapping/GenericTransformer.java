@@ -121,7 +121,12 @@ public abstract class GenericTransformer {
 
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
-        invoiceUtils.ensurePathExists(cenPath, invoice);
+        try {
+            invoiceUtils.ensurePathExists(cenPath, invoice);
+        } catch (Exception e) {
+            errors.add(ConversionIssue.newError(e, e.getMessage(), null, "generic-transformation", null));
+            return constructorParam[0];
+        }
         BTBG bg;
         if (cenPath.startsWith("/BT")) {
             bg = invoice;
