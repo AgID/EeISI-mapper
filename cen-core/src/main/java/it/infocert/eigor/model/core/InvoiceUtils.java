@@ -36,6 +36,7 @@ public class InvoiceUtils {
      * @param invoice The invoice where the path should be guaranteed.
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
+        log.info("Ensuring path '{}' exists.", path);
 
         //checkArgument(path!=null && path.startsWith("/"), "Illegal path '%s'.", path);
 
@@ -45,10 +46,6 @@ public class InvoiceUtils {
 
         try {
             for (String name : namesOfBGs) {
-                if (name.startsWith("BT")) {
-                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
-                    continue;
-                }
                 List<BTBG> children = getChildrenAsList(current, name);
 
                 if (children == null) {
@@ -60,6 +57,10 @@ public class InvoiceUtils {
                             children));
                 }
 
+                if (name.startsWith("BT")) {
+                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
+                    continue;
+                }
 
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
@@ -71,8 +72,8 @@ public class InvoiceUtils {
                     }
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
-                            format("'%s' is wrong, too many '%s' children found.",
-                                    path, current.denomination())
+                            format("'%s' is wrong, too many '%s' found in '%s'.",
+                                    path, children.get(0).denomination(), current.denomination())
                     );
                 }
                 current = children.get(0);
