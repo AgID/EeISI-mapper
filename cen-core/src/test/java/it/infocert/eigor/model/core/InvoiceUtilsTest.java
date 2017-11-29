@@ -127,7 +127,7 @@ public class InvoiceUtilsTest {
         assertEquals(BT0001InvoiceNumber.class, btBgByName);
     }
 
-    private void assertBtRecursively(String path ,int num, boolean byPath) {
+    private void assertBtRecursively(String path, int num, boolean byPath) {
         populateWithBT146(num);
         List<AbstractBT> bts;
         if (byPath) {
