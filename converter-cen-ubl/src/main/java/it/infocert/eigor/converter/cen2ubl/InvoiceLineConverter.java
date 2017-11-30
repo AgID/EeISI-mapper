@@ -20,6 +20,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
         DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#0.00");
+        DoubleToStringConverter dblStrConverter8Decimals = new DoubleToStringConverter("#0.00000000");
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -55,9 +56,19 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
-                        BT0129InvoicedQuantity bt0129 = elemBg25.getBT0129InvoicedQuantity(0);
+
+                        Double quantity = null;
+                        Double bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ? 0 : elemBg25.getBT0129InvoicedQuantity(0).getValue();
+
+                        if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
+                            Double bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
+                            quantity = bt129Quantity / bt0149BaseQuantity;
+                        } else {
+                            quantity = bt129Quantity;
+                        }
+
                         Element invoicedQuantity = new Element("InvoicedQuantity");
-                        invoicedQuantity.setText(dblStrConverter.convert(bt0129.getValue()));
+                        invoicedQuantity.setText(dblStrConverter8Decimals.convert(quantity));
 
                         if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
                             BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);

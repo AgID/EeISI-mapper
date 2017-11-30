@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 
-public class CopierTest {
+public class ITCopierTest {
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();

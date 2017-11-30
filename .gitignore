@@ -33,7 +33,7 @@ buildNumber.properties
 .idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
+.idea/*ab a*/uiDesigner.xml
 
 # Gradle:
 .idea/**/gradle.xml
