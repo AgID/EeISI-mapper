@@ -60,8 +60,12 @@ class Cen2FattPAConverterUtils {
     }
 
     static BigDecimal doubleToBigDecimalWith2Decimals(Double value) {
+        return doubleToBigDecimalWithDecimals(value, 2);
+    }
+
+    static BigDecimal doubleToBigDecimalWithDecimals(Double value, int scale) {
         BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        bd = bd.setScale(scale, RoundingMode.HALF_UP);
         return bd;
     }
 

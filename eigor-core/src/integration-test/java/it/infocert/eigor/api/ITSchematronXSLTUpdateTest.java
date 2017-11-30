@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SchematronXSLTUpdateTest {
+public class ITSchematronXSLTUpdateTest {
 
     public @Rule
     TemporaryFolder tmp = new TemporaryFolder();

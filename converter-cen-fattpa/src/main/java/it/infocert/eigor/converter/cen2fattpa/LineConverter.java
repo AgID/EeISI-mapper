@@ -361,7 +361,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
 
                 Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
-                dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
+
+                dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
                 log.trace("Set BT129 as Quantita with value {}", quantity);
 
                 if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
@@ -412,7 +413,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             String desc = String.format("%s%s", reason, code);
                             dettaglioLinee.setDescrizione(desc);
                             log.trace("Set Descrizione with value {}", desc);
-                            BigDecimal quantityBd = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity);
+                            BigDecimal quantityBd = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8);
                             dettaglioLinee.setQuantita(quantityBd);
                             log.trace("Set Quantita with value {}", quantityBd);
                             BigDecimal unit = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(discountValue);
@@ -449,7 +450,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? "" : " " + conversionRegistry.convert(Untdid7161SpecialServicesCodes.class, String.class, invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue());
                     if (surchargeValue > 0) {
                         dettaglioLinee.setDescrizione(String.format("%s%s", bt0144, bt0145));
-                        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
+                        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
                         dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(surchargeValue));
                         dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount * quantity));
                         if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
@@ -481,7 +482,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     try {
-                        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity / baseQuantity));
+                        dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity / baseQuantity, 8));
                     } catch (NumberFormatException e) {
                         ArrayList<String> zeroes = Lists.newArrayList();
                         if (quantity == 0) {
@@ -536,7 +537,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
 //            //Just so that FatturaPA doesn't complain about missing elements
 //            Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
-//            dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(quantity));
+//            dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
 //
 //            if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
 //                Double dValue = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
@@ -816,7 +817,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("No BT0097 found");
                 }
 
-                BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
+                BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(1.0, 8);
                 dettaglioLinee.setQuantita(quantitaCedute);
                 if (!allowances.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
 
@@ -953,7 +954,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("No BT0104 found");
                 }
 
-                BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(1.0);
+                BigDecimal quantitaCedute = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(1.0, 8);
                 dettaglioLinee.setQuantita(quantitaCedute);
                 if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
                     BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(charges.getBT0099DocumentLevelChargeAmount(0).getValue());
