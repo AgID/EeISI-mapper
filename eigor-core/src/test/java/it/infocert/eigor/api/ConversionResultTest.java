@@ -2,6 +2,7 @@ package it.infocert.eigor.api;
 
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -30,7 +31,7 @@ public class ConversionResultTest {
 
         // given
         IConversionIssue issueToReturn = ConversionIssue.newError(new Exception());
-        ConversionResult sut = new ConversionResult<String>(asList(issueToReturn), "result with issues");
+        ConversionResult<String> sut = new ConversionResult<>(Collections.singletonList(issueToReturn), "result with issues");
 
         // then
         List<IConversionIssue> errors = sut.getIssues();

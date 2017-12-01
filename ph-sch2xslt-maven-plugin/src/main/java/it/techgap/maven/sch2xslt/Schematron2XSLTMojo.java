@@ -325,7 +325,7 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
      *
      * @return TRUE if any sch file has a newer timestamp than any XSLT file
      */
-    boolean checkForUpdatedSchematron() {
+    private boolean checkForUpdatedSchematron() {
         long xsltLastModifiedTimestamp = 0;
         long schLastModifiedTimestamp = 0;
 

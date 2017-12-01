@@ -14,8 +14,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ConversionRepositoryTest {
 
-    @Mock ToCenConversion toCenConversion1;
-    @Mock FromCenConversion fromCenConversion1;
+    @Mock private ToCenConversion toCenConversion1;
+    @Mock private FromCenConversion fromCenConversion1;
 
     @Test
     public void shouldDelegateToConverters() {
@@ -26,8 +26,8 @@ public class ConversionRepositoryTest {
                 .register(fromCenConversion1)
                 .build();
 
-        when(toCenConversion1.getSupportedFormats()).thenReturn( new HashSet<String>(Arrays.asList("f1", "f2")));
-        when(fromCenConversion1.getSupportedFormats()).thenReturn( new HashSet<String>(Arrays.asList("f3", "f4")));
+        when(toCenConversion1.getSupportedFormats()).thenReturn(new HashSet<>(Arrays.asList("f1", "f2")));
+        when(fromCenConversion1.getSupportedFormats()).thenReturn(new HashSet<>(Arrays.asList("f3", "f4")));
 
         // then
         Assert.assertThat(sut.supportedFromCenFormats(), org.hamcrest.Matchers.hasItems("f3", "f4"));

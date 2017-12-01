@@ -197,6 +197,20 @@ public class LineConverterTest {
         }
     }
 
+    @Test
+    public void shouldMapBG25Quantity() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+        for (int i=0; i<5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            BigDecimal quantita = dettaglioLinee.getQuantita();
+            BigDecimal expected = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(2d, 8);
+            assertThat(quantita, is(expected));
+        }
+    }
+
     private void convert() {
         new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList());
     }
@@ -235,6 +249,7 @@ public class LineConverterTest {
             populateBG25WithBG29(invoiceLine);
             populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
+            populateBG25WithBT129(invoiceLine);
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
     }
@@ -286,6 +301,11 @@ public class LineConverterTest {
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
 
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
+    }
+
+    private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {
+        BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(2d);
+        invoiceLine.getBT0129InvoicedQuantity().add(bt0129);
     }
 
 }

@@ -57,7 +57,7 @@
                             <schematronDirectory>src/main/resources/converterdata/converter-cii-cen/cii/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
-                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
+                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>
@@ -71,7 +71,7 @@
                             <schematronDirectory>src/main/resources/converterdata/converter-cii-cen/cius/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
-                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
+                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>

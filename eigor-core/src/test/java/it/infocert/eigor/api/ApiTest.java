@@ -21,7 +21,6 @@ public class ApiTest {
 
         // services
         Reflections reflections = new Reflections("it.infocert.eigor.api");
-        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
         RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         PropertiesBackedConfiguration configuration = new PropertiesBackedConfiguration();
 
