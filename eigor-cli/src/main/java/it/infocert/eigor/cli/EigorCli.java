@@ -15,7 +15,9 @@ public class EigorCli {
     }
 
     public void run(String[] args) {
-        log.info(EigorVersion.getAsString());
+        String eigorVersion = EigorVersion.getAsString();
+        log.info(eigorVersion);
+        System.out.println(eigorVersion);
         CliCommand cliCommand = cli.parseCommandLine(args);
         cliCommand.execute(System.out, System.err);
     }
