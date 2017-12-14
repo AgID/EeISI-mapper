@@ -56,7 +56,7 @@ public class EigorApi {
                 toCen,
                 fromCen,
                 invoice,
-                false,
+                builder.isForceConversion(),
                 "invoice",
                 Arrays.asList(callback)).conversion();
 

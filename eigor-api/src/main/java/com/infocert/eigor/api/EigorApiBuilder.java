@@ -39,6 +39,7 @@ public class EigorApiBuilder {
     private File outputFolderFile;
     private RuleRepository ruleRepository;
     private boolean copy = false;
+    private boolean forceConversion = false;
 
     public EigorApiBuilder() throws IOException {
 
@@ -134,5 +135,14 @@ public class EigorApiBuilder {
     public EigorApiBuilder enableAutoCopy() {
         this.copy = true;
         return this;
+    }
+
+    public EigorApiBuilder enableForce() {
+        this.forceConversion = true;
+        return this;
+    }
+
+    public boolean isForceConversion() {
+        return forceConversion;
     }
 }
