@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -141,7 +142,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
         Visitor v = new CsvDumpVisitor();
         cenInvoice.accept(v);
-        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString());
+        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString(), StandardCharsets.UTF_8);
     }
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile, String targetInvoiceExtension) throws IOException {

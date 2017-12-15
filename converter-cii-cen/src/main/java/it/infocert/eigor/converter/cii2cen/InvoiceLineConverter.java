@@ -117,7 +117,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
                                         bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
                                     }catch (IllegalArgumentException e) {
-                                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date formatPadded").action("InvoiceLineConverter").build());
                                         errors.add(ConversionIssue.newError(ere));
                                     }
                                 }
@@ -134,7 +134,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                         BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
                                         bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
                                     }catch (IllegalArgumentException e) {
-                                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date formatPadded").action("InvoiceLineConverter").build());
                                         errors.add(ConversionIssue.newError(ere));
                                     }
                                 }

@@ -98,7 +98,7 @@ public class InvoiceUtils {
         Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
-                return method.getName().startsWith("get" + BtBgName.format(childName)) &&
+                return method.getName().startsWith("get" + BtBgName.formatPadded(childName)) &&
                         method.getParameterTypes().length == 0;
             }
         });
@@ -131,7 +131,7 @@ public class InvoiceUtils {
         Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
             public boolean apply(Class<? extends BTBG> c) {
-                return c.getSimpleName().startsWith(BtBgName.format(name));
+                return c.getSimpleName().startsWith(BtBgName.formatPadded(name));
             }
         });
 
@@ -230,7 +230,7 @@ public class InvoiceUtils {
             if (children != null && children.size() != 0) {
                 current = children.get(0);
             }
-            if (current.denomination().equals(BtBgName.format(namesOfBGs.get(namesOfBGs.size() - 1)))) {
+            if (current.denomination().equals(BtBgName.formatPadded(namesOfBGs.get(namesOfBGs.size() - 1)))) {
                 return true;
             }
         }
