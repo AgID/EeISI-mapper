@@ -97,6 +97,9 @@
                         <goals>
                             <goal>revision</goal>
                         </goals>
+                        <phase>
+                            generate-resources
+                        </phase>
                     </execution>
                 </executions>
                 <configuration>
@@ -105,8 +108,7 @@
                     <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
                     <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
-                    </generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.build.directory}/generated-resources/git.properties</generateGitPropertiesFilename>
                     <includeOnlyProperties>
                         <includeOnlyProperty>^git.build.version$</includeOnlyProperty>
                         <includeOnlyProperty>^git.branch$</includeOnlyProperty>
@@ -152,7 +154,24 @@
                                 -->
                                 <resource>
                                     <filtering>true</filtering>
-                                    <directory>src/integration-test/resources</directory>
+                                    <directory>src/integration-test/resources/generated-resources/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!-- Add a new resource directory to our build -->
+                    <execution>
+                        <id>add-generated-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the resource directory -->
+                            <resources>
+                                <resource>
+                                    <filtering>true</filtering>
+                                    <directory>${project.build.directory}/generated-resources/</directory>
                                 </resource>
                             </resources>
                         </configuration>
