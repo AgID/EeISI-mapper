@@ -9,6 +9,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
+import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
@@ -34,6 +35,8 @@ public class Eigor {
     private static final Logger log = LoggerFactory.getLogger(Eigor.class);
 
     public static void main(String[] args) {
+        System.out.println(EigorVersion.getAsString());
+        log.info(EigorVersion.getAsString());
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
         ctx.getBean(EigorCli.class).run(args);
     }
