@@ -71,9 +71,16 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
         if (!invoice.getBG0001InvoiceNote().isEmpty()) {
             for (BG0001InvoiceNote bg0001 : invoice.getBG0001InvoiceNote()) {
                 if (!bg0001.getBT0022InvoiceNote().isEmpty()) {
-                    BT0022InvoiceNote bt0022 = bg0001.getBT0022InvoiceNote(0);
                     Element note = new Element("Note");
-                    note.setText(bt0022.getValue());
+                    String bt0022 = bg0001.getBT0022InvoiceNote(0).getValue();
+
+                    if (bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
+                        note.setText(bt0022);
+                    } else {
+                        String bt0021 = bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue();
+                        note.setText("#"+bt0021+"#"+bt0022);
+                    }
+
                     root.addContent(note);
                 }
             }
