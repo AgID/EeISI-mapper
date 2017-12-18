@@ -7,14 +7,17 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0007Buyer;
-import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class CessionarioCommittenteConverter implements CustomMapping<FatturaElettronicaType> {
+
+    private final static Logger log = LoggerFactory.getLogger(CessionarioCommittenteConverter.class);
+
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
         CessionarioCommittenteType cessionarioCommittente = fatturaElettronica.getFatturaElettronicaHeader().getCessionarioCommittente();
@@ -66,14 +69,15 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                                 ": " +
                                 identifier.getIdentificationSchema() +
                                 ":" +
-                                identifier.getIdentifier()
-                                ;
+                                identifier.getIdentifier();
                         allegato.setAttachment(updated.getBytes());
                     }
                 }
             }
         }
     }
+
+
 
     private void addCodiceEori(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
         if (!invoice.getBG0007Buyer().isEmpty()) {
@@ -121,8 +125,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                                 ": " +
                                 identificationSchema +
                                 ":" +
-                                identifier
-                                ;
+                                identifier;
                         allegato.setAttachment(updated.getBytes());
                     }
 
