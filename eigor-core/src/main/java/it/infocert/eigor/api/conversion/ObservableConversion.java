@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * This is the core algorithm that converts a given invoice to the desired formatPadded.
+ * This is the core algorithm that converts a given invoice to the desired format.
  * <h2>Callbacks</h2>
  * <p>
  * It is possible to attach an unlimited number of callbacks that get informed
@@ -409,7 +409,7 @@ public class ObservableConversion {
         }
 
         /**
-         * Get the input invoice in source formatPadded. Always available.
+         * Get the input invoice in source format. Always available.
          */
         public byte[] getInvoiceInSourceFormat() {
             return invoiceInSourceFormat;

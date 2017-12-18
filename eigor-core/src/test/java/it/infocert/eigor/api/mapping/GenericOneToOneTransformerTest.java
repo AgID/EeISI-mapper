@@ -164,7 +164,7 @@ public class GenericOneToOneTransformerTest {
         List<Element> items = CommonConversionModule.evaluateXpath(document, xPathExpression);
 
         assertTrue(items.isEmpty());
-        assertEquals("null.GenericTransformer.null - Cannot formatPadded Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
+        assertEquals("null.GenericTransformer.null - Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class GenericOneToOneTransformerTest {
         List<Element> items = CommonConversionModule.evaluateXpath(document, xPathExpression);
 
         assertTrue(items.isEmpty());
-        assertEquals("null.GenericTransformer.null - Cannot formatPadded Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
+        assertEquals("null.GenericTransformer.null - Cannot format Wrong, should starts with either \"BT\" or \"BG\" followed by numbers. Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", errors.get(0).getMessage());
     }
 
     @Test

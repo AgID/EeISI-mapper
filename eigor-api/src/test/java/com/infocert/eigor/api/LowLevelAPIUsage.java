@@ -123,7 +123,7 @@ public class LowLevelAPIUsage {
 
         ObservableConversion.ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
 
-        // this retrieves the converters from the relate repository, it is likely the "formatPadded" values
+        // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
         ToCenConversion toCen = conversionRepository.findConversionToCen("ubl");
         FromCenConversion fromCen = conversionRepository.findConversionFromCen("fatturapa");
@@ -255,7 +255,7 @@ public class LowLevelAPIUsage {
 
         final ObservableConversion.ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
 
-        // this retrieves the converters from the relate repository, it is likely the "formatPadded" values
+        // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
         final ToCenConversion toCen = conversionRepository.findConversionToCen("ubl");
         final FromCenConversion fromCen = conversionRepository.findConversionFromCen("fatturapa");

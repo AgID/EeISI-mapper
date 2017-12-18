@@ -39,12 +39,7 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
                     Element id = findNamespaceChild(partyIdentification, namespacesInScope, "ID");
 
                     if (id != null) {
-                        Attribute schemeID = id.getAttribute("schemeID");
-                        if(schemeID != null) {
-                            bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
-                        } else {
-                            bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
-                        }
+                        bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
                     }
                 }
@@ -53,7 +48,7 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
                 if (partyTaxScheme != null) {
                     Element companyID = findNamespaceChild(partyTaxScheme, namespacesInScope, "CompanyID");
                     if (companyID != null) {
-                        bt0048 = new BT0048BuyerVatIdentifier(new Identifier(companyID.getText()));
+                        bt0048 = new BT0048BuyerVatIdentifier(new Identifier(companyID.getAttributeValue("schemeID"), companyID.getText()));
                         invoice.getBG0007Buyer(0).getBT0048BuyerVatIdentifier().add(bt0048);
                     }
                 }

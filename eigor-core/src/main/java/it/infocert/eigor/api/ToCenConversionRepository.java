@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * A {@link ToCenConversionRepository} is able to find a {@link ToCenConversion conversion} that will convert
- * an invoice from the given formatPadded to the CEN formatPadded.
+ * an invoice from the given format to the CEN format.
  */
 public interface ToCenConversionRepository {
 

@@ -44,7 +44,7 @@ public class HiLevelAPIUsage {
         // 2. Load the invoice to be converted as a stream
         InputStream invoiceAsStream = new ByteArrayInputStream("<invoice>data</invoice>".getBytes());
 
-        // 3. Execute the conversion specifying the source formatPadded, the target formatPadded and the invoice to be transformed.
+        // 3. Execute the conversion specifying the source format, the target format and the invoice to be transformed.
         ConversionResult<byte[]> outcome = api
                 .convert(
                         "ubl",

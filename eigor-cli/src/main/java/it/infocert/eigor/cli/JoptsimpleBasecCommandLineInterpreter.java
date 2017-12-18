@@ -22,11 +22,11 @@ import static java.nio.file.StandardOpenOption.READ;
  * --input
  *   path to the file of the invoice to transform.
  * --source
- *   formatPadded of the invoice specified with '--input', as 'fatt-pa', 'ubl', ...
+ *   format of the invoice specified with '--input', as 'fatt-pa', 'ubl', ...
  * --output
  *   path of the folder where the converted invoice will be stored along with other files.
  * --target
- *   formatPadded of the transformed invoice, support the same formats of '--source'.
+ *   format of the transformed invoice, support the same formats of '--source'.
  * </pre>
  */
 public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpreter {
@@ -98,33 +98,33 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             }
         }
 
-        // source formatPadded: should be supported
+        // source format: should be supported
         {
 
             if (!options.has("source")) {
-                return new ReportFailuereCommand("Source formatPadded missing, please specify the formatPadded of the original invoice with the --source parameter.", inputInvoice);
+                return new ReportFailuereCommand("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice);
             }
 
             String source = (String) options.valueOf("source");
             toCen = this.toCenConversionRepository.findConversionToCen(source);
             if (toCen == null) {
                 Set<String> supportedFormats = toCenConversionRepository.supportedToCenFormats();
-                return new ReportFailuereCommand("Source formatPadded '%s' is not supported. Please choose one among: %s.", source, supportedFormats);
+                return new ReportFailuereCommand("Source format '%s' is not supported. Please choose one among: %s.", source, supportedFormats);
             }
         }
 
-        // target formatPadded: should be supported
+        // target format: should be supported
         {
 
             if (!options.has("target")) {
-                return new ReportFailuereCommand("Target formatPadded missing, please specify the formatPadded of the target invoice with the --target parameter.", inputInvoice);
+                return new ReportFailuereCommand("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice);
             }
 
             String target = (String) options.valueOf("target");
             fromCen = fromCenConversionRepository.findConversionFromCen(target);
             if (fromCen == null) {
                 Set<String> supportedFormats = fromCenConversionRepository.supportedFromCenFormats();
-                return new ReportFailuereCommand("Target formatPadded '%s' is not supported. Please choose one among: %s.", target, supportedFormats);
+                return new ReportFailuereCommand("Target format '%s' is not supported. Please choose one among: %s.", target, supportedFormats);
             }
         }
 

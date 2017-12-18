@@ -54,7 +54,7 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                                 BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
                                 bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
                             } catch (IllegalArgumentException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date formatPadded").action("PrecedingInvoiceReferenceConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }

@@ -72,7 +72,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
                 "--input", plainFattPa.getAbsolutePath(), "--source", "aaa", "--target", "ooo", "--output", outputDir.getAbsolutePath()}));
 
         // then
-        assertThat( cliCommand.getErrorMessage(), is("Target formatPadded 'ooo' is not supported. Please choose one among: [frm1, frm2].") );
+        assertThat( cliCommand.getErrorMessage(), is("Target format 'ooo' is not supported. Please choose one among: [frm1, frm2].") );
 
     }
 
@@ -96,7 +96,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
                 "--output", outputDir.getAbsolutePath()}));
 
         // then
-        assertThat( cliCommand.getErrorMessage(), is("Source formatPadded 'aaa' is not supported. Please choose one among: [src1, src2].") );
+        assertThat( cliCommand.getErrorMessage(), is("Source format 'aaa' is not supported. Please choose one among: [src1, src2].") );
 
     }
 
