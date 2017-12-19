@@ -4,6 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -28,10 +29,16 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
         for (Element elemAdd : additionalDocumentReferences) {
             bg0024 = new BG0024AdditionalSupportingDocuments();
 
+            Element documentTypeCode = findNamespaceChild(elemAdd, namespacesInScope, "DocumentTypeCode");
             Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
             if (id != null) {
                 BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
                 bg0024.getBT0122SupportingDocumentReference().add(bt0122);
+
+                if (documentTypeCode != null && "130".equals(documentTypeCode.getText())) {
+                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID")));
+                    invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
+                }
             }
 
             Element documentDescription = findNamespaceChild(elemAdd, namespacesInScope, "DocumentDescription");
