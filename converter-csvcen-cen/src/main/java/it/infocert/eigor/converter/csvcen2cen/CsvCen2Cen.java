@@ -66,7 +66,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
         List<IConversionIssue> errors = new ArrayList<>();
 
-        Iterable<CSVRecord> cenRecordsFromCsv = null;
+        Iterable<CSVRecord> cenRecordsFromCsv;
 
         // try to parse the CEN CSV file.
         try {

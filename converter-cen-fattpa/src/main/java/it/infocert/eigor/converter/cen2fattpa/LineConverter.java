@@ -204,7 +204,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
                     switch (category) {
                         case Z:
-                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+8                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
                             break;
                         case E:
                             dettaglioLinee.setNatura(NaturaType.N_4);

@@ -23,8 +23,9 @@ public class CsvDumpVisitor implements Visitor {
     public void startBTBG(BTBG btbg) {
 
         String name = BtBgName.formatStandardCen(String.valueOf(btbg.denomination()));
+        String businessName = btbg.name();
         String value = btbg.toString();
-        sb.append(String.format("%s%c%s\n", name, SEPARATOR, value));
+        sb.append(String.format("%s%c%s%c%s%c%c\n", name, SEPARATOR, businessName, SEPARATOR, value, SEPARATOR, SEPARATOR));
     }
 
     @Override

@@ -12,6 +12,8 @@ public abstract class BTBG implements Serializable{
 
     public abstract void accept(Visitor v);
 
+    public abstract String name();
+
     public String denomination(){
         String simpleName = getClass().getSimpleName();
         Pattern pattern = Pattern.compile("(..\\d*)\\D");
