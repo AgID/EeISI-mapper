@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -26,6 +27,14 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
                         Element id = new Element("ID");
                         id.setText(bt0122.getValue());
+                        if(!cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                            Identifier bt0018 = cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
+                            id.setAttribute("schemeID",bt0018.getIdentificationSchema());
+
+                            Element documentTypeCode = new Element("DocumentTypeCode");
+                            documentTypeCode.setText("130");
+                            additionalDocumentReference.addContent(documentTypeCode);
+                        }
                         additionalDocumentReference.addContent(id);
                     }
                     if (!elemBg24.getBT0123SupportingDocumentDescription().isEmpty()) {
