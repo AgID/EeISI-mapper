@@ -11,11 +11,12 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 public class CsvDumpVisitor implements Visitor {
 
     private final StringBuilder sb = new StringBuilder();
-    private final char separator = ',';
+    private final char SEPARATOR = ',';
 
     @Override
     public void startInvoice(BG0000Invoice invoice) {
-        sb.append("BG/BT,Value\n");
+//        sb.append("BG/BT,Value\n");
+        sb.append("BG/BT,Business Term Name,Value,Remarks,Calculations\n");
     }
 
     @Override
@@ -23,7 +24,7 @@ public class CsvDumpVisitor implements Visitor {
 
         String name = BtBgName.formatStandardCen(String.valueOf(btbg.denomination()));
         String value = btbg.toString();
-        sb.append(String.format("%s%c%s\n", name, separator, value));
+        sb.append(String.format("%s%c%s\n", name, SEPARATOR, value));
     }
 
     @Override

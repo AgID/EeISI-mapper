@@ -8,6 +8,8 @@ public abstract class AbstractBTBG extends BTBG {
         return parent;
     }
 
+    public abstract String name();
+
     void setParent(AbstractBTBG parent) {
         if (this.parent != null) {
             throw new IllegalStateException("Parent already set");

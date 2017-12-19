@@ -44,6 +44,11 @@ public class ${ClassName} extends AbstractBT {
     }
 
     @Override
+    public String name() {
+        return "${rows[0].data.BusinessTerm}";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ${ClassName})) return false;

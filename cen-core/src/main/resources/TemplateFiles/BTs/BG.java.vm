@@ -49,6 +49,11 @@ public class ${clzName} extends AbstractBTBG {
     }
 
     @Override
+    public String name() {
+        return "${rows[0].data.BusinessTerm}";
+    }
+
+    @Override
     public void accept(Visitor v) {
         #if( ${row0.data.BTBGClassName.startsWith("BG0000")} )
         v.startInvoice(this);
