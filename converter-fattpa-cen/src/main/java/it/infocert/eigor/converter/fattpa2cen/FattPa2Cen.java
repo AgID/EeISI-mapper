@@ -40,10 +40,10 @@ public class FattPa2Cen extends AbstractToCenConverter {
     private final EigorConfiguration configuration;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new LookUpEnumConversion<>(Iso31661CountryCodes.class),
             new StringToJavaLocalDateConverter("yyyy-MM-dd"),
             new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
             new StringToDoubleConverter(),
             new StringToStringConverter(),
             new ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter(),

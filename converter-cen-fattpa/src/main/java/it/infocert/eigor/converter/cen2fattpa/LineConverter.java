@@ -27,16 +27,16 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     private final static Logger log = LoggerFactory.getLogger(LineConverter.class);
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new LookUpEnumConversion<>(Iso31661CountryCodes.class),
             new StringToJavaLocalDateConverter("yyyy-MM-dd"),
             new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new LookUpEnumConversion<>(Untdid1001InvoiceTypeCode.class),
             new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
             new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+            new LookUpEnumConversion<>(Untdid5305DutyTaxFeeCategories.class),
             new StringToUnitOfMeasureConverter(),
-            new LookUpEnumConversion(UnitOfMeasureCodes.class),
+            new LookUpEnumConversion<>(UnitOfMeasureCodes.class),
             new StringToDoubleConverter(),
             new StringToStringConverter(),
             new JavaLocalDateToStringConverter(),
@@ -204,7 +204,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
                     switch (category) {
                         case Z:
-8                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
                             break;
                         case E:
                             dettaglioLinee.setNatura(NaturaType.N_4);

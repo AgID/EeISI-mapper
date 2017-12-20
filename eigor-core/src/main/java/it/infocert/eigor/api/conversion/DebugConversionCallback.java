@@ -6,6 +6,8 @@ import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,17 +22,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * This callback can be used to collect info that can result priceless in investigating conversion problems.
  * In a given folder it writes:
  * <ul>
- *     <li>A copy of the original inoice to be converted.</li>
- *     <li>A list of errors occurred during the ->CEN transformation.</li>
- *     <li>A list of CEN validation errors.</li>
- *     <li>A list of errors occurred during the CEN-> transformation.</li>
- *     <li>The resulting transformed invoice.</li>
- *     <li>A log related to the operations executed by the thread that took in charge this conversion.</li>
+ * <li>A copy of the original inoice to be converted.</li>
+ * <li>A list of errors occurred during the ->CEN transformation.</li>
+ * <li>A list of CEN validation errors.</li>
+ * <li>A list of errors occurred during the CEN-> transformation.</li>
+ * <li>The resulting transformed invoice.</li>
+ * <li>A log related to the operations executed by the thread that took in charge this conversion.</li>
  * </ul>
  */
 public class DebugConversionCallback extends ObservableConversion.AbstractConversionCallback {
 
-    public static final Charset ENCODING = checkNotNull( Charset.forName("UTF-8") );
+    private final static Logger log = LoggerFactory.getLogger(DebugConversionCallback.class);
+    public static final Charset ENCODING = checkNotNull(Charset.forName("UTF-8"));
     private final File outputFolderFile;
     private LogSupport logSupport = null;
     private final boolean enableLog = true;
@@ -39,49 +42,60 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         this.outputFolderFile = outputFolderFile;
     }
 
-    @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
 
         // attach the logging for this conversion
-        if(enableLog) {
+        if (enableLog) {
             logSupport = new LogSupport();
 //            logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log")); //TODO Why is this needed?
         }
         cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
     }
 
-    @Override public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
         writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
-    @Override public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
         writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
-    @Override public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
-    @Override public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
-    @Override public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         String targetExtension = ctx.getTargetInvoiceExtension();
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
-    @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override
+    public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         String targetExtension = ctx.getTargetInvoiceExtension();
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
-    @Override public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
-        if(logSupport!=null) {
-            logSupport.removeLogger();
+    @Override
+    public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+        if (logSupport != null) {
+            try {
+                logSupport.removeLogger();
+            } catch (IllegalArgumentException ignored) {
+            } //Not yet added exception
         }
     }
 
@@ -107,23 +121,23 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
                 invoiceFile);
     }
 
-    private void writeToCenErrorsToFile(ConversionResult conversionResult, File outputFolderFile) throws IOException {
-            List<IConversionIssue> errors = conversionResult.getIssues();
-            String data = toCsvFileContent(errors);
-            File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
-            FileUtils.writeStringToFile(toCenErrors, data);
+    private void writeToCenErrorsToFile(ConversionResult<?> conversionResult, File outputFolderFile) throws IOException {
+        List<IConversionIssue> errors = conversionResult.getIssues();
+        String data = toCsvFileContent(errors);
+        File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
+        FileUtils.writeStringToFile(toCenErrors, data);
     }
 
     private void writeFromCenErrorsToFile(BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
         // writes to file
-            // writes from-cen errors csv
-            List<IConversionIssue> errors = conversionResult.getIssues();
-            File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
-            FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
+        // writes from-cen errors csv
+        List<IConversionIssue> errors = conversionResult.getIssues();
+        File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
+        FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
     }
 
     private String toCsvFileContent(List<IConversionIssue> errors) {
-        StringBuffer toCenErrorsCsv = new StringBuffer("Error,Reason\n");
+        final StringBuilder toCenErrorsCsv = new StringBuilder("Error,Reason\n");
         for (IConversionIssue e : errors) {
             toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
         }
@@ -147,10 +161,14 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile, String targetInvoiceExtension) throws IOException {
 
-        while(targetInvoiceExtension.startsWith(".")) targetInvoiceExtension = targetInvoiceExtension.substring(1);
+        while (targetInvoiceExtension.startsWith(".")) targetInvoiceExtension = targetInvoiceExtension.substring(1);
 
         File outfile = new File(outputFolderFile, "invoice-target." + targetInvoiceExtension);
         FileUtils.writeByteArrayToFile(outfile, targetInvoice);
     }
 
+    @Override
+    public void onUnexpectedException(Exception e, ObservableConversion.ConversionContext ctx) throws Exception {
+        log.error(e.getMessage(), e);
+    }
 }

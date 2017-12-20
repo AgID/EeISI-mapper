@@ -52,7 +52,6 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
                 out.println("CEN rules validation has encountered errors but will continue anyway.");
             } else {
                 out.println("CEN rules validation has encountered errors and will abort.");
-                return;
             }
         }
     }
@@ -69,7 +68,6 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
                 out.println("Conversion from CEN has encountered errors but will continue anyway.");
             } else {
                 out.println("Conversion from CEN has encountered errors and will abort.");
-                return;
             }
         }
     }
@@ -110,5 +108,10 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
             out.println("For more information see 'fromcen-errors.csv'.");
 
         }
+    }
+
+    @Override
+    public void onUnexpectedException(Exception e, ObservableConversion.ConversionContext ctx) throws Exception {
+        out.println(e.getMessage());
     }
 }

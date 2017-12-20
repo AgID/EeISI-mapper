@@ -1,5 +1,6 @@
 package it.infocert.eigor.model.core.dump;
 
+import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.Visitor;
@@ -24,7 +25,7 @@ public class CsvDumpVisitor implements Visitor {
 
         String name = BtBgName.formatStandardCen(String.valueOf(btbg.denomination()));
         String businessName = btbg.name();
-        String value = btbg.toString();
+        String value = btbg instanceof AbstractBT ? btbg.toString() : "";
         sb.append(String.format("%s%c%s%c%s%c%c\n", name, SEPARATOR, businessName, SEPARATOR, value, SEPARATOR, SEPARATOR));
     }
 

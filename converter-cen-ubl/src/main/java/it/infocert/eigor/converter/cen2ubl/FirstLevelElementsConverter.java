@@ -23,7 +23,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new StringToStringConverter(),
             new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
             new JavaLocalDateToStringConverter(),
             new Untdid2005DateTimePeriodQualifiersToStringConverter(),
             new Untdid1001InvoiceTypeCodesToStringConverter(),

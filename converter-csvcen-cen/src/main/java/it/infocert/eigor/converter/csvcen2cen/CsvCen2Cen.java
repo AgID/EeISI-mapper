@@ -37,15 +37,15 @@ public class CsvCen2Cen implements ToCenConversion {
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
+            new LookUpEnumConversion<>(Iso31661CountryCodes.class),
             new StringToJavaLocalDateConverter("dd-MMM-yy"),
             new StringToJavaLocalDateConverter("yyyy-MM-dd"),
             new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new LookUpEnumConversion<>(Untdid1001InvoiceTypeCode.class),
             new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
             new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+            new LookUpEnumConversion<>(Untdid5305DutyTaxFeeCategories.class),
             new StringToUnitOfMeasureConverter(),
             new StringToDoublePercentageConverter(),
             new StringToDoubleConverter(),
@@ -90,7 +90,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
             bgbtIdFromCsv = cenRecord.get("BG/BT");
             bgbtValueFromCsv = cenRecord.get("Value");
-            log.trace("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
+            log.debug("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
 
 
             // verifies that the name of the bgbt read from csv is a well formed name and that it is actually
@@ -118,6 +118,7 @@ public class CsvCen2Cen implements ToCenConversion {
                     // BGs can be instantiated.
                     btbg = btBgClass.newInstance();
 
+
                     // now, keep in mind that bg cannot have a value!
                     if (bgbtValueFromCsv != null && !bgbtValueFromCsv.trim().isEmpty()) {
                         throw new SyntaxErrorInInvoiceFormatException(btbg.denomination() + " cannot have a value, has '" + bgbtValueFromCsv + "' instead.");
@@ -140,29 +141,34 @@ public class CsvCen2Cen implements ToCenConversion {
 
                     // tries to convert the String value read from the file in the type expected by the constructor
                     Class<?> constructorParamType = constructor.getParameterTypes()[0];
-                    Object convert = null;
+                    Object convert;
                     try {
                         convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
-                        log.trace("Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
+                        log.info("{} - Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
+                                String.valueOf(bgbtIdFromCsv),
                                 String.valueOf(bgbtValueFromCsv),
                                 convert != null ? convert.getClass().getName() : "<null>",
                                 String.valueOf(convert));
                         // instantiate the BT
                         btbg = (BTBG) constructor.newInstance(convert);
                     } catch (IllegalArgumentException e) {
+                        final SyntaxErrorInInvoiceFormatException ex = new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
+                                cenRecord.getRecordNumber(),
+                                bgbtIdFromCsv,
+                                bgbtValueFromCsv,
+                                constructorParamType.getSimpleName()
+                        ));
+                        log.error(ex.getMessage(), e);
+                        log.trace(e.getMessage(), e);
                         errors.add(ConversionIssue.newWarning(
-                                new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
-                                        cenRecord.getRecordNumber(),
-                                        bgbtIdFromCsv,
-                                        bgbtValueFromCsv,
-                                        constructorParamType.getSimpleName()
-                                ))));
+                                ex));
                     }
 
                 }
                 log.trace("Successfully instantiated: '{}'.", btbg);
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                log.error(e.getMessage(), e);
                 throw new RuntimeException(e);
             }
             if (btbg == null) {
@@ -220,7 +226,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
         // the topmost element in the stack is always the invoice.
 
-        return new ConversionResult<BG0000Invoice>(errors, (BG0000Invoice) stack.get(0));
+        return new ConversionResult<>(errors, (BG0000Invoice) stack.get(0));
     }
 
     @Override

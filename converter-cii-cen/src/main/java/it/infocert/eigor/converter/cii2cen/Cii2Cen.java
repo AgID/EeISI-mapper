@@ -40,13 +40,13 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 			// enums
 			new CountryNameToIso31661CountryCodeConverter(),
-			new LookUpEnumConversion(Iso31661CountryCodes.class),
+			new LookUpEnumConversion<>(Iso31661CountryCodes.class),
 
             new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+            new LookUpEnumConversion<>(Untdid1001InvoiceTypeCode.class),
 
             new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
 
 			new Iso4217CurrenciesFundsCodesToStringConverter(),
 			new Iso31661CountryCodesToStringConverter(),
