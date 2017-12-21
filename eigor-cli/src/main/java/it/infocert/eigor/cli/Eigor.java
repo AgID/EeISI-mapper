@@ -16,6 +16,7 @@ import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
+import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
@@ -92,6 +93,7 @@ public class Eigor {
     ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
+                new UblCn2Cen(reflections, configuration),
                 new CsvCen2Cen(reflections),
                 new FattPa2Cen(reflections, configuration),
                 new Cii2Cen(reflections, configuration)
