@@ -50,7 +50,8 @@ public class CsvCen2Cen implements ToCenConversion {
             new StringToDoublePercentageConverter(),
             new StringToDoubleConverter(),
             new StringToStringConverter(),
-            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter()
+            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
+            new StringToIdentifierConverter()
     );
 
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
@@ -158,10 +159,11 @@ public class CsvCen2Cen implements ToCenConversion {
                                 bgbtValueFromCsv,
                                 constructorParamType.getSimpleName()
                         ));
-                        log.error(ex.getMessage(), e);
+                        if ("BT-49".equals(bgbtIdFromCsv)) throw e;
+                        /*log.error(ex.getMessage(), e);
                         log.trace(e.getMessage(), e);
                         errors.add(ConversionIssue.newWarning(
-                                ex));
+                                ex));*/
                     }
 
                 }
