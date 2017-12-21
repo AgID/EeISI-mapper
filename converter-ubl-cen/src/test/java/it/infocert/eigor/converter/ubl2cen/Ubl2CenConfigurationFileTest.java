@@ -9,6 +9,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.converter.commons.ubl2cen.InvoiceNoteConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import org.jdom2.Document;
@@ -44,7 +45,7 @@ public class Ubl2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-many", "converterdata/converter-ubl-cen/mappings/one_to_many.properties")
                 .addProperty("eigor.converter.ubl-cen.xsd", "file:src/test/resources/converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
-                .addProperty("eigor.converter.ubl-cen.schematron", "converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
+                .addProperty("eigor.converter.ubl-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
                 .addProperty("eigor.converter.ubl-cen.cius", "converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
         sut = new MyUblToCenConverter(new Reflections("it.infocert"), conf);

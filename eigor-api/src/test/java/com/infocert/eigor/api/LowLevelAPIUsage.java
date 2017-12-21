@@ -90,6 +90,18 @@ public class LowLevelAPIUsage {
                     .copyFrom("/converterdata/" + pathSegment);
         }
         {
+            String pathSegment = "converter-commons";
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
+        }
+        {
             String pathSegment = "converter-ubl-cen";
             new Copier( new File(dest, pathSegment) )
                     .withCallback(new Copier.Callback() {
@@ -211,6 +223,18 @@ public class LowLevelAPIUsage {
         }
         {
             String pathSegment = "converter-cii-cen";
+            new Copier( new File(dest, pathSegment) )
+                    .withCallback(new Copier.Callback() {
+                        @Override public void afterFileCopied(File file) throws IOException {
+                            if(file.isFile() && file.getName().endsWith(".xslt")){
+                                FileUtils.touch(file);
+                            }
+                        }
+                    })
+                    .copyFrom("/converterdata/" + pathSegment);
+        }
+        {
+            String pathSegment = "converter-commons";
             new Copier( new File(dest, pathSegment) )
                     .withCallback(new Copier.Callback() {
                         @Override public void afterFileCopied(File file) throws IOException {

@@ -49,6 +49,15 @@
         </fileSet>
         <!-- invoice examples -->
 
+        <!-- Converter commons -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-commons/</outputDirectory>
+            <directory>../converter-commons/src/main/resources/converterdata/converter-commons/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- UBL/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/</outputDirectory>
@@ -58,6 +67,14 @@
             </includes>
         </fileSet>
 
+        <!-- UBLCN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-ublcn-cen/</outputDirectory>
+            <directory>../converter-ublcn-cen/src/main/resources/converterdata/converter-ublcn-cen/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
 
         <!-- CEN/FATTPA -->
         <fileSet>
