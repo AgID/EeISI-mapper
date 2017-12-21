@@ -15,3 +15,5 @@ The light is red!
 ### Expected result:
 
 The light should be green!
+
+/label ~Triage 
