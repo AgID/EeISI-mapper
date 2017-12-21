@@ -16,4 +16,4 @@ The light is red!
 
 The light should be green!
 
-/label ~Triage 
+/label ~Triage
