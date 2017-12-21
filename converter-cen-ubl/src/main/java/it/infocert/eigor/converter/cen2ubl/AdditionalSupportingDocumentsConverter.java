@@ -36,6 +36,9 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             additionalDocumentReference.addContent(documentTypeCode);
                         }
                         additionalDocumentReference.addContent(id);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("916");
+                        additionalDocumentReference.addContent(documentTypeCode);
                     }
                     if (!elemBg24.getBT0123SupportingDocumentDescription().isEmpty()) {
                         BT0123SupportingDocumentDescription bt0123 = elemBg24.getBT0123SupportingDocumentDescription(0);

@@ -34,7 +34,9 @@
         <module>eigor-test</module>
         <module>eigor-core</module>
         <module>converter-csvcen-cen</module>
+        <module>converter-commons</module>
         <module>converter-ubl-cen</module>
+        <module>converter-ublcn-cen</module>
         <module>eigor-api</module>
         <module>converter-cii-cen</module>
         <module>eigor-spring-core</module>

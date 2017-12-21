@@ -43,7 +43,12 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-ubl-cen</artifactId>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-ublcn-cen</artifactId>
+        </dependency>
+        <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-ubl</artifactId>
         </dependency>

@@ -14,6 +14,7 @@ import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
+import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
@@ -54,6 +55,7 @@ public class EigorApiBuilder {
                 new ConversionRepository.Builder()
                         .register(new Cii2Cen(reflections, configuration))
                         .register(new Ubl2Cen(reflections, configuration))
+                        .register(new UblCn2Cen(reflections, configuration))
                         .register(new Cen2FattPA(reflections, configuration))
                         .register(new Cen2Ubl(reflections, configuration))
                         .register(new FattPa2Cen(reflections, configuration))
@@ -92,6 +94,15 @@ public class EigorApiBuilder {
         List<Named> converters = new ArrayList<>();
         converters.addAll(conversionRepository.getFromCenConverters());
         converters.addAll(conversionRepository.getToCenConverters());
+
+        //workaround for converter-commons
+        converters.add(new Named() {
+            @Override
+            public String getName() {
+                return "converter-commons";
+            }
+        });
+
         for (Named converter : converters) {
             String pathSegment = converter.getName();
             if (copy) {
