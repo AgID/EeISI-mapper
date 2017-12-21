@@ -28,10 +28,13 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
         for (Element elemAdd : additionalDocumentReferences) {
             bg0024 = new BG0024AdditionalSupportingDocuments();
 
-            Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
-            if (id != null) {
-                BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
-                bg0024.getBT0122SupportingDocumentReference().add(bt0122);
+            Element documentTypeCode = findNamespaceChild(elemAdd, namespacesInScope, "DocumentTypeCode");
+            if(documentTypeCode != null && "916".equals(documentTypeCode.getValue())) {
+                Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
+                if (id != null) {
+                    BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
+                    bg0024.getBT0122SupportingDocumentReference().add(bt0122);
+                }
             }
 
             Element documentDescription = findNamespaceChild(elemAdd, namespacesInScope, "DocumentDescription");
