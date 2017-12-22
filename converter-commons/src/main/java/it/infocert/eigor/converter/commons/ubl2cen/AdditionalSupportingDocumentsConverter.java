@@ -4,6 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.api.CustomConverterUtils;
 import org.jdom2.Document;
@@ -30,11 +31,16 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
             bg0024 = new BG0024AdditionalSupportingDocuments();
 
             Element documentTypeCode = findNamespaceChild(elemAdd, namespacesInScope, "DocumentTypeCode");
-            if(documentTypeCode != null && "916".equals(documentTypeCode.getValue())) {
-                Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
-                if (id != null) {
+            Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
+            if (id != null && documentTypeCode != null) {
+                if ("916".equals(documentTypeCode.getValue())) {
                     BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
                     bg0024.getBT0122SupportingDocumentReference().add(bt0122);
+                }
+                if ("130".equals(documentTypeCode.getValue())) {
+                    String schemeID = id.getAttributeValue("schemeID");
+                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID, id.getText()));
+                    invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
                 }
             }
 
