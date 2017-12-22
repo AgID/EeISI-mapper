@@ -23,23 +23,24 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                 for (BG0024AdditionalSupportingDocuments elemBg24 : bg0024) {
                     Element additionalDocumentReference = new Element("AdditionalDocumentReference");
                     root.addContent(additionalDocumentReference);
-                    if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
+
+                    if (!cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element id = new Element("ID");
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        Identifier bt0018 = cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
+                        id.setText(bt0018.getIdentifier());
+                        id.setAttribute("schemeID", bt0018.getIdentificationSchema());
+                        documentTypeCode.setText("130");
+                    } else if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
                         Element id = new Element("ID");
-                        id.setText(bt0122.getValue());
-                        if(!cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                            Identifier bt0018 = cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
-                            id.setAttribute("schemeID",bt0018.getIdentificationSchema());
-
-                            Element documentTypeCode = new Element("DocumentTypeCode");
-                            documentTypeCode.setText("130");
-                            additionalDocumentReference.addContent(documentTypeCode);
-                        }
-                        additionalDocumentReference.addContent(id);
                         Element documentTypeCode = new Element("DocumentTypeCode");
+                        id.setText(bt0122.getValue());
                         documentTypeCode.setText("916");
+                        additionalDocumentReference.addContent(id);
                         additionalDocumentReference.addContent(documentTypeCode);
                     }
+
                     if (!elemBg24.getBT0123SupportingDocumentDescription().isEmpty()) {
                         BT0123SupportingDocumentDescription bt0123 = elemBg24.getBT0123SupportingDocumentDescription(0);
                         Element documentDescription = new Element("DocumentDescription");
