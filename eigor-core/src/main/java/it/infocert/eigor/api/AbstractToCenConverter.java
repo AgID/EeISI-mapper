@@ -13,6 +13,7 @@ import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -32,7 +33,7 @@ import java.util.*;
 public abstract class AbstractToCenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractToCenConverter.class);
-    private Reflections reflections;
+    private IReflections reflections;
     private final ConversionRegistry conversionRegistry;
     protected final EigorConfiguration configuration;
     protected final DefaultResourceLoader drl;
@@ -48,7 +49,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings = Lists.newArrayList();
 
-    public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;

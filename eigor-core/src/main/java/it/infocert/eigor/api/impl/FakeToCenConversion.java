@@ -5,6 +5,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -21,7 +22,7 @@ import java.util.Set;
  */
 public class FakeToCenConversion extends AbstractToCenConverter {
 
-    public FakeToCenConversion(Reflections reflections, EigorConfiguration configuration) {
+    public FakeToCenConversion(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

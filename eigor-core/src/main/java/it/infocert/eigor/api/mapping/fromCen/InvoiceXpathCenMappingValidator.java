@@ -3,6 +3,7 @@ package it.infocert.eigor.api.mapping.fromCen;
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.reflections.Reflections;
@@ -18,7 +19,7 @@ public class InvoiceXpathCenMappingValidator implements InvoiceMappingValidator 
     private final InvoiceUtils invoiceUtils;
 
 
-    public InvoiceXpathCenMappingValidator(String keyRegex, Reflections reflections) {
+    public InvoiceXpathCenMappingValidator(String keyRegex, IReflections reflections) {
         pattern = Pattern.compile(keyRegex);
         invoiceUtils = new InvoiceUtils(reflections);
     }

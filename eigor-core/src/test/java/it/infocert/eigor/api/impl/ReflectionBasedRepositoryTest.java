@@ -2,6 +2,7 @@ package it.infocert.eigor.api.impl;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.hamcrest.Matchers;
@@ -26,7 +27,7 @@ public class ReflectionBasedRepositoryTest {
     @Test public void shouldFindRules() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.model"));
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(new ReflectionsReflections("it.infocert.eigor.model"));
         final Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
 
         // when

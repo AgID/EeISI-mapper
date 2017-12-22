@@ -3,6 +3,8 @@ package it.infocert.eigor.converter.cen2fattpa;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.model.core.dump.DumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -29,7 +31,7 @@ import static org.junit.Assert.assertThat;
 @Ignore //TODO fix the xpaths with the new line converter
 public class ITCen2FattPATest {
 
-    private final Reflections reflections = new Reflections("it.infocert");
+    private final IReflections reflections = new ReflectionsReflections("it.infocert");
     private CsvCen2Cen csvCen2Cen;
     private Cen2FattPA cen2FattPA;
     private XPathFactory xPathFactory;

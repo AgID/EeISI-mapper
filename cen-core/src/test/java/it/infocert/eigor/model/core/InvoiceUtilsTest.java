@@ -3,6 +3,7 @@ package it.infocert.eigor.model.core;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.google.common.collect.Lists;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class InvoiceUtilsTest {
     @Before
     public void setUp() throws Exception {
         invoice = new BG0000Invoice();
-        sut = new InvoiceUtils(new Reflections("it.infocert.eigor"));
+        sut = new InvoiceUtils(new ReflectionsReflections("it.infocert.eigor"));
     }
 
     @Test

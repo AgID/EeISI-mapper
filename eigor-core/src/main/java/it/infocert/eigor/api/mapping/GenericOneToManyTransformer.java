@@ -6,6 +6,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -31,7 +32,7 @@ public class GenericOneToManyTransformer extends GenericTransformer{
      */
     private final Map<String,Pair<Integer, Integer>> splittingBoundsForTargetPath;
 
-    public GenericOneToManyTransformer(Reflections reflections, ConversionRegistry conversionRegistry, List<String> targetPaths, String sourcePath, Map<String, Pair<Integer, Integer>> splittingBoundsForTargetPath) {
+    public GenericOneToManyTransformer(IReflections reflections, ConversionRegistry conversionRegistry, List<String> targetPaths, String sourcePath, Map<String, Pair<Integer, Integer>> splittingBoundsForTargetPath) {
         super(reflections, conversionRegistry);
         this.targetPaths = targetPaths;
         this.sourcePath = sourcePath;

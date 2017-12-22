@@ -4,6 +4,7 @@ import it.infocert.eigor.api.RuleRepository;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Repository based on <a href="https://github.com/ronmamo/reflections">Reflections</a>.
+ * Repository based on <a href="https://github.com/ronmamo/reflections">IReflections</a>.
  */
 public class ReflectionBasedRepository implements RuleRepository {
 
     private Set<Rule> rules = null;
-    private final Reflections reflections;
+    private final IReflections reflections;
 
-    public ReflectionBasedRepository(Reflections reflections) {
+    public ReflectionBasedRepository(IReflections reflections) {
         this.reflections = reflections;
     }
 

@@ -6,6 +6,8 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -50,7 +52,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
 				.addProperty("eigor.converter.cii-cen.cius", "converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
 				;
-		sut = new MyCiiToCenConverter(new Reflections("it.infocert"), conf);
+		sut = new MyCiiToCenConverter(new ReflectionsReflections("it.infocert"), conf);
 		sut.configure();
 	}
 
@@ -336,7 +338,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 	static class MyCiiToCenConverter extends Cii2Cen {
 
-		public MyCiiToCenConverter(Reflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+		public MyCiiToCenConverter(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
 			super(reflections, configuration);
 		}
 

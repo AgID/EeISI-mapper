@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.junit.Before;
@@ -16,7 +17,7 @@ public class InputInvoiceXpathMapTest {
 
     @Before
     public void setUp() throws Exception {
-        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new Reflections("it.infocert")));
+        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new ReflectionsReflections("it.infocert")));
     }
 
     @Test

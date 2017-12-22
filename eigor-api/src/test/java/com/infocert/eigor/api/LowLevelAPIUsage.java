@@ -7,6 +7,8 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.io.Copier;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
@@ -57,7 +59,7 @@ public class LowLevelAPIUsage {
     @Test public void lowLevelApiUsageSingleConversion() throws IOException, ConfigurationException {
 
         // needed support classes
-        Reflections reflections = new Reflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections("it.infocert");
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();
@@ -189,7 +191,7 @@ public class LowLevelAPIUsage {
         );
 
         // needed support classes
-        Reflections reflections = new Reflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections("it.infocert");
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();

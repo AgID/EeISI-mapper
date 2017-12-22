@@ -5,6 +5,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class Cen2UblTest {
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
-        converter = new Cen2Ubl(new Reflections("it.infocert"), conf);
+        converter = new Cen2Ubl(new ReflectionsReflections("it.infocert"), conf);
         converter.configure();
         xPathFactory = XPathFactory.newInstance();
     }

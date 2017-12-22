@@ -40,6 +40,7 @@
         <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
         <module>eigor-test-schemas</module>
+        <module>eigor-commons</module>
     </modules>
 
     <reporting>
