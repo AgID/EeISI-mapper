@@ -6,6 +6,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -27,7 +28,7 @@ public class GenericOneToOneTransformer extends GenericTransformer {
     private final String xPath;
     private final String cenPath;
 
-    public GenericOneToOneTransformer(String xPath, String cenPath, Reflections reflections, ConversionRegistry conversionRegistry) {
+    public GenericOneToOneTransformer(String xPath, String cenPath, IReflections reflections, ConversionRegistry conversionRegistry) {
         super(reflections, conversionRegistry);
         this.xPath = xPath;
         this.cenPath = cenPath;

@@ -9,6 +9,7 @@ import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
@@ -34,7 +35,7 @@ public abstract class GenericTransformer {
     protected ConversionRegistry conversionRegistry;
     protected InvoiceUtils invoiceUtils;
 
-    public GenericTransformer(Reflections reflections, ConversionRegistry conversionRegistry) {
+    public GenericTransformer(IReflections reflections, ConversionRegistry conversionRegistry) {
         this.invoiceUtils = new InvoiceUtils(reflections);
         this.conversionRegistry = conversionRegistry;
     }

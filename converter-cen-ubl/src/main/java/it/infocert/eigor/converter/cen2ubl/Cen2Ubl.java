@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -102,7 +103,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     }
 
-    public Cen2Ubl(Reflections reflections, EigorConfiguration configuration) {
+    public Cen2Ubl(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
         this.configuration = checkNotNull(configuration);
     }

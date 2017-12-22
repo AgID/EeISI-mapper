@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -31,7 +32,7 @@ public class Cii2CenTest {
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
 				.addProperty("eigor.converter.cii-cen.cius", "converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
 				;
-		sut = new Cii2Cen(new Reflections("it.infocert"), conf);
+		sut = new Cii2Cen(new ReflectionsReflections("it.infocert"), conf);
 		sut.configure();
 	}
 	

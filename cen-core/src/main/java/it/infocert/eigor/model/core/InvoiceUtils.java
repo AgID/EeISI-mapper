@@ -3,11 +3,11 @@ package it.infocert.eigor.model.core;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +22,9 @@ public class InvoiceUtils {
 
     private static Logger log = LoggerFactory.getLogger(InvoiceUtils.class);
 
-    private final Reflections reflections;
+    private final IReflections reflections;
 
-    public InvoiceUtils(Reflections reflections) {
+    public InvoiceUtils(IReflections reflections) {
         this.reflections = reflections;
     }
 

@@ -9,6 +9,8 @@ import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.io.Copier;
 import it.infocert.eigor.api.utils.EigorVersion;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
@@ -44,7 +46,7 @@ public class EigorApiBuilder {
     public EigorApiBuilder() throws IOException {
 
         // needed support classes
-        Reflections reflections = new Reflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections("it.infocert");
 
         // load the eigor configuration
         configuration = DefaultEigorConfigurationLoader.configuration();

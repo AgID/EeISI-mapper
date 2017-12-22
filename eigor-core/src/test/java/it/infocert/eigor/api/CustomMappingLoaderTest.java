@@ -4,6 +4,8 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,12 +20,12 @@ import static org.mockito.Mockito.mock;
 
 public class CustomMappingLoaderTest {
 
-    private Reflections reflections;
+    private IReflections reflections;
     private ConversionRegistry conversionRegistry;
 
     @Before
     public void setUp() throws Exception {
-        reflections = new Reflections("it.infocert.eigor");
+        reflections = new ReflectionsReflections("it.infocert.eigor");
         conversionRegistry = mock(ConversionRegistry.class);
     }
 
@@ -77,7 +79,7 @@ final class TestFromCenConverter extends AbstractFromCenConverter {
     private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.test.mapping.one-to-many";
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.test.mapping.custom";
 
-    TestFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    TestFromCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
     }
 

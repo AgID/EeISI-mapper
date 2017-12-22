@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -71,7 +72,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
 
-    public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
+    public Cen2FattPA(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
     }
 

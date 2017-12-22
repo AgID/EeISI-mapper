@@ -9,7 +9,7 @@
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
     <version>0.2.0</version>
-    <name>Eigor</name>
+    <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
         <name>Infocert</name>
@@ -40,6 +40,7 @@
         <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
         <module>eigor-test-schemas</module>
+        <module>eigor-commons</module>
     </modules>
 
     <reporting>

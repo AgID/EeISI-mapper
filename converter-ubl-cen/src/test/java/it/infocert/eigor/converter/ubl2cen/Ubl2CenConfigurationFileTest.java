@@ -8,6 +8,8 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
@@ -47,7 +49,7 @@ public class Ubl2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ubl-cen.schematron", "converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
                 .addProperty("eigor.converter.ubl-cen.cius", "converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
-        sut = new MyUblToCenConverter(new Reflections("it.infocert"), conf);
+        sut = new MyUblToCenConverter(new ReflectionsReflections("it.infocert"), conf);
         sut.configure();
     }
 
@@ -112,7 +114,7 @@ public class Ubl2CenConfigurationFileTest {
 
 
     static class MyUblToCenConverter extends Ubl2Cen {
-        public MyUblToCenConverter(Reflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+        public MyUblToCenConverter(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
             super(reflections, configuration);
         }
 

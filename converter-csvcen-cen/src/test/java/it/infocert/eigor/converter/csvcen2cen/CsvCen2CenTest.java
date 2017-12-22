@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class CsvCen2CenTest {
 
     @Before
     public void setUp() {
-        sut = new CsvCen2Cen(new Reflections("it.infocert"));
+        sut = new CsvCen2Cen(new ReflectionsReflections("it.infocert"));
     }
 
     @Test

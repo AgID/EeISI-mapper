@@ -2,7 +2,9 @@ package it.infocert.eigor.api.mapping;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;
@@ -28,7 +30,7 @@ public class GenericOneToManyTransformerTest {
     private static Logger log = LoggerFactory.getLogger(GenericOneToManyTransformerTest.class);
     private BG0000Invoice invoice;
     private ArrayList<IConversionIssue> errors;
-    private Reflections reflections;
+    private IReflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;
     private ConversionRegistry conversionRegistry;
@@ -42,7 +44,7 @@ public class GenericOneToManyTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new Reflections("it.infocert");
+        reflections = new ReflectionsReflections("it.infocert");
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

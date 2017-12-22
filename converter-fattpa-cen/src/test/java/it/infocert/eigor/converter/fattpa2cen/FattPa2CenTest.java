@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -34,7 +35,7 @@ public class FattPa2CenTest {
 
     @Before
     public void setUp() throws Exception {
-        sut = new FattPa2Cen(new Reflections("it.infocert"), mock(EigorConfiguration.class));
+        sut = new FattPa2Cen(new ReflectionsReflections("it.infocert"), mock(EigorConfiguration.class));
         doc = setUpDocument();
         xml = convertXml();
     }

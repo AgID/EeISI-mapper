@@ -2,6 +2,8 @@ package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -16,12 +18,12 @@ import static org.mockito.Mockito.mock;
 
 public class ToCenListBakedRepositoryTest {
 
-    private static Reflections reflections;
+    private static IReflections reflections;
     private static ToCenListBakedRepository sut;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        reflections = new Reflections("it.infocert");
+        reflections = new ReflectionsReflections("it.infocert");
 
         sut = new ToCenListBakedRepository(
                 new FakeToCenConversion(reflections, mock(EigorConfiguration.class))

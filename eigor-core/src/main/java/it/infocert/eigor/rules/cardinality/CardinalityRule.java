@@ -1,5 +1,6 @@
 package it.infocert.eigor.rules.cardinality;
 
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
@@ -23,7 +24,7 @@ public class CardinalityRule extends Rule {
     private final String name;
     private final Integer min;
     private final Integer max;
-    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert"));
+    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new ReflectionsReflections("it.infocert"));
 
     public CardinalityRule(String name, String cardinality) {
         this.name = formatName(name);
