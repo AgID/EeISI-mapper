@@ -12,6 +12,7 @@ import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
+import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
@@ -59,6 +60,7 @@ public class EigorApiBuilder {
                         .register(new Cen2FattPA(reflections, configuration))
                         .register(new Cen2Ubl(reflections, configuration))
                         .register(new FattPa2Cen(reflections, configuration))
+                        .register(new CsvCen2Cen(reflections))
                         .build();
 
         outputFolderFile = FileUtils.getTempDirectory();
