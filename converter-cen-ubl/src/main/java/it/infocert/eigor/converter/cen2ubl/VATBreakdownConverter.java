@@ -23,6 +23,33 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
 
         Element root = document.getRootElement();
         if (root != null) {
+
+            if (!invoice.getBG0022DocumentTotals().isEmpty()) {
+                BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals(0);
+                String amount = null;
+                String currencyId = null;
+
+                if (!invoice.getBT0006VatAccountingCurrencyCode().isEmpty() && !documentTotals.getBT0111InvoiceTotalVatAmountInAccountingCurrency().isEmpty()) {
+                    amount = dblStrConverter.convert(documentTotals.getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue());
+                    currencyId = invoice.getBT0006VatAccountingCurrencyCode(0).getValue().name();
+                } else if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty() && !documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+                    amount = dblStrConverter.convert(documentTotals.getBT0110InvoiceTotalVatAmount(0).getValue());
+                    currencyId = invoice.getBT0005InvoiceCurrencyCode(0).getValue().name();
+                }
+
+                if (amount != null) {
+                    Element taxTotal = root.getChild("TaxTotal");
+                    if (taxTotal == null) {
+                        taxTotal = new Element("TaxTotal");
+                        root.addContent(taxTotal);
+                    }
+                    Element taxAmount = new Element("TaxAmount");
+                    taxAmount.setText(amount);
+                    taxAmount.setAttribute("currencyID", currencyId);
+                    taxTotal.addContent(taxAmount);
+                }
+            }
+
             List<BG0023VatBreakdown> bg0023 = invoice.getBG0023VatBreakdown();
             for (BG0023VatBreakdown elemBg23 : bg0023) {
                 BT0116VatCategoryTaxableAmount bt0116 = null;
@@ -47,16 +74,6 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 if (taxTotal == null) {
                     taxTotal = new Element("TaxTotal");
                     root.addContent(taxTotal);
-                }
-
-                if (!invoice.getBG0022DocumentTotals().isEmpty()) {
-                    BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals(0);
-                    if (!documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
-                        Element taxAmount = new Element("TaxAmount");
-                        Double amount = documentTotals.getBT0110InvoiceTotalVatAmount(0).getValue();
-                        taxAmount.setText(dblStrConverter.convert(amount));
-                        taxTotal.addContent(taxAmount);
-                    }
                 }
 
                 Element taxSubtotal = new Element("TaxSubtotal");
@@ -100,9 +117,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
                     Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
 
-                    Element taxAmount = taxTotal.getChild("TaxAmount") != null ? taxTotal.getChild("TaxAmount") : new Element("TaxAmount");
                     String currencyName = currencyCode.name();
-                    taxAmount.setAttribute(new Attribute("currencyID", currencyName));
                     for (Element element : taxSubtotal.getChildren()) {
                         if (element.getName().equals("TaxableAmount") || element.getName().equals("TaxAmount")) {
                             element.setAttribute(new Attribute("currencyID", currencyName));
