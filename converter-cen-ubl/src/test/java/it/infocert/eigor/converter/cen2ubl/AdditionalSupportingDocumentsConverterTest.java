@@ -25,7 +25,7 @@ public class AdditionalSupportingDocumentsConverterTest {
     }
 
     @Test
-    public void additionalDocumentReferenceDocumentTypeCodeShouldBe130IfBG0024hasBT0018() throws Exception {
+    public void additionalDocumentReferenceDocumentTypeCodeShouldBe130IfBT0018() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0122();
         invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier("AED", "TESTID")));
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
