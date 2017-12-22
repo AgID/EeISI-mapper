@@ -31,6 +31,8 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         id.setText(bt0018.getIdentifier());
                         id.setAttribute("schemeID", bt0018.getIdentificationSchema());
                         documentTypeCode.setText("130");
+                        additionalDocumentReference.addContent(id);
+                        additionalDocumentReference.addContent(documentTypeCode);
                     } else if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
                         Element id = new Element("ID");

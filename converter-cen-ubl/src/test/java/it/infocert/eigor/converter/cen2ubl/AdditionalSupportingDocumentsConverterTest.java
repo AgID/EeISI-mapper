@@ -35,7 +35,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
 
         Element documentTypeCode = additionalSupportingDocuments.getChild("DocumentTypeCode");
-        assertTrue("130".equals(documentTypeCode.getText()));
+        assertTrue("130".equals(documentTypeCode.getValue()));
 
         Element id = additionalSupportingDocuments.getChild("ID");
         assertTrue("TESTID".equals(id.getValue()));
