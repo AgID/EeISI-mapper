@@ -38,7 +38,8 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     bg0024.getBT0122SupportingDocumentReference().add(bt0122);
                 }
                 if ("130".equals(documentTypeCode.getValue())) {
-                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID")));
+                    String schemeID = id.getAttributeValue("schemeID");
+                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID, id.getText()));
                     invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
                 }
             }
