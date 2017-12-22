@@ -1,13 +1,13 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0122SupportingDocumentReference;
 import it.infocert.eigor.model.core.model.BT0123SupportingDocumentDescription;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -45,6 +45,21 @@ public class AdditionalSupportingDocumentsConverterTest {
         converter.map(invoice, document, new ArrayList<IConversionIssue>());
         assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0122SupportingDocumentReference().size() == 0);
     }
+
+
+    @Test
+    public void shouldHaveBT0018IfAdditionalDocumentReferenceHasDocumentTypeCode130() throws Exception {
+        Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("130");
+        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        BG0000Invoice invoice = new BG0000Invoice();
+        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+
+        Identifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().get(0).getValue();
+
+        assertTrue("TESTID".equals(bt0018.getIdentifier()));
+        assertTrue("SCH".equals(bt0018.getIdentificationSchema()));
+    }
+
 
     private Document makeDocumentWithAdditionalDocumentReferenceAndDocumentDescription() {
         Document document = new Document();
@@ -85,6 +100,7 @@ public class AdditionalSupportingDocumentsConverterTest {
 
         Element id = new Element("ID", cbcNs);
         id.setText("TESTID");
+        id.setAttribute("schemeID", "SCH");
         Element documentTypeCode = new Element("DocumentTypeCode", cbcNs);
         documentTypeCode.setText(docType);
 
