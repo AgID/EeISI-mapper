@@ -13,7 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.reflections.Reflections;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,9 +37,8 @@ public class EigorTest {
 
     @Before public void setUpCommandLineInterpeter() {
 
-        IReflections reflections = new ReflectionsReflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections();
         Properties properties = new Properties();
-        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
 
         EigorConfiguration conf = new PropertiesBackedConfiguration();

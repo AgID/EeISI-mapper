@@ -12,7 +12,6 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,7 @@ public class GenericManyToOneTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new ReflectionsReflections("it.infocert");
+        reflections = new ReflectionsReflections();
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

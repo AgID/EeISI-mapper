@@ -6,7 +6,6 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.ReflectionsReflections;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
@@ -19,8 +18,8 @@ public class FromCenListBakedRepositoryTest {
     private static FromCenListBakedRepository sut;
 
     @BeforeClass
-    public static void setUp() throws Exception {
-        reflections = new ReflectionsReflections("it.infocert");
+    public static void setUp() {
+        reflections = new ReflectionsReflections();
 
         sut = new FromCenListBakedRepository(
                 new FakeFromCenConversion(reflections, mock(EigorConfiguration.class))

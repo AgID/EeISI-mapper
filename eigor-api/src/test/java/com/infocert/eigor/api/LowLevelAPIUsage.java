@@ -59,7 +59,7 @@ public class LowLevelAPIUsage {
     @Test public void lowLevelApiUsageSingleConversion() throws IOException, ConfigurationException {
 
         // needed support classes
-        IReflections reflections = new ReflectionsReflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections();
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();
@@ -191,7 +191,7 @@ public class LowLevelAPIUsage {
         );
 
         // needed support classes
-        IReflections reflections = new ReflectionsReflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections();
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();

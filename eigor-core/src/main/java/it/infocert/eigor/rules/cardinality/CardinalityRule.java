@@ -9,11 +9,9 @@ import it.infocert.eigor.model.core.model.structure.CenStructure;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class CardinalityRule extends Rule {
     private final String name;
     private final Integer min;
     private final Integer max;
-    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new ReflectionsReflections("it.infocert"));
+    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new ReflectionsReflections());
 
     public CardinalityRule(String name, String cardinality) {
         this.name = formatName(name);

@@ -20,7 +20,6 @@ import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.apache.commons.io.FileUtils;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EigorApiBuilder {
 
@@ -46,7 +43,7 @@ public class EigorApiBuilder {
     public EigorApiBuilder() throws IOException {
 
         // needed support classes
-        IReflections reflections = new ReflectionsReflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections();
 
         // load the eigor configuration
         configuration = DefaultEigorConfigurationLoader.configuration();

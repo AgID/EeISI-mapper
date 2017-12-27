@@ -22,8 +22,8 @@ public class ApiTest {
     @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
-        IReflections reflections = new ReflectionsReflections("it.infocert.eigor.api");
-        RuleRepository ruleRepository = new ReflectionBasedRepository( new ReflectionsReflections("it.infocert.eigor.model") );
+        IReflections reflections = new ReflectionsReflections();
+        RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         PropertiesBackedConfiguration configuration = new PropertiesBackedConfiguration();
 
         ToCenConversionRepository conversionRepository = new ToCenListBakedRepository(

@@ -7,7 +7,6 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +16,7 @@ public class InputInvoiceXpathMapTest {
 
     @Before
     public void setUp() throws Exception {
-        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new ReflectionsReflections("it.infocert")));
+        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new ReflectionsReflections()));
     }
 
     @Test

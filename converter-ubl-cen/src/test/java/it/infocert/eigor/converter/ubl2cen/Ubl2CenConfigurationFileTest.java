@@ -18,7 +18,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -29,7 +28,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Ubl2CenConfigurationFileTest {
 
@@ -49,7 +49,7 @@ public class Ubl2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ubl-cen.schematron", "converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
                 .addProperty("eigor.converter.ubl-cen.cius", "converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
-        sut = new MyUblToCenConverter(new ReflectionsReflections("it.infocert"), conf);
+        sut = new MyUblToCenConverter(new ReflectionsReflections(), conf);
         sut.configure();
     }
 

@@ -9,7 +9,6 @@ import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ public class CsvCen2CenTest {
 
     @Before
     public void setUp() {
-        sut = new CsvCen2Cen(new ReflectionsReflections("it.infocert"));
+        sut = new CsvCen2Cen(new ReflectionsReflections());
     }
 
     @Test

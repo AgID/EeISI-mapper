@@ -1,10 +1,6 @@
 package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.RuleRepository;
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
-import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.rules.Rule;
 import org.reflections.Reflections;
 
@@ -21,9 +17,13 @@ import java.util.Set;
 public class ReflectionBasedRepository implements RuleRepository {
 
     private Set<Rule> rules = null;
-    private final IReflections reflections;
+    private final Reflections reflections;
 
-    public ReflectionBasedRepository(IReflections reflections) {
+    public ReflectionBasedRepository() {
+        this.reflections = new Reflections("it.infocert");
+    }
+
+    public ReflectionBasedRepository(Reflections reflections) {
         this.reflections = reflections;
     }
 
@@ -42,19 +42,23 @@ public class ReflectionBasedRepository implements RuleRepository {
 
         for (Class<? extends T> subClass : subClasses) {
             try {
-                Constructor constrWithReflectionsAndRegistry = null;
+
+                // loops on all constructors to search for one that accepts Reflections
+                // as only argument
+                Constructor constructorWithReflectionsArgument = null;
                 for (Constructor c : subClass.getConstructors()) {
                     if (c.getParameterTypes().length == 1) {
                         Class aClass = c.getParameterTypes()[0];
                         if (Reflections.class.equals(aClass)) {
-                            constrWithReflectionsAndRegistry = c;
+                            constructorWithReflectionsArgument = c;
                         }
                     }
                 }
-                if (constrWithReflectionsAndRegistry == null) {
-                    myRules.add(subClass.newInstance());
+                if (constructorWithReflectionsArgument == null) {
+                    T rule = subClass.newInstance();
+                    myRules.add(rule);
                 } else {
-                    myRules.add((T) constrWithReflectionsAndRegistry.newInstance(reflections));
+                    myRules.add((T) constructorWithReflectionsArgument.newInstance(reflections));
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException("An error occurred instantiating class '" + subClass.getName() + "' as subclass of '" + classToFind.getName() + "'.", e);

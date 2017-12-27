@@ -1,15 +1,13 @@
 package it.infocert.eigor.api.utils;
 
 import it.infocert.eigor.model.core.model.BTBG;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class JavaReflectionsTest {
 
@@ -17,10 +15,10 @@ public class JavaReflectionsTest {
     public void getSubTypesOfBtBg() throws Exception {
 
         // given
-        ReflectionsReflections reference = new ReflectionsReflections( new Reflections("it.infocert") );
-        Set<Class<? extends BTBG>> referenceResults = reference.getSubTypesOf(BTBG.class);
+        ReflectionsReflections reference = new ReflectionsReflections( );
+        Set<Class<? extends BTBG>> referenceResults = reference.getSubTypesOfBtBg();
 
-        Set<Class<? extends BTBG>> manualResult = new JavaReflections().getSubTypesOf(BTBG.class);
+        Set<Class<? extends BTBG>> manualResult = new JavaReflections().getSubTypesOfBtBg();
 
         // then
         assertNotNull(manualResult);
@@ -29,11 +27,5 @@ public class JavaReflectionsTest {
         }
 
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getSubTypesOfOtherClasses() throws Exception {
-        new JavaReflections().getSubTypesOf(String.class);
-    }
-
 
 }

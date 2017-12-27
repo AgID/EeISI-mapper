@@ -14,7 +14,6 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,6 @@ import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class GenericOneToManyTransformerTest {
@@ -44,7 +42,7 @@ public class GenericOneToManyTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new ReflectionsReflections("it.infocert");
+        reflections = new ReflectionsReflections();
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

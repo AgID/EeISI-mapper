@@ -126,7 +126,7 @@ public class InvoiceUtils {
      */
     public Class<? extends BTBG> getBtBgByName(final String name) {
 
-        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
         Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
@@ -148,7 +148,7 @@ public class InvoiceUtils {
      */
     public Class<? extends BTBG> getBtBgByName(final BtBgName name) {
 
-        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
         Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override

@@ -6,7 +6,6 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.ReflectionsReflections;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.util.Set;
 
@@ -23,7 +22,7 @@ public class ToCenListBakedRepositoryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        reflections = new ReflectionsReflections("it.infocert");
+        reflections = new ReflectionsReflections();
 
         sut = new ToCenListBakedRepository(
                 new FakeToCenConversion(reflections, mock(EigorConfiguration.class))

@@ -7,7 +7,6 @@ import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
-import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.api.utils.IReflections;
@@ -18,10 +17,10 @@ import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
+import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -30,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 
 public class Eigor {
@@ -56,7 +56,11 @@ public class Eigor {
 
     @Bean
     RuleRepository ruleRepository(IReflections reflections) {
-        return new ReflectionBasedRepository(reflections);
+        return new RuleRepository() {
+            @Override public List<Rule> rules() {
+                throw new IllegalArgumentException("Not implemeted yet.");
+            }
+        };
     }
 
     @Bean

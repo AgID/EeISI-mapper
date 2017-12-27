@@ -12,7 +12,6 @@ import it.infocert.eigor.model.core.model.Visitor;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertThat;
 @Ignore //TODO fix the xpaths with the new line converter
 public class ITCen2FattPATest {
 
-    private final IReflections reflections = new ReflectionsReflections("it.infocert");
+    private final IReflections reflections = new ReflectionsReflections();
     private CsvCen2Cen csvCen2Cen;
     private Cen2FattPA cen2FattPA;
     private XPathFactory xPathFactory;

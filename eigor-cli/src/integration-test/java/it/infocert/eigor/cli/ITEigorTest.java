@@ -4,7 +4,10 @@ import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-import it.infocert.eigor.api.impl.*;
+import it.infocert.eigor.api.impl.FakeFromCenConversion;
+import it.infocert.eigor.api.impl.FakeToCenConversion;
+import it.infocert.eigor.api.impl.FromCenListBakedRepository;
+import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
@@ -13,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.reflections.Reflections;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,9 +42,8 @@ public class ITEigorTest {
     private CommandLineInterpreter cli;
 
     @Before public void setUpCommandLineInterpeter() {
-        IReflections reflections = new ReflectionsReflections("it.infocert");
+        IReflections reflections = new ReflectionsReflections();
         Properties properties = new Properties();
-        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
 
         EigorConfiguration conf = new PropertiesBackedConfiguration();

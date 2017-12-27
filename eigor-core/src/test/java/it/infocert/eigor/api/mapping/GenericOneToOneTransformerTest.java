@@ -7,16 +7,15 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Document;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class GenericOneToOneTransformerTest {
@@ -43,7 +41,7 @@ public class GenericOneToOneTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new ReflectionsReflections("it.infocert");
+        reflections = new ReflectionsReflections();
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

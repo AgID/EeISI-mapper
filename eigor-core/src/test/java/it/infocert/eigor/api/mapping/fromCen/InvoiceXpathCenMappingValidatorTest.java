@@ -6,7 +6,6 @@ import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.utils.ReflectionsReflections;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 
 public class InvoiceXpathCenMappingValidatorTest {
@@ -15,7 +14,7 @@ public class InvoiceXpathCenMappingValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new InvoiceXpathCenMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", new ReflectionsReflections("it.infocert"));
+        validator = new InvoiceXpathCenMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", new ReflectionsReflections());
     }
 
     @Test
