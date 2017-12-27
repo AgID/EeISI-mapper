@@ -3,7 +3,7 @@ package it.infocert.eigor.api.impl;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class FromCenListBakedRepositoryTest {
 
     @BeforeClass
     public static void setUp() {
-        reflections = new ReflectionsReflections();
+        reflections = new JavaReflections();
 
         sut = new FromCenListBakedRepository(
                 new FakeFromCenConversion(reflections, mock(EigorConfiguration.class))

@@ -19,7 +19,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

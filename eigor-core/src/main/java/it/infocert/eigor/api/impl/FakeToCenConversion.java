@@ -9,9 +9,7 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
-import org.reflections.Reflections;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;

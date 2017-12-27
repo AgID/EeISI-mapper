@@ -5,7 +5,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class Cen2FattPATest {
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
-        converter = new Cen2FattPA(new ReflectionsReflections(), conf);
+        converter = new Cen2FattPA(new JavaReflections(), conf);
         converter.configure();
         xPathFactory = XPathFactory.newInstance();
     }

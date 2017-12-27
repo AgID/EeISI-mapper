@@ -1,13 +1,14 @@
 package it.infocert.eigor.api.impl;
 
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.AbstractFromCenConverter;
+import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.Collections;

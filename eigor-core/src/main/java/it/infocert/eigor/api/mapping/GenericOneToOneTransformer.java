@@ -13,7 +13,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;

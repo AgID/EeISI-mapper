@@ -6,7 +6,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,7 +37,7 @@ public class EigorTest {
 
     @Before public void setUpCommandLineInterpeter() {
 
-        IReflections reflections = new ReflectionsReflections();
+        IReflections reflections = new JavaReflections();
         Properties properties = new Properties();
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
 

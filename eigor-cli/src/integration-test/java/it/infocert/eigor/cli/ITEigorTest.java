@@ -9,7 +9,7 @@ import it.infocert.eigor.api.impl.FakeToCenConversion;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,7 +42,7 @@ public class ITEigorTest {
     private CommandLineInterpreter cli;
 
     @Before public void setUpCommandLineInterpeter() {
-        IReflections reflections = new ReflectionsReflections();
+        IReflections reflections = new JavaReflections();
         Properties properties = new Properties();
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
 

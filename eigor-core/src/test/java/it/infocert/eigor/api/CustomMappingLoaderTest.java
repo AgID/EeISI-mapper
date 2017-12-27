@@ -5,7 +5,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class CustomMappingLoaderTest {
 
     @Before
     public void setUp() throws Exception {
-        reflections = new ReflectionsReflections();
+        reflections = new JavaReflections();
         conversionRegistry = mock(ConversionRegistry.class);
     }
 

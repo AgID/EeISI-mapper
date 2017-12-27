@@ -4,7 +4,8 @@ import com.google.common.io.Resources;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -41,7 +42,7 @@ public class GenericOneToOneTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new ReflectionsReflections();
+        reflections = new JavaReflections();
         conversionRegistry = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new LookUpEnumConversion(Iso31661CountryCodes.class),

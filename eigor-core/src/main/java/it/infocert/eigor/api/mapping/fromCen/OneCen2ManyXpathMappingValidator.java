@@ -1,15 +1,12 @@
 package it.infocert.eigor.api.mapping.fromCen;
 
-
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.reflections.Reflections;
 
-import javax.annotation.Nonnull;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;

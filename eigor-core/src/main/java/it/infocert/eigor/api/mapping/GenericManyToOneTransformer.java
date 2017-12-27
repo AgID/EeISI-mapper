@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.mapping;
 
-
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -10,7 +9,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;

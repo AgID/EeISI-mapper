@@ -4,8 +4,8 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.EigorRuntimeException;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -15,19 +15,15 @@ import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 
-import javax.print.Doc;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class GenericTransformer {
 

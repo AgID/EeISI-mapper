@@ -22,7 +22,6 @@ import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

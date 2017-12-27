@@ -5,7 +5,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
@@ -42,7 +42,7 @@ public class ITUbl2CenTest {
                 ;
 
         sut = new Ubl2Cen(
-                new ReflectionsReflections(),
+                new JavaReflections(),
                 conf
         );
         sut.configure();

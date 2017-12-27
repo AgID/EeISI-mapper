@@ -8,7 +8,7 @@ import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.io.Copier;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
@@ -59,7 +58,7 @@ public class LowLevelAPIUsage {
     @Test public void lowLevelApiUsageSingleConversion() throws IOException, ConfigurationException {
 
         // needed support classes
-        IReflections reflections = new ReflectionsReflections();
+        IReflections reflections = new JavaReflections();
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();
@@ -191,7 +190,7 @@ public class LowLevelAPIUsage {
         );
 
         // needed support classes
-        IReflections reflections = new ReflectionsReflections();
+        IReflections reflections = new JavaReflections();
 
         // load the eigor configuration
         EigorConfiguration configuration = new DefaultEigorConfigurationLoader().loadConfiguration();

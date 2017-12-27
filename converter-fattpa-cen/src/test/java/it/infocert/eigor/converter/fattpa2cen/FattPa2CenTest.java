@@ -3,7 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.utils.ReflectionsReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -30,7 +30,7 @@ public class FattPa2CenTest {
 
     @Before
     public void setUp() throws Exception {
-        sut = new FattPa2Cen(new ReflectionsReflections(), mock(EigorConfiguration.class));
+        sut = new FattPa2Cen(new JavaReflections(), mock(EigorConfiguration.class));
         doc = setUpDocument();
         xml = convertXml();
     }
