@@ -1,15 +1,14 @@
 package it.infocert.eigor.api.mapping;
 
-
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class GenericManyToOneTransformer extends GenericTransformer {
      *
      * @param targetPath the CEN invoice path
      */
-    public GenericManyToOneTransformer(String targetPath, String combinationExpression, List<String> sourcePaths, String mappingId, Reflections reflections, ConversionRegistry conversionRegistry) {
+    public GenericManyToOneTransformer(String targetPath, String combinationExpression, List<String> sourcePaths, String mappingId, IReflections reflections, ConversionRegistry conversionRegistry) {
         super(reflections, conversionRegistry);
         this.targetPath = targetPath;
         this.combinationExpression = combinationExpression;

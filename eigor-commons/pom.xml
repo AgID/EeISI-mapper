@@ -10,8 +10,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>eigor-test-schemas</artifactId>
-    <name>Eigor :: Test Schemas (${project.artifactId})</name>
+    <artifactId>eigor-commons</artifactId>
+    <name>Eigor :: Commons (${project.artifactId})</name>
+    <description>The Eigor Core module allows to programmatically convert invoices between formats.</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+    </dependencies>
+
+
 
 
 </project>

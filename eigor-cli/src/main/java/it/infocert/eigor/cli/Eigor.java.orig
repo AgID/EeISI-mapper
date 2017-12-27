@@ -17,8 +17,11 @@ import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
+<<<<<<< HEAD
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
+=======
 import it.infocert.eigor.model.core.rules.Rule;
+>>>>>>> 175-reflection-to-be-removed-to-suit-the-sogei-runtime
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
