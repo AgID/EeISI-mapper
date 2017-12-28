@@ -3,9 +3,9 @@ package it.infocert.eigor.converter.ubl2cen;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class Ubl2CenTest {
 				.addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
 				.addProperty("eigor.converter.ubl-cen.cius", "converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
 				;
-		sut = new Ubl2Cen(new Reflections("it.infocert"), conf);
+		sut = new Ubl2Cen(new JavaReflections(), conf);
 		sut.configure();
 	}
 

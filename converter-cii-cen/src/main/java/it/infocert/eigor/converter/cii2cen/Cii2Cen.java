@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -15,7 +16,7 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +74,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	private SchematronValidator schematronValidator;
     private SchematronValidator ciusValidator;
 
-	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
+	public Cii2Cen(IReflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
 		this.configuration = checkNotNull(configuration);
 	}

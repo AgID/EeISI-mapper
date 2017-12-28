@@ -7,6 +7,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -18,7 +19,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,7 @@ public class CsvCen2Cen implements ToCenConversion {
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
 
 
-    public CsvCen2Cen(Reflections reflections) {
+    public CsvCen2Cen(IReflections reflections) {
         cenStructure = new CenStructure();
         utils = new InvoiceUtils(reflections);
     }

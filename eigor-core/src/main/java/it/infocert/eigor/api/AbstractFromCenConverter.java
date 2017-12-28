@@ -13,6 +13,7 @@ import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.fromCen.InvoiceXpathCenMappingValidator;
 import it.infocert.eigor.api.mapping.fromCen.OneCen2ManyXpathMappingValidator;
 import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -21,7 +22,6 @@ import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractFromCenConverter.class);
     private final EigorConfiguration configuration;
-    private Reflections reflections;
+    private IReflections reflections;
     private ConversionRegistry conversionRegistry;
     private String regex;
     private final DefaultResourceLoader drl;
@@ -52,7 +52,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings;
 
-    protected AbstractFromCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    protected AbstractFromCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.drl = new DefaultResourceLoader();
