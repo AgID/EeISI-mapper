@@ -1,7 +1,10 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.conversion.Untdid4461PaymentMeansCodeToString;
+import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -21,7 +24,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
             if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {
                 BG0016PaymentInstructions bg0016 = cenInvoice.getBG0016PaymentInstructions(0);
 
-                Untdid4461PaymentMeansCodeToString paymentMeansCodeToStr = new Untdid4461PaymentMeansCodeToString();
+                TypeConverter<Untdid4461PaymentMeansCode, String> paymentMeansCodeToStr = Untdid4461PaymentMeansCodeToString.newConverter();
 
                 Element paymentMeans = root.getChild("PaymentMeans");
                 if (paymentMeans == null) {
@@ -36,7 +39,11 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                         BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
                         paymentMeansCode.setAttribute("Name", bt0082.getValue());
                     }
-                    paymentMeansCode.setText(paymentMeansCodeToStr.convert(bt0081.getValue()));
+                    try {
+                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(bt0081.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(e);
+                    }
                     paymentMeans.addContent(paymentMeansCode);
                 }
 

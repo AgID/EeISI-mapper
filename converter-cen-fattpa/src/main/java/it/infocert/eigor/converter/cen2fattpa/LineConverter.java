@@ -26,31 +26,31 @@ import java.util.List;
 public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     private final static Logger log = LoggerFactory.getLogger(LineConverter.class);
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-            new StringToUnitOfMeasureConverter(),
-            new LookUpEnumConversion(UnitOfMeasureCodes.class),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new JavaLocalDateToStringConverter(),
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new Iso31661CountryCodesToStringConverter(),
-            new DoubleToStringConverter("#.00"),
-            new UnitOfMeasureCodesToStringConverter(),
-            new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString(),
-            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
-            new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
-            new LocalDateToXMLGregorianCalendarConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
+            StringToUnitOfMeasureConverter.newConverter(),
+            LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            JavaLocalDateToStringConverter.newConverter(),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter("#.00"),
+            UnitOfMeasureCodesToStringConverter.newConverter(),
+            Untdid1001InvoiceTypeCodeToItalianCodeStringConverter.newConverter(),
+            Untdid4461PaymentMeansCodeToItalianCodeString.newConverter(),
+            Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter(),
+            Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
+            LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
 
 
@@ -240,12 +240,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                    Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
+                    TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
                     try {
                         String converted = converter.convert(code);
                         sb.append(converted);
                         log.trace("Appended BT98 to Descrizione");
-                    } catch (EigorRuntimeException e) {
+                    } catch (EigorRuntimeException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(e));
                     }
                 }
@@ -670,10 +670,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             lineaSconto.setDescrizione(descrizione);
                         } else {
                             Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
-                            Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
-                            descrizione = converter.convert(code);
-                            if (descrizione != null) {
-                                lineaSconto.setDescrizione(descrizione);
+                            TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
+                            try {
+                                descrizione = converter.convert(code);
+                                if (descrizione != null) {
+                                    lineaSconto.setDescrizione(descrizione);
+                                }
+                            } catch (ConversionFailedException e) {
+                                errors.add( ConversionIssue.newError(e) );
                             }
                         }
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
@@ -722,10 +726,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             lineaMaggiorazione.setDescrizione(descrizione);
                         } else {
                             Untdid7161SpecialServicesCodes code = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue();
-                            Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
-                            descrizione = converter.convert(code);
-                            if (descrizione != null) {
-                                lineaMaggiorazione.setDescrizione(descrizione);
+                            TypeConverter<Untdid7161SpecialServicesCodes, String> converter = Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter();
+                            try {
+                                descrizione = converter.convert(code);
+                                if (descrizione != null) {
+                                    lineaMaggiorazione.setDescrizione(descrizione);
+                                }
+                            } catch (ConversionFailedException e) {
+                                errors.add(ConversionIssue.newError(e));
                             }
                         }
                         Double chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? 0 : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
@@ -785,11 +793,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 String converted = "";
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                    Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter converter = new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter();
+                    TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
                     try {
                         converted = converter.convert(code);
                         dettaglioLinee.setRiferimentoAmministrazione(converted);
-                    } catch (EigorRuntimeException e) {
+                    } catch (EigorRuntimeException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(e));
                     }
                 } else {
@@ -922,11 +930,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 String converted = "";
                 if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
                     Untdid7161SpecialServicesCodes code = charges.getBT0105DocumentLevelChargeReasonCode(0).getValue();
-                    Untdid7161SpecialServicesCodesToItalianCodeStringConverter converter = new Untdid7161SpecialServicesCodesToItalianCodeStringConverter();
+                    TypeConverter<Untdid7161SpecialServicesCodes, String> converter = Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter();
                     try {
                         converted = converter.convert(code);
                         dettaglioLinee.setRiferimentoAmministrazione(converted);
-                    } catch (EigorRuntimeException e) {
+                    } catch (EigorRuntimeException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(e));
                     }
                 } else {

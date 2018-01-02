@@ -4,10 +4,8 @@ import it.infocert.eigor.api.AbstractToCenConverter;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 
 import java.io.InputStream;
@@ -15,34 +13,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static it.infocert.eigor.api.conversion.ConversionRegistry.DEFAULT_REGISTRY;
+
 /**
  * A fake conversion used to lay out the API general structure.
  */
 public class FakeToCenConversion extends AbstractToCenConverter {
 
     public FakeToCenConversion(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, new ConversionRegistry(
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                new StringToUnitOfMeasureConverter(),
-                new LookUpEnumConversion(UnitOfMeasureCodes.class),
-                new StringToDoubleConverter(),
-                new StringToStringConverter(),
-                new JavaLocalDateToStringConverter(),
-                new JavaLocalDateToStringConverter("dd-MMM-yy"),
-                new Iso4217CurrenciesFundsCodesToStringConverter(),
-                new Iso31661CountryCodesToStringConverter(),
-                new DoubleToStringConverter("#.00"),
-                new UnitOfMeasureCodesToStringConverter()
-        ), configuration);
+        super(reflections, DEFAULT_REGISTRY, configuration);
     }
 
     @Override

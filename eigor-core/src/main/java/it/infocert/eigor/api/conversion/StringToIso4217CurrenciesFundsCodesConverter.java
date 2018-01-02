@@ -9,7 +9,11 @@ import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
  */
 public class StringToIso4217CurrenciesFundsCodesConverter extends FilteringEnumConversion<String, Iso4217CurrenciesFundsCodes> {
 
-    public StringToIso4217CurrenciesFundsCodesConverter() {
+    public static TypeConverter<String, Iso4217CurrenciesFundsCodes> newConverter() {
+        return new StringToIso4217CurrenciesFundsCodesConverter();
+    }
+
+    StringToIso4217CurrenciesFundsCodesConverter() {
         super(Iso4217CurrenciesFundsCodes.class);
     }
 

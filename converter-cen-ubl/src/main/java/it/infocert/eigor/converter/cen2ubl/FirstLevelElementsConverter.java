@@ -8,29 +8,25 @@ import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BG0002ProcessControl;
-import it.infocert.eigor.model.core.model.BT0022InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 import org.joda.time.LocalDate;
 
-import java.io.IOException;
 import java.util.List;
 
 public class FirstLevelElementsConverter implements CustomMapping<Document> {
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new StringToStringConverter(),
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new JavaLocalDateToStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToStringConverter(),
-            new Untdid1001InvoiceTypeCodesToStringConverter(),
-            new DoubleToStringConverter("0.00"),
-            new Iso31661CountryCodesToStringConverter(),
-            new IdentifierToStringConverter(),
-            new Untdid4461PaymentMeansCodeToString()
+            StringToStringConverter.newConverter(),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            JavaLocalDateToStringConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToStringConverter.newConverter(),
+            Untdid1001InvoiceTypeCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter("0.00"),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            IdentifierToStringConverter.newConverter(),
+            Untdid4461PaymentMeansCodeToString.newConverter()
     );
 
     private Element root;

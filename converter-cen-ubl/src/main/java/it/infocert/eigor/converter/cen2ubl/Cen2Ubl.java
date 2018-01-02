@@ -55,16 +55,16 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     private IXMLValidator ciusValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new StringToStringConverter(),
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new JavaLocalDateToStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToStringConverter(),
-            new Untdid1001InvoiceTypeCodesToStringConverter(),
-            new DoubleToStringConverter("0.00"),
-            new Iso31661CountryCodesToStringConverter(),
-            new IdentifierToStringConverter(),
-            new Untdid4461PaymentMeansCodeToString()
+            StringToStringConverter.newConverter(),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            JavaLocalDateToStringConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToStringConverter.newConverter(),
+            Untdid1001InvoiceTypeCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter("0.00"),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            IdentifierToStringConverter.newConverter(),
+            Untdid4461PaymentMeansCodeToString.newConverter()
     );
 
     @Override

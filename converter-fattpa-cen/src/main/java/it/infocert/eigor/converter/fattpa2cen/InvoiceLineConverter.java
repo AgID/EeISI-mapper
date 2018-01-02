@@ -22,9 +22,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        TypeConverter<String,Double> strDblConverter = new StringToDoubleConverter();
-        TypeConverter<String,Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
-        TypeConverter<String,UnitOfMeasureCodes> strToUnitOfMeasure = new StringToUnitOfMeasureConverter();
+        TypeConverter<String,Double> strDblConverter = StringToDoubleConverter.newConverter();
+        TypeConverter<String,Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
+        TypeConverter<String,UnitOfMeasureCodes> strToUnitOfMeasure = StringToUnitOfMeasureConverter.newConverter();
 
 
 

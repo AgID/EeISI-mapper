@@ -4,7 +4,14 @@ import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 
 public class Iso4217CurrenciesFundsCodesToStringConverter extends ToStringTypeConverter<Iso4217CurrenciesFundsCodes> {
 
-        @Override
+    public static TypeConverter<Iso4217CurrenciesFundsCodes, String> newConverter(){
+        return new Iso4217CurrenciesFundsCodesToStringConverter();
+    }
+
+    Iso4217CurrenciesFundsCodesToStringConverter() {
+    }
+
+    @Override
         public String convert(Iso4217CurrenciesFundsCodes iso4217CurrenciesFundsCodes) {
             return iso4217CurrenciesFundsCodes.getCode();
         }

@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.EsigibilitaIVAType;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 
 public class Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter implements TypeConverter<Untdid2005DateTimePeriodQualifiers, String> {
@@ -26,5 +25,12 @@ public class Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter impl
     @Override
     public Class<Untdid2005DateTimePeriodQualifiers> getSourceClass() {
         return Untdid2005DateTimePeriodQualifiers.class;
+    }
+
+    Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter() {
+    }
+
+    public static TypeConverter<Untdid2005DateTimePeriodQualifiers, String> newConverter() {
+        return new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter();
     }
 }

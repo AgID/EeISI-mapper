@@ -5,6 +5,10 @@ import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 public class Untdid1001InvoiceTypeCodeToItalianCodeStringConverter extends ToStringTypeConverter<Untdid1001InvoiceTypeCode> {
+
+    Untdid1001InvoiceTypeCodeToItalianCodeStringConverter() {
+    }
+
     @Override
     public String convert(Untdid1001InvoiceTypeCode untdid1001InvoiceTypeCode) {
         switch (untdid1001InvoiceTypeCode.getCode()) {
@@ -25,5 +29,9 @@ public class Untdid1001InvoiceTypeCodeToItalianCodeStringConverter extends ToStr
     @Override
     public Class<Untdid1001InvoiceTypeCode> getSourceClass() {
         return Untdid1001InvoiceTypeCode.class;
+    }
+
+    public static TypeConverter newConverter() {
+        return new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter();
     }
 }
