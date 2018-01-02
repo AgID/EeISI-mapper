@@ -1,9 +1,10 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.StringToUnitOfMeasureConverter;
-import it.infocert.eigor.api.conversion.UnitOfMeasureCodesToStringConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
@@ -21,9 +22,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
-        ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter taxFeeCategoriesConverter = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
-        StringToUnitOfMeasureConverter strToUnitOfMeasure = new StringToUnitOfMeasureConverter();
+        TypeConverter<String,Double> strDblConverter = new StringToDoubleConverter();
+        TypeConverter<String,Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
+        TypeConverter<String,UnitOfMeasureCodes> strToUnitOfMeasure = new StringToUnitOfMeasureConverter();
+
+
 
         BG0025InvoiceLine bg0025;
 
@@ -47,7 +50,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             try {
                                 BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(strDblConverter.convert(quantita.getText()));
                                 bg0025.getBT0129InvoicedQuantity().add(invoicedQuantity);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -59,7 +62,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 unitCode = strToUnitOfMeasure.convert(unitaMisura.getText());
                                 BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                                 bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
-                            } catch (NullPointerException e) {
+                            } catch (NullPointerException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -69,7 +72,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             try {
                                 BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(strDblConverter.convert(prezzoTotale.getText()));
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -78,14 +81,17 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         BG0029PriceDetails bg0029 = new BG0029PriceDetails();
                         Element prezzoUnitario = dettaglioLinee.getChild("PrezzoUnitario");
                         if (prezzoUnitario != null) {
-                            BT0146ItemNetPrice itemNetPrice = new BT0146ItemNetPrice(strDblConverter.convert(prezzoUnitario.getText()));
-                            bg0029.getBT0146ItemNetPrice().add(itemNetPrice);
+                            try {
+                                BT0146ItemNetPrice itemNetPrice = new BT0146ItemNetPrice(strDblConverter.convert(prezzoUnitario.getText()));
+                                bg0029.getBT0146ItemNetPrice().add(itemNetPrice);
+                            } catch (ConversionFailedException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                                errors.add(ConversionIssue.newError(ere));
+                            }
                         }
                         Element unitaMisuraDett = dettaglioLinee.getChild("UnitaMisura");
                         if (unitaMisuraDett != null) {
                             try {
-//                                String commonQuantity = unitaMisuraDett.getValue().split(" ")[0];
-//                                BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(strDblConverter.convert(commonQuantity));
                                 BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(1d);
                                 bg0029.getBT0149ItemPriceBaseQuantity().add(itemPriceBaseQuantity);
                             } catch (NumberFormatException e) {
@@ -110,7 +116,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         if (natura != null) {
                             try {
                                 code = taxFeeCategoriesConverter.convert(natura.getText());
-                            } catch (NullPointerException e) {
+                            } catch (NullPointerException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -125,7 +131,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             try {
                                 BT0152InvoicedItemVatRate invoicedItemVatRate = new BT0152InvoicedItemVatRate(strDblConverter.convert(aliquotaIVA.getText()));
                                 bg0030.getBT0152InvoicedItemVatRate().add(invoicedItemVatRate);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
