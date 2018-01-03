@@ -13,7 +13,7 @@ public class Iso31661CountryCodesToStringConverter extends ToStringTypeConverter
 
     @Override
     public String convert(Iso31661CountryCodes iso31661CountryCodes) {
-        return iso31661CountryCodes.getIso2charCode();
+        return iso31661CountryCodes!=null ? iso31661CountryCodes.getIso2charCode() : null;
     }
 
     @Override

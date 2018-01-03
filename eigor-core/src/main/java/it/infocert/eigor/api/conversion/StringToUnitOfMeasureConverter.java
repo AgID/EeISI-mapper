@@ -27,7 +27,7 @@ StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCode
 
         UnitOfMeasureCodes result = Stream.create(UnitOfMeasureCodes.values()).filter(f).first();
 
-        if(result == null) throw new ConversionFailedExceptionPunctual(
+        if(result == null) throw new ConversionBetweenTypesFailedException(
                 String.class, UnitOfMeasureCodes.class,
                 s);
 

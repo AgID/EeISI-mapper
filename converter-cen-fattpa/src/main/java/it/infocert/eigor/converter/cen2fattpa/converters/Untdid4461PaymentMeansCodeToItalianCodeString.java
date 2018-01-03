@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.ToStringTypeConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.ModalitaPagamentoType;
@@ -15,7 +16,10 @@ public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeC
     }
 
     @Override
-    public String convert(Untdid4461PaymentMeansCode paymentMeansCode) {
+    public String convert(Untdid4461PaymentMeansCode paymentMeansCode) throws ConversionFailedException {
+
+        checkNotNull(paymentMeansCode);
+
         switch (paymentMeansCode) {
             case Code30:
                 return ModalitaPagamentoType.MP_05.value();

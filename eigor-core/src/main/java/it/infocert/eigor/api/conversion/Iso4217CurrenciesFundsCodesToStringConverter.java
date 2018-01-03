@@ -12,12 +12,12 @@ public class Iso4217CurrenciesFundsCodesToStringConverter extends ToStringTypeCo
     }
 
     @Override
-        public String convert(Iso4217CurrenciesFundsCodes iso4217CurrenciesFundsCodes) {
-            return iso4217CurrenciesFundsCodes.getCode();
-        }
+    public String convert(Iso4217CurrenciesFundsCodes iso4217CurrenciesFundsCodes) {
+        return iso4217CurrenciesFundsCodes!=null ? iso4217CurrenciesFundsCodes.getCode() : null;
+    }
 
-        @Override
-        public Class<Iso4217CurrenciesFundsCodes> getSourceClass() {
-            return Iso4217CurrenciesFundsCodes.class;
-        }
+    @Override
+    public Class<Iso4217CurrenciesFundsCodes> getSourceClass() {
+        return Iso4217CurrenciesFundsCodes.class;
+    }
 }

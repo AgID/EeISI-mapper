@@ -8,7 +8,10 @@ public class Untdid1001InvoiceTypeCodesToStringConverter extends ToStringTypeCon
     }
 
     @Override
-    public String convert(Untdid1001InvoiceTypeCode untdid1001InvoiceTypeCode) {
+    public String convert(Untdid1001InvoiceTypeCode untdid1001InvoiceTypeCode) throws ConversionBetweenTypesFailedException {
+
+        checkNotNull(untdid1001InvoiceTypeCode);
+
         return String.valueOf(untdid1001InvoiceTypeCode.getCode());
     }
 

@@ -1,6 +1,9 @@
 package it.infocert.eigor.api.conversion;
 
-public class ConversionFailedException extends Exception {
+/**
+ * Specify a problem occurred during conversion through a type conversion.
+ */
+public abstract class ConversionFailedException extends Exception {
 
     public ConversionFailedException() {
     }
