@@ -37,21 +37,21 @@ public class CsvCen2Cen implements ToCenConversion {
     private final InvoiceUtils utils;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("dd-MMM-yy"),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-            new StringToUnitOfMeasureConverter(),
-            new StringToDoublePercentageConverter(),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
+            StringToUnitOfMeasureConverter.newConverter(),
+            StringToDoublePercentageConverter.newConverter(),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter()
     );
 
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);

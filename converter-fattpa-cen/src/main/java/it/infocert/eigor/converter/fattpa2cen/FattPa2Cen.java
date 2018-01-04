@@ -42,17 +42,17 @@ public class FattPa2Cen extends AbstractToCenConverter {
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter(),
-            new ItalianCodeStringToUntdid4461PaymentMeansCode(),
-            new ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter(),
-            new StringToIdentifierConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            ItalianCodeStringToUntdid4461PaymentMeansCode.newConverter(),
+            ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter.newConverter(),
+            StringToIdentifierConverter.newConverter()
     );
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one";

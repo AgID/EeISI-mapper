@@ -1,6 +1,5 @@
 package it.infocert.eigor.converter.cen2ubl;
 
-import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
@@ -8,7 +7,6 @@ import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.converter.cen2ubl.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -16,20 +14,10 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.input.sax.XMLReaderJDOMFactory;
-import org.jdom2.input.sax.XMLReaderSchemaFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -55,16 +43,16 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     private IXMLValidator ciusValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new StringToStringConverter(),
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new JavaLocalDateToStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToStringConverter(),
-            new Untdid1001InvoiceTypeCodesToStringConverter(),
-            new DoubleToStringConverter("0.00"),
-            new Iso31661CountryCodesToStringConverter(),
-            new IdentifierToStringConverter(),
-            new Untdid4461PaymentMeansCodeToString()
+            StringToStringConverter.newConverter(),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            JavaLocalDateToStringConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToStringConverter.newConverter(),
+            Untdid1001InvoiceTypeCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter("0.00"),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            IdentifierToStringConverter.newConverter(),
+            Untdid4461PaymentMeansCodeToString.newConverter()
     );
 
     @Override

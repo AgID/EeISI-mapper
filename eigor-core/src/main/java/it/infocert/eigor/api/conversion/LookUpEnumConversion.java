@@ -29,7 +29,11 @@ public class LookUpEnumConversion<Target> extends FromStringTypeConverter<Target
     private Class<Target> theEnum;
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public LookUpEnumConversion(Class<Target> theEnum){
+    public static <Target> TypeConverter<String, Target> newConverter(Class<Target> theEnum){
+        return new LookUpEnumConversion(theEnum);
+    }
+
+    LookUpEnumConversion(Class<Target> theEnum){
         if(!theEnum.isEnum()) throw new IllegalArgumentException("Provided class '" + theEnum + "' is not an enum.");
         this.theEnum = theEnum;
     }

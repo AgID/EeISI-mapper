@@ -203,46 +203,46 @@ public class UblCn2Cen extends AbstractToCenConverter {
         return new ConversionRegistry(
 
                 // enums
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
+                CountryNameToIso31661CountryCodeConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
 
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+                StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
 
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+                StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
 
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+                StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
 
-                new StringToUnitOfMeasureConverter(),
-                new LookUpEnumConversion(UnitOfMeasureCodes.class),
+                StringToUnitOfMeasureConverter.newConverter(),
+                LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
 
-                new LookUpEnumConversion(VatExemptionReasonsCodes.class),
+                LookUpEnumConversion.newConverter(VatExemptionReasonsCodes.class),
 
-                new Iso4217CurrenciesFundsCodesToStringConverter(),
-                new Iso31661CountryCodesToStringConverter(),
-                new StringToUntdid4461PaymentMeansCode(),
-                new UnitOfMeasureCodesToStringConverter(),
+                Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+                Iso31661CountryCodesToStringConverter.newConverter(),
+                StringToUntdid4461PaymentMeansCode.newConverter(),
+                UnitOfMeasureCodesToStringConverter.newConverter(),
 
-                new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
-                new StringToUntdid2005DateTimePeriodQualifiers(),
+                StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
+                StringToUntdid2005DateTimePeriodQualifiers.newConverter(),
 
                 // dates
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new JavaLocalDateToStringConverter(),
-                new JavaLocalDateToStringConverter("dd-MMM-yy"),
+                StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+                StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+                JavaLocalDateToStringConverter.newConverter(),
+                JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
 
                 // numbers
-                new StringToDoubleConverter(),
-                new DoubleToStringConverter("#.00"),
+                StringToDoubleConverter.newConverter(),
+                DoubleToStringConverter.newConverter("#.00"),
 
                 // binaries
-                new Base64StringToBinaryConverter(),
+                Base64StringToBinaryConverter.newConverter(),
 
                 // string
-                new StringToStringConverter()
+                StringToStringConverter.newConverter()
 
 
         );

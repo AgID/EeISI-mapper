@@ -2,7 +2,6 @@ package it.infocert.eigor.api.conversion;
 
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
-import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -21,7 +20,8 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
         this.theEnum = theEnum;
     }
 
-    public final Target convert(final Source value) {
+    @Override
+    public final Target convert(final Source value) throws ConversionFailedException {
 
         Filter<Target> f = buildFilter(value);
 
@@ -37,7 +37,7 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
         }
 
         Target result = Stream.create(enumValues).filter(f).first();
-        if(result==null) throw new IllegalArgumentException( String.format("Value '%s' not found among %d entries in %s.", value, enumValues.size(), theEnum.getSimpleName()) );
+        if(result==null) throw new EnumConversionFailedException( String.format("Value '%s' not found among %d entries in %s.", value, enumValues.size(), theEnum.getSimpleName()) );
         return result;
 
     }

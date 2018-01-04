@@ -4,7 +4,7 @@ import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
@@ -15,6 +15,7 @@ import it.infocert.eigor.api.mapping.fromCen.OneCen2ManyXpathMappingValidator;
 import it.infocert.eigor.api.mapping.toCen.ManyCen2OneXpathMappingValidator;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
@@ -39,6 +40,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Base class with utility methods for CEN-XML conversion
  */
 public abstract class AbstractFromCenConverter implements FromCenConversion {
+
+
 
     private static final Logger log = LoggerFactory.getLogger(AbstractFromCenConverter.class);
     private final EigorConfiguration configuration;

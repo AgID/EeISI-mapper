@@ -9,14 +9,14 @@ import static org.junit.Assert.assertThat;
 public class StringToUntdid4461PaymentMeansCodeTest {
 
     @Test
-    public void shouldConvertByCode() {
+    public void shouldConvertByCode() throws ConversionFailedException {
         StringToUntdid4461PaymentMeansCode sut = new StringToUntdid4461PaymentMeansCode();
         Untdid4461PaymentMeansCode abc = sut.convert("3");
         assertThat( abc, equalTo( Untdid4461PaymentMeansCode.Code3 ) );
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldNotConvertByAnUnknownCode() {
+    @Test(expected = ConversionFailedException.class)
+    public void shouldNotConvertByAnUnknownCode() throws ConversionFailedException {
         StringToUntdid4461PaymentMeansCode sut = new StringToUntdid4461PaymentMeansCode();
         Untdid4461PaymentMeansCode abc = sut.convert("ABC");
     }

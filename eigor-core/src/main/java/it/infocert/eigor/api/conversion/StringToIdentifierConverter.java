@@ -3,6 +3,10 @@ package it.infocert.eigor.api.conversion;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 
 public class StringToIdentifierConverter implements TypeConverter<String,Identifier> {
+
+    StringToIdentifierConverter() {
+    }
+
     @Override
     public Identifier convert(String stringCode) {
         String scheme = stringCode.split(" ")[0];
@@ -18,5 +22,9 @@ public class StringToIdentifierConverter implements TypeConverter<String,Identif
     @Override
     public Class<String> getSourceClass() {
         return String.class;
+    }
+
+    public static TypeConverter newConverter() {
+        return new StringToIdentifierConverter();
     }
 }

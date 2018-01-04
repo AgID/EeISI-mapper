@@ -22,7 +22,11 @@ public class AttachmentToFileReferenceConverter implements TypeConverter<Element
     private final static Logger log = LoggerFactory.getLogger(AttachmentToFileReferenceConverter.class);
     private final File workdir;
 
-    public AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration) {
+    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration){
+        return new AttachmentToFileReferenceConverter(eigorConfiguration);
+    }
+
+    private AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration) {
         File workdir;
         String workdirS = eigorConfiguration.getMandatoryString("eigor.workdir");
         try {

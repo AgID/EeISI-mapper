@@ -5,7 +5,11 @@ import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 
 public class CountryNameToIso31661CountryCodeConverter extends FilteringEnumConversion<String, Iso31661CountryCodes> {
 
-    public CountryNameToIso31661CountryCodeConverter() {
+    public static TypeConverter<String, Iso31661CountryCodes> newConverter(){
+        return new CountryNameToIso31661CountryCodeConverter();
+    }
+
+    CountryNameToIso31661CountryCodeConverter() {
         super(Iso31661CountryCodes.class);
     }
 
@@ -25,6 +29,5 @@ public class CountryNameToIso31661CountryCodeConverter extends FilteringEnumConv
     public Class<String> getSourceClass() {
         return String.class;
     }
-
 
 }

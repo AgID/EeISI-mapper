@@ -1,15 +1,17 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BT0025PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BT0026PrecedingInvoiceIssueDate;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
 
 import java.util.List;
 
@@ -51,9 +53,9 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         Attribute format = dateTimeString.getAttribute("format");
                         if (format != null && format.getValue().equals("102")) {
                             try {
-                                BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
+                                BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(StringToJavaLocalDateConverter.newConverter ("yyyyMMdd").convert(dateTimeString.getText()));
                                 bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
-                            } catch (IllegalArgumentException e) {
+                            } catch (IllegalArgumentException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }

@@ -1,12 +1,9 @@
 package it.infocert.eigor.api.conversion;
 
+import it.infocert.eigor.model.core.enums.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +11,29 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class ConversionRegistry {
+
+    public static final ConversionRegistry DEFAULT_REGISTRY = new ConversionRegistry(
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
+            StringToUnitOfMeasureConverter.newConverter(),
+            LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            JavaLocalDateToStringConverter.newConverter(),
+            JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter ("#.00"),
+            UnitOfMeasureCodesToStringConverter.newConverter()
+    );
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 

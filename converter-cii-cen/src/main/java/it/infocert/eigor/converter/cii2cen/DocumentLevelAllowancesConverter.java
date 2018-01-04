@@ -1,7 +1,9 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -19,7 +21,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
 
     public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
+        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0020DocumentLevelAllowances bg0020 = null;
 
@@ -64,7 +66,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(strDblConverter.convert(actualAmount.getValue()));
                                     bg0020.getBT0092DocumentLevelAllowanceAmount().add(bt0092);
-                                }catch (NumberFormatException e) {
+                                }catch (NumberFormatException | ConversionFailedException e) {
                                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
@@ -73,7 +75,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                     bg0020.getBT0093DocumentLevelAllowanceBaseAmount().add(bt0093);
-                                }catch (NumberFormatException e) {
+                                }catch (NumberFormatException | ConversionFailedException e) {
                                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
@@ -82,7 +84,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try{
                                     BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(strDblConverter.convert(calculationPercent.getText()));
                                     bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
-                                }catch (NumberFormatException e) {
+                                }catch (NumberFormatException | ConversionFailedException e) {
                                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
@@ -100,7 +102,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                     bg0020.getBT0096DocumentLevelAllowanceVatRate().add(bt0096);
-                                }catch (NumberFormatException e) {
+                                }catch (NumberFormatException | ConversionFailedException e) {
                                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }

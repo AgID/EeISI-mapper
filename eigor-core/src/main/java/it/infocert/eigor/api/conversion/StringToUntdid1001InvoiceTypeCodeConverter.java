@@ -6,6 +6,13 @@ import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeConverter<Untdid1001InvoiceTypeCode> {
 
+    public static TypeConverter<String, Untdid1001InvoiceTypeCode> newConverter() {
+        return new StringToUntdid1001InvoiceTypeCodeConverter();
+    }
+
+    StringToUntdid1001InvoiceTypeCodeConverter() {
+    }
+
     @Override public Untdid1001InvoiceTypeCode convert(final String s) {
 
         Integer code;
@@ -34,4 +41,6 @@ public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeCo
     public Class<Untdid1001InvoiceTypeCode> getTargetClass() {
         return Untdid1001InvoiceTypeCode.class;
     }
+
+
 }

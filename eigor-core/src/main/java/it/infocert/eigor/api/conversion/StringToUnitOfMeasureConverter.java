@@ -6,7 +6,12 @@ import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 
 public class
 StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCodes> {
-    @Override public UnitOfMeasureCodes convert(final String s) {
+
+    StringToUnitOfMeasureConverter() {
+    }
+
+    @Override
+    public UnitOfMeasureCodes convert(final String s) throws ConversionFailedException {
 
         try {
             return UnitOfMeasureCodes.valueOf(s);
@@ -22,7 +27,9 @@ StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCode
 
         UnitOfMeasureCodes result = Stream.create(UnitOfMeasureCodes.values()).filter(f).first();
 
-        if(result == null) throw new IllegalArgumentException();
+        if(result == null) throw new ConversionBetweenTypesFailedException(
+                String.class, UnitOfMeasureCodes.class,
+                s);
 
         return result;
 
@@ -33,5 +40,7 @@ StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCode
         return UnitOfMeasureCodes.class;
     }
 
-
+    public static TypeConverter<String, UnitOfMeasureCodes> newConverter() {
+        return new StringToUnitOfMeasureConverter();
+    }
 }
