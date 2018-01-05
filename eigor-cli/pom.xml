@@ -58,8 +58,10 @@
             <version>1.5.2.RELEASE</version>
             <scope>compile</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-cii</artifactId>
+        </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cii-cen</artifactId>
