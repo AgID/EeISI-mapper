@@ -20,6 +20,10 @@
 		</dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-spring-core</artifactId>
         </dependency>
 		<dependency>
@@ -50,20 +54,6 @@
                 <artifactId>ph-sch2xslt-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <executions>
-                    <execution>
-                        <id>cii-xlst-generation</id>
-                        <configuration>
-                            <xsltDirectory>src/main/resources/converterdata/converter-cii-cen/cii/schematron-xslt</xsltDirectory>
-                            <schematronDirectory>src/main/resources/converterdata/converter-cii-cen/cii/schematron</schematronDirectory>
-                            <schematronPattern>*.sch</schematronPattern>
-                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
-                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
-                        </configuration>
-                        <goals>
-                            <goal>convert</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
                     <execution>
                         <id>cius-xslt-generation</id>
                         <configuration>

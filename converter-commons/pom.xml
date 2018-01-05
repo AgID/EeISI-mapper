@@ -60,6 +60,13 @@
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
+                        <fileset>
+                            <directory>converterdata/converter-commons/cii/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
@@ -73,6 +80,20 @@
                         <configuration>
                             <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron-xslt</xsltDirectory>
                             <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>cii-xlst-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/schematron</schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
                             <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
                             <updateOnSchematronChanges>false</updateOnSchematronChanges>
