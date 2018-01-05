@@ -103,6 +103,15 @@
             </includes>
         </fileSet>
 
+        <!-- CEN/CII -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-cii</outputDirectory>
+            <directory>../converter-cen-cii/src/main/resources/converterdata/converter-cen-cii</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- CEN/UBL -->
         <fileSet>
             <outputDirectory>converterdata/converter-cen-ubl</outputDirectory>
