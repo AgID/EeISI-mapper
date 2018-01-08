@@ -98,7 +98,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
 
-//        new XmlNamespaceApplier(RAM_URI, RSM_URI).applyUblNamespaces(document); //check if needed here
+        new XmlNamespaceApplier(RAM_URI, RSM_URI).applyCiiNamespaces(document); //check if needed here
         new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
