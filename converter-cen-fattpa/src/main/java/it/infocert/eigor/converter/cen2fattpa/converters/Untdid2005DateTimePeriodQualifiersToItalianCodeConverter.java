@@ -27,4 +27,11 @@ public class Untdid2005DateTimePeriodQualifiersToItalianCodeConverter implements
     public Class<Untdid2005DateTimePeriodQualifiers> getSourceClass() {
         return Untdid2005DateTimePeriodQualifiers.class;
     }
+
+    Untdid2005DateTimePeriodQualifiersToItalianCodeConverter() {
+    }
+
+    public static TypeConverter<Untdid2005DateTimePeriodQualifiers, EsigibilitaIVAType> newConverter() {
+        return new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter();
+    }
 }

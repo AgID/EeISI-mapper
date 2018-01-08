@@ -6,10 +6,13 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.LocalDateToXMLGregorianCalendarConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +28,7 @@ import java.util.List;
 public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaType> {
     private static final Logger log = LoggerFactory.getLogger(DatiGeneraliConverter.class);
 
-    private final LocalDateToXMLGregorianCalendarConverter dateConverter = new LocalDateToXMLGregorianCalendarConverter();
+    private final TypeConverter<LocalDate, XMLGregorianCalendar> dateConverter = LocalDateToXMLGregorianCalendarConverter.newConverter();
     private final AttachmentUtil attachmentUtil;
 
     public DatiGeneraliConverter() {
@@ -146,7 +149,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     try {
                         XMLGregorianCalendar precedingInvoiceIssueDate = dateConverter.convert(precedingInvoiceReference.getBT0026PrecedingInvoiceIssueDate(0).getValue());
                         fatturaCollegata.setData(precedingInvoiceIssueDate);
-                    } catch (EigorRuntimeException e) {
+                    } catch (EigorRuntimeException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(e));
                     }
                 }

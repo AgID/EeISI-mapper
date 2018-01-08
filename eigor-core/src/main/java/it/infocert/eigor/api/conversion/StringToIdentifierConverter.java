@@ -6,6 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringToIdentifierConverter implements TypeConverter<String,Identifier> {
+
+    StringToIdentifierConverter() {
+    }
+
     @Override
     public Identifier convert(String stringCode) {
         final String[] splitBlank = stringCode.split(" ");
@@ -36,5 +40,9 @@ public class StringToIdentifierConverter implements TypeConverter<String,Identif
     @Override
     public Class<String> getSourceClass() {
         return String.class;
+    }
+
+    public static TypeConverter newConverter() {
+        return new StringToIdentifierConverter();
     }
 }

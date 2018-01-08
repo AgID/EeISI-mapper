@@ -1,12 +1,14 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
-import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
 
-        JavaLocalDateToStringConverter dateConverter = new JavaLocalDateToStringConverter();
+        TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -36,15 +38,23 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                     if (!bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()) {
                         BT0073InvoicingPeriodStartDate bt0073 = bg0014.getBT0073InvoicingPeriodStartDate(0);
                         Element startDate = new Element("StartDate");
-                        startDate.setText(dateConverter.convert(bt0073.getValue()));
-                        invoicePeriod.addContent(startDate);
+                        try {
+                            startDate.setText(dateConverter.convert(bt0073.getValue()));
+                            invoicePeriod.addContent(startDate);
+                        } catch (ConversionFailedException e) {
+                            errors.add(e);
+                        }
                     }
 
                     if (!bg0014.getBT0074InvoicingPeriodEndDate().isEmpty()) {
                         BT0074InvoicingPeriodEndDate bt0074 = bg0014.getBT0074InvoicingPeriodEndDate(0);
                         Element endDate = new Element("EndDate");
-                        endDate.setText(dateConverter.convert(bt0074.getValue()));
-                        invoicePeriod.addContent(endDate);
+                        try {
+                            endDate.setText(dateConverter.convert(bt0074.getValue()));
+                            invoicePeriod.addContent(endDate);
+                        } catch (ConversionFailedException e) {
+                            errors.add(e);
+                        }
                     }
 
                     if (!cenInvoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {

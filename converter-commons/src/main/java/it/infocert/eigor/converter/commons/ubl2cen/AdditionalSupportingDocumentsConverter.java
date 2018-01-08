@@ -3,7 +3,10 @@ package it.infocert.eigor.converter.commons.ubl2cen;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.api.CustomConverterUtils;
@@ -64,11 +67,11 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
                 Element embeddedDocumentBinaryObject = findNamespaceChild(attachment, namespacesInScope, "EmbeddedDocumentBinaryObject");
                 if (embeddedDocumentBinaryObject != null) {
-                    AttachmentToFileReferenceConverter strToBinConverter = new AttachmentToFileReferenceConverter(DefaultEigorConfigurationLoader.configuration());
+                    TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration());
                     try {
                         BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(embeddedDocumentBinaryObject));
                         bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build());
                         errors.add(ConversionIssue.newError(ere));
                     } catch (EigorRuntimeException e) {

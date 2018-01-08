@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -15,7 +16,7 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,29 +40,29 @@ public class Cii2Cen extends AbstractToCenConverter {
 	private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
 
 			// enums
-			new CountryNameToIso31661CountryCodeConverter(),
-			new LookUpEnumConversion<>(Iso31661CountryCodes.class),
+			 CountryNameToIso31661CountryCodeConverter.newConverter(),
+			 LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
 
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion<>(Untdid1001InvoiceTypeCode.class),
+             StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+             LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
 
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
+             StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+             LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
 
-			new Iso4217CurrenciesFundsCodesToStringConverter(),
-			new Iso31661CountryCodesToStringConverter(),
-			new UnitOfMeasureCodesToStringConverter(),
+			 Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+			 Iso31661CountryCodesToStringConverter.newConverter(),
+			 UnitOfMeasureCodesToStringConverter.newConverter(),
 
-			new StringToUntdid4461PaymentMeansCode(),
+			 StringToUntdid4461PaymentMeansCode.newConverter(),
 
             // date
-            new StringToJavaLocalDateConverter("yyyyMMdd"),
+             StringToJavaLocalDateConverter.newConverter("yyyyMMdd"),
 
 			// numbers
-			new StringToDoubleConverter(),
+			 StringToDoubleConverter.newConverter(),
 
 			// string
-            new StringToStringConverter()
+             StringToStringConverter.newConverter()
 			);
 
 	private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cii-cen.mapping.one-to-many";
@@ -73,7 +74,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	private SchematronValidator schematronValidator;
     private SchematronValidator ciusValidator;
 
-	public Cii2Cen(Reflections reflections, EigorConfiguration configuration) {
+	public Cii2Cen(IReflections reflections, EigorConfiguration configuration) {
 		super(reflections, conversionRegistry, configuration);
 		this.configuration = checkNotNull(configuration);
 	}

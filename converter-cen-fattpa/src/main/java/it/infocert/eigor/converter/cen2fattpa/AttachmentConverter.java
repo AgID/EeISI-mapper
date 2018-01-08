@@ -6,24 +6,21 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0024AdditionalSupportingDocuments;
 import org.apache.commons.io.FileUtils;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,9 +60,8 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
     );
 
 
-    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert.eigor"));
+    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new JavaReflections());
     private final String attachmentName = "not-mapped-values";
-
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {

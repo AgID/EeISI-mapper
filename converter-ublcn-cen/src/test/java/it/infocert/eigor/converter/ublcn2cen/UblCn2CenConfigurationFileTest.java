@@ -8,6 +8,8 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.ubl2cen.InvoiceNoteConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -17,7 +19,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -28,7 +29,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UblCn2CenConfigurationFileTest {
 
@@ -48,7 +50,7 @@ public class UblCn2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ublcn-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ublcn-cen.mapping.custom", "converterdata/converter-ublcn-cen/mappings/custom.conf")
                 .addProperty("eigor.converter.ublcn-cen.cius", "converterdata/converter-ublcn-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
-        sut = new MyUblCnToCenConverter(new Reflections("it.infocert"), conf);
+        sut = new MyUblCnToCenConverter(new JavaReflections(), conf);
         sut.configure();
     }
 
@@ -106,7 +108,7 @@ public class UblCn2CenConfigurationFileTest {
 
 
     static class MyUblCnToCenConverter extends UblCn2Cen {
-        public MyUblCnToCenConverter(Reflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+        public MyUblCnToCenConverter(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
             super(reflections, configuration);
         }
 

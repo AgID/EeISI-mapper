@@ -10,15 +10,23 @@ public class StringToJavaLocalDateConverter extends FromStringTypeConverter<Loca
 
     private final DateTimeFormatter formatter;
 
-    public StringToJavaLocalDateConverter() {
+    public static TypeConverter<String, LocalDate> newConverter(String format) {
+        return new StringToJavaLocalDateConverter(format);
+    }
+
+    public static TypeConverter<String, LocalDate> newConverter() {
+        return new StringToJavaLocalDateConverter();
+    }
+
+    StringToJavaLocalDateConverter() {
         this("yyyy-MM-dd");
     }
 
-    public StringToJavaLocalDateConverter(String pattern) {
+    StringToJavaLocalDateConverter(String pattern) {
         this(DateTimeFormat.forPattern(pattern).withLocale(Locale.ENGLISH));
     }
 
-    public StringToJavaLocalDateConverter(DateTimeFormatter dateTimeFormatter) {
+    StringToJavaLocalDateConverter(DateTimeFormatter dateTimeFormatter) {
         formatter = dateTimeFormatter;
     }
 
@@ -31,4 +39,6 @@ public class StringToJavaLocalDateConverter extends FromStringTypeConverter<Loca
     public Class<LocalDate> getTargetClass() {
         return LocalDate.class;
     }
+
+
 }

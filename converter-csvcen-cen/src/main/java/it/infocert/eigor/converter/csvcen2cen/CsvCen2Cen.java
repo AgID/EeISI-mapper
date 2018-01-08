@@ -7,6 +7,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -18,7 +19,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,28 +37,27 @@ public class CsvCen2Cen implements ToCenConversion {
     private final InvoiceUtils utils;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion<>(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("dd-MMM-yy"),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion<>(Untdid1001InvoiceTypeCode.class),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion<>(Iso4217CurrenciesFundsCodes.class),
-            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion<>(Untdid5305DutyTaxFeeCategories.class),
-            new StringToUnitOfMeasureConverter(),
-            new StringToDoublePercentageConverter(),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
-            new StringToIdentifierConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
+            StringToUnitOfMeasureConverter.newConverter(),
+            StringToDoublePercentageConverter.newConverter(),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter()
     );
 
     private Logger log = LoggerFactory.getLogger(CsvCen2Cen.class);
 
 
-    public CsvCen2Cen(Reflections reflections) {
+    public CsvCen2Cen(IReflections reflections) {
         cenStructure = new CenStructure();
         utils = new InvoiceUtils(reflections);
     }
@@ -67,7 +67,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
         List<IConversionIssue> errors = new ArrayList<>();
 
-        Iterable<CSVRecord> cenRecordsFromCsv;
+        Iterable<CSVRecord> cenRecordsFromCsv = null;
 
         // try to parse the CEN CSV file.
         try {
@@ -91,7 +91,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
             bgbtIdFromCsv = cenRecord.get("BG/BT");
             bgbtValueFromCsv = cenRecord.get("Value");
-            log.debug("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
+            log.trace("Current item from CSV: {} | {}", bgbtIdFromCsv, bgbtValueFromCsv);
 
 
             // verifies that the name of the bgbt read from csv is a well formed name and that it is actually
@@ -119,7 +119,6 @@ public class CsvCen2Cen implements ToCenConversion {
                     // BGs can be instantiated.
                     btbg = btBgClass.newInstance();
 
-
                     // now, keep in mind that bg cannot have a value!
                     if (bgbtValueFromCsv != null && !bgbtValueFromCsv.trim().isEmpty()) {
                         throw new SyntaxErrorInInvoiceFormatException(btbg.denomination() + " cannot have a value, has '" + bgbtValueFromCsv + "' instead.");
@@ -142,35 +141,29 @@ public class CsvCen2Cen implements ToCenConversion {
 
                     // tries to convert the String value read from the file in the type expected by the constructor
                     Class<?> constructorParamType = constructor.getParameterTypes()[0];
-                    Object convert;
+                    Object convert = null;
                     try {
                         convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);
-                        log.info("{} - Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
-                                String.valueOf(bgbtIdFromCsv),
+                        log.trace("Value from CSV: '{}' has been converted to argument of type '{}' with value '{}'.",
                                 String.valueOf(bgbtValueFromCsv),
                                 convert != null ? convert.getClass().getName() : "<null>",
                                 String.valueOf(convert));
                         // instantiate the BT
                         btbg = (BTBG) constructor.newInstance(convert);
                     } catch (IllegalArgumentException e) {
-                        final SyntaxErrorInInvoiceFormatException ex = new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
-                                cenRecord.getRecordNumber(),
-                                bgbtIdFromCsv,
-                                bgbtValueFromCsv,
-                                constructorParamType.getSimpleName()
-                        ));
-                        if ("BT-49".equals(bgbtIdFromCsv)) throw e;
-                        /*log.error(ex.getMessage(), e);
-                        log.trace(e.getMessage(), e);
                         errors.add(ConversionIssue.newWarning(
-                                ex));*/
+                                new SyntaxErrorInInvoiceFormatException(String.format("Record #%d contains the item %s = '%s' that should be converted according to the CEN module to a '%s' but such transformation is unknown.",
+                                        cenRecord.getRecordNumber(),
+                                        bgbtIdFromCsv,
+                                        bgbtValueFromCsv,
+                                        constructorParamType.getSimpleName()
+                                ))));
                     }
 
                 }
                 log.trace("Successfully instantiated: '{}'.", btbg);
 
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                log.error(e.getMessage(), e);
                 throw new RuntimeException(e);
             }
             if (btbg == null) {
@@ -228,7 +221,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
         // the topmost element in the stack is always the invoice.
 
-        return new ConversionResult<>(errors, (BG0000Invoice) stack.get(0));
+        return new ConversionResult<BG0000Invoice>(errors, (BG0000Invoice) stack.get(0));
     }
 
     @Override

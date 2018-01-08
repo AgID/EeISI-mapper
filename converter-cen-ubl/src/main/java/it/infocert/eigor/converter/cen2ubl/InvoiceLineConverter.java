@@ -1,7 +1,9 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -19,8 +21,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List errors) {
-        DoubleToStringConverter dblStrConverter = new DoubleToStringConverter("#0.00");
-        DoubleToStringConverter dblStrConverter8Decimals = new DoubleToStringConverter("#0.00000000");
+        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("#0.00");
+        TypeConverter<Double, String> dblStrConverter8Decimals = DoubleToStringConverter.newConverter("#0.00000000");
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -68,7 +70,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
 
                         Element invoicedQuantity = new Element("InvoicedQuantity");
-                        invoicedQuantity.setText(dblStrConverter8Decimals.convert(quantity));
+                        try {
+                            invoicedQuantity.setText(dblStrConverter8Decimals.convert(quantity));
+                        } catch (ConversionFailedException e) {
+                            errors.add(e);
+                        }
 
                         if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
                             BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);
@@ -84,7 +90,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     if (!elemBg25.getBT0131InvoiceLineNetAmount().isEmpty()) {
                         BT0131InvoiceLineNetAmount bt0131 = elemBg25.getBT0131InvoiceLineNetAmount(0);
                         Element lineExtensionAmount = new Element("LineExtensionAmount");
-                        lineExtensionAmount.setText(dblStrConverter.convert(bt0131.getValue()));
+                        try {
+                            lineExtensionAmount.setText(dblStrConverter.convert(bt0131.getValue()));
+                        } catch (ConversionFailedException e) {
+                            errors.add(e);
+                        }
                         if (currencyCode != null) {
                             lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                         }
@@ -123,8 +133,12 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
                                         BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
                                         Element percent = new Element("Percent");
-                                        percent.setText(dblStrConverter.convert(bt0152.getValue()));
-                                        classifiedTaxCategory.addContent(percent);
+                                        try {
+                                            percent.setText(dblStrConverter.convert(bt0152.getValue()));
+                                            classifiedTaxCategory.addContent(percent);
+                                        } catch (ConversionFailedException e) {
+                                            errors.add(e);
+                                        }
                                     }
                                     Element taxScheme = new Element("TaxScheme");
                                     Element id = new Element("ID");
@@ -167,7 +181,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (!elemBg29.getBT0146ItemNetPrice().isEmpty()) {
                                 BT0146ItemNetPrice bt0146 = elemBg29.getBT0146ItemNetPrice(0);
                                 Element priceAmount = new Element("PriceAmount");
-                                priceAmount.setText(dblStrConverter.convert(bt0146.getValue()));
+                                try {
+                                    priceAmount.setText(dblStrConverter.convert(bt0146.getValue()));
+                                } catch (ConversionFailedException e) {
+                                    errors.add(e);
+                                }
                                 if (currencyCode != null) {
                                     priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                                 }
@@ -176,7 +194,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (!elemBg29.getBT0149ItemPriceBaseQuantity().isEmpty()) {
                                 BT0149ItemPriceBaseQuantity bt0149 = elemBg29.getBT0149ItemPriceBaseQuantity(0);
                                 Element baseQuantity = new Element("BaseQuantity");
-                                baseQuantity.setText(dblStrConverter.convert(bt0149.getValue()));
+                                try {
+                                    baseQuantity.setText(dblStrConverter.convert(bt0149.getValue()));
+                                } catch (ConversionFailedException e) {
+                                    errors.add(e);
+                                }
 
                                 if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
                                     BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);

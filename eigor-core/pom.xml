@@ -31,10 +31,7 @@
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -58,6 +55,10 @@
         <dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
         </dependency>
 
 
@@ -116,7 +117,7 @@
                         <includeOnlyProperty>^git.commit.time$</includeOnlyProperty>
                         <includeOnlyProperty>^git.dirty$</includeOnlyProperty>
                     </includeOnlyProperties>
-                    <useNativeGit>true</useNativeGit>
+                    <useNativeGit>false</useNativeGit>
                 </configuration>
             </plugin>
             <plugin>

@@ -7,9 +7,10 @@ import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
-import it.infocert.eigor.api.impl.ReflectionBasedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.api.utils.EigorVersion;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
@@ -17,10 +18,10 @@ import it.infocert.eigor.converter.csvcen2cen.CsvCen2Cen;
 import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
+import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 
 public class Eigor {
@@ -49,13 +51,17 @@ public class Eigor {
     }
 
     @Bean
-    Object reflections() {
-        return new Reflections("it.infocert");
+    IReflections reflections() {
+        return new JavaReflections();
     }
 
     @Bean
-    RuleRepository ruleRepository(Reflections reflections) {
-        return new ReflectionBasedRepository(reflections);
+    RuleRepository ruleRepository(IReflections reflections) {
+        return new RuleRepository() {
+            @Override public List<Rule> rules() {
+                throw new IllegalArgumentException("Not implemeted yet.");
+            }
+        };
     }
 
     @Bean
@@ -90,7 +96,7 @@ public class Eigor {
     }
 
     @Bean(initMethod = "configure")
-    ToCenConversionRepository toCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
+    ToCenConversionRepository toCenConversionRepository(IReflections reflections, EigorConfiguration configuration) {
         return new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
                 new UblCn2Cen(reflections, configuration),
@@ -101,7 +107,7 @@ public class Eigor {
     }
 
     @Bean(initMethod = "configure")
-    FromCenConversionRepository fromCenConversionRepository(Reflections reflections, EigorConfiguration configuration) {
+    FromCenConversionRepository fromCenConversionRepository(IReflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
                 new Cen2FattPA(reflections, configuration),
                 new Cen2Ubl(reflections, configuration)

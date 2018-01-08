@@ -5,7 +5,7 @@ import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCo
 
 public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverter extends FilteringEnumConversion<String, Untdid5189ChargeAllowanceDescriptionCodes> {
 
-    public StringToUntdid5189ChargeAllowanceDescriptionCodesConverter() {
+    StringToUntdid5189ChargeAllowanceDescriptionCodesConverter() {
         super(Untdid5189ChargeAllowanceDescriptionCodes.class);
     }
 
@@ -35,4 +35,7 @@ public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverter extends 
         };
     }
 
+    public static TypeConverter<String, Untdid5189ChargeAllowanceDescriptionCodes> newConverter() {
+        return new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter();
+    }
 }

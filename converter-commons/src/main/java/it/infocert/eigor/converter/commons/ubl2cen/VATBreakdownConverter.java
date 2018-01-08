@@ -1,7 +1,9 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
@@ -20,7 +22,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        StringToDoubleConverter strDblConverter = new StringToDoubleConverter();
+        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0023VatBreakdown bg0023 = null;
 
@@ -43,7 +45,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     try {
                         BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(taxableAmount.getText()));
                         bg0023.getBT0116VatCategoryTaxableAmount().add(bt0116);
-                    }catch (NumberFormatException e) {
+                    }catch (NumberFormatException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -54,7 +56,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     try {
                         BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(strDblConverter.convert(taxAmount.getText()));
                         bg0023.getBT0117VatCategoryTaxAmount().add(bt0117);
-                    }catch (NumberFormatException e) {
+                    }catch (NumberFormatException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -78,7 +80,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         try {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(percent.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
-                        }catch (NumberFormatException e) {
+                        }catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
                             errors.add(ConversionIssue.newError(ere));
                         }
