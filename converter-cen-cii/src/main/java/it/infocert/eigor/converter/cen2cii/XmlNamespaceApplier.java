@@ -3,59 +3,54 @@ package it.infocert.eigor.converter.cen2cii;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.jdom2.Parent;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class XmlNamespaceApplier {
 
-    private final String RAM = "ram";
-    private final String RSN = "rsm";
-    private final String RAM_VALUE;
-    private final String RSM_VALUE;
+    // we assume root element contains URI definitions for all namespaces used
+    private Map<String, String> nsPrefixMap;
 
-    public XmlNamespaceApplier(final String ramValue, String rsmValue) {
-        RAM_VALUE = ramValue;
-        RSM_VALUE = rsmValue;
+    public XmlNamespaceApplier() {
+        this.nsPrefixMap = new HashMap<>();
+        nsPrefixMap.put("ID", "ram");
+        nsPrefixMap.put("TypeCode", "ram");
+        nsPrefixMap.put("GuidelineSpecifiedDocumentContextParameter", "ram");
+        nsPrefixMap.put("BusinessProcessSpecifiedDocumentContextParameter", "ram");
+        nsPrefixMap.put("SpecifiedTradeSettlementHeaderMonetarySummation", "ram");
+        nsPrefixMap.put("ApplicableHeaderTradeSettlement", "ram");
+        nsPrefixMap.put("SpecifiedTradeSettlementPaymentMeans", "ram");
+        nsPrefixMap.put("ExchangedDocument", "rsm");
+        nsPrefixMap.put("ExchangedDocumentContext", "rsm");
+        nsPrefixMap.put("SupplyChainTradeTransaction", "rsm");
     }
-
-    public Element apply(final Element element, final String prefix, final String value) {
-        final Element cloned = element.clone();
-
-        preserveParent(element, cloned);
-
-        cloned.setNamespace(Namespace.getNamespace(prefix, value));
-        return cloned;
-    }
-
-    private void preserveParent(Element element, Element cloned) {
-        if (element.getParent() != null) {
-            Parent parent = element.getParent();
-            parent.addContent(cloned);
-            parent.removeContent(element);
-        }
-    }
-
-    public void applyBySideEffect(Element element, final String prefix, final String value) {
-        element.setNamespace(Namespace.getNamespace(prefix, value));
-    }
-
 
     public void applyCiiNamespaces(Document doc) {
         Element rootElement = doc.getRootElement();
-
         for (Element element : rootElement.getChildren()) {
-            applyCiiRecursively(element);
+            applyCiiRecursively(element, rootElement);
         }
 
     }
 
-    private void applyCiiRecursively(Element element) {
+    private void applyNamespace(Element element, Element rootElement) {
+        final String elementName = element.getName();
+        if (nsPrefixMap.containsKey(elementName)) {
+            String prefix = nsPrefixMap.get(elementName);
+            element.setNamespace(rootElement.getNamespace(prefix));
+        }
+    }
+
+    private void applyCiiRecursively(Element element, Element rootElement) {
         if (!element.getChildren().isEmpty()) {
-            applyBySideEffect(element, RSN, RSM_VALUE);
+            applyNamespace(element, rootElement);
             for (Element child : element.getChildren()) {
-                applyCiiRecursively(child);
+                applyCiiRecursively(child, rootElement);
             }
         } else {
-            applyBySideEffect(element, RAM, RAM_VALUE);
+            applyNamespace(element, rootElement);
         }
     }
 }

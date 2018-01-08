@@ -98,7 +98,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
 
-        new XmlNamespaceApplier(RAM_URI, RSM_URI).applyCiiNamespaces(document); //check if needed here
+        new XmlNamespaceApplier().applyCiiNamespaces(document);
         new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
@@ -185,7 +185,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         root.addNamespaceDeclaration(Namespace.getNamespace("ram", RAM_URI));
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
-        root.setNamespace(Namespace.getNamespace("urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"));
+        root.setNamespace(Namespace.getNamespace("rsm", RSM_URI));
         doc.setRootElement(root);
     }
 }
