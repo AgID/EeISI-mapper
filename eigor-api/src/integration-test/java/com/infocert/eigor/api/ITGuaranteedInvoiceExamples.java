@@ -13,6 +13,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,16 +33,16 @@ public class ITGuaranteedInvoiceExamples {
     public void setUp() throws Exception {
 
         final ClassLoader classLoader = this.getClass().getClassLoader();
-        final URL resource = classLoader.getResource("working-examples");
+        final URL resource = classLoader.getResource("working-examples" );
         assert resource != null;
 
         final File examplesDirectory = new File(resource.getFile());
         if (examplesDirectory.isDirectory()) {
-            final File[] files = Preconditions.checkNotNull(examplesDirectory.listFiles(), "No files found in resources/working-examples");
+            final File[] files = Preconditions.checkNotNull(examplesDirectory.listFiles(), "No files found in resources/working-examples" );
             this.testInvoices = Stream.of(files).filter(new Filter<File>() {
                 @Override
                 public boolean apply(File file) {
-                    return file.getName().endsWith(".xml");
+                    return file.getName().endsWith(".xml" );
                 }
             }).toList();
 
@@ -63,13 +64,13 @@ public class ITGuaranteedInvoiceExamples {
         Stream.of(testInvoices).filter(new Filter<File>() {
             @Override
             public boolean apply(File file) {
-                return file.getName().startsWith("fattpa");
+                return file.getName().startsWith("fattpa" );
             }
         }).forEach(new Consumer<File>() {
             @Override
             public void consume(File invoice) {
                 try {
-                    final ConversionResult<byte[]> result = api.convert("fatturapa", "ubl", new FileInputStream(invoice));
+                    final ConversionResult<byte[]> result = api.convert("fatturapa" , "ubl" , new FileInputStream(invoice));
                     assertFalse(result.hasIssues());
                     assertTrue(result.isSuccessful());
                     assertTrue(result.hasResult());
@@ -87,13 +88,13 @@ public class ITGuaranteedInvoiceExamples {
         Stream.of(testInvoices).filter(new Filter<File>() {
             @Override
             public boolean apply(File file) {
-                return file.getName().startsWith("ubl");
+                return file.getName().startsWith("ubl" );
             }
         }).forEach(new Consumer<File>() {
             @Override
             public void consume(File invoice) {
                 try {
-                    final ConversionResult<byte[]> result = api.convert("ubl", "fatturapa", new FileInputStream(invoice));
+                    final ConversionResult<byte[]> result = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
                     assertFalse(result.hasIssues());
                     assertTrue(result.isSuccessful());
                     assertTrue(result.hasResult());
@@ -115,16 +116,18 @@ public class ITGuaranteedInvoiceExamples {
             @Override
             public void consume(File invoice) {
                 try {
-                    final ConversionResult<byte[]> result = api.convert("ubl", "fatturapa", new FileInputStream(invoice));
+                    final ConversionResult<byte[]> _ = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
                     File[] tempFiles = tmp.getRoot().listFiles();
                     tempFiles = tempFiles != null ? tempFiles : new File[]{};
                     final File invoiceCen = findInvoiceCen(tempFiles, null);
                     assertNotNull(invoiceCen);
                     final FileInputStream cenIs = new FileInputStream(invoiceCen);
+                    System.out.println(getFileContent(invoiceCen, StandardCharsets.UTF_8.toString()));
+                    final ConversionResult<byte[]> result = api.convert("csvcen" , "fatturapa" , cenIs);
 
-                    final ConversionResult<byte[]> results = api.convert("csvcen", "fatturapa", cenIs);
-
-                    File[] tempFiles2 = tmp.getRoot().listFiles();
+                    assertTrue(result.isSuccessful());
+                    assertFalse(result.hasIssues());
+                    /*File[] tempFiles2 = tmp.getRoot().listFiles();
                     tempFiles2 = tempFiles2 != null ? tempFiles2 : new File[]{};
                     final ArrayList<File> files = Lists.newArrayList();
                     navigate(tempFiles2, files);
@@ -148,12 +151,15 @@ public class ITGuaranteedInvoiceExamples {
                                 final String sourceContent = getFileContent(new FileInputStream(source), "UTF-8");
                                 final boolean equals = Objects.equals(cenContent, sourceContent);
                                 final boolean parentEquals = Objects.equals(cen.getParent(), source.getParent());
-                                System.out.println(cen.getParent());
-                                System.out.println(source.getParent());
+//                                System.out.println(cen.getParent());
+//                                System.out.println(source.getParent());
                                 if (equals) {
+                                    final String sep = "=============================================";
+                                    System.out.println(sep);
                                     System.out.println(parentEquals);
                                     System.out.println(cen.getAbsolutePath());
                                     System.out.println(cenContent);
+                                    System.out.println(sep);
                                     System.out.println(source.getAbsolutePath());
                                     System.out.println(sourceContent);
                                 }
@@ -161,9 +167,11 @@ public class ITGuaranteedInvoiceExamples {
                                 e.printStackTrace();
                             }
                         }
-                    }
+                    }*/
                 } catch (FileNotFoundException e) {
                     fail();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -171,19 +179,19 @@ public class ITGuaranteedInvoiceExamples {
     }
 
     public static String getFileContent(
-            FileInputStream fis,
-            String          encoding ) throws IOException
-    {
-        try( BufferedReader br =
-                     new BufferedReader( new InputStreamReader(fis, encoding )))
-        {
+            File file,
+            String encoding) throws IOException {
+        final FileInputStream fis = new FileInputStream(file);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(fis, encoding))) {
             StringBuilder sb = new StringBuilder();
             String line;
-            while(( line = br.readLine()) != null ) {
-                sb.append( line );
-                sb.append( '\n' );
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append('\n');
             }
             return sb.toString();
+        } finally {
+            fis.close();
         }
     }
 
@@ -194,7 +202,7 @@ public class ITGuaranteedInvoiceExamples {
                 findInvoiceCen(tempFile.listFiles(), _t);
             } else {
                 final String name = tempFile.getName();
-                if (name.contains("invoice-cen")) {
+                if (name.contains("invoice-cen" )) {
                     _t.add(tempFile);
                 }
             }
@@ -209,7 +217,7 @@ public class ITGuaranteedInvoiceExamples {
                 navigate(tempFile.listFiles(), found);
             } else {
                 final String name = tempFile.getName();
-                if (name.contains("invoice-cen") || name.contains("invoice-source")) {
+                if (name.contains("invoice-cen" ) || name.contains("invoice-source" )) {
                     found.add(tempFile);
                 }
             }

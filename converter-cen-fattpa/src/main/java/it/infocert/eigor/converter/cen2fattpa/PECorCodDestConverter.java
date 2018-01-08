@@ -26,6 +26,10 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
             BG0007Buyer buyer = cenInvoice.getBG0007Buyer(0);
             if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
                 DatiTrasmissioneType datiTrasmissione = fatturaElettronicaType.getFatturaElettronicaHeader().getDatiTrasmissione();
+                if (datiTrasmissione == null) {
+                    datiTrasmissione = new DatiTrasmissioneType();
+                    fatturaElettronicaType.getFatturaElettronicaHeader().setDatiTrasmissione(datiTrasmissione);
+                }
                 BT0049BuyerElectronicAddressAndSchemeIdentifier address = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
                 if (address.getValue().getIdentificationSchema() != null) {
                     String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
@@ -50,7 +54,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 break;
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
-                        .message(String.format("BT-49 SchemeID is not a valid value. Shoudl be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
+                        .message(String.format("BT-49 SchemeID is not a valid value. Should be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
                         .action("PECorCodDestConversion")
                         .build())));
         }
