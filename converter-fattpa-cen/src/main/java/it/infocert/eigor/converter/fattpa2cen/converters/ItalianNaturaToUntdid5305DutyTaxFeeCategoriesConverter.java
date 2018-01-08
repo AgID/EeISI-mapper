@@ -1,12 +1,14 @@
 package it.infocert.eigor.converter.fattpa2cen.converters;
 
 import it.infocert.eigor.api.conversion.FromStringTypeConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.converter.fattpa2cen.models.NaturaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 
 public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends FromStringTypeConverter<Untdid5305DutyTaxFeeCategories>{
 
-
+    private ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter() {
+    }
 
     @Override
     public Untdid5305DutyTaxFeeCategories convert(String natura) {
@@ -38,5 +40,9 @@ public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends From
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public static TypeConverter<String, Untdid5305DutyTaxFeeCategories> newConverter() {
+        return new ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter();
     }
 }

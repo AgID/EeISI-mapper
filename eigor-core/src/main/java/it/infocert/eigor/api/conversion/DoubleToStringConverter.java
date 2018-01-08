@@ -7,7 +7,11 @@ public class DoubleToStringConverter extends ToStringTypeConverter<Double>{
 
     private final String formatPattern;
 
-    public DoubleToStringConverter(String formatPattern) {
+    public static TypeConverter<Double, String> newConverter(String formatPattern){
+        return new DoubleToStringConverter(formatPattern);
+    }
+
+    DoubleToStringConverter(String formatPattern) {
         this.formatPattern = formatPattern;
     }
 

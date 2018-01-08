@@ -27,4 +27,8 @@ public class ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter impl
     public Class<Untdid2005DateTimePeriodQualifiers> getTargetClass() {
         return Untdid2005DateTimePeriodQualifiers.class;
     }
+
+    public static TypeConverter<String, Untdid2005DateTimePeriodQualifiers> newConverter() {
+        return new ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter();
+    }
 }

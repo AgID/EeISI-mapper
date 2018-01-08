@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.conversion;
 
+
+
 /**
  * Generic service that converts a value in another format.
  * I.e. it can convert a {@link java.util.Date} in a {@link String}, a {@link String} in a {@link Number} and so on.
@@ -17,7 +19,7 @@ package it.infocert.eigor.api.conversion;
  */
 public interface TypeConverter<Source, Target> {
 
-    Target convert(Source source);
+    Target convert(Source source) throws ConversionFailedException;
 
     Class<Target> getTargetClass();
 

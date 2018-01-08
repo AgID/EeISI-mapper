@@ -1,14 +1,12 @@
 package it.infocert.eigor.api.mapping.fromCen;
 
-
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.reflections.Reflections;
 
-import javax.annotation.Nonnull;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -21,7 +19,7 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
     private final Pattern patternBgbt;
     private final InvoiceUtils invoiceUtils;
 
-    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, Reflections reflections) {
+    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, IReflections reflections) {
         patternXml = Pattern.compile(keyRegexXml);
         patternBgbt = Pattern.compile(keyRegexBgbt);
         invoiceUtils = new InvoiceUtils(reflections);

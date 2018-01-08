@@ -10,14 +10,14 @@ public class CountryNameToIso31661CountryCodeConverterTest {
 
     CountryNameToIso31661CountryCodeConverter sut = new CountryNameToIso31661CountryCodeConverter();
 
-    @Test public void convertCountryNamesToIso() {
+    @Test public void convertCountryNamesToIso() throws ConversionFailedException {
 
         Iso31661CountryCodes denmark = sut.convert("Denmark");
 
         assertThat( denmark, is(Iso31661CountryCodes.DK) );
     }
     
-    @Test(expected = IllegalArgumentException.class) public void shouldThrowExceptionIfConversionIsNotPossible() {
+    @Test(expected = ConversionFailedException.class) public void shouldThrowExceptionIfConversionIsNotPossible() throws ConversionFailedException {
 
         // given
         CountryNameToIso31661CountryCodeConverter sut = new CountryNameToIso31661CountryCodeConverter();

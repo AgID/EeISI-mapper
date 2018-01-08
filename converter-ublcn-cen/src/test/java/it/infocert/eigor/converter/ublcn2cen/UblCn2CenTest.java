@@ -3,9 +3,10 @@ package it.infocert.eigor.converter.ublcn2cen;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ public class UblCn2CenTest {
 				.addProperty("eigor.converter.ublcn-cen.mapping.custom", "converterdata/converter-ublcn-cen/mappings/custom.conf")
 				.addProperty("eigor.converter.ublcn-cen.cius", "converterdata/converter-ublcn-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
 				;
-		sut = new UblCn2Cen(new Reflections("it.infocert"), conf);
+		sut = new UblCn2Cen(new JavaReflections(), conf);
 		sut.configure();
 	}
 

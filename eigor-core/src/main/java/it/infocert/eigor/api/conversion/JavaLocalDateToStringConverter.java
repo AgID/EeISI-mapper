@@ -6,11 +6,19 @@ public class JavaLocalDateToStringConverter extends ToStringTypeConverter<LocalD
 
     private final String pattern;
 
-    public JavaLocalDateToStringConverter() {
+    public static TypeConverter<LocalDate, String> newConverter(){
+        return new JavaLocalDateToStringConverter();
+    }
+
+    public static TypeConverter<LocalDate, String> newConverter(String pattern){
+        return new JavaLocalDateToStringConverter(pattern);
+    }
+
+    JavaLocalDateToStringConverter() {
         pattern = "yyyy-MM-dd";
     }
 
-    public JavaLocalDateToStringConverter(String pattern) {
+    JavaLocalDateToStringConverter(String pattern) {
         this.pattern = pattern;
     }
 

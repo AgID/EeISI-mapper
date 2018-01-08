@@ -2,6 +2,9 @@ package it.infocert.eigor.api.conversion;
 
 public class StringToDoubleConverter extends FromStringTypeConverter<Double> {
 
+    StringToDoubleConverter() {
+    }
+
     @Override public Double convert(String in) {
         return Double.parseDouble(in);
     }
@@ -11,5 +14,7 @@ public class StringToDoubleConverter extends FromStringTypeConverter<Double> {
         return Double.class;
     }
 
-
+    public static TypeConverter<String, Double> newConverter() {
+        return new StringToDoubleConverter();
+    }
 }
