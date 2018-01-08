@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.*;
@@ -41,9 +42,9 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
         		}
         		if (issueDate != null) {
         			try{
-        				BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyy-MM-dd").convert(issueDate.getText()));
+        				BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(StringToJavaLocalDateConverter.newConverter ("yyyy-MM-dd").convert(issueDate.getText()));
         				bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
-					}catch (IllegalArgumentException e) {
+					}catch (IllegalArgumentException | ConversionFailedException e) {
 						EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
 						errors.add(ConversionIssue.newError(ere));
 					}

@@ -48,15 +48,6 @@ public class ITUblCn2CenTest {
         sut.configure();
     }
 
-
-    //fixme make plain credit note
-//    @Test
-//    public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
-//        InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/ubl-plain.xml");
-//        ConversionResult<BG0000Invoice> conversionResult = sut.convert(sourceInvoiceStream);
-//        assertNotNull(conversionResult.getResult());
-//    }
-
     @Test
     public void shouldConvertToCenInvoice() throws Exception {
         InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/ubl/UBL-CreditNote-2.1-Example.xml");

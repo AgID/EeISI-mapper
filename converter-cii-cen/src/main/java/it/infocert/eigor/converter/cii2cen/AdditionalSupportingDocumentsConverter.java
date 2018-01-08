@@ -3,8 +3,10 @@ package it.infocert.eigor.converter.cii2cen;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
-import it.infocert.eigor.api.conversion.Base64StringToBinaryConverter;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -19,12 +21,12 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
     public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BG0024AdditionalSupportingDocuments bg0024 = null;
+        BG0024AdditionalSupportingDocuments bg0024;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> additionalReferencedDocuments = null;
+        List<Element> additionalReferencedDocuments;
         Element child = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
 
         if (child != null) {
@@ -53,11 +55,11 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
                     }
                     if (attachmentBinaryObject != null) {
-                        AttachmentToFileReferenceConverter attToFileConverter = new AttachmentToFileReferenceConverter(DefaultEigorConfigurationLoader.configuration());
+                        TypeConverter<Element, FileReference> attToFileConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration());
                         try {
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(attToFileConverter.convert(attachmentBinaryObject));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                        }catch (IllegalArgumentException e) {
+                        }catch (IllegalArgumentException | ConversionFailedException e) {
                             errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build())));
                         }
                     }

@@ -5,7 +5,7 @@ import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 
 public class StringToUntdid4461PaymentMeansCode extends FilteringEnumConversion<String,Untdid4461PaymentMeansCode> {
 
-    public StringToUntdid4461PaymentMeansCode() {
+    StringToUntdid4461PaymentMeansCode() {
         super(Untdid4461PaymentMeansCode.class);
     }
 
@@ -23,5 +23,9 @@ public class StringToUntdid4461PaymentMeansCode extends FilteringEnumConversion<
     @Override
     public Class<String> getSourceClass() {
         return String.class;
+    }
+
+    public static TypeConverter<String, Untdid4461PaymentMeansCode> newConverter() {
+        return new StringToUntdid4461PaymentMeansCode();
     }
 }

@@ -2,8 +2,6 @@ package it.infocert.eigor.api;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.Multimaps;
 import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
@@ -13,6 +11,7 @@ import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
 import it.infocert.eigor.api.mapping.InputInvoiceXpathMap;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -20,7 +19,6 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +30,7 @@ import java.util.*;
 public abstract class AbstractToCenConverter implements ToCenConversion {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractToCenConverter.class);
-    private Reflections reflections;
+    private IReflections reflections;
     private final ConversionRegistry conversionRegistry;
     protected final EigorConfiguration configuration;
     protected final DefaultResourceLoader drl;
@@ -48,7 +46,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings = Lists.newArrayList();
 
-    public AbstractToCenConverter(Reflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;

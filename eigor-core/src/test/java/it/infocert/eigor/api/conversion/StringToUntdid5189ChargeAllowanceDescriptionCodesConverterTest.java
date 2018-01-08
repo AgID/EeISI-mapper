@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverterTest {
 
     @Test
-    public void shouldConvertCodeIntoEnum() {
+    public void shouldConvertCodeIntoEnum() throws ConversionFailedException {
 
         StringToUntdid5189ChargeAllowanceDescriptionCodesConverter sut = new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter();
         Untdid5189ChargeAllowanceDescriptionCodes converted = sut.convert("45");

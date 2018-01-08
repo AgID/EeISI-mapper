@@ -9,6 +9,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
 
 public class LocalDateToXMLGregorianCalendarConverter implements TypeConverter<LocalDate, XMLGregorianCalendar> {
+
+    public static TypeConverter<LocalDate, XMLGregorianCalendar> newConverter(){
+        return new LocalDateToXMLGregorianCalendarConverter();
+    }
+
+    LocalDateToXMLGregorianCalendarConverter() {
+    }
+
     @Override
     public XMLGregorianCalendar convert(LocalDate localDate) {
         GregorianCalendar gcal = new GregorianCalendar(

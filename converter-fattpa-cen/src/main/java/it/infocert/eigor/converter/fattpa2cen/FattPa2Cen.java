@@ -8,15 +8,18 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.converter.fattpa2cen.converters.*;
-import it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid4461PaymentMeansCode;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,17 +42,17 @@ public class FattPa2Cen extends AbstractToCenConverter {
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter(),
-            new ItalianCodeStringToUntdid4461PaymentMeansCode(),
-            new ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter(),
-            new StringToIdentifierConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            ItalianCodeStringToUntdid4461PaymentMeansCode.newConverter(),
+            ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter.newConverter(),
+            StringToIdentifierConverter.newConverter()
     );
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one";
@@ -59,7 +62,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     private XSDValidator xsdValidator;
 
-    public FattPa2Cen(Reflections reflections, EigorConfiguration configuration) {
+    public FattPa2Cen(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration);
         this.configuration = checkNotNull(configuration);
     }

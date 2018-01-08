@@ -5,7 +5,11 @@ import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 
 public class StringToUntdid5305DutyTaxFeeCategoriesConverter extends FilteringEnumConversion<String, Untdid5305DutyTaxFeeCategories> {
 
-    public StringToUntdid5305DutyTaxFeeCategoriesConverter(){
+    public static TypeConverter<String, Untdid5305DutyTaxFeeCategories> newConverter() {
+        return new StringToUntdid5305DutyTaxFeeCategoriesConverter();
+    }
+
+    StringToUntdid5305DutyTaxFeeCategoriesConverter(){
         super(Untdid5305DutyTaxFeeCategories.class);
     }
 

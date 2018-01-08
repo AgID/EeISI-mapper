@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.ToStringTypeConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 
 
@@ -24,5 +25,12 @@ public class Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter extends 
     @Override
     public Class<Untdid5305DutyTaxFeeCategories> getSourceClass() {
         return Untdid5305DutyTaxFeeCategories.class;
+    }
+
+    Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter() {
+    }
+
+    public static TypeConverter<Untdid5305DutyTaxFeeCategories,String> newConverter() {
+        return new Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter();
     }
 }

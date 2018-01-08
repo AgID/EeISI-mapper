@@ -6,4 +6,15 @@ public abstract class ToStringTypeConverter<T> implements TypeConverter<T, Strin
         return String.class;
     }
 
+    /**
+     * Utility method that throws a proper exception when the value to convert is null.
+     * To be used in case a converter does not want to manage null values.
+     */
+    protected void checkNotNull(Object valueToConvert) throws ConversionBetweenTypesFailedException {
+        if(valueToConvert == null) throw new ConversionBetweenTypesFailedException(
+                getSourceClass(),
+                String.class,
+                valueToConvert);
+    }
+
 }

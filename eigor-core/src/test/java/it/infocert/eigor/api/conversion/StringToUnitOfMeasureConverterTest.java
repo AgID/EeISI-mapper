@@ -5,11 +5,28 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class StringToUnitOfMeasureConverterTest {
 
-    @Test public void shouldFindByDescription() {
-        assertThat( new StringToUnitOfMeasureConverter().convert("Each"), is(UnitOfMeasureCodes.EACH_EA) );
+    TypeConverter<String, UnitOfMeasureCodes> sut = new StringToUnitOfMeasureConverter();
+
+    @Test public void shouldFindByDescription() throws ConversionFailedException {
+        assertThat(sut.convert("Each"),
+                is(UnitOfMeasureCodes.EACH_EA) );
+    }
+
+    @Test public void shouldThrowAnExceptionWhenUnitIsUnknown() {
+
+        try{
+            sut.convert("-DOES-NOT-EXIST-");
+            fail("Exception expected");
+        }catch(ConversionFailedException cfe){
+
+        }catch (Exception e){
+            fail("Wrong exception: " + e);
+        }
+
     }
 
 }

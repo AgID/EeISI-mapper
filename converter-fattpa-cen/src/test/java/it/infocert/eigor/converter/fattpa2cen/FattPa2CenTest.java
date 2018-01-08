@@ -3,7 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -12,17 +12,13 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class FattPa2CenTest {
@@ -34,7 +30,7 @@ public class FattPa2CenTest {
 
     @Before
     public void setUp() throws Exception {
-        sut = new FattPa2Cen(new Reflections("it.infocert"), mock(EigorConfiguration.class));
+        sut = new FattPa2Cen(new JavaReflections(), mock(EigorConfiguration.class));
         doc = setUpDocument();
         xml = convertXml();
     }

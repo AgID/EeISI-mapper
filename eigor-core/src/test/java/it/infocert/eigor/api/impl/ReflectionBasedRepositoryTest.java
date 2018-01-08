@@ -20,13 +20,13 @@ public class ReflectionBasedRepositoryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        reflections = new Reflections("it.infocert");
+        reflections = new Reflections("it.infocert.eigor.model.core.rules");
     }
 
     @Test public void shouldFindRules() {
 
         // given
-        ReflectionBasedRepository sut = new ReflectionBasedRepository(new Reflections("it.infocert.eigor.model"));
+        ReflectionBasedRepository sut = new ReflectionBasedRepository(reflections);
         final Class<? extends Rule> aRuleThatShouldBeFound = Br002AnInvoiceShallHaveAnInvoiceNumberRule.class;
 
         // when
