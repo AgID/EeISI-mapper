@@ -12,24 +12,32 @@ public enum Untdid4451InvoiceNoteSubjectCode {
     #end
 
     private boolean hasPlusSign;
-    private String shortDescritpion;
+    private String shortDescription;
     private String longDescription;
 
     Untdid4451InvoiceNoteSubjectCode(boolean hasPlusSign, String shortDescritpion, String longDescription) {
         this.hasPlusSign = hasPlusSign;
-        this.shortDescritpion = shortDescritpion;
+        this.shortDescription = shortDescritpion;
         this.longDescription = longDescription;
     }
 
     public String toDetailedString() {
-        return String.format("%s%s|%s|%s", (this.hasPlusSign ? "+":""), super.toString(), shortDescritpion, longDescription);
+        return String.format("%s%s|%s|%s", (this.hasPlusSign ? "+":""), super.toString(), shortDescription, longDescription);
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
     }
 
     @Override
     public String toString() {
         return "Untdid4451InvoiceNoteSubjectCode{" +
                 "hasPlusSign=" + hasPlusSign +
-                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| shortDescritpion='" + shortDescription + '\'' +
                 "| longDescription='" + longDescription + '\'' +
                 '}';
     }
