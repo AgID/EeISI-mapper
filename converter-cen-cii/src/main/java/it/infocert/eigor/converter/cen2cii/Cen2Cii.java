@@ -98,7 +98,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
 
-        new XmlNamespaceApplier().applyCiiNamespaces(document);
         new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
@@ -149,7 +148,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return "\\/CrossIndustryInvoice(\\/\\w+(\\[\\])*)*";
+        return "\\/rsm:CrossIndustryInvoice(\\/(\\w+\\:)?\\w+(\\[\\])*)*";
     }
 
     @Override
