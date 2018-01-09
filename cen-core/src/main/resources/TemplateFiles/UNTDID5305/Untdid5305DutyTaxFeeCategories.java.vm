@@ -27,7 +27,11 @@ public enum Untdid5305DutyTaxFeeCategories {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid5305DutyTaxFeeCategories{" +
+                "hasPlusSign=" + hasPlusSign +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
     }
 
     public boolean isHasPlusSign() {

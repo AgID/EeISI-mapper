@@ -27,6 +27,10 @@ public enum Untdid4451InvoiceNoteSubjectCode {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid4451InvoiceNoteSubjectCode{" +
+                "hasPlusSign=" + hasPlusSign +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
     }
 }

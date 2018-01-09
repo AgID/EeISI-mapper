@@ -122,56 +122,12 @@ public class ITGuaranteedInvoiceExamples {
                     final File invoiceCen = findInvoiceCen(tempFiles, null);
                     assertNotNull(invoiceCen);
                     final FileInputStream cenIs = new FileInputStream(invoiceCen);
-                    System.out.println(getFileContent(invoiceCen, StandardCharsets.UTF_8.toString()));
                     final ConversionResult<byte[]> result = api.convert("csvcen" , "fatturapa" , cenIs);
 
                     assertTrue(result.isSuccessful());
                     assertFalse(result.hasIssues());
-                    /*File[] tempFiles2 = tmp.getRoot().listFiles();
-                    tempFiles2 = tempFiles2 != null ? tempFiles2 : new File[]{};
-                    final ArrayList<File> files = Lists.newArrayList();
-                    navigate(tempFiles2, files);
-                    final List<File> invoiceCens = Stream.create(files).filter(new Filter<File>() {
-                        @Override
-                        public boolean apply(File file) {
-                            return file.getName().contains("invoice-cen");
-                        }
-                    }).toList();
-                    final List<File> sources = Stream.create(files).filter(new Filter<File>() {
-                        @Override
-                        public boolean apply(File file) {
-                            return file.getName().contains("invoice-source");
-                        }
-                    }).toList();
-
-                    for (File cen : invoiceCens) {
-                        for (File source : sources) {
-                            try {
-                                final String cenContent = getFileContent(new FileInputStream(cen), "UTF-8");
-                                final String sourceContent = getFileContent(new FileInputStream(source), "UTF-8");
-                                final boolean equals = Objects.equals(cenContent, sourceContent);
-                                final boolean parentEquals = Objects.equals(cen.getParent(), source.getParent());
-//                                System.out.println(cen.getParent());
-//                                System.out.println(source.getParent());
-                                if (equals) {
-                                    final String sep = "=============================================";
-                                    System.out.println(sep);
-                                    System.out.println(parentEquals);
-                                    System.out.println(cen.getAbsolutePath());
-                                    System.out.println(cenContent);
-                                    System.out.println(sep);
-                                    System.out.println(source.getAbsolutePath());
-                                    System.out.println(sourceContent);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }*/
                 } catch (FileNotFoundException e) {
                     fail();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
             }
