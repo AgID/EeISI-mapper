@@ -328,7 +328,12 @@ public abstract class GenericTransformer {
         if(nsPrefix!=null){
             Namespace namespace = rootElement.getNamespace(nsPrefix);
             if(namespace == null){
-                throw new EigorRuntimeException("Unable to find namespace declaration of prefix '" + nsPrefix +"' of tagname '" + tagname +"' in root element!");
+                StringBuilder availableNamespaces = new StringBuilder();
+                for(Namespace ns : rootElement.getNamespacesIntroduced()){
+                    availableNamespaces.append(ns.getPrefix()).append(" ");
+                }
+                throw new EigorRuntimeException("Unable to find namespace declaration of prefix '" + nsPrefix +"' of tagname '" + tagname +"' in root element!\n" +
+                "Available namespace prefixes are: " + availableNamespaces);
             }
             return new Element(elementName, namespace);
         }
