@@ -17,6 +17,7 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.Namespace;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
@@ -235,7 +236,7 @@ public abstract class GenericTransformer {
             attribute = true;
         }
 
-        List<Element> elements = createXmlPathRecursively(document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
+        List<Element> elements = createXmlPathRecursively(document.getRootElement(), document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
         if (btsSize > elements.size()) {
             IConversionIssue e = ConversionIssue.newError(
                     new IllegalArgumentException("BTs can not be more than XML elements"),
@@ -268,7 +269,7 @@ public abstract class GenericTransformer {
         return bts;
     }
 
-    protected synchronized List<Element> createXmlPathRecursively(Element parent, final ArrayList<String> steps, final int times, final List<Element> leafs) {
+    protected synchronized List<Element> createXmlPathRecursively(Element parent, Element rootElement, final ArrayList<String> steps, final int times, final List<Element> leafs) {
         if (times == 0) {
             return leafs;
         }
@@ -300,25 +301,52 @@ public abstract class GenericTransformer {
                     if (last) {
                         leafs.add(element);
                     } else {
-                        createXmlPathRecursively(element, (ArrayList<String>) steps.clone(), times, leafs);
+                        createXmlPathRecursively(element, rootElement, (ArrayList<String>) steps.clone(), times, leafs);
                     }
                 }
             } else {
                 Element child = parent.getChild(tagname);
                 if (child == null) {
-                    child = new Element(tagname);
+                    child = createElement(tagname, rootElement);
                     parent.addContent(child);
                 }
                 if (last) {
                     leafs.add(child);
                 } else {
-                    createXmlPathRecursively(child, (ArrayList<String>) steps.clone(), times, leafs);
+                    createXmlPathRecursively(child, rootElement, (ArrayList<String>) steps.clone(), times, leafs);
                 }
             }
 
         }
 
         return leafs;
+    }
+
+    private Element createElement(String tagname, Element rootElement){
+        String elementName = getElementNameTagName(tagname);
+        String nsPrefix = getNSPrefixForTagName(tagname);
+        if(nsPrefix!=null){
+            Namespace namespace = rootElement.getNamespace(nsPrefix);
+            if(namespace == null){
+                throw new EigorRuntimeException("Unable to find namespace declaration of prefix '" + nsPrefix +"' of tagname '" + tagname +"' in root element!");
+            }
+            return new Element(elementName, namespace);
+        }
+        return new Element(elementName);
+    }
+
+    private String getNSPrefixForTagName(String tagname) {
+        if (tagname.contains(":")) {
+            return tagname.substring(0, tagname.indexOf(":"));
+        }
+        return null;
+    }
+
+    private String getElementNameTagName(String tagname) {
+        if (tagname.contains(":")) {
+            return tagname.substring(tagname.indexOf(":")+1);
+        }
+        return tagname;
     }
 
     public abstract void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException;
