@@ -101,7 +101,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             String resource = getMany2OneMappingPath();
             try {
                 inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
-                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new ManyCen2OneXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new ManyCen2OneXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
                 many2oneMappings = mapper.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);
@@ -121,7 +121,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             String resource = getOne2ManyMappingPath();
             try {
                 inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
-                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
                 one2ManyMappings = mapper.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);
