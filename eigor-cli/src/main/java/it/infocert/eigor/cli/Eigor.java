@@ -9,6 +9,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 import it.infocert.eigor.api.utils.EigorVersion;
+import it.infocert.eigor.converter.cen2cii.Cen2Cii;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
@@ -110,7 +111,8 @@ public class Eigor {
     FromCenConversionRepository fromCenConversionRepository(IReflections reflections, EigorConfiguration configuration) {
         return new FromCenListBakedRepository(
                 new Cen2FattPA(reflections, configuration),
-                new Cen2Ubl(reflections, configuration)
+                new Cen2Ubl(reflections, configuration),
+                new Cen2Cii(reflections, configuration)
         );
     }
 

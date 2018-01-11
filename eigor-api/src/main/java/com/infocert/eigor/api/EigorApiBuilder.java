@@ -11,6 +11,7 @@ import it.infocert.eigor.api.io.Copier;
 import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.converter.cen2cii.Cen2Cii;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
@@ -54,6 +55,7 @@ public class EigorApiBuilder {
         conversionRepository =
                 new ConversionRepository.Builder()
                         .register(new Cii2Cen(reflections, configuration))
+                        .register(new Cen2Cii(reflections, configuration))
                         .register(new Ubl2Cen(reflections, configuration))
                         .register(new UblCn2Cen(reflections, configuration))
                         .register(new Cen2FattPA(reflections, configuration))
