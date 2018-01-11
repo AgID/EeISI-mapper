@@ -15,7 +15,6 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
     public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         BG0001InvoiceNote bg0001 = null;
-
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
 
