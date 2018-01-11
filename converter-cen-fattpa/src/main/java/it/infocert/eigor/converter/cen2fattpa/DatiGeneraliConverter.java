@@ -133,6 +133,18 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
     }
 
+    public void addDivisa(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+//        /FatturaElettronica/FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Divisa=/BT-5
+        DatiGeneraliDocumentoType dgd = datiGenerali.getDatiGeneraliDocumento();
+        if (dgd == null) {
+            dgd = new DatiGeneraliDocumentoType();
+        }
+        if(!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+            final BT0005InvoiceCurrencyCode currencyCode = invoice.getBT0005InvoiceCurrencyCode(0);
+
+        }
+    }
+
     private void addFattureCollegate(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
         if (!invoice.getBG0003PrecedingInvoiceReference().isEmpty()) {
             List<DatiDocumentiCorrelatiType> datiFattureCollegate = datiGenerali.getDatiFattureCollegate();

@@ -56,12 +56,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 if (documentTypeCode != null && documentTypeCode.getText().equals("130")) {
                     Element idRef = findNamespaceChild(documentReference, namespacesInScope, "ID");
                     if (idRef != null) {
-                        Attribute schemeID = idRef.getAttribute("schemeID");
-                        if (schemeID != null) {
-                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID.getValue(), idRef.getText()));
-                        } else {
-                            bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getText()));
-                        }
+                        bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(idRef.getAttributeValue("schemeID"), idRef.getText()));
                         bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
                     }
                 }
@@ -412,12 +407,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 if (standardItemIdentification != null) {
                     Element idStandard = findNamespaceChild(standardItemIdentification, namespacesInScope, "ID");
                     if (idStandard != null) {
-                        Attribute schemeID = id.getAttribute("schemeID");
-                        if (schemeID != null) {
-                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
-                        } else {
-                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(idStandard.getText()));
-                        }
+                        bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
                         bg0031.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt0157);
                     }
                 }
@@ -428,14 +418,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     if (itemClassificationCode != null) {
                         Attribute listID = id.getAttribute("listID");
                         Attribute listAgencyID = id.getAttribute("listVersionID");
-                        if (listID != null) {
-                            if (listAgencyID != null) {
-                                bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
-                            } else {
-                                bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(itemClassificationCode.getAttributeValue("listID"), itemClassificationCode.getText()));
-                            }
+                        if (listAgencyID != null) {
+                            bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
                         } else {
-                            bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(itemClassificationCode.getText()));
+                            bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(itemClassificationCode.getAttributeValue("listID"), itemClassificationCode.getText()));
                         }
                         bg0031.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add(bt0158);
                     }

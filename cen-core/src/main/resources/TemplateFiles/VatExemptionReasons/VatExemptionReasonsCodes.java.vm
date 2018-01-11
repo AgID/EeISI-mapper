@@ -28,6 +28,10 @@ public enum VatExemptionReasonsCodes {
 
     @Override
     public String toString() {
-        return super.toString() + " " + description;
+        return "VatExemptionReasonsCodes{" +
+                "description='" + description + '\'' +
+                "| explanation='" + explanation + '\'' +
+                "| applicationGuideline='" + applicationGuideline + '\'' +
+                '}';
     }
 }

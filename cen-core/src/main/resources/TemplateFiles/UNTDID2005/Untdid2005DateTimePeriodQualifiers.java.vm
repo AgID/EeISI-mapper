@@ -43,7 +43,11 @@ public enum Untdid2005DateTimePeriodQualifiers {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid2005DateTimePeriodQualifiers{" +
+                "sign='" + sign + '\'' +
+                ", code=" + code +
+                ", shortDescritpion='" + shortDescritpion + '\'' +
+                ", longDescription='" + longDescription + '\'' +
+                '}';
     }
-
-}
+    }

@@ -41,7 +41,7 @@ public class BuyerConverter implements CustomMapping<Document> {
                 if (datiAnagrafici != null) {
                     Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
                     if (codiceFiscale != null) {
-                        BT0046BuyerIdentifierAndSchemeIdentifier bt0046BuyerIdentifierAndSchemeIdentifier = null;
+                        BT0046BuyerIdentifierAndSchemeIdentifier bt0046BuyerIdentifierAndSchemeIdentifier;
                         if (nazioneStr.equals("IT")) {
                             bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(cf, codiceFiscale.getText()));
                         }else {
@@ -56,7 +56,7 @@ public class BuyerConverter implements CustomMapping<Document> {
                     Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                     if (anagrafica != null) {
                         Element codEORI = anagrafica.getChild("CodEORI");
-                        if (codEORI != null) {
+                        if (codEORI != null && codiceFiscale != null) {
                             BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = null;
                             if (nazioneStr.equals("IT")) {
                                 bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(eori, codiceFiscale.getText()));

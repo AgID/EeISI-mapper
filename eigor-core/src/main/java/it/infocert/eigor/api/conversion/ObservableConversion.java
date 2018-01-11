@@ -78,13 +78,13 @@ public class ObservableConversion {
         BinaryConversionResult fromCenResult = null;
 
         final ConversionContext ctx = new ConversionContext();
-        ctx.setForceConversion(forceConversion.booleanValue());
+        ctx.setForceConversion(forceConversion);
         ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
         ctx.setInvoiceFileName(invoiceFileName);
         ctx.setTargetInvoiceExtension(fromCen.extension());
 
         // The rule report
-        InMemoryRuleReport ruleReport = null;
+        InMemoryRuleReport ruleReport;
 
         List<IConversionIssue> issues = new ArrayList<>();
 

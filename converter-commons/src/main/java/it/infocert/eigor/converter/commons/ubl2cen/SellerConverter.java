@@ -40,28 +40,23 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
             Element party = findNamespaceChild(accountingSupplierParty, namespacesInScope, "Party");
 
             if (party != null) {
-            	List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
-            	
-            	for(Element elemParty : partyIdentifications) {
+                List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
 
-                	Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
+                for (Element elemParty : partyIdentifications) {
+
+                    Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
                     if (id != null) {
-                        Attribute schemeID = id.getAttribute("schemeID");
-                        if(schemeID != null) {
-                            bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
-                        } else {
-                            bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
-                        }
+                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
                         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                     }
                 }
 
                 //BT0031-BT0032
                 List<Element> partyTaxScheme = findNamespaceChildren(party, namespacesInScope, "PartyTaxScheme");
-            	String idValue = null;
+                String idValue = null;
                 BT0031SellerVatIdentifier bt0031;
                 BT0032SellerTaxRegistrationIdentifier bt0032;
-            	for (Element elemPartyTax : partyTaxScheme) {
+                for (Element elemPartyTax : partyTaxScheme) {
                     Element taxScheme = findNamespaceChild(elemPartyTax, namespacesInScope, "TaxScheme");
                     if (taxScheme != null) {
                         Element id = findNamespaceChild(taxScheme, namespacesInScope, "ID");

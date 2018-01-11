@@ -12,7 +12,7 @@ public enum Untdid1001InvoiceTypeCode {
      * <p>${row.data.ShortDescription}</p>
      * <p>${row.data.LongDescription}</p>
      */
-    Code${row.data.ID}("${row.data.Sign}",${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    Code${row.data.ID}("${row.data.Sign}" ,${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}" )#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
     private String sign;
@@ -45,7 +45,11 @@ public enum Untdid1001InvoiceTypeCode {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid1001InvoiceTypeCode{" +
+                "sign='" + sign + '\'' +
+                "| code=" + code +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
     }
-
 }

@@ -39,4 +39,14 @@ public enum Iso31661CountryCodes {
     public String getIso3charCode() {
         return iso3charCode;
     }
+
+    @Override
+    public String toString() {
+        return "Iso31661CountryCodes{" +
+                "countryNameInEnglish='" + countryNameInEnglish + '\'' +
+                "| iso2charCode='" + iso2charCode + '\'' +
+                "| iso3charCode='" + iso3charCode + '\'' +
+                "| index=" + index +
+                '}';
+    }
 }
