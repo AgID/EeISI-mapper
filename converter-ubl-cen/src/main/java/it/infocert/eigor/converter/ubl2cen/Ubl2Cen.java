@@ -124,9 +124,9 @@ public class Ubl2Cen extends AbstractToCenConverter {
                 log.info("CIUS Schematron validation successful!");
             }
 
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusErrors));
+			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronValidation").mapAll(schematronErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUSValidation").mapAll(ciusErrors));
 
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));

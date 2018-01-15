@@ -2,8 +2,10 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0129InvoicedQuantity;
+import it.infocert.eigor.model.core.model.BT0130InvoicedQuantityUnitOfMeasureCode;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
@@ -45,6 +47,25 @@ public class InvoiceLineConverterTest {
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
         final BT0129InvoicedQuantity bt129 = invoice.getBG0025InvoiceLine(0).getBT0129InvoicedQuantity(0);
         assertEquals(new Double(15d), bt129.getValue());
+    }
+
+    @Test
+    public void shouldConvertBT130() throws Exception {
+        document.getRootElement()
+                .getChild("FatturaElettronicaBody")
+                .getChild("DatiBeniServizi")
+                .getChild("DettaglioLinee")
+                .addContent(new Element("UnitaMisura").setText(UnitOfMeasureCodes.C62_ONE.getCommonCode()));
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        final BT0130InvoicedQuantityUnitOfMeasureCode unitOfMeasureCode = invoice.getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0);
+        assertEquals(UnitOfMeasureCodes.C62_ONE, unitOfMeasureCode.getValue());
+    }
+
+    @Test
+    public void shouldApplyBT130Default() throws Exception {
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        final BT0130InvoicedQuantityUnitOfMeasureCode unitOfMeasureCode = invoice.getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0);
+        assertEquals(UnitOfMeasureCodes.EACH_EA, unitOfMeasureCode.getValue());
     }
 
     private Document createXmlInvoice(Document document) {
