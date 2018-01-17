@@ -6,9 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.EigorException;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -17,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CedentePrestatoreConverter implements CustomMapping<FatturaElettronicaType> {
     private static final Logger log = LoggerFactory.getLogger(CedentePrestatoreConverter.class);
@@ -39,7 +39,8 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 addIndirizzo(invoice, fatturaElettronica, errors);
             }
         } else {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader")));
+            final IllegalArgumentException e = new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader");
+            errors.add(ConversionIssue.newError(e, e.getMessage(), null, "CedentePrestatoreConversion", null));
         }
     }
 
@@ -157,6 +158,15 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         if (anagrafica == null) {
                             anagrafica = new AnagraficaType();
                             datiAnagrafici.setAnagrafica(anagrafica);
+                        }
+
+                        if ("null".equals(identificationSchema) || "".equals(identificationSchema) || identifier.matches("IT:\\w*:.+")) {
+                            final Pattern pattern = Pattern.compile("(IT:\\w*):(.+)");
+                            final Matcher matcher = pattern.matcher(identifier);
+                            if (matcher.matches()) {
+                                identificationSchema = matcher.group(1);
+                                identifier = matcher.group(2);
+                            }
                         }
 
                         switch (identificationSchema) {

@@ -153,7 +153,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
-            validationErrors = new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors);
+            validationErrors = new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }
