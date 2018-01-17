@@ -18,7 +18,7 @@ public class DeliverToLocationIdentifierConverter extends CustomConverterUtils i
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        if (!cenInvoice.getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
+        if (!cenInvoice.getBG0013DeliveryInformation().isEmpty() && !cenInvoice.getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
             Element rootElement = document.getRootElement();
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 

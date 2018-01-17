@@ -18,7 +18,7 @@ public class PayeeIdentifierConverter extends CustomConverterUtils implements Cu
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        if (!cenInvoice.getBG0010Payee(0).getBT0060PayeeIdentifierAndSchemeIdentifier().isEmpty()) {
+        if (!cenInvoice.getBG0010Payee().isEmpty() && !cenInvoice.getBG0010Payee(0).getBT0060PayeeIdentifierAndSchemeIdentifier().isEmpty()) {
             Element rootElement = document.getRootElement();
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
