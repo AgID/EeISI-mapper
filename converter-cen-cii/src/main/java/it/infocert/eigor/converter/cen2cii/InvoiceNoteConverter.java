@@ -24,13 +24,20 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
 
             Element exchangedDocument = findNamespaceChild(rootElement, namespacesInScope, "ExchangedDocument");
 
-            if (exchangedDocument != null) {
+            if (exchangedDocument == null) {
                 exchangedDocument = new Element("ExchangedDocument", rootElement.getNamespace("rsm"));
                 rootElement.addContent(exchangedDocument);
             }
 
-            for (BG0001InvoiceNote bg0001 : cenInvoice.getBG0001InvoiceNote()) {
+            List<BG0001InvoiceNote> bg0001InvoiceNote = cenInvoice.getBG0001InvoiceNote();
+            for (int i = 0; i < bg0001InvoiceNote.size(); i++) {
+                BG0001InvoiceNote bg0001 = bg0001InvoiceNote.get(i);
                 Element includedNote = new Element("IncludedNote", rootElement.getNamespace("ram"));
+
+                // FIXME according to CII XSD, ID is mandatory, but we have no mapping, thus index is used as mock value
+                Element id = new Element("ID", rootElement.getNamespace("ram"));
+                id.setText(String.valueOf(i));
+                includedNote.addContent(id);
 
                 if (!bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
                     Element subjectCode = new Element("SubjectCode", rootElement.getNamespace("ram"));
