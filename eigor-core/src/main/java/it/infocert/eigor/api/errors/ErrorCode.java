@@ -1,7 +1,5 @@
 package it.infocert.eigor.api.errors;
 
-import com.google.common.base.Preconditions;
-
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,7 +7,7 @@ import java.util.Objects;
 public class ErrorCode implements Serializable {
 
     /*
-     * Where did the error occured?
+     * Where did the error occur?
      */
     @Nullable
     private final String location;

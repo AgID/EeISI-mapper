@@ -102,7 +102,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
         }

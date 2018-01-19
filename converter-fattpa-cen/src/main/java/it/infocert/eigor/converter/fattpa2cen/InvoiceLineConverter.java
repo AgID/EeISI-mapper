@@ -22,10 +22,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        TypeConverter<String,Double> strDblConverter = StringToDoubleConverter.newConverter();
-        TypeConverter<String,Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
-        TypeConverter<String,UnitOfMeasureCodes> strToUnitOfMeasure = StringToUnitOfMeasureConverter.newConverter();
-
+        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
+        TypeConverter<String, Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
+        TypeConverter<String, UnitOfMeasureCodes> strToUnitOfMeasure = StringToUnitOfMeasureConverter.newConverter();
 
 
         BG0025InvoiceLine bg0025;
@@ -54,18 +53,25 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
+                        } else {
+                            BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(1d);
+                            bg0025.getBT0129InvoicedQuantity().add(invoicedQuantity);
                         }
                         Element unitaMisura = dettaglioLinee.getChild("UnitaMisura");
                         UnitOfMeasureCodes unitCode = null;
                         if (unitaMisura != null) {
+                            final String text = unitaMisura.getText();
                             try {
-                                unitCode = strToUnitOfMeasure.convert(unitaMisura.getText());
+                                unitCode = strToUnitOfMeasure.convert(text);
                                 BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                                 bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
-                            } catch (NullPointerException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found").action("InvoiceLineConverter").build());
+                            } catch (ConversionFailedException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid UnitOfMeasureCodes: " + text).action("InvoiceLineConverter").build());
                                 errors.add(ConversionIssue.newError(ere));
+                                bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
                             }
+                        } else {
+                            bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
                         }
                         Element prezzoTotale = dettaglioLinee.getChild("PrezzoTotale");
                         if (prezzoTotale != null) {
