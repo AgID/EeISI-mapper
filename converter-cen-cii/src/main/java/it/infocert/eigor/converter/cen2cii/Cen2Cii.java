@@ -104,12 +104,11 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
 
         try {
-
             List<IConversionIssue> validationErrors = xsdValidator.validate(documentByteArray);
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
+            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
             List<IConversionIssue> schematronErrors = ublValidator.validate(documentByteArray);
             if (schematronErrors.isEmpty()) {
                 log.info("Schematron validation successful!");
