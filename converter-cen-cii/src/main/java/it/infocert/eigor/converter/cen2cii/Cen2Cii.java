@@ -34,6 +34,8 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private final String RAM_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
     private final String RSM_URI = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
+    private final String QDT_URI = "urn:un:unece:uncefact:data:standard:QualifiedDataType:100";
+    private final String UDT_URI = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100";
     private final EigorConfiguration configuration;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
@@ -178,17 +180,25 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
 
     private void createRootNode(Document doc) {
+        Namespace rsmNs = Namespace.getNamespace("rsm", RSM_URI);
+        Namespace ramNs = Namespace.getNamespace("ram", RAM_URI);
+        Namespace qdtNs = Namespace.getNamespace("qdt", QDT_URI);
+        Namespace udtNs = Namespace.getNamespace("udt", UDT_URI);
         Element root = new Element("CrossIndustryInvoice");
-        root.addNamespaceDeclaration(Namespace.getNamespace("rsm", RSM_URI));
-        root.addNamespaceDeclaration(Namespace.getNamespace("ram", RAM_URI));
-        root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
-        root.setNamespace(Namespace.getNamespace("rsm", RSM_URI));
+        root.setNamespace(rsmNs);
+        root.addNamespaceDeclaration(ramNs);
+        root.addNamespaceDeclaration(qdtNs);
+        root.addNamespaceDeclaration(udtNs);
 
-        Element exchangedDocumentContext = new Element("ExchangedDocumentContext", root.getNamespace("rsm"));
+        Element exchangedDocumentContext = new Element("ExchangedDocumentContext", rsmNs);
+        Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
+        Element id = new Element("ID", ramNs);
+        id.setText("urn:cen.eu:en16931:2017");
+        guidelineSpecifiedDocumentContextParameter.addContent(id);
+        exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
         root.addContent(exchangedDocumentContext);
 
-        Element exchangedDocument = new Element("ExchangedDocument", root.getNamespace("rsm"));
+        Element exchangedDocument = new Element("ExchangedDocument", rsmNs);
         root.addContent(exchangedDocument);
 
         doc.setRootElement(root);
