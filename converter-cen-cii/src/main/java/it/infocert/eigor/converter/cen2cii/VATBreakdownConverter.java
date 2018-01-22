@@ -6,6 +6,7 @@ import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -40,6 +41,20 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
         if (applicableHeaderTradeSettlement == null) {
             applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
             supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
+        }
+
+        if(!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()){
+            Iso4217CurrenciesFundsCodes bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue();
+            Element invoiceCurrencyCode = new Element("InvoiceCurrencyCode", ramNs);
+            invoiceCurrencyCode.setText(bt0005.getCode());
+            applicableHeaderTradeSettlement.addContent(invoiceCurrencyCode);
+        }
+
+        if(!cenInvoice.getBT0006VatAccountingCurrencyCode().isEmpty()){
+            Iso4217CurrenciesFundsCodes bt0006 = cenInvoice.getBT0006VatAccountingCurrencyCode(0).getValue();
+            Element taxCurrencyCode = new Element("TaxCurrencyCode", ramNs);
+            taxCurrencyCode.setText(bt0006.getCode());
+            applicableHeaderTradeSettlement.addContent(taxCurrencyCode);
         }
 
         Element taxPointDate = null;
