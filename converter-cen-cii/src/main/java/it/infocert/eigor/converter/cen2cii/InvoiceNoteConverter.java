@@ -5,9 +5,9 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
-import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -42,6 +42,13 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                 Element id = new Element("ID", ramNs);
                 id.setText(bt0001);
                 exchangedDocument.addContent(id);
+            }
+
+            if(!cenInvoice.getBT0003InvoiceTypeCode().isEmpty()){
+                Untdid1001InvoiceTypeCode bt0003 = cenInvoice.getBT0003InvoiceTypeCode(0).getValue();
+                Element typeCode = new Element("TypeCode", ramNs);
+                typeCode.setText(String.valueOf(bt0003.getCode()));
+                exchangedDocument.addContent(typeCode);
             }
 
             if (!cenInvoice.getBT0002InvoiceIssueDate().isEmpty()) {

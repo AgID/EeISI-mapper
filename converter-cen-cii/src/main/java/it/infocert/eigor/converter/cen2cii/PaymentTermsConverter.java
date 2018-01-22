@@ -2,13 +2,11 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0016PaymentInstructions;
-import it.infocert.eigor.model.core.model.BG0019DirectDebit;
-import it.infocert.eigor.model.core.model.BT0089MandateReferenceIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -24,6 +22,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
+        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -81,6 +80,124 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     Element directDebitMandateID = new Element("DirectDebitMandateID", ramNs);
                     directDebitMandateID.setText(bt0089.getValue());
                     specifiedTradePaymentTerms.addContent(directDebitMandateID);
+                }
+            }
+        }
+
+        if (!cenInvoice.getBG0022DocumentTotals().isEmpty()) {
+            BG0022DocumentTotals bg0022 = cenInvoice.getBG0022DocumentTotals(0);
+
+            Element specifiedTradeSettlementHeaderMonetarySummation = findNamespaceChild(applicableHeaderTradeAgreement, namespacesInScope, "SpecifiedTradeSettlementHeaderMonetarySummation");
+            if (specifiedTradeSettlementHeaderMonetarySummation == null) {
+                specifiedTradeSettlementHeaderMonetarySummation = new Element("SpecifiedTradeSettlementHeaderMonetarySummation", ramNs);
+                applicableHeaderTradeAgreement.addContent(specifiedTradeSettlementHeaderMonetarySummation);
+            }
+
+            if (!bg0022.getBT0106SumOfInvoiceLineNetAmount().isEmpty()) {
+                Double bt0106 = bg0022.getBT0106SumOfInvoiceLineNetAmount(0).getValue();
+                Element lineTotalAmount = new Element("LineTotalAmount", ramNs);
+                try {
+                    lineTotalAmount.setText(dblStrConverter.convert(bt0106));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(lineTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0107SumOfAllowancesOnDocumentLevel().isEmpty()) {
+                Double bt0107 = bg0022.getBT0107SumOfAllowancesOnDocumentLevel(0).getValue();
+                Element allowanceTotalAmount = new Element("AllowanceTotalAmount", ramNs);
+                try {
+                    allowanceTotalAmount.setText(dblStrConverter.convert(bt0107));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(allowanceTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0108SumOfChargesOnDocumentLevel().isEmpty()) {
+                Double bt0108 = bg0022.getBT0108SumOfChargesOnDocumentLevel(0).getValue();
+                Element chargeTotalAmount = new Element("ChargeTotalAmount", ramNs);
+                try {
+                    chargeTotalAmount.setText(dblStrConverter.convert(bt0108));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0109InvoiceTotalAmountWithoutVat().isEmpty()) {
+                Double bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0).getValue();
+                Element taxBasisTotalAmount = new Element("TaxBasisTotalAmount", ramNs);
+                try {
+                    taxBasisTotalAmount.setText(dblStrConverter.convert(bt0109));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(taxBasisTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+                Double bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();
+                Element taxTotalAmount = new Element("TaxTotalAmount", ramNs);
+                try {
+                    taxTotalAmount.setText(dblStrConverter.convert(bt0110));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
+                Double bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+                Element grandTotalAmount = new Element("GrandTotalAmount", ramNs);
+                try {
+                    grandTotalAmount.setText(dblStrConverter.convert(bt0112));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(grandTotalAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0113PaidAmount().isEmpty()) {
+                Double bt0113 = bg0022.getBT0113PaidAmount(0).getValue();
+                Element totalPrepaidAmount = new Element("TotalPrepaidAmount", ramNs);
+                try {
+                    totalPrepaidAmount.setText(dblStrConverter.convert(bt0113));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(totalPrepaidAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
+                Double bt0114 = bg0022.getBT0114RoundingAmount(0).getValue();
+                Element roundingAmount = new Element("RoundingAmount", ramNs);
+                try {
+                    roundingAmount.setText(dblStrConverter.convert(bt0114));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+
+            if (!bg0022.getBT0115AmountDueForPayment().isEmpty()) {
+                Double bt0115 = bg0022.getBT0115AmountDueForPayment(0).getValue();
+                Element duePayableAmount = new Element("DuePayableAmount", ramNs);
+                try {
+                    duePayableAmount.setText(dblStrConverter.convert(bt0115));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(duePayableAmount);
+                } catch (ConversionFailedException e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
+                    errors.add(ConversionIssue.newError(ere));
                 }
             }
         }
