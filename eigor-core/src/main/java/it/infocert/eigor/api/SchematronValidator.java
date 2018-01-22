@@ -42,8 +42,8 @@ public class SchematronValidator implements IXMLValidator {
                 schematronResource = SchematronResourceSCH.fromFile(schemaFile);
             }
             if (!schematronResource.isValidSchematron())
-                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT?"XSLT":"SCH", schemaFile, schemaFile.getAbsolutePath()));
-        }finally {
+                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath()));
+        } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaFile.getAbsolutePath(), delta);
         }
@@ -66,7 +66,7 @@ public class SchematronValidator implements IXMLValidator {
 
         List<Object> firedRuleAndFailedAssert = new ArrayList<>();
 
-        if(schematronOutput!=null) {
+        if (schematronOutput != null) {
             try {
                 List<Object> asserts = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
                 firedRuleAndFailedAssert.addAll(asserts);
@@ -75,7 +75,12 @@ public class SchematronValidator implements IXMLValidator {
                 errors.add(ConversionIssue.newError(e));
                 return errors;
             }
+        } else {
+            final String message = "Schematron parsing failed. File: " + schematronResource.getID();
+            log.error(message);
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(message)));
         }
+
 
         for (Object obj : firedRuleAndFailedAssert) {
             if (obj instanceof FailedAssert) {
