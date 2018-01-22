@@ -31,19 +31,15 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
         Namespace udtNs = rootElement.getNamespace("udt");
 
         Element supplyChainTradeTransaction = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
-        Element applicableHeaderTradeSettlement = null;
-
         if (supplyChainTradeTransaction == null) {
             supplyChainTradeTransaction = new Element("SupplyChainTradeTransaction", rootElement.getNamespace("rsm"));
+            rootElement.addContent(supplyChainTradeTransaction);
+        }
+
+        Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
+        if (applicableHeaderTradeSettlement == null) {
             applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
             supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
-            rootElement.addContent(supplyChainTradeTransaction);
-        } else {
-            applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
-            if (applicableHeaderTradeSettlement == null) {
-                applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
-                supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
-            }
         }
 
         Element taxPointDate = null;
