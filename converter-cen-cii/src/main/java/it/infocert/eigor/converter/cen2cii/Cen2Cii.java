@@ -184,6 +184,13 @@ public class Cen2Cii extends AbstractFromCenConverter {
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
         root.setNamespace(Namespace.getNamespace("rsm", RSM_URI));
+
+        Element exchangedDocumentContext = new Element("ExchangedDocumentContext", root.getNamespace("rsm"));
+        root.addContent(exchangedDocumentContext);
+
+        Element exchangedDocument = new Element("ExchangedDocument", root.getNamespace("rsm"));
+        root.addContent(exchangedDocument);
+
         doc.setRootElement(root);
     }
 }
