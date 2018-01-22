@@ -73,11 +73,11 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             Element applicableTradeTax = new Element("ApplicableTradeTax", ramNs);
 
             if (taxPointDate != null) {
-                applicableTradeTax.addContent(taxPointDate);
+                applicableTradeTax.addContent(taxPointDate.clone());
             }
 
             if (dueDateTypeCode != null) {
-                applicableTradeTax.addContent(dueDateTypeCode);
+                applicableTradeTax.addContent(dueDateTypeCode.clone());
             }
 
             if (!bg0023.getBT0116VatCategoryTaxableAmount().isEmpty()) {
