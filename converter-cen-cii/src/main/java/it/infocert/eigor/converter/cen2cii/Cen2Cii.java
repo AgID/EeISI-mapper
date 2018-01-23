@@ -183,11 +183,14 @@ public class Cen2Cii extends AbstractFromCenConverter {
         Namespace ramNs = Namespace.getNamespace("ram", RAM_URI);
         Namespace qdtNs = Namespace.getNamespace("qdt", QDT_URI);
         Namespace udtNs = Namespace.getNamespace("udt", UDT_URI);
-        Element root = new Element("CrossIndustryInvoice");
-        root.setNamespace(rsmNs);
+        Namespace xsiNs = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        Element root = new Element("CrossIndustryInvoice", rsmNs);
+        root.addNamespaceDeclaration(rsmNs);
         root.addNamespaceDeclaration(ramNs);
         root.addNamespaceDeclaration(qdtNs);
         root.addNamespaceDeclaration(udtNs);
+        root.addNamespaceDeclaration(xsiNs);
+        root.setAttribute("schemaLocation", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 CrossIndustryInvoice_100pD16B.xsd", xsiNs);
         doc.setRootElement(root);
     }
 }
