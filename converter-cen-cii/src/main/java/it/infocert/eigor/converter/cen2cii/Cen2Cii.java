@@ -32,7 +32,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private static final String FORMAT = "cii";
 
-    private final String RAM_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+    private final String RAM_URI = "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
     private final String RSM_URI = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
     private final String QDT_URI = "urn:un:unece:uncefact:data:standard:QualifiedDataType:100";
     private final String UDT_URI = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100";

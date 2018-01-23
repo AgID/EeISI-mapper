@@ -44,7 +44,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                 exchangedDocument.addContent(id);
             }
 
-            if(!cenInvoice.getBT0003InvoiceTypeCode().isEmpty()){
+            if (!cenInvoice.getBT0003InvoiceTypeCode().isEmpty()) {
                 Untdid1001InvoiceTypeCode bt0003 = cenInvoice.getBT0003InvoiceTypeCode(0).getValue();
                 Element typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText(String.valueOf(bt0003.getCode()));
@@ -67,14 +67,8 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
             }
 
             List<BG0001InvoiceNote> bg0001InvoiceNote = cenInvoice.getBG0001InvoiceNote();
-            for (int i = 0; i < bg0001InvoiceNote.size(); i++) {
-                BG0001InvoiceNote bg0001 = bg0001InvoiceNote.get(i);
+            for (BG0001InvoiceNote bg0001 : bg0001InvoiceNote) {
                 Element includedNote = new Element("IncludedNote", ramNs);
-
-                // FIXME according to CII XSD, ID is mandatory, but we have no mapping, thus index is used as mock value
-                Element id = new Element("ID", ramNs);
-                id.setText(String.valueOf(i));
-                includedNote.addContent(id);
 
                 if (!bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
                     Element subjectCode = new Element("SubjectCode", ramNs);
@@ -87,7 +81,6 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                     content.setText(bg0001.getBT0022InvoiceNote(0).getValue());
                     includedNote.addContent(content);
                 }
-
                 exchangedDocument.addContent(includedNote);
             }
         }
