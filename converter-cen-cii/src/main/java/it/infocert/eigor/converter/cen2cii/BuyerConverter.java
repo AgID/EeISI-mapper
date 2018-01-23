@@ -118,6 +118,13 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 Element postalTradeAddress = new Element("PostalTradeAddress", ramNs);
                 buyerTradeParty.addContent(postalTradeAddress);
 
+                if (!bg0008.getBT0053BuyerPostCode().isEmpty()) {
+                    BT0053BuyerPostCode bt0053 = bg0008.getBT0053BuyerPostCode(0);
+                    Element postcodeCode = new Element("PostcodeCode", ramNs);
+                    postcodeCode.setText(bt0053.getValue());
+                    postalTradeAddress.addContent(postcodeCode);
+                }
+
                 if (!bg0008.getBT0050BuyerAddressLine1().isEmpty()) {
                     BT0050BuyerAddressLine1 bt0050 = bg0008.getBT0050BuyerAddressLine1(0);
                     Element lineOne = new Element("LineOne", ramNs);
@@ -144,13 +151,6 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                     Element cityName = new Element("CityName", ramNs);
                     cityName.setText(bt0052.getValue());
                     postalTradeAddress.addContent(cityName);
-                }
-
-                if (!bg0008.getBT0053BuyerPostCode().isEmpty()) {
-                    BT0053BuyerPostCode bt0053 = bg0008.getBT0053BuyerPostCode(0);
-                    Element postcodeCode = new Element("PostcodeCode", ramNs);
-                    postcodeCode.setText(bt0053.getValue());
-                    postalTradeAddress.addContent(postcodeCode);
                 }
 
                 if (!bg0008.getBT0054BuyerCountrySubdivision().isEmpty()) {
