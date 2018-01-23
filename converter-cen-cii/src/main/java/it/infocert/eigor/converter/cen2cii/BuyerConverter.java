@@ -18,7 +18,6 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
         Namespace rsmNs = rootElement.getNamespace("rsm");
@@ -113,6 +112,37 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 buyerTradeParty.addContent(uriUniversalCommunication);
             }
 
+            if (!bg0007.getBG0009BuyerContact().isEmpty()) {
+                BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
+                Element definedTradeContact = new Element("DefinedTradeContact", ramNs);
+                buyerTradeParty.addContent(definedTradeContact);
+
+                if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
+                    BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
+                    Element personName = new Element("PersonName", ramNs);
+                    personName.setText(bt0056.getValue());
+                    definedTradeContact.addContent(personName);
+                }
+
+                if (!bg0009.getBT0057BuyerContactTelephoneNumber().isEmpty()) {
+                    BT0057BuyerContactTelephoneNumber bt0057 = bg0009.getBT0057BuyerContactTelephoneNumber(0);
+                    Element telephoneUniversalCommunication = new Element("TelephoneUniversalCommunication", ramNs);
+                    Element completeNumber = new Element("CompleteNumber", ramNs);
+                    completeNumber.setText(bt0057.getValue());
+                    telephoneUniversalCommunication.addContent(completeNumber);
+                    definedTradeContact.addContent(telephoneUniversalCommunication);
+                }
+
+                if (!bg0009.getBT0058BuyerContactEmailAddress().isEmpty()) {
+                    BT0058BuyerContactEmailAddress bt0058 = bg0009.getBT0058BuyerContactEmailAddress(0);
+                    Element emailURIUniversalCommunication = new Element("EmailURIUniversalCommunication", ramNs);
+                    Element uriid = new Element("URIID", ramNs);
+                    uriid.setText(bt0058.getValue());
+                    emailURIUniversalCommunication.addContent(uriid);
+                    definedTradeContact.addContent(emailURIUniversalCommunication);
+                }
+            }
+
             if (!bg0007.getBG0008BuyerPostalAddress().isEmpty()) {
                 BG0008BuyerPostalAddress bg0008 = bg0007.getBG0008BuyerPostalAddress(0);
                 Element postalTradeAddress = new Element("PostalTradeAddress", ramNs);
@@ -165,37 +195,6 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                     Element countryID = new Element("CountryID", ramNs);
                     countryID.setText(bt0055.getValue().getIso2charCode());
                     postalTradeAddress.addContent(countryID);
-                }
-            }
-
-            if (!bg0007.getBG0009BuyerContact().isEmpty()) {
-                BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
-                Element definedTradeContact = new Element("DefinedTradeContact", ramNs);
-                buyerTradeParty.addContent(definedTradeContact);
-
-                if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
-                    BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
-                    Element personName = new Element("PersonName", ramNs);
-                    personName.setText(bt0056.getValue());
-                    definedTradeContact.addContent(personName);
-                }
-
-                if (!bg0009.getBT0057BuyerContactTelephoneNumber().isEmpty()) {
-                    BT0057BuyerContactTelephoneNumber bt0057 = bg0009.getBT0057BuyerContactTelephoneNumber(0);
-                    Element telephoneUniversalCommunication = new Element("TelephoneUniversalCommunication", ramNs);
-                    Element completeNumber = new Element("CompleteNumber", ramNs);
-                    completeNumber.setText(bt0057.getValue());
-                    telephoneUniversalCommunication.addContent(completeNumber);
-                    definedTradeContact.addContent(telephoneUniversalCommunication);
-                }
-
-                if (!bg0009.getBT0058BuyerContactEmailAddress().isEmpty()) {
-                    BT0058BuyerContactEmailAddress bt0058 = bg0009.getBT0058BuyerContactEmailAddress(0);
-                    Element emailURIUniversalCommunication = new Element("EmailURIUniversalCommunication", ramNs);
-                    Element uriid = new Element("URIID", ramNs);
-                    uriid.setText(bt0058.getValue());
-                    emailURIUniversalCommunication.addContent(uriid);
-                    definedTradeContact.addContent(emailURIUniversalCommunication);
                 }
             }
         }
