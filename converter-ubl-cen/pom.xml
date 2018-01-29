@@ -80,8 +80,8 @@
                             <schematronDirectory>src/main/resources/converterdata/converter-ubl-cen/cius/schematron
                             </schematronDirectory>
                             <schematronPattern>*.sch</schematronPattern>
-                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
-                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
+                            <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>true</updateOnSchematronChanges>
                         </configuration>
                         <goals>
                             <goal>convert</goal>

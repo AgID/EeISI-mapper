@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.helger.schematron.ISchematronResource;
 import com.helger.schematron.xslt.SchematronResourceSCH;
 import com.helger.schematron.xslt.SchematronResourceXSLT;
+import it.infocert.eigor.schematron.FixedSchematronResource;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.slf4j.Logger;
@@ -37,9 +38,9 @@ public class SchematronValidator implements IXMLValidator {
                 if (xsltFileUpdater.isSchNewerThanXslt()) {
                     xsltFileUpdater.updateXSLTfromSch();
                 }
-                schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
+                schematronResource = new FixedSchematronResource(SchematronResourceXSLT.fromFile(schemaFile));
             } else {
-                schematronResource = SchematronResourceSCH.fromFile(schemaFile);
+                schematronResource = new FixedSchematronResource(SchematronResourceSCH.fromFile(schemaFile));
             }
             if (!schematronResource.isValidSchematron())
                 throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath()));
@@ -95,7 +96,7 @@ public class SchematronValidator implements IXMLValidator {
                 Exception error = new Exception(
                         String.format("Schematron failed assert '%s' on XML element at '%s'.", ruleDescriptionFromSchematron, offendingElement), cause);
 
-                if (failedAssert.getFlag().equals("fatal")) {
+                if ("fatal".equals(failedAssert.getFlag())) {
                     errors.add(ConversionIssue.newError(error));
                 } else {
                     errors.add(ConversionIssue.newWarning(error));

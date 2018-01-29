@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dogs>
+    <dog id="male-dog" age="12" sex="m">Abbot</dog>
+    <dog id="female-dog" age="2" sex="f">Fufi</dog>
+    <dog id="dog-without-sex" age="7">Amber</dog>
+    <dog id="another-dog-without-sex" age="10">Biscuit</dog>
+</dogs>

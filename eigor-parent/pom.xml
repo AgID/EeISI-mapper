@@ -195,6 +195,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>eigor-ph-schematron</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>

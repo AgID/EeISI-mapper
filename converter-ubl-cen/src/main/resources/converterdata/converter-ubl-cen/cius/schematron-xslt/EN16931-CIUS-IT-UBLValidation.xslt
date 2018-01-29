@@ -195,7 +195,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-9] BT-31 (Seller VAT identifier) -Mandatory in Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative). 
+          <svrl:text>[CIUS-CA-9] BT-31 (Seller VAT identifier) -Mandatory in
+            Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -211,7 +212,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-32] BT-1 (Invoice number) -BT maximum length shall be 20 digits. 
+          <svrl:text>[CIUS-VD-32] BT-1 (Invoice number) -BT maximum length
+            shall be 20 digits.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -227,8 +229,8 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-39] BT-21, BT-22 (Invoice note subject code
-Invoice note) -The sum of BTs maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-39] BT-21, BT-22 (Invoice note subject code
+            Invoice note) -The sum of BTs maximum length shall be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -244,7 +246,8 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CI-13] BT-6 (VAT accounting currency code)  should be € for invoices from EU to IT in accordance with 2006/112/CE art. 9. 
+          <svrl:text>[CIUS-CI-13] BT-6 (VAT accounting currency code) should
+            be € for invoices from EU to IT in accordance with 2006/112/CE art. 9.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -266,7 +269,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-100-1] BT-46, BT-46-1 (Buyer identifier - Buyer identifier identification scheme identifier) -BT46-1=IT:CF then BT-46 minimum lenght 11 and maximum lenght shall be 16 
+          <svrl:text>[CIUS-VD-100-1] BT-46, BT-46-1 (Buyer identifier -
+            Buyer identifier identification scheme identifier) -BT46-1=IT:CF then BT-46 minimum lenght 11 and maximum
+            lenght shall be 16
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -282,7 +287,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-100-2] BT-46, BT-46-1 (Buyer identifier - Buyer identifier identification scheme identifier) -If BT-46-1=IT:EORI then BT-46 minimum lenght 13 and maximum lenght shall be 17 
+          <svrl:text>[CIUS-VD-100-2] BT-46, BT-46-1 (Buyer identifier -
+            Buyer identifier identification scheme identifier) -If BT-46-1=IT:EORI then BT-46 minimum lenght 13 and
+            maximum lenght shall be 17
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -298,7 +305,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-100-3] BT-46, BT-46-1 (Buyer identifier - Buyer identifier identification scheme identifier) -If BT-46-1=IT:VAT then BT-46 maximum length 30 (the first two chars indicates country code). 
+          <svrl:text>[CIUS-VD-100-3] BT-46, BT-46-1 (Buyer identifier -
+            Buyer identifier identification scheme identifier) -If BT-46-1=IT:VAT then BT-46 maximum length 30 (the
+            first two chars indicates country code).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -320,7 +329,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-101-1] BT-29, BT-29-1 (Seller identifier - Seller identifier identification scheme identifier) -BT29-1=IT:CF then BT-29 minimum lenght 11 and maximum lenght shall be 16. 
+          <svrl:text>[CIUS-VD-101-1] BT-29, BT-29-1 (Seller identifier
+            - Seller identifier identification scheme identifier) -BT29-1=IT:CF then BT-29 minimum lenght 11 and maximum
+            lenght shall be 16.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -336,7 +347,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-101-2] BT-29, BT-29-1 (Seller identifier - Seller identifier identification scheme identifier) -If BT-29-1=IT:EORI then BT-29 minimum lenght 13 and maximum lenght shall be 17 . 
+          <svrl:text>[CIUS-VD-101-2] BT-29, BT-29-1 (Seller identifier
+            - Seller identifier identification scheme identifier) -If BT-29-1=IT:EORI then BT-29 minimum lenght 13 and
+            maximum lenght shall be 17 .
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -352,7 +365,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-101-3] BT-29, BT-29-1 (Seller identifier - Seller identifier identification scheme identifier) -If BT-29-1=IT:VAT then BT-29 maximum length 30 (the first two chars indicates country code). 
+          <svrl:text>[CIUS-VD-101-3] BT-29, BT-29-1 (Seller identifier
+            - Seller identifier identification scheme identifier) -If BT-29-1=IT:VAT then BT-29 maximum length 30 (the
+            first two chars indicates country code).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -374,7 +389,10 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-102-1] BT-30, BT-30-1 (Seller legal registration identifier - Seller legal registration identifier identification scheme identifier) -If BT-30-1=IT:REA then BT-30 minimum lenght 3 and maximum lenght shall be 22 (first two chars indicate the italian province code). 
+          <svrl:text>[CIUS-VD-102-1] BT-30, BT-30-1 (Seller legal
+            registration identifier - Seller legal registration identifier identification scheme identifier) -If
+            BT-30-1=IT:REA then BT-30 minimum lenght 3 and maximum lenght shall be 22 (first two chars indicate the
+            italian province code).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -390,7 +408,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-102-2] BT-30, BT-30-1 (Seller legal registration identifier - Seller legal registration identifier identification scheme identifier) -If BT-30-1=IT:ALBO then BT-30 maximum length 60 . 
+          <svrl:text>[CIUS-VD-102-2] BT-30, BT-30-1 (Seller legal
+            registration identifier - Seller legal registration identifier identification scheme identifier) -If
+            BT-30-1=IT:ALBO then BT-30 maximum length 60 .
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -412,8 +432,9 @@ Invoice note) -The sum of BTs maximum length shall be 200 chars.
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-BR-14] BT-48
-BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier) -1.4.1.1 is not mandatory in Italy (buyer) but VAT number or Fiscal code should be indicated. 
+          <svrl:text>[CIUS-BR-14] BT-48
+            BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier)
+            -1.4.1.1 is not mandatory in Italy (buyer) but VAT number or Fiscal code should be indicated.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -429,8 +450,10 @@ BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier ident
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-2] BT-49
-BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario (see the Italian business rules). BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
+          <svrl:text>[CIUS-CA-2] BT-49
+            BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain
+            a legal mail address (PEC) or IndicePA/CodiceDestinatario (see the Italian business rules). BT-49-1=IT:PEC
+            or IT:IPA or IT:CODDEST
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -446,7 +469,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-53] BT-46, BT-46-1 (Buyer identifier - Buyer identifier identification scheme identifier) -If BT-48 is empty then one of the buyer identifiers (0..n) should be the FiscalCode in BT-46. BT-46-1 shall contain the scheme. 
+          <svrl:text>[CIUS-VD-53] BT-46, BT-46-1 (Buyer identifier - Buyer
+            identifier identification scheme identifier) -If BT-48 is empty then one of the buyer identifiers (0..n)
+            should be the FiscalCode in BT-46. BT-46-1 shall contain the scheme.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -462,7 +487,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-97-1-1] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49 minimum length shall be 7 maximum length shall be 256 
+          <svrl:text>[CIUS-VD-97-1-1] BT-49, BT-49-1 (Buyer electronic
+            address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49
+            minimum length shall be 7 maximum length shall be 256
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -478,7 +505,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-97-1-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema then BT-49 maximum length shall be 6 chars 
+          <svrl:text>[CIUS-VD-97-1-2] BT-49, BT-49-1 (Buyer electronic
+            address - Buyer electronic address identification scheme identifier) =IT:IPA schema then BT-49 maximum
+            length shall be 6 chars
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -494,7 +523,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-97-1-3] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier)=IT:CODDEST schema then BT-49 maximum length shall be 7 chars. 
+          <svrl:text>[CIUS-VD-97-1-3] BT-49, BT-49-1 (Buyer electronic
+            address - Buyer electronic address identification scheme identifier)=IT:CODDEST schema then BT-49 maximum
+            length shall be 7 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -516,7 +547,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-51] BT-56 (Buyer contact point) -BT maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-51] BT-56 (Buyer contact point) -BT maximum
+            length shall be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -538,7 +570,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-18] BT-44 (Buyer name) -BT maximum length shall be 80 chars. 
+          <svrl:text>[CIUS-VD-18] BT-44 (Buyer name) -BT maximum length shall
+            be 80 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -560,7 +593,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-43] BT-48 (Buyer VAT identifier) -BT maximum length shall be 30 chars. 
+          <svrl:text>[CIUS-VD-43] BT-48 (Buyer VAT identifier) -BT maximum
+            length shall be 30 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -582,7 +616,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-11-1-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-11-1-1] BT-50 (Buyer address line 1) -
+            Fields are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -598,7 +633,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-11-1-2] BT-52 (Buyer city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-11-1-2] BT-52 (Buyer city) - Fields are
+            mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -614,7 +650,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-11-1-3] BT-53 (Buyer post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-11-1-3] BT-53 (Buyer post code) - Fields
+            are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -630,7 +667,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-21] BT-50, BT-51, BT-163 (Buyer address line 1 - Buyer address line 2 - Buyer address line 3) -The sum of BTs maximum length shall be 60 chars (including separator). 
+          <svrl:text>[CIUS-VD-21] BT-50, BT-51, BT-163 (Buyer address line 1
+            - Buyer address line 2 - Buyer address line 3) -The sum of BTs maximum length shall be 60 chars (including
+            separator).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -646,7 +685,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-24] BT-52 (Buyer city) -BT maximum length shall be 60 characters. 
+          <svrl:text>[CIUS-VD-24] BT-52 (Buyer city) -BT maximum length shall
+            be 60 characters.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -662,7 +702,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-27-1-1] BT-53 (Buyer post code) -BT maximum length shall be 15 chars  if country-code not =IT and 5 chars if country-code=IT. 
+          <svrl:text>[CIUS-VD-27-1-1] BT-53 (Buyer post code) -BT maximum
+            length shall be 15 chars if country-code not =IT and 5 chars if country-code=IT.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -678,7 +719,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-27-1-2] BT-53 (Buyer post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+          <svrl:text>[CIUS-VD-27-1-2] BT-53 (Buyer post code) -BT maximum
+            length, if country code =IT then it should be numeric and maximum length 5.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -694,7 +736,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-30] BT-54 (Buyer country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+          <svrl:text>[CIUS-VD-30] BT-54 (Buyer country subdivision) -BT
+            maximum length shall be 2 chars only used if country code=IT else the BT is not used.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -710,7 +753,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-48] BT-54 (Buyer country subdivision) -If country code=IT it should be coded according to Italian province list. 
+          <svrl:text>[CIUS-VD-48] BT-54 (Buyer country subdivision) -If
+            country code=IT it should be coded according to Italian province list.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -732,7 +776,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-44] BT-41 (Seller contact point)  -BT maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-44] BT-41 (Seller contact point) -BT maximum
+            length shall be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -748,7 +793,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-45] BT-42 (Seller contact telephone number) -BT minimum length shall be 5 maximum length shall be 12 chars. 
+          <svrl:text>[CIUS-VD-45] BT-42 (Seller contact telephone number) -BT
+            minimum length shall be 5 maximum length shall be 12 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -764,7 +810,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-46] BT-43 (Seller contact email address) -BT minimum length shall be 7 maximum length shall be 256 chars. 
+          <svrl:text>[CIUS-VD-46] BT-43 (Seller contact email address) -BT
+            minimum length shall be 7 maximum length shall be 256 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -786,7 +833,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-17] BT-27 (Seller name) -BT maximum length shall be 80 chars. 
+          <svrl:text>[CIUS-VD-17] BT-27 (Seller name) -BT maximum length
+            shall be 80 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -808,7 +856,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-BT-98-1] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. 
+          <svrl:text>[CIUS-BT-98-1] BT-32 (Seller tax registration
+            identifier) is a conditional field and shall not be used by a foreign seller as it is not possible to map
+            into XMLPA.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -824,7 +874,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-99] BT-32 (Seller tax registration identifier) -In case the seller is Italian this field must contain the codification of RegimeFiscale 
+          <svrl:text>[CIUS-VD-99] BT-32 (Seller tax registration identifier)
+            -In case the seller is Italian this field must contain the codification of RegimeFiscale
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -840,7 +891,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-41] BT-31 (Seller VAT identifier) -BT maximum length shall be 30 chars. 
+          <svrl:text>[CIUS-VD-41] BT-31 (Seller VAT identifier) -BT maximum
+            length shall be 30 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -862,7 +914,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-BT-98-2] BT-32 (Seller tax registration identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
+          <svrl:text>[CIUS-BT-98-2] BT-32 (Seller tax registration
+            identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale
+            (1.2.1.8)
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -884,7 +938,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-10-1] BT-35 (Seller address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-10-1] BT-35 (Seller address line 1) -
+            Fields are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -900,7 +955,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-10-2] BT-37 (Seller city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-10-2] BT-37 (Seller city) - Fields are
+            mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -916,7 +972,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-10-3] BT-38 (Seller post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-10-3] BT-38 (Seller post code) - Fields are
+            mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -932,7 +989,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-20] BT-35, BT-36, BT-162 (Seller address line 1 - Seller address line 2 - Seller address line 3) -The sum of BTs maximum length shall be 60 chars (including separator). 
+          <svrl:text>[CIUS-VD-20] BT-35, BT-36, BT-162 (Seller address line 1
+            - Seller address line 2 - Seller address line 3) -The sum of BTs maximum length shall be 60 chars (including
+            separator).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -948,7 +1007,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-23] BT-37 (Seller city) -BT maximum length shall be 60 characters. 
+          <svrl:text>[CIUS-VD-23] BT-37 (Seller city) -BT maximum length
+            shall be 60 characters.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -964,7 +1024,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-26-1-1] BT-38 (Seller post code) - BT maximum length shall be 15 chars if country-code not =IT and 5 chars if country-code=IT. 
+          <svrl:text>[CIUS-VD-26-1-1] BT-38 (Seller post code) - BT
+            maximum length shall be 15 chars if country-code not =IT and 5 chars if country-code=IT.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -980,7 +1041,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-26-1-2] BT-38 (Seller post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+          <svrl:text>[CIUS-VD-26-1-2] BT-38 (Seller post code) -BT
+            maximum length, if country code =IT then it should be numeric and maximum length 5.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -996,7 +1058,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-29] BT-39 (Seller country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+          <svrl:text>[CIUS-VD-29] BT-39 (Seller country subdivision) -BT
+            maximum length shall be 2 chars only used if country code=IT else the BT is not used.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1012,7 +1075,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-47] BT-39 (Seller country subdivision) -If country code=IT it should be coded according to Italian province list. 
+          <svrl:text>[CIUS-VD-47] BT-39 (Seller country subdivision) -If
+            country code=IT it should be coded according to Italian province list.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1034,7 +1098,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-71] BT-125 (Attached document) -If BT-122 not empty then BT-124 or BT-125 should be mandatory as the mapped field is mandatory in Italy. 
+          <svrl:text>[CIUS-CA-71] BT-125 (Attached document) -If BT-122 not
+            empty then BT-124 or BT-125 should be mandatory as the mapped field is mandatory in Italy.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1050,7 +1115,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-69] BT-122, BT-125-2 (Supporting document reference - Attached document Filename) - BT maximum length shall be 60 chars. 
+          <svrl:text>[CIUS-VD-69] BT-122, BT-125-2 (Supporting document
+            reference - Attached document Filename) - BT maximum length shall be 60 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1066,7 +1132,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-70] BT-123 (Supporting document description) -BT maximum length shall be 100 chars. 
+          <svrl:text>[CIUS-VD-70] BT-123 (Supporting document description)
+            -BT maximum length shall be 100 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1088,7 +1155,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-72] BT-125-1 (Attached document Mime code) -BT maximum length shall be 10 chars. 
+          <svrl:text>[CIUS-VD-72] BT-125-1 (Attached document Mime code) -BT
+            maximum length shall be 10 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1110,7 +1178,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-60] BT-97, BT-98 (Document level allowance reason - Document level allowance reason code)-BTs maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-60] BT-97, BT-98 (Document level allowance
+            reason - Document level allowance reason code)-BTs maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1126,7 +1195,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-61] BT-104, BT-105 (Document level charge reason - Document level charge reason code)-BTs maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-61] BT-104, BT-105 (Document level charge
+            reason - Document level charge reason code)-BTs maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1142,7 +1212,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-64] BT-92, BT-99 (Document level allowance amount - Document level charge amount) -BT minimum length shall be 4 maximum length shall be 21 chars. 
+          <svrl:text>[CIUS-VD-64] BT-92, BT-99 (Document level allowance
+            amount - Document level charge amount) -BT minimum length shall be 4 maximum length shall be 21 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1164,7 +1235,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-40] BT-25 (Preceding Invoice number)-BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-40] BT-25 (Preceding Invoice number)-BT maximum
+            length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1186,7 +1258,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-34] BT-12 (Contract reference) -BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-34] BT-12 (Contract reference) -BT maximum
+            length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1208,7 +1281,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-12-1-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-12-1-1] BT-75 (Deliver to address line 1) -
+            Fields are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1224,7 +1298,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-12-1-2] BT-77 (Deliver to city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-12-1-2] BT-77 (Deliver to city) - Fields
+            are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1240,7 +1315,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-12-1-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+          <svrl:text>[CIUS-CA-12-1-3] BT-78 (Deliver to post code) -
+            Fields are mandatory in Italy. Mapped BTs should be mandatory.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1256,7 +1332,9 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-22] BT-75, BT-76, BT-165 (Deliver to address line 1 - Deliver to address line 2 - Deliver to address line 3) -The sum of BTs maximum length shall be 60 chars (including separator). 
+          <svrl:text>[CIUS-VD-22] BT-75, BT-76, BT-165 (Deliver to address
+            line 1 - Deliver to address line 2 - Deliver to address line 3) -The sum of BTs maximum length shall be 60
+            chars (including separator).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1272,7 +1350,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-25] BT-77 (Deliver to city) -BT maximum length shall be 60 characters. 
+          <svrl:text>[CIUS-VD-25] BT-77 (Deliver to city) -BT maximum length
+            shall be 60 characters.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1288,7 +1367,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-28-1-1] BT-78 (Deliver to post code) -BT maximum length shall be 15 chars if country-code not =IT and 5 chars if country-code=IT. 
+          <svrl:text>[CIUS-VD-28-1-1] BT-78 (Deliver to post code) -BT
+            maximum length shall be 15 chars if country-code not =IT and 5 chars if country-code=IT.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1304,7 +1384,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-28-1-2] BT-78 (Deliver to post code) -BT maximum length, if country code =IT then it should be numeric and maximum length 5. 
+          <svrl:text>[CIUS-VD-28-1-2] BT-78 (Deliver to post code) -BT
+            maximum length, if country code =IT then it should be numeric and maximum length 5.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1320,7 +1401,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-31] BT-79 (Deliver to country subdivision) -BT maximum length shall be 2 chars only used if country code=IT else the BT is not used. 
+          <svrl:text>[CIUS-VD-31] BT-79 (Deliver to country subdivision) -BT
+            maximum length shall be 2 chars only used if country code=IT else the BT is not used.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1336,7 +1418,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-49] BT-79 (Deliver to country subdivision) -If country code=IT it should be coded according to Italian province list. 
+          <svrl:text>[CIUS-VD-49] BT-79 (Deliver to country subdivision) -If
+            country code=IT it should be coded according to Italian province list.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1358,7 +1441,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-15] BT-16 (Despatch advice reference) -BT will be structured as unique ID containing the despatch date as well (e.g. 123456789_2017-03-05) 
+          <svrl:text>[CIUS-VD-15] BT-16 (Despatch advice reference) -BT will
+            be structured as unique ID containing the despatch date as well (e.g. 123456789_2017-03-05)
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1374,7 +1458,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-16] BT-16 (Despatch advice reference) -BT maximum length shall be 30 chars (20 digit + YYYY-MM-DD). 
+          <svrl:text>[CIUS-VD-16] BT-16 (Despatch advice reference) -BT
+            maximum length shall be 30 chars (20 digit + YYYY-MM-DD).
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1396,7 +1481,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-SD-73] BT-126 (Invoice line identifier) -The BT value should be numeric. 
+          <svrl:text>[CIUS-SD-73] BT-126 (Invoice line identifier) -The BT
+            value should be numeric.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1412,7 +1498,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-38] BT-19 (Buyer accounting reference) -BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-38] BT-19 (Buyer accounting reference) -BT
+            maximum length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1428,7 +1515,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-74] BT-126 (Invoice line identifier) -BT maximum length shall be 4 chars. 
+          <svrl:text>[CIUS-VD-74] BT-126 (Invoice line identifier) -BT
+            maximum length shall be 4 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1444,7 +1532,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-75] BT-127 (Invoice line note) -BT maximum length shall be 60 chars. 
+          <svrl:text>[CIUS-VD-75] BT-127 (Invoice line note) -BT maximum
+            length shall be 60 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1460,7 +1549,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-78-1-1] BT-130 (Invoiced quantity unit of measure) -BT maximum length shall be 10 chars. 
+          <svrl:text>[CIUS-VD-78-1-1] BT-130 (Invoiced quantity unit of
+            measure) -BT maximum length shall be 10 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1476,7 +1566,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-78-1-2] BT-149 (Item price base quantity) -BT maximum length shall be 10 chars. 
+          <svrl:text>[CIUS-VD-78-1-2] BT-149 (Item price base quantity)
+            -BT maximum length shall be 10 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1492,7 +1583,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-78-1-3] BT-150 (Item price base quantity unit of measure code) -BT maximum length shall be 10 chars. 
+          <svrl:text>[CIUS-VD-78-1-3] BT-150 (Item price base quantity
+            unit of measure code) -BT maximum length shall be 10 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1508,7 +1600,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-79] BT-133 (Invoice line Buyer accounting reference)-BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-79] BT-133 (Invoice line Buyer accounting
+            reference)-BT maximum length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1530,7 +1623,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-80] BT-136, BT-141 (Invoice line allowance amount - Invoice line charge amount)-BT minimum length shall be 4, maximum length shall be 21 chars. 
+          <svrl:text>[CIUS-VD-80] BT-136, BT-141 (Invoice line allowance
+            amount - Invoice line charge amount)-BT minimum length shall be 4, maximum length shall be 21 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1546,7 +1640,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-81-1-1] BT-139 (Invoice line allowance reason)-BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-81-1-1] BT-139 (Invoice line allowance
+            reason)-BT maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1562,7 +1657,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-81-1-2] BT-140 (Invoice line allowance reason code)-BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-81-1-2] BT-140 (Invoice line allowance
+            reason code)-BT maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1578,7 +1674,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-82-1-1] BT-144 (Invoice line charge reason)-BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-82-1-1] BT-144 (Invoice line charge
+            reason)-BT maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1594,7 +1691,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-82-1-2] BT-145 (Invoice line charge reason code)-BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-82-1-2] BT-145 (Invoice line charge reason
+            code)-BT maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1616,7 +1714,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-76] BT-128-1 (Invoice line object identifier identification scheme identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-76] BT-128-1 (Invoice line object identifier
+            identification scheme identifier) -BT maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1632,7 +1731,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-77] BT-128 (Invoice line object identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-77] BT-128 (Invoice line object identifier) -BT
+            maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1654,7 +1754,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-85-1-1] BT-153 (Item name) -BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-85-1-1] BT-153 (Item name) -BT maximum
+            length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1670,7 +1771,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-85-1-2] BT-154 (Item description) -BT maximum length shall be 1000 chars. 
+          <svrl:text>[CIUS-VD-85-1-2] BT-154 (Item description) -BT
+            maximum length shall be 1000 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1692,7 +1794,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-93] BT-160 (Item attribute name) -BT maximum length shall be 10 chars. 
+          <svrl:text>[CIUS-VD-93] BT-160 (Item attribute name) -BT maximum
+            length shall be 10 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1708,7 +1811,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-94] BT-161 (Item attribute value) -BT maximum length shall be 60 chars. 
+          <svrl:text>[CIUS-VD-94] BT-161 (Item attribute value) -BT maximum
+            length shall be 60 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1730,7 +1834,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-87] BT-156 (Item Buyer's identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-87] BT-156 (Item Buyer's identifier) -BT
+            maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1752,7 +1857,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-89] BT-158 (Item classification identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-89] BT-158 (Item classification identifier) -BT
+            maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1774,7 +1880,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-91-1-1] BT-158-1 (Item classification identifier identification scheme identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-91-1-1] BT-158-1 (Item classification
+            identifier identification scheme identifier) -BT maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1790,7 +1897,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-91-1-2] BT-158-2 (Scheme version identifer) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-91-1-2] BT-158-2 (Scheme version identifer)
+            -BT maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1812,7 +1920,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-92] BT-159 (Item country of origin) -BT maximum length shall be 60 chars. 
+          <svrl:text>[CIUS-VD-92] BT-159 (Item country of origin) -BT maximum
+            length shall be 60 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1834,7 +1943,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-86] BT-155 (Item Seller's identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-86] BT-155 (Item Seller's identifier) -BT
+            maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1856,7 +1966,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-88] BT-157 (Item standard identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-88] BT-157 (Item standard identifier) -BT
+            maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1872,7 +1983,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-90] BT-157-1 (Item standard identifier identification scheme identifier) -BT maximum length shall be 35 chars. 
+          <svrl:text>[CIUS-VD-90] BT-157-1 (Item standard identifier
+            identification scheme identifier) -BT maximum length shall be 35 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1894,7 +2006,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-96] BT-132 (Referenced purchase order line reference) -BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-96] BT-132 (Referenced purchase order line
+            reference) -BT maximum length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1916,7 +2029,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-83] BT-146 (Item net price) -BT minimum length shall be 4 maximum length shall be 21 chars. 
+          <svrl:text>[CIUS-VD-83] BT-146 (Item net price) -BT minimum length
+            shall be 4 maximum length shall be 21 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1932,7 +2046,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-95] BT-146 (Item net price) -BT allowed fraction digits shall be 8. 
+          <svrl:text>[CIUS-VD-95] BT-146 (Item net price) -BT allowed
+            fraction digits shall be 8.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1954,7 +2069,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-62] BT-112 (Invoice total amount with VAT) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-62] BT-112 (Invoice total amount with VAT) -BT
+            minimum length shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1970,7 +2086,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-63] BT-115 (Amount due for payment) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-63] BT-115 (Amount due for payment) -BT minimum
+            length shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1986,7 +2103,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-65] BT-114 (Rounding amount) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-65] BT-114 (Rounding amount) -BT minimum length
+            shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2008,7 +2126,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-35] BT-13 (Purchase order reference) -BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-35] BT-13 (Purchase order reference) -BT
+            maximum length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2030,7 +2149,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-37] BT-17 (Tender or lot reference) -BT maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-37] BT-17 (Tender or lot reference) -BT maximum
+            length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2052,7 +2172,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-50] BT-59 (Payee name) -BT maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-50] BT-59 (Payee name) -BT maximum length shall
+            be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2074,7 +2195,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-55] BT-82 (Payment means text) -BT maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-55] BT-82 (Payment means text) -BT maximum
+            length shall be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2090,7 +2212,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-56] BT-83 (Remittance information) -BT maximum length shall be 60 chars. 
+          <svrl:text>[CIUS-VD-56] BT-83 (Remittance information) -BT maximum
+            length shall be 60 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2112,7 +2235,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-BT-84] BT-84 (Payment account identifier)  shall be an IBAN code. 
+          <svrl:text>[CIUS-BT-84] BT-84 (Payment account identifier) shall be
+            an IBAN code.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2128,7 +2252,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-57] BT-84 (Payment account identifier) -BT minimum length shall be 15, maximum length shall be 34 chars. 
+          <svrl:text>[CIUS-VD-57] BT-84 (Payment account identifier) -BT
+            minimum length shall be 15, maximum length shall be 34 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2144,7 +2269,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-58] BT-85 (Payment account name) -BT maximum length shall be 200 chars. 
+          <svrl:text>[CIUS-VD-58] BT-85 (Payment account name) -BT maximum
+            length shall be 200 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2166,7 +2292,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-59] BT-86 (Payment service provider identifier) -BT minimum length shall be 8 maximum length shall be 11 chars. 
+          <svrl:text>[CIUS-VD-59] BT-86 (Payment service provider identifier)
+            -BT minimum length shall be 8 maximum length shall be 11 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2188,7 +2315,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-33] BT-11 (Project reference) -BT maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-33] BT-11 (Project reference) -BT maximum
+            length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2210,7 +2338,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-36] BT-15 (Receiving advice reference) -BT maximum length shall be 20 chars. 
+          <svrl:text>[CIUS-VD-36] BT-15 (Receiving advice reference) -BT
+            maximum length shall be 20 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2232,7 +2361,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-19] BT-62 (Seller tax representative name) -BT maximum length shall be 80 chars. 
+          <svrl:text>[CIUS-VD-19] BT-62 (Seller tax representative name) -BT
+            maximum length shall be 80 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2254,7 +2384,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-42] BT-63 (Seller tax representative VAT identifier) -BT maximum length shall be 30 chars. 
+          <svrl:text>[CIUS-VD-42] BT-63 (Seller tax representative VAT
+            identifier) -BT maximum length shall be 30 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2276,7 +2407,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-66] BT-116 (VAT category taxable amount) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-66] BT-116 (VAT category taxable amount) -BT
+            minimum length shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2292,7 +2424,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-67] BT-117 (VAT category tax amount) -BT minimum length shall be 4 maximum length shall be 15 chars. 
+          <svrl:text>[CIUS-VD-67] BT-117 (VAT category tax amount) -BT
+            minimum length shall be 4 maximum length shall be 15 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2314,7 +2447,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-VD-68] BT-120 (VAT exemption reason text) -BT maximum length shall be 100 chars. 
+          <svrl:text>[CIUS-VD-68] BT-120 (VAT exemption reason text) -BT
+            maximum length shall be 100 chars.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -2336,7 +2470,8 @@ BT-49-1 (Buyer electronic address - Buyer electronic address identification sche
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [CIUS-CA-103] BT-81 (Payment means code) -Mandatory BT when PaymentMeans is present.
+          <svrl:text>[CIUS-CA-103] BT-81 (Payment means code) -Mandatory BT
+            when PaymentMeans is present.
         </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
