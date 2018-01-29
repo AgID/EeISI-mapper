@@ -47,6 +47,7 @@
         <module>converter-cen-ubl</module>
         <module>eigor-test-schemas</module>
         <module>eigor-commons</module>
+        <module>eigor-ph-schematron</module>
     </modules>
 
     <reporting>
