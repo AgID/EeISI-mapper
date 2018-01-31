@@ -22,6 +22,7 @@ public class ConversionIssueErrorCodeMapper {
         this.action = action;
     }
 
+    @Deprecated
     public IConversionIssue map(IConversionIssue issue) {
         ErrorMessage message = issue.getErrorMessage();
         Exception cause = issue.getCause();
@@ -37,7 +38,7 @@ public class ConversionIssueErrorCodeMapper {
         } else {
             error = aClass.getSimpleName().replace("Exception", "");
         }
-        message.updateErrorCode(location, action, error);
+//        message.updateErrorCode(location, action, error);
         return issue;
     }
 

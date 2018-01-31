@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
@@ -136,7 +137,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         try {
             document = getDocument(clonedInputStream);
         } catch (JDOMException | IOException e) {
-            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), getName(), "DocumentBuilding", e.getClass().getSimpleName().replace("Exception", "")), e);
+            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.UBL_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 

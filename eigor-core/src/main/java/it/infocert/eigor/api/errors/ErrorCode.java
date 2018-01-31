@@ -1,5 +1,7 @@
 package it.infocert.eigor.api.errors;
 
+import com.google.common.base.Preconditions;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,38 +11,32 @@ public class ErrorCode implements Serializable {
     /*
      * Where did the error occur?
      */
-    @Nullable
     private final Location location;
 
     /*
      * What caused the error?
      */
-    @Nullable
     private final Action action;
 
     /*
      * What error did occur?
      */
-    @Nullable
     private final Error error;
 
-    public ErrorCode(@Nullable Location location, @Nullable Action action, @Nullable Error error) {
-        this.location = location;
-        this.action = action;
-        this.error = error;
+    public ErrorCode(Location location, Action action, Error error) {
+        this.location = Preconditions.checkNotNull(location, "Cannot build an error code without the Location tag");
+        this.action = Preconditions.checkNotNull(action, "Cannot build an error code without the Action tag");
+        this.error = Preconditions.checkNotNull(error, "Cannot build an error code without the Error tag");
     }
 
-    @Nullable
     public Location getLocation() {
         return location;
     }
 
-    @Nullable
     public Action getAction() {
         return action;
     }
 
-    @Nullable
     public Error getError() {
         return error;
     }

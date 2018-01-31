@@ -5,6 +5,7 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
@@ -68,7 +69,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(strDblConverter.convert(invoicedQuantity.getText()));
                     bg0025.getBT0129InvoicedQuantity().add(bt0129);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                            .message(e.getMessage())
+                            .location(ErrorCode.Location.UBL_IN)
+                            .action(ErrorCode.Action.HARDCODED_MAP)
+                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                            .build());
                     errors.add(ConversionIssue.newError(ere));
                 }
                 Attribute invoicedQuantityAttribute = invoicedQuantity.getAttribute("unitCode");
@@ -86,8 +92,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     } catch (NullPointerException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                 .message(String.format("Unit Of Measure Code %s not found in list", commonCode))
-                                .action("InvoiceLineConverter")
-                                .error("UnitOfMeasureNotFound")
+                                .location(ErrorCode.Location.UBL_IN)
+                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                .error(ErrorCode.Error.MISSING_VALUE)
                                 .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -100,7 +107,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(strDblConverter.convert(lineExtensionAmount.getText()));
                     bg0025.getBT0131InvoiceLineNetAmount().add(bt0131);
                 } catch (NumberFormatException | ConversionFailedException  e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                            .message(e.getMessage())
+                            .location(ErrorCode.Location.UBL_IN)
+                            .action(ErrorCode.Action.HARDCODED_MAP)
+                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                            .build());
                     errors.add(ConversionIssue.newError(ere));
                 }
             }
@@ -131,14 +143,24 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         BT0134InvoiceLinePeriodStartDate bt0134 = new BT0134InvoiceLinePeriodStartDate(StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd").convert(startDateLine.getText()));
                         bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
                     } catch (IllegalArgumentException | ConversionFailedException  e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                .message("Invalid date format")
+                                .location(ErrorCode.Location.UBL_IN)
+                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
                     try {
                         BT0135InvoiceLinePeriodEndDate bt0135 = new BT0135InvoiceLinePeriodEndDate(StringToJavaLocalDateConverter.newConverter ("yyyy-MM-dd").convert(endDateLine.getText()));
                         bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
                     } catch (IllegalArgumentException | ConversionFailedException  e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
+                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                .message("Invalid date format")
+                                .location(ErrorCode.Location.UBL_IN)
+                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
                 }
