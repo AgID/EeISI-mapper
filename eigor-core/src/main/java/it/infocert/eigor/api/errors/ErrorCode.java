@@ -10,38 +10,38 @@ public class ErrorCode implements Serializable {
      * Where did the error occur?
      */
     @Nullable
-    private final String location;
+    private final Location location;
 
     /*
      * What caused the error?
      */
     @Nullable
-    private final String action;
+    private final Action action;
 
     /*
      * What error did occur?
      */
     @Nullable
-    private final String error;
+    private final Error error;
 
-    public ErrorCode(@Nullable String location, @Nullable String action, @Nullable String error) {
+    public ErrorCode(@Nullable Location location, @Nullable Action action, @Nullable Error error) {
         this.location = location;
         this.action = action;
         this.error = error;
     }
 
     @Nullable
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
     @Nullable
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
     @Nullable
-    public String getError() {
+    public Error getError() {
         return error;
     }
 
@@ -61,5 +61,30 @@ public class ErrorCode implements Serializable {
         result = 31 * result + (action != null ? action.hashCode() : 0);
         result = 31 * result + (error != null ? error.hashCode() : 0);
         return result;
+    }
+
+    public enum Location {
+        UBL_IN,
+        UBL_OUT,
+        FATTPA_IN,
+        FATTPA_OUT,
+        CII_IN,
+        CII_OUT
+    }
+
+    public enum Action {
+        XSD_VALIDATION,
+        SCH_VALIDATION,
+        CIUS_SCH_VALIDATION,
+        CONFIGURED_MAP,
+        HARDCODED_MAP,
+        XML_PARSING,
+        GENERIC
+    }
+
+    public enum Error {
+        INVALID,
+        ILLEGAL_VALUE,
+        MISSING_VALUE
     }
 }

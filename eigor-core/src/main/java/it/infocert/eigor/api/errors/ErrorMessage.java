@@ -14,8 +14,8 @@ public class ErrorMessage implements Serializable{
     private ErrorCode errorCode;
     private final List<Exception> relatedExceptions = new ArrayList<>(0);
 
-    public ErrorMessage(String message, @Nullable String location, @Nullable String type, @Nullable String code) {
-        this(message, new ErrorCode(location, type, code));
+    public ErrorMessage(String message, @Nullable ErrorCode.Location location, @Nullable ErrorCode.Action action, @Nullable ErrorCode.Error code) {
+        this(message, new ErrorCode(location, action, code));
     }
 
     public ErrorMessage(@Nullable String message) {
@@ -31,7 +31,7 @@ public class ErrorMessage implements Serializable{
         this(message, errorMessage.getErrorCode());
     }
 
-    public ErrorMessage(Exception relatedException, String message, String location, @Nullable String action, @Nullable String code) {
+    public ErrorMessage(Exception relatedException, String message, ErrorCode.Location location, @Nullable ErrorCode.Action action, @Nullable ErrorCode.Error code) {
         this(relatedException, message, new ErrorCode(location, action, code));
     }
 
@@ -74,7 +74,7 @@ public class ErrorMessage implements Serializable{
         return !relatedExceptions.isEmpty();
     }
 
-    public ErrorCode updateErrorCode(String location, @Nullable String action, String error) {
+    public ErrorCode updateErrorCode(ErrorCode.Location location, @Nullable ErrorCode.Action action, ErrorCode.Error error) {
         if (this.errorCode != null) {
             this.errorCode = new ErrorCode(
                     location != null ? location : this.errorCode.getLocation(),
@@ -110,13 +110,13 @@ public class ErrorMessage implements Serializable{
         private String message;
 
         @Nullable
-        private String location;
+        private ErrorCode.Location location;
 
         @Nullable
-        private String action;
+        private ErrorCode.Action action;
 
         @Nullable
-        private String error;
+        private ErrorCode.Error error;
 
         @Nullable
         private ErrorCode errorCode;
@@ -130,17 +130,17 @@ public class ErrorMessage implements Serializable{
             return this;
         }
 
-        public Builder location(String location) {
+        public Builder location(ErrorCode.Location location) {
             this.location = location;
             return this;
         }
 
-        public Builder action(String action) {
+        public Builder action(ErrorCode.Action action) {
             this.action = action;
             return this;
         }
 
-        public Builder error(String error) {
+        public Builder error(ErrorCode.Error error) {
             this.error = error;
             return this;
         }
