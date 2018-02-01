@@ -5,6 +5,8 @@ import it.infocert.eigor.api.utils.RuleReports;
 import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.Visitor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -137,9 +140,15 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     private String toCsvFileContent(List<IConversionIssue> errors) {
-        final StringBuilder toCenErrorsCsv = new StringBuilder("Error,Reason\n");
-        for (IConversionIssue e : errors) {
-            toCenErrorsCsv.append(e.getMessage()).append(",").append(e.getCause()).append("\n");
+        final StringBuilder toCenErrorsCsv = new StringBuilder();
+        try (CSVPrinter printer = new CSVPrinter(toCenErrorsCsv, CSVFormat.DEFAULT.withHeader("Error", "Reason"));) {
+            for (IConversionIssue e : errors) {
+                printer.printRecord(e.getMessage(), e.getCause());
+            }
+            printer.flush();
+            printer.close();
+        } catch (Exception e) {
+            toCenErrorsCsv.append(e.getMessage());
         }
         return toCenErrorsCsv.toString();
     }
