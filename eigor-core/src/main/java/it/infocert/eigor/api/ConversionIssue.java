@@ -26,6 +26,16 @@ public class ConversionIssue implements IConversionIssue {
         return new ConversionIssue(message, e, false);
     }
 
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an warning caused by the given exception and error code. */
+    public static ConversionIssue newWarning(Exception e, String message, @Nullable String location, @Nullable String action, String error) {
+        return new ConversionIssue(new ErrorMessage(message, location, action, error), e, false);
+    }
+
+    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an warning caused by the given exception and error message. */
+    public static ConversionIssue newWarning(Exception e, ErrorMessage message) {
+        return new ConversionIssue(message, e, false);
+    }
+
     /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
     public static ConversionIssue newError(Exception e) {
         return new ConversionIssue(e.getMessage(), e, true);

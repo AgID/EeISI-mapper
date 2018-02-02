@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Mapper;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
@@ -142,6 +144,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 			if(ciusValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_CIUS_VALIDATION);
             }
+
 			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidationErrors));
 
 		} catch (IOException e) {
