@@ -191,7 +191,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)">
           <xsl:attribute name="id">CIUS-CA-9</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -208,7 +208,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-32</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -225,7 +225,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Note) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-39</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -242,7 +242,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(exists(cbc:TaxCurrencyCode)) or matches(cbc:TaxCurrencyCode, 'EUR')">
           <xsl:attribute name="id">CIUS-CI-13</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -265,7 +265,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:CF') or ( (string-length(cbc:ID) >= 11) and (string-length(cbc:ID) &lt;=16))">
           <xsl:attribute name="id">CIUS-VD-100-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -283,7 +283,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:EORI') or ( (string-length(cbc:ID) >= 13) and (string-length(cbc:ID) &lt;=17))">
           <xsl:attribute name="id">CIUS-VD-100-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -301,7 +301,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:VAT') or ( (string-length(cbc:ID) &lt;= 30) and (contains( 'AD AE AF AG AI AL AM AN AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BL BJ BM BN BO BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CX CY CZ DE DJ DK DM DO DZ EC EE EG EH EL ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR ST SV SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW',substring(cbc:ID,1,2) ) ))">
           <xsl:attribute name="id">CIUS-VD-100-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -325,7 +325,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:CF') or ( (string-length(cbc:ID) >= 11) and (string-length(cbc:ID) &lt;=16))">
           <xsl:attribute name="id">CIUS-VD-101-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -343,7 +343,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:EORI') or ( (string-length(cbc:ID) >= 13) and (string-length(cbc:ID) &lt;=17))">
           <xsl:attribute name="id">CIUS-VD-101-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -361,7 +361,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:VAT') or ( (string-length(cbc:ID) &lt;= 30) and ( contains( 'AD AE AF AG AI AL AM AN AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BL BJ BM BN BO BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CX CY CZ DE DJ DK DM DO DZ EC EE EG EH EL ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR ST SV SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW',substring(cbc:ID,1,2) ) ))">
           <xsl:attribute name="id">CIUS-VD-101-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -385,7 +385,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:REA') or ( (string-length(cbc:CompanyID) >= 3) and (string-length(cbc:CompanyID) &lt;=22) and( contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',substring(cbc:CompanyID,1,2) )))">
           <xsl:attribute name="id">CIUS-VD-102-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -404,7 +404,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cbc:ID/@schemeID = 'IT:ALBO') or (string-length(cbc:CompanyID) &lt;=30)">
           <xsl:attribute name="id">CIUS-VD-102-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -428,7 +428,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:CF') or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:PIVA')">
           <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -446,7 +446,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = 'IT:CODDEST' or cbc:EndpointID/@schemeID = 'IT:PEC' or cbc:EndpointID/@schemeID = 'IT:IPA' )">
           <xsl:attribute name="id">CIUS-CA-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -465,7 +465,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or ( exists(cac:PartyIdentification/cbc:ID) and exists(cac:PartyIdentification/cbc:ID/@schemeID) )">
           <xsl:attribute name="id">CIUS-VD-53</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -483,7 +483,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cbc:EndpointID/@schemeID = 'IT:PEC') or ( string-length(cbc:EndpointID) >= 7 and string-length(cbc:EndpointID) &lt;= 256 )">
           <xsl:attribute name="id">CIUS-VD-97-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -501,7 +501,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cbc:EndpointID/@schemeID = 'IT:IPA') or ( string-length(cbc:EndpointID) = 6 )">
           <xsl:attribute name="id">CIUS-VD-97-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -519,7 +519,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cbc:EndpointID/@schemeID = 'IT:CODDEST') or ( string-length(cbc:EndpointID) = 7 )">
           <xsl:attribute name="id">CIUS-VD-97-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -543,7 +543,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-51</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -566,7 +566,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:RegistrationName) &lt;= 80">
           <xsl:attribute name="id">CIUS-VD-18</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -589,7 +589,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
           <xsl:attribute name="id">CIUS-VD-43</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -612,7 +612,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-11-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -629,7 +629,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-11-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -646,7 +646,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-11-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -663,7 +663,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-21</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -681,7 +681,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-24</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -698,7 +698,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
           <xsl:attribute name="id">CIUS-VD-27-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -715,7 +715,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
           <xsl:attribute name="id">CIUS-VD-27-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -732,7 +732,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or not(exists(cbc:CountrySubentity)) or string-length(cbc:CountrySubentity) = 2">
           <xsl:attribute name="id">CIUS-VD-30</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -749,7 +749,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )">
           <xsl:attribute name="id">CIUS-VD-48</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -772,7 +772,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-44</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -789,7 +789,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(exists(cbc:Telephone)) or (string-length(cbc:Telephone) &lt;= 12 and string-length(cbc:Telephone) >= 5)">
           <xsl:attribute name="id">CIUS-VD-45</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -806,7 +806,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(exists(cbc:ElectronicMail)) or (string-length(cbc:ElectronicMail) &lt;= 256 and string-length(cbc:ElectronicMail) >= 7)">
           <xsl:attribute name="id">CIUS-VD-46</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -829,7 +829,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:RegistrationName) &lt;= 80">
           <xsl:attribute name="id">CIUS-VD-17</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -852,7 +852,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(cac:TaxScheme/cbc:ID='VAT') or ((../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and (exists(cbc:CompanyID)))">
           <xsl:attribute name="id">CIUS-BT-98-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -870,7 +870,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or (cac:TaxScheme/cbc:ID='VAT') or contains( 'RF01 RF02 RF03 RF04 RF05 RF06 RF07 RF08 RF09 RF10 RF11 RF12 RF13 RF14 RF15 RF16 RF17 RF18 RF19',cbc:CompanyID)">
           <xsl:attribute name="id">CIUS-VD-99</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -887,7 +887,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
           <xsl:attribute name="id">CIUS-VD-41</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -910,7 +910,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or count(cac:PartyTaxScheme/cac:TaxScheme[not(cbc:ID='VAT')]) >=1">
           <xsl:attribute name="id">CIUS-BT-98-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -934,7 +934,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-10-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -951,7 +951,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-10-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -968,7 +968,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-10-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -985,7 +985,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-20</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1003,7 +1003,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-23</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1020,7 +1020,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
           <xsl:attribute name="id">CIUS-VD-26-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1037,7 +1037,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
           <xsl:attribute name="id">CIUS-VD-26-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1054,7 +1054,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or not(exists(cbc:CountrySubentity)) or string-length(cbc:CountrySubentity) = 2">
           <xsl:attribute name="id">CIUS-VD-29</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1071,7 +1071,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',cbc:CountrySubentity )">
           <xsl:attribute name="id">CIUS-VD-47</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1094,7 +1094,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:Attachment/cbc:EmbeddedDocumentBinaryObject)">
           <xsl:attribute name="id">CIUS-CA-71</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1111,7 +1111,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:ID) + string-length(cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@filename)) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-69</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1128,7 +1128,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:DocumentType) &lt;= 100">
           <xsl:attribute name="id">CIUS-VD-70</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1151,7 +1151,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(EmbeddedDocumentBinaryObject/@mimeCode) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-72</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1174,7 +1174,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:AllowanceChargeReason) + string-length(cbc:AllowanceChargeReasonCode)) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-60</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1191,7 +1191,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:AllowanceChargeReason) + string-length(cbc:AllowanceChargeReasonCode)) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-61</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1208,7 +1208,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Amount) &lt;= 21 and string-length(cbc:Amount) >= 4">
           <xsl:attribute name="id">CIUS-VD-64</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1231,7 +1231,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-40</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1254,7 +1254,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-34</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1277,7 +1277,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-12-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1294,7 +1294,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-12-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1311,7 +1311,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-12-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1328,7 +1328,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(string-length(cbc:StreetName) + string-length(cbc:AdditionalStreetName) + string-length(cac:AddressLine/cbc:Line)) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-22</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1346,7 +1346,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CityName) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-25</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1363,7 +1363,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PostalZone) &lt;= 15">
           <xsl:attribute name="id">CIUS-VD-28-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1380,7 +1380,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or ( string-length(cbc:PostalZone) &lt;= 5 and number(cbc:PostalZone) > 0 )">
           <xsl:attribute name="id">CIUS-VD-28-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1397,7 +1397,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or string-length(cbc:CountrySubentity) = 2">
           <xsl:attribute name="id">CIUS-VD-31</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1414,7 +1414,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:Country/cbc:IdentificationCode = 'IT') or contains( 'AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT',concat(' ',normalize-space(.),' ') )">
           <xsl:attribute name="id">CIUS-VD-49</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1437,7 +1437,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="matches(cbc:ID, '([0-9]{1,20})+_+([0-9]{4})-([0-9]{2})-([0-9]{2})')">
           <xsl:attribute name="id">CIUS-VD-15</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1454,7 +1454,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 31">
           <xsl:attribute name="id">CIUS-VD-16</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1477,7 +1477,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="number(cbc:ID) > 0 and number(cbc:ID) &lt;=9999">
           <xsl:attribute name="id">CIUS-SD-73</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1494,7 +1494,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AccountingCost) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-38</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1511,7 +1511,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 4">
           <xsl:attribute name="id">CIUS-VD-74</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1528,7 +1528,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Note) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-75</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1545,7 +1545,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:InvoicedQuantity/@unitCode) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-78-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1562,7 +1562,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cac:Price/cbc:BaseQuantity) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-78-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1579,7 +1579,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cac:Price/cbc:BaseQuantity/@unitCode) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-78-3</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1596,7 +1596,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AccountingCost) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-79</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1619,7 +1619,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Amount) >= 4 and string-length(cbc:Amount) &lt;= 21">
           <xsl:attribute name="id">CIUS-VD-80</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1636,7 +1636,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AllowanceChargeReason) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-81-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1653,7 +1653,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AllowanceChargeReasonCode) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-81-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1670,7 +1670,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AllowanceChargeReason) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-82-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1687,7 +1687,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:AllowanceChargeReasonCode) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-82-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1710,7 +1710,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID/@schemeID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-76</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1727,7 +1727,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-77</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1750,7 +1750,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-85-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1767,7 +1767,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Description) &lt;= 1000">
           <xsl:attribute name="id">CIUS-VD-85-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1790,7 +1790,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 10">
           <xsl:attribute name="id">CIUS-VD-93</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1807,7 +1807,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Value) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-94</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1830,7 +1830,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-87</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1853,7 +1853,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ItemClassificationCode) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-89</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1876,7 +1876,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(@listVersionID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-91-1</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1893,7 +1893,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(@listID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-91-2</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1916,7 +1916,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:IdentificationCode) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-92</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1939,7 +1939,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-86</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1962,7 +1962,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-88</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -1979,7 +1979,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID/@schemeID) &lt;= 35">
           <xsl:attribute name="id">CIUS-VD-90</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2002,7 +2002,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:LineID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-96</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2025,7 +2025,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PriceAmount) &lt;= 21 and string-length(cbc:PriceAmount) >= 4">
           <xsl:attribute name="id">CIUS-VD-83</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2042,7 +2042,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="matches(cbc:PriceAmount, '^[0-9]+(\.[0-9]{0,8})*$')">
           <xsl:attribute name="id">CIUS-VD-95</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2065,7 +2065,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:TaxInclusiveAmount) &lt;= 15 and string-length(cbc:TaxInclusiveAmount) >= 4">
           <xsl:attribute name="id">CIUS-VD-62</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2082,7 +2082,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PayableAmount) &lt;= 15 and string-length(cbc:PayableAmount) >= 4">
           <xsl:attribute name="id">CIUS-VD-63</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2099,7 +2099,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(exists(cbc:PayableRoundingAmount)) or (string-length(cbc:PayableRoundingAmount) &lt;= 15 and string-length(cbc:PayableRoundingAmount) >= 4)">
           <xsl:attribute name="id">CIUS-VD-65</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2122,7 +2122,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-35</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2145,7 +2145,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 15">
           <xsl:attribute name="id">CIUS-VD-37</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2168,7 +2168,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-50</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2191,7 +2191,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:InstructionNote) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-55</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2208,7 +2208,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:PaymentID) &lt;= 60">
           <xsl:attribute name="id">CIUS-VD-56</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2231,7 +2231,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="matches(cbc:ID, '([a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})')">
           <xsl:attribute name="id">CIUS-BT-84</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2248,7 +2248,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 34 and string-length(cbc:ID) >= 15">
           <xsl:attribute name="id">CIUS-VD-57</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2265,7 +2265,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 200">
           <xsl:attribute name="id">CIUS-VD-58</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2288,7 +2288,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 11 and string-length(cbc:ID) >= 8">
           <xsl:attribute name="id">CIUS-VD-59</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2311,7 +2311,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 15">
           <xsl:attribute name="id">CIUS-VD-33</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2334,7 +2334,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:ID) &lt;= 20">
           <xsl:attribute name="id">CIUS-VD-36</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2357,7 +2357,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:Name) &lt;= 80">
           <xsl:attribute name="id">CIUS-VD-19</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2380,7 +2380,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:CompanyID) &lt;= 30">
           <xsl:attribute name="id">CIUS-VD-42</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2403,7 +2403,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:TaxableAmount) &lt;= 15 and string-length(cbc:TaxableAmount) >= 4">
           <xsl:attribute name="id">CIUS-VD-66</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2420,7 +2420,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:TaxAmount) &lt;= 15 and string-length(cbc:TaxAmount) >= 4">
           <xsl:attribute name="id">CIUS-VD-67</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2443,7 +2443,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="string-length(cbc:TaxExemptionReason) &lt;= 100">
           <xsl:attribute name="id">CIUS-VD-68</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -2466,7 +2466,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:PaymentMeansCode)">
           <xsl:attribute name="id">CIUS-CA-103</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>

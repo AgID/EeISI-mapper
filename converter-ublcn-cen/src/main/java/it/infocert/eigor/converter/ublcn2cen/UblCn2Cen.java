@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.ublcn2cen;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Mapper;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
@@ -126,6 +128,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
 			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
             errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusErrors));
+
 
         } catch (IOException | IllegalArgumentException e) {
             errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));

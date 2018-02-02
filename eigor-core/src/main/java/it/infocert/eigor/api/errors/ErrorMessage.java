@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorMessage implements Serializable{
+public class ErrorMessage implements Serializable {
 
     @Nullable
     private final String message;
@@ -35,7 +35,7 @@ public class ErrorMessage implements Serializable{
         this(relatedException, message, new ErrorCode(location, action, code));
     }
 
-    public ErrorMessage(Exception relatedException, String message,@Nullable ErrorCode errorCode) {
+    public ErrorMessage(Exception relatedException, String message, @Nullable ErrorCode errorCode) {
         this(message, errorCode);
         this.relatedExceptions.add(relatedException);
     }
@@ -123,7 +123,8 @@ public class ErrorMessage implements Serializable{
 
         private final List<Exception> exceptions = new ArrayList<>(0);
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public Builder message(String message) {
             this.message = message;
