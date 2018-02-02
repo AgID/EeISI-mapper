@@ -43,7 +43,7 @@ public class ErrorCode implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s.%s.%s", location, action, error);
+        return String.format("%s.%s.%s", location.name(), action.name(), error.name());
     }
 
     @Override
