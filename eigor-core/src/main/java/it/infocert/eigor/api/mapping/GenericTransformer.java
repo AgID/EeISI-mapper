@@ -3,11 +3,9 @@ package it.infocert.eigor.api.mapping;
 import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import com.google.common.collect.Lists;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.EigorRuntimeException;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -29,12 +27,15 @@ import java.util.List;
 public abstract class GenericTransformer {
 
     protected static Logger log = null;
+    private final ErrorCode.Action errorAction = ErrorCode.Action.CONFIGURED_MAP;
     protected ConversionRegistry conversionRegistry;
-    protected InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
+    InvoiceUtils invoiceUtils;
 
-    public GenericTransformer(IReflections reflections, ConversionRegistry conversionRegistry) {
+    protected GenericTransformer(IReflections reflections, ConversionRegistry conversionRegistry, ErrorCode.Location callingLocation) {
         this.invoiceUtils = new InvoiceUtils(reflections);
         this.conversionRegistry = conversionRegistry;
+        this.callingLocation = callingLocation;
     }
 
 
@@ -75,7 +76,6 @@ public abstract class GenericTransformer {
     }
 
     protected Object addNewCenObjectWithIdentifierToInvoice(String cenPath, BG0000Invoice invoice, Element node, List<IConversionIssue> errors) {
-        final Object[] constructorParam = new Object[]{null};
 
         // find the parent BG
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
@@ -104,9 +104,7 @@ public abstract class GenericTransformer {
                 BTBG bt = constructor.newInstance(id);
                 invoiceUtils.addChild(bg, bt);
                 return id;
-            } catch (NoSuchMethodException e) {
-                errors.add(ConversionIssue.newError(e));
-            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 errors.add(ConversionIssue.newError(e));
             }
         }
@@ -121,8 +119,11 @@ public abstract class GenericTransformer {
         String bgPath = cenPath.substring(0, cenPath.lastIndexOf("/"));
         try {
             invoiceUtils.ensurePathExists(cenPath, invoice);
+        } catch (IllegalArgumentException e) {
+            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.ILLEGAL_VALUE));
+            return constructorParam[0];
         } catch (Exception e) {
-            errors.add(ConversionIssue.newError(e, e.getMessage(), null, "generic-transformation", null));
+            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
             return constructorParam[0];
         }
         BTBG bg;
@@ -167,7 +168,7 @@ public abstract class GenericTransformer {
                                                 bt.add((BTBG) constructor.newInstance(constructorParam[0]));
                                             } catch (InstantiationException | IllegalAccessException e) {
                                                 log.error(e.getMessage(), e);
-                                                errors.add(ConversionIssue.newError(e));
+                                                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
                                             } catch (InvocationTargetException e) {
                                                 String message = constructorParam[0] == null ?
                                                         String.format("%s - Constructor parameter conversion yielded null for %s with value %s",
@@ -180,11 +181,11 @@ public abstract class GenericTransformer {
                                                                 message
                                                                 : e.getMessage()
                                                         , e);
-                                                errors.add(ConversionIssue.newError(e, message, null, "ConstructorParameterConversion", null));
+                                                errors.add(ConversionIssue.newError(e, message, callingLocation, errorAction, ErrorCode.Error.INVALID));
 
                                             }
                                         } catch (IllegalArgumentException e) {
-                                            errors.add(ConversionIssue.newError(e));
+                                            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.ILLEGAL_VALUE));
                                         }
                                     }
                                 });
@@ -192,7 +193,7 @@ public abstract class GenericTransformer {
                             }
                         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
-                            errors.add(ConversionIssue.newError(e));
+                            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
                         }
                     }
                 };
@@ -204,9 +205,12 @@ public abstract class GenericTransformer {
                 if (!bt.isEmpty()) {
                     invoiceUtils.addChild(bg, bt.get(0));
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
                 log.error(e.getMessage(), e);
-                errors.add(ConversionIssue.newError(e));
+                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.ILLEGAL_VALUE));
+            } catch (InvocationTargetException e) {
+                log.error(e.getMessage(), e);
+                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
             }
         }
         return constructorParam[0];
@@ -229,25 +233,27 @@ public abstract class GenericTransformer {
         ArrayList<String> xmlSteps = Lists.newArrayList(xPath.substring(1).split("/"));
         String remove //keep it that way, there were some access races without it that still need to be investigated
                 = xmlSteps.remove(0);
-        boolean attribute = false;
         String last;
         if ((last = xmlSteps.get(xmlSteps.size() - 1)).startsWith("@")) {
             xmlSteps.remove(last);
-            attribute = true;
         }
 
         List<Element> elements = createXmlPathRecursively(document.getRootElement(), document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
         if (btsSize > elements.size()) {
             IConversionIssue e = ConversionIssue.newError(
-                    new IllegalArgumentException("BTs can not be more than XML elements"),
-                    String.format("Found %d %s but only %d %s XML elements were created. " +
-                                    "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
-                                    "Check rule-report.csv for more informations about BT/BGs validation",
-                            btsSize,
-                            cenPath,
-                            elements.size(),
-                            xPath
-                    )
+                            new IllegalArgumentException("BTs can not be more than XML elements"),
+                            String.format("Found %d %s but only %d %s XML elements were created. " +
+                                            "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
+                                            "Check rule-report.csv for more informations about BT/BGs validation",
+                                    btsSize,
+                                    cenPath,
+                                    elements.size(),
+                                    xPath
+                            ),
+                    callingLocation,
+                    errorAction,
+                    ErrorCode.Error.INVALID
+
             );
             errors.add(e);
             log.error(e.getMessage());
@@ -262,7 +268,11 @@ public abstract class GenericTransformer {
         try {
             bts = getBtRecursively(invoice, Lists.newArrayList(cenSteps), new ArrayList<BTBG>(0));
         } catch (Exception e) {
-            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("GenericTransformer").build());
+            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                    .location(callingLocation)
+                    .action(errorAction)
+                    .error(ErrorCode.Error.INVALID)
+                    .build());
             errors.add(ConversionIssue.newError(ere));
             return null;
         }
@@ -322,18 +332,23 @@ public abstract class GenericTransformer {
         return leafs;
     }
 
-    private Element createElement(String tagname, Element rootElement){
+    private Element createElement(String tagname, Element rootElement) {
         String elementName = getElementNameTagName(tagname);
         String nsPrefix = getNSPrefixForTagName(tagname);
-        if(nsPrefix!=null){
+        if (nsPrefix != null) {
             Namespace namespace = rootElement.getNamespace(nsPrefix);
-            if(namespace == null){
+            if (namespace == null) {
                 StringBuilder availableNamespaces = new StringBuilder();
-                for(Namespace ns : rootElement.getNamespacesIntroduced()){
+                for (Namespace ns : rootElement.getNamespacesIntroduced()) {
                     availableNamespaces.append(ns.getPrefix()).append(" ");
                 }
-                throw new EigorRuntimeException("Unable to find namespace declaration of prefix '" + nsPrefix +"' of tagname '" + tagname +"' in root element!\n" +
-                "Available namespace prefixes are: " + availableNamespaces);
+                throw new EigorRuntimeException(
+                        String.format("Unable to find namespace declaration of prefix '%s' of tag name '%s' in root element!\n" +
+                                "Available namespace prefixes are: %s", nsPrefix, tagname, availableNamespaces),
+                        callingLocation,
+                        errorAction,
+                        ErrorCode.Error.MISSING_VALUE
+                );
             }
             return new Element(elementName, namespace);
         }
@@ -349,7 +364,7 @@ public abstract class GenericTransformer {
 
     private String getElementNameTagName(String tagname) {
         if (tagname.contains(":")) {
-            return tagname.substring(tagname.indexOf(":")+1);
+            return tagname.substring(tagname.indexOf(":") + 1);
         }
         return tagname;
     }

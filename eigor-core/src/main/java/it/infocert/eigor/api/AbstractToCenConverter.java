@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
@@ -33,6 +34,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     private IReflections reflections;
     private final ConversionRegistry conversionRegistry;
     protected final EigorConfiguration configuration;
+    private final ErrorCode.Location callingLocation;
     protected final DefaultResourceLoader drl;
 
     @Nullable
@@ -46,10 +48,11 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings = Lists.newArrayList();
 
-    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration, ErrorCode.Location callingLocation) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;
+        this.callingLocation = callingLocation;
         this.drl = new DefaultResourceLoader();
         this.configurableSupport = new ConfigurableSupport(this);
     }
@@ -128,7 +131,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 
 
         for (Map.Entry<String, String> entry : oneToOneMappings.entries()) {
-            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
+            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry, callingLocation);
             transformer.transformXmlToCen(document, invoice, errors);
         }
         return new ConversionResult<>(errors, invoice);

@@ -5,6 +5,7 @@ import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
@@ -22,30 +23,32 @@ import java.util.Map;
  * based on a 1-n configurable mapping
  * Use string substring start and end indexes pairs for each target
  */
-public class GenericOneToManyTransformer extends GenericTransformer{
+public class GenericOneToManyTransformer extends GenericTransformer {
 
     private final List<String> targetPaths;
     private final String sourcePath;
     /**
      * Substring start and end index for each targetPath
      */
-    private final Map<String,Pair<Integer, Integer>> splittingBoundsForTargetPath;
+    private final Map<String, Pair<Integer, Integer>> splittingBoundsForTargetPath;
+    private final ErrorCode.Location callingLocation;
 
-    public GenericOneToManyTransformer(IReflections reflections, ConversionRegistry conversionRegistry, List<String> targetPaths, String sourcePath, Map<String, Pair<Integer, Integer>> splittingBoundsForTargetPath) {
-        super(reflections, conversionRegistry);
+    public GenericOneToManyTransformer(IReflections reflections, ConversionRegistry conversionRegistry, List<String> targetPaths, String sourcePath, Map<String, Pair<Integer, Integer>> splittingBoundsForTargetPath, ErrorCode.Location callingLocation) {
+        super(reflections, conversionRegistry, callingLocation);
         this.targetPaths = targetPaths;
         this.sourcePath = sourcePath;
         this.splittingBoundsForTargetPath = splittingBoundsForTargetPath;
+        this.callingLocation = callingLocation;
         log = LoggerFactory.getLogger(GenericOneToManyTransformer.class);
     }
 
     @Override
-    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformXmlToCen(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
         throw new RuntimeException("Not yet implemented!");
     }
 
     @Override
-    public void transformCenToXml(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
+    public void transformCenToXml(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
         final String logPrefix = "(" + sourcePath + " - " + targetPaths + ") ";
         log.trace(logPrefix + "resolving");
 
@@ -92,7 +95,12 @@ public class GenericOneToManyTransformer extends GenericTransformer{
 
                 elements.get(0).setText(subStringValue);
             } catch (StringIndexOutOfBoundsException e) {
-                errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().action("OneToMany").error("StringIndexOutOfBound").message(e.getMessage()).build())));
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder()
+                        .location(callingLocation)
+                        .action(ErrorCode.Action.CONFIGURED_MAP)
+                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+
+                        .message(e.getMessage()).build())));
             }
         }
     }

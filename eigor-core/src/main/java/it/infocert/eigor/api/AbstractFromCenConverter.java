@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
@@ -47,7 +48,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     private final EigorConfiguration configuration;
     private IReflections reflections;
     private ConversionRegistry conversionRegistry;
-    private String regex;
+    private final ErrorCode.Location callingLocation;
     private final DefaultResourceLoader drl;
     private Multimap<String, String> mappings;
     private Multimap<String, String> many2oneMappings;
@@ -55,9 +56,10 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings;
 
-    protected AbstractFromCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    protected AbstractFromCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration, ErrorCode.Location callingLocation) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
+        this.callingLocation = callingLocation;
         this.drl = new DefaultResourceLoader();
         this.configuration = checkNotNull(configuration);
         this.configurableSupport = new ConfigurableSupport(this);
@@ -164,7 +166,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
         // apply the mappings
         for (Map.Entry<String, String> entry : mappings.entries()) {
             String key = entry.getKey();
-            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry);
+            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry, callingLocation);
             transformer.transformCenToXml(invoice, document, errors);
         }
         return new Pair<>(document, errors);
@@ -179,7 +181,12 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             return bos.toByteArray();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AbstractFromCenConverter").build());
+            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                    .location(callingLocation)
+                    .action(ErrorCode.Action.CONFIGURED_MAP)
+                    .error(ErrorCode.Error.INVALID)
+
+                    .build());
             errors.add(ConversionIssue.newError(ere));
             return null;
         }
@@ -214,7 +221,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                     sourceKey = key.replace(".target", ".source." + index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry, callingLocation);
                 transformer.transformCenToXml(invoice, document, errors);
             }
         }

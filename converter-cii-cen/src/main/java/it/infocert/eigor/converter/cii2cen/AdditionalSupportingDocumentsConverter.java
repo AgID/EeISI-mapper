@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.*;
@@ -55,7 +56,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
                     }
                     if (attachmentBinaryObject != null) {
-                        TypeConverter<Element, FileReference> attToFileConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration());
+                        TypeConverter<Element, FileReference> attToFileConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.CII_IN);
                         try {
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(attToFileConverter.convert(attachmentBinaryObject));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);

@@ -6,6 +6,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
@@ -26,11 +27,13 @@ import java.util.List;
 public class GenericOneToOneTransformer extends GenericTransformer {
     private final String xPath;
     private final String cenPath;
+    private final ErrorCode.Location callingLocation;
 
-    public GenericOneToOneTransformer(String xPath, String cenPath, IReflections reflections, ConversionRegistry conversionRegistry) {
-        super(reflections, conversionRegistry);
+    public GenericOneToOneTransformer(String xPath, String cenPath, IReflections reflections, ConversionRegistry conversionRegistry, ErrorCode.Location callingLocation) {
+        super(reflections, conversionRegistry, callingLocation);
         this.xPath = xPath;
         this.cenPath = cenPath;
+        this.callingLocation = callingLocation;
         log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
     }
 

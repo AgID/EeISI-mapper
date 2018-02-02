@@ -7,7 +7,7 @@ public class EigorRuntimeException extends RuntimeException {
 
     private ErrorMessage errorMessage;
 
-    public EigorRuntimeException(String message, String location, String action, String error) {
+    public EigorRuntimeException(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error) {
         this(new ErrorMessage(message, location, action, error));
     }
 
@@ -24,8 +24,8 @@ public class EigorRuntimeException extends RuntimeException {
         this.errorMessage = errorMessage;
     }
 
-    public EigorRuntimeException(String message, String location, String action, Throwable cause) {
-        this(new ErrorMessage(message, new ErrorCode(location, action, cause.getClass().getSimpleName().replace("Exception", ""))), cause);
+    public EigorRuntimeException(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error, Throwable cause) {
+        this(new ErrorMessage(message, new ErrorCode(location, action, error)), cause);
     }
 
     public EigorRuntimeException(ErrorMessage errorMessage, Throwable cause) {
