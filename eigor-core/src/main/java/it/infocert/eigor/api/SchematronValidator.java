@@ -54,7 +54,7 @@ public class SchematronValidator implements IXMLValidator {
     @Override
     public List<IConversionIssue> validate(byte[] xml) {
         List<IConversionIssue> errors = new ArrayList<>();
-        SchematronOutputType schematronOutput = null;
+        SchematronOutputType schematronOutput;
 
         try {
             StreamSource source = new StreamSource(new ByteArrayInputStream(xml));

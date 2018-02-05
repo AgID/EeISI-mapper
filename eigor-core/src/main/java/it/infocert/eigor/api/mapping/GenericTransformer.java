@@ -104,9 +104,7 @@ public abstract class GenericTransformer {
                 BTBG bt = constructor.newInstance(id);
                 invoiceUtils.addChild(bg, bt);
                 return id;
-            } catch (NoSuchMethodException e) {
-                errors.add(ConversionIssue.newError(e));
-            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 errors.add(ConversionIssue.newError(e));
             }
         }

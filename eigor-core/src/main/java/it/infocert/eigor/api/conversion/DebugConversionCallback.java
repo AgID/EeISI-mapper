@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -141,9 +140,9 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
 
     private String toCsvFileContent(List<IConversionIssue> errors) {
         final StringBuilder toCenErrorsCsv = new StringBuilder();
-        try (CSVPrinter printer = new CSVPrinter(toCenErrorsCsv, CSVFormat.DEFAULT.withHeader("Error", "Reason"));) {
+        try (CSVPrinter printer = new CSVPrinter(toCenErrorsCsv, CSVFormat.DEFAULT.withHeader("Fatal", "Error", "Reason"));) {
             for (IConversionIssue e : errors) {
-                printer.printRecord(e.getMessage(), e.getCause());
+                printer.printRecord(e.isError(), e.getMessage(), e.getCause());
             }
             printer.flush();
             printer.close();
