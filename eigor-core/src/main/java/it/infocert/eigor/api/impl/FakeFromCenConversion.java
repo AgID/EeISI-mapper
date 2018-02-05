@@ -25,7 +25,7 @@ public class FakeFromCenConversion extends AbstractFromCenConverter {
 
 
     public FakeFromCenConversion(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, DEFAULT_REGISTRY, configuration);
+        super(reflections, DEFAULT_REGISTRY, configuration, null);
     }
 
     @Override

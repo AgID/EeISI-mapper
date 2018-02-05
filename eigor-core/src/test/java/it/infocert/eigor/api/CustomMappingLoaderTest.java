@@ -79,7 +79,7 @@ final class TestFromCenConverter extends AbstractFromCenConverter {
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.test.mapping.custom";
 
     TestFromCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, null);
     }
 
 

@@ -169,7 +169,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                     sourceKey = key.replace("cen.target", "xml.source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry, callingLocation);
                 transformer.transformXmlToCen(document, partialInvoice, errors);
             }
         }
@@ -225,7 +225,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                         sourceKey = key.replace("cen.source", "xml.target." + index);
                     }
 
-                    GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
+                    GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs, callingLocation);
                     transformer.transformCenToXml(partialInvoice, document, errors);
                 }
             }

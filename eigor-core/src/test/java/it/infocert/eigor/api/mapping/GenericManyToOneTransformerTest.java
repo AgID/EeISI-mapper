@@ -3,6 +3,7 @@ package it.infocert.eigor.api.mapping;
 import com.google.common.io.Resources;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.*;
@@ -61,7 +62,7 @@ public class GenericManyToOneTransformerTest {
         final String cenPath = "/BG0004/BT0033";
         final String combinationExpression = "%1-%3 %2";
 
-        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformator.transformXmlToCen(doc, invoice, errors);
 
         assertThat(invoice.getBG0004Seller().get(0).getBT0033SellerAdditionalLegalInformation(), hasSize(1));
@@ -80,7 +81,7 @@ public class GenericManyToOneTransformerTest {
         seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
         invoice.getBG0004Seller().add(seller);
 
-        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformer.transformCenToXml(invoice, document, errors);
         Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
         assertEquals("Grafton street 3rd Floor, Room 5", item.getText());
@@ -99,7 +100,7 @@ public class GenericManyToOneTransformerTest {
         seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
         invoice.getBG0004Seller().add(seller);
 
-        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformer.transformCenToXml(invoice, document, errors);
         Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
         assertEquals("Grafton street Building 5 3rd Floor, Room 5", item.getText());

@@ -21,7 +21,7 @@ import static it.infocert.eigor.api.conversion.ConversionRegistry.DEFAULT_REGIST
 public class FakeToCenConversion extends AbstractToCenConverter {
 
     public FakeToCenConversion(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, DEFAULT_REGISTRY, configuration);
+        super(reflections, DEFAULT_REGISTRY, configuration, null);
     }
 
     @Override

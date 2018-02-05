@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ConversionIssueErrorCodeMapper {
     private final String location;
 
@@ -22,7 +23,6 @@ public class ConversionIssueErrorCodeMapper {
         this.action = action;
     }
 
-    @Deprecated
     public IConversionIssue map(IConversionIssue issue) {
         ErrorMessage message = issue.getErrorMessage();
         Exception cause = issue.getCause();

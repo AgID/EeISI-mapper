@@ -125,7 +125,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         List<IConversionIssue> errors = conversionResult.getIssues();
         String data = toCsvFileContent(errors);
         File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
-        FileUtils.writeStringToFile(toCenErrors, data);
+        FileUtils.writeStringToFile(toCenErrors, data, StandardCharsets.UTF_8);
     }
 
     private void writeFromCenErrorsToFile(BinaryConversionResult conversionResult, File outputFolderFile) throws IOException {
