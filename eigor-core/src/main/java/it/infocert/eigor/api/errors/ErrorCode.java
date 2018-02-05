@@ -2,7 +2,6 @@ package it.infocert.eigor.api.errors;
 
 import com.google.common.base.Preconditions;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -72,6 +71,7 @@ public class ErrorCode implements Serializable {
         XSD_VALIDATION,
         SCH_VALIDATION,
         CIUS_SCH_VALIDATION,
+        CONFIG_VALIDATION,
         CONFIGURED_MAP,
         HARDCODED_MAP,
         XML_PARSING,

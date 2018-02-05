@@ -8,12 +8,12 @@ import it.infocert.eigor.api.errors.ErrorMessage;
  */
 public class SyntaxErrorInMappingFileException extends EigorException {
     private static final ErrorCode.Error NAME = ErrorCode.Error.INVALID;
-    public SyntaxErrorInMappingFileException(String message) {
-        super(ErrorMessage.builder().message(message).error(NAME).build());
+    public SyntaxErrorInMappingFileException(String message, ErrorCode.Location location, ErrorCode.Action action) {
+        super(ErrorMessage.builder().message(message).location(location).action(action).error(NAME).build());
     }
 
-    public SyntaxErrorInMappingFileException(String message, Throwable cause) {
-        super(ErrorMessage.builder().message(message).error(NAME).build(), cause);
+    public SyntaxErrorInMappingFileException(String message, ErrorCode.Location location, ErrorCode.Action action, Throwable cause) {
+        super(ErrorMessage.builder().message(message).location(location).action(action).error(NAME).build(), cause);
     }
 
     public SyntaxErrorInMappingFileException(ErrorMessage message) {
@@ -24,7 +24,4 @@ public class SyntaxErrorInMappingFileException extends EigorException {
         super(message, cause);
     }
 
-    public SyntaxErrorInMappingFileException(Throwable cause) {
-        super(ErrorMessage.builder().message(cause.getMessage()).error(NAME).build(), cause);
-    }
 }

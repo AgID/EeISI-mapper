@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
 
@@ -150,7 +152,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                             allegati.setNomeAttachment(file.getFileName());
                         } catch (IOException e) {
                             log.error(e.getMessage(), e);
-                            errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.INVALID));
                         }
                     }
 

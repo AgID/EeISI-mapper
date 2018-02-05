@@ -5,15 +5,15 @@ import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.FAILED;
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.UNAPPLICABLE;
+import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.*;
 import static org.junit.Assert.*;
 
+@Ignore
 public class CardinalityRuleTest {
 
     private BG0000Invoice invoice;

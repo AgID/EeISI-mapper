@@ -64,7 +64,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
             InputInvoiceXpathMap mapper;
             String mappingRegex = getMappingRegex();
             if(mappingRegex!=null){
-                mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(mappingRegex, reflections));
+                mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(mappingRegex, reflections, callingLocation));
             }else{
                 mapper = new InputInvoiceXpathMap();
             }

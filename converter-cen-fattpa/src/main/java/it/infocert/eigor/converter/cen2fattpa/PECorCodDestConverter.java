@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasmissioneType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
@@ -55,7 +56,9 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
                         .message(String.format("BT-49 SchemeID is not a valid value. Should be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
-                        .action("PECorCodDestConversion")
+                        .location(ErrorCode.Location.FATTPA_OUT)
+                        .action(ErrorCode.Action.HARDCODED_MAP)
+                        .error(ErrorCode.Error.ILLEGAL_VALUE)
                         .build())));
         }
     }

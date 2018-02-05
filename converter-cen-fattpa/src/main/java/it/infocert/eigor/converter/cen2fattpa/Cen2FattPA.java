@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
@@ -15,7 +16,6 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -73,7 +73,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private XSDValidator validator;
 
     public Cen2FattPA(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_OUT);
     }
 
     @Override

@@ -81,7 +81,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             Resource resource = drl.getResource(this.configuration.getMandatoryString(one2OneMappingPath));
             try {
                 inputStream = resource.getInputStream();
-                InputInvoiceXpathMap inputInvoiceXpathMap = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections));
+                InputInvoiceXpathMap inputInvoiceXpathMap = new InputInvoiceXpathMap(new InvoiceXpathCenMappingValidator(getMappingRegex(), reflections, callingLocation));
                 mappings = inputInvoiceXpathMap.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);
@@ -101,7 +101,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             String resource = getMany2OneMappingPath();
             try {
                 inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
-                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new ManyCen2OneXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new ManyCen2OneXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections, callingLocation));
                 many2oneMappings = mapper.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);
@@ -121,7 +121,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
             String resource = getOne2ManyMappingPath();
             try {
                 inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream();
-                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections));
+                InputInvoiceXpathMap mapper = new InputInvoiceXpathMap(new OneCen2ManyXpathMappingValidator(getMappingRegex(), "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?", reflections, callingLocation));
                 one2ManyMappings = mapper.getMapping(inputStream);
             } catch (IOException e) {
                 throw new ConfigurationException(e);

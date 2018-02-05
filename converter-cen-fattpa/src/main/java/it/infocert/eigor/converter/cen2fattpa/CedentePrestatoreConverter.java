@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -40,7 +41,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             }
         } else {
             final IllegalArgumentException e = new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader");
-            errors.add(ConversionIssue.newError(e, e.getMessage(), null, "CedentePrestatoreConversion", null));
+            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.ILLEGAL_VALUE));
         }
     }
 
