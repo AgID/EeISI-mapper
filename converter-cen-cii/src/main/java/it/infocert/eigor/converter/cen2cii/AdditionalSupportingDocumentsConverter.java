@@ -27,14 +27,13 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
             Element supplyChainTradeTransaction = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
-            Element applicableHeaderTradeAgreement = null;
 
             if (supplyChainTradeTransaction == null) {
                 supplyChainTradeTransaction = new Element("SupplyChainTradeTransaction", rootElement.getNamespace("rsm"));
                 rootElement.addContent(supplyChainTradeTransaction);
             }
 
-            applicableHeaderTradeAgreement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeAgreement");
+            Element applicableHeaderTradeAgreement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeAgreement");
             if (applicableHeaderTradeAgreement == null) {
                 applicableHeaderTradeAgreement = new Element("ApplicableHeaderTradeAgreement", rootElement.getNamespace("ram"));
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
