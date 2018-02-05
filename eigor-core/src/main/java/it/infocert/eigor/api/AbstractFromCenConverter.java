@@ -261,7 +261,13 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                             xPaths.add(xPath);
                             splitIndexPairs.put(xPath, pair);
                         } catch (NumberFormatException e) {
-                            errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
+                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                    String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString),
+                                    callingLocation,
+                                    ErrorCode.Action.CONFIGURED_MAP,
+                                    ErrorCode.Error.INVALID,
+                                    e
+                            )));
                         }
                     }
                     index++;
@@ -277,7 +283,12 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
     private boolean existsValueForKeyInMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors, String mappingType) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            RuntimeException e = new RuntimeException(String.format("No value in %s mapping properties for key %s!", mappingType, key));
+            EigorRuntimeException e = new EigorRuntimeException(
+                    String.format("No value in %s mapping properties for key %s!", mappingType, key),
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.INVALID
+            );
             if (key.contains(".end")) {
                 log.warn("Key {} is missing value. Assuming last index and splitting to string end", key);
             } else {

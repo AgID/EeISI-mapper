@@ -4,9 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -118,7 +119,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Unmarshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice unmarshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
 
@@ -144,7 +145,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
                 marshaller.marshal(fatturaElettronicaXML, xmlOutput);
             }
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Marshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice marshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
@@ -153,13 +154,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
-            validationErrors = new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }
 
             errors.addAll(validationErrors);
-            new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
             return new BinaryConversionResult(jaxml, errors);
 
         }

@@ -5,7 +5,6 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
@@ -123,12 +122,12 @@ public class UblCn2Cen extends AbstractToCenConverter {
                 log.info("CIUS Schematron validation successful!");
             }
 
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusErrors));
+			errors.addAll(validationErrors);
+            errors.addAll(schematronErrors);
+            errors.addAll(ciusErrors);
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
         }
 
         Document document;
@@ -142,8 +141,6 @@ public class UblCn2Cen extends AbstractToCenConverter {
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
-
         return result;
     }
 

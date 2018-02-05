@@ -218,7 +218,13 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                                     splitIndexPairs.put(xPath, pair);
                                 }
                             } catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
+                                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                        String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString),
+                                        callingLocation,
+                                        ErrorCode.Action.CONFIGURED_MAP,
+                                        ErrorCode.Error.INVALID,
+                                        e
+                                )));
                             }
                         }
                         index++;
@@ -235,7 +241,12 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 
     private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            errors.add(ConversionIssue.newError(new RuntimeException("No value in many2one mapping properties for key: " + key)));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    "No value in many2one mapping properties for key: " + key,
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.INVALID
+            )));
             return false;
         }
         return true;
@@ -243,7 +254,12 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     
     private boolean existsValueForKeyInOne2ManyMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors, String mappingType) {
     	if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            RuntimeException e = new RuntimeException(String.format("No value in %s mapping properties for key %s!", mappingType, key));
+            EigorRuntimeException e = new EigorRuntimeException(
+                    String.format("No value in %s mapping properties for key %s!", mappingType, key),
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.INVALID
+            );
             if (key.contains(".end")) {
                 log.warn("Key {} is missing value. Assuming last index and splitting to string end", key);
             } else {

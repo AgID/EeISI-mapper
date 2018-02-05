@@ -8,6 +8,7 @@ import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.AbstractBT;
@@ -70,7 +71,13 @@ public abstract class GenericTransformer {
         if (btbg instanceof AbstractBT) {
             return ((AbstractBT) btbg).getValue();
         } else {
-            errors.add(ConversionIssue.newError(new IllegalAccessException(btbg.denomination() + " is not a BT")));
+            errors.add(ConversionIssue.newError(new EigorException(
+                    btbg.denomination() + " is not a BT",
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.ILLEGAL_VALUE,
+                    Pair.of("offendingItem", btbg.name())
+            )));
             return null;
         }
     }
@@ -96,7 +103,7 @@ public abstract class GenericTransformer {
                 String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if (btClass == null) {
-                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", btName));
                 }
 
                 Constructor<? extends BTBG> constructor = btClass.getConstructor(Identifier.class);
@@ -105,7 +112,14 @@ public abstract class GenericTransformer {
                 invoiceUtils.addChild(bg, bt);
                 return id;
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                errors.add(ConversionIssue.newError(e));
+                errors.add(ConversionIssue.newError(
+                        e,
+                        "Error during CEN Object instantiation",
+                        callingLocation,
+                        ErrorCode.Action.CONFIGURED_MAP,
+                        ErrorCode.Error.INVALID,
+                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()
+                        )));
             }
         }
         return null;
@@ -142,7 +156,7 @@ public abstract class GenericTransformer {
                 final String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if (btClass == null) {
-                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'");
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", btName));
                 }
 
                 Constructor<?>[] constructors = btClass.getConstructors();
@@ -241,15 +255,15 @@ public abstract class GenericTransformer {
         List<Element> elements = createXmlPathRecursively(document.getRootElement(), document.getRootElement(), xmlSteps, btsSize, new ArrayList<Element>(0));
         if (btsSize > elements.size()) {
             IConversionIssue e = ConversionIssue.newError(
-                            new IllegalArgumentException("BTs can not be more than XML elements"),
-                            String.format("Found %d %s but only %d %s XML elements were created. " +
-                                            "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
-                                            "Check rule-report.csv for more informations about BT/BGs validation",
-                                    btsSize,
-                                    cenPath,
-                                    elements.size(),
-                                    xPath
-                            ),
+                    new IllegalArgumentException("BTs can not be more than XML elements"),
+                    String.format("Found %d %s but only %d %s XML elements were created. " +
+                                    "Maybe there is an error in the configuration file or the converted CEN object is not well formed. " +
+                                    "Check rule-report.csv for more informations about BT/BGs validation",
+                            btsSize,
+                            cenPath,
+                            elements.size(),
+                            xPath
+                    ),
                     callingLocation,
                     errorAction,
                     ErrorCode.Error.INVALID

@@ -9,6 +9,9 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.*;
@@ -59,9 +62,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
+            final IllegalArgumentException e = new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica");
+            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.ILLEGAL_VALUE, Pair.of("offendingItem", "FatturaElettronicaBody")));
         } else if (size < 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
+            final IllegalArgumentException e = new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica");
+            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", "FatturaElettronicaBody")));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             if (fatturaElettronicaBody.getDatiBeniServizi() == null) {
@@ -246,7 +251,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         sb.append(converted);
                         log.trace("Appended BT98 to Descrizione");
                     } catch (EigorRuntimeException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(e));
+                        errors.add(ConversionIssue.newError(e, "Failed converting BT-98",
+                                ErrorCode.Location.FATTPA_OUT,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of("offendingItem", "BT0098")
+                        ));
                     }
                 }
 
@@ -677,7 +688,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                     lineaSconto.setDescrizione(descrizione);
                                 }
                             } catch (ConversionFailedException e) {
-                                errors.add( ConversionIssue.newError(e) );
+                                errors.add(ConversionIssue.newError(e));
                             }
                         }
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();

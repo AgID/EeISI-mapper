@@ -2,21 +2,14 @@ package it.infocert.eigor.api;
 
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 
 public class EigorRuntimeException extends RuntimeException {
 
     private ErrorMessage errorMessage;
 
-    public EigorRuntimeException(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error) {
-        this(new ErrorMessage(message, location, action, error));
-    }
-
-    public EigorRuntimeException(String message) {
-        this(new ErrorMessage(message));
-    }
-
-    public EigorRuntimeException(String message, Throwable cause) {
-        this(new ErrorMessage(message), cause);
+    public EigorRuntimeException(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error, Pair<String, String>... parameters) {
+        this(new ErrorMessage(message, location, action, error, parameters));
     }
 
     public EigorRuntimeException(ErrorMessage errorMessage) {

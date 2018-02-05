@@ -1,29 +1,39 @@
 package it.infocert.eigor.api.errors;
 
+import it.infocert.eigor.api.utils.Pair;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ErrorMessage implements Serializable {
 
+    public static final String SOURCEMSG_PARAM = "sourceMsg";
 
-    @Nullable
     private final String message;
 
-    @Nullable
     private ErrorCode errorCode;
+    
+    private final Map<String, String> parameters = new HashMap<>(0);
+
     private final List<Exception> relatedExceptions = new ArrayList<>(0);
 
-    public ErrorMessage(String message, @Nullable ErrorCode.Location location, @Nullable ErrorCode.Action action, @Nullable ErrorCode.Error code) {
+    @SafeVarargs
+    public ErrorMessage(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code, Pair<String, String>... parameters) {
         this(message, new ErrorCode(location, action, code));
+        for (Pair<String, String> p : parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
-    public ErrorMessage(@Nullable String message) {
+    public ErrorMessage(String message) {
         this.message = message;
     }
 
-    public ErrorMessage(@Nullable String message, @Nullable ErrorCode errorCode) {
+    public ErrorMessage(String message, ErrorCode errorCode) {
         this.message = message;
         this.errorCode = errorCode;
     }
@@ -32,11 +42,11 @@ public class ErrorMessage implements Serializable {
         this(message, errorMessage.getErrorCode());
     }
 
-    public ErrorMessage(Exception relatedException, String message, ErrorCode.Location location, @Nullable ErrorCode.Action action, @Nullable ErrorCode.Error code) {
+    public ErrorMessage(Exception relatedException, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code) {
         this(relatedException, message, new ErrorCode(location, action, code));
     }
 
-    public ErrorMessage(Exception relatedException, String message, @Nullable ErrorCode errorCode) {
+    public ErrorMessage(Exception relatedException, String message, ErrorCode errorCode) {
         this(message, errorCode);
         this.relatedExceptions.add(relatedException);
     }
@@ -50,6 +60,9 @@ public class ErrorMessage implements Serializable {
         this.message = builder.message;
         this.errorCode = builder.errorCode;
         this.relatedExceptions.addAll(builder.exceptions);
+        for (Pair<String, String> p : builder.parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
     @Nullable
@@ -62,6 +75,9 @@ public class ErrorMessage implements Serializable {
         return errorCode;
     }
 
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
 
     public List<Exception> getRelatedExceptions() {
         return relatedExceptions;
@@ -75,7 +91,7 @@ public class ErrorMessage implements Serializable {
         return !relatedExceptions.isEmpty();
     }
 
-    public ErrorCode updateErrorCode(ErrorCode.Location location, @Nullable ErrorCode.Action action, ErrorCode.Error error) {
+    public ErrorCode updateErrorCode(ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error) {
         if (this.errorCode != null) {
             this.errorCode = new ErrorCode(
                     location != null ? location : this.errorCode.getLocation(),
@@ -122,6 +138,8 @@ public class ErrorMessage implements Serializable {
         @Nullable
         private ErrorCode errorCode;
 
+        private List<Pair<String, String>> parameters = new ArrayList<>(0);
+
         private final List<Exception> exceptions = new ArrayList<>(0);
 
         private Builder() {
@@ -144,6 +162,11 @@ public class ErrorMessage implements Serializable {
 
         public Builder error(ErrorCode.Error error) {
             this.error = error;
+            return this;
+        }
+
+        public Builder addParam(String key, String value) {
+            parameters.add(Pair.of(key, value));
             return this;
         }
 

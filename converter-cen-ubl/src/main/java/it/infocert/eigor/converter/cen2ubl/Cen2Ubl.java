@@ -4,8 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -14,7 +16,6 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +110,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         applyCustomMapping(invoice, document, errors);
 
         new XmlNamespaceApplier(CBC_URI, CAC_URI).applyUblNamespaces(document);
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
 
@@ -120,16 +120,15 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
+            errors.addAll(validationErrors);
             List<IConversionIssue> schematronErrors = ublValidator.validate(documentByteArray);
             if (schematronErrors.isEmpty()) {
                 log.info("Schematron validation successful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
-//            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(documentByteArray)));
+            errors.addAll(schematronErrors);
 
         } catch (IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.UBL_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         return new BinaryConversionResult(documentByteArray, errors);

@@ -1,7 +1,9 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import org.joda.time.LocalDate;
 import org.xml.sax.SAXException;
 
@@ -82,7 +84,7 @@ class Cen2FattPAConverterUtils {
             Schema schema = schemaFactory.newSchema(schemaFile);
             schema.newValidator().validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newWarning(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e)));
+            errors.add(ConversionIssue.newWarning(new EigorRuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XSD_VALIDATION, ErrorCode.Error.INVALID, e)));
             return false;
         }
         return true;

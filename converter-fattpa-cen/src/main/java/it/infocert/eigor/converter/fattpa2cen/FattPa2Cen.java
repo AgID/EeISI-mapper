@@ -6,10 +6,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
@@ -103,9 +103,9 @@ public class FattPa2Cen extends AbstractToCenConverter {
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
+            errors.addAll(validationErrors);
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         Document document;
