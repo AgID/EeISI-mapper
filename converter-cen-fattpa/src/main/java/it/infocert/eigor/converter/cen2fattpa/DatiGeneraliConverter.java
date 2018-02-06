@@ -9,6 +9,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.LocalDateToXMLGregorianCalendarConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -36,13 +37,13 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
     }
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
         } else if (size < 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException("No FatturaElettronicaBody found in current FatturaElettronica")));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             DatiGeneraliType datiGenerali = fatturaElettronicaBody.getDatiGenerali();
