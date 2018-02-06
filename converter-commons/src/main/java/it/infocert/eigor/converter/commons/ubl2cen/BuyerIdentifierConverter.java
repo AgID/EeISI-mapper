@@ -1,14 +1,14 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
-import it.infocert.eigor.api.CustomConverterUtils;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -20,14 +20,13 @@ import java.util.List;
  */
 public class BuyerIdentifierConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    private ConversionResult<BG0000Invoice> toBT0046_BT0048(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    private ConversionResult<BG0000Invoice> toBT0046_BT0048(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         BT0046BuyerIdentifierAndSchemeIdentifier bt0046;
         BT0048BuyerVatIdentifier bt0048;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> ids = null;
         Element accountingCustomerParty = findNamespaceChild(rootElement, namespacesInScope, "AccountingCustomerParty");
 
         if (accountingCustomerParty != null) {
@@ -59,7 +58,7 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBT0046_BT0048(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBT0046_BT0048(document, cenInvoice, errors, callingLocation);
     }
 }
