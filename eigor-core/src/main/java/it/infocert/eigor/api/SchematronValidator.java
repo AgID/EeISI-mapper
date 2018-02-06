@@ -92,7 +92,7 @@ public class SchematronValidator implements IXMLValidator {
         } else {
             final String message = "Schematron parsing failed. File: " + schematronResource.getID();
             log.error(message);
-            errors.add(ConversionIssue.newError(new EigorRuntimeException(message, callingLocation, ErrorCode.Action.SCH_VALIDATION, ErrorCode.Error.INVALID, Pair.of("offendingItem", schematronResource.getID()))));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(message, callingLocation, ErrorCode.Action.SCH_VALIDATION, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, schematronResource.getID()))));
         }
 
 

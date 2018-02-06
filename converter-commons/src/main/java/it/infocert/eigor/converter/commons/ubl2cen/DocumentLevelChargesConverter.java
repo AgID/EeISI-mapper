@@ -54,7 +54,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -75,7 +75,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -96,7 +96,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -120,7 +120,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                             .action(ErrorCode.Action.HARDCODED_MAP)
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam("offendingItem", text)
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -140,7 +140,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                             .action(ErrorCode.Action.HARDCODED_MAP)
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam("offendingItem", text)
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -168,7 +168,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }

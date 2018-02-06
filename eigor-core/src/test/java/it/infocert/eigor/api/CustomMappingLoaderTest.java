@@ -4,6 +4,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -40,7 +41,7 @@ public class CustomMappingLoaderTest {
     }
 
     @Test
-    public void converterShouldThrowConfigurationExceptionIfConfigIsNotAValidClass() throws Exception {
+    public void converterShouldThrowConfigurationExceptionIfConfigIsNotAValidClass() {
         TestFromCenConverter sut = new TestFromCenConverter(reflections, conversionRegistry, createConfiguration("custom-test-wrong.conf"));
         try {
             sut.configure();
@@ -104,7 +105,7 @@ final class TestFromCenConverter extends AbstractFromCenConverter {
     }
 
     @Override
-    public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+    public BinaryConversionResult convert(BG0000Invoice invoice) {
         return null;
     }
 
@@ -137,7 +138,7 @@ final class TestFromCenConverter extends AbstractFromCenConverter {
 class TestCustomMapper implements CustomMapping<String> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, String s, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, String s, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         System.out.println("Success!");
     }
 }

@@ -57,7 +57,7 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }

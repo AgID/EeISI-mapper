@@ -20,7 +20,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +77,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
             }
@@ -111,7 +110,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         Document document;
         try {
             document = getDocument(clonedInputStream);
-        } catch (JDOMException | IOException e) {
+        } catch (RuntimeException e) {
             throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
 
@@ -126,7 +125,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN);
         }
     }
 

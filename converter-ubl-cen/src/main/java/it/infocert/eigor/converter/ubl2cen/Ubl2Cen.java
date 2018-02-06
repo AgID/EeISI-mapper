@@ -15,7 +15,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +47,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
     private IXMLValidator ciusValidator;
 
     public Ubl2Cen(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry,  configuration);
+        super(reflections, conversionRegistry,  configuration, ErrorCode.Location.UBL_IN);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -62,7 +61,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
             }
@@ -71,7 +70,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -79,7 +78,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         // load the CIUS schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -135,7 +134,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         Document document;
         try {
             document = getDocument(clonedInputStream);
-        } catch (JDOMException | IOException e) {
+        } catch (RuntimeException e) {
             throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.UBL_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
@@ -150,7 +149,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_IN);
         }
     }
 

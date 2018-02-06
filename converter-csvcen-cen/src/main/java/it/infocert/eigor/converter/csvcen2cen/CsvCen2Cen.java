@@ -6,21 +6,21 @@ import com.google.common.base.Charsets;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import it.infocert.eigor.model.core.model.structure.CenStructure;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,7 +157,15 @@ public class CsvCen2Cen implements ToCenConversion {
                             if (taken != null) {
                                 convert = taken;
                             } else {
-                                errors.add(ConversionIssue.newError(new EigorRuntimeException(String.format("Cannot convert %s into an enum value of type %s", currentBtValue, constructorParamType.getSimpleName()))));
+                                final String message = String.format("Cannot convert %s into an enum value of type %s", currentBtValue, constructorParamType.getSimpleName());
+                                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                        message,
+                                        ErrorCode.Location.CSVCEN_IN,
+                                        ErrorCode.Action.HARDCODED_MAP,
+                                        ErrorCode.Error.ILLEGAL_VALUE,
+                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, currentBtValue)
+                                )));
                             }
                         } else {
                             convert = conversionRegistry.convert(String.class, constructorParamType, bgbtValueFromCsv);

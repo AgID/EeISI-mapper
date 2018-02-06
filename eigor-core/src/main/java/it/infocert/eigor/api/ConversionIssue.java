@@ -43,7 +43,8 @@ public class ConversionIssue implements IConversionIssue {
     public static ConversionIssue newError(Exception e, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error, Pair<String, String>... parameters) {
         return new ConversionIssue(new ErrorMessage(message, location, action, error, parameters), e, true);
     }
-/**
+
+    /**
      * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception.
      */
     public static ConversionIssue newWarning(EigorException e) {
@@ -56,6 +57,14 @@ public class ConversionIssue implements IConversionIssue {
     public static ConversionIssue newWarning(EigorRuntimeException e) {
         return new ConversionIssue(e.getErrorMessage(), e, false);
     }
+
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception.
+     */
+    public static ConversionIssue newWarning(Exception e, ErrorMessage m) {
+        return new ConversionIssue(m, e, false);
+    }
+
 
     /**
      * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception and error code.

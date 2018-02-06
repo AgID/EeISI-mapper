@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         BG0024AdditionalSupportingDocuments bg0024;
 
@@ -61,7 +61,14 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                             BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(attToFileConverter.convert(attachmentBinaryObject));
                             bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
                         }catch (IllegalArgumentException | ConversionFailedException e) {
-                            errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build())));
+                            errors.add(ConversionIssue.newError(new EigorRuntimeException(e, ErrorMessage.builder()
+                            .message(e.getMessage())
+                            .location(callingLocation)
+                            .action(ErrorCode.Action.HARDCODED_MAP)
+                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                            .addParam("offendingItem", attachmentBinaryObject.toString())
+                            .build())));
                         }
                     }
                     invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
@@ -72,7 +79,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0024(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0024(document, cenInvoice, errors, callingLocation);
     }
 }

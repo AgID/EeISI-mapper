@@ -1,9 +1,14 @@
 package it.infocert.eigor.converter.cen2ubl;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -18,7 +23,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
     private static final Logger log = LoggerFactory.getLogger(DeliveryOrInvoicePeriodConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
@@ -38,22 +43,40 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                     if (!bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()) {
                         BT0073InvoicingPeriodStartDate bt0073 = bg0014.getBT0073InvoicingPeriodStartDate(0);
                         Element startDate = new Element("StartDate");
+                        final LocalDate date = bt0073.getValue();
                         try {
-                            startDate.setText(dateConverter.convert(bt0073.getValue()));
+                            startDate.setText(dateConverter.convert(date));
                             invoicePeriod.addContent(startDate);
                         } catch (ConversionFailedException e) {
-                            errors.add(e);
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, date.toString())
+                            ));
                         }
                     }
 
                     if (!bg0014.getBT0074InvoicingPeriodEndDate().isEmpty()) {
                         BT0074InvoicingPeriodEndDate bt0074 = bg0014.getBT0074InvoicingPeriodEndDate(0);
                         Element endDate = new Element("EndDate");
+                        final LocalDate date = bt0074.getValue();
                         try {
-                            endDate.setText(dateConverter.convert(bt0074.getValue()));
+                            endDate.setText(dateConverter.convert(date));
                             invoicePeriod.addContent(endDate);
                         } catch (ConversionFailedException e) {
-                            errors.add(e);
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, date.toString())
+                            ));
                         }
                     }
 

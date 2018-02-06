@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class InvoiceLineConverter implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
         TypeConverter<String, Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
@@ -52,9 +52,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0025.getBT0129InvoicedQuantity().add(invoicedQuantity);
                             } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -72,9 +73,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
                             } catch (ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid UnitOfMeasureCodes: " + text)
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                                 bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
@@ -89,9 +91,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
                             } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -105,9 +108,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0029.getBT0146ItemNetPrice().add(itemNetPrice);
                             } catch (ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -119,9 +123,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0029.getBT0149ItemPriceBaseQuantity().add(itemPriceBaseQuantity);
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -132,9 +137,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(itemPriceBaseQuantityUnitOfMeasureCode);
                             } catch (NullPointerException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.MISSING_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -149,9 +155,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 code = taxFeeCategoriesConverter.convert(natura.getText());
                             } catch (NullPointerException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -168,9 +175,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0030.getBT0152InvoicedItemVatRate().add(invoicedItemVatRate);
                             } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
@@ -215,7 +223,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0025(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0025(document, cenInvoice, errors, callingLocation);
     }
 }

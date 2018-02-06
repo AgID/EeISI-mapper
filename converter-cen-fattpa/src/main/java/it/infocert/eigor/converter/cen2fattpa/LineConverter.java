@@ -58,33 +58,33 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
             final IllegalArgumentException e = new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica");
-            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.ILLEGAL_VALUE, Pair.of("offendingItem", "FatturaElettronicaBody")));
+            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.ILLEGAL_VALUE, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")));
         } else if (size < 1) {
             final IllegalArgumentException e = new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica");
-            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", "FatturaElettronicaBody")));
+            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             if (fatturaElettronicaBody.getDatiBeniServizi() == null) {
                 fatturaElettronicaBody.setDatiBeniServizi(new DatiBeniServiziType());
             }
 
-            mapBG20(invoice, fatturaElettronicaBody, errors);
-            mapBG21(invoice, fatturaElettronicaBody, errors);
-            mapBG25(invoice, fatturaElettronicaBody, errors);
+            mapBG20(invoice, fatturaElettronicaBody, errors, callingLocation);
+            mapBG21(invoice, fatturaElettronicaBody, errors, callingLocation);
+            mapBG25(invoice, fatturaElettronicaBody, errors, callingLocation);
 
-            mapLineChargesAllowances(invoice, fatturaElettronicaBody, errors);
-            mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors);
+            mapLineChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
+            mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
 
-            mapBt73and74(invoice, fatturaElettronicaBody, errors);
+            mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
         }
     }
 
-    private void mapBt73and74(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapBt73and74(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!datesAlreadyExistent(invoice)) {
             if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
                 BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
@@ -174,7 +174,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     }
 
 
-    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapBG20(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             if (datiBeniServizi == null) {
@@ -252,11 +252,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         log.trace("Appended BT98 to Descrizione");
                     } catch (EigorRuntimeException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(e, "Failed converting BT-98",
-                                ErrorCode.Location.FATTPA_OUT,
+                                callingLocation,
                                 ErrorCode.Action.HARDCODED_MAP,
                                 ErrorCode.Error.ILLEGAL_VALUE,
                                 Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                Pair.of("offendingItem", "BT0098")
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "BT0098")
                         ));
                     }
                 }
@@ -272,7 +272,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
-    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0021DocumentLevelCharges().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             if (datiBeniServizi == null) {
@@ -359,7 +359,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     }
 
 
-    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
@@ -503,7 +503,16 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         if (baseQuantity == 0) {
                             zeroes.add("BT0149");
                         }
-                        errors.add(ConversionIssue.newError(e, String.format("These values cannot be 0: %s", zeroes.toString())));
+                        final String message = String.format("These values cannot be 0: %s", zeroes.toString());
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                message,
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, zeroes.toString())
+                        ));
                     }
                     if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
                         Double value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
@@ -619,7 +628,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     }
 
     @SuppressWarnings({"Duplicates"})
-    private void mapLineChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapLineChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
@@ -688,7 +697,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                     lineaSconto.setDescrizione(descrizione);
                                 }
                             } catch (ConversionFailedException e) {
-                                errors.add(ConversionIssue.newError(e));
+                                errors.add(ConversionIssue.newError(
+                                        e,
+                                        e.getMessage(),
+                                        callingLocation,
+                                        ErrorCode.Action.HARDCODED_MAP,
+                                        ErrorCode.Error.ILLEGAL_VALUE,
+                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())));
                             }
                         }
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
@@ -744,7 +760,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                     lineaMaggiorazione.setDescrizione(descrizione);
                                 }
                             } catch (ConversionFailedException e) {
-                                errors.add(ConversionIssue.newError(e));
+                                errors.add(ConversionIssue.newError(
+                                        e,
+                                        e.getMessage(),
+                                        callingLocation,
+                                        ErrorCode.Action.HARDCODED_MAP,
+                                        ErrorCode.Error.ILLEGAL_VALUE,
+                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
+                                ));
                             }
                         }
                         Double chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? 0 : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
@@ -785,7 +809,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
-    private void mapDocumentChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void mapDocumentChargesAllowances(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         //ALLOWANCES
         if (!invoice.getBG0020DocumentLevelAllowances().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -798,7 +822,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 log.trace("Processing DettaglioLinee for BG0020");
                 dettaglioLinee.setNumeroLinea(9999);
                 dettaglioLinee.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
-                String reason = "Sconto Documento";
+                String reason;
                 String baseAmount = "N/A";
                 String percentage = "N/A";
                 String converted = "";
@@ -809,7 +833,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         converted = converter.convert(code);
                         dettaglioLinee.setRiferimentoAmministrazione(converted);
                     } catch (EigorRuntimeException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(e));
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
+                        ));
                     }
                 } else {
                     log.trace("No BT0098 found");
@@ -946,7 +978,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         converted = converter.convert(code);
                         dettaglioLinee.setRiferimentoAmministrazione(converted);
                     } catch (EigorRuntimeException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(e));
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
+                        ));
                     }
                 } else {
                     log.trace("No BT0105 found");
@@ -1014,7 +1054,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 //altridatigestionali
                 log.trace("Processing AltriDatiGestionali for BG0021");
-                AltriDatiGestionaliType altriDatiGestionaliType = null;
+                AltriDatiGestionaliType altriDatiGestionaliType;
                 if (!charges.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
                     altriDatiGestionaliType = new AltriDatiGestionaliType();
                     altriDatiGestionaliType.setTipoDato("BT-100");

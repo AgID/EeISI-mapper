@@ -76,7 +76,7 @@ public abstract class GenericTransformer {
                     callingLocation,
                     ErrorCode.Action.CONFIGURED_MAP,
                     ErrorCode.Error.ILLEGAL_VALUE,
-                    Pair.of("offendingItem", btbg.name())
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, btbg.name())
             )));
             return null;
         }
@@ -103,7 +103,7 @@ public abstract class GenericTransformer {
                 String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if (btClass == null) {
-                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", btName));
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, btName));
                 }
 
                 Constructor<? extends BTBG> constructor = btClass.getConstructor(Identifier.class);
@@ -156,7 +156,7 @@ public abstract class GenericTransformer {
                 final String btName = cenPath.substring(cenPath.lastIndexOf("/") + 1);
                 Class<? extends BTBG> btClass = invoiceUtils.getBtBgByName(btName);
                 if (btClass == null) {
-                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of("offendingItem", btName));
+                    throw new EigorRuntimeException("Unable to find BT with name '" + btName + "'", callingLocation, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.MISSING_VALUE, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, btName));
                 }
 
                 Constructor<?>[] constructors = btClass.getConstructors();

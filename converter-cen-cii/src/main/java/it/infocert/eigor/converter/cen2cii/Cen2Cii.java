@@ -65,7 +65,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
             }
@@ -74,7 +74,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         // load the CII schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -84,7 +84,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
     }
 
     public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -128,7 +128,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.CII_OUT);
         }
     }
 

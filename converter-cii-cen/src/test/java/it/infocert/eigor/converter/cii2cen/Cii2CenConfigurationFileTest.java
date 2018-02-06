@@ -227,7 +227,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, callingLocation);
 
 		assertEquals("123456", invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation(0).getValue());
 	}
@@ -240,7 +240,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, callingLocation);
 
 		assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation().isEmpty());
 	}
@@ -253,7 +253,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		VATBreakdownConverter bg0023 = new VATBreakdownConverter();
-		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors, callingLocation);
 
 		assertEquals("provaReason", invoice.getBG0023VatBreakdown(0).getBT0120VatExemptionReasonText(0).getValue());
 		assertEquals(VatExemptionReasonsCodes.AAA, invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
@@ -282,7 +282,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, callingLocation);
 
 		assertTrue(result.getResult().getBG0024AdditionalSupportingDocuments(0).getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty());
 	}

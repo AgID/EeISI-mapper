@@ -60,7 +60,7 @@ public class GenericOneToManyTransformer extends GenericTransformer {
                     callingLocation,
                     ErrorCode.Action.CONFIGURED_MAP,
                     ErrorCode.Error.ILLEGAL_VALUE,
-                    Pair.of("offendingItem", sourcePath)
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, sourcePath)
             )));
             return;
         }
@@ -88,7 +88,7 @@ public class GenericOneToManyTransformer extends GenericTransformer {
                         callingLocation,
                         ErrorCode.Action.CONFIGURED_MAP,
                         ErrorCode.Error.MISSING_VALUE,
-                        Pair.of("offendingItem", targetPath)
+                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, targetPath)
                 )));
                 return;
             }
@@ -105,7 +105,7 @@ public class GenericOneToManyTransformer extends GenericTransformer {
                             callingLocation,
                             ErrorCode.Action.CONFIGURED_MAP,
                             ErrorCode.Error.ILLEGAL_VALUE,
-                            Pair.of("offendingItem", targetPath)
+                            Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, targetPath)
                             )));
                     return;
                 }

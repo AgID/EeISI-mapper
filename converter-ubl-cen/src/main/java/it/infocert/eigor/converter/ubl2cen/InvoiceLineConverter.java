@@ -23,12 +23,12 @@ import java.util.List;
 @SuppressWarnings("Duplicates")
 public class InvoiceLineConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
-        BG0025InvoiceLine bg0025 = null;
-        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = null;
+        BG0025InvoiceLine bg0025;
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -70,7 +70,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 } catch (NumberFormatException | ConversionFailedException e) {
                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                             .message(e.getMessage())
-                            .location(ErrorCode.Location.UBL_IN)
+                            .location(callingLocation)
                             .action(ErrorCode.Action.HARDCODED_MAP)
                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                             .build());
@@ -91,7 +91,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     } catch (NullPointerException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                 .message(String.format("Unit Of Measure Code %s not found in list", commonCode))
-                                .location(ErrorCode.Location.UBL_IN)
+                                .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                 .error(ErrorCode.Error.MISSING_VALUE)
                                 .build());
@@ -108,7 +108,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 } catch (NumberFormatException | ConversionFailedException e) {
                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                             .message(e.getMessage())
-                            .location(ErrorCode.Location.UBL_IN)
+                            .location(callingLocation)
                             .action(ErrorCode.Action.HARDCODED_MAP)
                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                             .build());
@@ -144,7 +144,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     } catch (IllegalArgumentException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                 .message("Invalid date format")
-                                .location(ErrorCode.Location.UBL_IN)
+                                .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                 .error(ErrorCode.Error.ILLEGAL_VALUE)
                                 .build());
@@ -156,7 +156,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     } catch (IllegalArgumentException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                 .message("Invalid date format")
-                                .location(ErrorCode.Location.UBL_IN)
+                                .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                 .error(ErrorCode.Error.ILLEGAL_VALUE)
                                 .build());
@@ -173,7 +173,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134);
                         } catch (IllegalArgumentException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -187,7 +187,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135);
                         } catch (IllegalArgumentException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -216,7 +216,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -231,7 +231,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -246,7 +246,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -267,7 +267,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(bt0140);
                         } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5189ChargeAllowanceDescriptionCodes not found")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -288,7 +288,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -302,7 +302,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0028.getBT0142InvoiceLineChargeBaseAmount().add(bt0142);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -317,7 +317,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -338,7 +338,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0028.getBT0145InvoiceLineChargeReasonCode().add(bt0145);
                         } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid7161SpecialServicesCodes not found")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .build());
@@ -362,7 +362,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         bg0029.getBT0146ItemNetPrice().add(bt0146);
                     } catch (NumberFormatException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                .location(ErrorCode.Location.UBL_IN)
+                                .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                 .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                         errors.add(ConversionIssue.newError(ere));
@@ -382,7 +382,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 bg0029.getBT0147ItemPriceDiscount().add(bt0147);
                             } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.UBL_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                                 errors.add(ConversionIssue.newError(ere));
@@ -396,7 +396,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 bg0029.getBT0148ItemGrossPrice().add(bt0148);
                             } catch (NumberFormatException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(ErrorCode.Location.UBL_IN)
+                                        .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                                 errors.add(ConversionIssue.newError(ere));
@@ -412,7 +412,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
                     } catch (NumberFormatException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                .location(ErrorCode.Location.UBL_IN)
+                                .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                 .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                         errors.add(ConversionIssue.newError(ere));
@@ -433,7 +433,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(bt0150);
                         } catch (NullPointerException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("UnitOfMeasureCodes not found")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                             errors.add(ConversionIssue.newError(ere));
@@ -511,7 +511,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0031.getBT0159ItemCountryOfOrigin().add(bt0159);
                         } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Iso31661CountryCodes not found")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                             errors.add(ConversionIssue.newError(ere));
@@ -533,7 +533,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0030.getBT0151InvoicedItemVatCategoryCode().add(bt0151);
                         } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found")
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                             errors.add(ConversionIssue.newError(ere));
@@ -547,7 +547,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                             bg0030.getBT0152InvoicedItemVatRate().add(bt0152);
                         } catch (NumberFormatException | ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                    .location(ErrorCode.Location.UBL_IN)
+                                    .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE).build());
                             errors.add(ConversionIssue.newError(ere));
@@ -582,7 +582,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0025(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0025(document, cenInvoice, errors, callingLocation);
     }
 }

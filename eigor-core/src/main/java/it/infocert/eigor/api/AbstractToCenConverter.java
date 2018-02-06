@@ -276,9 +276,8 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
      *
      * @param sourceInvoiceStream the source invoice stream
      * @return the document
-     * @throws SyntaxErrorInInvoiceFormatException syntax error in invoice format exception
      */
-    protected Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException, JDOMException, IOException {
+    protected Document getDocument(InputStream sourceInvoiceStream) {
         Document doc;
         try {
             SAXBuilder saxBuilder = new SAXBuilder();

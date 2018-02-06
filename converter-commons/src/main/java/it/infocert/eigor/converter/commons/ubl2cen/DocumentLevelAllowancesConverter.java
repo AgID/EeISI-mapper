@@ -54,7 +54,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", value)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, value)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -75,7 +75,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -96,7 +96,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }
@@ -119,7 +119,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                             .action(ErrorCode.Action.HARDCODED_MAP)
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam("offendingItem", text)
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -140,7 +140,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                             .action(ErrorCode.Action.HARDCODED_MAP)
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam("offendingItem", text)
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -168,7 +168,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", text)
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     }

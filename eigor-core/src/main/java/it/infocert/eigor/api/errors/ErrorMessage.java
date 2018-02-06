@@ -12,11 +12,12 @@ import java.util.Map;
 public class ErrorMessage implements Serializable {
 
     public static final String SOURCEMSG_PARAM = "sourceMsg";
+    public static final String OFFENDINGITEM_PARAM = "offendingItem";
 
     private final String message;
 
     private ErrorCode errorCode;
-    
+
     private final Map<String, String> parameters = new HashMap<>(0);
 
     private final List<Exception> relatedExceptions = new ArrayList<>(0);

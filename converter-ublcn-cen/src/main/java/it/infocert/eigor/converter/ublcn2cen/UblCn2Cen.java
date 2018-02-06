@@ -5,6 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
@@ -13,7 +14,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
     private IXMLValidator ciusValidator;
 
     public UblCn2Cen(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry,  configuration);
+        super(reflections, conversionRegistry,  configuration, ErrorCode.Location.UBLCN_IN);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -60,7 +60,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBLCN_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBLCN2CEN from '" + mandatoryString + "'.", e);
             }
@@ -69,7 +69,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron") );
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -77,7 +77,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         // load the CIUS schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -127,14 +127,28 @@ public class UblCn2Cen extends AbstractToCenConverter {
             errors.addAll(ciusErrors);
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, e.getMessage()));
+            errors.add(ConversionIssue.newWarning(e, ErrorMessage.builder()
+                    .message("Error during validation")
+                    .location(ErrorCode.Location.UBLCN_IN)
+                    .action(ErrorCode.Action.GENERIC)
+                    .error(ErrorCode.Error.INVALID)
+                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                    .build()
+            ));
         }
 
         Document document;
         try {
             document = getDocument(clonedInputStream);
-        } catch (JDOMException | IOException e) {
-            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), getName(), "DocumentBuilding", e.getClass().getSimpleName().replace("Exception", "")), e);
+        } catch (RuntimeException e) {
+            throw new EigorRuntimeException(ErrorMessage.builder()
+                    .message("Error during XML parsing")
+                    .location(ErrorCode.Location.UBLCN_IN)
+                    .action(ErrorCode.Action.XML_PARSING)
+                    .error(ErrorCode.Error.INVALID)
+                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                    .build()
+            );
         }
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
@@ -148,7 +162,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBLCN_IN);
         }
     }
 

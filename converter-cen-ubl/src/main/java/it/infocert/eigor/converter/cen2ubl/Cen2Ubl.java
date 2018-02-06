@@ -41,7 +41,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     private XSDValidator xsdValidator;
     private IXMLValidator ublValidator;
-    private IXMLValidator ciusValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -66,7 +65,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_OUT);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
             }
@@ -75,7 +74,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.UBL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -93,7 +92,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     }
 
     public Cen2Ubl(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.UBL_OUT);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -138,7 +137,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT);
         }
     }
 

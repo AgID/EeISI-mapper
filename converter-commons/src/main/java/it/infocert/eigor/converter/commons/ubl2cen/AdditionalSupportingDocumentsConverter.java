@@ -81,7 +81,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                                         .action(ErrorCode.Action.HARDCODED_MAP)
                                         .error(ErrorCode.Error.ILLEGAL_VALUE)
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .addParam("offendingItem", attachment.toString())
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, attachment.toString())
                                         .build());
                         errors.add(ConversionIssue.newError(ere));
                     } catch (EigorRuntimeException e) {
