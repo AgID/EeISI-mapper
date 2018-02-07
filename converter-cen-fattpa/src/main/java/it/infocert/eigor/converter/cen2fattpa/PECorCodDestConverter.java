@@ -22,7 +22,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
     private static final String ipa = "IT:IPA";
 
     @Override
-    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!cenInvoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = cenInvoice.getBG0007Buyer(0);
             if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {

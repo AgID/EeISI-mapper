@@ -6,8 +6,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -28,10 +31,10 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
     }
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         CedentePrestatoreType cedentePrestatore = fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore();
         if (cedentePrestatore != null) {
-            addRegimeFiscale(invoice, cedentePrestatore, errors);
+            addRegimeFiscale(invoice, cedentePrestatore, errors, callingLocation);
             List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
             if (!bodies.isEmpty()) {
                 FatturaElettronicaBodyType body = bodies.get(0);
@@ -41,7 +44,14 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             }
         } else {
             final IllegalArgumentException e = new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader");
-            errors.add(ConversionIssue.newError(e, e.getMessage(), ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.HARDCODED_MAP, ErrorCode.Error.ILLEGAL_VALUE));
+            errors.add(ConversionIssue.newError(
+                    e,
+                    e.getMessage(),
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.ILLEGAL_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+            ));
         }
     }
 
@@ -307,7 +317,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
         }
     }
 
-    private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+    private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller seller = invoice.getBG0004Seller(0);
 
@@ -328,10 +338,26 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     log.debug("Mapped BT0031 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
                 }
             } else {
-                errors.add(ConversionIssue.newError(new IllegalArgumentException("No DatiAnagrafici was found in current CedentePrestatore")));
+                final String message = "No DatiAnagrafici was found in current CedentePrestatore";
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        message,
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.MISSING_VALUE,
+                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiAnagrafici")
+                )));
             }
         } else {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No [BG-4] Seller was found in current Invoice")));
+            final String message = "No [BG-4] Seller was found in current Invoice";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "BG-4")
+            )));
         }
     }
 

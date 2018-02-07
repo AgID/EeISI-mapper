@@ -85,7 +85,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
         try {
-            validator = new XSDValidator(xsdFile.getFile());
+            validator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }
@@ -168,7 +168,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
-            customMapping.map(invoice, fatturaElettronica, errors);
+            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT);
         }
     }
 
