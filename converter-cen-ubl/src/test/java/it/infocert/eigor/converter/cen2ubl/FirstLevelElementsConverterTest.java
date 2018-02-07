@@ -1,18 +1,18 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BT0021InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.BT0022InvoiceNote;
-import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FirstLevelElementsConverterTest {
 
@@ -22,7 +22,7 @@ public class FirstLevelElementsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBG0001InvoiceNoteAndBT0022(true);
         Document document = new Document(new Element("Invoice"));
         FirstLevelElementsConverter converter = new FirstLevelElementsConverter();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element note = document.getRootElement().getChild("Note");
         String noteText = note.getText();
@@ -35,7 +35,7 @@ public class FirstLevelElementsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBG0001InvoiceNoteAndBT0022(false);
         Document document = new Document(new Element("Invoice"));
         FirstLevelElementsConverter converter = new FirstLevelElementsConverter();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element note = document.getRootElement().getChild("Note");
         String noteText = note.getText();
