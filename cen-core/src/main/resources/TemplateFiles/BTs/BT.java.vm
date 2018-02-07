@@ -3,7 +3,6 @@
 ## ============================
 package it.infocert.eigor.model.core.model;
 
-
 /**
 * ${rows[0].data.BusinessTerm}
 * child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
