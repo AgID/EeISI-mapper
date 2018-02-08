@@ -49,7 +49,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 				.addProperty("eigor.converter.cii-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt")
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
-				.addProperty("eigor.converter.cii-cen.cius", "converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
+				.addProperty("eigor.converter.cii-cen.cius", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
 				;
 		sut = new MyCiiToCenConverter(new JavaReflections(), conf);
 		sut.configure();
@@ -306,7 +306,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 	private List<IConversionIssue> validateXmlWithCiiCIUSSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-		String filePath = getClass().getClassLoader().getResource("converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt").getFile();
+		String filePath = "../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt";
 		File schematronFile = new File(filePath);
 		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, ErrorCode.Location.CII_IN);
 		return ciiCIUSValidator.validate(bytes);
