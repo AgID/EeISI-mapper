@@ -1,11 +1,12 @@
 package it.infocert.eigor.converter.cen2ubl;
 
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -17,7 +18,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBT0122();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
         Element documentTypeCode = additionalSupportingDocuments.getChild("DocumentTypeCode");
@@ -30,7 +31,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier("AED", "TESTID")));
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
 
@@ -49,7 +50,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBT0123();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
         Element documentDescription = additionalSupportingDocuments.getChild("DocumentDescription");

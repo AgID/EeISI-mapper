@@ -1,32 +1,29 @@
 package it.infocert.eigor.converter.ublcn2cen;
 
 import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ITUblCn2CenTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ITUbl2CenTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ITUblCn2CenTest.class);
 
-    private static Ubl2Cen sut;
+    private static UblCn2Cen sut;
 
     @Before
     public void setUp() throws ConfigurationException {
@@ -41,8 +38,8 @@ public class ITUblCn2CenTest {
                 .addProperty("eigor.converter.ublcn-cen.mapping.one-to-many", "converterdata/converter-ublcn-cen/mappings/one_to_many.properties")
                 .addProperty("eigor.converter.ublcn-cen.mapping.custom", "converterdata/converter-ublcn-cen/mappings/custom.conf");
 
-        sut = new Ubl2Cen(
-                new Reflections("it.infocert"),
+        sut = new UblCn2Cen(
+                new JavaReflections(),
                 conf
         );
         sut.configure();

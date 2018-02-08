@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.assertj.core.util.Lists;
 import org.jdom2.Document;
@@ -24,8 +25,8 @@ public class DocumentTotalsConverterTest {
     }
 
     @Test
-    public void name() throws Exception {
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+    public void test() throws Exception {
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final Double value = invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat(0).getValue();
         assertEquals(new Double(3.0d), value);
     }

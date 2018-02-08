@@ -3,11 +3,6 @@
 #set( $clzName = ${row0.data.BTBGClassName} )
 package it.infocert.eigor.model.core.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
 ${rows[0].data.BusinessTerm}
 #if( !${row0.data.BTBGClassName.startsWith("BG0000")} )

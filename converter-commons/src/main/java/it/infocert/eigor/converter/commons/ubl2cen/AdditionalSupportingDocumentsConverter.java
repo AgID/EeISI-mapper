@@ -5,11 +5,11 @@ import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
-import it.infocert.eigor.api.CustomConverterUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        BG0024AdditionalSupportingDocuments bg0024 = null;
+        BG0024AdditionalSupportingDocuments bg0024;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -67,12 +67,22 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
                 Element embeddedDocumentBinaryObject = findNamespaceChild(attachment, namespacesInScope, "EmbeddedDocumentBinaryObject");
                 if (embeddedDocumentBinaryObject != null) {
-                    TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration());
+                    TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), callingLocation);
                     try {
-                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(embeddedDocumentBinaryObject));
+                        final FileReference fileReference = strToBinConverter.convert(embeddedDocumentBinaryObject);
+                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(fileReference);
                         bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("AdditionalSupportingDocumentsConverter").build());
+                        EigorRuntimeException ere = new EigorRuntimeException(
+                                e, 
+                                ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, attachment.toString())
+                                        .build());
                         errors.add(ConversionIssue.newError(ere));
                     } catch (EigorRuntimeException e) {
                         errors.add(ConversionIssue.newError(e));
@@ -85,7 +95,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0024(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0024(document, cenInvoice, errors, callingLocation);
     }
 }

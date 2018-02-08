@@ -1,7 +1,8 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -15,7 +16,7 @@ public class BuyerPostalAddressConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(BuyerPostalAddressConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0007Buyer().isEmpty()) {

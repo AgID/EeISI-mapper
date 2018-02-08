@@ -5,7 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -15,8 +15,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +73,7 @@ public class Cii2Cen extends AbstractToCenConverter {
     private SchematronValidator ciusValidator;
 
 	public Cii2Cen(IReflections reflections, EigorConfiguration configuration) {
-		super(reflections, conversionRegistry, configuration);
+		super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_IN);
 		this.configuration = checkNotNull(configuration);
 	}
 
@@ -89,7 +87,7 @@ public class Cii2Cen extends AbstractToCenConverter {
             xsdValidator = null;
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for CII2CEN from '" + mandatoryString + "'.", e);
             }
@@ -98,7 +96,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 		// load the CII schematron validator.
         try {
             Resource ciiSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.schematron") );
-            schematronValidator = new SchematronValidator(ciiSchemaFile.getFile(), true);
+            schematronValidator = new SchematronValidator(ciiSchemaFile.getFile(), true, ErrorCode.Location.CII_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -106,7 +104,7 @@ public class Cii2Cen extends AbstractToCenConverter {
         // load the CII schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.CII_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -130,19 +128,19 @@ public class Cii2Cen extends AbstractToCenConverter {
 			if(xsdValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_XSD_VALIDATION);
 			}
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(xsdValidationErrors));
+			errors.addAll(xsdValidationErrors);
 
 			List<IConversionIssue> schematronValidationErrors = schematronValidator.validate(bytes);
 			if(schematronValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_SCHEMATRON_VALIDATION);
 			}
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronValidationErrors));
+			errors.addAll(schematronValidationErrors);
 
 			List<IConversionIssue> ciusValidationErrors = ciusValidator.validate(bytes);
 			if(ciusValidationErrors.isEmpty()){
 				log.info(IConstants.SUCCESS_CIUS_VALIDATION);
             }
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidationErrors));
+			errors.addAll(ciusValidationErrors);
 
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -156,10 +154,9 @@ public class Cii2Cen extends AbstractToCenConverter {
 			result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 			result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
             applyCustomMapping(result.getResult(), document, errors);
-		} catch (JDOMException | IOException e) {
-			throw new EigorRuntimeException(e.getMessage(), getName(), "Mappings", e);
+		} catch (RuntimeException e) {
+			throw new EigorRuntimeException(e.getMessage(), ErrorCode.Location.CII_IN, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.INVALID, e);
 		}
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 		return result;
 	}
 
@@ -167,7 +164,7 @@ public class Cii2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> mappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> mapping : mappings) {
-            mapping.map(invoice, document, errors);
+            mapping.map(invoice, document, errors, ErrorCode.Location.CII_IN);
         }
     }
 

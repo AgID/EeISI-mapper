@@ -4,8 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -32,10 +34,8 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private static final String FORMAT = "cii";
 
-    private final String RAM_URI = "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+    private final String RAM_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
     private final String RSM_URI = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
-    private final String QDT_URI = "urn:un:unece:uncefact:data:standard:QualifiedDataType:100";
-    private final String UDT_URI = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100";
     private final EigorConfiguration configuration;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
@@ -65,7 +65,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
             }
@@ -74,7 +74,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         // load the CII schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -84,7 +84,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
     }
 
     public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -100,25 +100,25 @@ public class Cen2Cii extends AbstractFromCenConverter {
         applyOne2ManyTransformationsBasedOnMapping(invoice, document, errors);
         applyCustomMapping(invoice, document, errors);
 
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
 
         byte[] documentByteArray = createXmlFromDocument(document, errors);
 
 
         try {
+
             List<IConversionIssue> validationErrors = xsdValidator.validate(documentByteArray);
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
+            errors.addAll(validationErrors);
             List<IConversionIssue> schematronErrors = ublValidator.validate(documentByteArray);
             if (schematronErrors.isEmpty()) {
                 log.info("Schematron validation successful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(schematronErrors));
+            errors.addAll(schematronErrors);
 
         } catch (IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.CII_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.ILLEGAL_VALUE, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         return new BinaryConversionResult(documentByteArray, errors);
@@ -128,7 +128,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.CII_OUT);
         }
     }
 
@@ -178,19 +178,14 @@ public class Cen2Cii extends AbstractFromCenConverter {
     }
 
 
+
     private void createRootNode(Document doc) {
-        Namespace rsmNs = Namespace.getNamespace("rsm", RSM_URI);
-        Namespace ramNs = Namespace.getNamespace("ram", RAM_URI);
-        Namespace qdtNs = Namespace.getNamespace("qdt", QDT_URI);
-        Namespace udtNs = Namespace.getNamespace("udt", UDT_URI);
-        Namespace xsiNs = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        Element root = new Element("CrossIndustryInvoice", rsmNs);
-        root.addNamespaceDeclaration(rsmNs);
-        root.addNamespaceDeclaration(ramNs);
-        root.addNamespaceDeclaration(qdtNs);
-        root.addNamespaceDeclaration(udtNs);
-        root.addNamespaceDeclaration(xsiNs);
-        root.setAttribute("schemaLocation", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 CrossIndustryInvoice_100pD16B.xsd", xsiNs);
+        Element root = new Element("CrossIndustryInvoice");
+        root.addNamespaceDeclaration(Namespace.getNamespace("rsm", RSM_URI));
+        root.addNamespaceDeclaration(Namespace.getNamespace("ram", RAM_URI));
+        root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
+        root.setNamespace(Namespace.getNamespace("rsm", RSM_URI));
         doc.setRootElement(root);
     }
 }

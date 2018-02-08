@@ -1,8 +1,12 @@
 package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0017CreditTransfer;
+import it.infocert.eigor.model.core.model.BT0084PaymentAccountIdentifier;
+import it.infocert.eigor.model.core.model.BT0086PaymentServiceProviderIdentifier;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -14,7 +18,7 @@ public class CreditTransferConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(CreditTransferConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {

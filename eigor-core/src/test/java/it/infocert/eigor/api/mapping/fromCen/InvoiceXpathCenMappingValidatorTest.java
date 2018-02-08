@@ -3,7 +3,7 @@ package it.infocert.eigor.api.mapping.fromCen;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
-
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class InvoiceXpathCenMappingValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new InvoiceXpathCenMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", new JavaReflections());
+        validator = new InvoiceXpathCenMappingValidator("\\/FatturaElettronica\\/FatturaElettronica(Header|Body)(\\/\\w+(\\[\\])*)*", new JavaReflections(), ErrorCode.Location.UBL_IN);
     }
 
     @Test

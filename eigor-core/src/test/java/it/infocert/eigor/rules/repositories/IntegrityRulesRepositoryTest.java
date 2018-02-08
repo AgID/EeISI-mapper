@@ -9,6 +9,7 @@ import it.infocert.eigor.model.core.rules.RuleOutcome;
 import it.infocert.eigor.rules.MalformedRuleException;
 import it.infocert.eigor.rules.integrity.IteratingIntegrityRule;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
+@Ignore
 public class IntegrityRulesRepositoryTest {
 
     private Properties properties;

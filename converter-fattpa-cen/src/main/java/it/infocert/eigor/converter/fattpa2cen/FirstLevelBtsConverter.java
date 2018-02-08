@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0016DespatchAdviceReference;
 import org.jdom2.Document;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class FirstLevelBtsConverter implements CustomMapping<Document> {
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         mapBt16(invoice, document, errors);
     }
 
