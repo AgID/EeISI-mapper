@@ -70,7 +70,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		IConversionIssue issue = errors.get(0);
 		assertTrue(issue.getCause() instanceof SAXParseException);
 		assertTrue(issue.isError());
-		assertTrue(issue.getMessage().startsWith(IConstants.ERROR_XML_VALIDATION_ERROR));
+		assertTrue(issue.getMessage().endsWith("Error during XSD parsing"));
 	}
 
 	@Test
