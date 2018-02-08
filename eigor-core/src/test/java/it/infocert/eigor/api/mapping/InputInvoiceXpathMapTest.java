@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 import com.google.common.collect.Multimap;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.toCen.InvoiceCenXpathMappingValidator;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -10,13 +11,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+
+@SuppressWarnings("deprecation")
 public class InputInvoiceXpathMapTest {
 
     private InputInvoiceXpathMap xpathMap;
 
     @Before
     public void setUp() throws Exception {
-        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new JavaReflections()));
+        xpathMap = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new JavaReflections(), ErrorCode.Location.UBL_IN));
     }
 
     @Test

@@ -8,6 +8,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
@@ -95,7 +96,7 @@ public class UblCn2CenConfigurationFileTest {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
         String filePath = getClass().getClassLoader().getResource("xsd/UBL-CreditNote-2.1.xsd").getFile();
         File xsdFile = new File(filePath);
-        XSDValidator xsdValidator = new XSDValidator(xsdFile);
+        XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBLCN_IN);
         return xsdValidator.validate(bytes);
     }
 

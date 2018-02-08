@@ -1,28 +1,40 @@
 package it.infocert.eigor.api.errors;
 
+import it.infocert.eigor.api.utils.Pair;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ErrorMessage implements Serializable {
 
-    @Nullable
+    public static final String SOURCEMSG_PARAM = "sourceMsg";
+    public static final String OFFENDINGITEM_PARAM = "offendingItem";
+
     private final String message;
 
-    @Nullable
     private ErrorCode errorCode;
+
+    private final Map<String, String> parameters = new HashMap<>(0);
+
     private final List<Exception> relatedExceptions = new ArrayList<>(0);
 
-    public ErrorMessage(String message, @Nullable String location, @Nullable String type, @Nullable String code) {
-        this(message, new ErrorCode(location, type, code));
+    @SafeVarargs
+    public ErrorMessage(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code, Pair<String, String>... parameters) {
+        this(message, new ErrorCode(location, action, code));
+        for (Pair<String, String> p : parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
-    public ErrorMessage(@Nullable String message) {
+    public ErrorMessage(String message) {
         this.message = message;
     }
 
-    public ErrorMessage(@Nullable String message, @Nullable ErrorCode errorCode) {
+    public ErrorMessage(String message, ErrorCode errorCode) {
         this.message = message;
         this.errorCode = errorCode;
     }
@@ -31,11 +43,11 @@ public class ErrorMessage implements Serializable {
         this(message, errorMessage.getErrorCode());
     }
 
-    public ErrorMessage(Exception relatedException, String message, String location, @Nullable String action, @Nullable String code) {
+    public ErrorMessage(Exception relatedException, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code) {
         this(relatedException, message, new ErrorCode(location, action, code));
     }
 
-    public ErrorMessage(Exception relatedException, String message, @Nullable ErrorCode errorCode) {
+    public ErrorMessage(Exception relatedException, String message, ErrorCode errorCode) {
         this(message, errorCode);
         this.relatedExceptions.add(relatedException);
     }
@@ -49,6 +61,9 @@ public class ErrorMessage implements Serializable {
         this.message = builder.message;
         this.errorCode = builder.errorCode;
         this.relatedExceptions.addAll(builder.exceptions);
+        for (Pair<String, String> p : builder.parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
     @Nullable
@@ -61,6 +76,9 @@ public class ErrorMessage implements Serializable {
         return errorCode;
     }
 
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
 
     public List<Exception> getRelatedExceptions() {
         return relatedExceptions;
@@ -74,7 +92,7 @@ public class ErrorMessage implements Serializable {
         return !relatedExceptions.isEmpty();
     }
 
-    public ErrorCode updateErrorCode(String location, @Nullable String action, String error) {
+    public ErrorCode updateErrorCode(ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error) {
         if (this.errorCode != null) {
             this.errorCode = new ErrorCode(
                     location != null ? location : this.errorCode.getLocation(),
@@ -110,16 +128,18 @@ public class ErrorMessage implements Serializable {
         private String message;
 
         @Nullable
-        private String location;
+        private ErrorCode.Location location;
 
         @Nullable
-        private String action;
+        private ErrorCode.Action action;
 
         @Nullable
-        private String error;
+        private ErrorCode.Error error;
 
         @Nullable
         private ErrorCode errorCode;
+
+        private List<Pair<String, String>> parameters = new ArrayList<>(0);
 
         private final List<Exception> exceptions = new ArrayList<>(0);
 
@@ -131,18 +151,23 @@ public class ErrorMessage implements Serializable {
             return this;
         }
 
-        public Builder location(String location) {
+        public Builder location(ErrorCode.Location location) {
             this.location = location;
             return this;
         }
 
-        public Builder action(String action) {
+        public Builder action(ErrorCode.Action action) {
             this.action = action;
             return this;
         }
 
-        public Builder error(String error) {
+        public Builder error(ErrorCode.Error error) {
             this.error = error;
+            return this;
+        }
+
+        public Builder addParam(String key, String value) {
+            parameters.add(Pair.of(key, value));
             return this;
         }
 

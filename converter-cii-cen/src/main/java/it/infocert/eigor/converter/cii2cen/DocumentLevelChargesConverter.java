@@ -4,6 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class DocumentLevelChargesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0021(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0021(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
@@ -63,7 +64,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(strDblConverter.convert(actualAmount.getText()));
                                 bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
                             }catch (NumberFormatException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -72,7 +78,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                 bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
                             }catch (NumberFormatException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -81,7 +92,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(strDblConverter.convert(calculationPercent.getText()));
                                 bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
                             }catch (NumberFormatException | ConversionFailedException  e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -90,7 +106,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
                                 bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
                             }catch (IllegalArgumentException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -99,7 +120,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                 bg0021.getBT0103DocumentLevelChargeVatRate().add(bt0103);
                             }catch (NumberFormatException | ConversionFailedException  e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -112,7 +138,12 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                                 BT0105DocumentLevelChargeReasonCode bt0105 = new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(reasonCode.getText()));
                                 bg0021.getBT0105DocumentLevelChargeReasonCode().add(bt0105);
                             }catch (IllegalArgumentException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid7161SpecialServicesCodes not found").action("DocumentLevelChargesConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message("Untdid7161SpecialServicesCodes not found")
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -126,7 +157,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0021(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0021(document, cenInvoice, errors, callingLocation);
     }
 }

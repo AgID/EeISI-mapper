@@ -72,7 +72,7 @@ public class IntegrityRulesRepository implements RuleRepository {
                         rule = new IteratingIntegrityRule(items, body, key);
                         validRules.add(rule);
                         rules.add(rule);
-                    }else {
+                    } else {
                         if (!itemR) {
                             invalidRules.put(String.format("%s.items", key), (String) itemsResult.get("expression"));
                         }

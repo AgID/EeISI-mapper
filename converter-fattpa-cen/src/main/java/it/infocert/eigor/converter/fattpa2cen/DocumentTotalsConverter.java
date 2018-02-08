@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import com.google.common.base.Optional;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0022DocumentTotals;
 import it.infocert.eigor.model.core.model.BT0112InvoiceTotalAmountWithVat;
@@ -17,7 +18,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
     private final static Logger log = LoggerFactory.getLogger(DocumentTotalsConverter.class);
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         addInvoiceTotalAmountWithVatDefault(invoice, document, errors);
     }
 

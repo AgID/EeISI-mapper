@@ -1,9 +1,14 @@
 package it.infocert.eigor.converter.cen2ubl;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.api.conversion.Untdid4461PaymentMeansCodeToString;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -17,7 +22,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(PaymentMeansConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -39,10 +44,19 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                         BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
                         paymentMeansCode.setAttribute("Name", bt0082.getValue());
                     }
+                    final Untdid4461PaymentMeansCode value = bt0081.getValue();
                     try {
-                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(bt0081.getValue()));
+                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(value));
                     } catch (ConversionFailedException e) {
-                        errors.add(e);
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
+                        ));
                     }
                     paymentMeans.addContent(paymentMeansCode);
                 }

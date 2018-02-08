@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.EigorRuntimeException;
 import org.joda.time.LocalDate;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -27,7 +26,7 @@ public class LocalDateToXMLGregorianCalendarConverter implements TypeConverter<L
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            throw new EigorRuntimeException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

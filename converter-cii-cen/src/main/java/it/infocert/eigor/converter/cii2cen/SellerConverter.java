@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
@@ -91,7 +92,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0029_31_32(document, cenInvoice, errors);
     }
 }

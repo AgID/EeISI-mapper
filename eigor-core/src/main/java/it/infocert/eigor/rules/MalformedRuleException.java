@@ -2,6 +2,7 @@ package it.infocert.eigor.rules;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.model.core.rules.Rule;
@@ -13,7 +14,7 @@ public class MalformedRuleException extends EigorRuntimeException {
 
     private Map<String, String> invalidRules = Maps.newHashMap();
     private List<Rule> validRules = Lists.newArrayList();
-    private final static String NAME = "MalformedRule";
+    private final static ErrorCode.Error NAME = ErrorCode.Error.INVALID;
 
     public MalformedRuleException(String message) {
         super(ErrorMessage.builder().message(message).error(NAME).build());

@@ -2,6 +2,7 @@ package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -21,12 +22,14 @@ import java.util.UUID;
 public class AttachmentToFileReferenceConverter implements TypeConverter<Element, FileReference> {
     private final static Logger log = LoggerFactory.getLogger(AttachmentToFileReferenceConverter.class);
     private final File workdir;
+    private final ErrorCode.Location callingLocation;
 
-    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration){
-        return new AttachmentToFileReferenceConverter(eigorConfiguration);
+    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation){
+        return new AttachmentToFileReferenceConverter(eigorConfiguration, callingLocation);
     }
 
-    private AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration) {
+    private AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation) {
+        this.callingLocation = callingLocation;
         File workdir;
         String workdirS = eigorConfiguration.getMandatoryString("eigor.workdir");
         try {
@@ -47,7 +50,11 @@ public class AttachmentToFileReferenceConverter implements TypeConverter<Element
         String filename = element.getAttributeValue("filename");
 
         if (mimeCode == null || filename == null) {
-            throw new EigorRuntimeException(ErrorMessage.builder().message(String.format("Attribute %s is missing", mimeCode == null? "mimeCode": "filename")).action("AttachmentToFileReferenceConversion").build());
+            throw new EigorRuntimeException(ErrorMessage.builder().message(String.format("Attribute %s is missing", mimeCode == null? "mimeCode": "filename"))
+                    .location(callingLocation)
+                    .action(ErrorCode.Action.HARDCODED_MAP)
+                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                    .build());
         }
 
         try {

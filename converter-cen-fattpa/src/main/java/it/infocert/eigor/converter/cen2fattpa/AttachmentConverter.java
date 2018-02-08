@@ -5,8 +5,12 @@ import com.amoerie.jstreams.functions.Filter;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
@@ -23,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
 
@@ -64,17 +69,33 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
     private final String attachmentName = "not-mapped-values";
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "Too many FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.ILLEGAL_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else if (size < 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "No FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             setUnmappedCenElements(invoice, fatturaElettronicaBody);
-            forwardExistingAttachments(invoice, fatturaElettronicaBody, errors);
+            forwardExistingAttachments(invoice, fatturaElettronicaBody, errors, callingLocation);
         }
     }
 
@@ -119,7 +140,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
         }
     }
 
-    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         log.info("Starting converting Allegati");
         if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             for (BG0024AdditionalSupportingDocuments documents : invoice.getBG0024AdditionalSupportingDocuments()) {
@@ -150,7 +171,14 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                             allegati.setNomeAttachment(file.getFileName());
                         } catch (IOException e) {
                             log.error(e.getMessage(), e);
-                            errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.INVALID,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                            ));
                         }
                     }
 

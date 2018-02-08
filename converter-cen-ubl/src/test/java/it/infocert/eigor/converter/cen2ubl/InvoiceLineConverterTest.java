@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.cen2ubl;
 
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -24,7 +26,7 @@ public class InvoiceLineConverterTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         InvoiceLineConverter converter = new InvoiceLineConverter();
-        converter.map(cenInvoice, document, new ArrayList());
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("InvoiceLine");
@@ -43,7 +45,7 @@ public class InvoiceLineConverterTest {
     public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0129AndBT0149();
         InvoiceLineConverter converter = new InvoiceLineConverter();
-        converter.map(cenInvoice, document, new ArrayList());
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("InvoiceLine");
