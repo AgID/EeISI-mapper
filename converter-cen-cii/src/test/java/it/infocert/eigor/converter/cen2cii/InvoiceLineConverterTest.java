@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
@@ -38,7 +39,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0126OrBT0127ThenInvoiceWillHaveAssociatedDocumentLineDocument() {
         BG0000Invoice invoice = createInvoiceWithBT0126AndBT0127();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -61,7 +62,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0128ThenInvoiceWillHaveAdditionalReferencedDocumentWithTypeCode130() {
         BG0000Invoice invoice = createInvoiceWithBT0128();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -87,7 +88,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0149AndBT0150ThenInvoiceWillHaveBasisQuantityWithUnitCodeCommonCode() {
         BG0000Invoice invoice = createInvoiceWithBT0149AndBT150();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -111,7 +112,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0159ThenInvoiceWillHaveOriginTradeCountryIdAs2LetterCode() {
         BG0000Invoice invoice = createInvoiceWithBT0159();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);

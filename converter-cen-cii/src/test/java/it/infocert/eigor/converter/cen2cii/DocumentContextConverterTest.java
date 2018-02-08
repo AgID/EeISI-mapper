@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0002ProcessControl;
 import it.infocert.eigor.model.core.model.BT0024SpecificationIdentifier;
@@ -34,7 +35,7 @@ public class DocumentContextConverterTest {
     @Test
     public void ifBT0024ThenInvoiceWillHaveGuidelineSpecifiedDocumentContextParameterId() {
         BG0000Invoice invoice = createInvoiceWithBT0024();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
         assertNotNull(exchangedDocumentContext);
@@ -49,7 +50,7 @@ public class DocumentContextConverterTest {
     @Test
     public void ifNoBT0024ThenInvoiceWillHaveDefaultValueForGuidelineSpecifiedDocumentContextParameterId() {
         BG0000Invoice invoice = createInvoiceWithBG0002();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
         assertNotNull(exchangedDocumentContext);

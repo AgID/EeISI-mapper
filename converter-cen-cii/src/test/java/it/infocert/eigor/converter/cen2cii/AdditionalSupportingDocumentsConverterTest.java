@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.*;
 import org.assertj.core.util.Lists;
@@ -32,7 +33,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = createInvoiceWithBG0024();
         Document document = createInvoiceWithRootNode();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -80,7 +81,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BT0124ExternalDocumentLocation bt0124 = new BT0124ExternalDocumentLocation("URITEST");
         bg0024.getBT0124ExternalDocumentLocation().add(bt0124);
 
-        TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration());
+        TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.CII_OUT);
         Element fakeContent = new Element("FakeContent");
         fakeContent.setAttribute("mimeCode", "application/pdf");
         fakeContent.setAttribute("filename", "test.pdf");
