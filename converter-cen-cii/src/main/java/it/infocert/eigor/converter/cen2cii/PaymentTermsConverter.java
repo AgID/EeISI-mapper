@@ -5,7 +5,7 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -20,7 +20,7 @@ import java.util.List;
 public class PaymentTermsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
@@ -58,8 +58,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 dueDateDateTime.addContent(dateTimeString);
                 specifiedTradePaymentTerms.addContent(dueDateDateTime);
             } catch (IllegalArgumentException | ConversionFailedException e) {
-                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceNoteConverter").build());
-                errors.add(ConversionIssue.newError(ere));
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        e.getMessage(),
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.INVALID,
+                        e
+                )));
             }
         }
 
@@ -100,8 +105,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     lineTotalAmount.setText(dblStrConverter.convert(bt0106));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(lineTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -112,8 +122,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     allowanceTotalAmount.setText(dblStrConverter.convert(bt0107));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(allowanceTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -124,8 +139,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     chargeTotalAmount.setText(dblStrConverter.convert(bt0108));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -136,8 +156,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     taxBasisTotalAmount.setText(dblStrConverter.convert(bt0109));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(taxBasisTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -148,8 +173,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     taxTotalAmount.setText(dblStrConverter.convert(bt0110));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -160,8 +190,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     grandTotalAmount.setText(dblStrConverter.convert(bt0112));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(grandTotalAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -172,8 +207,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     totalPrepaidAmount.setText(dblStrConverter.convert(bt0113));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(totalPrepaidAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -184,8 +224,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     roundingAmount.setText(dblStrConverter.convert(bt0114));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -196,8 +241,13 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                     duePayableAmount.setText(dblStrConverter.convert(bt0115));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(duePayableAmount);
                 } catch (ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("PaymentTermsConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
         }

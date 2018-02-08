@@ -1,11 +1,9 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -20,7 +18,7 @@ import java.util.List;
 public class DocumentContextConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 

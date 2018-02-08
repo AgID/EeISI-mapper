@@ -1,9 +1,7 @@
 package it.infocert.eigor.converter.cen2cii;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.CustomConverterUtils;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.*;
 import org.codehaus.plexus.util.FileUtils;
@@ -15,13 +13,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * The Additional Supporting Documents Custom Converter
- */
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!cenInvoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             Element rootElement = document.getRootElement();
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -73,7 +68,13 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         attachmentBinaryObject.setText(content);
                         additionalReferencedDocument.addContent(attachmentBinaryObject);
                     } catch (IOException e) {
-                        errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                String.format("Cannot read attachment file %s!", bt0125.getFileName()),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
 

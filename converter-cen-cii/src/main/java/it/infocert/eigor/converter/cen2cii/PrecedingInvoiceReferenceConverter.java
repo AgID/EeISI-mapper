@@ -3,7 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
 import org.jdom2.Document;
@@ -18,7 +18,7 @@ import java.util.List;
 public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!cenInvoice.getBG0003PrecedingInvoiceReference().isEmpty()) {
             Element rootElement = document.getRootElement();
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -53,8 +53,13 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         formattedIssueDateTime.setText(JavaLocalDateToStringConverter.newConverter("yyyyMMdd").convert(bg0003.getBT0026PrecedingInvoiceIssueDate(0).getValue()));
                         invoiceReferencedDocument.addContent(formattedIssueDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
                 applicableHeaderTradeSettlement.addContent(invoiceReferencedDocument);

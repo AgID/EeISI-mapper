@@ -2,11 +2,10 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -20,7 +19,7 @@ import java.util.List;
 public class InvoiceLineConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
@@ -93,8 +92,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeSettlementLineMonetarySummation.addContent(lineTotalAmount);
                     specifiedLineTradeSettlement.addContent(specifiedTradeSettlementLineMonetarySummation);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -123,8 +127,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         startDateTime.addContent(dateTimeString);
                         billingSpecifiedPeriod.addContent(startDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
 
@@ -138,8 +147,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         endDateTime.addContent(dateTimeString);
                         billingSpecifiedPeriod.addContent(endDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
                 specifiedLineTradeSettlement.addContent(billingSpecifiedPeriod);
@@ -161,8 +175,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         actualAmount.setText(dblStrConverter.convert(bt0136));
                         specifiedTradeAllowanceCharge.addContent(actualAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -173,8 +192,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         basisAmount.setText(dblStrConverter.convert(bt0137));
                         specifiedTradeAllowanceCharge.addContent(basisAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -185,8 +209,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         calculationPercent.setText(dblStrConverter.convert(bt0138));
                         specifiedTradeAllowanceCharge.addContent(calculationPercent);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -221,8 +250,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         actualAmount.setText(dblStrConverter.convert(bt0141));
                         specifiedTradeAllowanceCharge.addContent(actualAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -233,8 +267,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         basisAmount.setText(dblStrConverter.convert(bt0142));
                         specifiedTradeAllowanceCharge.addContent(basisAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -245,8 +284,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         calculationPercent.setText(dblStrConverter.convert(bt0143));
                         specifiedTradeAllowanceCharge.addContent(calculationPercent);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -286,8 +330,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         rateApplicablePercent.setText(dblStrConverter.convert(bt0152));
                         applicableTradeTax.addContent(rateApplicablePercent);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
                 specifiedLineTradeSettlement.addContent(applicableTradeTax);
@@ -307,8 +356,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedLineTradeDelivery.addContent(billedQuantity);
                     includedSupplyChainTradeLineItem.addContent(specifiedLineTradeDelivery);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -337,8 +391,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         netPriceProductTradePrice.addContent(chargeAmount);
                         specifiedLineTradeAgreement.addContent(netPriceProductTradePrice);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -353,8 +412,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         appliedTradeAllowanceCharge.addContent(actualAmount);
                         grossPriceProductTradePrice.addContent(appliedTradeAllowanceCharge);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -365,8 +429,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         chargeAmount.setText(dblStrConverter.convert(bt0148));
                         grossPriceProductTradePrice.addContent(chargeAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
 
@@ -381,8 +450,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         basisQuantity.setText(dblStrConverter.convert(bt0149));
                         grossPriceProductTradePrice.addContent(basisQuantity);
                     } catch (NumberFormatException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                     }
                 }
                 specifiedLineTradeAgreement.addContent(grossPriceProductTradePrice);

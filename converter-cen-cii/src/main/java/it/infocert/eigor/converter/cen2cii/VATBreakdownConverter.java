@@ -5,7 +5,7 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.model.*;
@@ -22,7 +22,7 @@ import java.util.List;
 public class VATBreakdownConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
@@ -67,8 +67,13 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 taxPointDate = new Element("TaxPointDate", ramNs);
                 taxPointDate.addContent(dateString);
             } catch (ConversionFailedException e) {
-                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("VATBreakdownConverter").build());
-                errors.add(ConversionIssue.newError(ere));
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        e.getMessage(),
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.INVALID,
+                        e
+                )));
             }
         }
 
@@ -98,8 +103,13 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     basisAmount.setText(dblStrConverter.convert(bt0116.getValue()));
                     applicableTradeTax.addContent(basisAmount);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -110,8 +120,13 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     calculatedAmount.setText(dblStrConverter.convert(bt0117.getValue()));
                     applicableTradeTax.addContent(calculatedAmount);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -135,8 +150,13 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     rateApplicablePercent.setText(dblStrConverter.convert(bt0119.getValue()));
                     applicableTradeTax.addContent(rateApplicablePercent);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 

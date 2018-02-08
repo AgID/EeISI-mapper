@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -17,7 +18,7 @@ import java.util.List;
 public class CreditTransferConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {
             BG0016PaymentInstructions bg0016 = cenInvoice.getBG0016PaymentInstructions(0);
             Element rootElement = document.getRootElement();

@@ -4,7 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DeliverToLocationConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
@@ -99,8 +99,13 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                     actualDeliverySupplyChainEvent.addContent(occurrenceDateTime);
                     applicableHeaderTradeDelivery.addContent(actualDeliverySupplyChainEvent);
                 } catch (IllegalArgumentException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceNoteConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -125,8 +130,13 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                         startDateTime.addContent(dateTimeString);
                         billingSpecifiedPeriod.addContent(startDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("DeliverToLocationConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
 
@@ -140,8 +150,13 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                         endDateTime.addContent(dateTimeString);
                         billingSpecifiedPeriod.addContent(endDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
-                        EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("DeliverToLocationConverter").build());
-                        errors.add(ConversionIssue.newError(ere));
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
                     }
                 }
                 applicableHeaderTradeSettlement.addContent(billingSpecifiedPeriod);

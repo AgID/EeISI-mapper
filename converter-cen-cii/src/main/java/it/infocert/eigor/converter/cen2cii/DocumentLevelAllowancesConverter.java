@@ -4,7 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
 import org.jdom2.Document;
@@ -19,7 +19,7 @@ import java.util.List;
 public class DocumentLevelAllowancesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
         Element rootElement = document.getRootElement();
@@ -56,8 +56,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     actualAmount.setText(dblStrConverter.convert(bg0020.getBT0092DocumentLevelAllowanceAmount(0).getValue()));
                     specifiedTradeAllowanceCharge.addContent(actualAmount);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -67,8 +72,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     basisAmount.setText(dblStrConverter.convert(bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue()));
                     specifiedTradeAllowanceCharge.addContent(basisAmount);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -78,8 +88,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     calculationPercent.setText(dblStrConverter.convert(bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue()));
                     specifiedTradeAllowanceCharge.addContent(calculationPercent);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
@@ -98,8 +113,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     rateApplicablePercent.setText(dblStrConverter.convert(bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue()));
                     categoryTradeTax.addContent(rateApplicablePercent);
                 } catch (NumberFormatException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelChargesConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 

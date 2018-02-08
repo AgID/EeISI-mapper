@@ -4,7 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
-import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
@@ -21,7 +21,7 @@ import java.util.List;
 public class InvoiceNoteConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
             TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
@@ -61,8 +61,13 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                     issueDateTime.addContent(dateTimeString);
                     exchangedDocument.addContent(issueDateTime);
                 } catch (IllegalArgumentException | ConversionFailedException e) {
-                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("InvoiceNoteConverter").build());
-                    errors.add(ConversionIssue.newError(ere));
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
 
