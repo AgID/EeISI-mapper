@@ -6,7 +6,9 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -143,7 +145,8 @@ public class Cii2Cen extends AbstractToCenConverter {
 			errors.addAll(ciusValidationErrors);
 
 		} catch (IOException e) {
-			log.error(e.getMessage(), e);
+			errors.add(ConversionIssue.newWarning(e,"Error during validation", ErrorCode.Location.CII_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.ILLEGAL_VALUE, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
+
 		}
 
 		Document document;
