@@ -28,7 +28,7 @@ public class RuleReportsTest {
         String s = RuleReports.dump(sut);
 
         // then
-        String expected = "Outcome,Reason\n" + "FAILED,outcome1\n" + "SUCCESS,outcome2\n" + "UNAPPLICABLE,outcome3";
+        String expected = "Outcome,Reason\r\n" + "FAILED,outcome1\r\n" + "SUCCESS,outcome2\r\n" + "UNAPPLICABLE,outcome3\r\n";
         assertEquals(expected, s);
 
     }
