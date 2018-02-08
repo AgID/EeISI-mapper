@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping.fromCen;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -16,11 +17,13 @@ public class InvoiceXpathCenMappingValidator implements InvoiceMappingValidator 
 
     private final Pattern pattern;
     private final InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
 
 
-    public InvoiceXpathCenMappingValidator(String keyRegex, IReflections reflections) {
+    public InvoiceXpathCenMappingValidator(String keyRegex, IReflections reflections, ErrorCode.Location callingLocation) {
         pattern = Pattern.compile(keyRegex);
         invoiceUtils = new InvoiceUtils(reflections);
+        this.callingLocation = callingLocation;
     }
 
     @Override
@@ -29,10 +32,10 @@ public class InvoiceXpathCenMappingValidator implements InvoiceMappingValidator 
             if (validateKey(key)) {
                 for (String value : map.get(key)) {
                     if (!validateValue(value)) {
-                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key);
+                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
                     }
                 }
-            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
+            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
         }
     }
 

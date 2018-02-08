@@ -1,11 +1,12 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
-import it.infocert.eigor.api.CustomConverterUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -54,7 +55,7 @@ public class PaymentMeansConverter extends CustomConverterUtils implements Custo
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBG0016(document, cenInvoice, errors);
     }
 }

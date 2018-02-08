@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -95,7 +96,7 @@ public class BuyerConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBG0007(document, cenInvoice, errors);
     }
 }

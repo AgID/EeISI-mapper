@@ -9,6 +9,9 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.LocalDateToXMLGregorianCalendarConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -36,24 +39,40 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
     }
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "Too many FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.ILLEGAL_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else if (size < 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "No FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             DatiGeneraliType datiGenerali = fatturaElettronicaBody.getDatiGenerali();
-            addDDT(invoice, datiGenerali, errors);
-            addCausale(invoice, datiGenerali, errors);
-            addFattureCollegate(invoice, datiGenerali, errors);
+            addDDT(invoice, datiGenerali, errors, callingLocation);
+            addCausale(invoice, datiGenerali, errors, callingLocation);
+            addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
             addIndirizzo(invoice, fatturaElettronica, errors);
         }
     }
 
-    private void addDDT(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+    private void addDDT(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         try {
             if (datiGenerali != null) {
                 if (!invoice.getBT0016DespatchAdviceReference().isEmpty()) {
@@ -69,12 +88,18 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 }
             }
         } catch (DatatypeConfigurationException | ParseException e) {
-            errors.add(ConversionIssue.newError(new EigorRuntimeException(e.getMessage(), e)));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    e.getMessage(),
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.INVALID,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+            )));
         }
     }
 
 
-    private void addCausale(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+    private void addCausale(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (datiGenerali != null) {
             DatiGeneraliDocumentoType datiGeneraliDocumento = datiGenerali.getDatiGeneraliDocumento();
             if (datiGeneraliDocumento != null) {
@@ -125,10 +150,25 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
                 }
             } else {
-                errors.add(ConversionIssue.newError(new IllegalArgumentException("No DatiGeneraliDocumento was found in current DatiGenerali")));
+                final String message = "No DatiGeneraliDocumento was found in current DatiGenerali";
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        message,
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.MISSING_VALUE,
+                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiGeneraliDocumento"))));
             }
         } else {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No DatiGenerali was found in current FatturaElettronicaBody")));
+            final String message = "No DatiGenerali was found in current FatturaElettronicaBody";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiGenerali")
+            )));
         }
 
     }
@@ -139,13 +179,13 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         if (dgd == null) {
             dgd = new DatiGeneraliDocumentoType();
         }
-        if(!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+        if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
             final BT0005InvoiceCurrencyCode currencyCode = invoice.getBT0005InvoiceCurrencyCode(0);
 
         }
     }
 
-    private void addFattureCollegate(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+    private void addFattureCollegate(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0003PrecedingInvoiceReference().isEmpty()) {
             List<DatiDocumentiCorrelatiType> datiFattureCollegate = datiGenerali.getDatiFattureCollegate();
             for (BG0003PrecedingInvoiceReference precedingInvoiceReference : invoice.getBG0003PrecedingInvoiceReference()) {
@@ -158,11 +198,20 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 }
 
                 if (!precedingInvoiceReference.getBT0026PrecedingInvoiceIssueDate().isEmpty()) {
+                    final LocalDate value = precedingInvoiceReference.getBT0026PrecedingInvoiceIssueDate(0).getValue();
                     try {
-                        XMLGregorianCalendar precedingInvoiceIssueDate = dateConverter.convert(precedingInvoiceReference.getBT0026PrecedingInvoiceIssueDate(0).getValue());
+                        XMLGregorianCalendar precedingInvoiceIssueDate = dateConverter.convert(value);
                         fatturaCollegata.setData(precedingInvoiceIssueDate);
                     } catch (EigorRuntimeException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(e));
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
+                        ));
                     }
                 }
             }

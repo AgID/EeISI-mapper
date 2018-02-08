@@ -3,6 +3,9 @@ package it.infocert.eigor.api.xml;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.IXMLValidator;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
@@ -26,6 +29,7 @@ import java.util.List;
 
 public class XSDValidator implements IXMLValidator {
 
+    private final ErrorCode.Location callingLocation;
     private Schema schema;
     private static final SchemaFactory DEFAULT_SCHEMA_FACTORY;
     private static final Logger log = LoggerFactory.getLogger(XSDValidator.class);
@@ -36,27 +40,28 @@ public class XSDValidator implements IXMLValidator {
         DEFAULT_SCHEMA_FACTORY.setResourceResolver(new LoggingResourceResolver());
     }
 
-    public XSDValidator(File schemaFile, SchemaFactory schemaFactory) throws SAXException {
-        this(new StreamSource(schemaFile), schemaFactory);
+    public XSDValidator(File schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
+        this(new StreamSource(schemaFile), schemaFactory, callingLocation);
     }
 
-    public XSDValidator(InputStream schemaFile, SchemaFactory schemaFactory) throws SAXException {
-        this(new StreamSource(schemaFile), schemaFactory);
+    public XSDValidator(InputStream schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
+        this(new StreamSource(schemaFile), schemaFactory, callingLocation);
     }
 
-    public XSDValidator(Source schemaSource, SchemaFactory schemaFactory) throws SAXException {
+    public XSDValidator(Source schemaSource, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
+        this.callingLocation = callingLocation;
         overriddenSchemaFactory = null;
         long delta = System.currentTimeMillis();
         try {
             schema = schemaFactoryToUse().newSchema(schemaSource);
-        }finally {
+        } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
         }
     }
 
-    public XSDValidator(File schemaFile) throws SAXException {
-        this(new StreamSource(schemaFile));
+    public XSDValidator(File schemaFile, ErrorCode.Location callingLocation) throws SAXException {
+        this(new StreamSource(schemaFile), callingLocation);
     }
 
     /**
@@ -64,16 +69,17 @@ public class XSDValidator implements IXMLValidator {
      * Please, keep in mind that you cannot load XSDs that import other XSD as an inputstream because the parser would not be
      * able to resolve the imports, since the inputstream does not carry any info about the location it has been loaded from.
      */
-    public XSDValidator(InputStream schemaFile) throws SAXException {
-        this(new StreamSource(schemaFile));
+    public XSDValidator(InputStream schemaFile, ErrorCode.Location callingLocation) throws SAXException {
+        this(new StreamSource(schemaFile), callingLocation);
     }
 
-    public XSDValidator(Source schemaSource) throws SAXException {
+    public XSDValidator(Source schemaSource, ErrorCode.Location callingLocation) throws SAXException {
+        this.callingLocation = callingLocation;
         overriddenSchemaFactory = null;
         long delta = System.currentTimeMillis();
         try {
             schema = schemaFactoryToUse().newSchema(schemaSource);
-        }finally {
+        } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
         }
@@ -88,7 +94,12 @@ public class XSDValidator implements IXMLValidator {
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
-                    errors.add(ConversionIssue.newWarning(exception));
+                    errors.add(ConversionIssue.newWarning(exception, "Error during XSD validation",
+                            callingLocation,
+                            ErrorCode.Action.XSD_VALIDATION,
+                            ErrorCode.Error.INVALID,
+                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, exception.getMessage())
+                    ));
                 }
 
                 @Override
@@ -96,10 +107,15 @@ public class XSDValidator implements IXMLValidator {
 
                     int lineNumber = exception.getLineNumber();
                     int columnNumber = exception.getColumnNumber();
-                    String message = String.format( "XSD validation error at %d:%d. %s",
+                    String message = String.format("XSD validation error at %d:%d. %s",
                             lineNumber, columnNumber,
-                            exception.getMessage() );
-                    errors.add(ConversionIssue.newError(exception, message));
+                            exception.getMessage());
+                    errors.add(ConversionIssue.newError(exception, "Error during XSD validation",
+                            callingLocation,
+                            ErrorCode.Action.XSD_VALIDATION,
+                            ErrorCode.Error.INVALID,
+                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, message)
+                    ));
                     log.error(message, exception);
                 }
 
@@ -110,12 +126,16 @@ public class XSDValidator implements IXMLValidator {
             });
             validator.validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newError(e, "XSD validation failed!"));
+            errors.add(ConversionIssue.newError(e, "XSD validation failed!",
+                    callingLocation,
+                    ErrorCode.Action.XSD_VALIDATION,
+                    ErrorCode.Error.INVALID,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
         return errors;
     }
 
     private SchemaFactory schemaFactoryToUse() {
-        return this.overriddenSchemaFactory!=null ? overriddenSchemaFactory : DEFAULT_SCHEMA_FACTORY;
+        return this.overriddenSchemaFactory != null ? overriddenSchemaFactory : DEFAULT_SCHEMA_FACTORY;
     }
 }

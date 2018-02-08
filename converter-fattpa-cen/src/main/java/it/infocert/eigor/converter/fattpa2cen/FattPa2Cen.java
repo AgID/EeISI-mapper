@@ -6,9 +6,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
@@ -19,7 +20,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
     private XSDValidator xsdValidator;
 
     public FattPa2Cen(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_IN);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -77,7 +77,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
             }
@@ -102,23 +102,22 @@ public class FattPa2Cen extends AbstractToCenConverter {
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation succesful!");
             }
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors));
+            errors.addAll(validationErrors);
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         Document document;
         try {
             document = getDocument(clonedInputStream);
-        } catch (JDOMException | IOException e) {
-            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), getName(), "DocumentBuilding", e.getClass().getSimpleName().replace("Exception", "")), e);
+        } catch (RuntimeException e) {
+            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
 
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
         return result;
     }
 
@@ -126,7 +125,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN);
         }
     }
 

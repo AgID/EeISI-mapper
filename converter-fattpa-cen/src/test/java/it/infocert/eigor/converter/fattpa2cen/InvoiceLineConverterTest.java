@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0129InvoicedQuantity;
@@ -11,9 +12,7 @@ import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class InvoiceLineConverterTest {
 
@@ -31,7 +30,7 @@ public class InvoiceLineConverterTest {
 
     @Test
     public void shouldApplyBT129Default() throws Exception {
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0129InvoicedQuantity bt129 = invoice.getBG0025InvoiceLine(0).getBT0129InvoicedQuantity(0);
         assertEquals(new Double(1d), bt129.getValue());
     }
@@ -44,7 +43,7 @@ public class InvoiceLineConverterTest {
                 .getChild("DettaglioLinee")
                 .addContent(new Element("Quantita").setText("15"));
 
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0129InvoicedQuantity bt129 = invoice.getBG0025InvoiceLine(0).getBT0129InvoicedQuantity(0);
         assertEquals(new Double(15d), bt129.getValue());
     }
@@ -56,14 +55,14 @@ public class InvoiceLineConverterTest {
                 .getChild("DatiBeniServizi")
                 .getChild("DettaglioLinee")
                 .addContent(new Element("UnitaMisura").setText(UnitOfMeasureCodes.C62_ONE.getCommonCode()));
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0130InvoicedQuantityUnitOfMeasureCode unitOfMeasureCode = invoice.getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0);
         assertEquals(UnitOfMeasureCodes.C62_ONE, unitOfMeasureCode.getValue());
     }
 
     @Test
     public void shouldApplyBT130Default() throws Exception {
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0130InvoicedQuantityUnitOfMeasureCode unitOfMeasureCode = invoice.getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0);
         assertEquals(UnitOfMeasureCodes.EACH_EA, unitOfMeasureCode.getValue());
     }

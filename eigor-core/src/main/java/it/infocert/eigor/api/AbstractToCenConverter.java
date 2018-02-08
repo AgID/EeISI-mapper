@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurableSupport;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.GenericManyToOneTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToManyTransformer;
 import it.infocert.eigor.api.mapping.GenericOneToOneTransformer;
@@ -33,6 +34,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     private IReflections reflections;
     private final ConversionRegistry conversionRegistry;
     protected final EigorConfiguration configuration;
+    private final ErrorCode.Location callingLocation;
     protected final DefaultResourceLoader drl;
 
     @Nullable
@@ -46,10 +48,11 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     protected final ConfigurableSupport configurableSupport;
     private List<CustomMapping<?>> customMappings = Lists.newArrayList();
 
-    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration) {
+    public AbstractToCenConverter(IReflections reflections, ConversionRegistry conversionRegistry, EigorConfiguration configuration, ErrorCode.Location callingLocation) {
         this.reflections = reflections;
         this.conversionRegistry = conversionRegistry;
         this.configuration = configuration;
+        this.callingLocation = callingLocation;
         this.drl = new DefaultResourceLoader();
         this.configurableSupport = new ConfigurableSupport(this);
     }
@@ -61,7 +64,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
             InputInvoiceXpathMap mapper;
             String mappingRegex = getMappingRegex();
             if(mappingRegex!=null){
-                mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(mappingRegex, reflections));
+                mapper = new InputInvoiceXpathMap(new InvoiceCenXpathMappingValidator(mappingRegex, reflections, callingLocation));
             }else{
                 mapper = new InputInvoiceXpathMap();
             }
@@ -128,7 +131,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 
 
         for (Map.Entry<String, String> entry : oneToOneMappings.entries()) {
-            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry);
+            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry, callingLocation);
             transformer.transformXmlToCen(document, invoice, errors);
         }
         return new ConversionResult<>(errors, invoice);
@@ -166,7 +169,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                     sourceKey = key.replace("cen.target", "xml.source."+index);
                 }
 
-                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry);
+                GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(bgBtPath, combinationExpression, xPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry, callingLocation);
                 transformer.transformXmlToCen(document, partialInvoice, errors);
             }
         }
@@ -215,14 +218,20 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                                     splitIndexPairs.put(xPath, pair);
                                 }
                             } catch (NumberFormatException e) {
-                                errors.add(ConversionIssue.newError(new RuntimeException(String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString))));
+                                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                        String.format("For start index key %s value is %s, for end index key %s value is %s!", sourceKey.concat(".start"), indexBeginString, sourceKey.concat(".end"), indexEndString),
+                                        callingLocation,
+                                        ErrorCode.Action.CONFIGURED_MAP,
+                                        ErrorCode.Error.INVALID,
+                                        e
+                                )));
                             }
                         }
                         index++;
                         sourceKey = key.replace("cen.source", "xml.target." + index);
                     }
 
-                    GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs);
+                    GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs, callingLocation);
                     transformer.transformCenToXml(partialInvoice, document, errors);
                 }
             }
@@ -232,7 +241,12 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
 
     private boolean existsValueForKeyInMany2OneMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors) {
         if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            errors.add(ConversionIssue.newError(new RuntimeException("No value in many2one mapping properties for key: " + key)));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    "No value in many2one mapping properties for key: " + key,
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.INVALID
+            )));
             return false;
         }
         return true;
@@ -240,7 +254,12 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
     
     private boolean existsValueForKeyInOne2ManyMultiMap(Multimap<String, String> mapping, String key, List<IConversionIssue> errors, String mappingType) {
     	if (mapping.get(key) == null || !mapping.get(key).iterator().hasNext()) {
-            RuntimeException e = new RuntimeException(String.format("No value in %s mapping properties for key %s!", mappingType, key));
+            EigorRuntimeException e = new EigorRuntimeException(
+                    String.format("No value in %s mapping properties for key %s!", mappingType, key),
+                    callingLocation,
+                    ErrorCode.Action.CONFIGURED_MAP,
+                    ErrorCode.Error.INVALID
+            );
             if (key.contains(".end")) {
                 log.warn("Key {} is missing value. Assuming last index and splitting to string end", key);
             } else {
@@ -257,9 +276,8 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
      *
      * @param sourceInvoiceStream the source invoice stream
      * @return the document
-     * @throws SyntaxErrorInInvoiceFormatException syntax error in invoice format exception
      */
-    protected Document getDocument(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException, JDOMException, IOException {
+    protected Document getDocument(InputStream sourceInvoiceStream) {
         Document doc;
         try {
             SAXBuilder saxBuilder = new SAXBuilder();

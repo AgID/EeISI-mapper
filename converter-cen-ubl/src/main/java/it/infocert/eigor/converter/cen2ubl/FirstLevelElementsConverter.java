@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2ubl;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -32,7 +33,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
     private Element root;
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         this.root = document.getRootElement();
 

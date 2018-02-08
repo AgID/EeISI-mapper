@@ -4,12 +4,12 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,12 +19,12 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
 
     public ConversionResult<BG0000Invoice> toBG0017(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BG0017CreditTransfer bg0017 = null;
+        BG0017CreditTransfer bg0017;
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> payeePartyCreditorFinancialAccount = null;
+        List<Element> payeePartyCreditorFinancialAccount;
         Element child = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
 
         if (child != null) {
@@ -79,7 +79,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBG0017(document, cenInvoice, errors);
     }
 }

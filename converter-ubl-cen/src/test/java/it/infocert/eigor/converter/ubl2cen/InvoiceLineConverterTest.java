@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier;
 import org.jdom2.Document;
@@ -31,7 +32,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void shouldMapToBT0128IfInvoiceLineDocumentReferenceTypeCodeIs130() throws Exception {
         InvoiceLineConverter converter = new InvoiceLineConverter();
-        ConversionResult<BG0000Invoice> result = converter.toBG0025(document, cenInvoice, errors);
+        ConversionResult<BG0000Invoice> result = converter.toBG0025(document, cenInvoice, errors, ErrorCode.Location.UBL_IN);
 
         assertTrue(result.hasResult());
 

@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping.fromCen;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
@@ -18,11 +19,13 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
     private final Pattern patternXml;
     private final Pattern patternBgbt;
     private final InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
 
-    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, IReflections reflections) {
+    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, IReflections reflections, ErrorCode.Location callingLocation) {
         patternXml = Pattern.compile(keyRegexXml);
         patternBgbt = Pattern.compile(keyRegexBgbt);
         invoiceUtils = new InvoiceUtils(reflections);
+        this.callingLocation = callingLocation;
     }
 
     @Override
@@ -56,24 +59,24 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
             if (validateKey(key)) {
                 for (String value : map.get(key)) {
                     if (!validateValue(value, key)) {
-                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value);
+                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
                     }
                 }
-            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
+            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
         }
         for (String key : startKeyExist.keySet()) {
             if (key != null && !startKeyExist.get(key)) {
-                throw new SyntaxErrorInMappingFileException("Missign start key for target: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign start key for target: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
         for (String key : mappingSource.keySet()) {
             if (key != null && mappingSource.get(key) == null) {
-                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
         for (String key : mappingTarget.keySet()) {
             if (key != null && mappingTarget.get(key) == null) {
-                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
     }

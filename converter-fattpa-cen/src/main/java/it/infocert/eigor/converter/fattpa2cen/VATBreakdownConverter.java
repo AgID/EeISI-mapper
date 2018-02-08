@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -19,14 +19,12 @@ import java.util.List;
  */
 public class VATBreakdownConverter implements CustomMapping<Document> {
 
-    private final static ConversionRegistry conversionRegistry = new ConversionRegistry();
-
-    public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
         TypeConverter<String, Untdid5305DutyTaxFeeCategories> dutyTaxFeeCategories = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
 
-        BG0023VatBreakdown bg0023 = null;
+        BG0023VatBreakdown bg0023;
 
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
@@ -44,7 +42,14 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                 BT0116VatCategoryTaxableAmount vatCategoryTaxableAmount = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(imponibileImporto.getText()));
                                 bg0023.getBT0116VatCategoryTaxableAmount().add(vatCategoryTaxableAmount);
                             } catch (NumberFormatException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -54,7 +59,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                 BT0117VatCategoryTaxAmount vatCategoryTaxAmount = new BT0117VatCategoryTaxAmount(strDblConverter.convert(imposta.getText()));
                                 bg0023.getBT0117VatCategoryTaxAmount().add(vatCategoryTaxAmount);
                             } catch (NumberFormatException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -64,7 +74,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                             try {
                                 code = dutyTaxFeeCategories.convert(natura.getText());
                             } catch (NullPointerException | ConversionFailedException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("InvoiceLineConverter").build());
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         } else {
@@ -77,7 +92,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(aliquotaIVA.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
                         } catch (NumberFormatException | ConversionFailedException e) {
-                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("VATBreakdownConverter").build());
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                    .location(callingLocation)
+                                    .action(ErrorCode.Action.HARDCODED_MAP)
+                                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                    .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
                         invoice.getBG0023VatBreakdown().add(bg0023);
@@ -89,7 +109,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0023(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0023(document, cenInvoice, errors, callingLocation);
     }
 }
