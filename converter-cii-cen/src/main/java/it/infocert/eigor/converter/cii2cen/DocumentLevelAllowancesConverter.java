@@ -4,6 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class DocumentLevelAllowancesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
@@ -36,7 +37,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
             if (child1 != null) {
                 specifiedTradeAllowanceCharges = findNamespaceChildren(child1, namespacesInScope, "SpecifiedTradeAllowanceCharge");
 
-                for(Element elem : specifiedTradeAllowanceCharges) {
+                for (Element elem : specifiedTradeAllowanceCharges) {
 
                     Element chargeIndicator = findNamespaceChild(elem, namespacesInScope, "ChargeIndicator");
                     if (chargeIndicator != null) {
@@ -53,7 +54,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                             Element categoryCode = null;
                             Element rateApplicablePercent = null;
                             List<Element> categoryTradeTaxes = findNamespaceChildren(elem, namespacesInScope, "CategoryTradeTax");
-                            for(Element taxesElem : categoryTradeTaxes) {
+                            for (Element taxesElem : categoryTradeTaxes) {
                                 typeCode = findNamespaceChild(taxesElem, namespacesInScope, "TypeCode");
                                 categoryCode = findNamespaceChild(taxesElem, namespacesInScope, "CategoryCode");
                                 rateApplicablePercent = findNamespaceChild(taxesElem, namespacesInScope, "RateApplicablePercent");
@@ -66,8 +67,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(strDblConverter.convert(actualAmount.getValue()));
                                     bg0020.getBT0092DocumentLevelAllowanceAmount().add(bt0092);
-                                }catch (NumberFormatException | ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                } catch (NumberFormatException | ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
@@ -75,26 +81,41 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(strDblConverter.convert(basisAmount.getText()));
                                     bg0020.getBT0093DocumentLevelAllowanceBaseAmount().add(bt0093);
-                                }catch (NumberFormatException | ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                } catch (NumberFormatException | ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (calculationPercent != null) {
-                                try{
+                                try {
                                     BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(strDblConverter.convert(calculationPercent.getText()));
                                     bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
-                                }catch (NumberFormatException | ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                } catch (NumberFormatException | ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
                             if (typeCode != null && categoryCode != null) {
-                                try{
+                                try {
                                     BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
                                     bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(bt0095);
-                                }catch (IllegalArgumentException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5305DutyTaxFeeCategories not found").action("DocumentLevelAllowancesConverter").build());
+                                } catch (IllegalArgumentException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message("Untdid5305DutyTaxFeeCategories not found")
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
@@ -102,8 +123,13 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 try {
                                     BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
                                     bg0020.getBT0096DocumentLevelAllowanceVatRate().add(bt0096);
-                                }catch (NumberFormatException | ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage()).action("DocumentLevelAllowancesConverter").build());
+                                } catch (NumberFormatException | ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
@@ -112,11 +138,16 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                                 bg0020.getBT0097DocumentLevelAllowanceReason().add(bt0097);
                             }
                             if (reasonCode != null) {
-                                try{
-                                    BT0098DocumentLevelAllowanceReasonCode bt0098 = new BT0098DocumentLevelAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code"+reasonCode.getText()));
+                                try {
+                                    BT0098DocumentLevelAllowanceReasonCode bt0098 = new BT0098DocumentLevelAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.valueOf("Code" + reasonCode.getText()));
                                     bg0020.getBT0098DocumentLevelAllowanceReasonCode().add(bt0098);
-                                }catch (IllegalArgumentException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Untdid5189ChargeAllowanceDescriptionCodes not found").action("DocumentLevelAllowancesConverter").build());
+                                } catch (IllegalArgumentException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                            .message("Untdid5189ChargeAllowanceDescriptionCodes not found")
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
@@ -131,7 +162,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0020(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0020(document, cenInvoice, errors, callingLocation);
     }
 }

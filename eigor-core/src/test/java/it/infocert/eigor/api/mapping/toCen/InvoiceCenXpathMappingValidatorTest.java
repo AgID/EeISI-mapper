@@ -3,6 +3,7 @@ package it.infocert.eigor.api.mapping.toCen;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class InvoiceCenXpathMappingValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new JavaReflections());
+        validator = new InvoiceCenXpathMappingValidator("/(BG|BT)[0-9]{4}(-[0-9]{1})?", new JavaReflections(), ErrorCode.Location.UBL_IN);
     }
 
     @Test

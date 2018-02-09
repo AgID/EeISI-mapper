@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0122SupportingDocumentReference;
@@ -22,7 +23,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndDocumentDescription();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
         BT0123SupportingDocumentDescription bt0123 = invoice.getBG0024AdditionalSupportingDocuments(0).getBT0123SupportingDocumentDescription(0);
         assertTrue("TEST".equals(bt0123.getValue()));
     }
@@ -32,7 +33,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("916");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
         BT0122SupportingDocumentReference bt0122 = invoice.getBG0024AdditionalSupportingDocuments(0).getBT0122SupportingDocumentReference(0);
         assertTrue("TESTID".equals(bt0122.getValue()));
     }
@@ -42,7 +43,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("666");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
         assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0122SupportingDocumentReference().size() == 0);
     }
 
@@ -52,7 +53,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("130");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>());
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
 
         Identifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().get(0).getValue();
 

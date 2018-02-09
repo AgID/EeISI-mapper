@@ -1,7 +1,12 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
-import it.infocert.eigor.api.*;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
+import it.infocert.eigor.model.core.model.BT0022InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -14,7 +19,7 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0001(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BG0001InvoiceNote bg0001 = null;
+        BG0001InvoiceNote bg0001;
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
 
@@ -39,7 +44,7 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBG0001(document, cenInvoice, errors);
     }
 }

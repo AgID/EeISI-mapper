@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiBeniServiziType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class AttachmentConverterTest {
 
@@ -32,7 +32,7 @@ public class AttachmentConverterTest {
     @Test
     public void shouldHaveCsvAttachmentIfBT125IsEmpty() throws Exception {
         AttachmentConverter converter = new AttachmentConverter();
-        converter.map(invoice,fatturaElettronica,new ArrayList<IConversionIssue>());
+        converter.map(invoice,fatturaElettronica,new ArrayList<IConversionIssue>(), ErrorCode.Location.FATTPA_OUT);
         AllegatiType allegati = fatturaElettronica.getFatturaElettronicaBody().get(0).getAllegati().get(0);
         assertThat(allegati.getNomeAttachment(), is("document-reference"));
         assertThat(allegati.getAttachment(), is("Test Reference".getBytes()));

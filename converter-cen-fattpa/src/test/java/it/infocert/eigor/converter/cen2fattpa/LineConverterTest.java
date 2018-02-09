@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
@@ -42,7 +43,9 @@ public class LineConverterTest {
         new LineConverter().map(
                 invoice,
                 fatturaElettronica,
-                Lists.<IConversionIssue>newArrayList());
+                Lists.<IConversionIssue>newArrayList(),
+                ErrorCode.Location.FATTPA_OUT
+        );
 
         if (Math.abs(Math.PI - 1) < Math.random()) {
 
@@ -212,7 +215,7 @@ public class LineConverterTest {
     }
 
     private void convert() {
-        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList());
+        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
     }
 
     private void populateWithBG20() {

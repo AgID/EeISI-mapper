@@ -1,12 +1,12 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0039SellerCountrySubdivision;
-import it.infocert.eigor.api.CustomConverterUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -25,12 +25,9 @@ public class PostalAddressConverter extends CustomConverterUtils implements Cust
 
     public ConversionResult<BG0000Invoice> toBT0039(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
-        BT0029SellerIdentifierAndSchemeIdentifier bt0029 = null;
-
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> ids = null;
         Element accountingSupplierParty = findNamespaceChild(rootElement, namespacesInScope, "AccountingSupplierParty");
 
         if (accountingSupplierParty != null) {
@@ -72,7 +69,7 @@ public class PostalAddressConverter extends CustomConverterUtils implements Cust
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0039(document, cenInvoice, errors);
     }
 }

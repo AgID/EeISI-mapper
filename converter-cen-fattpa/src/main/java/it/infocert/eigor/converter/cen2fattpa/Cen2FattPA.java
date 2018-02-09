@@ -4,8 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -15,7 +17,6 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -73,7 +74,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private XSDValidator validator;
 
     public Cen2FattPA(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_OUT);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
         try {
-            validator = new XSDValidator(xsdFile.getFile());
+            validator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }
@@ -118,7 +119,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Unmarshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice unmarshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
 
@@ -144,7 +145,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
                 marshaller.marshal(fatturaElettronicaXML, xmlOutput);
             }
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Marshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice marshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
@@ -153,13 +154,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
-            validationErrors = new ConversionIssueErrorCodeMapper(getName(), "XSDValidation").mapAll(validationErrors);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }
 
             errors.addAll(validationErrors);
-            new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
             return new BinaryConversionResult(jaxml, errors);
 
         }
@@ -169,7 +168,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
-            customMapping.map(invoice, fatturaElettronica, errors);
+            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT);
         }
     }
 

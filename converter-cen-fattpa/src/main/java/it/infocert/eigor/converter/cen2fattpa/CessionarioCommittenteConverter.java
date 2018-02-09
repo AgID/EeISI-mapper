@@ -4,11 +4,17 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0007Buyer;
+import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,14 +25,22 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
     private final static Logger log = LoggerFactory.getLogger(CessionarioCommittenteConverter.class);
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         CessionarioCommittenteType cessionarioCommittente = fatturaElettronica.getFatturaElettronicaHeader().getCessionarioCommittente();
         if (cessionarioCommittente != null) {
             FatturaElettronicaBodyType fatturaElettronicaBody = fatturaElettronica.getFatturaElettronicaBody().get(0);
             addCodiceFiscale(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
             addCodiceEori(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
         } else {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No CessionarioCommittente was found in current FatturaElettronicaHeader")));
+            final String message = "No CessionarioCommittente was found in current FatturaElettronicaHeader";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "CessionarioCommittente")
+            )));
         }
     }
 

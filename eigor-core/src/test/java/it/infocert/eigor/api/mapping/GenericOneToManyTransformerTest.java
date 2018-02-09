@@ -2,6 +2,7 @@ package it.infocert.eigor.api.mapping;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.utils.Pair;
@@ -82,6 +83,6 @@ public class GenericOneToManyTransformerTest {
         indexLimits.put(xPaths.get(0), bounds[0]);
         indexLimits.put(xPaths.get(1), bounds[1]);
 
-        return new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, indexLimits);
+        return new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, indexLimits, ErrorCode.Location.FATTPA_IN);
     }
 }

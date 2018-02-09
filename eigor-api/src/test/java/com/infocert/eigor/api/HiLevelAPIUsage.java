@@ -33,6 +33,7 @@ public class HiLevelAPIUsage {
 
     @Test
     public void hiLevelConversion() throws IOException, ConfigurationException {
+
         // 1. Construct an instance of EigorAPI using the related builder.
         // The API obtained is thread safe and can be then used to convert multiple invoices.
         // So, there's no need to instantiate EigorApi api each time even because its initialization takes time.

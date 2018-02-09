@@ -1,6 +1,7 @@
 package it.infocert.eigor.api.errors;
 
-import javax.annotation.Nullable;
+import com.google.common.base.Preconditions;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -9,45 +10,39 @@ public class ErrorCode implements Serializable {
     /*
      * Where did the error occur?
      */
-    @Nullable
-    private final String location;
+    private final Location location;
 
     /*
      * What caused the error?
      */
-    @Nullable
-    private final String action;
+    private final Action action;
 
     /*
      * What error did occur?
      */
-    @Nullable
-    private final String error;
+    private final Error error;
 
-    public ErrorCode(@Nullable String location, @Nullable String action, @Nullable String error) {
-        this.location = location;
-        this.action = action;
-        this.error = error;
+    public ErrorCode(Location location, Action action, Error error) {
+        this.location = Preconditions.checkNotNull(location, "Cannot build an error code without the Location tag");
+        this.action = Preconditions.checkNotNull(action, "Cannot build an error code without the Action tag");
+        this.error = Preconditions.checkNotNull(error, "Cannot build an error code without the Error tag");
     }
 
-    @Nullable
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    @Nullable
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
-    @Nullable
-    public String getError() {
+    public Error getError() {
         return error;
     }
 
     @Override
     public String toString() {
-        return String.format("%s.%s.%s", location, action, error);
+        return String.format("%s.%s.%s", location.name(), action.name(), error.name());
     }
 
     @Override
@@ -61,5 +56,33 @@ public class ErrorCode implements Serializable {
         result = 31 * result + (action != null ? action.hashCode() : 0);
         result = 31 * result + (error != null ? error.hashCode() : 0);
         return result;
+    }
+
+    public enum Location {
+        UBL_IN,
+        UBL_OUT,
+        FATTPA_IN,
+        FATTPA_OUT,
+        CII_IN,
+        CII_OUT,
+        UBLCN_IN,
+        CSVCEN_IN
+    }
+
+    public enum Action {
+        XSD_VALIDATION,
+        SCH_VALIDATION,
+        CIUS_SCH_VALIDATION,
+        CONFIG_VALIDATION,
+        CONFIGURED_MAP,
+        HARDCODED_MAP,
+        XML_PARSING,
+        GENERIC
+    }
+
+    public enum Error {
+        INVALID,
+        ILLEGAL_VALUE,
+        MISSING_VALUE
     }
 }

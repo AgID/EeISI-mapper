@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.CedentePrestatoreType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaHeaderType;
@@ -13,7 +14,7 @@ import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CedentePrestatoreConverterTest {
 
@@ -33,7 +34,7 @@ public class CedentePrestatoreConverterTest {
         final String code = "1234567890";
         final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(null, "IT:CF:" + code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
         final String codiceFiscale = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
         assertEquals(code, codiceFiscale);
     }
@@ -45,7 +46,7 @@ public class CedentePrestatoreConverterTest {
         final String code = "1234567890";
         final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier("IT:CF", code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList());
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
         final String codiceFiscale = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
         assertEquals(code, codiceFiscale);
     }

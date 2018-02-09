@@ -1,12 +1,12 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
-import it.infocert.eigor.api.CustomConverterUtils;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -21,7 +21,7 @@ import java.util.List;
 public class SellerConverter extends CustomConverterUtils implements CustomMapping<Document> {
     private final static Logger log = LoggerFactory.getLogger(SellerConverter.class);
 
-    public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBT0029_31_32(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         BT0029SellerIdentifierAndSchemeIdentifier bt0029;
 
@@ -81,7 +81,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBT0029_31_32(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBT0029_31_32(document, cenInvoice, errors, callingLocation);
     }
 }

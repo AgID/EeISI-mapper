@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;
@@ -10,28 +11,29 @@ import it.infocert.eigor.model.core.model.BG0006SellerContact;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import javax.xml.stream.events.EntityDeclaration;
 import java.util.List;
 
 public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
-    private Element supplier;
     private final String SUPPLIER = "AccountingSupplierParty";
     private final String PARTY = "Party";
-    private Element party;
-    private Element root;
-
-    public AccountSupplierPartyConverter() {
-        supplier = new Element(SUPPLIER);
-        this.party = new Element(this.PARTY);
-        supplier.addContent(party);
-    }
 
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
-        root = document.getRootElement();
-        this.supplier = root.getChild(SUPPLIER) == null ? root.addContent(supplier) : root.getChild(SUPPLIER);
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+
+        final Element root = document.getRootElement();
+        final Element party;
+        final Element supplier = root.getChild(SUPPLIER);
+        if (supplier == null) {
+            Element s = new Element(SUPPLIER);
+            party = new Element(PARTY);
+            s.addContent(party);
+            root.addContent(s);
+        } else {
+            party = supplier.getChild(PARTY);
+        }
+
 
         if (invoice.getBG0004Seller().isEmpty()) {
             return;
@@ -42,7 +44,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
             BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress(0);
             Element postalAddress = new Element("PostalAddress");
-            this.party.addContent(postalAddress);
+            party.addContent(postalAddress);
             if (!sellerPostalAddress.getBT0035SellerAddressLine1().isEmpty()) {
                 Element streetName = new Element("StreetName");
                 streetName.setText(sellerPostalAddress.getBT0035SellerAddressLine1(0).getValue());
@@ -92,11 +94,11 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             partyTaxScheme.addContent(companyID);
             partyTaxScheme.addContent(taxScheme);
 
-            this.party.addContent(partyTaxScheme);
+            party.addContent(partyTaxScheme);
         }
 
         Element partyLegalEntity = new Element("PartyLegalEntity");
-        this.party.addContent(partyLegalEntity);
+        party.addContent(partyLegalEntity);
 
         if (!seller.getBT0027SellerName().isEmpty()) {
             Element registrationName = new Element("RegistrationName");
@@ -117,7 +119,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         if (!seller.getBG0006SellerContact().isEmpty()) {
             BG0006SellerContact sellerContact = seller.getBG0006SellerContact(0);
             Element contact = new Element("Contact");
-            this.party.addContent(contact);
+            party.addContent(contact);
 
             if (!sellerContact.getBT0042SellerContactTelephoneNumber().isEmpty()) {
                 Element telephone = new Element("Telephone");
@@ -125,7 +127,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 contact.addContent(telephone);
             }
 
-            if(!sellerContact.getBT0043SellerContactEmailAddress().isEmpty()) {
+            if (!sellerContact.getBT0043SellerContactEmailAddress().isEmpty()) {
                 Element electronicMail = new Element("ElectronicMail");
                 electronicMail.setText(sellerContact.getBT0043SellerContactEmailAddress(0).getValue());
                 contact.addContent(electronicMail);
@@ -134,6 +136,6 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
 
     }
-     /*
+    /*
      */
 }

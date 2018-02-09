@@ -1,7 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
 import org.junit.Rule;
@@ -112,7 +112,12 @@ public class ConversionCommandTest {
         given(fromCen.extension()).willReturn(".xml");
 
         List<IConversionIssue> myErrors = Arrays.asList(
-                (IConversionIssue)ConversionIssue.newError(new IllegalArgumentException("test exception"))
+                (IConversionIssue)ConversionIssue.newError(new EigorRuntimeException(
+                        "test exception",
+                        ErrorCode.Location.FATTPA_OUT,
+                        ErrorCode.Action.GENERIC,
+                        ErrorCode.Error.INVALID
+                ))
         );
         when(fromCen.convert(any(BG0000Invoice.class))).thenReturn(new BinaryConversionResult("bytes".getBytes(), myErrors));
 
@@ -146,7 +151,12 @@ public class ConversionCommandTest {
 
 
         List<IConversionIssue> myErrors = Arrays.asList(
-                (IConversionIssue)ConversionIssue.newError(new IllegalArgumentException("test exception"))
+                (IConversionIssue)ConversionIssue.newError(new EigorRuntimeException(
+                        "test exception",
+                        ErrorCode.Location.FATTPA_OUT,
+                        ErrorCode.Action.GENERIC,
+                        ErrorCode.Error.INVALID
+                ))
         );
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
@@ -174,7 +184,12 @@ public class ConversionCommandTest {
 
 
         List<IConversionIssue> myErrors = Arrays.asList(
-                (IConversionIssue) ConversionIssue.newError(new IllegalArgumentException("test exception")));
+                (IConversionIssue) ConversionIssue.newError(new EigorRuntimeException(
+                        "test exception",
+                        ErrorCode.Location.FATTPA_OUT,
+                        ErrorCode.Action.GENERIC,
+                        ErrorCode.Error.INVALID
+                )));
         when(toCen.convert(any(InputStream.class))).thenReturn(new ConversionResult(myErrors, new BG0000Invoice()));
 
         // given
