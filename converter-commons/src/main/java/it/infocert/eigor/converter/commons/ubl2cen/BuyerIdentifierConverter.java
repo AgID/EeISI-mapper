@@ -40,7 +40,9 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
 
                     if (id != null) {
                         bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
-                        invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
+                        if (!invoice.getBG0007Buyer().isEmpty()) {
+                            invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
+                        }
                     }
                 }
 

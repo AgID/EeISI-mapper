@@ -4,7 +4,6 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,11 +12,8 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static junit.framework.TestCase.*;
 
