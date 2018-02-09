@@ -1,27 +1,36 @@
 package it.infocert.eigor.api.utils;
 
 import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Mapper;
+import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 
 public class RuleReports {
 
     public static String dump(RuleReport ruleReport) {
-        Mapper<Map.Entry<RuleOutcome, Rule>, String> mapper = new Mapper<Map.Entry<RuleOutcome, Rule>, String>() {
-            @Override public String map(Map.Entry<RuleOutcome, Rule> x) {
-                return x.getKey().outcome() + "," + x.getKey().description();
-            }
-        };
-        List<String> stringPieces = Stream.create( ruleReport.getAll() ).map( mapper ).toList();
-        StringBuffer sb = new StringBuffer("Outcome,Reason\n");
-        for(int i = 0; i<stringPieces.size(); i++){
-            sb.append(stringPieces.get(i));
-            if(i<stringPieces.size()-1) sb.append("\n");
+        final StringBuffer sb = new StringBuffer();
+        try (final CSVPrinter printer = new CSVPrinter(sb, CSVFormat.DEFAULT.withHeader("Outcome", "Reason"));) {
+            Consumer<Map.Entry<RuleOutcome, Rule>> entryConsumer = new Consumer<Map.Entry<RuleOutcome, Rule>>() {
+                @Override
+                public void consume(Map.Entry<RuleOutcome, Rule> ruleOutcomeRuleEntry) {
+                    try {
+                        printer.printRecord(ruleOutcomeRuleEntry.getKey().outcome(), ruleOutcomeRuleEntry.getKey().description());
+                    } catch (IOException e) {
+                        sb.append(e.getMessage());
+                    }
+                }
+            };
+            Stream.create( ruleReport.getAll() ).forEach( entryConsumer );
+            printer.flush();
+            printer.close();
+        } catch (Exception e) {
+            sb.append(e.getMessage());
         }
         return sb.toString();
     }

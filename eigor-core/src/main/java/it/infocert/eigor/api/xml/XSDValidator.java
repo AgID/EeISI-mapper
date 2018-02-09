@@ -94,7 +94,7 @@ public class XSDValidator implements IXMLValidator {
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
-                    errors.add(ConversionIssue.newWarning(exception, "Error during XSD validation",
+                    errors.add(ConversionIssue.newWarning(exception, "Error during XSD parsing",
                             callingLocation,
                             ErrorCode.Action.XSD_VALIDATION,
                             ErrorCode.Error.INVALID,
@@ -110,7 +110,7 @@ public class XSDValidator implements IXMLValidator {
                     String message = String.format("XSD validation error at %d:%d. %s",
                             lineNumber, columnNumber,
                             exception.getMessage());
-                    errors.add(ConversionIssue.newError(exception, "Error during XSD validation",
+                    errors.add(ConversionIssue.newError(exception, "Error during XSD parsing",
                             callingLocation,
                             ErrorCode.Action.XSD_VALIDATION,
                             ErrorCode.Error.INVALID,
