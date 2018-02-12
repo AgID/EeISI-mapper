@@ -67,6 +67,13 @@
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
+                        <fileset>
+                            <directory>converterdata/converter-commons/cii/cius/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
@@ -103,6 +110,20 @@
                         </goals>
                         <phase>generate-resources</phase>
                     </execution>
+                        <execution>
+                            <id>cii-cius-xslt-generation</id>
+                            <configuration>
+                                <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
+                                <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
+                                <schematronPattern>*.sch</schematronPattern>
+                                <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                                <updateOnSchematronChanges>false</updateOnSchematronChanges>
+                            </configuration>
+                            <goals>
+                                <goal>convert</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                        </execution>
                 </executions>
             </plugin>
         </plugins>
