@@ -296,12 +296,16 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
                     if (!postCodes.isEmpty()) {
                         final String postCode = postCodes.get(0).getValue();
-                        attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
-                        sede.setCAP("99999");
+                        if (postCode.length() > 5) {
+                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
+                            sede.setCAP("99999");
 //                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("SellerPostalCode was not compliant with FatturaPA specification. " +
 //                                "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("SellerPostalCode was not compliant with FatturaPA specification. " +
-                                "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
+                            log.warn("SellerPostalCode was not compliant with FatturaPA specification. " +
+                                    "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
+                        } else {
+                            sede.setCAP(postCode);
+                        }
                     } else {
                         log.warn("No [BT-38] SellerPostCode was found in current [BG-5] SellerPostalAddress");
                     }
