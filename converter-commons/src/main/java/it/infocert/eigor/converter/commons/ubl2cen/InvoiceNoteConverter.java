@@ -13,6 +13,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,7 +30,38 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
 
         List<Element> notes = findNamespaceChildren(rootElement, namespacesInScope, "Note");
 
-        for (Element elem : notes) {
+        final Iterator<Element> itr = notes.iterator();
+        while(itr.hasNext()) {
+            final Element elem = itr.next();
+            bg0001 = new BG0001InvoiceNote();
+
+            String text = elem.getText();
+            if (text != null) {
+                if (text.matches("^#.*#.*$")) {
+                    BT0021InvoiceNoteSubjectCode bt0021 = new BT0021InvoiceNoteSubjectCode(text.substring(1, text.indexOf("#", 1)));
+                    bg0001.getBT0021InvoiceNoteSubjectCode().add(bt0021);
+                    if (!text.matches("^#.*#$")) {
+                        BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(text.substring(text.indexOf("#", 1) + 1));
+                        bg0001.getBT0022InvoiceNote().add(bt0022);
+                    } else if(itr.hasNext()) {
+                        final Element note = itr.next();
+                        if (!note.getText().matches("^#.*#.*$")) {
+                            BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(note.getText());
+                            bg0001.getBT0022InvoiceNote().add(bt0022);
+                        }
+                    }
+
+                } else {
+                    BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(text);
+                    bg0001.getBT0022InvoiceNote().add(bt0022);
+                }
+
+                invoice.getBG0001InvoiceNote().add(bg0001);
+            }
+        }
+
+
+        /*for (Element elem : notes) {
             bg0001 = new BG0001InvoiceNote();
 
             String text = elem.getText();
@@ -46,7 +78,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
 
                 invoice.getBG0001InvoiceNote().add(bg0001);
             }
-        }
+        }*/
         return new ConversionResult<>(errors, invoice);
     }
 
