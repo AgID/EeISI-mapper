@@ -109,15 +109,20 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 }
                 if (!invoice.getBG0001InvoiceNote().isEmpty()) {
                     for (BG0001InvoiceNote invoiceNote : invoice.getBG0001InvoiceNote()) {
+                        final StringBuilder sb = new StringBuilder();
                         if (!invoiceNote.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
                             BT0021InvoiceNoteSubjectCode invoiceNoteSubjectCode = invoiceNote.getBT0021InvoiceNoteSubjectCode(0);
-                            String noteText = invoiceNoteSubjectCode.getValue();
-                            log.info("Mapping Causale from BT-21 with value: '{}'.", noteText);
-                            manageNoteText(datiGeneraliDocumento, noteText);
+                            String note = invoiceNoteSubjectCode.getValue();
+                            sb.append(note).append(" ");
+                            log.info("Mapping Causale from BT-21 and BT-22 with value: '{}'.", note);
                         }
                         if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
                             String note = invoiceNote.getBT0022InvoiceNote(0).getValue();
                             log.info("Mapping Causale from BT-22 with value: '{}'.", note);
+                            sb.append(note);
+                        }
+                        final String note = sb.toString();
+                        if (!"".equalsIgnoreCase(note) && !" ".equalsIgnoreCase(note)) {
                             manageNoteText(datiGeneraliDocumento, note);
                         }
                     }

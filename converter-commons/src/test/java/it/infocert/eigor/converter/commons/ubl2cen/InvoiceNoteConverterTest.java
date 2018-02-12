@@ -31,6 +31,19 @@ public class InvoiceNoteConverterTest {
     }
 
     @Test
+    public void shouldHaveBT0021IfInvoiceNoteHasSubjectCodeSeparated() throws Exception {
+        Document document = makeDocumentWithInvoiceNote("#TESTSUBJECTCODE#", "TESTNOTE");
+        InvoiceNoteConverter converter = new InvoiceNoteConverter();
+        BG0000Invoice invoice = new BG0000Invoice();
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
+        BT0021InvoiceNoteSubjectCode bt0021 = invoice.getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode(0);
+        BT0022InvoiceNote bt0022 = invoice.getBG0001InvoiceNote(0).getBT0022InvoiceNote(0);
+
+        assertEquals("TESTSUBJECTCODE", bt0021.getValue());
+        assertEquals("TESTNOTE", bt0022.getValue());
+    }
+
+    @Test
     public void shouldNotHaveBT0021IfInvoiceNoteHasNoPrependedSubjectCode() throws Exception {
         Document document = makeDocumentWithInvoiceNote("TESTNOTE");
         InvoiceNoteConverter converter = new InvoiceNoteConverter();
@@ -44,7 +57,7 @@ public class InvoiceNoteConverterTest {
     }
 
 
-    private Document makeDocumentWithInvoiceNote(String noteText) {
+    private Document makeDocumentWithInvoiceNote(String... noteTexts) {
         Document document = new Document();
         Namespace defaultNs = Namespace.getNamespace("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
         Namespace cacNs = Namespace.getNamespace("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
@@ -56,10 +69,12 @@ public class InvoiceNoteConverterTest {
         rootElement.addNamespaceDeclaration(cbcNs);
         document.setRootElement(rootElement);
 
-        Element note = new Element("Note", cbcNs);
 
-        note.setText(noteText);
-        rootElement.addContent(note);
+        for (String noteText : noteTexts) {
+            Element note = new Element("Note", cbcNs);
+            note.setText(noteText);
+            rootElement.addContent(note);
+        }
 
         return document;
     }
