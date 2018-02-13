@@ -268,7 +268,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     }
 
                     if (!addressLines3.isEmpty()) {
-                        final BT0036SellerAddressLine2 addressLine3 = addressLines2.get(0);
+                        final BT0162SellerAddressLine3 addressLine3 = addressLines3.get(0);
                         addressLine3Value = addressLine3.getValue();
                     } else {
                         log.warn("No [BT-162] SellerAddressLine3 was found in current [BG-5] SellerPostalAddress");
