@@ -23,6 +23,10 @@ public enum Untdid1153ReferenceQualifierCode {
 
     @Override
     public String toString() {
-        return super.toString() + " " + description;
+        return "Untdid1153ReferenceQualifierCode{" +
+                "sign='" + sign + '\'' +
+                "| id='" + id + '\'' +
+                "| description='" + description + '\'' +
+                '}';
     }
 }

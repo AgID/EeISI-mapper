@@ -8,10 +8,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.ls.LSInput;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class CachedResourceResolverTest {
@@ -69,6 +71,7 @@ public class CachedResourceResolverTest {
     private File checkThatCacheIsQuicker(String type, String namespaceURI, String publicId, String systemId, String baseUri) throws IOException {
         // given
         File cacheFolder = tmp.newFolder();
+
         CachedResourceResolver sut = new CachedResourceResolver(cacheFolder);
 
         // when

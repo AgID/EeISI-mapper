@@ -1,24 +1,16 @@
 package it.infocert.eigor.model.core;
 
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
 import com.google.common.collect.Lists;
+import it.infocert.eigor.api.utils.ReflectionsReflections;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.reflections.Reflections;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class InvoiceUtilsTest {
 
@@ -29,7 +21,7 @@ public class InvoiceUtilsTest {
     @Before
     public void setUp() throws Exception {
         invoice = new BG0000Invoice();
-        sut = new InvoiceUtils(new Reflections("it.infocert.eigor"));
+        sut = new InvoiceUtils(new ReflectionsReflections());
     }
 
     @Test
@@ -127,7 +119,7 @@ public class InvoiceUtilsTest {
         assertEquals(BT0001InvoiceNumber.class, btBgByName);
     }
 
-    private void assertBtRecursively(String path ,int num, boolean byPath) {
+    private void assertBtRecursively(String path, int num, boolean byPath) {
         populateWithBT146(num);
         List<AbstractBT> bts;
         if (byPath) {

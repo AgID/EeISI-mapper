@@ -4,8 +4,14 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 
-public class StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCodes> {
-    @Override public UnitOfMeasureCodes convert(final String s) {
+public class
+StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCodes> {
+
+    StringToUnitOfMeasureConverter() {
+    }
+
+    @Override
+    public UnitOfMeasureCodes convert(final String s) throws ConversionFailedException {
 
         try {
             return UnitOfMeasureCodes.valueOf(s);
@@ -21,7 +27,9 @@ public class StringToUnitOfMeasureConverter extends FromStringTypeConverter<Unit
 
         UnitOfMeasureCodes result = Stream.create(UnitOfMeasureCodes.values()).filter(f).first();
 
-        if(result == null) throw new IllegalArgumentException();
+        if(result == null) throw new ConversionBetweenTypesFailedException(
+                String.class, UnitOfMeasureCodes.class,
+                s);
 
         return result;
 
@@ -32,5 +40,7 @@ public class StringToUnitOfMeasureConverter extends FromStringTypeConverter<Unit
         return UnitOfMeasureCodes.class;
     }
 
-
+    public static TypeConverter<String, UnitOfMeasureCodes> newConverter() {
+        return new StringToUnitOfMeasureConverter();
+    }
 }

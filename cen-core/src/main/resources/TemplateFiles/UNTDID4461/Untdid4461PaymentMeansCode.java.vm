@@ -26,7 +26,11 @@ public enum Untdid4461PaymentMeansCode {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid4461PaymentMeansCode{" +
+                "code=" + code +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
     }
 
     public int getCode() {

@@ -7,6 +7,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
@@ -35,6 +36,7 @@ public class Files {
     /**
      * Find first file in a given folder, or {@code null}.
      */
+    @Nullable
     public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         List<File> files = Arrays.asList(outputDir.listFiles());
         Collection<File> filter = Collections2.filter(files, col);
@@ -44,6 +46,7 @@ public class Files {
     /**
      * Find first file by name.
      */
+    @Nullable
     public static File findFirstFileByNameOrNull(File outputDir, final String name) {
         return findFirstFileOrNull(outputDir, new Predicate<File>() {
             @Override

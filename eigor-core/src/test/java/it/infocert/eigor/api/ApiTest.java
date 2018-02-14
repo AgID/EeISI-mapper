@@ -4,6 +4,8 @@ import com.amoerie.jstreams.Stream;
 import com.amoerie.jstreams.functions.Consumer;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.*;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -20,8 +22,7 @@ public class ApiTest {
     @Test public void exampleOfAConversion() throws SyntaxErrorInInvoiceFormatException {
 
         // services
-        Reflections reflections = new Reflections("it.infocert.eigor.api");
-        ReflectionBasedRepository reflectionBasedRepository = new ReflectionBasedRepository(reflections);
+        IReflections reflections = new JavaReflections();
         RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         PropertiesBackedConfiguration configuration = new PropertiesBackedConfiguration();
 

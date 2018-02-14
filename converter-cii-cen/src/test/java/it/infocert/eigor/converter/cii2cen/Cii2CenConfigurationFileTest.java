@@ -5,9 +5,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -16,7 +17,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -42,15 +42,16 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	@Before
 	public void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
+				.addProperty("eigor.workdir", "file:")
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-many", "converterdata/converter-cii-cen/mappings/one_to_many.properties")
-				.addProperty("eigor.converter.cii-cen.xsd", "file:src/test/resources/converterdata/converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
-				.addProperty("eigor.converter.cii-cen.schematron", "converterdata/converter-cii-cen/cii/schematron-xslt/EN16931-CII-validation.xslt")
+				.addProperty("eigor.converter.cii-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
+				.addProperty("eigor.converter.cii-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt")
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
-				.addProperty("eigor.converter.cii-cen.cius", "converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
+				.addProperty("eigor.converter.cii-cen.cius", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
 				;
-		sut = new MyCiiToCenConverter(new Reflections("it.infocert"), conf);
+		sut = new MyCiiToCenConverter(new JavaReflections(), conf);
 		sut.configure();
 	}
 
@@ -69,7 +70,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		IConversionIssue issue = errors.get(0);
 		assertTrue(issue.getCause() instanceof SAXParseException);
 		assertTrue(issue.isError());
-		assertTrue(issue.getMessage().startsWith(IConstants.ERROR_XML_VALIDATION_ERROR));
+		assertTrue(issue.getMessage().endsWith("Error during XSD parsing"));
 	}
 
 	@Test
@@ -196,7 +197,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		PrecedingInvoiceReferenceConverter bg0003 = new PrecedingInvoiceReferenceConverter();
-		ConversionResult<BG0000Invoice> result = bg0003.toBG0003(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0003.toBG0003(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertEquals("TOSL109", result.getResult().getBG0003PrecedingInvoiceReference(0).getBT0025PrecedingInvoiceReference(0).getValue());
 		assertEquals("2013-03-10", result.getResult().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue().toString());
@@ -227,7 +228,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertEquals("123456", invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation(0).getValue());
 	}
@@ -240,7 +241,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0124ExternalDocumentLocation().isEmpty());
 	}
@@ -253,7 +254,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		VATBreakdownConverter bg0023 = new VATBreakdownConverter();
-		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertEquals("provaReason", invoice.getBG0023VatBreakdown(0).getBT0120VatExemptionReasonText(0).getValue());
 		assertEquals(VatExemptionReasonsCodes.AAA, invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
@@ -267,7 +268,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
         List<IConversionIssue> errors = new ArrayList<>();
 
         InvoiceLineConverter bg0025 = new InvoiceLineConverter();
-        ConversionResult<BG0000Invoice> result = bg0025.toBG0025(document, invoice, errors);
+        ConversionResult<BG0000Invoice> result = bg0025.toBG0025(document, invoice, errors, ErrorCode.Location.CII_IN);
 
         assertEquals("1", result.getResult().getBG0025InvoiceLine(0).getBT0126InvoiceLineIdentifier(0).getValue());
         assertEquals("C62", result.getResult().getBG0025InvoiceLine(0).getBG0029PriceDetails(0).getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode());
@@ -282,16 +283,16 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors);
+		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertTrue(result.getResult().getBG0024AdditionalSupportingDocuments(0).getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty());
 	}
 
 	private List<IConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-	   	String filePath = getClass().getClassLoader().getResource("xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd").getFile();
+	   	String filePath = "../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd";
 	   	File xsdFile = new File(filePath);
-	   	XSDValidator xsdValidator = new XSDValidator(xsdFile);
+	   	XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.CII_IN);
 	   	return xsdValidator.validate(bytes);
 	}
 	
@@ -299,15 +300,15 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		String filePath = getClass().getClassLoader().getResource("schematron-xslt/EN16931-CII-validation.xslt").getFile();
 		File schematronFile = new File(filePath);
-		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true);
+		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true, ErrorCode.Location.CII_IN);
 		return ciiValidator.validate(bytes);
 	}
 
 	private List<IConversionIssue> validateXmlWithCiiCIUSSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-		String filePath = getClass().getClassLoader().getResource("converterdata/converter-cii-cen/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt").getFile();
+		String filePath = "../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt";
 		File schematronFile = new File(filePath);
-		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true);
+		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, ErrorCode.Location.CII_IN);
 		return ciiCIUSValidator.validate(bytes);
 	}
 	
@@ -336,7 +337,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 	static class MyCiiToCenConverter extends Cii2Cen {
 
-		public MyCiiToCenConverter(Reflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+		public MyCiiToCenConverter(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
 			super(reflections, configuration);
 		}
 

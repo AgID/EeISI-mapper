@@ -2,10 +2,11 @@ package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.reflections.Reflections;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -19,11 +20,13 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
 
     private final Pattern pattern;
     private final InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
 
 
-    public InvoiceCenXpathMappingValidator(String keyRegex, Reflections reflections) {
+    public InvoiceCenXpathMappingValidator(String keyRegex, IReflections reflections, ErrorCode.Location callingLocation) {
         pattern = Pattern.compile(keyRegex);
         invoiceUtils = new InvoiceUtils(reflections);
+        this.callingLocation = callingLocation;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
                 try {
                     checkValue(value);
                 } catch (XPathExpressionException e) {
-                    throw new SyntaxErrorInMappingFileException("Mapping '" + key + "' => '" + value + "' is wrong due to:" +  e.getMessage(),e);
+                    throw new SyntaxErrorInMappingFileException("Mapping '" + key + "' => '" + value + "' is wrong due to:" +  e.getMessage(), callingLocation, ErrorCode.Action.CONFIG_VALIDATION, e);
                 }
             }
         }
@@ -47,7 +50,7 @@ public class InvoiceCenXpathMappingValidator implements InvoiceMappingValidator 
         //     throw new RuntimeException("'" + key + "' does not match '" + pattern.pattern() + "'.");
         // }
         if(!validateBTsBGs(key)){
-            throw new SyntaxErrorInMappingFileException("There isn't any BG / BT at path '" + key + "'.");
+            throw new SyntaxErrorInMappingFileException("There isn't any BG / BT at path '" + key + "'.", callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
         }
     }
 

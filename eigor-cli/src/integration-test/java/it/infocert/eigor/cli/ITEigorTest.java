@@ -4,14 +4,18 @@ import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
-import it.infocert.eigor.api.impl.*;
+import it.infocert.eigor.api.impl.FakeFromCenConversion;
+import it.infocert.eigor.api.impl.FakeToCenConversion;
+import it.infocert.eigor.api.impl.FromCenListBakedRepository;
+import it.infocert.eigor.api.impl.ToCenListBakedRepository;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.reflections.Reflections;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,9 +42,8 @@ public class ITEigorTest {
     private CommandLineInterpreter cli;
 
     @Before public void setUpCommandLineInterpeter() {
-        Reflections reflections = new Reflections("it.infocert");
+        IReflections reflections = new JavaReflections();
         Properties properties = new Properties();
-        ReflectionBasedRepository genericRepo = new ReflectionBasedRepository(reflections);
         IntegrityRulesRepository integrityRepo = new IntegrityRulesRepository(properties);
 
         EigorConfiguration conf = new PropertiesBackedConfiguration();
@@ -103,12 +106,12 @@ public class ITEigorTest {
 
         // then
         List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(4) );
+        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(7) );
 
         assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-cen.csv"), notNullValue() );
         assertThat( files + " found", findFirstFileByNameOrNull(outputDir,"invoice-target.fake"), notNullValue() );
         assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "rule-report.csv"), notNullValue() );
-//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue() );
+        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue() );
         assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-source.xml"), notNullValue() );
 
     }

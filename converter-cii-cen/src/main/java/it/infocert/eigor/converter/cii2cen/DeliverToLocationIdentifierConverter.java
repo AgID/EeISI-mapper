@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0071DeliverToLocationIdentifierAndSchemeIdentifier;
@@ -33,7 +35,7 @@ public class DeliverToLocationIdentifierConverter extends CustomConverterUtils i
                     Element globalID = findNamespaceChild(shipToTradeParty, namespacesInScope, "GlobalID");
                     if (globalID != null) {
                         Attribute schemeID = globalID.getAttribute("schemeID");
-                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071 = null;
+                        BT0071DeliverToLocationIdentifierAndSchemeIdentifier bt0071;
                         if (schemeID != null) {
                             bt0071 = new BT0071DeliverToLocationIdentifierAndSchemeIdentifier(new Identifier(globalID.getAttributeValue("schemeID"), globalID.getText()));
                         } else {
@@ -52,7 +54,7 @@ public class DeliverToLocationIdentifierConverter extends CustomConverterUtils i
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0071(document, cenInvoice, errors);
     }
 }

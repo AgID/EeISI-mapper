@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import it.infocert.eigor.model.core.model.BT0021InvoiceNoteSubjectCode;
@@ -54,7 +56,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBG0001(document, cenInvoice, errors);
     }
 }

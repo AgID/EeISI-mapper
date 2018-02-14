@@ -5,16 +5,16 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +46,8 @@ public class Ubl2Cen extends AbstractToCenConverter {
     private IXMLValidator ublValidator;
     private IXMLValidator ciusValidator;
 
-    public Ubl2Cen(Reflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry,  configuration);
+    public Ubl2Cen(IReflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry,  configuration, ErrorCode.Location.UBL_IN);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -61,7 +61,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile());
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
             }
@@ -70,7 +70,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -78,7 +78,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         // load the CIUS schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -110,29 +110,38 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if(validationErrors.isEmpty()){
-            	log.info("Xsd validation succesful!");
+            	log.info("Xsd validation successful!");
             }
-			errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "Schematron").mapAll(ublValidator.validate(bytes)));
-            errors.addAll(new ConversionIssueErrorCodeMapper(getName(), "SchematronCIUS").mapAll(ciusValidator.validate(bytes)));
+
+            List<IConversionIssue> schematronErrors = ublValidator.validate(bytes);
+            if (schematronErrors.isEmpty()) {
+                log.info("Schematron validation successful!");
+            }
+
+            List<IConversionIssue> ciusErrors = ciusValidator.validate(bytes);
+            if (ciusErrors.isEmpty()) {
+                log.info("CIUS Schematron validation successful!");
+            }
+
+			errors.addAll(validationErrors);
+            errors.addAll(schematronErrors);
+            errors.addAll(ciusErrors);
 
         } catch (IOException | IllegalArgumentException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Validation").map(ConversionIssue.newWarning(e, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.UBL_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         Document document;
         try {
             document = getDocument(clonedInputStream);
-        } catch (JDOMException | IOException e) {
-            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), getName(), "DocumentBuilding", e.getClass().getSimpleName().replace("Exception", "")), e);
+        } catch (RuntimeException e) {
+            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.UBL_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
 
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
-        new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
-
         return result;
     }
 
@@ -140,7 +149,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_IN);
         }
     }
 
@@ -192,46 +201,46 @@ public class Ubl2Cen extends AbstractToCenConverter {
         return new ConversionRegistry(
 
                 // enums
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
+                CountryNameToIso31661CountryCodeConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
 
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
+                StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
 
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
+                StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
 
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
+                StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+                LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
 
-                new StringToUnitOfMeasureConverter(),
-                new LookUpEnumConversion(UnitOfMeasureCodes.class),
+                StringToUnitOfMeasureConverter.newConverter(),
+                LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
 
-                new LookUpEnumConversion(VatExemptionReasonsCodes.class),
+                LookUpEnumConversion.newConverter(VatExemptionReasonsCodes.class),
 
-                new Iso4217CurrenciesFundsCodesToStringConverter(),
-                new Iso31661CountryCodesToStringConverter(),
-                new StringToUntdid4461PaymentMeansCode(),
-                new UnitOfMeasureCodesToStringConverter(),
+                Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+                Iso31661CountryCodesToStringConverter.newConverter(),
+                StringToUntdid4461PaymentMeansCode.newConverter(),
+                UnitOfMeasureCodesToStringConverter.newConverter(),
 
-                new StringToUntdid5189ChargeAllowanceDescriptionCodesConverter(),
-                new StringToUntdid2005DateTimePeriodQualifiers(),
+                StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
+                StringToUntdid2005DateTimePeriodQualifiers.newConverter(),
 
                 // dates
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new JavaLocalDateToStringConverter(),
-                new JavaLocalDateToStringConverter("dd-MMM-yy"),
+                StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+                StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+                JavaLocalDateToStringConverter.newConverter(),
+                JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
 
                 // numbers
-                new StringToDoubleConverter(),
-                new DoubleToStringConverter("#.00"),
+                StringToDoubleConverter.newConverter(),
+                DoubleToStringConverter.newConverter("#.00"),
 
                 // binaries
-                new Base64StringToBinaryConverter(),
+                Base64StringToBinaryConverter.newConverter(),
 
                 // string
-                new StringToStringConverter()
+                StringToStringConverter.newConverter()
 
 
         );

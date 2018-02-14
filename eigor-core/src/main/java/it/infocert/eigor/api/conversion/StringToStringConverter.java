@@ -2,6 +2,9 @@ package it.infocert.eigor.api.conversion;
 
 public class StringToStringConverter extends FromStringTypeConverter<String> {
 
+    StringToStringConverter() {
+    }
+
     @Override public String convert(String in) {
         return in;
     }
@@ -11,5 +14,7 @@ public class StringToStringConverter extends FromStringTypeConverter<String> {
         return String.class;
     }
 
-
+    public static TypeConverter<String, String> newConverter() {
+        return new StringToStringConverter();
+    }
 }

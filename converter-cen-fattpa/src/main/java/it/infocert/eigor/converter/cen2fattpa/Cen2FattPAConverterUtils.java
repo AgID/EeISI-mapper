@@ -1,7 +1,11 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 import org.joda.time.LocalDate;
 import org.xml.sax.SAXException;
 
@@ -60,8 +64,12 @@ class Cen2FattPAConverterUtils {
     }
 
     static BigDecimal doubleToBigDecimalWith2Decimals(Double value) {
+        return doubleToBigDecimalWithDecimals(value, 2);
+    }
+
+    static BigDecimal doubleToBigDecimalWithDecimals(Double value, int scale) {
         BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        bd = bd.setScale(scale, RoundingMode.HALF_UP);
         return bd;
     }
 
@@ -71,14 +79,36 @@ class Cen2FattPAConverterUtils {
      * @return true if XML is valid compared to XSD
      */
     static Boolean validateXmlAgainstSchemaDefinition(byte[] xml, List<IConversionIssue> errors) {
-        URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource("converterdata/converter-cen-fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
+        final String xsdName = "converterdata/converter-cen-fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd";
+        URL schemaFile = Cen2FattPAConverterUtils.class.getClassLoader().getResource(xsdName);
         Source xmlFile = new StreamSource(new ByteArrayInputStream(xml));
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        if (schemaFile == null) {
+            final String message = "No XSD file found for FatturaPA 1.2";
+            errors.add(ConversionIssue.newError(
+                    new EigorRuntimeException(
+                            message,
+                            ErrorCode.Location.FATTPA_OUT,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.MISSING_VALUE,
+                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                            Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, xsdName)
+                    )
+            ));
+            return false;
+        }
         try {
             Schema schema = schemaFactory.newSchema(schemaFile);
             schema.newValidator().validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newWarning(new RuntimeException(IConstants.ERROR_XML_VALIDATION_FAILED, e)));
+            errors.add(ConversionIssue.newWarning(
+                    e,
+                    IConstants.ERROR_XML_VALIDATION_FAILED,
+                    ErrorCode.Location.FATTPA_OUT,
+                    ErrorCode.Action.XSD_VALIDATION,
+                    ErrorCode.Error.INVALID,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+            ));
             return false;
         }
         return true;

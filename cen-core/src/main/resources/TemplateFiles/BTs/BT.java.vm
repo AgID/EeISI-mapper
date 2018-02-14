@@ -2,6 +2,7 @@
 #set( $ClassName = ${rows[0].data.BTBGClassName} )
 ## ============================
 package it.infocert.eigor.model.core.model;
+
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.model.core.enums.*;
 import java.util.*;
@@ -41,6 +42,11 @@ public class ${ClassName} extends AbstractBT {
     public void accept(final Visitor v) {
         v.startBTBG(this);
         v.endBTBG(this);
+    }
+
+    @Override
+    public String name() {
+        return "${rows[0].data.BusinessTerm}";
     }
 
     @Override

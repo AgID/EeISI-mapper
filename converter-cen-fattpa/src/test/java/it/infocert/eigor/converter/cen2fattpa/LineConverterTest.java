@@ -2,18 +2,23 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -38,7 +43,93 @@ public class LineConverterTest {
         new LineConverter().map(
                 invoice,
                 fatturaElettronica,
-                Lists.<IConversionIssue>newArrayList());
+                Lists.<IConversionIssue>newArrayList(),
+                ErrorCode.Location.FATTPA_OUT
+        );
+
+        if (Math.abs(Math.PI - 1) < Math.random()) {
+
+        };
+    }
+
+    @Test
+    public void shouldMapBt73And74() throws Exception {
+        final long now = System.currentTimeMillis();
+        final long after = System.currentTimeMillis() + 1000;
+
+        populateWithDates(now, after);
+        populateWithBG20();
+        populateWithBG25();
+        XMLGregorianCalendar nowXml = setupCalendar(now);
+        XMLGregorianCalendar afterXml = setupCalendar(after);
+        convert();
+
+        List<DettaglioLineeType> dettaglioLinee = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiBeniServizi().getDettaglioLinee();
+
+        assertFalse(dettaglioLinee.isEmpty());
+
+        for (DettaglioLineeType linea : dettaglioLinee) {
+            assertEquals(nowXml, linea.getDataInizioPeriodo());
+            assertEquals(afterXml, linea.getDataFinePeriodo());
+        }
+    }
+
+    @Test
+    public void shouldNotMapBt73And74IfOthersArePresent() throws Exception {
+        final long now = System.currentTimeMillis();
+        final long after = System.currentTimeMillis() + 1000;
+
+        populateWithDates(now, after);
+        populateWithBG20();
+        populateWithBG25();
+        setupBG26(now, after);
+
+        convert();
+
+        List<DettaglioLineeType> dettaglioLinee = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiBeniServizi().getDettaglioLinee();
+
+        for (DettaglioLineeType linea : dettaglioLinee) {
+
+            assertNull(linea.getDataInizioPeriodo());
+            assertNull(linea.getDataFinePeriodo());
+        }
+    }
+
+    private void setupBG26(final long start, final long end) {
+        List<BG0025InvoiceLine> invoiceLines = invoice.getBG0025InvoiceLine();
+        for (BG0025InvoiceLine invoiceLine : invoiceLines) {
+            BG0026InvoiceLinePeriod period = new BG0026InvoiceLinePeriod();
+            period.getBT0134InvoiceLinePeriodStartDate().add(new BT0134InvoiceLinePeriodStartDate(new LocalDate(start)));
+            period.getBT0135InvoiceLinePeriodEndDate().add(new BT0135InvoiceLinePeriodEndDate(new LocalDate(end)));
+            invoiceLine.getBG0026InvoiceLinePeriod().add(period);
+        }
+    }
+
+    private XMLGregorianCalendar setupCalendar(final long time) throws DatatypeConfigurationException {
+        GregorianCalendar calendar = new GregorianCalendar();
+
+        calendar.setTimeInMillis(time);
+
+        XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+
+        xmlCalendar.setHour(0);
+        xmlCalendar.setMinute(0);
+        xmlCalendar.setSecond(0);
+        xmlCalendar.setMillisecond(0);
+
+        return xmlCalendar;
+    }
+
+
+    private void populateWithDates(final long now, final long after) {
+        BG0014InvoicingPeriod invoicingPeriod = new BG0014InvoicingPeriod();
+        invoicingPeriod.getBT0073InvoicingPeriodStartDate().add(new BT0073InvoicingPeriodStartDate(new LocalDate(now)));
+        invoicingPeriod.getBT0074InvoicingPeriodEndDate().add(new BT0074InvoicingPeriodEndDate(new LocalDate(after)));
+
+        BG0013DeliveryInformation deliveryInformation = new BG0013DeliveryInformation();
+        deliveryInformation.getBG0014InvoicingPeriod().add(invoicingPeriod);
+
+        invoice.getBG0013DeliveryInformation().add(deliveryInformation);
     }
 
     @Test
@@ -96,8 +187,35 @@ public class LineConverterTest {
 
     }
 
+    @Test
+    public void shouldMapBG30() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+        for (int i=0; i<5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            assertThat(dettaglioLinee.getAliquotaIVA(), is(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0d)));
+            assertEquals(NaturaType.N_4, dettaglioLinee.getNatura());
+        }
+    }
+
+    @Test
+    public void shouldMapBG25Quantity() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+        for (int i=0; i<5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            BigDecimal quantita = dettaglioLinee.getQuantita();
+            BigDecimal expected = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(2d, 8);
+            assertThat(quantita, is(expected));
+        }
+    }
+
     private void convert() {
-        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList());
+        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
     }
 
     private void populateWithBG20() {
@@ -127,13 +245,14 @@ public class LineConverterTest {
     private void populateWithBG25() {
         for (int i = 0; i < 5; i++) {
 
-
             BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
 
             populateBG25WithBG27(invoiceLine);
             populateBG25WithBG28(invoiceLine);
             populateBG25WithBG29(invoiceLine);
+            populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
+            populateBG25WithBT129(invoiceLine);
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
     }
@@ -172,11 +291,24 @@ public class LineConverterTest {
         invoiceLine.getBG0029PriceDetails().add(priceDetails);
     }
 
+    private void populateBG25WithBG30(BG0025InvoiceLine invoiceLine) {
+        BG0030LineVatInformation lineVatInformation = new BG0030LineVatInformation();
+        lineVatInformation.getBT0151InvoicedItemVatCategoryCode().add(new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.E));
+        lineVatInformation.getBT0152InvoicedItemVatRate().add(new BT0152InvoicedItemVatRate(0d));
+
+        invoiceLine.getBG0030LineVatInformation().add(lineVatInformation);
+    }
+
     private void populateBG25WithBG31(BG0025InvoiceLine invoiceLine) {
         BG0031ItemInformation itemInformation = new BG0031ItemInformation();
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
 
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
+    }
+
+    private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {
+        BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(2d);
+        invoiceLine.getBT0129InvoicedQuantity().add(bt0129);
     }
 
 }

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>eigor-parent</artifactId>
+        <groupId>it.infocert.eigor</groupId>
+        <version>1.0.0</version>
+        <relativePath>../eigor-parent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>converter-ublcn-cen</artifactId>
+
+    <name>Eigor :: Converter :: UBL CN - CEN (${project.artifactId})</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amoerie</groupId>
+            <artifactId>jstreams</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>converterdata/converter-ublcn-cen/cius/schematron-xslt</directory>
+                            <includes>
+                                <include>*.xslt</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>it.infocert.eigor</groupId>
+                <artifactId>ph-sch2xslt-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>cius-xslt-generation</id>
+                        <configuration>
+                            <!--multipart- -->
+                            <xsltDirectory>src/main/resources/converterdata/converter-ublcn-cen/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-ublcn-cen/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <updateOnSchematronChanges>false</updateOnSchematronChanges>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -25,6 +25,8 @@ import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 
+import javax.annotation.Nullable;
+
 /**
  * Converts an Object to a single-element Collection containing the Object.
  * Will convert the Object to the target Collection's parameterized type if necessary.
@@ -51,6 +53,7 @@ final class ObjectToCollectionConverter implements ConditionalGenericConverter {
 		return ConversionUtils.canConvertElements(sourceType, targetType.getElementTypeDescriptor(), this.conversionService);
 	}
 
+	@Nullable
 	@SuppressWarnings("unchecked")
 	public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		if (source == null) {

@@ -3,11 +3,11 @@ package it.infocert.eigor.model.core;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +22,9 @@ public class InvoiceUtils {
 
     private static Logger log = LoggerFactory.getLogger(InvoiceUtils.class);
 
-    private final Reflections reflections;
+    private final IReflections reflections;
 
-    public InvoiceUtils(Reflections reflections) {
+    public InvoiceUtils(IReflections reflections) {
         this.reflections = reflections;
     }
 
@@ -36,6 +36,7 @@ public class InvoiceUtils {
      * @param invoice The invoice where the path should be guaranteed.
      */
     public BG0000Invoice ensurePathExists(String path, BG0000Invoice invoice) {
+        log.info("Ensuring path '{}' exists.", path);
 
         //checkArgument(path!=null && path.startsWith("/"), "Illegal path '%s'.", path);
 
@@ -45,10 +46,6 @@ public class InvoiceUtils {
 
         try {
             for (String name : namesOfBGs) {
-                if (name.startsWith("BT")) {
-                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
-                    continue;
-                }
                 List<BTBG> children = getChildrenAsList(current, name);
 
                 if (children == null) {
@@ -60,16 +57,23 @@ public class InvoiceUtils {
                             children));
                 }
 
+                if (name.startsWith("BT")) {
+                    log.debug("Found BT {} while ensuring path existance of [{}]. Reached end of chain.", name, path);
+                    continue;
+                }
 
                 if (children.size() < 1) {
                     Class<? extends BTBG> childType = getBtBgByName(name);
-
-                    BTBG bg = childType.newInstance();
-                    children.add(bg);
+                    if (childType != null) {
+                        BTBG bg = childType.newInstance();
+                        children.add(bg);
+                    } else {
+                        throw new IllegalArgumentException(format("Name %s didn't return a valid class.", name));
+                    }
                 } else if (children.size() > 1) {
                     throw new IllegalArgumentException(
-                            format("'%s' is wrong, too many '%s' children found.",
-                                    path, current.denomination())
+                            format("'%s' is wrong, too many '%s' found in '%s'.",
+                                    path, children.get(0).denomination(), current.denomination())
                     );
                 }
                 current = children.get(0);
@@ -94,7 +98,7 @@ public class InvoiceUtils {
         Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
             @Override
             public boolean apply(Method method) {
-                return method.getName().startsWith("get" + BtBgName.format(childName)) &&
+                return method.getName().startsWith("get" + BtBgName.formatPadded(childName)) &&
                         method.getParameterTypes().length == 0;
             }
         });
@@ -122,17 +126,17 @@ public class InvoiceUtils {
      */
     public Class<? extends BTBG> getBtBgByName(final String name) {
 
-        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
-        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
+        Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
             public boolean apply(Class<? extends BTBG> c) {
-                return c.getSimpleName().startsWith(BtBgName.format(name));
+                return c.getSimpleName().startsWith(BtBgName.formatPadded(name));
             }
         });
 
-        if (filter == null || filter.isEmpty()) return null;
-        else return filter.iterator().next();
+        if (filtered == null || filtered.isEmpty()) return null;
+        else return filtered.iterator().next();
 
     }
 
@@ -144,7 +148,7 @@ public class InvoiceUtils {
      */
     public Class<? extends BTBG> getBtBgByName(final BtBgName name) {
 
-        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOf(BTBG.class);
+        Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
         Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
             @Override
@@ -226,7 +230,7 @@ public class InvoiceUtils {
             if (children != null && children.size() != 0) {
                 current = children.get(0);
             }
-            if (current.denomination().equals(BtBgName.format(namesOfBGs.get(namesOfBGs.size() - 1)))) {
+            if (current.denomination().equals(BtBgName.formatPadded(namesOfBGs.get(namesOfBGs.size() - 1)))) {
                 return true;
             }
         }

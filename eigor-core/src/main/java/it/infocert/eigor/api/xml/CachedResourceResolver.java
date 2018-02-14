@@ -114,9 +114,9 @@ public class CachedResourceResolver implements LSResourceResolver
         final String sSystemId;
         final String sBaseURI;
 
-        CacheKey(String sNamespaceURI){
-            this(null, null, null, null, null);
-        }
+//        CacheKey(String sNamespaceURI){
+//            this(null, null, null, null, null);
+//        }
 
         CacheKey(String sType, String sNamespaceURI, String sPublicId, String sSystemId, String sBaseURI) {
             this.sType = sType;

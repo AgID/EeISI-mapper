@@ -59,9 +59,10 @@ public class ObservableConversion {
             throw new RuntimeException(e);
         }
 
-        this.forceConversion = checkNotNull( forceConversion );
+        this.forceConversion = forceConversion;
         this.listeners = new ArrayList<>( checkNotNull( listeners ) );
-        checkArgument(invoiceFileName!=null && !invoiceFileName.isEmpty());
+        checkNotNull(invoiceFileName);
+        checkArgument(!invoiceFileName.isEmpty());
         this.invoiceFileName = invoiceFileName;
     }
 
@@ -74,16 +75,16 @@ public class ObservableConversion {
         BG0000Invoice cenInvoice = null;
 
         // The final converted invoice
-        BinaryConversionResult conversionResult = null;
+        BinaryConversionResult fromCenResult = null;
 
         final ConversionContext ctx = new ConversionContext();
-        ctx.setForceConversion(forceConversion.booleanValue());
+        ctx.setForceConversion(forceConversion);
         ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
         ctx.setInvoiceFileName(invoiceFileName);
         ctx.setTargetInvoiceExtension(fromCen.extension());
 
         // The rule report
-        InMemoryRuleReport ruleReport = null;
+        InMemoryRuleReport ruleReport;
 
         List<IConversionIssue> issues = new ArrayList<>();
 
@@ -129,13 +130,13 @@ public class ObservableConversion {
             // 3rd step CEN -> XML
             if (keepOnGoing) {
                 fireOnStartingFromCenTransformation(ctx);
-                conversionResult = fromCen.convert(cenInvoice);
-                ctx.setFromCenResult(conversionResult);
-                if (!conversionResult.hasIssues()) {
+                fromCenResult = fromCen.convert(cenInvoice);
+                ctx.setFromCenResult(fromCenResult);
+                if (!fromCenResult.hasIssues()) {
                     fireOnSuccessfullFromCenTransformation(ctx);
                 } else {
                     fireOnFailedFromCenTransformation(ctx);
-                    issues.addAll( toCenResult.getIssues() );
+                    issues.addAll( fromCenResult.getIssues() );
                 }
             }
         } catch (SyntaxErrorInInvoiceFormatException e) {
@@ -146,7 +147,7 @@ public class ObservableConversion {
         // anyhow, we inform the listeners we completed the transformation
         fireOnTerminatedConverion(ctx);
 
-        return new BinaryConversionResult(conversionResult!=null ? conversionResult.getResult() : null, issues);
+        return new BinaryConversionResult(fromCenResult!=null ? fromCenResult.getResult() : null, issues);
 
     }
 

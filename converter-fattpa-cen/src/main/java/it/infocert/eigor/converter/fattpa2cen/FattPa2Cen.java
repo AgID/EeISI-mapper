@@ -1,80 +1,158 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid4461PaymentMeansCode;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.jdom2.Text;
-import org.jdom2.filter.Filters;
-import org.jdom2.xpath.XPathFactory;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * The FattPA to CEN format converter
+ */
 public class FattPa2Cen extends AbstractToCenConverter {
 
     private final static Logger log = LoggerFactory.getLogger(FattPa2Cen.class);
     private final static String FORMAT = "fatturapa";
-    private final static ConversionRegistry conversionRegistry = new ConversionRegistry();
+    private final DefaultResourceLoader drl = new DefaultResourceLoader();
+    private final EigorConfiguration configuration;
+    private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            ItalianCodeStringToUntdid4461PaymentMeansCode.newConverter(),
+            ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter.newConverter(),
+            StringToIdentifierConverter.newConverter()
+    );
 
-    public FattPa2Cen(Reflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom";
+
+    private XSDValidator xsdValidator;
+
+    public FattPa2Cen(IReflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_IN);
+        this.configuration = checkNotNull(configuration);
+    }
+
+    @Override public void configure() throws ConfigurationException {
+        super.configure();
+
+        // load the XSD.
+        {
+            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.fatturapa-cen.xsd");
+            xsdValidator = null;
+            try {
+                Resource xsdFile = drl.getResource(mandatoryString);
+
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
+            } catch (Exception e) {
+                throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
+            }
+        }
+        configurableSupport.configure();
     }
 
     @Override
     public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream) throws SyntaxErrorInInvoiceFormatException {
+
+        configurableSupport.checkConfigurationOccurred();
+
+        List<IConversionIssue> errors = new ArrayList<>();
+        InputStream clonedInputStream = null;
+
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 
-            InputStream clonedInputStream = new ByteArrayInputStream(bytes);
+            clonedInputStream = new ByteArrayInputStream(bytes);
 
-            Document doc = getDocument(clonedInputStream);
-
-            BG0000Invoice invoice = new BG0000Invoice();
-            String number = getNumber(doc);
-            invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber(number));
-            return new ConversionResult<>(Lists.<IConversionIssue>newArrayList(), invoice);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            if (validationErrors.isEmpty()) {
+                log.info("Xsd validation succesful!");
+            }
+            errors.addAll(validationErrors);
+        } catch (IOException | IllegalArgumentException e) {
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
-        return null;
+
+        Document document;
+        try {
+            document = getDocument(clonedInputStream);
+        } catch (RuntimeException e) {
+            throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.FATTPA_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
+        }
+
+        ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
+        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
+        result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
+        applyCustomMapping(result.getResult(), document, errors);
+        return result;
     }
 
-    private String getNumber(Document doc) {
-        XPathFactory factory = XPathFactory.instance();
-        Text number = factory.compile("//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero/text()", Filters.text()).evaluateFirst(doc);
-        return number.getText();
+    private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
+        List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
+
+        for (CustomMapping<Document> customMapping : customMappings) {
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN);
+        }
     }
+
+//    private String getNumber(Document doc) {
+//        XPathFactory factory = XPathFactory.instance();
+//        Text number = factory.compile("//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero/text()", Filters.text()).evaluateFirst(doc);
+//        return number.getText();
+//    }
 
     @Override
     protected String getOne2OneMappingPath() {
-        return null;
+        return configuration.getMandatoryString(ONE2ONE_MAPPING_PATH);
     }
 
     @Override
     protected String getMany2OneMappingPath() {
-        return null;
+        return configuration.getMandatoryString(MANY2ONE_MAPPING_PATH);
     }
 
     @Override
     protected String getOne2ManyMappingPath() {
-        return null;
+        return configuration.getMandatoryString(ONE2MANY_MAPPING_PATH);
     }
 
     @Override
     protected String getCustomMappingPath() {
-        return null;
+        return CUSTOM_CONVERTER_MAPPING_PATH;
     }
 
     @Override
@@ -93,11 +171,11 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return null;
+        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
     }
 
     @Override
     public String getName() {
-        return "converter-fatturapa-cen";
+        return "converter-fattpa-cen";
     }
 }

@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
      * Return the conversion that correspond to the given format.
      * @param format
      */
+    @Nullable
     @Override public FromCenConversion findConversionFromCen(String format) {
         return fromCenConversionRepository.findConversionFromCen(format);
     }
@@ -50,6 +52,7 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
      * @param sourceFormat The format of the original invoice.
      * @return <code>null</code> if no conversions are found.
      */
+    @Nullable
     @Override public ToCenConversion findConversionToCen(String sourceFormat) {
         return toCenConversionRepository.findConversionToCen(sourceFormat);
     }

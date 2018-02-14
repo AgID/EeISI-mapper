@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +13,13 @@ public interface FromCenConversionRepository {
     /**
      * Return the conversion that correspond to the given format.
      */
-    public FromCenConversion findConversionFromCen(String ubl);
+    @Nullable
+    FromCenConversion findConversionFromCen(String ubl);
 
     /**
      * Return the supported formats.
      */
-    public Set<String> supportedFromCenFormats();
+    Set<String> supportedFromCenFormats();
 
 
     List<FromCenConversion> getFromCenConverters();

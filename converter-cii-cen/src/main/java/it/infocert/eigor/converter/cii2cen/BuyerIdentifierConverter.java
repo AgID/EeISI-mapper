@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
@@ -25,19 +27,18 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        List<Element> buyerTradeParties = null;
         Element child = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
 
         if (child != null) {
             Element child1 = findNamespaceChild(child, namespacesInScope, "ApplicableHeaderTradeAgreement");
 
             if (child1 != null) {
-                buyerTradeParties = findNamespaceChildren(child1, namespacesInScope, "BuyerTradeParty");
+               Element buyerTradeParty = findNamespaceChild(child1, namespacesInScope, "BuyerTradeParty");
 
-                for (Element elemBuyer : buyerTradeParties) {
+                if (buyerTradeParty != null) {
 
-                    Element id = findNamespaceChild(elemBuyer, namespacesInScope, "ID");
-                    Element globalID = findNamespaceChild(elemBuyer, namespacesInScope, "GlobalID");
+                    Element id = findNamespaceChild(buyerTradeParty, namespacesInScope, "ID");
+                    Element globalID = findNamespaceChild(buyerTradeParty, namespacesInScope, "GlobalID");
 
                     if (globalID != null) {
                         Attribute schemeID = globalID.getAttribute("schemeID");
@@ -59,7 +60,7 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0046(document, cenInvoice, errors);
     }
 }

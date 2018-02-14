@@ -24,4 +24,5 @@ public interface IConstants {
     String ERROR_BASE_QUANTITY_TRANSFORM = "Error transforming base unit/qty for sales line.";
     String ERROR_LINE_PROCESSING = "Error processing invoice line";
     String ERROR_TAX_INFORMATION = "Tax information error";
+    String WHITESPACE = " ";
 }

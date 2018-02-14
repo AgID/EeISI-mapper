@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
@@ -35,7 +37,7 @@ public class TenderRefInvoicedObjectID extends CustomConverterUtils implements C
                     Element typeCode = findNamespaceChild(elemAddRefDoc, namespacesInScope, "TypeCode");
                     Element referenceTypeCode = findNamespaceChild(elemAddRefDoc, namespacesInScope, "ReferenceTypeCode");
 
-                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = null;
+                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018;
                     if (issuerAssignedID != null && typeCode != null) {
                         if (typeCode.getText().equals("50")) {
                             BT0017TenderOrLotReference bt0017 = new BT0017TenderOrLotReference(issuerAssignedID.getText());
@@ -57,7 +59,7 @@ public class TenderRefInvoicedObjectID extends CustomConverterUtils implements C
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0017_18(document, cenInvoice, errors);
     }
 }

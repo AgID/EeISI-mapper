@@ -8,14 +8,18 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.converter.commons.ubl2cen.InvoiceNoteConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -26,7 +30,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Ubl2CenConfigurationFileTest {
 
@@ -43,10 +48,10 @@ public class Ubl2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-many", "converterdata/converter-ubl-cen/mappings/one_to_many.properties")
                 .addProperty("eigor.converter.ubl-cen.xsd", "file:src/test/resources/converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
-                .addProperty("eigor.converter.ubl-cen.schematron", "converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
+                .addProperty("eigor.converter.ubl-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
                 .addProperty("eigor.converter.ubl-cen.cius", "converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
-        sut = new MyUblToCenConverter(new Reflections("it.infocert"), conf);
+        sut = new MyUblToCenConverter(new JavaReflections(), conf);
         sut.configure();
     }
 
@@ -72,9 +77,25 @@ public class Ubl2CenConfigurationFileTest {
         List<IConversionIssue> errors = new ArrayList<>();
 
         InvoiceNoteConverter bg0001 = new InvoiceNoteConverter();
-        ConversionResult<BG0000Invoice> result = bg0001.toBG0001(document, invoice, errors);
+        BG0000Invoice convertedInvoice = bg0001.toBG0001(document, invoice, errors).getResult();
+        assertFalse(convertedInvoice.getBG0001InvoiceNote().isEmpty());
+        int found = 0;
+        for (BG0001InvoiceNote invoiceNote : convertedInvoice.getBG0001InvoiceNote()) {
+            if (!invoiceNote.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
+                String value = invoiceNote.getBT0021InvoiceNoteSubjectCode(0).getValue();
+                if ("Ordered through our website#Ordering information".equals(value)) {
+                    found++;
+                }
+            }
 
-        assertEquals("Ordered through our website#Ordering information", result.getResult().getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode().get(0).getValue());
+            if (!invoiceNote.getBT0022InvoiceNote().isEmpty()) {
+                String value = invoiceNote.getBT0022InvoiceNote(0).getValue();
+                if ("Ordered through our website#Ordering information".equals(value)) {
+                    found++;
+                }
+            }
+        }
+        assertTrue(found > 0);
     }
 
 
@@ -82,7 +103,7 @@ public class Ubl2CenConfigurationFileTest {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
         String filePath = getClass().getClassLoader().getResource("xsd/UBL-Invoice-2.1.xsd").getFile();
         File xsdFile = new File(filePath);
-        XSDValidator xsdValidator = new XSDValidator(xsdFile);
+        XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBL_IN);
         return xsdValidator.validate(bytes);
     }
 
@@ -95,7 +116,7 @@ public class Ubl2CenConfigurationFileTest {
 
 
     static class MyUblToCenConverter extends Ubl2Cen {
-        public MyUblToCenConverter(Reflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+        public MyUblToCenConverter(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
             super(reflections, configuration);
         }
 

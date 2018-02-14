@@ -4,12 +4,15 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.2.RELEASE</version>
     </parent>
+
+
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.0</version>
-    <name>Eigor</name>
+    <version>1.0.0</version>
+    <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
         <name>Infocert</name>
@@ -34,11 +37,17 @@
         <module>eigor-test</module>
         <module>eigor-core</module>
         <module>converter-csvcen-cen</module>
+        <module>converter-commons</module>
         <module>converter-ubl-cen</module>
+        <module>converter-ublcn-cen</module>
         <module>eigor-api</module>
         <module>converter-cii-cen</module>
+        <module>converter-cen-cii</module>
         <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
+        <module>eigor-test-schemas</module>
+        <module>eigor-commons</module>
+        <module>eigor-ph-schematron</module>
     </modules>
 
     <reporting>

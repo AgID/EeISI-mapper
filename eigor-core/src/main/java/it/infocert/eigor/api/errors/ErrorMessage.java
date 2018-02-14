@@ -1,17 +1,33 @@
 package it.infocert.eigor.api.errors;
 
+import it.infocert.eigor.api.utils.Pair;
+
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ErrorMessage implements Serializable{
+public class ErrorMessage implements Serializable {
+
+    public static final String SOURCEMSG_PARAM = "sourceMsg";
+    public static final String OFFENDINGITEM_PARAM = "offendingItem";
 
     private final String message;
+
     private ErrorCode errorCode;
+
+    private final Map<String, String> parameters = new HashMap<>(0);
+
     private final List<Exception> relatedExceptions = new ArrayList<>(0);
 
-    public ErrorMessage(String message, String location, String type, String code) {
-        this(message, new ErrorCode(location, type, code));
+    @SafeVarargs
+    public ErrorMessage(String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code, Pair<String, String>... parameters) {
+        this(message, new ErrorCode(location, action, code));
+        for (Pair<String, String> p : parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
     public ErrorMessage(String message) {
@@ -27,8 +43,8 @@ public class ErrorMessage implements Serializable{
         this(message, errorMessage.getErrorCode());
     }
 
-    public ErrorMessage(Exception relatedException, String message, String location, String type, String code) {
-        this(relatedException, message, new ErrorCode(location, type, code));
+    public ErrorMessage(Exception relatedException, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error code) {
+        this(relatedException, message, new ErrorCode(location, action, code));
     }
 
     public ErrorMessage(Exception relatedException, String message, ErrorCode errorCode) {
@@ -45,16 +61,24 @@ public class ErrorMessage implements Serializable{
         this.message = builder.message;
         this.errorCode = builder.errorCode;
         this.relatedExceptions.addAll(builder.exceptions);
+        for (Pair<String, String> p : builder.parameters) {
+            this.parameters.put(p.getLeft(), p.getRight());
+        }
     }
 
+    @Nullable
     public String getMessage() {
         return message;
     }
 
+    @Nullable
     public ErrorCode getErrorCode() {
         return errorCode;
     }
 
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
 
     public List<Exception> getRelatedExceptions() {
         return relatedExceptions;
@@ -68,7 +92,7 @@ public class ErrorMessage implements Serializable{
         return !relatedExceptions.isEmpty();
     }
 
-    public ErrorCode updateErrorCode(String location, String action, String error) {
+    public ErrorCode updateErrorCode(ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error) {
         if (this.errorCode != null) {
             this.errorCode = new ErrorCode(
                     location != null ? location : this.errorCode.getLocation(),
@@ -99,32 +123,51 @@ public class ErrorMessage implements Serializable{
     }
 
     public static class Builder {
+
+        @Nullable
         private String message;
-        private String location;
-        private String action;
-        private String error;
+
+        @Nullable
+        private ErrorCode.Location location;
+
+        @Nullable
+        private ErrorCode.Action action;
+
+        @Nullable
+        private ErrorCode.Error error;
+
+        @Nullable
         private ErrorCode errorCode;
+
+        private List<Pair<String, String>> parameters = new ArrayList<>(0);
+
         private final List<Exception> exceptions = new ArrayList<>(0);
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public Builder message(String message) {
             this.message = message;
             return this;
         }
 
-        public Builder location(String location) {
+        public Builder location(ErrorCode.Location location) {
             this.location = location;
             return this;
         }
 
-        public Builder action(String action) {
+        public Builder action(ErrorCode.Action action) {
             this.action = action;
             return this;
         }
 
-        public Builder error(String error) {
+        public Builder error(ErrorCode.Error error) {
             this.error = error;
+            return this;
+        }
+
+        public Builder addParam(String key, String value) {
+            parameters.add(Pair.of(key, value));
             return this;
         }
 

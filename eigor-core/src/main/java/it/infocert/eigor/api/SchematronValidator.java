@@ -4,6 +4,10 @@ import com.google.common.base.Preconditions;
 import com.helger.schematron.ISchematronResource;
 import com.helger.schematron.xslt.SchematronResourceSCH;
 import com.helger.schematron.xslt.SchematronResourceXSLT;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.schematron.FixedSchematronResource;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.slf4j.Logger;
@@ -18,10 +22,12 @@ import java.util.List;
 
 public class SchematronValidator implements IXMLValidator {
 
+    private final ErrorCode.Location callingLocation;
     private ISchematronResource schematronResource;
     private static final Logger log = LoggerFactory.getLogger(SchematronValidator.class);
 
-    public SchematronValidator(File schemaFile, boolean isXSLT) {
+    public SchematronValidator(File schemaFile, boolean isXSLT, ErrorCode.Location callingLocation) {
+        this.callingLocation = callingLocation;
 
         long delta = System.currentTimeMillis();
         try {
@@ -37,13 +43,13 @@ public class SchematronValidator implements IXMLValidator {
                 if (xsltFileUpdater.isSchNewerThanXslt()) {
                     xsltFileUpdater.updateXSLTfromSch();
                 }
-                schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
+                schematronResource = new FixedSchematronResource(SchematronResourceXSLT.fromFile(schemaFile));
             } else {
-                schematronResource = SchematronResourceSCH.fromFile(schemaFile);
+                schematronResource = new FixedSchematronResource(SchematronResourceSCH.fromFile(schemaFile));
             }
             if (!schematronResource.isValidSchematron())
-                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT?"XSLT":"SCH", schemaFile, schemaFile.getAbsolutePath()));
-        }finally {
+                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath()));
+        } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaFile.getAbsolutePath(), delta);
         }
@@ -53,29 +59,42 @@ public class SchematronValidator implements IXMLValidator {
     @Override
     public List<IConversionIssue> validate(byte[] xml) {
         List<IConversionIssue> errors = new ArrayList<>();
-        SchematronOutputType schematronOutput = null;
+        SchematronOutputType schematronOutput;
 
         try {
             StreamSource source = new StreamSource(new ByteArrayInputStream(xml));
             schematronOutput = schematronResource.applySchematronValidationToSVRL(source);
         } catch (Exception e) {
-            errors.add(ConversionIssue.newWarning(e));
+            errors.add(ConversionIssue.newWarning(e, "Error during Schematron Validation.",
+                    callingLocation,
+                    ErrorCode.Action.SCH_VALIDATION,
+                    ErrorCode.Error.INVALID,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             return errors;
         }
 
 
         List<Object> firedRuleAndFailedAssert = new ArrayList<>();
 
-        if(schematronOutput!=null) {
+        if (schematronOutput != null) {
             try {
                 List<Object> asserts = schematronOutput.getActivePatternAndFiredRuleAndFailedAssert();
                 firedRuleAndFailedAssert.addAll(asserts);
                 log.trace(asserts.toString());
             } catch (Exception e) {
-                errors.add(ConversionIssue.newError(e));
+                errors.add(ConversionIssue.newWarning(e, "Error during Schematron result registration.",
+                        callingLocation,
+                        ErrorCode.Action.SCH_VALIDATION,
+                        ErrorCode.Error.INVALID,
+                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
                 return errors;
             }
+        } else {
+            final String message = "Schematron parsing failed. File: " + schematronResource.getID();
+            log.error(message);
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(message, callingLocation, ErrorCode.Action.SCH_VALIDATION, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, schematronResource.getID()))));
         }
+
 
         for (Object obj : firedRuleAndFailedAssert) {
             if (obj instanceof FailedAssert) {
@@ -87,10 +106,20 @@ public class SchematronValidator implements IXMLValidator {
 
                 String ruleDescriptionFromSchematron = failedAssert.getText().trim().replaceAll("\\n", " ").replaceAll(" {2,}", " ");
                 String offendingElement = failedAssert.getLocation().trim();
-                Exception error = new Exception(
-                        String.format("Schematron failed assert '%s' on XML element at '%s'.", ruleDescriptionFromSchematron, offendingElement), cause);
+                EigorException error = new EigorException(
+                        ErrorMessage.builder()
+                        .message(String.format("Schematron failed assert '%s' on XML element at '%s'.",
+                                ruleDescriptionFromSchematron,
+                                offendingElement)
+                        )
+                        .location(callingLocation)
+                        .action(ErrorCode.Action.SCH_VALIDATION)
+                        .error(ErrorCode.Error.INVALID)
+                        .build(),
+                        cause
+                );
 
-                if (failedAssert.getFlag().equals("fatal")) {
+                if ("fatal".equals(failedAssert.getFlag())) {
                     errors.add(ConversionIssue.newError(error));
                 } else {
                     errors.add(ConversionIssue.newWarning(error));

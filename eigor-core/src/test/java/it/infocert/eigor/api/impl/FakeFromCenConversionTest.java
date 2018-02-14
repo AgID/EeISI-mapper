@@ -1,9 +1,10 @@
 package it.infocert.eigor.api.impl;
 
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.utils.IReflections;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.reflections.Reflections;
+
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -13,7 +14,7 @@ public class FakeFromCenConversionTest {
 
     @Test public void shouldSupportTheFakeFormatOnly() {
 
-        FakeFromCenConversion sut = new FakeFromCenConversion(mock(Reflections.class), Mockito.mock(EigorConfiguration.class));
+        FakeFromCenConversion sut = new FakeFromCenConversion(mock(IReflections.class), Mockito.mock(EigorConfiguration.class));
 
         assertTrue( sut.support("fake") );
         assertFalse( sut.support("FAKE") );

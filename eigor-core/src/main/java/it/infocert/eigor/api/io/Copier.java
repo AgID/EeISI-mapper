@@ -1,5 +1,6 @@
 package it.infocert.eigor.api.io;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -78,8 +79,13 @@ public class Copier {
         log.trace("Copied from filesystem dir '{}' to '{}'.", sourceDir.getAbsolutePath(), dest.getAbsolutePath());
     }
 
-    public void copyFromJar(String s) throws IOException {
-        URL resource = getClass().getResource(s);
+    public void copyFromJar(String pathInJarAsStr) throws IOException {
+        Preconditions.checkNotNull(pathInJarAsStr, "Path in jar is null");
+        Preconditions.checkArgument(!pathInJarAsStr.trim().isEmpty(), "Invalid path in jar.");
+
+        URL resource = getClass().getResource(pathInJarAsStr);
+
+        Preconditions.checkState(resource!=null, "Unable to find resource %s in JAR.", pathInJarAsStr);
 
         String fullPath = resource.toString();
 

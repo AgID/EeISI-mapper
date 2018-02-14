@@ -35,9 +35,9 @@ public enum Iso4217CurrenciesFundsCodes {
     public String toString() {
         return "Iso4217CurrenciesFundsCodes{" +
                 "code='" + code + '\'' +
-                ", num=" + num +
-                ", numberOfDecimalDigits=" + numberOfDecimalDigits +
-                ", currency='" + currency + '\'' +
+                "| num=" + num +
+                "| numberOfDecimalDigits=" + numberOfDecimalDigits +
+                "| currency='" + currency + '\'' +
                 '}';
     }
 

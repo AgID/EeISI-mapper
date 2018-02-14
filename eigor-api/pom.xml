@@ -5,12 +5,12 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>0.2.1</version>
+        <version>1.0.0</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Eigor :: API :: API (${project.artifactId})</name>
+    <name>Eigor :: API (${project.artifactId})</name>
     <description>The API.</description>
      <artifactId>eigor-api</artifactId>
 
@@ -48,9 +48,20 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-ublcn-cen</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cii-cen</artifactId>
             <version>${project.version}</version>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-cii</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-ubl</artifactId>
             <version>${project.version}</version>
@@ -63,6 +74,58 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
+    <build>
+        <plugins>
+            <!--
+           add integration-test to the sources,
+           to be sure the integration test at least always compile.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <!-- Add a new source directory to our build -->
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add a new resource directory to our build -->
+                    <execution>
+                        <id>add-integration-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the resource directory of our integration tests -->
+                            <resources>
+                                <!--
+                                    Placeholders that are found from the files located in the configured resource
+                                    directories are replaced with the property values found from the profile
+                                    specific configuration file.
+                                -->
+                                <resource>
+                                    <filtering>true</filtering>
+                                    <directory>src/integration-test/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

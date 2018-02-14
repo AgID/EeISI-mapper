@@ -11,25 +11,25 @@ public class BtBgNameTest {
 
     @Test
     public void shouldFormatDifferentNames() throws Exception {
-        assertEquals("BT0001", BtBgName.format("BT-1") );
-        assertEquals("BT0012", BtBgName.format("BT12"));
-        assertEquals("BT0021", BtBgName.format("Bt21"));
-        assertEquals("BT0023", BtBgName.format("bt 23"));
-        assertEquals("BT0023", BtBgName.format("bt          23"));
-        assertEquals("BG0015", BtBgName.format("bG-15"));
-        assertEquals("BG0015", BtBgName.format("bg- 15"));
-        assertEquals("BG0015", BtBgName.format("bg - 15"));
-        assertEquals("BG0015", BtBgName.format("bg -15"));
-        assertEquals("BG0015", BtBgName.format("bg                  -15"));
-        assertEquals("BG0015-1", BtBgName.format("BG15-1"));
-        assertEquals("BG0015-1", BtBgName.format("bg -15-1"));
-        assertEquals("BG0015-1", BtBgName.format("bg -15-                      1"));
+        assertEquals("BT0001", BtBgName.formatPadded("BT-1") );
+        assertEquals("BT0012", BtBgName.formatPadded("BT12"));
+        assertEquals("BT0021", BtBgName.formatPadded("Bt21"));
+        assertEquals("BT0023", BtBgName.formatPadded("bt 23"));
+        assertEquals("BT0023", BtBgName.formatPadded("bt          23"));
+        assertEquals("BG0015", BtBgName.formatPadded("bG-15"));
+        assertEquals("BG0015", BtBgName.formatPadded("bg- 15"));
+        assertEquals("BG0015", BtBgName.formatPadded("bg - 15"));
+        assertEquals("BG0015", BtBgName.formatPadded("bg -15"));
+        assertEquals("BG0015", BtBgName.formatPadded("bg                  -15"));
+        assertEquals("BG0015-1", BtBgName.formatPadded("BG15-1"));
+        assertEquals("BG0015-1", BtBgName.formatPadded("bg -15-1"));
+        assertEquals("BG0015-1", BtBgName.formatPadded("bg -15-                      1"));
     }
 
     @Test
     public void shouldFailIfNotAMeaningfulBgBtName() throws Exception {
         try {
-            BtBgName.format("invalid string");
+            BtBgName.formatPadded("invalid string");
             fail();
         } catch (IllegalArgumentException ignored) {}
     }
@@ -60,6 +60,28 @@ public class BtBgNameTest {
         assertFailedParsing("");
         assertFailedParsing("BT-");
 
+    }
+
+    @Test
+    public void shouldParseIntoStandardString() throws Exception {
+        assertEquals("BT-1", BtBgName.formatStandardCen("BT-1") );
+        assertEquals("BT-1", BtBgName.formatStandardCen("BT-0001") );
+        assertEquals("BT-12", BtBgName.formatStandardCen("BT12"));
+        assertEquals("BT-21", BtBgName.formatStandardCen("Bt21"));
+        assertEquals("BT-23", BtBgName.formatStandardCen("bt 23"));
+        assertEquals("BT-23", BtBgName.formatStandardCen("bt 00023"));
+        assertEquals("BT-23", BtBgName.formatStandardCen("bt0023"));
+        assertEquals("BT-23", BtBgName.formatStandardCen("bt          23"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bG-15"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bg- 15"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bg - 15"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bg -15"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bg                  -15"));
+        assertEquals("BG-15", BtBgName.formatStandardCen("bg             - 0000             15"));
+        assertEquals("BG-15-1", BtBgName.formatStandardCen("BG15-1"));
+        assertEquals("BG-15-1", BtBgName.formatStandardCen("bg -15-1"));
+        assertEquals("BG-15-1", BtBgName.formatStandardCen("bg -15-                      1"));
+        assertEquals("BG-15-1", BtBgName.formatStandardCen("bg -15-                      0000000000000001"));
     }
 
     private void assertFailedParsing(String badFormat) {

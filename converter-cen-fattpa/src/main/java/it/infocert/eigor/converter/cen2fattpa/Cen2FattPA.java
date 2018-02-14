@@ -4,7 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.api.errors.ConversionIssueErrorCodeMapper;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -14,7 +17,6 @@ import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -41,37 +43,38 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     private static final String FORMAT = "fatturapa";
     private final String ROOT_TAG = "FatturaElettronica";
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
-            new CountryNameToIso31661CountryCodeConverter(),
-            new LookUpEnumConversion(Iso31661CountryCodes.class),
-            new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-            new StringToUntdid1001InvoiceTypeCodeConverter(),
-            new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-            new StringToIso4217CurrenciesFundsCodesConverter(),
-            new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-            new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-            new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-            new StringToUnitOfMeasureConverter(),
-            new LookUpEnumConversion(UnitOfMeasureCodes.class),
-            new StringToDoubleConverter(),
-            new StringToStringConverter(),
-            new JavaLocalDateToStringConverter(),
-            new Iso4217CurrenciesFundsCodesToStringConverter(),
-            new Iso31661CountryCodesToStringConverter(),
-            new DoubleToStringConverter("#.00"),
-            new UnitOfMeasureCodesToStringConverter(),
-            new Untdid1001InvoiceTypeCodeToItalianCodeStringConverter(),
-            new Untdid4461PaymentMeansCodeToItalianCodeString(),
-            new Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter(),
-            new Untdid7161SpecialServicesCodesToItalianCodeStringConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeConverter(),
-            new Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter(),
-            new IdentifierToStringConverter()
+            CountryNameToIso31661CountryCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
+            StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
+            StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
+            StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
+            StringToUnitOfMeasureConverter.newConverter(),
+            LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
+            StringToDoubleConverter.newConverter(),
+            StringToStringConverter.newConverter(),
+            JavaLocalDateToStringConverter.newConverter(),
+            Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
+            Iso31661CountryCodesToStringConverter.newConverter(),
+            DoubleToStringConverter.newConverter("#.00"),
+            UnitOfMeasureCodesToStringConverter.newConverter(),
+            Untdid1001InvoiceTypeCodeToItalianCodeStringConverter.newConverter(),
+            Untdid4461PaymentMeansCodeToItalianCodeString.newConverter(),
+            Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter(),
+            Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter.newConverter(),
+            Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
+            Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
+            IdentifierToStringConverter.newConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
 
-    public Cen2FattPA(Reflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration);
+    public Cen2FattPA(IReflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_OUT);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
         try {
-            validator = new XSDValidator(xsdFile.getFile());
+            validator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }
@@ -116,7 +119,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Unmarshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice unmarshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
 
@@ -142,7 +145,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
                 marshaller.marshal(fatturaElettronicaXML, xmlOutput);
             }
         } catch (JAXBException e) {
-            errors.add(new ConversionIssueErrorCodeMapper(getName(), "Marshalling").map(ConversionIssue.newError(e)));
+            errors.add(ConversionIssue.newError(e, "Error during invoice marshalling", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.XML_PARSING, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             log.error(e.getMessage(), e);
         }
         if (xmlOutput == null) {
@@ -151,13 +154,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
-            validationErrors = new ConversionIssueErrorCodeMapper(getName(), "XSD").mapAll(validationErrors);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }
 
             errors.addAll(validationErrors);
-            new ConversionIssueErrorCodeMapper(getName()).mapAll(errors);
             return new BinaryConversionResult(jaxml, errors);
 
         }
@@ -167,7 +168,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
-            customMapping.map(invoice, fatturaElettronica, errors);
+            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT);
         }
     }
 

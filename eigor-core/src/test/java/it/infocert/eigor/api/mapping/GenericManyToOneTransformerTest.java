@@ -2,15 +2,16 @@ package it.infocert.eigor.api.mapping;
 
 import com.google.common.io.Resources;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.*;
-import it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public class GenericManyToOneTransformerTest {
     private static Logger log = LoggerFactory.getLogger(GenericManyToOneTransformerTest.class);
     private BG0000Invoice invoice;
     private ArrayList<IConversionIssue> errors;
-    private Reflections reflections;
+    private IReflections reflections;
     private Document document;
     private SAXBuilder saxBuilder;
     private ConversionRegistry conversionRegistry;
@@ -40,29 +41,8 @@ public class GenericManyToOneTransformerTest {
         saxBuilder = new SAXBuilder();
         document = new Document(new Element("FatturaElettronica"));
         errors = new ArrayList<>(0);
-        reflections = new Reflections("it.infocert");
-        conversionRegistry = new ConversionRegistry(
-                new CountryNameToIso31661CountryCodeConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class),
-                new StringToJavaLocalDateConverter("dd-MMM-yy"),
-                new StringToJavaLocalDateConverter("yyyy-MM-dd"),
-                new StringToUntdid1001InvoiceTypeCodeConverter(),
-                new LookUpEnumConversion(Untdid1001InvoiceTypeCode.class),
-                new StringToIso4217CurrenciesFundsCodesConverter(),
-                new LookUpEnumConversion(Iso4217CurrenciesFundsCodes.class),
-                new StringToUntdid5305DutyTaxFeeCategoriesConverter(),
-                new LookUpEnumConversion(Untdid5305DutyTaxFeeCategories.class),
-                new StringToUnitOfMeasureConverter(),
-                new LookUpEnumConversion(UnitOfMeasureCodes.class),
-                new StringToDoubleConverter(),
-                new StringToStringConverter(),
-                new JavaLocalDateToStringConverter(),
-                new JavaLocalDateToStringConverter("dd-MMM-yy"),
-                new Iso4217CurrenciesFundsCodesToStringConverter(),
-                new Iso31661CountryCodesToStringConverter(),
-                new DoubleToStringConverter("#.00"),
-                new UnitOfMeasureCodesToStringConverter()
-        );
+        reflections = new JavaReflections();
+        conversionRegistry = ConversionRegistry.DEFAULT_REGISTRY;
     }
 
     @Test
@@ -82,7 +62,7 @@ public class GenericManyToOneTransformerTest {
         final String cenPath = "/BG0004/BT0033";
         final String combinationExpression = "%1-%3 %2";
 
-        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformator = new GenericManyToOneTransformer(cenPath, combinationExpression, xPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformator.transformXmlToCen(doc, invoice, errors);
 
         assertThat(invoice.getBG0004Seller().get(0).getBT0033SellerAdditionalLegalInformation(), hasSize(1));
@@ -101,7 +81,7 @@ public class GenericManyToOneTransformerTest {
         seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
         invoice.getBG0004Seller().add(seller);
 
-        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformer.transformCenToXml(invoice, document, errors);
         Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
         assertEquals("Grafton street 3rd Floor, Room 5", item.getText());
@@ -120,7 +100,7 @@ public class GenericManyToOneTransformerTest {
         seller.getBG0005SellerPostalAddress(0).getBT0162SellerAddressLine3().add(new BT0162SellerAddressLine3("3rd Floor, Room 5"));
         invoice.getBG0004Seller().add(seller);
 
-        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry);
+        GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPathExpression, "%1 %2 %3", cenPaths, "testMapping", reflections, conversionRegistry, ErrorCode.Location.FATTPA_IN);
         transformer.transformCenToXml(invoice, document, errors);
         Element item = CommonConversionModule.evaluateXpath(document, xPathExpression).get(0);
         assertEquals("Grafton street Building 5 3rd Floor, Room 5", item.getText());

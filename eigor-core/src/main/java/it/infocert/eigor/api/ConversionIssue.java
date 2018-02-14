@@ -1,57 +1,77 @@
 package it.infocert.eigor.api;
 
 
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.Pair;
 
 public class ConversionIssue implements IConversionIssue {
 
-    /** The message describing the issue. */
+    /**
+     * The message describing the issue.
+     */
     private final ErrorMessage errorMessage;
 
-    /** The exception that caused the problem. */
+    /**
+     * The exception that caused the problem.
+     */
     private final Exception cause;
 
-    /** If {@literal true} this has to be considered fatal, meaning it prevents the conversion to be completed. */
+    /**
+     * If {@literal true} this has to be considered fatal, meaning it prevents the conversion to be completed.
+     */
     private final boolean fatal;
 
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
-    public static ConversionIssue newWarning(Exception e) {
-        return new ConversionIssue(e.getMessage(), e, false);
-    }
-
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception. */
-    public static ConversionIssue newWarning(Exception e, String message) {
-        return new ConversionIssue(message, e, false);
-    }
-
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
-    public static ConversionIssue newError(Exception e) {
-        return new ConversionIssue(e.getMessage(), e, true);
-    }
-
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception.
+     */
     public static ConversionIssue newError(EigorException e) {
         return new ConversionIssue(e.getErrorMessage(), e, true);
     }
 
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception.
+     */
     public static ConversionIssue newError(EigorRuntimeException e) {
         return new ConversionIssue(e.getErrorMessage(), e, true);
     }
 
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception. */
-    public static ConversionIssue newError(Exception e, String message) {
-        return new ConversionIssue(message, e, true);
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code.
+     */
+    @SafeVarargs
+    public static ConversionIssue newError(Exception e, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error, Pair<String, String>... parameters) {
+        return new ConversionIssue(new ErrorMessage(message, location, action, error, parameters), e, true);
     }
 
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code. */
-    public static ConversionIssue newError(Exception e, String message, String location, String action, String error) {
-        return new ConversionIssue(new ErrorMessage(message, location, action, error), e, true);
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception.
+     */
+    public static ConversionIssue newWarning(EigorException e) {
+        return new ConversionIssue(e.getErrorMessage(), e, false);
     }
 
-    /** Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception and error code with no location or action. */
-    public static ConversionIssue newError(Exception e, String message, String error) {
-        return newError(e, message, null, null, error);
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception.
+     */
+    public static ConversionIssue newWarning(EigorRuntimeException e) {
+        return new ConversionIssue(e.getErrorMessage(), e, false);
+    }
+
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception.
+     */
+    public static ConversionIssue newWarning(Exception e, ErrorMessage m) {
+        return new ConversionIssue(m, e, false);
+    }
+
+
+    /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about a warning caused by the given exception and error code.
+     */
+    @SafeVarargs
+    public static ConversionIssue newWarning(Exception e, String message, ErrorCode.Location location, ErrorCode.Action action, ErrorCode.Error error, Pair<String, String>... parameters) {
+        return new ConversionIssue(new ErrorMessage(message, location, action, error, parameters), e, false);
     }
 
     private ConversionIssue(ErrorMessage message, Exception cause, boolean fatal) {

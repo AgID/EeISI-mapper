@@ -84,7 +84,7 @@ public class ConversionRegistryTest {
         ConversionRegistry sut = new ConversionRegistry(
                 new CountryNameToIso31661CountryCodeConverter(),
                 new StringToJavaLocalDateConverter(),
-                new LookUpEnumConversion(Iso31661CountryCodes.class)
+                new LookUpEnumConversion<>(Iso31661CountryCodes.class)
         );
 
         // then

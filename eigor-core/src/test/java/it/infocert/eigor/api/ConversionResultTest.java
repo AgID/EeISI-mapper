@@ -1,10 +1,11 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.errors.ErrorCode;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.*;
@@ -29,8 +30,8 @@ public class ConversionResultTest {
     public void conversionResultWithErrors() {
 
         // given
-        IConversionIssue issueToReturn = ConversionIssue.newError(new Exception());
-        ConversionResult sut = new ConversionResult<String>(asList(issueToReturn), "result with issues");
+        IConversionIssue issueToReturn = ConversionIssue.newError(new EigorException("test", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.INVALID));
+        ConversionResult<String> sut = new ConversionResult<>(Collections.singletonList(issueToReturn), "result with issues");
 
         // then
         List<IConversionIssue> errors = sut.getIssues();

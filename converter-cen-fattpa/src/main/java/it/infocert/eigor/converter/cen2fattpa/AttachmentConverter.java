@@ -1,29 +1,33 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
+import com.amoerie.jstreams.Stream;
+import com.amoerie.jstreams.functions.Filter;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.InvoiceUtils;
-import it.infocert.eigor.model.core.datatypes.Binary;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0024AdditionalSupportingDocuments;
 import org.apache.commons.io.FileUtils;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
 
@@ -31,6 +35,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
     private final List<String> cenPaths = Lists.newArrayList(
             "/BT0007",
+            "/BT0006",
             "/BT0010",
             "/BT0014",
             "/BT0018",
@@ -39,26 +44,58 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             "/BG0004/BT0033",
             "/BG0004/BT0034",
             "/BG0007/BT0045",
-            "/BG0007/BT0047",
             "/BG0007/BG0009/BT0057",
-            "/BG0007/BG0009/BT0058"
+            "/BG0007/BG0009/BT0058",
+            "/BG0010/BT0060",
+            "/BG0010/BT0061",
+            "/BG0011/BG0012/BT0064",
+            "/BG0011/BG0012/BT0065",
+            "/BG0011/BG0012/BT0066",
+            "/BG0011/BG0012/BT0067",
+            "/BG0011/BG0012/BT0068",
+            "/BG0011/BG0012/BT0069",
+            "/BG0011/BG0012/BT0164",
+            "/BG0016/BG0018/BT0087",
+            "/BG0016/BG0018/BT0088",
+            "/BG0016/BG0019/BT0089",
+            "/BG0016/BG0019/BT0090",
+            "/BG0016/BG0019/BT0091",
+            "/BG0022/BT0111",
+            "/BG0022/BT0113"
     );
 
-    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new Reflections("it.infocert.eigor"));
 
+    private final InvoiceUtils invoiceUtils = new InvoiceUtils(new JavaReflections());
+    private final String attachmentName = "not-mapped-values";
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("Too many FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "Too many FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.ILLEGAL_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else if (size < 1) {
-            errors.add(ConversionIssue.newError(new IllegalArgumentException("No FatturaElettronicaBody found in current FatturaElettronica")));
+            final String message = "No FatturaElettronicaBody found in current FatturaElettronica";
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                    message,
+                    callingLocation,
+                    ErrorCode.Action.HARDCODED_MAP,
+                    ErrorCode.Error.MISSING_VALUE,
+                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
+            )));
         } else {
             FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
             setUnmappedCenElements(invoice, fatturaElettronicaBody);
-            forwardExistingAttachments(invoice, fatturaElettronicaBody, errors);
+            forwardExistingAttachments(invoice, fatturaElettronicaBody, errors, callingLocation);
         }
     }
 
@@ -74,6 +111,9 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             }
         }
 
+        log.warn("Created attachment {}.txt with unmapped cen elements.", attachmentName);
+        log.debug("{}: {}.", attachmentName, cenPaths);
+
         return sb.toString();
     }
 
@@ -81,42 +121,69 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
         String attachment = createAttachment(invoice);
         if (!"".equals(attachment)) {
-            List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
-            AllegatiType allegato = new AllegatiType();
-            allegato.setNomeAttachment("unmapped-cen-elements"); //TODO How to name it?
-            allegato.setFormatoAttachment("txt");
-            allegato.setAttachment(attachment.getBytes());
-            allegati.add(allegato);
+            final List<AllegatiType> allegati = fatturaElettronicaBody.getAllegati();
+            if (allegati.isEmpty()) {
+                AllegatiType allegato = new AllegatiType();
+                allegato.setNomeAttachment(attachmentName); //TODO How to name it?
+                allegato.setFormatoAttachment("txt");
+                allegato.setAttachment(attachment.getBytes());
+                allegati.add(allegato);
+            } else {
+                AllegatiType unmapped = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                    @Override
+                    public boolean apply(AllegatiType allegato) {
+                        return "not-mapped-values".equals(allegato.getNomeAttachment());
+                    }
+                }).first();
+                unmapped.setAttachment(attachment.getBytes());
+            }
         }
     }
 
-    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors) {
+    private void forwardExistingAttachments(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         log.info("Starting converting Allegati");
         if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             for (BG0024AdditionalSupportingDocuments documents : invoice.getBG0024AdditionalSupportingDocuments()) {
-                AllegatiType allegati = new AllegatiType();
-                allegati.setNomeAttachment(documents.getBT0122SupportingDocumentReference().get(0).getValue());
+                if (!documents.getBT0122SupportingDocumentReference().isEmpty()) {
+                    AllegatiType allegati = new AllegatiType();
+                    String documentReference = documents.getBT0122SupportingDocumentReference().get(0).getValue();
 
-                if (!documents.getBT0123SupportingDocumentDescription().isEmpty()) {
-                    allegati.setDescrizioneAttachment(documents.getBT0123SupportingDocumentDescription().get(0).getValue());
-                }
-
-                if (!documents.getBT0124ExternalDocumentLocation().isEmpty() && documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
-                } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
-
-                    try {
-                        allegati.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
-                        allegati.setFormatoAttachment(file.getMimeType().toString());
-                        allegati.setNomeAttachment(file.getFileName());
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                        errors.add(ConversionIssue.newError(e, e.getMessage(), "AttachmentConverter"));
+                    if (!documents.getBT0123SupportingDocumentDescription().isEmpty()) {
+                        allegati.setDescrizioneAttachment(documents.getBT0123SupportingDocumentDescription().get(0).getValue());
                     }
-                }
 
-                fatturaElettronicaBody.getAllegati().add(allegati);
+                    if (documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                        if (!documents.getBT0124ExternalDocumentLocation().isEmpty()) {
+                            allegati.setNomeAttachment(documentReference);
+                            allegati.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
+                        } else {
+                            allegati.setAttachment(documentReference.getBytes());
+                            allegati.setFormatoAttachment("csv");
+                            allegati.setNomeAttachment("document-reference");
+                        }
+
+                    } else if (documents.getBT0124ExternalDocumentLocation().isEmpty() && !documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
+                        FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
+
+                        try {
+                            allegati.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
+                            allegati.setFormatoAttachment(file.getMimeType().toString());
+                            allegati.setNomeAttachment(file.getFileName());
+                        } catch (IOException e) {
+                            log.error(e.getMessage(), e);
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.INVALID,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                            ));
+                        }
+                    }
+
+                    fatturaElettronicaBody.getAllegati().add(allegati);
+                }
             }
         }
     }

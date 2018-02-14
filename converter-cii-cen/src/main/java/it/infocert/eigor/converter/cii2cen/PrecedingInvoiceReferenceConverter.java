@@ -1,15 +1,18 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BT0025PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BT0026PrecedingInvoiceIssueDate;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.reflections.Reflections;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.util.List;
  */
 public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0003(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         BG0003PrecedingInvoiceReference bg0003 = null;
 
@@ -51,10 +54,15 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         Attribute format = dateTimeString.getAttribute("format");
                         if (format != null && format.getValue().equals("102")) {
                             try {
-                                BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new StringToJavaLocalDateConverter("yyyyMMdd").convert(dateTimeString.getText()));
+                                BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(StringToJavaLocalDateConverter.newConverter ("yyyyMMdd").convert(dateTimeString.getText()));
                                 bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
-                            } catch (IllegalArgumentException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid date format").action("PrecedingInvoiceReferenceConverter").build());
+                            } catch (IllegalArgumentException | ConversionFailedException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                        .message("Invalid date format")
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
@@ -68,7 +76,7 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
-        toBG0003(document, cenInvoice, errors);
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        toBG0003(document, cenInvoice, errors, callingLocation);
     }
 }

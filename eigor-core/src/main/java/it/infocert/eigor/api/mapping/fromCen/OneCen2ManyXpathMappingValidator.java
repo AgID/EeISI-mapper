@@ -1,12 +1,12 @@
 package it.infocert.eigor.api.mapping.fromCen;
 
-
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.reflections.Reflections;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -14,16 +14,18 @@ import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator{
+public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator {
 
     private final Pattern patternXml;
     private final Pattern patternBgbt;
     private final InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
 
-    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, Reflections reflections) {
+    public OneCen2ManyXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, IReflections reflections, ErrorCode.Location callingLocation) {
         patternXml = Pattern.compile(keyRegexXml);
         patternBgbt = Pattern.compile(keyRegexBgbt);
         invoiceUtils = new InvoiceUtils(reflections);
+        this.callingLocation = callingLocation;
     }
 
     @Override
@@ -37,12 +39,12 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
                     startKeyExist.put(key, false);
                 }
                 int idx = key.indexOf(".xml.target");
-                mappingTarget.put(key.substring(0,idx).concat(".type"), key);
+                mappingTarget.put(key.substring(0, idx).concat(".type"), key);
             }
             if (key.endsWith(".start")) {
-                startKeyExist.put(key.substring(0, key.length()-6), true);
+                startKeyExist.put(key.substring(0, key.length() - 6), true);
             }
-            if (key.endsWith(".type")){
+            if (key.endsWith(".type")) {
                 if (!mappingSource.containsKey(key)) {
                     mappingSource.put(key, null);
                 }
@@ -50,31 +52,31 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
                     mappingTarget.put(key, null);
                 }
             }
-            if (key.endsWith(".cen.source")){
+            if (key.endsWith(".cen.source")) {
                 int idx = key.indexOf(".cen.source");
-                mappingSource.put(key.substring(0,idx).concat(".type"), key);
+                mappingSource.put(key.substring(0, idx).concat(".type"), key);
             }
             if (validateKey(key)) {
                 for (String value : map.get(key)) {
                     if (!validateValue(value, key)) {
-                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value);
+                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
                     }
                 }
-            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
+            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
         }
-        for (String key: startKeyExist.keySet()){
-            if (startKeyExist.get(key) == false){
-                throw new SyntaxErrorInMappingFileException("Missign start key for target: " + key);
+        for (String key : startKeyExist.keySet()) {
+            if (key != null && !startKeyExist.get(key)) {
+                throw new SyntaxErrorInMappingFileException("Missign start key for target: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
-        for (String key: mappingSource.keySet()){
-            if (mappingSource.get(key) == null){
-                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key);
+        for (String key : mappingSource.keySet()) {
+            if (key != null && mappingSource.get(key) == null) {
+                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
-        for (String key: mappingTarget.keySet()){
-            if (mappingTarget.get(key) == null){
-                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key);
+        for (String key : mappingTarget.keySet()) {
+            if (key != null && mappingTarget.get(key) == null) {
+                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
     }
@@ -87,6 +89,7 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
      * mapping.MAPR-SP-11.xml.target.1.end
      * mapping.MAPR-SP-11.xml.target.2
      * mapping.MAPR-SP-11.xml.target.2.start
+     *
      * @param key
      * @return
      */
@@ -95,10 +98,10 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
                 key.endsWith("cen.source")) {
             return true;
         }
-        if (key.contains(".xml.target.")){
+        if (key.contains(".xml.target.")) {
             if (key.endsWith(".start") ||
                     key.endsWith(".end") ||
-                    key.matches("^.*\\d$")){
+                    key.matches("^.*\\d$")) {
                 return true;
             }
         }
@@ -107,23 +110,24 @@ public class OneCen2ManyXpathMappingValidator implements InvoiceMappingValidator
 
     /**
      * mapping.MAPR-SP-11.type=split
-     mapping.MAPR-SP-11.cen.source=/BG0004/BT0031
-     mapping.MAPR-SP-11.xml.target.1=/FatturaElettronica/FatturaElettronicaHeader/DatiTrasmissione/IdTrasmittente/IdPaese
-     mapping.MAPR-SP-11.xml.target.1.start=1
-     mapping.MAPR-SP-11.xml.target.1.end=3
-     mapping.MAPR-SP-11.xml.target.2=/FatturaElettronica/FatturaElettronicaHeader/DatiTrasmissione/IdTrasmittente/IdCodice
-     mapping.MAPR-SP-11.xml.target.2.start=3
+     * mapping.MAPR-SP-11.cen.source=/BG0004/BT0031
+     * mapping.MAPR-SP-11.xml.target.1=/FatturaElettronica/FatturaElettronicaHeader/DatiTrasmissione/IdTrasmittente/IdPaese
+     * mapping.MAPR-SP-11.xml.target.1.start=1
+     * mapping.MAPR-SP-11.xml.target.1.end=3
+     * mapping.MAPR-SP-11.xml.target.2=/FatturaElettronica/FatturaElettronicaHeader/DatiTrasmissione/IdTrasmittente/IdCodice
+     * mapping.MAPR-SP-11.xml.target.2.start=3
+     *
      * @param value
      * @return
      */
     private boolean validateValue(String value, String key) {
-        if (key.endsWith(".type")){
+        if (key.endsWith(".type")) {
             return value.equals("split");
         }
-        if (key.endsWith(".cen.source")){
+        if (key.endsWith(".cen.source")) {
             return patternBgbt.matcher(value).matches() && validateBTsBGs(value);
         }
-        if (key.endsWith(".start") || key.endsWith(".end")){
+        if (key.endsWith(".start") || key.endsWith(".end")) {
             return value.matches("^[0-9]+$");
         }
 

@@ -1,12 +1,25 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.ToStringTypeConverter;
+import it.infocert.eigor.api.conversion.TypeConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.ModalitaPagamentoType;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 
 public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeConverter<Untdid4461PaymentMeansCode>{
+
+    Untdid4461PaymentMeansCodeToItalianCodeString() {
+    }
+
+    public static TypeConverter<Untdid4461PaymentMeansCode, String> newConverter() {
+        return new Untdid4461PaymentMeansCodeToItalianCodeString();
+    }
+
     @Override
-    public String convert(Untdid4461PaymentMeansCode paymentMeansCode) {
+    public String convert(Untdid4461PaymentMeansCode paymentMeansCode) throws ConversionFailedException {
+
+        checkNotNull(paymentMeansCode);
+
         switch (paymentMeansCode) {
             case Code30:
                 return ModalitaPagamentoType.MP_05.value();
@@ -39,4 +52,6 @@ public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeC
     public Class<Untdid4461PaymentMeansCode> getSourceClass() {
         return Untdid4461PaymentMeansCode.class;
     }
+
+
 }

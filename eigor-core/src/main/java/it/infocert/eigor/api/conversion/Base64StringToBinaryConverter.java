@@ -8,6 +8,13 @@ import javax.activation.MimeTypeParseException;
 
 public class Base64StringToBinaryConverter implements TypeConverter<String, Binary> {
 
+    public static TypeConverter<String, Binary> newConverter(){
+        return new Base64StringToBinaryConverter();
+    }
+
+    Base64StringToBinaryConverter() {
+    }
+
     @Override public Binary convert(String contentInBase64) {
         byte[] bytes = Base64.decodeBase64(contentInBase64.getBytes());
         MimeType mt = null;

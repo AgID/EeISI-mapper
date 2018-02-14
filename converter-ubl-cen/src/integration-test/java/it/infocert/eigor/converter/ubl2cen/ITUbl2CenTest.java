@@ -5,13 +5,12 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
+import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
 import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class ITUbl2CenTest {
         EigorConfiguration conf = new PropertiesBackedConfiguration()
                 .addProperty("eigor.workdir", "file:${prop.java.io.tmpdir}eigor")
                 .addProperty("eigor.converter.ubl-cen.cius", "classpath:converterdata/converter-ubl-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
-                .addProperty("eigor.converter.ubl-cen.schematron", "classpath:converterdata/converter-ubl-cen/ubl/schematron-xslt/EN16931-UBL-validation.xslt" )
+                .addProperty("eigor.converter.ubl-cen.schematron", "classpath:converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt" )
                 .addProperty("eigor.converter.ubl-cen.xsd", "converterdata/converter-ubl-cen/ubl/xsd/UBL-Invoice-2.1.xsd")
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")
@@ -43,7 +42,7 @@ public class ITUbl2CenTest {
                 ;
 
         sut = new Ubl2Cen(
-                new Reflections("it.infocert"),
+                new JavaReflections(),
                 conf
         );
         sut.configure();
@@ -68,7 +67,7 @@ public class ITUbl2CenTest {
         assertFalse(bt0002InvoiceIssueDates.isEmpty());
         assertEquals("TOSL108", bt0001InvoiceNumbers.get(0).getValue());
         assertEquals("2009-12-15", bt0002InvoiceIssueDates.get(0).getValue().toString("yyyy-MM-dd"));
-        assertEquals("Ordered in our booth at the convention.", invoice.getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode(0).getValue());
+        assertEquals("Ordered in our booth at the convention.", invoice.getBG0001InvoiceNote(0).getBT0022InvoiceNote(0).getValue());
         //// TODO: 6/28/17 check manytoone output after getting examples from Sara 
     }
 

@@ -29,7 +29,11 @@ public enum Untdid5189ChargeAllowanceDescriptionCodes {
 
     @Override
     public String toString() {
-        return super.toString() + " " + shortDescritpion;
+        return "Untdid5189ChargeAllowanceDescriptionCodes{" +
+                "code=" + code +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
     }
 
     public int getCode() {

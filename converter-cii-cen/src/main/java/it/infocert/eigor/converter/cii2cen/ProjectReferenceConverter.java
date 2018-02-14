@@ -1,8 +1,10 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0011ProjectReference;
 import org.jdom2.Document;
@@ -28,7 +30,6 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
                 Element specifiedProcuringProject = findNamespaceChild(child1, namespacesInScope, "SpecifiedProcuringProject");
                 if (specifiedProcuringProject != null) {
                     Element id = findNamespaceChild(specifiedProcuringProject, namespacesInScope, "ID");
-                    Element name = findNamespaceChild(specifiedProcuringProject, namespacesInScope, "Name");
 
                     if (id != null) {
                         BT0011ProjectReference bt0011 =  new BT0011ProjectReference(id.getText());
@@ -41,7 +42,7 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0011(document, cenInvoice, errors);
     }
 }

@@ -2,10 +2,11 @@ package it.infocert.eigor.api.mapping.toCen;
 
 import com.google.common.collect.Multimap;
 import it.infocert.eigor.api.SyntaxErrorInMappingFileException;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.mapping.InvoiceMappingValidator;
+import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.BTBG;
-import org.reflections.Reflections;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -18,11 +19,13 @@ public class ManyCen2OneXpathMappingValidator implements InvoiceMappingValidator
     private final Pattern patternXml;
     private final Pattern patternBgbt;
     private final InvoiceUtils invoiceUtils;
+    private final ErrorCode.Location callingLocation;
 
-    public ManyCen2OneXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, Reflections reflections) {
+    public ManyCen2OneXpathMappingValidator(String keyRegexXml, String keyRegexBgbt, IReflections reflections, ErrorCode.Location callingLocation) {
         patternXml = Pattern.compile(keyRegexXml);
         patternBgbt = Pattern.compile(keyRegexBgbt);
         invoiceUtils = new InvoiceUtils(reflections);
+        this.callingLocation = callingLocation;
     }
 
     /**
@@ -51,7 +54,7 @@ public class ManyCen2OneXpathMappingValidator implements InvoiceMappingValidator
                         mappingSource.put(typeKey, newVal);
                     }
                 } catch (NumberFormatException e) {
-                    throw new SyntaxErrorInMappingFileException("Invalid index for source element: " + key, e);
+                    throw new SyntaxErrorInMappingFileException("Invalid index for source element: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION, e);
                 }
             }
             if (key.endsWith(".type")){
@@ -74,29 +77,29 @@ public class ManyCen2OneXpathMappingValidator implements InvoiceMappingValidator
                     }
 
                     if (!validateValue(value, key)) {
-                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value);
+                        throw new SyntaxErrorInMappingFileException("Bad mapping value for key: " + key + " - " + value, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
                     }
                 }
-            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key);
+            } else throw new SyntaxErrorInMappingFileException("Bad mapping key: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
         }
         for (String key: mappingSource.keySet()){
             if (mappingSource.get(key) == null){
-                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign source key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
             if (!mappingExpr.containsKey(key)) {
-                throw new SyntaxErrorInMappingFileException("Missign expression key for mapping: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign expression key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
             /*
                 mappingSource contains maximum index in source fields
                 i search to see if index present in expression
              */
             if (mappingExpr.get(key).indexOf("%"+mappingSource.get(key)) == -1){
-                throw new SyntaxErrorInMappingFileException("Source element with index "+ mappingSource.get(key) + " missing from expression: " + mappingExpr.get(key));
+                throw new SyntaxErrorInMappingFileException("Source element with index "+ mappingSource.get(key) + " missing from expression: " + mappingExpr.get(key), callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
         for (String key: mappingTarget.keySet()){
             if (mappingTarget.get(key) == null){
-                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key);
+                throw new SyntaxErrorInMappingFileException("Missign target key for mapping: " + key, callingLocation, ErrorCode.Action.CONFIG_VALIDATION);
             }
         }
     }
