@@ -1,6 +1,9 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.api.utils.RuleReports;
 import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -50,7 +53,9 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         // attach the logging for this conversion
         if (enableLog) {
             logSupport = new LogSupport();
-//            logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log")); //TODO Why is this needed?
+            if (logSupport.isLogbackSupportActive()) {
+                logSupport.addLogger(new File(outputFolderFile, "invoice-transformation.log"));
+            }
         }
         cloneSourceInvoice(ctx.getInvoiceInSourceFormat(), outputFolderFile, ctx.getSourceInvoiceFileName());
     }
