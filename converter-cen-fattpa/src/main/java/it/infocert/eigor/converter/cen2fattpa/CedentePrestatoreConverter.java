@@ -240,6 +240,10 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             final List<BG0005SellerPostalAddress> addresses = sellers.get(0).getBG0005SellerPostalAddress();
             if (!addresses.isEmpty()) {
                 final BG0005SellerPostalAddress address = addresses.get(0);
+                Optional<String> subdivision = Optional.absent();
+                if (!address.getBT0039SellerCountrySubdivision().isEmpty()) {
+                    subdivision = Optional.fromNullable(address.getBT0039SellerCountrySubdivision(0).getValue());
+                }
 
                 final List<BT0040SellerCountryCode> countryCodes = address.getBT0040SellerCountryCode();
                 if (!countryCodes.isEmpty() && !Iso31661CountryCodes.IT.equals(countryCodes.get(0).getValue())) {
@@ -309,8 +313,11 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     } else {
                         log.warn("No [BT-38] SellerPostCode was found in current [BG-5] SellerPostalAddress");
                     }
+                    if (subdivision.isPresent()) attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
                 } else {
-                    log.debug("Italian address, keeping normal mapping");
+                    log.debug("Italian address");
+                    final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
+                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
                 }
 
             } else {
