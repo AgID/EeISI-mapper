@@ -11,7 +11,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
