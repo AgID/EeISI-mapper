@@ -70,6 +70,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
             addIndirizzo(invoice, fatturaElettronica, errors);
             addDatiTrasporto(invoice, datiGenerali, errors, callingLocation);
+            addRiferimentoNormativo(invoice, fatturaElettronicaBody, errors);
         }
     }
 
@@ -315,8 +316,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
     private void addDatiTrasporto(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<BG0013DeliveryInformation> deliveryInformations = invoice.getBG0013DeliveryInformation();
         if (!deliveryInformations.isEmpty()) {
-            BG0013DeliveryInformation deliveryInformation = deliveryInformations.get(0);
-            List<BT0072ActualDeliveryDate> deliveryDates = deliveryInformation.getBT0072ActualDeliveryDate();
+            List<BT0072ActualDeliveryDate> deliveryDates = deliveryInformations.get(0).getBT0072ActualDeliveryDate();
             if (!deliveryDates.isEmpty()) {
                 Optional<LocalDate> deliveryDateOpt = Optional.fromNullable(deliveryDates.get(0).getValue());
                 if (deliveryDateOpt.isPresent()) {
@@ -342,6 +342,22 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             }
         }
 
+    }
+
+    private void addRiferimentoNormativo(BG0000Invoice invoice, FatturaElettronicaBodyType body, List<IConversionIssue> errors) {
+        List<BG0023VatBreakdown> breakdowns = invoice.getBG0023VatBreakdown();
+        if (!breakdowns.isEmpty()) {
+            List<BT0120VatExemptionReasonText> reasons = breakdowns.get(0).getBT0120VatExemptionReasonText();
+            if (!reasons.isEmpty()) {
+                String reason = reasons.get(0).getValue();
+                DatiBeniServiziType datiBeniServizi = Optional.fromNullable(body.getDatiBeniServizi()).or(new DatiBeniServiziType());
+                List<DatiRiepilogoType> datiRiepilogoList = datiBeniServizi.getDatiRiepilogo();
+                if (datiRiepilogoList.isEmpty()) datiRiepilogoList.add(new DatiRiepilogoType());
+                DatiRiepilogoType datiRiepilogo = datiRiepilogoList.get(0);
+                datiRiepilogo.setRiferimentoNormativo(reason);
+                body.setDatiBeniServizi(datiBeniServizi);
+            }
+        }
     }
 
     private void manageNoteText(DatiGeneraliDocumentoType datiGeneraliDocumento, String noteText) {
