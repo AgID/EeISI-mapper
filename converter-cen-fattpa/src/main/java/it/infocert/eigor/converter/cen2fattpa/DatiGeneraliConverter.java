@@ -69,6 +69,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             addCausale(invoice, datiGenerali, errors, callingLocation);
             addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
             addIndirizzo(invoice, fatturaElettronica, errors);
+            addDatiTrasporto(invoice, datiGenerali, errors, callingLocation);
         }
     }
 
@@ -311,6 +312,37 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         }
     }
 
+    private void addDatiTrasporto(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        List<BG0013DeliveryInformation> deliveryInformations = invoice.getBG0013DeliveryInformation();
+        if (!deliveryInformations.isEmpty()) {
+            BG0013DeliveryInformation deliveryInformation = deliveryInformations.get(0);
+            List<BT0072ActualDeliveryDate> deliveryDates = deliveryInformation.getBT0072ActualDeliveryDate();
+            if (!deliveryDates.isEmpty()) {
+                Optional<LocalDate> deliveryDateOpt = Optional.fromNullable(deliveryDates.get(0).getValue());
+                if (deliveryDateOpt.isPresent()) {
+                    LocalDate deliveryDate = deliveryDateOpt.get();
+                    DatiTrasportoType datiTrasporto = Optional.fromNullable(datiGenerali.getDatiTrasporto()).or(new DatiTrasportoType());
+                    try {
+                    XMLGregorianCalendar converted = dateConverter.convert(deliveryDate);
+                        datiTrasporto.setDataOraConsegna(converted);
+                    } catch (ConversionFailedException e) {
+                        log.error(e.getMessage(), e);
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                "Error creating DataOraConsegna from LocalDate",
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, deliveryDate.toString())
+                                ));
+                    }
+                    datiGenerali.setDatiTrasporto(datiTrasporto);
+                }
+            }
+        }
+
+    }
 
     private void manageNoteText(DatiGeneraliDocumentoType datiGeneraliDocumento, String noteText) {
         if (noteText.length() > 200) {
