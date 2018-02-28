@@ -45,6 +45,7 @@
         <module>converter-cen-cii</module>
         <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
+        <module>converter-cen-ublcn</module>
         <module>eigor-test-schemas</module>
         <module>eigor-commons</module>
         <module>eigor-ph-schematron</module>
