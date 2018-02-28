@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
