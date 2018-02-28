@@ -67,7 +67,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
                 xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for CEN2UBL from '" + mandatoryString + "'.", e);
             }
         }
 
