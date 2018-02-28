@@ -1,10 +1,8 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 import org.junit.Before;
 import org.junit.Test;
 

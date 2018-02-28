@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
