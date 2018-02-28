@@ -75,7 +75,8 @@ public class Cen2Cii extends AbstractFromCenConverter {
         // load the CII schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.CII_OUT);
+            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron.auto-update-xslt"));
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -83,7 +84,8 @@ public class Cen2Cii extends AbstractFromCenConverter {
         // load the CII CIUS schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-cii.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.CII_OUT);
+            boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-cii.cius.auto-update-xslt"));
+            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }

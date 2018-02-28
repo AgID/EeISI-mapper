@@ -12,6 +12,7 @@ import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
+import org.apache.commons.io.FileUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -48,8 +49,10 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-many", "converterdata/converter-cii-cen/mappings/one_to_many.properties")
 				.addProperty("eigor.converter.cii-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
 				.addProperty("eigor.converter.cii-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt")
+				.addProperty("eigor.converter.cii-cen.schematron.auto-update-xslt", "false")
 				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
 				.addProperty("eigor.converter.cii-cen.cius", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
+				.addProperty("eigor.converter.cii-cen.cius.auto-update-xslt", "false")
 				;
 		sut = new MyCiiToCenConverter(new JavaReflections(), conf);
 		sut.configure();
@@ -75,7 +78,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 
 	@Test
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiSchematron() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example1M.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example9M.xml");
 		List<IConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.isEmpty());
 	}
@@ -87,13 +90,13 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		String temp;
 		for(IConversionIssue conversionIssue : errors){
 			temp = conversionIssue.getMessage();
-            assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[BR-CO-02]") || temp.contains("[CII-SR-014]"));
+            assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[BR-S-08]") || temp.contains("[CII-SR-014]"));
 		}
 	}
 
 	@Test
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiCIUSSchematron() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example5M-ita-compliant.xml");
+		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example9M-ita-compliant.xml");
 		List<IConversionIssue> errors = validateXmlWithCiiCIUSSchematron(sourceInvoiceStream);
 		assertTrue(errors.isEmpty());
 	}
@@ -105,7 +108,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
         String temp;
         for(IConversionIssue conversionIssue : errors){
             temp = conversionIssue.getMessage();
-            assertTrue(temp.contains("[CIUS-VD-57]"));
+            assertTrue(temp.contains("CII_IN.SCH_VALIDATION.INVALID - Schematron failed assert"));
         }
     }
 
@@ -298,17 +301,15 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	
 	private List<IConversionIssue> validateXmlWithCiiSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-		String filePath = getClass().getClassLoader().getResource("schematron-xslt/EN16931-CII-validation.xslt").getFile();
-		File schematronFile = new File(filePath);
-		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true, ErrorCode.Location.CII_IN);
+		File schematronFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt");
+		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true, false, ErrorCode.Location.CII_IN);
 		return ciiValidator.validate(bytes);
 	}
 
 	private List<IConversionIssue> validateXmlWithCiiCIUSSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-		String filePath = "../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt";
-		File schematronFile = new File(filePath);
-		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, ErrorCode.Location.CII_IN);
+		File schematronFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt");
+		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, false, ErrorCode.Location.CII_IN);
 		return ciiCIUSValidator.validate(bytes);
 	}
 	

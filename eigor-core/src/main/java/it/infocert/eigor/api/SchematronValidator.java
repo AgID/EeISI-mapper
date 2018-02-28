@@ -26,7 +26,7 @@ public class SchematronValidator implements IXMLValidator {
     private ISchematronResource schematronResource;
     private static final Logger log = LoggerFactory.getLogger(SchematronValidator.class);
 
-    public SchematronValidator(File schemaFile, boolean isXSLT, ErrorCode.Location callingLocation) {
+    public SchematronValidator(File schemaFile, boolean isXSLT, boolean xsltFileUpdate, ErrorCode.Location callingLocation) {
         this.callingLocation = callingLocation;
 
         long delta = System.currentTimeMillis();
@@ -35,13 +35,15 @@ public class SchematronValidator implements IXMLValidator {
             Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
 
             if (isXSLT) {
-                // we check if relative path ../schematron contains newer .sch files
-                SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
-                        schemaFile.getParent(),
-                        schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron");
+                if (xsltFileUpdate) {
+                    // we check if relative path ../schematron contains newer .sch files
+                    SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
+                            schemaFile.getParent(),
+                            schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron"
+                    );
 
-                if (xsltFileUpdater.isSchNewerThanXslt()) {
-                    xsltFileUpdater.updateXSLTfromSch();
+                    int count = xsltFileUpdater.updateXSLTfromSch();
+                    log.info(count + " XSLT files were updated.");
                 }
                 schematronResource = new FixedSchematronResource(SchematronResourceXSLT.fromFile(schemaFile));
             } else {
@@ -108,14 +110,14 @@ public class SchematronValidator implements IXMLValidator {
                 String offendingElement = failedAssert.getLocation().trim();
                 EigorException error = new EigorException(
                         ErrorMessage.builder()
-                        .message(String.format("Schematron failed assert '%s' on XML element at '%s'.",
-                                ruleDescriptionFromSchematron,
-                                offendingElement)
-                        )
-                        .location(callingLocation)
-                        .action(ErrorCode.Action.SCH_VALIDATION)
-                        .error(ErrorCode.Error.INVALID)
-                        .build(),
+                                .message(String.format("Schematron failed assert '%s' on XML element at '%s'.",
+                                        ruleDescriptionFromSchematron,
+                                        offendingElement)
+                                )
+                                .location(callingLocation)
+                                .action(ErrorCode.Action.SCH_VALIDATION)
+                                .error(ErrorCode.Error.INVALID)
+                                .build(),
                         cause
                 );
 

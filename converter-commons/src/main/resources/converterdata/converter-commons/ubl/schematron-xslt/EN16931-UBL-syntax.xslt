@@ -203,8 +203,8 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount'))] " mode="M7" priority="1011">
-    <svrl:fired-rule context="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount'))] " />
+<xsl:template match="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount')) and not(ancestor::cac:Price/cac:AllowanceCharge)]" mode="M7" priority="1011">
+    <svrl:fired-rule context="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount')) and not(ancestor::cac:Price/cac:AllowanceCharge)]" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -337,21 +337,6 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text>[UBL-CR-001]-A UBL invoice should not include extensions</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="not(cbc:UBLVersionID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(cbc:UBLVersionID)">
-          <xsl:attribute name="id">UBL-CR-002</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[UBL-CR-002]-A UBL invoice should not include the UBLVersionID</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2023,15 +2008,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:AdditionalDocumentReference/cbc:DocumentTypeCode)" />
+      <xsl:when test="not(cac:AdditionalDocumentReference/cbc:DocumentType)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:AdditionalDocumentReference/cbc:DocumentTypeCode)">
+        <svrl:failed-assert test="not(cac:AdditionalDocumentReference/cbc:DocumentType)">
           <xsl:attribute name="id">UBL-CR-114</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[UBL-CR-114]-A UBL invoice should not include the AdditionalDocumentReference DocumentTypeCode</svrl:text>
+          <svrl:text>[UBL-CR-114]-A UBL invoice should not include the AdditionalDocumentReference DocumentType</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -2107,21 +2092,6 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text>[UBL-CR-119]-A UBL invoice should not include the AdditionalDocumentReference DocumentStatusCode</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)">
-          <xsl:attribute name="id">UBL-CR-120</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[UBL-CR-120]-A UBL invoice should not include the AdditionalDocumentReference DocumentDescription</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -8353,21 +8323,6 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentTypeCode)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentTypeCode)">
-          <xsl:attribute name="id">UBL-CR-536</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[UBL-CR-536]-A UBL invoice should not include the InvoiceLine DocumentReference DocumentTypeCode</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
       <xsl:when test="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentType)" />
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentType)">
@@ -10183,9 +10138,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(//@name)" />
+      <xsl:when test="count(//@name) - count(//cbc:PaymentMeansCode/@name) &lt;= 0" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(//@name)">
+        <svrl:failed-assert test="count(//@name) - count(//cbc:PaymentMeansCode/@name) &lt;= 0">
           <xsl:attribute name="id">UBL-DT-18</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
@@ -10363,9 +10318,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)" />
+      <xsl:when test="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)">
+        <svrl:failed-assert test="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)">
           <xsl:attribute name="id">UBL-SR-04</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
