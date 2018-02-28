@@ -17,6 +17,9 @@
 package it.techgap.maven.sch2xslt;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -113,11 +116,11 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
 
     /**
      * Overwrite existing Schematron files without notice? If this is set to
-     * <code>false</code> than existing XSLT files are not overwritten.
+     * <code>true</code> than existing XSLT files are overwritten.
      *
-     * @parameter property="overwrite" default-value="true"
+     * @parameter property="overwrite" default-value="false"
      */
-    private boolean overwriteWithoutQuestion = true;
+    private boolean overwriteWithoutQuestion = false;
 
     /**
      * Define the phase to be used for XSLT creation. By default the
@@ -138,6 +141,7 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
     /**
      * Update the XSLT if the Schematron changes? If set to <code>false</code>
      * they will not be updated even if modified.
+     *
      * @parameter property="updateOnSchematronChanges" default-value="false"
      */
     private boolean updateOnSchematronChanges = false;
@@ -216,11 +220,6 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
         if (!xsltDirectory.exists() && !xsltDirectory.mkdirs())
             throw new MojoExecutionException("Failed to create the XSLT directory " + xsltDirectory);
 
-        boolean update = true;
-
-        if (updateOnSchematronChanges) {
-            update = !checkForUpdatedSchematron();
-        }
 
         // for all Schematron files that match the pattern
         final DirectoryScanner aScanner = new DirectoryScanner();
@@ -236,20 +235,46 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
                 // 1. build XSLT file name (outputdir + localpath with new extension)
                 final File aXSLTFile = new File(xsltDirectory, FilenameHelper.getWithoutExtension(sFilename) + xsltExtension);
 
-                getLog().info("Converting Schematron file '" +
-                        aFile.getPath() +
-                        "' to XSLT file '" +
-                        aXSLTFile.getPath() +
-                        "'");
-
                 // 2. The Schematron resource
                 final IReadableResource aSchematronResource = new FileSystemResource(aFile);
 
+                boolean compileXSLT = false;
                 // 3. Check if the XSLT file already exists
-                if (update && aXSLTFile.exists() && !overwriteWithoutQuestion) {
-                    // 3.1 Not overwriting the existing file
-                    getLog().info("Skipping XSLT file '" + aXSLTFile.getPath() + "' because it already exists!");
+                if (aXSLTFile.exists()) {
+                    if (overwriteWithoutQuestion) {
+                        getLog().info("XSLT file '" + aXSLTFile.getPath() + "' already exists and will be overwritten!");
+                        compileXSLT = true;
+                    } else if (updateOnSchematronChanges) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SSS dd-MM-yyyy");
+                        Date aFileDate = new Date(aFile.getAbsoluteFile().lastModified());
+                        Date aXSLTFileDate = new Date(aXSLTFile.getAbsoluteFile().lastModified());
+                        if (FileHelper.isFileNewer(aFile, aXSLTFile)) {
+                            String diffText = dateDifferenceAsText(aXSLTFileDate, aFileDate);
+                            getLog().info("Schematron file '" +
+                                    aFile.getPath() +
+                                    "' [" + sdf.format(aFileDate) + "] is " +
+                                    diffText + " newer than XSLT file '" +
+                                    aXSLTFile.getPath() +
+                                    "' [" + sdf.format(aXSLTFileDate) + "] and will overwrite it!");
+                            compileXSLT = true;
+                        } else {
+                            String diffText = dateDifferenceAsText(aFileDate, aXSLTFileDate);
+                            getLog().info("Schematron file '" +
+                                    aFile.getPath() +
+                                    "' [" + sdf.format(aFileDate) + "] is " +
+                                    diffText + " older than XSLT file '" +
+                                    aXSLTFile.getPath() +
+                                    "' [" + sdf.format(aXSLTFileDate) + "] and will be skipped!");
+                        }
+                    } else {
+                        getLog().info("Skipping XSLT file '" + aXSLTFile.getPath() + "' because it already exists!");
+                    }
                 } else {
+                    getLog().info("XSLT file '" + aXSLTFile.getPath() + "' does not exist and will be created!");
+                    compileXSLT = true;
+                }
+
+                if (compileXSLT) {
                     // 3.2 Create the directory, if necessary
                     final File aXsltFileDirectory = aXSLTFile.getParentFile();
                     if (aXsltFileDirectory != null && !aXsltFileDirectory.exists()) {
@@ -320,33 +345,6 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
         }
     }
 
-    /**
-     * Check for updated schematron.
-     *
-     * @return TRUE if any sch file has a newer timestamp than any XSLT file
-     */
-    private boolean checkForUpdatedSchematron() {
-        long xsltLastModifiedTimestamp = 0;
-        long schLastModifiedTimestamp = 0;
-
-
-        // Find highest (most recent) last modified timestamp file in XSLT directory
-        final List<File> xsltFilenames = getXSLTFileList();
-        if (!xsltFilenames.isEmpty()) {
-            xsltLastModifiedTimestamp = getLatestModifiedTimestamp(xsltFilenames);
-        }
-
-        // Find highest (most recent) last modified timestamp file in Schematron directory
-        final List<File> schFilenames = getSchematronFileList();
-        if (!schFilenames.isEmpty()) {
-            schLastModifiedTimestamp = getLatestModifiedTimestamp(schFilenames);
-        }
-
-        // if there is a more recent timestamped Schematron file, regeneration of XSLT is needed.
-        return schLastModifiedTimestamp > xsltLastModifiedTimestamp;
-    }
-
-
     private List<File> getXSLTFileList() {
         return getDirectoryFileList(xsltDirectory, "xslt");
     }
@@ -355,19 +353,23 @@ public final class Schematron2XSLTMojo extends AbstractMojo {
         return getDirectoryFileList(schematronDirectory, "sch");
     }
 
-
     private List<File> getDirectoryFileList(File baseDirectory, String format) {
         return (List<File>) FileUtils.listFiles(baseDirectory, new String[]{format}, true);
     }
 
-    private long getLatestModifiedTimestamp(List<File> fileList) {
-        long highestLastModified = 0;
-        for (File file : fileList) {
-            long lastModified = file.lastModified();
-            if (lastModified > highestLastModified) {
-                highestLastModified = lastModified;
-            }
-        }
-        return highestLastModified;
+    private String dateDifferenceAsText(Date d1, Date d2) {
+        StringBuilder sb = new StringBuilder();
+        long diff = d2.getTime() - d1.getTime();
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        if (diffDays > 0) sb.append(diffDays).append("D ");
+        if (diffHours > 0) sb.append(diffHours).append("H ");
+        if (diffMinutes > 0) sb.append(diffMinutes).append("m ");
+        sb.append(diffSeconds).append("s");
+
+        return sb.toString();
     }
 }

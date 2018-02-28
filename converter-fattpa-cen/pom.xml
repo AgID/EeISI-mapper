@@ -30,6 +30,10 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-test</artifactId>
         </dependency>
 
@@ -81,10 +85,9 @@
                 <configuration>
                     <packageName>it.infocert.eigor.converter.fattpa2cen.models</packageName>
                     <sources>
-                        <source>src/main/resources/converterdata/converter-fattpa-cen/xsdstatic</source>
-                        <!--
-                        <source>src/main/resources</source>
-                        -->
+                        <source>
+                            ../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic
+                        </source>
                     </sources>
                 </configuration>
             </plugin>

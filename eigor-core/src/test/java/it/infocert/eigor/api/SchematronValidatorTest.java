@@ -18,7 +18,7 @@ public class SchematronValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        schematronValidator = new SchematronValidator(new File("src/test/resources/validator/dogs/dogs.sch"), false, ErrorCode.Location.CII_OUT);
+        schematronValidator = new SchematronValidator(new File("src/test/resources/validator/dogs/dogs.sch"), false, false, ErrorCode.Location.CII_OUT);
         sampleXml = Files.readAllBytes(Paths.get("src/test/resources/validator/dogs/dogs.xml"));
     }
 

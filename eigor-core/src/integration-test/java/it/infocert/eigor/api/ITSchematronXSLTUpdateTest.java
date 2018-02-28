@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.errors.ErrorCode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,7 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ITSchematronXSLTUpdateTest {
@@ -44,14 +46,14 @@ public class ITSchematronXSLTUpdateTest {
     }
 
     @Test
-    public void ifXsltDirectoryIsEmptyUpdateIsNeeded() {
-        assertTrue(fileUpdater.isSchNewerThanXslt());
+    public void ifXsltDirectoryIsEmptyXsltWillBeGenerated() {
+        assertThat(fileUpdater.updateXSLTfromSch(), is(1));
     }
 
     @Test
-    public void ifXsltUpdateIsRunThenUpdateIsNotNeeded() {
+    public void ifXsltUpdateWasRunThenUpdateWillNotUpdateAgain() {
         fileUpdater.updateXSLTfromSch();
-        assertFalse(fileUpdater.isSchNewerThanXslt());
+        assertThat(fileUpdater.updateXSLTfromSch(),is(0));
     }
 
     @Test
@@ -65,7 +67,7 @@ public class ITSchematronXSLTUpdateTest {
         Thread.sleep(1000);
         schFile = TestUtils.copyResourceToFolder("/simple.sch", schDirectory);
 
-        assertTrue(fileUpdater.isSchNewerThanXslt());
+        assertThat(fileUpdater.updateXSLTfromSch(), is(1));
     }
 
     @Test

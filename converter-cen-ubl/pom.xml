@@ -24,6 +24,10 @@
 			<groupId>it.infocert.eigor</groupId>
 			<artifactId>eigor-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>converter-commons</artifactId>
+		</dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-spring-core</artifactId>
