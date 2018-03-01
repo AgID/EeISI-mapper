@@ -748,7 +748,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaMaggiorazione = new DettaglioLineeType();
                         lineaMaggiorazione.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaMaggiorazione.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
-                        String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
+                        String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? null : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
                         if (descrizione != null) {
                             lineaMaggiorazione.setDescrizione(descrizione);
                         } else {
@@ -770,6 +770,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                         Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
                                 ));
                             }
+
                         }
                         Double chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? 0 : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
                         BigDecimal prezzo = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount);
@@ -944,7 +945,10 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     altriDatiGestionaliType = new AltriDatiGestionaliType();
                     altriDatiGestionaliType.setTipoDato("BT-98");
-                    altriDatiGestionaliType.setRiferimentoTesto(converted);
+                    final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
+                    final String result = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
+                    log.error("Created RiferimentoTesto from BT-98 with value {} (from enum {})", result, code);
+                    altriDatiGestionaliType.setRiferimentoTesto(result);
                     dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
                 } else {
                     log.trace("No BT0098 found");
