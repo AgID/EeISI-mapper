@@ -748,7 +748,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaMaggiorazione = new DettaglioLineeType();
                         lineaMaggiorazione.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaMaggiorazione.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
-                        String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? null : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
+                        String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
                         if (descrizione != null) {
                             lineaMaggiorazione.setDescrizione(descrizione);
                         } else {
