@@ -50,7 +50,7 @@ public class CreditNoteLineConverterTest {
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");
 
-        Element invoicedQuantity = invoiceLine.getChild("InvoicedQuantity");
+        Element invoicedQuantity = invoiceLine.getChild("CreditedQuantity");
 
         assertTrue(invoicedQuantity.getText().equals("1.00000000"));
     }
