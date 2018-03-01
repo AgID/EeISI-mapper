@@ -41,8 +41,8 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
 
         if (!invoice.getBG0002ProcessControl().isEmpty()) {
             BG0002ProcessControl processControl = invoice.getBG0002ProcessControl(0);
-            if(processControl.getBT0024SpecificationIdentifier().isEmpty()) {
-               convert("CustomizationID", processControl.getBT0024SpecificationIdentifier(0).getValue());
+            if (processControl.getBT0024SpecificationIdentifier().isEmpty()) {
+                convert("CustomizationID", processControl.getBT0024SpecificationIdentifier(0).getValue());
             }
         }
 
@@ -55,14 +55,21 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
             convert("IssueDate", converted);
         }
 
-        if (!invoice.getBT0009PaymentDueDate().isEmpty()) {
+        if (!invoice.getBT0009PaymentDueDate().isEmpty() && ErrorCode.Location.UBL_OUT.equals(callingLocation)) {
             String converted = conversionRegistry.convert(LocalDate.class, String.class, invoice.getBT0009PaymentDueDate(0).getValue());
             convert("DueDate", converted);
         }
 
         if (!invoice.getBT0003InvoiceTypeCode().isEmpty()) {
-            String converted = conversionRegistry.convert(Untdid1001InvoiceTypeCode.class, String.class, invoice.getBT0003InvoiceTypeCode(0).getValue());
-            convert("InvoiceTypeCode", converted);
+            Untdid1001InvoiceTypeCode bt0003 = invoice.getBT0003InvoiceTypeCode(0).getValue();
+            String converted = conversionRegistry.convert(Untdid1001InvoiceTypeCode.class, String.class, bt0003);
+
+            if (ErrorCode.Location.UBL_OUT.equals(callingLocation)) {
+                convert("InvoiceTypeCode", converted);
+            }
+            if (ErrorCode.Location.UBLCN_OUT.equals(callingLocation)) {
+                convert("CreditNoteTypeCode", converted);
+            }
         }
 
         if (!invoice.getBG0001InvoiceNote().isEmpty()) {
@@ -75,7 +82,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
                         note.setText(bt0022);
                     } else {
                         String bt0021 = bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue();
-                        note.setText("#"+bt0021+"#"+bt0022);
+                        note.setText("#" + bt0021 + "#" + bt0022);
                     }
 
                     root.addContent(note);
