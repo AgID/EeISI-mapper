@@ -121,7 +121,7 @@
             </includes>
         </fileSet>
 
-         CEN/UBLCN
+         <!--CEN/UBLCN-->
         <fileSet>
             <outputDirectory>converterdata/converter-cen-ublcn</outputDirectory>
             <directory>../converter-cen-ublcn/src/main/resources/converterdata/converter-cen-ublcn</directory>
