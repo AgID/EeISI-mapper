@@ -2,53 +2,15 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-    <id>bin</id>
+    <id>extras</id>
     <formats>
         <format>zip</format>
         <format>tar.gz</format>
     </formats>
 
+    <baseDirectory>eigor-api-extras</baseDirectory>
 
-    <baseDirectory>${artifactId}</baseDirectory>
-
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>lib</outputDirectory>
-        </dependencySet>
-    </dependencySets>
     <fileSets>
-        <fileSet>
-            <outputDirectory>conf</outputDirectory>
-            <directory>env/release</directory>
-            <excludes>
-                <exclude>eigor.bat</exclude>
-                <exclude>eigor.sh</exclude>
-            </excludes>
-        </fileSet>
-
-        <!-- invoice examples -->
-        <fileSet>
-            <outputDirectory>examples/cen</outputDirectory>
-            <directory>../eigor-test/src/main/resources/examples/cen</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>examples/fattpa</outputDirectory>
-            <directory>../eigor-test/src/main/resources/examples/fattpa</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>examples/ubl</outputDirectory>
-            <directory>../eigor-test/src/main/resources/examples/ubl</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>examples/cii</outputDirectory>
-            <directory>../eigor-test/src/main/resources/examples/cii</directory>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>examples/working-examples</outputDirectory>
-            <directory>../eigor-test/src/main/resources/examples/working-examples</directory>
-        </fileSet>
-        <!-- invoice examples -->
-
         <!-- Converter commons -->
         <fileSet>
             <outputDirectory>converterdata/converter-commons/</outputDirectory>
@@ -130,38 +92,12 @@
             <!--</includes>-->
         <!--</fileSet>-->
 
-
-        <!-- rules -->
         <fileSet>
-            <outputDirectory>conf</outputDirectory>
-            <directory>../eigor-rules/src/main/resources</directory>
-            <includes>
-                <include>*.properties</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <outputDirectory>/</outputDirectory>
-            <directory>env/release</directory>
-            <includes>
-                <include>eigor.bat</include>
-                <include>eigor.sh</include>
-            </includes>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>conf</outputDirectory>
-            <directory>env/release</directory>
+            <outputDirectory>.</outputDirectory>
+            <directory>src/assembly/samples</directory>
             <includes>
                 <include>eigor.properties</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>logs</outputDirectory>
-            <directory>src/main/resources</directory>
-            <excludes>
-                <exclude>*/**</exclude>
-            </excludes>
         </fileSet>
     </fileSets>
 </assembly>
