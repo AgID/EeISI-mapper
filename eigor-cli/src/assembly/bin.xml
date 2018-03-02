@@ -121,6 +121,15 @@
             </includes>
         </fileSet>
 
+         CEN/UBLCN
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-ublcn</outputDirectory>
+            <directory>../converter-cen-ubl/src/main/resources/converterdata/converter-cen-ublcn</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
 
         <!-- rules -->
         <fileSet>
