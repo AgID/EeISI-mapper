@@ -834,7 +834,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 String reason;
                 String baseAmount = "N/A";
                 String percentage = "N/A";
-                String converted = "";
+                String converted;
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                     TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
@@ -871,8 +871,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
 
                     dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
-                } else if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-                    dettaglioLinee.setRiferimentoAmministrazione(converted);
                 } else {
                     log.trace("No BT0097 found");
                 }
@@ -956,8 +954,10 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                     final String result = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
                     log.error("Created RiferimentoTesto from BT-98 with value {} (from enum {})", result, code);
-                    altriDatiGestionaliType.setRiferimentoTesto(result);
-                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    if (!"".equals(result)) {
+                        altriDatiGestionaliType.setRiferimentoTesto(result);
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    }
                 } else {
                     log.trace("No BT0098 found");
                 }
@@ -1019,7 +1019,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
 
                     dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
-                } else if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                } else if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty() && !"".equals(converted)) {
                     dettaglioLinee.setRiferimentoAmministrazione(converted);
                 } else {
                     log.trace("No BT0104 found");
@@ -1094,7 +1094,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("No BT0104 found");
                 }
 
-                if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty() && !"".equals(converted)) {
                     altriDatiGestionaliType = new AltriDatiGestionaliType();
                     altriDatiGestionaliType.setTipoDato("BT-105");
                     altriDatiGestionaliType.setRiferimentoTesto(converted);
