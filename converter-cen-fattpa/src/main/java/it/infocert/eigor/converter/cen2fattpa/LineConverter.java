@@ -244,26 +244,25 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 sb.append(" ");
 
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-                    Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                    TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
-                    try {
-                        String converted = converter.convert(code);
-                        sb.append(converted);
-                        log.trace("Appended BT98 to Descrizione");
-                    } catch (EigorRuntimeException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(e, "Failed converting BT-98",
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.ILLEGAL_VALUE,
-                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "BT0098")
-                        ));
+                    AltriDatiGestionaliType altriDatiGestionaliType = new AltriDatiGestionaliType();
+                    altriDatiGestionaliType.setTipoDato("BT-98");
+                    final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
+                    final String result = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
+                    if (!"".equals(result)) {
+                        log.debug("BT-98 mapped to AltriDatiGestionali");
+                        altriDatiGestionaliType.setRiferimentoTesto(result);
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                    } else {
+                        log.debug("BT-98 mapped to Descrizione");
+                        sb.append(code.name()).append(" ").append(code.getCode());
                     }
+                } else {
+                    log.trace("No BT0098 found");
                 }
 
                 String des = sb.toString();
                 dettaglioLinee.setDescrizione(des);
-                log.trace("Set \"{}\" as Descrizione", des);
+                log.debug("Set \"{}\" as Descrizione", des);
 //                    ScontoMaggiorazioneType scontoMaggiorazione = new ScontoMaggiorazioneType();
 //                    scontoMaggiorazione.setTipo(TipoScontoMaggiorazioneType.SC);
 //                    dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione);
@@ -948,19 +947,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("No BT0097 found");
                 }
 
-                if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-                    altriDatiGestionaliType = new AltriDatiGestionaliType();
-                    altriDatiGestionaliType.setTipoDato("BT-98");
-                    final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                    final String result = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
-                    log.error("Created RiferimentoTesto from BT-98 with value {} (from enum {})", result, code);
-                    if (!"".equals(result)) {
-                        altriDatiGestionaliType.setRiferimentoTesto(result);
-                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
-                    }
-                } else {
-                    log.trace("No BT0098 found");
-                }
+
 
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             }
