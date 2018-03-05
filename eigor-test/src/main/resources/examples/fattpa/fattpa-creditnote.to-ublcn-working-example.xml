@@ -78,8 +78,8 @@
                 <Descrizione>Laptop computer</Descrizione>
                 <Quantita>1.00000000</Quantita>
                 <UnitaMisura>1.0 C62</UnitaMisura>
-                <PrezzoUnitario>-1273.00</PrezzoUnitario>
-                <PrezzoTotale>-1273.00</PrezzoTotale>
+                <PrezzoUnitario>1273.00</PrezzoUnitario>
+                <PrezzoTotale>1273.00</PrezzoTotale>
                 <AliquotaIVA>20.00</AliquotaIVA>
                 <AltriDatiGestionali>
                     <TipoDato>Color</TipoDato>
@@ -97,7 +97,7 @@
             <DettaglioPagamento>
                 <Beneficiario>Customer</Beneficiario>
                 <ModalitaPagamento>MP21</ModalitaPagamento>
-                <ImportoPagamento>1527.60</ImportoPagamento>
+                <ImportoPagamento>-1273.00</ImportoPagamento>
             </DettaglioPagamento>
         </DatiPagamento>
     </FatturaElettronicaBody>
