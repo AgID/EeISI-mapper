@@ -519,6 +519,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(value));
                     }
 
+                    if (!priceDetails.getBT0147ItemPriceDiscount().isEmpty()) {
+                        final Double itemPriceDiscount = priceDetails.getBT0147ItemPriceDiscount(0).getValue();
+                        final AltriDatiGestionaliType dati = new AltriDatiGestionaliType();
+                        dati.setTipoDato("BT-147");
+                        dati.setRiferimentoNumero(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(itemPriceDiscount, 8));
+                        dettaglioLinee.getAltriDatiGestionali().add(dati);
+                    }
+
                     dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(itemNetPrice));
                     if (baseQuantity == 0) {
                         dettaglioLinee.setUnitaMisura(quantityUnitOfMeasureCode);
