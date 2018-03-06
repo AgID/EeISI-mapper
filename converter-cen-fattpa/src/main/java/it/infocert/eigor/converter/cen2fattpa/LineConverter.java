@@ -244,17 +244,16 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 sb.append(" ");
 
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-                    AltriDatiGestionaliType altriDatiGestionaliType = new AltriDatiGestionaliType();
-                    altriDatiGestionaliType.setTipoDato("BT-98");
+
                     final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                     final String result = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
+                    sb.append("BT-98=");
                     if (!"".equals(result)) {
                         log.debug("BT-98 mapped to AltriDatiGestionali");
-                        altriDatiGestionaliType.setRiferimentoTesto(result);
-                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliType);
+                       sb.append(result);
                     } else {
                         log.debug("BT-98 mapped to Descrizione");
-                        sb.append(code.name()).append(" ").append(code.getCode());
+                        sb.append(code.getCode());
                     }
                 } else {
                     log.trace("No BT0098 found");
