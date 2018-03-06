@@ -834,9 +834,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 String baseAmount = "N/A";
                 String percentage = "N/A";
                 String converted;
+                TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
                 if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
-                    TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
                     try {
                         converted = converter.convert(code);
                         dettaglioLinee.setRiferimentoAmministrazione(converted);
@@ -856,20 +856,59 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 }
 
                 if (!allowances.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
+                    final StringBuilder sb = new StringBuilder();
                     reason = allowances.getBT0097DocumentLevelAllowanceReason(0).getValue();
-                    if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
-                        baseAmount = String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
+                    sb.append(reason);
+
+                    if (!allowances.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                        sb.append(" BT-98=");
+                        final Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
+                        log.error("BT-98: {}", code);
+                        try {
+                            final String convertedValue = converter.convert(code);
+                            if (!"".equals(convertedValue)) {
+                                sb.append(convertedValue);
+                            } else {
+                                sb.append(code.getCode());
+                            }
+                        } catch (ConversionFailedException e) {
+                            log.error("Failed converting BT-98.");
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
+                            ));
+                        }
+
                     } else {
+                        log.debug("No BT0098 found");
+                    }
+
+                    sb.append(" - ");
+                    sb.append("Base Amount: ");
+                    if (!allowances.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+                        final String ba = String.valueOf(allowances.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue());
+                        sb.append(ba);
+                    } else {
+                        sb.append("N/A");
                         log.trace("No BT0093 found");
                     }
 
+                    sb.append(" Percentage: ");
                     if (!allowances.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-                        percentage = String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
+                        final String p = String.valueOf(allowances.getBT0094DocumentLevelAllowancePercentage(0).getValue());
+                        sb.append(p).append("%");
                     } else {
+                        sb.append("N/A");
                         log.trace("No BT0094 found");
                     }
-
-                    dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
+                    final String desc = sb.toString();
+                    log.debug("Set {} as Descrizione", desc);
+                    dettaglioLinee.setDescrizione(desc);
                 } else {
                     log.trace("No BT0097 found");
                 }
@@ -946,7 +985,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 } else {
                     log.trace("No BT0097 found");
                 }
-
 
 
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
