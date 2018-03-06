@@ -98,7 +98,8 @@ public class Cii2Cen extends AbstractToCenConverter {
 		// load the CII schematron validator.
         try {
             Resource ciiSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.schematron") );
-            schematronValidator = new SchematronValidator(ciiSchemaFile.getFile(), true, ErrorCode.Location.CII_IN);
+			boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cii-cen.schematron.auto-update-xslt"));
+			schematronValidator = new SchematronValidator(ciiSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.CII_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -106,7 +107,8 @@ public class Cii2Cen extends AbstractToCenConverter {
         // load the CII schematron validator.
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.cius") );
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ErrorCode.Location.CII_IN);
+			boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cii-cen.cius.auto-update-xslt"));
+			ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.CII_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }

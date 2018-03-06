@@ -15,6 +15,7 @@ import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.ubl2cen.InvoiceNoteConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
+import org.apache.commons.io.FileUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -47,10 +48,12 @@ public class UblCn2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ublcn-cen.mapping.one-to-one", "converterdata/converter-ublcn-cen/mappings/one_to_one.properties")
                 .addProperty("eigor.converter.ublcn-cen.mapping.many-to-one", "converterdata/converter-ublcn-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ublcn-cen.mapping.one-to-many", "converterdata/converter-ublcn-cen/mappings/one_to_many.properties")
-                .addProperty("eigor.converter.ublcn-cen.xsd", "file:src/test/resources/converterdata/converter-ublcn-cen/ubl/xsd/UBL-CreditNote-2.1.xsd")
+                .addProperty("eigor.converter.ublcn-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsd/UBL-CreditNote-2.1.xsd")
                 .addProperty("eigor.converter.ublcn-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
+                .addProperty("eigor.converter.ublcn-cen.schematron.auto-update-xslt", "false")
                 .addProperty("eigor.converter.ublcn-cen.mapping.custom", "converterdata/converter-ublcn-cen/mappings/custom.conf")
-                .addProperty("eigor.converter.ublcn-cen.cius", "converterdata/converter-ublcn-cen/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt");
+                .addProperty("eigor.converter.ublcn-cen.cius", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/cius/schematron-xslt/EN16931-CIUS-IT-UBLValidation.xslt")
+                .addProperty("eigor.converter.ublcn-cen.cius.auto-update-xslt", "false");
         sut = new MyUblCnToCenConverter(new JavaReflections(), conf);
         sut.configure();
     }
@@ -94,8 +97,7 @@ public class UblCn2CenConfigurationFileTest {
 
     private List<IConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-        String filePath = getClass().getClassLoader().getResource("xsd/UBL-CreditNote-2.1.xsd").getFile();
-        File xsdFile = new File(filePath);
+        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsd/UBL-CreditNote-2.1.xsd");
         XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBLCN_IN);
         return xsdValidator.validate(bytes);
     }

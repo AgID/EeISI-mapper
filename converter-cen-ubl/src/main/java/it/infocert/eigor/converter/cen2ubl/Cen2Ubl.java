@@ -74,21 +74,13 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         // load the UBL schematron validator.
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, ErrorCode.Location.UBL_OUT);
+            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
 
-//        // load the CIUS schematron validator.
-//        try {
-//            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.cius"));
-//            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true);
-//        } catch (Exception e) {
-//            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
-//        }
-
         configurableSupport.configure();
-
     }
 
     public Cen2Ubl(IReflections reflections, EigorConfiguration configuration) {

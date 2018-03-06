@@ -5,7 +5,7 @@
   <param name="UBL-SR-01" value="(count(cac:ContractDocumentReference/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-02" value="(count(cac:ReceiptDocumentReference/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-03" value="(count(cac:DespatchDocumentReference/cbc:ID) &lt;= 1)"/>
-  <param name="UBL-SR-04" value="(count(cac:AdditionalDocumentReference[cbc:DocumentType='ATS']/cbc:ID) &lt;= 1)"/>
+  <param name="UBL-SR-04" value="(count(cac:AdditionalDocumentReference[cbc:DocumentTypeCode='130']/cbc:ID) &lt;= 1)"/>
   <param name="UBL-SR-05" value="(count(cac:PaymentTerms/cbc:Note) &lt;= 1)"/>
   <param name="UBL-SR-06" value="(count(cac:InvoiceDocumentReference) &lt;= 1)"/>
   <param name="UBL-SR-07" value="(cac:InvoiceDocumentReference/cbc:ID)"/>
@@ -55,7 +55,7 @@
   <param name="UBL-DT-15" value="not(//@unitCodeListAgencyName)"/>
   <param name="UBL-DT-16" value="not(//@listAgencyName)"/>
   <param name="UBL-DT-17" value="not(//@listName)"/>
-  <param name="UBL-DT-18" value="not(//@name)"/>
+  <param name="UBL-DT-18" value="count(//@name) - count(//cbc:PaymentMeansCode/@name) &lt;= 0"/>
   <param name="UBL-DT-19" value="not(//@languageID)"/>
   <param name="UBL-DT-20" value="not(//@listURI)"/>
   <param name="UBL-DT-21" value="not(//@listSchemeURI)"/>
@@ -65,7 +65,6 @@
   <param name="UBL-DT-25" value="not(//@characterSetCode)"/>
   <param name="UBL-DT-26" value="not(//@encodingCode)"/>
   <param name="UBL-CR-001" value="not(ext:UBLExtensions)"/>
-  <param name="UBL-CR-002" value="not(cbc:UBLVersionID)"/>
   <param name="UBL-CR-003" value="not(cbc:ProfileExecutionID)"/>
   <param name="UBL-CR-004" value="not(cbc:CopyIndicator)"/>
   <param name="UBL-CR-005" value="not(cbc:UUID)"/>
@@ -177,13 +176,12 @@
   <param name="UBL-CR-111" value="not(cac:AdditionalDocumentReference/cbc:UUID)"/>
   <param name="UBL-CR-112" value="not(cac:AdditionalDocumentReference/cbc:IssueDate)"/>
   <param name="UBL-CR-113" value="not(cac:AdditionalDocumentReference/cbc:IssueTime)"/>
-  <param name="UBL-CR-114" value="not(cac:AdditionalDocumentReference/cbc:DocumentTypeCode)"/>
+  <param name="UBL-CR-114" value="not(cac:AdditionalDocumentReference/cbc:DocumentType)"/>
   <param name="UBL-CR-115" value="not(cac:AdditionalDocumentReference/cbc:Xpath)"/>
   <param name="UBL-CR-116" value="not(cac:AdditionalDocumentReference/cbc:LanguageID)"/>
   <param name="UBL-CR-117" value="not(cac:AdditionalDocumentReference/cbc:LocaleCode)"/>
   <param name="UBL-CR-118" value="not(cac:AdditionalDocumentReference/cbc:VersionID)"/>
   <param name="UBL-CR-119" value="not(cac:AdditionalDocumentReference/cbc:DocumentStatusCode)"/>
-  <param name="UBL-CR-120" value="not(cac:AdditionalDocumentReference/cbc:DocumentDescription)"/>
   <param name="UBL-CR-121" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:DocumentHash)"/>
   <param name="UBL-CR-122" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:HashAlgorithmMethod)"/>
   <param name="UBL-CR-123" value="not(cac:AdditionalDocumentReference/cac:Attachment/cac:ExternalReference/cbc:ExpiryDate)"/>
@@ -599,7 +597,6 @@
   <param name="UBL-CR-533" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:UUID)"/>
   <param name="UBL-CR-534" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:IssueDate)"/>
   <param name="UBL-CR-535" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:IssueTime)"/>
-  <param name="UBL-CR-536" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentTypeCode)"/>
   <param name="UBL-CR-537" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:DocumentType)"/>
   <param name="UBL-CR-538" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:Xpath)"/>
   <param name="UBL-CR-539" value="not(cac:InvoiceLine/cac:DocumentReference/cbc:LanguageID)"/>
@@ -723,7 +720,7 @@
   <param name="Tax_subtotal" value="cac:TaxSubtotal"/>
   <param name="Additional_supporting_documents" value="cac:AdditionalDocumentReference"/>
   <param name="Invoice" value="/ubl:Invoice"/>
-  <param name="Amount_data_type" value="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount'))] "/>
+  <param name="Amount_data_type" value="//*[ends-with(name(), 'Amount') and not(ends-with(name(),'PriceAmount')) and not(ancestor::cac:Price/cac:AllowanceCharge)]"/>
   <param name="Price_data_type" value="//*[ends-with(name(), 'PriceAmount')]"/>
   <param name="Quantity_data_type" value="//*[ends-with(name(), 'Quantity')]"/>
   <param name="Percent_data_type" value="//*[ends-with(name(), 'Rate')]"/>

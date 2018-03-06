@@ -2,7 +2,7 @@
 <jxb:bindings version="2.1"
               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
               xmlns:xs="http://www.w3.org/2001/XMLSchema"
-              schemaLocation="../resources/converterdata/converter-cen-fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+              schemaLocation="../../../../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
     <jxb:globalBindings>
         <jxb:javaType name="javax.xml.datatype.XMLGregorianCalendar"
                       xmlType="xs:date"
