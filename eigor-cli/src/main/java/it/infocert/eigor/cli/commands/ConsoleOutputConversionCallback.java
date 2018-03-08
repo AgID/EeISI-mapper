@@ -80,7 +80,8 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
             List<IConversionIssue> errors = conversionResult.getIssues();
             for (int i = 0; i < errors.size(); i++) {
                 IConversionIssue e = errors.get(i);
-                out.println(String.format("%d) Error: %s", i + 1, e.getMessage()));
+                String label = e.isError() ? "%d) ERROR: %s" : "%d) WARN: %s";
+                out.println(String.format(label, i + 1, e.getMessage()));
             }
             out.println("For more information see 'tocen-errors.csv'.");
         }
