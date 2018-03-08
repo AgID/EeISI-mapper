@@ -150,7 +150,7 @@ public class LineConverterTest {
 
         assertEquals(new BigDecimal(23.00).setScale(2, RoundingMode.HALF_UP), dettaglioLinee.getAliquotaIVA());
 
-        assertEquals("Reason PR", dettaglioLinee.getDescrizione());
+        assertEquals("Reason BT-98=PR", dettaglioLinee.getDescrizione());
     }
 
     @Test

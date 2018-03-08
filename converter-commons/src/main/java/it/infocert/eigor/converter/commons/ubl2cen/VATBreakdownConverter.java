@@ -12,6 +12,8 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -19,6 +21,8 @@ import java.util.List;
  * The VAT Breakdown Custom Converter
  */
 public class VATBreakdownConverter extends CustomConverterUtils implements CustomMapping<Document> {
+
+    public static final Logger logger  =LoggerFactory.getLogger(VATBreakdownConverter.class);
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
@@ -130,6 +134,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     if (taxExemptionReason != null) {
                         BT0120VatExemptionReasonText bt0120 = new BT0120VatExemptionReasonText(taxExemptionReason.getText());
                         bg0023.getBT0120VatExemptionReasonText().add(bt0120);
+                    } else {
+                        logger.debug("No TaxExemptionReason found");
                     }
 
                     Element taxExemptionReasonCode = findNamespaceChild(taxCategory, namespacesInScope, "TaxExemptionReasonCode");
