@@ -9,6 +9,7 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -67,7 +68,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
                 xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBL2CEN from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for CEN2UBL from '" + mandatoryString + "'.", e);
             }
         }
 
@@ -135,7 +136,7 @@ public class Cen2Ubl extends AbstractFromCenConverter {
 
     @Override
     public boolean support(String format) {
-        return "ubl".equals(format.toLowerCase().trim());
+        return FORMAT.equals(format.toLowerCase().trim());
     }
 
     @Override
