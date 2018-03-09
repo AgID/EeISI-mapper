@@ -154,7 +154,7 @@ public class LineConverterTest {
     }
 
     @Test
-    public void shouldMapBG21() throws Exception {
+    public void shouldMapBG21() {
         populateWithBG21();
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
