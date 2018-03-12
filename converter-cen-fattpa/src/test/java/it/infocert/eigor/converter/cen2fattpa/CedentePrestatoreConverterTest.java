@@ -51,8 +51,13 @@ public class CedentePrestatoreConverterTest {
         assertEquals(code, codiceFiscale);
     }
 
+
+
     private BG0000Invoice setUpInvoice(final BG0000Invoice invoice) {
-        invoice.getBG0004Seller().add(new BG0004Seller());
+        final BG0004Seller seller = new BG0004Seller();
+        invoice.getBG0004Seller().add(seller);
+
+
         return invoice;
     }
 
@@ -60,6 +65,7 @@ public class CedentePrestatoreConverterTest {
         final FatturaElettronicaHeaderType header = new FatturaElettronicaHeaderType();
         final FatturaElettronicaBodyType body = new FatturaElettronicaBodyType();
         final CedentePrestatoreType cedentePrestatore = new CedentePrestatoreType();
+
         header.setCedentePrestatore(cedentePrestatore);
         fatturaElettronica.setFatturaElettronicaHeader(header);
         fatturaElettronica.getFatturaElettronicaBody().add(body);

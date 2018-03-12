@@ -15,6 +15,7 @@
 
         <menu name="Eigor App">
             <item name="Configuration" href="configuration/configuration.html"/>
+            <item name="Schematron update" href="configuration/schematron.html"/>
         </menu>
 
         <menu name="Formats">

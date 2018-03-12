@@ -93,7 +93,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);
                             if (bt0130 != null) {
                                 UnitOfMeasureCodes unitOfMeasureCodes = bt0130.getValue();
-                                Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
+                                Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.getCommonCode());
                                 invoicedQuantity.setAttribute(unitCode);
                             }
                         }
@@ -252,7 +252,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
                                     BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
                                     UnitOfMeasureCodes unitOfMeasureCodes = bt0150.getValue();
-                                    Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.name());
+                                    Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.getCommonCode());
                                     baseQuantity.setAttribute(unitCode);
                                 }
                                 price.addContent(baseQuantity);

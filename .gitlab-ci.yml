@@ -64,7 +64,7 @@ eigor-cli-snapshot:
 
 eigor-cli-release:
   stage: packaging
-  script: ./mvnw $MAVEN_CLI_OPTS install -Prelease
+  script: ./mvnw $MAVEN_CLI_OPTS install -Preleasexslt
   artifacts:
     paths:
       - eigor-cli/target/eigor-*.zip

@@ -6,6 +6,8 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0004Seller;
+import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
 import it.infocert.eigor.model.core.model.BT0039SellerCountrySubdivision;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -50,17 +52,27 @@ public class PostalAddressConverter extends CustomConverterUtils implements Cust
                         String countryCodeValue = countryCode.getValue();
                         if (countryCodeValue.equalsIgnoreCase("IT")) {
                             if (isValidProvinceOfItaly(countryCodeValue)) {
-                                BT0039SellerCountrySubdivision bt0039 = new BT0039SellerCountrySubdivision(countrySubentity.getValue());
-                                invoice.getBG0004Seller(0).getBG0005SellerPostalAddress(0).getBT0039SellerCountrySubdivision().add(bt0039);
+                                addBT39(invoice, countrySubentity);
                             }
                         } else {
-                            log.warn("CountryCode not IT!");
+                            addBT39(invoice, countrySubentity);
                         }
                     }
                 }
             }
         }
         return new ConversionResult<>(errors, invoice);
+    }
+
+    private void addBT39(BG0000Invoice invoice, Element countrySubentity) {
+        if (!invoice.getBG0004Seller().isEmpty()) {
+            final BG0004Seller seller = invoice.getBG0004Seller(0);
+            if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
+                final BG0005SellerPostalAddress address = seller.getBG0005SellerPostalAddress(0);
+                final BT0039SellerCountrySubdivision bt0039 = new BT0039SellerCountrySubdivision(countrySubentity.getValue());
+                address.getBT0039SellerCountrySubdivision().add(bt0039);
+            }
+        }
     }
 
     private boolean isValidProvinceOfItaly(String countryCodeValue) {

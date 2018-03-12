@@ -78,9 +78,9 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
         } else {
             out.println(String.format("To Cen Conversion finished, but %d issues have occured.", conversionResult.getIssues().size()));
             List<IConversionIssue> errors = conversionResult.getIssues();
-            for (int i = 0; i < errors.size(); i++) {
-                IConversionIssue e = errors.get(i);
-                out.println(String.format("%d) Error: %s", i + 1, e.getMessage()));
+            for (IConversionIssue e : errors) {
+                String label = e.isError() ? "ERROR: " : "WARN: ";
+                out.println(label + e.getMessage());
             }
             out.println("For more information see 'tocen-errors.csv'.");
         }
@@ -103,7 +103,8 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
             out.println("From Cen Conversion finished, but some issues have occured:");
             List<IConversionIssue> errors = conversionResult.getIssues();
             for (IConversionIssue e : errors) {
-                out.println("Error: " + e.getMessage());
+                String label = e.isError() ? "ERROR: " : "WARN: ";
+                out.println(label + e.getMessage());
             }
             out.println("For more information see 'fromcen-errors.csv'.");
 

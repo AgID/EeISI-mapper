@@ -35,15 +35,20 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
             Element documentTypeCode = findNamespaceChild(elemAdd, namespacesInScope, "DocumentTypeCode");
             Element id = findNamespaceChild(elemAdd, namespacesInScope, "ID");
-            if (id != null && documentTypeCode != null) {
-                if ("916".equals(documentTypeCode.getValue())) {
+            if (id != null) {
+                if (documentTypeCode != null) {
+                    if ("916".equals(documentTypeCode.getValue())) {
+                        BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
+                        bg0024.getBT0122SupportingDocumentReference().add(bt0122);
+                    }
+                    if ("130".equals(documentTypeCode.getValue())) {
+                        String schemeID = id.getAttributeValue("schemeID");
+                        BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID, id.getText()));
+                        invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
+                    }
+                } else {
                     BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(id.getText());
                     bg0024.getBT0122SupportingDocumentReference().add(bt0122);
-                }
-                if ("130".equals(documentTypeCode.getValue())) {
-                    String schemeID = id.getAttributeValue("schemeID");
-                    BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(schemeID, id.getText()));
-                    invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(bt0018);
                 }
             }
 
@@ -74,7 +79,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
-                                e, 
+                                e,
                                 ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
