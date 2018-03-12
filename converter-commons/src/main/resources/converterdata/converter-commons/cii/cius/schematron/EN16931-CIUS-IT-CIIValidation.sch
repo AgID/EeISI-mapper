@@ -39,19 +39,19 @@
      -->
  <pattern xmlns="http://purl.oclc.org/dsdl/schematron"  id="CIUS-IT">
    <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans/ram:PayeePartyCreditorFinancialAccount">
-      <assert test=  "matches(ram:IBANID, '(^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})$')" id="CIUS-BT-84" flag="warning"> [CIUS-BT-84] BT-84 (Payment account identifier)  shall be an IBAN code and respect the Regular Expression [a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30}) . 
+      <assert test=  "matches(ram:IBANID, '(^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})$')" id="CIUS-BT-84" flag="fatal"> [CIUS-BT-84] BT-84 (Payment account identifier)  shall be an IBAN code and respect the Regular Expression [a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30}) . 
         </assert>
    </rule>
    <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication">
-      <assert test=  "exists(ram:URIID) and (ram:URIID/@schemeID = 'IT:CODDEST' or ram:URIID/@schemeID = 'IT:PEC' or ram:URIID/@schemeID = 'IT:IPA' )" id="CIUS-CA-2" flag="warning"> [CIUS-CA-2] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario (see the Italian business rules). BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
+      <assert test=  "exists(ram:URIID) and (ram:URIID/@schemeID = 'IT:CODDEST' or ram:URIID/@schemeID = 'IT:PEC' or ram:URIID/@schemeID = 'IT:IPA' )" id="CIUS-CA-2" flag="fatal"> [CIUS-CA-2] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario (see the Italian business rules). BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
         </assert>
    </rule>
    <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementPaymentMeans">
-      <assert test=  "exists(ram:TypeCode)" id="CIUS-CA-103" flag="warning"> [CIUS-CA-103] BT-81 (Payment means type code) -Fields are mandatory in XMLPA. Mapped BTs should be mandatory 
+      <assert test=  "exists(ram:TypeCode)" id="CIUS-CA-103" flag="fatal"> [CIUS-CA-103] BT-81 (Payment means type code) -Fields are mandatory in XMLPA. Mapped BTs should be mandatory 
         </assert>
    </rule>
    <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty">
-      <assert test=  "exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA') or exists(ram:GlobalID/@schemeID = 'IT:CF') or exists(ram:GlobalID/@schemeID = 'IT:VAT')" id="CIUS-BR-14" flag="warning"> [CIUS-BR-14] BT-48 BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier) -1.4.1.1 is not mandatory in Italy (buyer) but VAT number or Fiscal code should be indicated. 
+      <assert test=  "exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA') or exists(ram:GlobalID/@schemeID = 'IT:CF') or exists(ram:GlobalID/@schemeID = 'IT:VAT')" id="CIUS-BR-14" flag="fatal"> [CIUS-BR-14] BT-48 BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier) -1.4.1.1 is not mandatory in Italy (buyer) but VAT number or Fiscal code should be indicated. 
         </assert>
    </rule>
  </pattern>
@@ -65,45 +65,45 @@
   <pattern xmlns="http://purl.oclc.org/dsdl/schematron"  id="CIUS-USAGE-IT">
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration">
       <assert test=  "(ram:ID/@schemeID='VA') or ((../ram:PostalTradeAddress/ram:CountryID = 'IT') and (exists(ram:ID) and ram:ID/@schemeID='FC'))
-        " id="CIUS-BT-98-1" flag="warning"> [CIUS-BT-98-1] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. 
+        " id="CIUS-BT-98-1" flag="fatal"> [CIUS-BT-98-1] BT-32 (Seller tax registration identifier)  is a conditional field and shall not be used by a foreign seller as it is not possible to map into XMLPA. 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty">
       <assert test=  "not(ram:PostalTradeAddress/ram:CountryID = 'IT') or count(ram:SpecifiedTaxRegistration[(ram:ID/@SchemeID='FC')]) &gt;=1
-        " id="CIUS-BT-98-2" flag="warning"> [CIUS-BT-98-2] BT-32 (Seller tax registration identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
+        " id="CIUS-BT-98-2" flag="fatal"> [CIUS-BT-98-2] BT-32 (Seller tax registration identifier). In case the seller is Italian this field shall contain the codification of RegimeFiscale (1.2.1.8) 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement">
-      <assert test=  " (exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID ='VA') or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and  ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA')" id="CIUS-CA-9" flag="warning"> [CIUS-CA-9] BT-31
+      <assert test=  " (exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID ='VA') or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and  ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA')" id="CIUS-CA-9" flag="fatal"> [CIUS-CA-9] BT-31
         BT-63 (Seller VAT identifier - Seller tax representative VAT identifier) -Mandatory in Italy (seller). BT-31 should be mandatory or copied from BT-63 (tax representative). 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress">
-      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-10-1" flag="warning"> [CIUS-CA-10-1] BT-35 (Seller address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-10-1" flag="fatal"> [CIUS-CA-10-1] BT-35 (Seller address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:CityName)" id="CIUS-CA-10-2" flag="warning"> [CIUS-CA-10-2] BT-37 (Seller city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:CityName)" id="CIUS-CA-10-2" flag="fatal"> [CIUS-CA-10-2] BT-37 (Seller city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-10-3" flag="warning"> [CIUS-CA-10-3] BT-38 (Seller post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-10-3" flag="fatal"> [CIUS-CA-10-3] BT-38 (Seller post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress">
-      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-11-1" flag="warning"> [CIUS-CA-11-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-11-1" flag="fatal"> [CIUS-CA-11-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:CityName)" id="CIUS-CA-11-2" flag="warning"> [CIUS-CA-11-2] BT-52 (Buyer city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:CityName)" id="CIUS-CA-11-2" flag="fatal"> [CIUS-CA-11-2] BT-52 (Buyer city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-11-3" flag="warning"> [CIUS-CA-11-3] BT-53 (Buyer post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-11-3" flag="fatal"> [CIUS-CA-11-3] BT-53 (Buyer post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery/ram:ShipToTradeParty/ram:PostalTradeAddress">
-      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-12-1" flag="warning"> [CIUS-CA-12-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:LineOne)" id="CIUS-CA-12-1" flag="fatal"> [CIUS-CA-12-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:CityName)" id="CIUS-CA-12-2" flag="warning"> [CIUS-CA-12-2] BT-77 (Deliver to city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:CityName)" id="CIUS-CA-12-2" flag="fatal"> [CIUS-CA-12-2] BT-77 (Deliver to city) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
-      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-12-3" flag="warning"> [CIUS-CA-12-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
+      <assert test=  "exists(ram:PostcodeCode)" id="CIUS-CA-12-3" flag="fatal"> [CIUS-CA-12-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy. Mapped BTs should be mandatory. 
       </assert>
     </rule>
     <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument">
-      <assert test=  "exists(ram:URIID) or exists(ram:AttachmentBinaryObject)" id="CIUS-CA-71" flag="warning"> [CIUS-CA-71] BT-125 (Attached document) -If BT-122 not empty then BT-124 or BT-125 should be mandatory as the mapped field is mandatory in Italy. 
+      <assert test=  "exists(ram:URIID) or exists(ram:AttachmentBinaryObject)" id="CIUS-CA-71" flag="fatal"> [CIUS-CA-71] BT-125 (Attached document) -If BT-122 not empty then BT-124 or BT-125 should be mandatory as the mapped field is mandatory in Italy. 
       </assert>
     </rule>
   </pattern>

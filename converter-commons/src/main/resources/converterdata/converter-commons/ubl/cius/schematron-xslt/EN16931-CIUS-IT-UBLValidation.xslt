@@ -209,7 +209,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="matches(cbc:ID, '(^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})$')">
           <xsl:attribute name="id">CIUS-BT-84</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -231,7 +231,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:EndpointID) and (cbc:EndpointID/@schemeID = 'IT:CODDEST' or cbc:EndpointID/@schemeID = 'IT:PEC' or cbc:EndpointID/@schemeID = 'IT:IPA' )">
           <xsl:attribute name="id">CIUS-CA-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -247,7 +247,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID) or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:CF') or exists(cac:PartyIdentification/cbc:ID/@schemeID = 'IT:PIVA')">
           <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -269,7 +269,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:PaymentMeansCode)">
           <xsl:attribute name="id">CIUS-CA-103</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -298,7 +298,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(cac:TaxScheme/cbc:ID='VAT') or ((../cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') and (exists(cbc:CompanyID)))">
           <xsl:attribute name="id">CIUS-BT-98-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -320,7 +320,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:PostalAddress/cac:Country/cbc:IdentificationCode = 'IT') or count(cac:PartyTaxScheme/cac:TaxScheme[not(cbc:ID='VAT')]) >=1">
           <xsl:attribute name="id">CIUS-BT-98-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -338,11 +338,11 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="( exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) and cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:ID = 'VAT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)" />
+      <xsl:when test="( exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) and cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID = 'VAT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="( exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) and cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:ID = 'VAT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)">
+        <svrl:failed-assert test="( exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID) and cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID = 'VAT') or exists(cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID)">
           <xsl:attribute name="id">CIUS-CA-9</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -365,7 +365,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-10-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -381,7 +381,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-10-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -397,7 +397,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-10-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -419,7 +419,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-11-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -435,7 +435,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-11-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -451,7 +451,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-11-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -473,7 +473,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:StreetName)">
           <xsl:attribute name="id">CIUS-CA-12-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -489,7 +489,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:CityName)">
           <xsl:attribute name="id">CIUS-CA-12-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -505,7 +505,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not (cac:Country/cbc:IdentificationCode = 'IT') or exists(cbc:PostalZone)">
           <xsl:attribute name="id">CIUS-CA-12-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -527,7 +527,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:Attachment/cac:ExternalReference/cbc:URI) or exists(cac:Attachment/cbc:EmbeddedDocumentBinaryObject)">
           <xsl:attribute name="id">CIUS-CA-71</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
