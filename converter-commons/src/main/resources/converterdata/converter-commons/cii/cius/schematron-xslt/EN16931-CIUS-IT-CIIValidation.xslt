@@ -209,7 +209,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="matches(ram:IBANID, '(^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30})$')">
           <xsl:attribute name="id">CIUS-BT-84</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -231,7 +231,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:URIID) and (ram:URIID/@schemeID = 'IT:CODDEST' or ram:URIID/@schemeID = 'IT:PEC' or ram:URIID/@schemeID = 'IT:IPA' )">
           <xsl:attribute name="id">CIUS-CA-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -253,7 +253,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:TypeCode)">
           <xsl:attribute name="id">CIUS-CA-103</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -275,7 +275,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA') or exists(ram:GlobalID/@schemeID = 'IT:CF') or exists(ram:GlobalID/@schemeID = 'IT:VAT')">
           <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -304,7 +304,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(ram:ID/@schemeID='VA') or ((../ram:PostalTradeAddress/ram:CountryID = 'IT') and (exists(ram:ID) and ram:ID/@schemeID='FC'))">
           <xsl:attribute name="id">CIUS-BT-98-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -326,7 +326,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="not(ram:PostalTradeAddress/ram:CountryID = 'IT') or count(ram:SpecifiedTaxRegistration[(ram:ID/@SchemeID='FC')]) >=1">
           <xsl:attribute name="id">CIUS-BT-98-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -348,7 +348,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID ='VA') or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID='VA')">
           <xsl:attribute name="id">CIUS-CA-9</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -371,7 +371,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:LineOne)">
           <xsl:attribute name="id">CIUS-CA-10-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -387,7 +387,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:CityName)">
           <xsl:attribute name="id">CIUS-CA-10-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -403,7 +403,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:PostcodeCode)">
           <xsl:attribute name="id">CIUS-CA-10-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -425,7 +425,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:LineOne)">
           <xsl:attribute name="id">CIUS-CA-11-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -441,7 +441,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:CityName)">
           <xsl:attribute name="id">CIUS-CA-11-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -457,7 +457,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:PostcodeCode)">
           <xsl:attribute name="id">CIUS-CA-11-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -479,7 +479,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:LineOne)">
           <xsl:attribute name="id">CIUS-CA-12-1</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -495,7 +495,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:CityName)">
           <xsl:attribute name="id">CIUS-CA-12-2</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -511,7 +511,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:PostcodeCode)">
           <xsl:attribute name="id">CIUS-CA-12-3</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
@@ -533,7 +533,7 @@
       <xsl:otherwise>
         <svrl:failed-assert test="exists(ram:URIID) or exists(ram:AttachmentBinaryObject)">
           <xsl:attribute name="id">CIUS-CA-71</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
