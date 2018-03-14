@@ -55,7 +55,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 break;
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
-                        .message(String.format("BT-49 SchemeID is not a valid value. Should be %s, %s or %s, was: %s", pec, coddest, ipa, identificationSchema))
+                        .message(String.format("BT-49 SchemeID is not a valid value. Should be %s, %s or %s, was: %s", pec, coddest, ipa, "".equals(identificationSchema.trim()) ? "<empty string>" : identificationSchema ))
                         .location(ErrorCode.Location.FATTPA_OUT)
                         .action(ErrorCode.Action.HARDCODED_MAP)
                         .error(ErrorCode.Error.ILLEGAL_VALUE)

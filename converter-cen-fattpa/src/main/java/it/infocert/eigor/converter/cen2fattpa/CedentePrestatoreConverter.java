@@ -357,7 +357,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         }
                     } else {
                         datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
-                        attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT-32: %s", value));
+                        attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", value, System.lineSeparator()));
                         log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
                     }
                 } else {
