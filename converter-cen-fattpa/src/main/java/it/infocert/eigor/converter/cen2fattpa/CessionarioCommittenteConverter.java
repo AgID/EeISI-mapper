@@ -86,11 +86,20 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
     private void addCodiceEori(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
         if (!invoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-            if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
-                BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
-                Identifier identifierI = registrationIdentifier.getValue();
+            BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
+            Identifier identifierI = registrationIdentifier.getValue();
 
-                if (identifierI != null) {
+            if (identifierI != null) {
+                boolean italian = false;
+                if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+                    if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
+                        final List<BT0055BuyerCountryCode> countryCodes = buyer.getBG0008BuyerPostalAddress(0).getBT0055BuyerCountryCode();
+                        if (!countryCodes.isEmpty()) {
+                            final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
+                            italian = Iso31661CountryCodes.IT.equals(countryCode);
+                        }
+                    }
+
 
                     String identificationSchema = identifierI.getIdentificationSchema();
                     String identifier = identifierI.getIdentifier();
@@ -106,10 +115,17 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         datiAnagrafici.setAnagrafica(anagrafica);
                     }
 
-                    if ("IT:EORI".equals(identificationSchema)) {
-                        anagrafica.setCodEORI(identifier);
+
+                    final String eori = "IT:EORI";
+                    if ((eori.equals(identificationSchema) || identifier.startsWith(eori)) && italian) {
+                        if (identifier.startsWith(eori)) {
+                            final String replaced = identifier.replace(eori + ":", "");
+                            anagrafica.setCodEORI(replaced);
+                        } else {
+                            anagrafica.setCodEORI(identifier);
+                        }
                     } else {
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronicaBody, String.format("%s: %s:%s", registrationIdentifier.denomination(), identificationSchema, identifier));
+                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronicaBody, String.format("BT0047: %s:%s", identificationSchema != null ? identificationSchema.trim() : "", identifier));
                     }
 
                 }
