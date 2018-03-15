@@ -100,7 +100,7 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
         if (conversionResult.isSuccessful()) {
             out.println("From Cen Conversion was successful!");
         } else {
-            out.println("From Cen Conversion finished, but some issues have occured:");
+            out.println(String.format("From Cen Conversion finished, but %d issues have occured:", conversionResult.getIssues().size()));
             List<IConversionIssue> errors = conversionResult.getIssues();
             for (IConversionIssue e : errors) {
                 String label = e.isError() ? "ERROR: " : "WARN: ";
