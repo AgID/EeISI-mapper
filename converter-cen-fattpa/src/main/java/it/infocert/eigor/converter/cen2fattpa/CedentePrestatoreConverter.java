@@ -34,10 +34,10 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         CedentePrestatoreType cedentePrestatore = fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore();
         if (cedentePrestatore != null) {
-            addRegimeFiscale(invoice, cedentePrestatore, errors, callingLocation);
             List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
             if (!bodies.isEmpty()) {
                 FatturaElettronicaBodyType body = bodies.get(0);
+                addRegimeFiscale(invoice, body, cedentePrestatore, errors, callingLocation);
                 mapBt29(invoice, body, cedentePrestatore, errors);
                 mapBt30(invoice, body, cedentePrestatore, errors);
                 addIndirizzo(invoice, fatturaElettronica, errors);
@@ -313,7 +313,8 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     } else {
                         log.warn("No [BT-38] SellerPostCode was found in current [BG-5] SellerPostalAddress");
                     }
-                    if (subdivision.isPresent()) attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
+                    if (subdivision.isPresent())
+                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
                 } else {
                     log.debug("Italian address");
                     final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
@@ -328,7 +329,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
         }
     }
 
-    private void addRegimeFiscale(BG0000Invoice invoice, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    private void addRegimeFiscale(BG0000Invoice invoice, FatturaElettronicaBodyType body, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller seller = invoice.getBG0004Seller(0);
 
@@ -337,16 +338,31 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
                 if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
                     BT0032SellerTaxRegistrationIdentifier identifier = seller.getBT0032SellerTaxRegistrationIdentifier(0);
+                    final String value = identifier.getValue();
                     if (!seller.getBT0031SellerVatIdentifier().isEmpty() && seller.getBT0031SellerVatIdentifier(0).getValue().startsWith("IT")) {
-                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(identifier.getValue()));
-                        log.debug("Mapped BT0031 to RegimeFiscale with value {}", identifier.getValue());
+                        try {
+                            datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(value));
+                            log.debug("Mapped BT0032 to RegimeFiscale with value {}", value);
+                        } catch (IllegalArgumentException e) {
+                            log.error(e.getMessage());
+                            final String message = String.format("BT-32 value '%s' is not a valid RegimeFiscale code", value);
+                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                    message,
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE,
+                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value)
+                            )));
+                        }
                     } else {
-                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18); //FIXME mapping says "will be by default RF00 (inknown- because it is a mandatory" but no RF_00 is present in the enum
-                        log.debug("Mapped BT0031 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
+                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
+                        attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", value, System.lineSeparator()));
+                        log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
                     }
                 } else {
-                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18); //FIXME mapping says "will be by default RF00 (inknown- because it is a mandatory" but no RF_00 is present in the enum
-                    log.debug("Mapped BT0031 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
+                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
+                    log.debug("Mapped RegimeFiscale with default value {} since BT-32 is empty", RegimeFiscaleType.RF_18);
                 }
             } else {
                 final String message = "No DatiAnagrafici was found in current CedentePrestatore";
