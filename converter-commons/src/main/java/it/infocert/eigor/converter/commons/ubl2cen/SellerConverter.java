@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
@@ -7,13 +9,16 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * The Seller Custom Converter
@@ -79,9 +84,55 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         }
         return new ConversionResult<>(errors, invoice);
     }
+//    /Invoice/cac:PayeeParty/cac:PartyIdentification/cbc:ID
+//    /Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0029_31_32(document, cenInvoice, errors, callingLocation);
+    }
+
+    private void mapBankIdentifier(final BG0000Invoice invoice, final Document document) {
+        final Element root = document.getRootElement();
+        final List<Namespace> namespacesInScope = root.getNamespacesIntroduced();
+        final Optional<Element> payeeParty = Optional.fromNullable(findNamespaceChild(root, namespacesInScope, "PayeeParty"));
+        if (payeeParty.isPresent()) {
+            final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(payeeParty.get(), namespacesInScope, "PartyIdentification"));
+            if (partyIdentification.isPresent()) {
+                final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
+                if (idOptional.isPresent()) {
+                    final Element id = idOptional.get();
+                    final Attribute sepa = id.getAttribute("SEPA");
+                    if (sepa != null) {
+                        final Identifier identifier = new Identifier(sepa.getValue(), id.getText());
+                        final BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
+                        final BG0019DirectDebit bg19 = new BG0019DirectDebit();
+                        bg19.getBT0090BankAssignedCreditorIdentifier().add(new BT0090BankAssignedCreditorIdentifier(identifier));
+                        bg16.getBG0019DirectDebit().add(bg19);
+                        invoice.getBG0016PaymentInstructions().add(bg16);
+                    }
+                }
+            }
+        }
+
+
+        /*final List<BG0016PaymentInstructions> paymentInstructions = invoice.getBG0016PaymentInstructions();
+        if (!paymentInstructions.isEmpty()) {
+            final BG0016PaymentInstructions instructions = paymentInstructions.get(0);
+            final List<BG0019DirectDebit> directDebits = instructions.getBG0019DirectDebit();
+            if (!directDebits.isEmpty()) {
+                final BG0019DirectDebit directDebit = directDebits.get(0);
+                final List<BT0090BankAssignedCreditorIdentifier> bankIdentifiers = directDebit.getBT0090BankAssignedCreditorIdentifier();
+                if (!bankIdentifiers.isEmpty()) {
+                    final Identifier bankId = bankIdentifiers.get(0).getValue();
+                    final String identificationSchema = bankId.getIdentificationSchema();
+                    if (identificationSchema != null && "sepa".equalsIgnoreCase(identificationSchema)) {
+
+                    }
+
+
+                }
+            }
+        }*/
     }
 }
