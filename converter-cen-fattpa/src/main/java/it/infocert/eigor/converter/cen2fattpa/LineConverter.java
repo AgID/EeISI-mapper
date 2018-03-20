@@ -250,7 +250,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     sb.append("BT-98=");
                     if (!"".equals(result)) {
                         log.debug("BT-98 mapped to AltriDatiGestionali");
-                       sb.append(result);
+                        sb.append(result);
                     } else {
                         log.debug("BT-98 mapped to Descrizione");
                         sb.append(code.getCode());
@@ -410,7 +410,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         Double baseAmount = invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
                         Double percentage = invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().isEmpty() ? 0 : invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage(0).getValue();
                         String reason = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().isEmpty() ? "Sconto Linea" : invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
-                        String code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty() ? "" : " " + conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue());
+
+                        String code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty() ? "" : String.format(" BT-0140: %d", invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue().getCode());
+
                         if (allowanceAmount > 0) {
                             discountValue = -allowanceAmount;
                         } else if (baseAmount != 0 && percentage != 0) {
@@ -456,9 +458,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 //                    scontoMaggiorazione1.setTipo(TipoScontoMaggiorazioneType.MG);
 //                    dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione1);
                     String bt0144 = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione Linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
-                    String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? "" : " " + conversionRegistry.convert(Untdid7161SpecialServicesCodes.class, String.class, invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue());
+                    String bt0145 = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty() ? null : invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue().name();
                     if (surchargeValue > 0) {
-                        dettaglioLinee.setDescrizione(String.format("%s%s", bt0144, bt0145));
+                        if (bt0145 != null) {
+                            dettaglioLinee.setDescrizione(String.format("%s BT-0145: %s", bt0144, bt0145));
+                        } else {
+                            dettaglioLinee.setDescrizione(bt0144);
+                        }
                         dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
                         dettaglioLinee.setPrezzoUnitario(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(surchargeValue));
                         dettaglioLinee.setPrezzoTotale(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount * quantity));
@@ -693,24 +699,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         lineaSconto.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
                         String descrizione = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
                         if (descrizione != null) {
-                            lineaSconto.setDescrizione(descrizione);
-                        } else {
-                            Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
-                            TypeConverter<Untdid5189ChargeAllowanceDescriptionCodes, String> converter = Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter();
-                            try {
-                                descrizione = converter.convert(code);
-                                if (descrizione != null) {
-                                    lineaSconto.setDescrizione(descrizione);
-                                }
-                            } catch (ConversionFailedException e) {
-                                errors.add(ConversionIssue.newError(
-                                        e,
-                                        e.getMessage(),
-                                        callingLocation,
-                                        ErrorCode.Action.HARDCODED_MAP,
-                                        ErrorCode.Error.ILLEGAL_VALUE,
-                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())));
+                            if (invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
+                                lineaSconto.setDescrizione(descrizione);
+                            } else {
+                                Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
+                                lineaSconto.setDescrizione(String.format("%s BT-0140: %d", descrizione, code.getCode()));
                             }
                         }
                         Double allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? 0 : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
@@ -755,28 +748,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         lineaMaggiorazione.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaMaggiorazione.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
                         String descrizione = invoiceLineCharges.getBT0144InvoiceLineChargeReason().isEmpty() ? "Maggiorazione linea" : invoiceLineCharges.getBT0144InvoiceLineChargeReason(0).getValue();
-                        if (descrizione != null) {
+                        if (invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
                             lineaMaggiorazione.setDescrizione(descrizione);
                         } else {
                             Untdid7161SpecialServicesCodes code = invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode(0).getValue();
-                            TypeConverter<Untdid7161SpecialServicesCodes, String> converter = Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter();
-                            try {
-                                descrizione = converter.convert(code);
-                                if (descrizione != null) {
-                                    lineaMaggiorazione.setDescrizione(descrizione);
-                                }
-                            } catch (ConversionFailedException e) {
-                                errors.add(ConversionIssue.newError(
-                                        e,
-                                        e.getMessage(),
-                                        callingLocation,
-                                        ErrorCode.Action.HARDCODED_MAP,
-                                        ErrorCode.Error.ILLEGAL_VALUE,
-                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, code.toString())
-                                ));
-                            }
-
+                            lineaMaggiorazione.setDescrizione(String.format("%s BT-0145: %s", descrizione, code.name()));
                         }
                         Double chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? 0 : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
                         BigDecimal prezzo = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(chargeAmount);
