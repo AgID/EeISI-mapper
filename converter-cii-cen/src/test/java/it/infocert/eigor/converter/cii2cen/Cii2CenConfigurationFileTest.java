@@ -73,7 +73,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		IConversionIssue issue = errors.get(0);
 		assertTrue(issue.getCause() instanceof SAXParseException);
 		assertTrue(issue.isError());
-		assertTrue(issue.getMessage().endsWith("Error during XSD parsing"));
+		assertTrue(issue.getMessage().endsWith("XSD validation failed"));
 	}
 
 	@Test
