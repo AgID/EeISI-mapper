@@ -13,8 +13,9 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <excludes>
-                <!-- working example below-->
-                <!--<exclude>org.slf4j:*</exclude>-->
+                <!-- exclude logging -->
+                <exclude>org.slf4j:*</exclude>
+                <exclude>log4j:*</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
