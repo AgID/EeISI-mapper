@@ -94,23 +94,28 @@ public class XSDValidator implements IXMLValidator {
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
-                    errors.add(ConversionIssue.newWarning(exception, "Error during XSD parsing",
+                    int lineNumber = exception.getLineNumber();
+                    int columnNumber = exception.getColumnNumber();
+                    String message = String.format("XSD validation warning at %d:%d. %s",
+                            lineNumber, columnNumber,
+                            exception.getMessage());
+                    errors.add(ConversionIssue.newWarning(exception, "XSD validation warning",
                             callingLocation,
                             ErrorCode.Action.XSD_VALIDATION,
                             ErrorCode.Error.INVALID,
-                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, exception.getMessage())
+                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, message)
                     ));
+                    log.warn(message, exception);
                 }
 
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
-
                     int lineNumber = exception.getLineNumber();
                     int columnNumber = exception.getColumnNumber();
                     String message = String.format("XSD validation error at %d:%d. %s",
                             lineNumber, columnNumber,
                             exception.getMessage());
-                    errors.add(ConversionIssue.newError(exception, "Error during XSD parsing",
+                    errors.add(ConversionIssue.newError(exception, "XSD validation failed",
                             callingLocation,
                             ErrorCode.Action.XSD_VALIDATION,
                             ErrorCode.Error.INVALID,
@@ -126,7 +131,7 @@ public class XSDValidator implements IXMLValidator {
             });
             validator.validate(xmlFile);
         } catch (SAXException | IOException e) {
-            errors.add(ConversionIssue.newError(e, "XSD validation failed!",
+            errors.add(ConversionIssue.newError(e, "XSD validator error!",
                     callingLocation,
                     ErrorCode.Action.XSD_VALIDATION,
                     ErrorCode.Error.INVALID,
