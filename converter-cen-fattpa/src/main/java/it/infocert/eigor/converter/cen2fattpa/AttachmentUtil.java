@@ -7,6 +7,7 @@ import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.activation.MimeType;
 import java.util.List;
 
 /**
@@ -44,5 +45,30 @@ class AttachmentUtil {
         }
         final String updated = "".equalsIgnoreCase(content) ? input : content + System.lineSeparator() + input;
         allegato.setAttachment(updated.getBytes());
+    }
+
+    String getShortFileFormat(MimeType mimeType) {
+        if(mimeType == null) return null;
+
+        String primaryType = mimeType.getPrimaryType();
+        String subType = mimeType.getSubType();
+
+        switch (primaryType) {
+            case "application":
+                if ("pdf".equals(subType)) return "pdf";
+                if ("vnd.oasis.opendocument.spreadsheet".equals(subType)) return "ods";
+                if ("vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(subType)) return "xlsx";
+                break;
+            case "image":
+                if ("png".equals(subType)) return "png";
+                if ("jpeg".equals(subType)) return "jpeg";
+                break;
+            case "text":
+                if ("csv".equals(subType)) return "csv";
+                break;
+        }
+
+        log.trace("No short file format for MIME {}", mimeType.getBaseType());
+        return null;
     }
 }
