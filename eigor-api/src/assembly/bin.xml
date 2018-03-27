@@ -15,7 +15,8 @@
             <excludes>
                 <!-- exclude logging -->
                 <exclude>org.slf4j:*</exclude>
-                <exclude>log4j:*</exclude>
+                <exclude>log4j:log4j</exclude>
+                <exclude>commons-logging:commons-logging</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
