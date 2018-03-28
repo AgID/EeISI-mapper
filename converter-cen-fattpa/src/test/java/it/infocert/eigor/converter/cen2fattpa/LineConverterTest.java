@@ -144,8 +144,7 @@ public class LineConverterTest {
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
         List<AltriDatiGestionaliType> altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali();
-        assertThat(altriDatiGestionali.size(), is(1));
-        assertEquals("21.0", altriDatiGestionali.get(0).getRiferimentoTesto());
+        assertThat(altriDatiGestionali.size(), is(0));
 
         assertEquals(NaturaType.N_3, dettaglioLinee.getNatura());
 
@@ -167,8 +166,7 @@ public class LineConverterTest {
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
         List<AltriDatiGestionaliType> altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali();
-        assertThat(altriDatiGestionali.size(), is(1));
-        assertEquals("20.00", altriDatiGestionali.get(0).getRiferimentoNumero().toString());
+        assertThat(altriDatiGestionali.size(), is(0));
 
         assertEquals(NaturaType.N_3, dettaglioLinee.getNatura());
 
