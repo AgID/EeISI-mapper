@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -173,7 +174,7 @@ public class LineConverterTest {
 
         assertEquals(new BigDecimal(23.00).setScale(2, RoundingMode.HALF_UP), dettaglioLinee.getAliquotaIVA());
 
-        assertEquals("Reason TC01", dettaglioLinee.getDescrizione());
+        assertEquals("Reason SC", dettaglioLinee.getDescrizione());
     }
 
     @Test
@@ -260,8 +261,8 @@ public class LineConverterTest {
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {
         BG0027InvoiceLineAllowances invoiceLineAllowances = new BG0027InvoiceLineAllowances();
         invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().add(new BT0136InvoiceLineAllowanceAmount(20.0));
-        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(21.0));
-        invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(22.0));
+        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(new Identifier("EUR", "21.0")));
+        invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(new Identifier("EUR", "22.0")));
         invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().add(new BT0139InvoiceLineAllowanceReason("Reason"));
         invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code42));
 

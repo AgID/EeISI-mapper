@@ -90,6 +90,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0029_31_32(document, cenInvoice, errors, callingLocation);
+        mapBankIdentifier(cenInvoice, document);
     }
 
     private void mapBankIdentifier(final BG0000Invoice invoice, final Document document) {
@@ -101,38 +102,53 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
             if (partyIdentification.isPresent()) {
                 final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
                 if (idOptional.isPresent()) {
-                    final Element id = idOptional.get();
-                    final Attribute sepa = id.getAttribute("SEPA");
-                    if (sepa != null) {
-                        final Identifier identifier = new Identifier(sepa.getValue(), id.getText());
-                        final BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
-                        final BG0019DirectDebit bg19 = new BG0019DirectDebit();
-                        bg19.getBT0090BankAssignedCreditorIdentifier().add(new BT0090BankAssignedCreditorIdentifier(identifier));
-                        bg16.getBG0019DirectDebit().add(bg19);
-                        invoice.getBG0016PaymentInstructions().add(bg16);
-                    }
-                }
+                    mapId(invoice, idOptional.get());
+                } else
+                    log("ID");
+            } else {
+                log("PartyIdentification");
             }
+        } else {
+            log("PayeeParty");
+        }
+        final Optional<Element> accountingSupplierParty = Optional.fromNullable(findNamespaceChild(root, namespacesInScope, "AccountingSupplierParty"));
+        if (accountingSupplierParty.isPresent()) {
+            final Optional<Element> party = Optional.fromNullable(findNamespaceChild(accountingSupplierParty.get(), namespacesInScope, "Party"));
+            if (party.isPresent()) {
+                final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(party.get(), namespacesInScope, "PartyIdentification"));
+                if (partyIdentification.isPresent()) {
+                    final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
+                    if (idOptional.isPresent()) {
+                        mapId(invoice, idOptional.get());
+                    } else
+                        log("ID");
+                } else {
+                    log("PartyIdentification");
+                }
+            } else {
+                log("Party");
+            }
+        } else {
+            log("AccountingSupplierParty");
         }
 
+    }
 
-        /*final List<BG0016PaymentInstructions> paymentInstructions = invoice.getBG0016PaymentInstructions();
-        if (!paymentInstructions.isEmpty()) {
-            final BG0016PaymentInstructions instructions = paymentInstructions.get(0);
-            final List<BG0019DirectDebit> directDebits = instructions.getBG0019DirectDebit();
-            if (!directDebits.isEmpty()) {
-                final BG0019DirectDebit directDebit = directDebits.get(0);
-                final List<BT0090BankAssignedCreditorIdentifier> bankIdentifiers = directDebit.getBT0090BankAssignedCreditorIdentifier();
-                if (!bankIdentifiers.isEmpty()) {
-                    final Identifier bankId = bankIdentifiers.get(0).getValue();
-                    final String identificationSchema = bankId.getIdentificationSchema();
-                    if (identificationSchema != null && "sepa".equalsIgnoreCase(identificationSchema)) {
+    private void mapId(BG0000Invoice invoice, Element id) {
+        final Attribute sepa = id.getAttribute("schemeID");
+        if (sepa != null && "sepa".equalsIgnoreCase(sepa.getValue())) {
+            final Identifier identifier = new Identifier(sepa.getValue(), id.getText());
+            final BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
+            final BG0019DirectDebit bg19 = new BG0019DirectDebit();
+            bg19.getBT0090BankAssignedCreditorIdentifier().add(new BT0090BankAssignedCreditorIdentifier(identifier));
+            bg16.getBG0019DirectDebit().add(bg19);
+            invoice.getBG0016PaymentInstructions().add(bg16);
+        } else
+            log.info("Element 'ID' has no schemeID or it is not of value 'SEPA'. SchemeID: {}", sepa != null ? sepa.getValue() : "null");
+    }
 
-                    }
 
-
-                }
-            }
-        }*/
+    private void log(final String item) {
+        log.info("No {} in current UBL invoice", item);
     }
 }
