@@ -112,7 +112,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 if (!bg0019.getBT0090BankAssignedCreditorIdentifier().isEmpty()) {
                     BT0090BankAssignedCreditorIdentifier bt0090 = bg0019.getBT0090BankAssignedCreditorIdentifier(0);
                     Element creditorReferenceID = new Element("CreditorReferenceID", ramNs);
-                    creditorReferenceID.setText(bt0090.getValue());
+                    creditorReferenceID.setText(bt0090.getValue().getIdentifier());
                     applicableHeaderTradeAgreement.addContent(creditorReferenceID);
                 }
 

@@ -1,5 +1,7 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
@@ -7,13 +9,16 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * The Seller Custom Converter
@@ -79,9 +84,71 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         }
         return new ConversionResult<>(errors, invoice);
     }
+//    /Invoice/cac:PayeeParty/cac:PartyIdentification/cbc:ID
+//    /Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         toBT0029_31_32(document, cenInvoice, errors, callingLocation);
+        mapBankIdentifier(cenInvoice, document);
+    }
+
+    private void mapBankIdentifier(final BG0000Invoice invoice, final Document document) {
+        final Element root = document.getRootElement();
+        final List<Namespace> namespacesInScope = root.getNamespacesIntroduced();
+        final Optional<Element> payeeParty = Optional.fromNullable(findNamespaceChild(root, namespacesInScope, "PayeeParty"));
+        if (payeeParty.isPresent()) {
+            final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(payeeParty.get(), namespacesInScope, "PartyIdentification"));
+            if (partyIdentification.isPresent()) {
+                final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
+                if (idOptional.isPresent()) {
+                    mapId(invoice, idOptional.get());
+                } else
+                    log("ID");
+            } else {
+                log("PartyIdentification");
+            }
+        } else {
+            log("PayeeParty");
+        }
+        final Optional<Element> accountingSupplierParty = Optional.fromNullable(findNamespaceChild(root, namespacesInScope, "AccountingSupplierParty"));
+        if (accountingSupplierParty.isPresent()) {
+            final Optional<Element> party = Optional.fromNullable(findNamespaceChild(accountingSupplierParty.get(), namespacesInScope, "Party"));
+            if (party.isPresent()) {
+                final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(party.get(), namespacesInScope, "PartyIdentification"));
+                if (partyIdentification.isPresent()) {
+                    final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
+                    if (idOptional.isPresent()) {
+                        mapId(invoice, idOptional.get());
+                    } else
+                        log("ID");
+                } else {
+                    log("PartyIdentification");
+                }
+            } else {
+                log("Party");
+            }
+        } else {
+            log("AccountingSupplierParty");
+        }
+
+    }
+
+    private void mapId(BG0000Invoice invoice, Element id) {
+        final Attribute sepa = id.getAttribute("schemeID");
+        if (sepa != null && "sepa".equalsIgnoreCase(sepa.getValue())) {
+            final Identifier identifier = new Identifier(sepa.getValue(), id.getText());
+            final BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
+            final BG0019DirectDebit bg19 = new BG0019DirectDebit();
+            bg19.getBT0090BankAssignedCreditorIdentifier().add(new BT0090BankAssignedCreditorIdentifier(identifier));
+            bg16.getBG0019DirectDebit().add(bg19);
+            invoice.getBG0016PaymentInstructions().add(bg16);
+        } else
+            log.info("Element 'ID' has no schemeID or it is not of value 'SEPA'. SchemeID: {}", sepa != null ? sepa.getValue() : "null");
+    }
+
+
+    private void log(final String item) {
+        log.info("No {} in current UBL invoice", item);
     }
 }
