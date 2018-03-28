@@ -192,9 +192,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 Element basisAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BasisAmount");
                                 if (basisAmount != null) {
                                     try {
-                                        BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(strDblConverter.convert(basisAmount.getText()));
+                                        final String text = basisAmount.getText();
+                                        final Attribute currencyID = basisAmount.getAttribute("currencyID");
+                                        final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
+                                        BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
                                         bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
-                                    }catch (NumberFormatException | ConversionFailedException e) {
+                                    }catch (NumberFormatException e) {
                                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                             .message(e.getMessage())
                                             .location(callingLocation)
@@ -208,9 +211,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 Element calculationPercent = findNamespaceChild(elemInvAll, namespacesInScope, "CalculationPercent");
                                 if (calculationPercent != null) {
                                     try {
-                                        BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(strDblConverter.convert(calculationPercent.getText()));
+                                        final String text = calculationPercent.getText();
+                                        final Attribute currencyID = calculationPercent.getAttribute("currencyID");
+                                        final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
+                                        BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
                                         bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
-                                    }catch (NumberFormatException | ConversionFailedException e) {
+                                    }catch (NumberFormatException e) {
                                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                             .message(e.getMessage())
                                             .location(callingLocation)

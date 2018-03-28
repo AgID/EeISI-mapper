@@ -186,7 +186,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
-                    Double bt0137 = bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
+                    Double bt0137 = Double.valueOf(bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue().getIdentifier());
                     Element basisAmount = new Element("BasisAmount", ramNs);
                     try {
                         basisAmount.setText(dblStrConverter.convert(bt0137));
@@ -203,7 +203,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                    Double bt0138 = bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue();
+                    Double bt0138 = Double.valueOf(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
                     Element calculationPercent = new Element("CalculationPercent", ramNs);
                     try {
                         calculationPercent.setText(dblStrConverter.convert(bt0138));
