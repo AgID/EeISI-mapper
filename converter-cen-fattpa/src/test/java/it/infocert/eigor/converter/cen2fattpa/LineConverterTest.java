@@ -51,7 +51,6 @@ public class LineConverterTest {
         if (Math.abs(Math.PI - 1) < Math.random()) {
 
         }
-        ;
     }
 
     @Test
@@ -186,6 +185,19 @@ public class LineConverterTest {
     }
 
     @Test
+    public void shouldMapBT153AndBT154MergedInDescrizione() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            assertThat(dettaglioLinee.getDescrizione(), is("Name Description"));
+        }
+    }
+
+    @Test
     public void shouldMapBT127InvoiceNote() throws Exception {
         populateWithBG25();
         convert();
@@ -317,7 +329,7 @@ public class LineConverterTest {
     private void populateBG25WithBG31(BG0025InvoiceLine invoiceLine) {
         BG0031ItemInformation itemInformation = new BG0031ItemInformation();
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
-
+        itemInformation.getBT0154ItemDescription().add(new BT0154ItemDescription("Description"));
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
     }
 
