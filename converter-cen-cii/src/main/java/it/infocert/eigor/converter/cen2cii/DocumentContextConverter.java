@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;

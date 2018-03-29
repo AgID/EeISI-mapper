@@ -2,6 +2,9 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;

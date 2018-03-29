@@ -10,6 +10,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
@@ -362,6 +363,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
 
+                for (BT0127InvoiceLineNote bt0127 : invoiceLine.getBT0127InvoiceLineNote()) {
+                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato("BT-127");
+                    altriDatiGestionali.setRiferimentoTesto(bt0127.getValue());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
+                }
+
                 Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
 
                 dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
@@ -590,6 +599,16 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             if (!itemInformation.getBT0153ItemName().isEmpty()) {
                 dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName(0).getValue());
+            }
+
+            if (!itemInformation.getBT0154ItemDescription().isEmpty()) {
+                String bt154 = itemInformation.getBT0154ItemDescription(0).getValue();
+                String currentDesc = dettaglioLinee.getDescrizione();
+                if (currentDesc == null || currentDesc.isEmpty()) {
+                    dettaglioLinee.setDescrizione(bt154);
+                } else {
+                    dettaglioLinee.setDescrizione(String.format("%s %s", currentDesc, bt154));
+                }
             }
 
             if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {

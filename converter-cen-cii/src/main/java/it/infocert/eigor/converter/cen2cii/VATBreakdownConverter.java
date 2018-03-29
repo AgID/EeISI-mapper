@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.DoubleToStringConverter;
-import it.infocert.eigor.api.conversion.JavaLocalDateToStringConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
