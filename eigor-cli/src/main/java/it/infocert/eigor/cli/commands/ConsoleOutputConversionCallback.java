@@ -2,6 +2,8 @@ package it.infocert.eigor.cli.commands;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.conversion.AbstractConversionCallback;
+import it.infocert.eigor.api.conversion.ConversionContext;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -12,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A {@link ObservableConversion.ConversionCallback conversion callback}
+ * A {@link ConversionCallback conversion callback}
  * that prints out useful information about the ongoing conversion.
  */
-class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConversionCallback {
+class ConsoleOutputConversionCallback extends AbstractConversionCallback {
 
     private final PrintStream out;
 
@@ -23,15 +25,15 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
         this.out = Preconditions.checkNotNull(out);
     }
 
-    @Override public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onStartingConversion(ConversionContext ctx) throws Exception {
         out.println("Starting conversion.");
     }
 
-    @Override public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullToCenTranformation(ConversionContext ctx) throws Exception {
         out.println("Conversion to CEN completed successfully.");
     }
 
-    @Override public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onFailedToCenConversion(ConversionContext ctx) throws Exception {
         writeToCenErrorsToOutputStream(out, ctx.getToCenResult());
         if (ctx.isForceConversion()) {
             out.println("Conversion to CEN has encountered errors but will continue anyway.");
@@ -40,12 +42,12 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
         }
     }
 
-    @Override public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception {
         out.println("CEN rules validation completed successfully.");
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
     }
 
-    @Override public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
         if (ctx.getRuleReport().hasFailures()) {
             if (ctx.isForceConversion()) {
@@ -56,11 +58,11 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
         }
     }
 
-    @Override public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception {
         out.println("Conversion from CEN completed successfully.");
     }
 
-    @Override public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    @Override public void onFailedFromCenTransformation(ConversionContext ctx) throws Exception {
         BinaryConversionResult conversionResult = ctx.getFromCenResult();
         writeFromCenErrorsToOutStream(out, conversionResult);
         if (conversionResult.hasIssues()) {
@@ -112,7 +114,7 @@ class ConsoleOutputConversionCallback extends ObservableConversion.AbstractConve
     }
 
     @Override
-    public void onUnexpectedException(Exception e, ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onUnexpectedException(Exception e, ConversionContext ctx) throws Exception {
         out.println(e.getMessage());
     }
 }

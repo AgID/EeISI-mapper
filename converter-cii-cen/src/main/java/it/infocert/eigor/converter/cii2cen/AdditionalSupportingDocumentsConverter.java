@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
-import it.infocert.eigor.api.conversion.AttachmentToFileReferenceConverter;
+import it.infocert.eigor.api.conversion.converter.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;

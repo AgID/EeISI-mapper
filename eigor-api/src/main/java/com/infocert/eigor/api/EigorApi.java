@@ -1,8 +1,13 @@
 package com.infocert.eigor.api;
 
-import it.infocert.eigor.api.*;
+import com.google.common.collect.Lists;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.FromCenConversion;
+import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
+import it.infocert.eigor.api.conversion.ObservableValidation;
 import it.infocert.eigor.api.utils.EigorVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -33,7 +37,7 @@ public class EigorApi {
      * @param invoice The invoice to convert.
      * @return The invoice converted in the given target format.
      */
-    public ConversionResult<byte[]> convert(String sourceFormat, String targetFormat, InputStream invoice) {
+    public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice) {
         log.debug(EigorVersion.getAsString());
 
         String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
@@ -42,7 +46,7 @@ public class EigorApi {
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
         outputFolderForThisTransformation.mkdirs();
 
-        ObservableConversion.ConversionCallback callback = new DebugConversionCallback(
+        ConversionCallback callback = new DebugConversionCallback(
                 outputFolderForThisTransformation
         );
 
@@ -58,7 +62,29 @@ public class EigorApi {
                 invoice,
                 builder.isForceConversion(),
                 "invoice",
-                Arrays.asList(callback)).conversion();
+                Lists.newArrayList(callback)).conversion();
 
+    }
+
+    public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
+        log.debug(EigorVersion.getAsString());
+
+        String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
+
+        String folderName = String.format( "validation-%s-%s-%s", stringAsDate, sourceFormat, (int)(Math.random()*100000));
+        File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
+        outputFolderForThisTransformation.mkdirs();
+        ToCenConversion toCen = builder.getConversionRepository().findConversionToCen(sourceFormat);
+        ConversionCallback callback = new DebugConversionCallback(
+                outputFolderForThisTransformation
+        );
+
+        return new ObservableValidation(
+                invoice,
+                toCen,
+                "invoice",
+                Lists.newArrayList(callback),
+                builder.getRuleRepository()
+                ).validate();
     }
 }

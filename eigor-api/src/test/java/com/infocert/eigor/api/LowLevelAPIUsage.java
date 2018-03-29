@@ -4,6 +4,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.io.Copier;
@@ -134,7 +135,7 @@ public class LowLevelAPIUsage {
                         .build();
         conversionRepository.configure();
 
-        ObservableConversion.ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
+        ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
 
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
@@ -278,7 +279,7 @@ public class LowLevelAPIUsage {
                         .build();
         conversionRepository.configure();
 
-        final ObservableConversion.ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
+        final ConversionCallback callback = new DebugConversionCallback(outputFolderFile);
 
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.

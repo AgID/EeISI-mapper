@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.ublcn2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;

@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.converters;
 
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 public class ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter implements TypeConverter<String,Untdid1001InvoiceTypeCode> {
