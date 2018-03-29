@@ -600,6 +600,16 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 dettaglioLinee.setDescrizione(itemInformation.getBT0153ItemName(0).getValue());
             }
 
+            if (!itemInformation.getBT0154ItemDescription().isEmpty()) {
+                String bt154 = itemInformation.getBT0154ItemDescription(0).getValue();
+                String currentDesc = dettaglioLinee.getDescrizione();
+                if (currentDesc == null || currentDesc.isEmpty()) {
+                    dettaglioLinee.setDescrizione(bt154);
+                } else {
+                    dettaglioLinee.setDescrizione(String.format("%s %s", currentDesc, bt154));
+                }
+            }
+
             if (!itemInformation.getBT0155ItemSellerSIdentifier().isEmpty()) {
                 CodiceArticoloType codiceArticolo = new CodiceArticoloType();
                 codiceArticolo.setCodiceTipo("Seller");
