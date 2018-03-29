@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.fattpa2cen.converters;
 
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 
 public class ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter implements TypeConverter<String, Untdid2005DateTimePeriodQualifiers> {

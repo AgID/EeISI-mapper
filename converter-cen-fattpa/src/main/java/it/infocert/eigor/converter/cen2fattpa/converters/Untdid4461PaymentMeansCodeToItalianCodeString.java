@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.ToStringTypeConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.ToStringTypeConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.converter.cen2fattpa.models.ModalitaPagamentoType;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 
