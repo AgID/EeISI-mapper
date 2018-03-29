@@ -362,6 +362,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
 
+                for (BT0127InvoiceLineNote bt0127 : invoiceLine.getBT0127InvoiceLineNote()) {
+                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato("BT-127");
+                    altriDatiGestionali.setRiferimentoTesto(bt0127.getValue());
+                    dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
+                }
+
                 Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
 
                 dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
