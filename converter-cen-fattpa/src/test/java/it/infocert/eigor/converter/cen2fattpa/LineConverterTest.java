@@ -50,7 +50,8 @@ public class LineConverterTest {
 
         if (Math.abs(Math.PI - 1) < Math.random()) {
 
-        };
+        }
+        ;
     }
 
     @Test
@@ -182,8 +183,22 @@ public class LineConverterTest {
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
         assertThat(dettaglioLineeList.size(), is(15));
+    }
 
+    @Test
+    public void shouldMapBT127InvoiceNote() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
 
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            AltriDatiGestionaliType altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali().get(0);
+
+            assertThat(altriDatiGestionali.getTipoDato(), is("BT-127"));
+            assertThat(altriDatiGestionali.getRiferimentoTesto(), is("TestNote"));
+        }
     }
 
     @Test
@@ -192,7 +207,7 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
             assertThat(dettaglioLinee.getAliquotaIVA(), is(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0d)));
             assertEquals(NaturaType.N_4, dettaglioLinee.getNatura());
@@ -205,7 +220,7 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
             BigDecimal quantita = dettaglioLinee.getQuantita();
             BigDecimal expected = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(2d, 8);
@@ -251,6 +266,7 @@ public class LineConverterTest {
             populateBG25WithBG29(invoiceLine);
             populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
+            populateBG25WithBT127(invoiceLine);
             populateBG25WithBT129(invoiceLine);
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
@@ -303,6 +319,11 @@ public class LineConverterTest {
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
 
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
+    }
+
+    private void populateBG25WithBT127(BG0025InvoiceLine invoiceLine) {
+        BT0127InvoiceLineNote bt0127 = new BT0127InvoiceLineNote("TestNote");
+        invoiceLine.getBT0127InvoiceLineNote().add(bt0127);
     }
 
     private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {
