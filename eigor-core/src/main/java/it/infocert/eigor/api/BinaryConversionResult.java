@@ -9,8 +9,6 @@ import java.util.Objects;
  */
 public class BinaryConversionResult extends ConversionResult<byte[]> {
 
-    private final boolean hasResult;
-
     /**
      * A successfull conversion.
      */
@@ -24,19 +22,11 @@ public class BinaryConversionResult extends ConversionResult<byte[]> {
      */
     public BinaryConversionResult(byte[] result, List<IConversionIssue> errors) {
         super(errors, result);
-        if (result != null && result.length > 0) {
-            hasResult = true;
-            if (errors.isEmpty()) {
-                successful = true;
-            }
-        } else {
-            hasResult = false;
-        }
         Objects.requireNonNull(errors);
     }
 
     @Override
     public boolean hasResult() {
-        return hasResult;
+        return (result != null && result.length > 0);
     }
 }
