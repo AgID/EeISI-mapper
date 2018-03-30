@@ -496,8 +496,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 for (Element elemComm : commodityClassifications) {
                     Element itemClassificationCode = findNamespaceChild(elemComm, namespacesInScope, "ItemClassificationCode");
                     if (itemClassificationCode != null) {
-                        Attribute listID = id.getAttribute("listID");
-                        Attribute listAgencyID = id.getAttribute("listVersionID");
+                        Attribute listID = itemClassificationCode.getAttribute("listID");
+                        Attribute listAgencyID = itemClassificationCode.getAttribute("listVersionID");
                         if (listAgencyID != null) {
                             bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
                         } else {
