@@ -240,6 +240,20 @@ public class LineConverterTest {
         }
     }
 
+    @Test
+    public void shouldMapBT158SchemeIdentifierAndVersionMergedInCodiceTipo() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(0).getCodiceTipo();
+            assertThat(codiceTipo, is("BT-158-1 BT-158-2"));
+        }
+    }
+
     private void convert() {
         new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
     }
@@ -330,6 +344,10 @@ public class LineConverterTest {
         BG0031ItemInformation itemInformation = new BG0031ItemInformation();
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
         itemInformation.getBT0154ItemDescription().add(new BT0154ItemDescription("Description"));
+        BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt158 =
+                new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(
+                        new Identifier("BT-158-1", "BT-158-2", "BT158"));
+        itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add(bt158);
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
     }
 
