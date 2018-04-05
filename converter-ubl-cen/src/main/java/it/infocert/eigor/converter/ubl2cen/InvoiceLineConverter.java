@@ -487,7 +487,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 if (standardItemIdentification != null) {
                     Element idStandard = findNamespaceChild(standardItemIdentification, namespacesInScope, "ID");
                     if (idStandard != null) {
-                        bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
+                        bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(idStandard.getAttributeValue("schemeID"), idStandard.getText()));
                         bg0031.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt0157);
                     }
                 }
@@ -496,8 +496,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 for (Element elemComm : commodityClassifications) {
                     Element itemClassificationCode = findNamespaceChild(elemComm, namespacesInScope, "ItemClassificationCode");
                     if (itemClassificationCode != null) {
-                        Attribute listID = id.getAttribute("listID");
-                        Attribute listAgencyID = id.getAttribute("listVersionID");
+                        Attribute listID = itemClassificationCode.getAttribute("listID");
+                        Attribute listAgencyID = itemClassificationCode.getAttribute("listVersionID");
                         if (listAgencyID != null) {
                             bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
                         } else {
