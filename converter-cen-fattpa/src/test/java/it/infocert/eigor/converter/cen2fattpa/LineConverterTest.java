@@ -257,6 +257,21 @@ public class LineConverterTest {
     }
 
     @Test
+    public void shouldMapBT157WithSchemeIdentifier() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(0);
+            assertThat(codiceArticolo.getCodiceValore(), is("BT-157"));
+            assertThat(codiceArticolo.getCodiceTipo(), is("BT-157-1"));
+        }
+    }
+
+    @Test
     public void shouldMapBT158SchemeIdentifierAndVersionMergedInCodiceTipo() throws Exception {
         populateWithBG25();
         convert();
@@ -361,6 +376,8 @@ public class LineConverterTest {
         BG0031ItemInformation itemInformation = new BG0031ItemInformation();
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
         itemInformation.getBT0154ItemDescription().add(new BT0154ItemDescription("Description"));
+        BT0157ItemStandardIdentifierAndSchemeIdentifier bt157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier("BT-157-1", "BT-157"));
+        itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt157);
         BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt158 =
                 new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(
                         new Identifier("BT-158-1", "BT-158-2", "BT158"));
