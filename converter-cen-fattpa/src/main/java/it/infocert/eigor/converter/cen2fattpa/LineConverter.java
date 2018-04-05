@@ -628,7 +628,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
                 CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue().getIdentifier());
+                Identifier bt0157 = itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue();
+                codiceArticolo.setCodiceValore(bt0157.getIdentifier());
+                codiceArticolo.setCodiceTipo(bt0157.getIdentificationSchema());
                 dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
             }
