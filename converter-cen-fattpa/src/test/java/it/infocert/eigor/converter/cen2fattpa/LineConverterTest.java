@@ -214,6 +214,22 @@ public class LineConverterTest {
     }
 
     @Test
+    public void shouldMapBT128InvoiceLineIdentifier() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(0);
+
+            assertThat(codiceArticolo.getCodiceValore(), is("BT-128"));
+            assertThat(codiceArticolo.getCodiceTipo(), is("BT-128-1"));
+        }
+    }
+
+    @Test
     public void shouldMapBG30() throws Exception {
         populateWithBG25();
         convert();
@@ -249,7 +265,7 @@ public class LineConverterTest {
 
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
-            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(0);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(1);
             assertThat(codiceArticolo.getCodiceValore(), is("BT-157"));
             assertThat(codiceArticolo.getCodiceTipo(), is("BT-157-1"));
         }
@@ -264,7 +280,7 @@ public class LineConverterTest {
 
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
-            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(1).getCodiceTipo();
+            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(2).getCodiceTipo();
             assertThat(codiceTipo, is("BT-158-1 BT-158-2"));
         }
     }
@@ -308,6 +324,7 @@ public class LineConverterTest {
             populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
             populateBG25WithBT127(invoiceLine);
+            populateBG25WithBT128(invoiceLine);
             populateBG25WithBT129(invoiceLine);
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
@@ -371,6 +388,13 @@ public class LineConverterTest {
     private void populateBG25WithBT127(BG0025InvoiceLine invoiceLine) {
         BT0127InvoiceLineNote bt0127 = new BT0127InvoiceLineNote("TestNote");
         invoiceLine.getBT0127InvoiceLineNote().add(bt0127);
+    }
+
+    private void populateBG25WithBT128(BG0025InvoiceLine invoiceLine) {
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 =
+                new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(
+                        new Identifier("BT-128-1", "BT-128"));
+        invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
     }
 
     private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {
