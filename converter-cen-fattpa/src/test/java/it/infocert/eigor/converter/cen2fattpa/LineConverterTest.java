@@ -198,6 +198,21 @@ public class LineConverterTest {
     }
 
     @Test
+    public void shouldMapBT132InDatiOrdineAcquisto() {
+        populateWithBG25();
+        convert();
+        final List<DatiDocumentiCorrelatiType> datiOrdineAcquisto = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiGenerali().getDatiOrdineAcquisto();
+        assertFalse(datiOrdineAcquisto.isEmpty());
+        for (int i = 0; i < 5; i++) {
+            final DatiDocumentiCorrelatiType dati = datiOrdineAcquisto.get(i);
+            final String numItem = dati.getNumItem();
+            final List<Integer> riferimentoNumeroLinea = dati.getRiferimentoNumeroLinea();
+            assertEquals("Test Reference", numItem);
+            assertFalse(riferimentoNumeroLinea.isEmpty());
+        }
+    }
+
+    @Test
     public void shouldMapBT127InvoiceNote() throws Exception {
         populateWithBG25();
         convert();
@@ -326,8 +341,15 @@ public class LineConverterTest {
             populateBG25WithBT127(invoiceLine);
             populateBG25WithBT128(invoiceLine);
             populateBG25WithBT129(invoiceLine);
+            populateBG25WithBT132(invoiceLine);
+
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
+    }
+
+    private void populateBG25WithBT132(BG0025InvoiceLine invoiceLine) {
+        final BT0132ReferencedPurchaseOrderLineReference bt132 = new BT0132ReferencedPurchaseOrderLineReference("Test Reference");
+        invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().add(bt132);
     }
 
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {

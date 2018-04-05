@@ -357,6 +357,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
             final DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
             final DatiGeneraliType datiGenerali = Optional.fromNullable(fatturaElettronicaBody.getDatiGenerali()).or(new DatiGeneraliType());
+            fatturaElettronicaBody.setDatiGenerali(datiGenerali);
             final List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
             if (dettaglioLineeList.size() < invoice.getBG0025InvoiceLine().size()) {
                 int n = invoice.getBG0025InvoiceLine().size() - dettaglioLineeList.size();
@@ -407,14 +408,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
                     final String purchaseOrder = invoiceLine.getBT0132ReferencedPurchaseOrderLineReference(0).getValue();
-                    final DatiDocumentiCorrelatiType dati;
-                    final List<DatiDocumentiCorrelatiType> datiOrdineAcquisto = datiGenerali.getDatiOrdineAcquisto();
-                    if (datiOrdineAcquisto.isEmpty()) {
-                        dati = new DatiDocumentiCorrelatiType();
-                        datiOrdineAcquisto.add(dati);
-                    } else {
-                        dati = datiOrdineAcquisto.get(0);
-                    }
+                    final DatiDocumentiCorrelatiType dati = new DatiDocumentiCorrelatiType();
                     dati.setNumItem(purchaseOrder);
                     if (lineIdentifier.isPresent()) {
                         Integer number;
@@ -425,7 +419,10 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         }
                         dati.getRiferimentoNumeroLinea().add(number);
 
+                    } else {
+                        dati.getRiferimentoNumeroLinea().add(dettaglioLinee.getNumeroLinea());
                     }
+                    datiGenerali.getDatiOrdineAcquisto().add(dati);
                 }
 
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
