@@ -177,7 +177,8 @@ public class DebugConversionCallback extends AbstractConversionCallback {
         while (targetInvoiceExtension.startsWith(".")) targetInvoiceExtension = targetInvoiceExtension.substring(1);
 
         File outfile = new File(outputFolderFile, "invoice-target." + targetInvoiceExtension);
-        FileUtils.writeByteArrayToFile(outfile, targetInvoice);
+        final String content = new String(targetInvoice);
+        FileUtils.writeStringToFile(outfile, content, StandardCharsets.UTF_8);
     }
 
     @Override
