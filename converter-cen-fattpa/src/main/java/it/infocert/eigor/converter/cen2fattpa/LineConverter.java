@@ -9,7 +9,9 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -353,8 +355,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
     private void mapBG25(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0025InvoiceLine().isEmpty()) {
-            DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
-            List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
+            final DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
+            final DatiGeneraliType datiGenerali = Optional.fromNullable(fatturaElettronicaBody.getDatiGenerali()).or(new DatiGeneraliType());
+            final List<DettaglioLineeType> dettaglioLineeList = datiBeniServizi.getDettaglioLinee();
             if (dettaglioLineeList.size() < invoice.getBG0025InvoiceLine().size()) {
                 int n = invoice.getBG0025InvoiceLine().size() - dettaglioLineeList.size();
                 createMissingLines(dettaglioLineeList, n);
@@ -362,6 +365,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             for (int i = 0; i < invoice.getBG0025InvoiceLine().size(); i++) {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
+                final Optional<String> lineIdentifier;
+                if (!invoiceLine.getBT0126InvoiceLineIdentifier().isEmpty()) {
+                    lineIdentifier = Optional.of(invoiceLine.getBT0126InvoiceLineIdentifier(0).getValue());
+                } else {
+                    lineIdentifier = Optional.absent();
+                }
 
                 for (BT0127InvoiceLineNote bt0127 : invoiceLine.getBT0127InvoiceLineNote()) {
                     AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
@@ -371,7 +380,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
                 }
 
-                if(!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()){
+                if (!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
                     Identifier bt0128 = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0).getValue();
                     CodiceArticoloType codiceArticolo = new CodiceArticoloType();
                     codiceArticolo.setCodiceValore(bt0128.getIdentifier());
@@ -396,17 +405,40 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
 
+                if (!invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
+                    final String purchaseOrder = invoiceLine.getBT0132ReferencedPurchaseOrderLineReference(0).getValue();
+                    final DatiDocumentiCorrelatiType dati;
+                    final List<DatiDocumentiCorrelatiType> datiOrdineAcquisto = datiGenerali.getDatiOrdineAcquisto();
+                    if (datiOrdineAcquisto.isEmpty()) {
+                        dati = new DatiDocumentiCorrelatiType();
+                        datiOrdineAcquisto.add(dati);
+                    } else {
+                        dati = datiOrdineAcquisto.get(0);
+                    }
+                    dati.setNumItem(purchaseOrder);
+                    if (lineIdentifier.isPresent()) {
+                        Integer number;
+                        try {
+                            number = Integer.valueOf(lineIdentifier.get());
+                        } catch (NumberFormatException e) {
+                            number = dettaglioLinee.getNumeroLinea();
+                        }
+                        dati.getRiferimentoNumeroLinea().add(number);
+
+                    }
+                }
+
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
                     BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
                     if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
-                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(lineVatInformation.getBT0152InvoicedItemVatRate(0).getValue());
+                        BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(lineVatInformation.getBT0152InvoicedItemVatRate(0).getValue(), 8);
                         dettaglioLinee.setAliquotaIVA(value);
                     } else {
                         if (!invoice.getBG0023VatBreakdown().isEmpty()) {
                             BG0023VatBreakdown vatBreakdown = invoice.getBG0023VatBreakdown(0);
 
                             if (!vatBreakdown.getBT0119VatCategoryRate().isEmpty()) {
-                                BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue());
+                                BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(vatBreakdown.getBT0119VatCategoryRate(0).getValue(), 8);
                                 dettaglioLinee.setAliquotaIVA(value); //Even if BG25 doesn't have it, FatturaPA wants it
                             }
                         }
