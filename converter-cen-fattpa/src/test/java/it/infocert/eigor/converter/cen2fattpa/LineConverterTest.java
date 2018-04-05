@@ -265,7 +265,7 @@ public class LineConverterTest {
 
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
-            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(0);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(1);
             assertThat(codiceArticolo.getCodiceValore(), is("BT-157"));
             assertThat(codiceArticolo.getCodiceTipo(), is("BT-157-1"));
         }
@@ -280,7 +280,7 @@ public class LineConverterTest {
 
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
-            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(1).getCodiceTipo();
+            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(2).getCodiceTipo();
             assertThat(codiceTipo, is("BT-158-1 BT-158-2"));
         }
     }
