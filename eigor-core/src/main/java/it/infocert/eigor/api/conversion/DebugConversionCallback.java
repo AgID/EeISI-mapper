@@ -150,7 +150,6 @@ public class DebugConversionCallback extends AbstractConversionCallback {
                 printer.printRecord(e.isError(), e.getMessage(), e.getCause());
             }
             printer.flush();
-            printer.close();
         } catch (Exception e) {
             toCenErrorsCsv.append(e.getMessage());
         }
