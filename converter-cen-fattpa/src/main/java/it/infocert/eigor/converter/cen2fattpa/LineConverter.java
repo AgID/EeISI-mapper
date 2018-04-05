@@ -371,6 +371,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
                 }
 
+                if(!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()){
+                    Identifier bt0128 = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0).getValue();
+                    CodiceArticoloType codiceArticolo = new CodiceArticoloType();
+                    codiceArticolo.setCodiceValore(bt0128.getIdentifier());
+                    codiceArticolo.setCodiceTipo(bt0128.getIdentificationSchema());
+                    dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                    log.trace("Set BT128 as CodiceArticolo with value {}", bt0128.getIdentifier());
+                }
+
                 Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
 
                 dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
