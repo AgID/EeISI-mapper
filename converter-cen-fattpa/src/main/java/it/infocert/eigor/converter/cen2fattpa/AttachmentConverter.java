@@ -157,7 +157,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                         allegatiExternal.setFormatoAttachment("csv");
                         allegatiExternal.setNomeAttachment(documentReference + ".link.txt");
                         fatturaElettronicaBody.getAllegati().add(allegatiExternal);
-                    } else if(documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()){
+                    } else if (documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
                         allegatiExternal.setAttachment(documentReference.getBytes());
                         allegatiExternal.setFormatoAttachment("csv");
                         allegatiExternal.setNomeAttachment("document-reference");
@@ -174,7 +174,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                         FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
                         try {
                             allegatiEmbedded.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
-                            allegatiEmbedded.setFormatoAttachment(file.getMimeType().toString());
+                            allegatiEmbedded.setFormatoAttachment(new AttachmentUtil().getShortFileFormat(file.getMimeType()));
                             allegatiEmbedded.setNomeAttachment(file.getFileName());
                             fatturaElettronicaBody.getAllegati().add(allegatiEmbedded);
                         } catch (IOException e) {

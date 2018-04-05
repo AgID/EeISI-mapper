@@ -371,6 +371,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
                 }
 
+                if(!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()){
+                    Identifier bt0128 = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0).getValue();
+                    CodiceArticoloType codiceArticolo = new CodiceArticoloType();
+                    codiceArticolo.setCodiceValore(bt0128.getIdentifier());
+                    codiceArticolo.setCodiceTipo(bt0128.getIdentificationSchema());
+                    dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
+                    log.trace("Set BT128 as CodiceArticolo with value {}", bt0128.getIdentifier());
+                }
+
                 Double quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ? 0 : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
 
                 dettaglioLinee.setQuantita(Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(quantity, 8));
@@ -628,15 +637,29 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             if (!itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
                 CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                codiceArticolo.setCodiceValore(itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue().getIdentifier());
+                Identifier bt0157 = itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0).getValue();
+                codiceArticolo.setCodiceValore(bt0157.getIdentifier());
+                codiceArticolo.setCodiceTipo(bt0157.getIdentificationSchema());
                 dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
             }
 
             if (!itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
                 for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier identifier : itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier()) {
+                    Identifier bt158 = identifier.getValue();
                     CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                    codiceArticolo.setCodiceValore(identifier.getValue().getIdentifier());
+                    codiceArticolo.setCodiceValore(bt158.getIdentifier());
+
+                    String bt158_1 = bt158.getIdentificationSchema();
+                    String bt158_2 = bt158.getSchemaVersion();
+
+                    if (bt158_1 != null && bt158_2 != null) {
+                        codiceArticolo.setCodiceTipo(String.format("%s %s", bt158_1, bt158_2));
+                    } else if (bt158_1 != null) {
+                        codiceArticolo.setCodiceTipo(bt158_1);
+                    } else if (bt158_2 != null) {
+                        codiceArticolo.setCodiceTipo(bt158_2);
+                    }
                     dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
                 }
