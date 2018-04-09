@@ -13,10 +13,14 @@ import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class FirstLevelElementsConverter implements CustomMapping<Document> {
+
+    private final static Logger logger = LoggerFactory.getLogger(FirstLevelElementsConverter.class);
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -39,10 +43,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
         this.root = document.getRootElement();
 
         // PEPPOL hardcoding
-        convert("CustomizationID", "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
-        convert("ProfileID", "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
-
-        /*convert("CustomizationID", "urn:cen.eu:en16931:2017");
+       /*convert("CustomizationID", "urn:cen.eu:en16931:2017");
 
         if (!invoice.getBG0002ProcessControl().isEmpty()) {
 
