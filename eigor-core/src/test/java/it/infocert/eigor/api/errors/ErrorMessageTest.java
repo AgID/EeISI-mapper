@@ -4,8 +4,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import static it.infocert.eigor.api.errors.ErrorCode.*;
 
+import static it.infocert.eigor.api.errors.ErrorCode.Action;
+import static it.infocert.eigor.api.errors.ErrorCode.Location;
 import static org.junit.Assert.assertEquals;
 
 public class ErrorMessageTest {
@@ -41,5 +42,28 @@ public class ErrorMessageTest {
         ErrorMessage errorMessage = new ErrorMessage(message, Location.FATTPA_IN, Action.SCH_VALIDATION, ErrorCode.Error.INVALID);
 
         assertEquals("FATTPA_IN.SCH_VALIDATION.INVALID - " + message, errorMessage.toString());
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void name() {
+        String msg = "I'm the first message!";
+        ErrorMessage errorMessage = new ErrorMessage(msg, Location.FATTPA_IN, Action.SCH_VALIDATION, ErrorCode.Error.INVALID);
+
+        String message = errorMessage.getMessage();
+
+        List<Exception> exceptions = errorMessage.getRelatedExceptions();
+
+        ErrorCode errorCode = errorMessage.getErrorCode();
+
+        Location location = errorCode.getLocation();
+
+        Action action = errorCode.getAction();
+
+        ErrorCode.Error error = errorCode.getError();
+
+
+        System.out.printf("", message, exceptions, location, action, error);
+
     }
 }
