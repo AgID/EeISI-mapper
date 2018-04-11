@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>3.0.0-PEPPOL</version>
+        <version>3.0.0-SNAPSHOT</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
