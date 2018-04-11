@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.fattpa2cen.converters;
 
-import it.infocert.eigor.api.conversion.FromStringTypeConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.FromStringTypeConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.converter.fattpa2cen.models.NaturaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 

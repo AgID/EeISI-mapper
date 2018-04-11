@@ -32,7 +32,6 @@ public class SchematronValidator implements IXMLValidator {
         long delta = System.currentTimeMillis();
         try {
             Preconditions.checkArgument(schemaFile != null, "Provide a Schematron file.");
-            Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
 
             if (isXSLT) {
                 if (xsltFileUpdate) {
@@ -45,8 +44,10 @@ public class SchematronValidator implements IXMLValidator {
                     int count = xsltFileUpdater.updateXSLTfromSch();
                     log.info(count + " XSLT files were updated.");
                 }
+                Preconditions.checkArgument(schemaFile.exists(), "Schematron XSLT file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
                 schematronResource = new FixedSchematronResource(SchematronResourceXSLT.fromFile(schemaFile));
             } else {
+                Preconditions.checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
                 schematronResource = new FixedSchematronResource(SchematronResourceSCH.fromFile(schemaFile));
             }
             if (!schematronResource.isValidSchematron())

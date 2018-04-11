@@ -7,8 +7,9 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.LocalDateToXMLGregorianCalendarConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.Iso31661CountryCodesToStringConverter;
+import it.infocert.eigor.api.conversion.converter.LocalDateToXMLGregorianCalendarConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
@@ -32,6 +33,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
     private static final Logger log = LoggerFactory.getLogger(DatiGeneraliConverter.class);
 
     private final TypeConverter<LocalDate, XMLGregorianCalendar> dateConverter = LocalDateToXMLGregorianCalendarConverter.newConverter();
+    private final TypeConverter<Iso31661CountryCodes, String> countryCodesConverter = Iso31661CountryCodesToStringConverter.newConverter();
     private final AttachmentUtil attachmentUtil;
 
     public DatiGeneraliConverter() {
@@ -63,14 +65,14 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
             )));
         } else {
-            FatturaElettronicaBodyType fatturaElettronicaBody = bodies.get(0);
-            DatiGeneraliType datiGenerali = fatturaElettronicaBody.getDatiGenerali();
+            FatturaElettronicaBodyType body = bodies.get(0);
+            DatiGeneraliType datiGenerali = body.getDatiGenerali();
             addDDT(invoice, datiGenerali, errors, callingLocation);
             addCausale(invoice, datiGenerali, errors, callingLocation);
             addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
             addIndirizzo(invoice, fatturaElettronica, errors);
-            addDatiTrasporto(invoice, datiGenerali, errors, callingLocation);
-            addRiferimentoNormativo(invoice, fatturaElettronicaBody, errors);
+            addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
+            addRiferimentoNormativo(invoice, body, errors);
         }
     }
 
@@ -313,17 +315,19 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         }
     }
 
-    private void addDatiTrasporto(BG0000Invoice invoice, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    private void addDatiTrasporto(BG0000Invoice invoice, FatturaElettronicaBodyType body, DatiGeneraliType datiGenerali, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         List<BG0013DeliveryInformation> deliveryInformations = invoice.getBG0013DeliveryInformation();
         if (!deliveryInformations.isEmpty()) {
-            List<BT0072ActualDeliveryDate> deliveryDates = deliveryInformations.get(0).getBT0072ActualDeliveryDate();
+            final DatiTrasportoType datiTrasporto = Optional.fromNullable(datiGenerali.getDatiTrasporto()).or(new DatiTrasportoType());
+            datiGenerali.setDatiTrasporto(datiTrasporto);
+            final BG0013DeliveryInformation deliveryInformation = deliveryInformations.get(0);
+            List<BT0072ActualDeliveryDate> deliveryDates = deliveryInformation.getBT0072ActualDeliveryDate();
             if (!deliveryDates.isEmpty()) {
                 Optional<LocalDate> deliveryDateOpt = Optional.fromNullable(deliveryDates.get(0).getValue());
                 if (deliveryDateOpt.isPresent()) {
                     LocalDate deliveryDate = deliveryDateOpt.get();
-                    DatiTrasportoType datiTrasporto = Optional.fromNullable(datiGenerali.getDatiTrasporto()).or(new DatiTrasportoType());
                     try {
-                    XMLGregorianCalendar converted = dateConverter.convert(deliveryDate);
+                        XMLGregorianCalendar converted = dateConverter.convert(deliveryDate);
                         datiTrasporto.setDataOraConsegna(converted);
                     } catch (ConversionFailedException e) {
                         log.error(e.getMessage(), e);
@@ -335,11 +339,85 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                                 ErrorCode.Error.ILLEGAL_VALUE,
                                 Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, deliveryDate.toString())
-                                ));
+                        ));
                     }
-                    datiGenerali.setDatiTrasporto(datiTrasporto);
                 }
             }
+            final List<BG0015DeliverToAddress> deliverToAddress = deliveryInformation.getBG0015DeliverToAddress();
+            if (!deliverToAddress.isEmpty()) {
+                final BG0015DeliverToAddress address = deliverToAddress.get(0);
+                final IndirizzoType indirizzoResa = Optional.fromNullable(datiTrasporto.getIndirizzoResa()).or(new IndirizzoType());
+                datiTrasporto.setIndirizzoResa(indirizzoResa);
+
+                final List<BT0077DeliverToCity> deliverToCities = address.getBT0077DeliverToCity();
+                final List<BT0078DeliverToPostCode> postCodes = address.getBT0078DeliverToPostCode();
+                final List<BT0079DeliverToCountrySubdivision> subdivisions = address.getBT0079DeliverToCountrySubdivision();
+                final List<BT0080DeliverToCountryCode> countryCodes = address.getBT0080DeliverToCountryCode();
+
+                if (!countryCodes.isEmpty()) {
+                    final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
+
+                    try {
+                        indirizzoResa.setNazione(countryCodesConverter.convert(countryCode));
+                    } catch (ConversionFailedException e) {
+                        log.error(e.getMessage(), e);
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                "Error creating Nazione from Iso31661CountryCodes",
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, countryCodes.toString())
+                        ));
+                        return;
+                    }
+
+                    if (!deliverToCities.isEmpty()) {
+                        final String city = deliverToCities.get(0).getValue();
+                        final String value = (city != null && !"".equalsIgnoreCase(city.trim())) ? city : "undefined";
+                        indirizzoResa.setComune(value);
+                    }
+
+                    if (!postCodes.isEmpty()) {
+                        final String postCode = postCodes.get(0).getValue();
+                        if (postCode.length() > 5) {
+                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0078: " + postCode);
+                            indirizzoResa.setCAP("99999");
+                            log.warn("DeliverToPostCode was not compliant with FatturaPA specification. " +
+                                    "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
+                        } else {
+                            indirizzoResa.setCAP(postCode);
+                        }
+                    } else {
+                        log.warn("No [BT-78] DeliverToPostCode was found in current [BG-5] DeliverToAddress");
+                    }
+
+                    if (!subdivisions.isEmpty()) {
+                        final String subdivision = subdivisions.get(0).getValue();
+                        if (Iso31661CountryCodes.IT.equals(countryCode)) {
+                            indirizzoResa.setProvincia(subdivision);
+                        } else {
+                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0079: " + subdivision);
+                        }
+                    }
+
+                } else {
+                    final String message = "No [BT-80] DeliverToCountryCode was found in current [BG-15] SellerPostalAddress";
+                    final EigorRuntimeException e = new EigorRuntimeException(
+                            message,
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.MISSING_VALUE,
+                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+                            Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, countryCodes.toString())
+                    );
+                    log.error(e.getMessage(), e);
+                    errors.add(ConversionIssue.newError(e));
+                }
+
+            }
+
         }
 
     }

@@ -2,6 +2,9 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
@@ -186,7 +189,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
-                    Double bt0137 = bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
+                    Double bt0137 = Double.valueOf(bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue().getIdentifier());
                     Element basisAmount = new Element("BasisAmount", ramNs);
                     try {
                         basisAmount.setText(dblStrConverter.convert(bt0137));
@@ -203,7 +206,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                    Double bt0138 = bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue();
+                    Double bt0138 = Double.valueOf(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
                     Element calculationPercent = new Element("CalculationPercent", ramNs);
                     try {
                         calculationPercent.setText(dblStrConverter.convert(bt0138));

@@ -11,8 +11,6 @@ import java.util.List;
 public class ConversionResult<R> {
 
     protected final R result;
-    protected boolean successful;
-    protected boolean hasErrors;
     protected List<IConversionIssue> issues;
 
     /**
@@ -25,12 +23,6 @@ public class ConversionResult<R> {
     public ConversionResult(List<IConversionIssue> issues, R result) {
         this.issues = Collections.unmodifiableList(issues);
         this.result = result;
-        for (IConversionIssue issue : issues) {
-            if (issue.isError()) {
-                hasErrors = true;
-                break;
-            }
-        }
     }
 
     /**
@@ -52,7 +44,12 @@ public class ConversionResult<R> {
      * @return TRUE if the issue list is contains one or more ConversionIssue that is an error.
      */
     public boolean hasIssues() {
-        return hasErrors;
+        for (IConversionIssue issue : issues) {
+            if (issue.isError()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

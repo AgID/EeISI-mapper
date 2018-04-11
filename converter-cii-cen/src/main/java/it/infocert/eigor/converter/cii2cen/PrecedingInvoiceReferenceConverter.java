@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.model.BG0000Invoice;

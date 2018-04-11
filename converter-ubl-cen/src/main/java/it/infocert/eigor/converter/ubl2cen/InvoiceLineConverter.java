@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -227,9 +227,11 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element baseAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BaseAmount");
                     if (baseAmount != null) {
                         try {
-                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(strDblConverter.convert(baseAmount.getText()));
+                            final Attribute currencyID = baseAmount.getAttribute("currencyID");
+                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), baseAmount.getText()) : new Identifier(baseAmount.getText());
+                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -242,9 +244,11 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element multiplierFactorNumeric = findNamespaceChild(elemInvAll, namespacesInScope, "MultiplierFactorNumeric");
                     if (multiplierFactorNumeric != null) {
                         try {
-                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(strDblConverter.convert(multiplierFactorNumeric.getText()));
+                            final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
+                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), multiplierFactorNumeric.getText()) : new Identifier(multiplierFactorNumeric.getText());
+                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -483,7 +487,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 if (standardItemIdentification != null) {
                     Element idStandard = findNamespaceChild(standardItemIdentification, namespacesInScope, "ID");
                     if (idStandard != null) {
-                        bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
+                        bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(idStandard.getAttributeValue("schemeID"), idStandard.getText()));
                         bg0031.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt0157);
                     }
                 }
@@ -492,8 +496,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 for (Element elemComm : commodityClassifications) {
                     Element itemClassificationCode = findNamespaceChild(elemComm, namespacesInScope, "ItemClassificationCode");
                     if (itemClassificationCode != null) {
-                        Attribute listID = id.getAttribute("listID");
-                        Attribute listAgencyID = id.getAttribute("listVersionID");
+                        Attribute listID = itemClassificationCode.getAttribute("listID");
+                        Attribute listAgencyID = itemClassificationCode.getAttribute("listVersionID");
                         if (listAgencyID != null) {
                             bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));
                         } else {

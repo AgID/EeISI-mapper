@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -49,7 +50,7 @@ public class LineConverterTest {
 
         if (Math.abs(Math.PI - 1) < Math.random()) {
 
-        };
+        }
     }
 
     @Test
@@ -143,8 +144,7 @@ public class LineConverterTest {
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
         List<AltriDatiGestionaliType> altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali();
-        assertThat(altriDatiGestionali.size(), is(1));
-        assertEquals("21.0", altriDatiGestionali.get(0).getRiferimentoTesto());
+        assertThat(altriDatiGestionali.size(), is(0));
 
         assertEquals(NaturaType.N_3, dettaglioLinee.getNatura());
 
@@ -166,14 +166,13 @@ public class LineConverterTest {
         DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(0);
 
         List<AltriDatiGestionaliType> altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali();
-        assertThat(altriDatiGestionali.size(), is(1));
-        assertEquals("20.00", altriDatiGestionali.get(0).getRiferimentoNumero().toString());
+        assertThat(altriDatiGestionali.size(), is(0));
 
         assertEquals(NaturaType.N_3, dettaglioLinee.getNatura());
 
         assertEquals(new BigDecimal(23.00).setScale(2, RoundingMode.HALF_UP), dettaglioLinee.getAliquotaIVA());
 
-        assertEquals("Reason TC01", dettaglioLinee.getDescrizione());
+        assertEquals("Reason SC", dettaglioLinee.getDescrizione());
     }
 
     @Test
@@ -183,8 +182,66 @@ public class LineConverterTest {
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
         assertThat(dettaglioLineeList.size(), is(15));
+    }
 
+    @Test
+    public void shouldMapBT153AndBT154MergedInDescrizione() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
 
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            assertThat(dettaglioLinee.getDescrizione(), is("Name Description"));
+        }
+    }
+
+    @Test
+    public void shouldMapBT132InDatiOrdineAcquisto() {
+        populateWithBG25();
+        convert();
+        final List<DatiDocumentiCorrelatiType> datiOrdineAcquisto = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiGenerali().getDatiOrdineAcquisto();
+        assertFalse(datiOrdineAcquisto.isEmpty());
+        for (int i = 0; i < 5; i++) {
+            final DatiDocumentiCorrelatiType dati = datiOrdineAcquisto.get(i);
+            final String numItem = dati.getNumItem();
+            final List<Integer> riferimentoNumeroLinea = dati.getRiferimentoNumeroLinea();
+            assertEquals("Test Reference", numItem);
+            assertFalse(riferimentoNumeroLinea.isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldMapBT127InvoiceNote() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            AltriDatiGestionaliType altriDatiGestionali = dettaglioLinee.getAltriDatiGestionali().get(0);
+
+            assertThat(altriDatiGestionali.getTipoDato(), is("BT-127"));
+            assertThat(altriDatiGestionali.getRiferimentoTesto(), is("TestNote"));
+        }
+    }
+
+    @Test
+    public void shouldMapBT128InvoiceLineIdentifier() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(0);
+
+            assertThat(codiceArticolo.getCodiceValore(), is("BT-128"));
+            assertThat(codiceArticolo.getCodiceTipo(), is("BT-128-1"));
+        }
     }
 
     @Test
@@ -193,7 +250,7 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
             assertThat(dettaglioLinee.getAliquotaIVA(), is(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0d)));
             assertEquals(NaturaType.N_4, dettaglioLinee.getNatura());
@@ -206,11 +263,40 @@ public class LineConverterTest {
         convert();
         FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
             BigDecimal quantita = dettaglioLinee.getQuantita();
             BigDecimal expected = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(2d, 8);
             assertThat(quantita, is(expected));
+        }
+    }
+
+    @Test
+    public void shouldMapBT157WithSchemeIdentifier() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            CodiceArticoloType codiceArticolo = dettaglioLinee.getCodiceArticolo().get(1);
+            assertThat(codiceArticolo.getCodiceValore(), is("BT-157"));
+            assertThat(codiceArticolo.getCodiceTipo(), is("BT-157-1"));
+        }
+    }
+
+    @Test
+    public void shouldMapBT158SchemeIdentifierAndVersionMergedInCodiceTipo() throws Exception {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            String codiceTipo = dettaglioLinee.getCodiceArticolo().get(2).getCodiceTipo();
+            assertThat(codiceTipo, is("BT-158-1 BT-158-2"));
         }
     }
 
@@ -252,16 +338,25 @@ public class LineConverterTest {
             populateBG25WithBG29(invoiceLine);
             populateBG25WithBG30(invoiceLine);
             populateBG25WithBG31(invoiceLine);
+            populateBG25WithBT127(invoiceLine);
+            populateBG25WithBT128(invoiceLine);
             populateBG25WithBT129(invoiceLine);
+            populateBG25WithBT132(invoiceLine);
+
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
+    }
+
+    private void populateBG25WithBT132(BG0025InvoiceLine invoiceLine) {
+        final BT0132ReferencedPurchaseOrderLineReference bt132 = new BT0132ReferencedPurchaseOrderLineReference("Test Reference");
+        invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().add(bt132);
     }
 
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {
         BG0027InvoiceLineAllowances invoiceLineAllowances = new BG0027InvoiceLineAllowances();
         invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().add(new BT0136InvoiceLineAllowanceAmount(20.0));
-        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(21.0));
-        invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(22.0));
+        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(new Identifier("EUR", "21.0")));
+        invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(new Identifier("EUR", "22.0")));
         invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().add(new BT0139InvoiceLineAllowanceReason("Reason"));
         invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code42));
 
@@ -302,8 +397,26 @@ public class LineConverterTest {
     private void populateBG25WithBG31(BG0025InvoiceLine invoiceLine) {
         BG0031ItemInformation itemInformation = new BG0031ItemInformation();
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
-
+        itemInformation.getBT0154ItemDescription().add(new BT0154ItemDescription("Description"));
+        BT0157ItemStandardIdentifierAndSchemeIdentifier bt157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier("BT-157-1", "BT-157"));
+        itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(bt157);
+        BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt158 =
+                new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(
+                        new Identifier("BT-158-1", "BT-158-2", "BT158"));
+        itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add(bt158);
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
+    }
+
+    private void populateBG25WithBT127(BG0025InvoiceLine invoiceLine) {
+        BT0127InvoiceLineNote bt0127 = new BT0127InvoiceLineNote("TestNote");
+        invoiceLine.getBT0127InvoiceLineNote().add(bt0127);
+    }
+
+    private void populateBG25WithBT128(BG0025InvoiceLine invoiceLine) {
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 =
+                new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(
+                        new Identifier("BT-128-1", "BT-128"));
+        invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
     }
 
     private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {

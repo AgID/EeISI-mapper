@@ -154,14 +154,15 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
                     if (!documents.getBT0124ExternalDocumentLocation().isEmpty()) {
                         allegatiExternal.setAttachment(documents.getBT0124ExternalDocumentLocation().get(0).getValue().getBytes());
-                        allegatiExternal.setFormatoAttachment("text/plain");
+                        allegatiExternal.setFormatoAttachment("csv");
                         allegatiExternal.setNomeAttachment(documentReference + ".link.txt");
-                    } else {
+                        fatturaElettronicaBody.getAllegati().add(allegatiExternal);
+                    } else if (documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
                         allegatiExternal.setAttachment(documentReference.getBytes());
                         allegatiExternal.setFormatoAttachment("csv");
                         allegatiExternal.setNomeAttachment("document-reference");
+                        fatturaElettronicaBody.getAllegati().add(allegatiExternal);
                     }
-                    fatturaElettronicaBody.getAllegati().add(allegatiExternal);
 
                     if (!documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
                         AllegatiType allegatiEmbedded = new AllegatiType();
@@ -173,7 +174,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                         FileReference file = documents.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().get(0).getValue();
                         try {
                             allegatiEmbedded.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
-                            allegatiEmbedded.setFormatoAttachment(file.getMimeType().toString());
+                            allegatiEmbedded.setFormatoAttachment(new AttachmentUtil().getShortFileFormat(file.getMimeType()));
                             allegatiEmbedded.setNomeAttachment(file.getFileName());
                             fatturaElettronicaBody.getAllegati().add(allegatiEmbedded);
                         } catch (IOException e) {

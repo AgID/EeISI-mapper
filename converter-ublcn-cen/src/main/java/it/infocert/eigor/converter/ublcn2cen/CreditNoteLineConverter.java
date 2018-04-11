@@ -2,9 +2,9 @@ package it.infocert.eigor.converter.ublcn2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
+import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -259,9 +259,11 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                     if (baseAmount != null) {
                         final String text = baseAmount.getText();
                         try {
-                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(strDblConverter.convert(text));
+                            final Attribute currencyID = baseAmount.getAttribute("currencyID");
+                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
+                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                     .message(e.getMessage())
                                     .location(callingLocation)
@@ -278,9 +280,11 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                     if (multiplierFactorNumeric != null) {
                         final String text = multiplierFactorNumeric.getText();
                         try {
-                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(strDblConverter.convert(text));
+                            final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
+                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
+                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                     .message(e.getMessage())
                                     .location(callingLocation)
@@ -325,8 +329,7 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                     //indicator == true --> BG0028
                     bg0028 = new BG0028InvoiceLineCharges();
                     Element amount = findNamespaceChild(elemInvAll, namespacesInScope, "Amount");
-                    if (amount != null) {
-                        final String text = amount.getText();
+                    if (amount != null) {                        final String text = amount.getText();
                         try {
                             BT0141InvoiceLineChargeAmount bt0141 = new BT0141InvoiceLineChargeAmount(strDblConverter.convert(text));
                             bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141);

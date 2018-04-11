@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <li>A log related to the operations executed by the thread that took in charge this conversion.</li>
  * </ul>
  */
-public class DebugConversionCallback extends ObservableConversion.AbstractConversionCallback {
+public class DebugConversionCallback extends AbstractConversionCallback {
 
     private final static Logger log = LoggerFactory.getLogger(DebugConversionCallback.class);
     public static final Charset ENCODING = checkNotNull(Charset.forName("UTF-8"));
@@ -48,7 +48,7 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     @Override
-    public void onStartingConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onStartingConversion(ConversionContext ctx) throws Exception {
 
         // attach the logging for this conversion
         if (enableLog) {
@@ -61,43 +61,43 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
     }
 
     @Override
-    public void onSuccessfullToCenTranformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onSuccessfullToCenTranformation(ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
         writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override
-    public void onFailedToCenConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onFailedToCenConversion(ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
         writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override
-    public void onSuccessfullyVerifiedCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
     @Override
-    public void onFailedVerifingCenRules(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
     @Override
-    public void onSuccessfullFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         String targetExtension = ctx.getTargetInvoiceExtension();
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
     @Override
-    public void onFailedFromCenTransformation(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onFailedFromCenTransformation(ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         String targetExtension = ctx.getTargetInvoiceExtension();
         writeTargetInvoice(ctx.getFromCenResult().getResult(), outputFolderFile, targetExtension);
     }
 
     @Override
-    public void onTerminatedConversion(ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onTerminatedConversion(ConversionContext ctx) throws Exception {
         if (logSupport != null) {
             try {
                 logSupport.removeLogger();
@@ -150,7 +150,6 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
                 printer.printRecord(e.isError(), e.getMessage(), e.getCause());
             }
             printer.flush();
-            printer.close();
         } catch (Exception e) {
             toCenErrorsCsv.append(e.getMessage());
         }
@@ -177,11 +176,12 @@ public class DebugConversionCallback extends ObservableConversion.AbstractConver
         while (targetInvoiceExtension.startsWith(".")) targetInvoiceExtension = targetInvoiceExtension.substring(1);
 
         File outfile = new File(outputFolderFile, "invoice-target." + targetInvoiceExtension);
-        FileUtils.writeByteArrayToFile(outfile, targetInvoice);
+        final String content = new String(targetInvoice);
+        FileUtils.writeStringToFile(outfile, content, StandardCharsets.UTF_8);
     }
 
     @Override
-    public void onUnexpectedException(Exception e, ObservableConversion.ConversionContext ctx) throws Exception {
+    public void onUnexpectedException(Exception e, ConversionContext ctx) throws Exception {
         log.error(e.getMessage(), e);
     }
 }
