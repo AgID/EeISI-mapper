@@ -3,7 +3,8 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -84,7 +85,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
         // load the CII CIUS schematron validator.
         try {
-            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cen-cii.cius") );
+            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.cius"));
             boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-cii.cius.auto-update-xslt"));
             ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
@@ -130,7 +131,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
             errors.addAll(schematronErrors);
 
             List<IConversionIssue> ciusValidationErrors = ciusValidator.validate(documentByteArray);
-            if(ciusValidationErrors.isEmpty()){
+            if (ciusValidationErrors.isEmpty()) {
                 log.info("CIUS schematron validation successful!");
             }
             errors.addAll(ciusValidationErrors);
@@ -194,7 +195,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
     public String getName() {
         return "converter-cen-cii";
     }
-
 
 
     private void createRootNode(Document doc) {
