@@ -73,10 +73,24 @@ public class BuyerConverter implements CustomMapping<Document> {
                         partyTaxScheme.addContent(companyID);
                     }
 
-                    if (!bg0007.getBT0044BuyerName().isEmpty()) {
+
+                    Element registrationName = null;
+
+                    if (!bg0007.getBG0009BuyerContact().isEmpty()) {
+                        BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
+                        if(!bg0009.getBT0056BuyerContactPoint().isEmpty()){
+                            BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
+                            registrationName = new Element("RegistrationName");
+                            registrationName.setText(bt0056.getValue());
+                        }
+                    } else if(!bg0007.getBT0044BuyerName().isEmpty()) {
                         BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
-                        Element registrationName = new Element("RegistrationName");
+                        registrationName = new Element("RegistrationName");
                         registrationName.setText(bt0044.getValue());
+
+                    }
+
+                    if(registrationName!=null){
                         Element partyLegalEntity = party.getChild("PartyLegalEntity");
                         if (partyLegalEntity == null) {
                             partyLegalEntity = new Element("PartyLegalEntity");
