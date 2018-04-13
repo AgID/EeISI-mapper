@@ -2,21 +2,25 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
-import it.infocert.eigor.model.core.model.BG0002ProcessControl;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class FirstLevelElementsConverter implements CustomMapping<Document> {
+
+    private final static Logger logger = LoggerFactory.getLogger(FirstLevelElementsConverter.class);
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -38,14 +42,17 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
 
         this.root = document.getRootElement();
 
-        convert("CustomizationID", "urn:cen.eu:en16931:2017");
+        // PEPPOL hardcoding
+       /*convert("CustomizationID", "urn:cen.eu:en16931:2017");
 
         if (!invoice.getBG0002ProcessControl().isEmpty()) {
+
+
             BG0002ProcessControl processControl = invoice.getBG0002ProcessControl(0);
             if (processControl.getBT0024SpecificationIdentifier().isEmpty()) {
                 convert("CustomizationID", processControl.getBT0024SpecificationIdentifier(0).getValue());
             }
-        }
+        }*/
 
         if (!invoice.getBT0001InvoiceNumber().isEmpty()) {
             convert("ID", invoice.getBT0001InvoiceNumber(0).getValue());

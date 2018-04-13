@@ -44,7 +44,7 @@ public class DocumentContextConverterTest {
         assertNotNull(guidelineSpecifiedDocumentContextParameter);
 
         Element guidelineSpecifiedDocumentContextParameterId = guidelineSpecifiedDocumentContextParameter.getChild("ID", ramNs);
-        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("TESTID"));
+        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class DocumentContextConverterTest {
         assertNotNull(guidelineSpecifiedDocumentContextParameter);
 
         Element guidelineSpecifiedDocumentContextParameterId = guidelineSpecifiedDocumentContextParameter.getChild("ID", ramNs);
-        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("urn:cen.eu:en16931:2017"));
+        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"));
     }
 
     private BG0000Invoice createInvoiceWithBT0024() {

@@ -3,7 +3,8 @@ package it.infocert.eigor.converter.cen2ubl;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -133,6 +134,12 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         for (CustomMapping<Document> customMapping : customMappings) {
             customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT);
         }
+
+        // PEPPOL hardcoding
+        final Element root = document.getRootElement();
+
+        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.customization-id")));
+        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.profile-id")));
     }
 
     @Override
@@ -179,7 +186,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
     public String getName() {
         return "converter-cen-ubl";
     }
-
 
 
     private void createRootNode(Document doc) {
