@@ -2,14 +2,18 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.model.*;
 import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class DocumentTotalsConverterTest {
 
@@ -25,10 +29,25 @@ public class DocumentTotalsConverterTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testTotals() throws Exception {
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final Double value = invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat(0).getValue();
         assertEquals(new Double(3.0d), value);
+    }
+
+    @Test
+    public void shouldMapDocumentLevelChargesBT104IfBolloVirtualeIsSI(){
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
+        assertFalse(invoice.getBG0021DocumentLevelCharges().isEmpty());
+        BG0021DocumentLevelCharges bg0021 = invoice.getBG0021DocumentLevelCharges().get(0);
+
+        assertTrue(bg0021.getBT0099DocumentLevelChargeAmount().isEmpty());
+        assertTrue(bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty());
+        assertTrue(bg0021.getBT0101DocumentLevelChargePercentage().isEmpty());
+        assertTrue(bg0021.getBT0103DocumentLevelChargeVatRate().isEmpty());
+
+        BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
+        assertThat(bt0104.getValue(), is("SI"));
     }
 
     private Document createXmlInvoice(Document document) {
@@ -41,8 +60,13 @@ public class DocumentTotalsConverterTest {
                 .addContent(new Element("Imposta").setText("1"));
 
         fatturaElettronicaBody.addContent(datiBeniServizi.addContent(datiRiepilogo));
-        fatturaElettronicaBody.addContent(new Element("DatiGenerali").addContent(new Element("DatiGeneraliDocumento")));
+        fatturaElettronicaBody.addContent(new Element("DatiGenerali")
+                .addContent(new Element("DatiGeneraliDocumento")
+                        .addContent(new Element("DatiBollo")
+                                .addContent(new Element("BolloVirtuale").setText("SI"))
+                                .addContent(new Element("ImportoBollo").setText("2.00")))));
         document.setRootElement(fatturaElettronica);
         return document;
     }
 }
+
