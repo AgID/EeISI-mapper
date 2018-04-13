@@ -17,11 +17,18 @@ public class DefaultEigorConfigurationLoader {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
+     * Shorthand method to get the Eigor configuration.
+     */
+    public static EigorConfiguration configuration() {
+        return new DefaultEigorConfigurationLoader().loadConfiguration();
+    }
+
+    /**
      * Load the Eigor configuration from a well-well knows list of location:
      * <ul>
-     *     <li>If the {@code eigor.configurationFile} system property is set, it tries to load the configuration from a file which path is the value of that system variable.</li>
-     *     <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor-test.properties}.</li>
-     *     <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor.properties}.</li>
+     * <li>If the {@code eigor.configurationFile} system property is set, it tries to load the configuration from a file which path is the value of that system variable.</li>
+     * <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor-test.properties}.</li>
+     * <li>If a confiugration is not available, tries to load it from the classpath resource {@code /eigor.properties}.</li>
      * </ul>
      * This is highly inspired by how logback loads its cofiguration.
      */
@@ -33,23 +40,23 @@ public class DefaultEigorConfigurationLoader {
 
         // if the system property is defined, try to load from it.
         String location = System.getProperty("eigor.configurationFile");
-        if(location!=null){
+        if (location != null) {
             tentatives.add(location);
             Resource resource = new DefaultResourceLoader().getResource(location);
-            if(resource.exists()){
+            if (resource.exists()) {
                 try {
                     eigorConfiguration = fromInputstream(resource.getInputStream());
                     log.debug("Successfully loaded Eigor configuration from '{}'", location);
                 } catch (IOException ioe) {
                     log.debug("Skipping loading Eigor configuration from '{}' because of: {}", location, ioe.getMessage());
                 }
-            }else{
+            } else {
                 log.debug("Skipping loading Eigor configuration from '{}' because it does not exist.", location);
             }
         }
 
         // then try to load 'eigor-test.properties' from classpath
-        if(eigorConfiguration==null) {
+        if (eigorConfiguration == null) {
             String resourcePath = "/eigor-test.properties";
             try {
                 tentatives.add(resourcePath);
@@ -66,7 +73,7 @@ public class DefaultEigorConfigurationLoader {
         }
 
         // try to load 'eigor.properties' from classpath
-        if(eigorConfiguration==null) {
+        if (eigorConfiguration == null) {
             String resourcePath = "/eigor.properties";
             try {
                 tentatives.add(resourcePath);
@@ -81,22 +88,17 @@ public class DefaultEigorConfigurationLoader {
             }
         }
 
-        if(eigorConfiguration == null){
-            throw new RuntimeException( format("Unable to find an eigor configuration file in any of those locations: %s.", tentatives) );
+        if (eigorConfiguration == null) {
+            throw new RuntimeException(format("Unable to find an eigor configuration file in any of those locations: %s.", tentatives));
         }
 
         return eigorConfiguration;
 
     }
 
-    /** Shorthand method to get the Eigor configuration. */
-    public static EigorConfiguration configuration() {
-        return new DefaultEigorConfigurationLoader().loadConfiguration();
-    }
-
     private EigorConfiguration fromClasspath(String resourcePath) throws IOException {
         InputStream conf = getClass().getResourceAsStream(resourcePath);
-        if(conf == null) return null;
+        if (conf == null) return null;
         return fromInputstream(conf);
     }
 
