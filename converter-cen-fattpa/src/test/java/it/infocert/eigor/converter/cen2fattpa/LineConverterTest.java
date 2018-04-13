@@ -213,6 +213,20 @@ public class LineConverterTest {
     }
 
     @Test
+    public void shouldMapBT133InLineeRiferimentoAmministrazione() {
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+        List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
+
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
+            String sut = dettaglioLinee.getRiferimentoAmministrazione();
+            assertThat(sut, is("BT-133"));
+        }
+    }
+
+    @Test
     public void shouldMapBT127InvoiceNote() throws Exception {
         populateWithBG25();
         convert();
@@ -342,6 +356,7 @@ public class LineConverterTest {
             populateBG25WithBT128(invoiceLine);
             populateBG25WithBT129(invoiceLine);
             populateBG25WithBT132(invoiceLine);
+            populateBG25WithBT133(invoiceLine);
 
             invoice.getBG0025InvoiceLine().add(invoiceLine);
         }
@@ -350,6 +365,11 @@ public class LineConverterTest {
     private void populateBG25WithBT132(BG0025InvoiceLine invoiceLine) {
         final BT0132ReferencedPurchaseOrderLineReference bt132 = new BT0132ReferencedPurchaseOrderLineReference("Test Reference");
         invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().add(bt132);
+    }
+
+    private void populateBG25WithBT133(BG0025InvoiceLine invoiceLine) {
+        final BT0133InvoiceLineBuyerAccountingReference bt0133 = new BT0133InvoiceLineBuyerAccountingReference("BT-133");
+        invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133);
     }
 
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {
