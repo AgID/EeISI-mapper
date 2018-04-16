@@ -26,10 +26,15 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("#0.00");
 
+        Iso4217CurrenciesFundsCodes currencyCode = null;
+        if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+            BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+            currencyCode = bt0005.getValue();
+        }
+
         Element root = document.getRootElement();
         if (root != null) {
-            if (!cenInvoice.getBG0021DocumentLevelCharges().isEmpty()) {
-                BG0021DocumentLevelCharges bg0021 = cenInvoice.getBG0021DocumentLevelCharges(0);
+            for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
 
                 Element allowanceCharge = new Element("AllowanceCharge");
 
@@ -49,6 +54,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0099.toString())
                         ));
                     }
+                    amount.setAttribute("currencyID", currencyCode.getCode());
                     allowanceCharge.addContent(amount);
                 }
 
@@ -68,7 +74,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0100.toString())
                         ));
                     }
-
+                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
                     allowanceCharge.addContent(baseAmount);
                 }
 
@@ -211,10 +217,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     }
                 }
 
-                if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                    BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
-                    Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
-
+                if (currencyCode != null) {
                     for (Element element : legalMonetaryTotal.getChildren()) {
                         element.setAttribute(new Attribute("currencyID", currencyCode.name()));
                     }
