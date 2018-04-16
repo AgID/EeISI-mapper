@@ -23,8 +23,8 @@ public class BuyerConverter implements CustomMapping<Document> {
         final Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0007Buyer().isEmpty()) {
-                BG0007Buyer bg0007 = cenInvoice.getBG0007Buyer(0);
-                if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty() || !bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                BG0007Buyer buyer = cenInvoice.getBG0007Buyer(0);
+                if (!buyer.getBT0048BuyerVatIdentifier().isEmpty() || !buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
 
                     final Element accountingCustomerParty = Optional.fromNullable(root.getChild("AccountingCustomerParty")).or(new Supplier<Element>() {
                         @Override
@@ -44,8 +44,8 @@ public class BuyerConverter implements CustomMapping<Document> {
                         }
                     });
 
-                    if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                    if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
                         Element endpointID = new Element("EndpointID");
                         Identifier identifier = bt0049.getValue();
                         if (identifier.getIdentificationSchema() != null) {
@@ -58,8 +58,8 @@ public class BuyerConverter implements CustomMapping<Document> {
                     }
 
 
-                    if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
-                        final Identifier identifier = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
+                    if (!buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
+                        final Identifier identifier = buyer.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
                         final Element partyIdentification = Optional.fromNullable(party.getChild("PartyIdentification")).or(new Supplier<Element>() {
                             @Override
                             public Element get() {
@@ -84,8 +84,8 @@ public class BuyerConverter implements CustomMapping<Document> {
                         if (schema != null) id.setAttribute("schemeID", schema);
                     }
 
-                    if (!bg0007.getBG0008BuyerPostalAddress().isEmpty()) {
-                        final BG0008BuyerPostalAddress bg0008 = bg0007.getBG0008BuyerPostalAddress(0);
+                    if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
+                        final BG0008BuyerPostalAddress bg0008 = buyer.getBG0008BuyerPostalAddress(0);
 
                         Element postalAddress = party.getChild("PostalAddress");
                         if (postalAddress == null) {
@@ -128,10 +128,10 @@ public class BuyerConverter implements CustomMapping<Document> {
                         }
                     }
 
-                    if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
-                        BT0048BuyerVatIdentifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0);
+                    if (!buyer.getBT0048BuyerVatIdentifier().isEmpty()) {
+                        BT0048BuyerVatIdentifier buyerVatIdentifier = buyer.getBT0048BuyerVatIdentifier(0);
                         Element companyID = new Element("CompanyID");
-                        Identifier identifier = bt0048.getValue();
+                        Identifier identifier = buyerVatIdentifier.getValue();
 //                        if (identifier.getIdentificationSchema() != null) {
 //                            companyID.setAttribute("schemeID", identifier.getIdentificationSchema());
 //                        }
@@ -152,33 +152,34 @@ public class BuyerConverter implements CustomMapping<Document> {
                             party.addContent(partyTaxScheme);
                         }
                         partyTaxScheme.addContent(companyID);
+                        Element taxScheme = new Element("TaxScheme");
+                        Element taxSchemeId = new Element("ID");
+                        taxSchemeId.setText("VAT");
+                        taxScheme.addContent(taxSchemeId);
+                        partyTaxScheme.addContent(taxScheme);
+
                     }
 
+                    Element partyLegalEntity = party.getChild("PartyLegalEntity");
+                    if (partyLegalEntity == null) {
+                        partyLegalEntity = new Element("PartyLegalEntity");
+                        party.addContent(partyLegalEntity);
+                    }
 
-                    Element registrationName = null;
-
-                    if (!bg0007.getBG0009BuyerContact().isEmpty()) {
-                        BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
+                    Element registrationName = new Element("RegistrationName");
+                    if (!buyer.getBG0009BuyerContact().isEmpty()) {
+                        BG0009BuyerContact bg0009 = buyer.getBG0009BuyerContact(0);
                         if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
                             BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
-                            registrationName = new Element("RegistrationName");
                             registrationName.setText(bt0056.getValue());
+                            partyLegalEntity.addContent(registrationName);
                         }
-                    } else if (!bg0007.getBT0044BuyerName().isEmpty()) {
-                        BT0044BuyerName bt0044 = bg0007.getBT0044BuyerName(0);
-                        registrationName = new Element("RegistrationName");
+                    } else if (!buyer.getBT0044BuyerName().isEmpty()) {
+                        BT0044BuyerName bt0044 = buyer.getBT0044BuyerName(0);
                         registrationName.setText(bt0044.getValue());
-
-                    }
-
-                    if (registrationName != null) {
-                        Element partyLegalEntity = party.getChild("PartyLegalEntity");
-                        if (partyLegalEntity == null) {
-                            partyLegalEntity = new Element("PartyLegalEntity");
-                            party.addContent(partyLegalEntity);
-                        }
                         partyLegalEntity.addContent(registrationName);
                     }
+
                 }
             }
         }
