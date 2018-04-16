@@ -80,8 +80,8 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                         final String ide = identifier.getIdentifier();
                         final String schema = identifier.getIdentificationSchema();
-                        id.setText(ide);
-                        if (schema != null) id.setAttribute("schemeID", schema);
+                        id.setText(String.format("%s:%s", schema, ide));
+//                        if (schema != null) id.setAttribute("schemeID", schema);
                     }
 
                     if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
