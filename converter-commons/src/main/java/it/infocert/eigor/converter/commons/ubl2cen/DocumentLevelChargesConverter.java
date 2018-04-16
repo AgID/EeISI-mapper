@@ -23,21 +23,19 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
 
     public ConversionResult<BG0000Invoice> toBG0021(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
+        final TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
-        BG0021DocumentLevelCharges bg0021 = null;
+        final Element rootElement = document.getRootElement();
+        final List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
 
-        Element rootElement = document.getRootElement();
-        List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
-
-        List<Element> allowanceCharge = findNamespaceChildren(rootElement, namespacesInScope, "AllowanceCharge");
+        final List<Element> allowanceCharge = findNamespaceChildren(rootElement, namespacesInScope, "AllowanceCharge");
 
         for (Element elemAllowance : allowanceCharge) {
 
             Element chargeIndicator = findNamespaceChild(elemAllowance, namespacesInScope, "ChargeIndicator");
             if (chargeIndicator != null && chargeIndicator.getText().equals("true")) {
 
-                bg0021 = new BG0021DocumentLevelCharges();
+                final BG0021DocumentLevelCharges bg0021 = new BG0021DocumentLevelCharges();
 
                 Element amount = findNamespaceChild(elemAllowance, namespacesInScope, "Amount");
                 if (amount != null) {

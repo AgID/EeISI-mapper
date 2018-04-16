@@ -26,8 +26,96 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("#0.00");
 
+        Iso4217CurrenciesFundsCodes currencyCode = null;
+        if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+            BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+            currencyCode = bt0005.getValue();
+        }
+
         Element root = document.getRootElement();
         if (root != null) {
+            for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
+
+                Element allowanceCharge = new Element("AllowanceCharge");
+
+                if (!bg0021.getBT0099DocumentLevelChargeAmount().isEmpty()) {
+                    BT0099DocumentLevelChargeAmount bt0099 = bg0021.getBT0099DocumentLevelChargeAmount(0);
+                    Element amount = new Element("Amount");
+                    try {
+                        amount.setText(dblStrConverter.convert(bt0099.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0099.toString())
+                        ));
+                    }
+                    amount.setAttribute("currencyID", currencyCode.getCode());
+                    allowanceCharge.addContent(amount);
+                }
+
+                if (!bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
+                    BT0100DocumentLevelChargeBaseAmount bt0100 = bg0021.getBT0100DocumentLevelChargeBaseAmount(0);
+                    Element baseAmount = new Element("BaseAmount");
+                    try {
+                        baseAmount.setText(dblStrConverter.convert(bt0100.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0100.toString())
+                        ));
+                    }
+                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                    allowanceCharge.addContent(baseAmount);
+                }
+
+                if (!bg0021.getBT0101DocumentLevelChargePercentage().isEmpty()) {
+                    BT0101DocumentLevelChargePercentage bt0101 = bg0021.getBT0101DocumentLevelChargePercentage(0);
+                    Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                    try {
+                        multiplierFactorNumeric.setText(dblStrConverter.convert(bt0101.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0101.toString())
+                        ));
+                    }
+                    allowanceCharge.addContent(multiplierFactorNumeric);
+                }
+
+                if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
+                    BT0102DocumentLevelChargeVatCategoryCode bt0102 = bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0);
+                    Element taxCategory = new Element("TaxCategory");
+                    Element id = new Element("ID");
+                    taxCategory.addContent(id);
+                    id.setText(bt0102.getValue().name());
+                    allowanceCharge.addContent(taxCategory);
+                }
+
+                if (!bg0021.getBT0104DocumentLevelChargeReason().isEmpty()) {
+                    BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
+                    Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                    allowanceChargeReason.setText(bt0104.getValue());
+                    allowanceCharge.addContent(allowanceChargeReason);
+                }
+
+                root.addContent(allowanceCharge);
+            }
+
             if (!cenInvoice.getBG0022DocumentTotals().isEmpty()) {
                 BG0022DocumentTotals bg0022 = cenInvoice.getBG0022DocumentTotals(0);
                 Element legalMonetaryTotal = new Element("LegalMonetaryTotal");
@@ -129,17 +217,13 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     }
                 }
 
-                if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                    BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
-                    Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
-
+                if (currencyCode != null) {
                     for (Element element : legalMonetaryTotal.getChildren()) {
                         element.setAttribute(new Attribute("currencyID", currencyCode.name()));
                     }
                 }
 
                 root.addContent(legalMonetaryTotal);
-
             }
         }
     }

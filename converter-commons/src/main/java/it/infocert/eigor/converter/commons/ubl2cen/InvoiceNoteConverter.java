@@ -31,7 +31,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
         List<Element> notes = findNamespaceChildren(rootElement, namespacesInScope, "Note");
 
         final Iterator<Element> itr = notes.iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             final Element elem = itr.next();
             bg0001 = new BG0001InvoiceNote();
 
@@ -43,7 +43,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                     if (!text.matches("^#.*#$")) {
                         BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(text.substring(text.indexOf("#", 1) + 1));
                         bg0001.getBT0022InvoiceNote().add(bt0022);
-                    } else if(itr.hasNext()) {
+                    } else if (itr.hasNext()) {
                         final Element note = itr.next();
                         if (!note.getText().matches("^#.*#.*$")) {
                             BT0022InvoiceNote bt0022 = new BT0022InvoiceNote(note.getText());

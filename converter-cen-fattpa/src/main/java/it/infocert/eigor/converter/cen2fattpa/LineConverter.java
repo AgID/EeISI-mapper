@@ -286,7 +286,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
 
                 if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
-                    BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(charges.getBT0099DocumentLevelChargeAmount(0).getValue());
+                    BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(charges.getBT0099DocumentLevelChargeAmount(0).getValue(), 8);
                     dettaglioLinee.setPrezzoUnitario(value);
                     dettaglioLinee.setPrezzoTotale(value);
                     log.trace("Set BT99 as PrezzoUnitario and PrezzoTotale with value {}", value);
@@ -423,6 +423,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         dati.getRiferimentoNumeroLinea().add(dettaglioLinee.getNumeroLinea());
                     }
                     datiGenerali.getDatiOrdineAcquisto().add(dati);
+                }
+
+                if (!invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
+                    BT0133InvoiceLineBuyerAccountingReference invoiceLineBuyerAccountingReference = invoiceLine.getBT0133InvoiceLineBuyerAccountingReference(0);
+                    dettaglioLinee.setRiferimentoAmministrazione(invoiceLineBuyerAccountingReference.getValue());
                 }
 
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
@@ -610,9 +615,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliUnit);
                     }
-
                 }
-
                 mapBG31(invoice, invoiceLine, dettaglioLinee);
             }
         }
@@ -813,10 +816,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 }
                             }
                         }
-                        if (!invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
-                            BT0133InvoiceLineBuyerAccountingReference invoiceLineBuyerAccountingReference = invoiceLine.getBT0133InvoiceLineBuyerAccountingReference(0);
-                            lineaSconto.setRiferimentoAmministrazione(invoiceLineBuyerAccountingReference.getValue());
-                        }
+
                         datiBeniServizi.getDettaglioLinee().add(lineaSconto);
                     }
                 }
@@ -859,10 +859,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                         lineaMaggiorazione.setNatura(null);
                                 }
                             }
-                        }
-                        if (!invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
-                            BT0133InvoiceLineBuyerAccountingReference invoiceLineBuyerAccountingReference = invoiceLine.getBT0133InvoiceLineBuyerAccountingReference(0);
-                            lineaMaggiorazione.setRiferimentoAmministrazione(invoiceLineBuyerAccountingReference.getValue());
                         }
                         datiBeniServizi.getDettaglioLinee().add(lineaMaggiorazione);
                     }
@@ -1178,7 +1174,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 } else {
                     log.trace("No BT0105 found");
                 }
-
                 datiBeniServizi.getDettaglioLinee().add(dettaglioLinee);
             }
         } else {
