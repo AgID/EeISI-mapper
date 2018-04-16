@@ -286,7 +286,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
 
                 if (!charges.getBT0099DocumentLevelChargeAmount().isEmpty()) {
-                    BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(charges.getBT0099DocumentLevelChargeAmount(0).getValue());
+                    BigDecimal value = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(charges.getBT0099DocumentLevelChargeAmount(0).getValue(), 8);
                     dettaglioLinee.setPrezzoUnitario(value);
                     dettaglioLinee.setPrezzoTotale(value);
                     log.trace("Set BT99 as PrezzoUnitario and PrezzoTotale with value {}", value);
