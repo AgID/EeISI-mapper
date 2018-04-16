@@ -73,6 +73,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     );
     private final ObjectFactory factory = new ObjectFactory();
     private XSDValidator validator;
+    private FieldLengthEnforcer fieldLengthEnforcer;
 
     public Cen2FattPA(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_OUT);
@@ -81,6 +82,15 @@ public class Cen2FattPA extends AbstractFromCenConverter {
     @Override
     public void configure() throws ConfigurationException {
         super.configure();
+
+        String pathOfFieldLengths = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.field-lengths");
+        Resource fieldLengthsFile = getResourceLoader().getResource(pathOfFieldLengths);
+
+        try {
+            fieldLengthEnforcer = new FieldLengthEnforcer(fieldLengthsFile.getFile(), ErrorCode.Location.FATTPA_OUT);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
+        }
 
         String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
@@ -154,11 +164,19 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         } else {
 
             byte[] jaxml = xmlOutput.toString().getBytes();
+
+            ConversionResult<byte[]> lengthResult = fieldLengthEnforcer.process(jaxml);
+            if(lengthResult.isSuccessful()){
+                log.info("Field length check successful! No fields trimmed.");
+            } else {
+                errors.addAll(lengthResult.getIssues());
+                jaxml = lengthResult.getResult(); //new xml byte[] with extra attachments for trimmed fields
+            }
+
             List<IConversionIssue> validationErrors = validator.validate(jaxml);
             if (validationErrors.isEmpty()) {
                 log.info("XSD validation successful!");
             }
-
             errors.addAll(validationErrors);
             return new BinaryConversionResult(jaxml, errors);
 
