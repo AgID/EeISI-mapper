@@ -10,10 +10,14 @@ import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
 import it.infocert.eigor.model.core.model.BG0006SellerContact;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class AccountSupplierPartyConverter implements CustomMapping<Document> {
+
+    private final static Logger logger = LoggerFactory.getLogger(AccountSupplierPartyConverter.class);
 
     private final String SUPPLIER = "AccountingSupplierParty";
     private final String PARTY = "Party";
@@ -72,29 +76,15 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         }
 
 
-        if (!seller.getBT0031SellerVatIdentifier().isEmpty() || !seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
-            Element partyTaxScheme = new Element("PartyTaxScheme");
-            Element companyID = new Element("CompanyID");
-            Element taxScheme = new Element("TaxScheme");
-            Element taxSchemeId = new Element("ID");
-            String companyIdValue;
-            String taxSchemeIdValue;
-            if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
-                companyIdValue = seller.getBT0031SellerVatIdentifier(0).getValue();
-                taxSchemeIdValue = "VAT";
-            } else {
-                companyIdValue = seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue();
-                taxSchemeIdValue = "NoVAT";
-
-            }
-
-            taxSchemeId.setText(taxSchemeIdValue);
-            companyID.setText(companyIdValue);
-            taxScheme.addContent(taxSchemeId);
-            partyTaxScheme.addContent(companyID);
-            partyTaxScheme.addContent(taxScheme);
-
-            party.addContent(partyTaxScheme);
+        if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
+            mapPartyTaxScheme(party, seller.getBT0031SellerVatIdentifier(0).getValue(), "VAT");
+        } else {
+            logger.debug("BT-31 is missing");
+        }
+        if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
+            mapPartyTaxScheme(party, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "NoVAT");
+        } else {
+            logger.debug("BT-31 is missing");
         }
 
         Element partyLegalEntity = new Element("PartyLegalEntity");
@@ -136,6 +126,20 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
 
     }
-    /*
-     */
+
+    private void mapPartyTaxScheme(Element party, String companyIdValue, String taxSchemeIdValue) {
+        Element partyTaxScheme = new Element("PartyTaxScheme");
+        Element companyID = new Element("CompanyID");
+        Element taxScheme = new Element("TaxScheme");
+        Element taxSchemeId = new Element("ID");
+
+        taxSchemeId.setText(taxSchemeIdValue);
+        companyID.setText(companyIdValue);
+        taxScheme.addContent(taxSchemeId);
+        partyTaxScheme.addContent(companyID);
+        partyTaxScheme.addContent(taxScheme);
+
+        party.addContent(partyTaxScheme);
+    }
+
 }
