@@ -1,5 +1,6 @@
 package com.infocert.eigor.api;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
@@ -16,6 +17,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Convert a given invoice into a given format.
@@ -52,8 +55,12 @@ public class EigorApi {
 
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
-        ToCenConversion toCen = builder.getConversionRepository().findConversionToCen(sourceFormat);
-        FromCenConversion fromCen = builder.getConversionRepository().findConversionFromCen(targetFormat);
+        ToCenConversion toCen = checkNotNull(
+                builder.getConversionRepository().findConversionToCen(sourceFormat),
+                "Target format '%s' not supported. Available formats are %s", sourceFormat, builder.getConversionRepository().supportedToCenFormats());
+        FromCenConversion fromCen = checkNotNull(
+                builder.getConversionRepository().findConversionFromCen(targetFormat),
+                "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
 
         return new ObservableConversion(
                 builder.getRuleRepository(),

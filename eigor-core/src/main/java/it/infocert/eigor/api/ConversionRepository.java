@@ -6,9 +6,7 @@ import it.infocert.eigor.api.impl.FromCenListBakedRepository;
 import it.infocert.eigor.api.impl.ToCenListBakedRepository;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConversionRepository implements ToCenConversionRepository, FromCenConversionRepository, Configurable {
 
@@ -39,7 +37,7 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
      * Return the supported formats.
      */
     @Override public Set<String> supportedFromCenFormats() {
-        return fromCenConversionRepository.supportedFromCenFormats();
+        return sort( fromCenConversionRepository.supportedFromCenFormats() );
     }
 
     @Override
@@ -58,12 +56,18 @@ public class ConversionRepository implements ToCenConversionRepository, FromCenC
     }
 
     @Override public Set<String> supportedToCenFormats() {
-        return toCenConversionRepository.supportedToCenFormats();
+        return sort(toCenConversionRepository.supportedToCenFormats());
     }
 
     @Override
     public List<ToCenConversion> getToCenConverters() {
         return toCenConversionRepository.getToCenConverters();
+    }
+
+    private Set<String> sort(Set<String> strings1) {
+        ArrayList<String> strings = new ArrayList<>(strings1);
+        Collections.sort(strings);
+        return new LinkedHashSet( strings );
     }
 
     public static class Builder {
