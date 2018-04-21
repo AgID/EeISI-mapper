@@ -162,8 +162,10 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
 
         // apply the mappings
         for (Map.Entry<String, String> entry : mappings.entries()) {
-            String key = entry.getKey();
-            GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, entry.getValue(), reflections, conversionRegistry, callingLocation);
+            final String key = entry.getKey();
+            final String value = entry.getValue();
+            log.info("Mapping '{}' to '{}'", key, value);
+            final GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(key, value, reflections, conversionRegistry, callingLocation);
             transformer.transformCenToXml(invoice, document, errors);
         }
         return new Pair<>(document, errors);
@@ -218,6 +220,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                     sourceKey = key.replace(".target", ".source." + index);
                 }
 
+                log.info("Mapping '{}' to '{}'", xPath, btPaths);
                 GenericManyToOneTransformer transformer = new GenericManyToOneTransformer(xPath, combinationExpression, btPaths, expressionKey.substring(0, expressionKey.indexOf(".expression")), reflections, conversionRegistry, callingLocation);
                 transformer.transformCenToXml(invoice, document, errors);
             }
@@ -273,7 +276,7 @@ public abstract class AbstractFromCenConverter implements FromCenConversion {
                     index++;
                     sourceKey = key.replace("cen.source", "xml.target." + index);
                 }
-
+                log.info("Mapping '{}' to '{}'", cenPath, xPaths);
                 GenericOneToManyTransformer transformer = new GenericOneToManyTransformer(reflections, conversionRegistry, xPaths, cenPath, splitIndexPairs, callingLocation);
                 transformer.transformCenToXml(invoice, document, errors);
             }
