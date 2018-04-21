@@ -39,13 +39,18 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
 
             // fix for https://gitlab.com/tgi-infocert-eigor/eigor/issues/269
             // sometimes idPaese and idCodice are messed.
-            String idPaese = cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese();
-            String idCodice = cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
-            if(idCodice.startsWith(":") && idCodice.length()>=3){
-                idPaese = idCodice.substring(1,3);
-                idCodice = idCodice.substring(3);
-                cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().setIdPaese(idPaese);
-                cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().setIdCodice(idCodice);
+            if(cessionarioCommittente.getDatiAnagrafici()!=null &&
+                    cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA()!=null &&
+                    cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() !=null &&
+                    cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice() != null) {
+                String idPaese = cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese();
+                String idCodice = cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice();
+                if (idCodice.startsWith(":") && idCodice.length() >= 3) {
+                    idPaese = idCodice.substring(1, 3);
+                    idCodice = idCodice.substring(3);
+                    cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().setIdPaese(idPaese);
+                    cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().setIdCodice(idCodice);
+                }
             }
 
         } else {
