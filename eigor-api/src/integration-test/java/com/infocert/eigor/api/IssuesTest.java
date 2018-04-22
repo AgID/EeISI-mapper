@@ -13,14 +13,15 @@ import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertTrue;
-
-public class Issues {
+public class IssuesTest {
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
@@ -48,23 +49,37 @@ public class Issues {
     }
 
     @Test
+    public void issue269() throws Exception {
+        InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
+        ConversionResult<byte[]> convert = api.convert("cii", "fatturapa", ciiInStream);
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='CessionarioCommittente']//*[local-name()='IdCodice']/text()");
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "97735020584", evaluate);
+    }
+
+    @Test
     public void issue245() throws Exception {
 
-        InputStream inputFatturaPaXml = getClass().getResourceAsStream("/issues/issue-245-fattpa.xml");
-        Assert.assertNotNull(inputFatturaPaXml);
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-245-fattpa.xml");
 
-        String sourceFormat = "fatturapa";
-        String destinationFormat = "ubl";
-        ConversionResult<byte[]> convert = api.convert(sourceFormat, destinationFormat, inputFatturaPaXml);
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
 
-        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
-        InputSource is = new InputSource( xmlStringReader );
-
-        XPathExpression expr = xPath.compile("//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
-        String evaluate = expr.evaluate(is);
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
 
         Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "VAT", evaluate);
+    }
+
+    private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
+        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
+        InputSource is = new InputSource( xmlStringReader );
+        XPathExpression expr = xPath.compile(expression);
+        return expr.evaluate(is);
+    }
+
+    private InputStream invoiceAsStream(String invoicePath) {
+        InputStream inputFatturaPaXml = getClass().getResourceAsStream(invoicePath);
+        Assert.assertNotNull(inputFatturaPaXml);
+        return inputFatturaPaXml;
     }
 
     private static class KeepByErrorCode implements Predicate<IConversionIssue> {

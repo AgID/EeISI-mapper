@@ -98,7 +98,7 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                     orderReference = new Element(ORDER_REFERENCE);
                 }
                 if (invoicePeriod != null) {
-                    final int index = root.indexOf(invoicePeriod) + 1;
+                    final int index = root.indexOf(invoicePeriod); // + 1;
                     root.removeChild(ORDER_REFERENCE);
                     root.addContent(index, orderReference);
                 } else {
