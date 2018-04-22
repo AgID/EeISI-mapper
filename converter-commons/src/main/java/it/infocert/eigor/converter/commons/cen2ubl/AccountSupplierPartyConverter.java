@@ -128,14 +128,17 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
     }
 
     private void mapPartyTaxScheme(Element party, String companyIdValue, String taxSchemeIdValue) {
-        Element partyTaxScheme = new Element("PartyTaxScheme");
-        Element companyID = new Element("CompanyID");
-        Element taxScheme = new Element("TaxScheme");
-        Element taxSchemeId = new Element("ID");
 
+        Element taxSchemeId = new Element("ID");
         taxSchemeId.setText(taxSchemeIdValue);
+
+        Element companyID = new Element("CompanyID");
         companyID.setText(companyIdValue);
+
+        Element taxScheme = new Element("TaxScheme");
         taxScheme.addContent(taxSchemeId);
+
+        Element partyTaxScheme = new Element("PartyTaxScheme");
         partyTaxScheme.addContent(companyID);
         partyTaxScheme.addContent(taxScheme);
 
