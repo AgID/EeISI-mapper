@@ -1,6 +1,5 @@
 package com.infocert.eigor.api;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
@@ -57,7 +56,7 @@ public class EigorApi {
         // would come from a different software module, i.e. the GUI.
         ToCenConversion toCen = checkNotNull(
                 builder.getConversionRepository().findConversionToCen(sourceFormat),
-                "Target format '%s' not supported. Available formats are %s", sourceFormat, builder.getConversionRepository().supportedToCenFormats());
+                "Source format '%s' not supported. Available formats are %s", sourceFormat, builder.getConversionRepository().supportedToCenFormats());
         FromCenConversion fromCen = checkNotNull(
                 builder.getConversionRepository().findConversionFromCen(targetFormat),
                 "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
