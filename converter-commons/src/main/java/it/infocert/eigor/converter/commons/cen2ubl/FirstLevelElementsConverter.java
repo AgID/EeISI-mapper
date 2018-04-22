@@ -103,6 +103,12 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
             convert("DocumentCurrencyCode", converted);
         }
 
+        if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
+            final String value = invoice.getBT0013PurchaseOrderReference(0).getValue();
+            final Element orderReference = new Element("OrderReference");
+            final Element id = new Element("ID").setText(value);
+            root.addContent(orderReference.setContent(id));
+        }
     }
 
     private void convert(String tag, String value) {
