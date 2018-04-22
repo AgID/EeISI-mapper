@@ -408,10 +408,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!invoiceLine.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
                     final String purchaseOrder = invoiceLine.getBT0132ReferencedPurchaseOrderLineReference(0).getValue();
-                    if (datiGenerali.getDatiOrdineAcquisto().isEmpty()) {
-                        datiGenerali.getDatiOrdineAcquisto().add(new DatiDocumentiCorrelatiType());
-                    }
-                    final DatiDocumentiCorrelatiType dati = datiGenerali.getDatiOrdineAcquisto().get(0);
+                    final DatiDocumentiCorrelatiType dati = new DatiDocumentiCorrelatiType();
+                    datiGenerali.getDatiOrdineAcquisto().add(dati);
                     dati.setNumItem(purchaseOrder);
                     if (lineIdentifier.isPresent()) {
                         Integer number;
@@ -424,6 +422,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     } else {
                         dati.getRiferimentoNumeroLinea().add(dettaglioLinee.getNumeroLinea());
+                    }
+
+                    if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
+                        final String orderReference = invoice.getBT0013PurchaseOrderReference(0).getValue();
+                        dati.setIdDocumento(orderReference);
                     }
                 }
 
