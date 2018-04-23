@@ -1,0 +1,60 @@
+package it.infocert.eigor.converter.commons.cen2ubl;
+
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import org.jdom2.Document;
+import org.jdom2.Element;
+<<<<<<< HEAD
+=======
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+>>>>>>> develop
+
+import java.util.List;
+
+public class PaymentTermsConverter implements CustomMapping<Document> {
+<<<<<<< HEAD
+
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document xmlInvoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+
+        Element invoice = xmlInvoice.getRootElement();
+        int indexOfAccountingCustomerParty = invoice.indexOf(invoice.getChild("AccountingCustomerParty"));
+
+        if(!cenInvoice.getBT0020PaymentTerms().isEmpty()){
+
+            Element note = new Element("Note");
+            note.setText( cenInvoice.getBT0020PaymentTerms().get(0).getValue() );
+
+            Element payementTerms = new Element("PaymentTerms");
+            payementTerms.addContent( note );
+            invoice.addContent(indexOfAccountingCustomerParty+1, payementTerms);
+
+        }
+
+
+    }
+
+=======
+    private final static Logger logger = LoggerFactory.getLogger(PaymentTermsConverter.class);
+
+    @Override
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        Element root = document.getRootElement();
+        if (root != null) {
+            if (!invoice.getBT0020PaymentTerms().isEmpty()) {
+                final Element paymentTerms = new Element("PaymentTerms");
+                final String termsValue = invoice.getBT0020PaymentTerms(0).getValue();
+                final Element note = new Element("Note").setText(termsValue);
+                paymentTerms.addContent(note);
+                root.addContent(paymentTerms);
+                logger.info("Mapped BT-20 to PaymentTerms/Note with value {}", termsValue);
+            } else {
+                logger.info("No BT-20 found");
+            }
+        }
+    }
+>>>>>>> develop
+}

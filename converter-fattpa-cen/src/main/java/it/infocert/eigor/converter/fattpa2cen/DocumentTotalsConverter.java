@@ -11,6 +11,7 @@ import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.converter.fattpa2cen.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -213,6 +214,10 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                 }
             }
+
+
+
+
         }
     }
 }

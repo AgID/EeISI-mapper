@@ -23,20 +23,21 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
     private static final Logger log = LoggerFactory.getLogger(DeliveryOrInvoicePeriodConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
         Element root = document.getRootElement();
         if (root != null) {
-            if (!cenInvoice.getBG0013DeliveryInformation().isEmpty()) {
-                BG0013DeliveryInformation bg0013 = cenInvoice.getBG0013DeliveryInformation(0);
+            final String INVOICE_PERIOD = "InvoicePeriod";
+            Element invoicePeriod = root.getChild(INVOICE_PERIOD);
+            if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+                BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
                 if (!bg0013.getBG0014InvoicingPeriod().isEmpty()) {
                     BG0014InvoicingPeriod bg0014 = bg0013.getBG0014InvoicingPeriod(0);
 
-                    Element invoicePeriod = root.getChild("InvoicePeriod");
                     if (invoicePeriod == null) {
-                        invoicePeriod = new Element("InvoicePeriod");
+                        invoicePeriod = new Element(INVOICE_PERIOD);
                         root.addContent(invoicePeriod);
                     }
 
@@ -80,8 +81,8 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                         }
                     }
 
-                    if (!cenInvoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
-                        BT0008ValueAddedTaxPointDateCode bt0008 = cenInvoice.getBT0008ValueAddedTaxPointDateCode(0);
+                    if (!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
+                        BT0008ValueAddedTaxPointDateCode bt0008 = invoice.getBT0008ValueAddedTaxPointDateCode(0);
                         Element descriptionCode = new Element("DescriptionCode");
                         Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
                         descriptionCode.setText(code.name());
@@ -90,11 +91,29 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                 }
             }
 
-            if (!cenInvoice.getBT0012ContractReference().isEmpty()) {
+            if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
+                final String ORDER_REFERENCE = "OrderReference";
+                Element orderReference = root.getChild(ORDER_REFERENCE);
+                if (orderReference == null) {
+                    orderReference = new Element(ORDER_REFERENCE);
+                }
+                if (invoicePeriod != null) {
+                    final int index = root.indexOf(invoicePeriod); // + 1;
+                    root.removeChild(ORDER_REFERENCE);
+                    root.addContent(index, orderReference);
+                } else {
+                    log.debug("Maintaining OrderReference current position since no InvoicePeriod has been found.");
+                }
+
+                String purchaseOrderReference = invoice.getBT0013PurchaseOrderReference(0).getValue();
+                orderReference.setContent(new Element("ID").setText(purchaseOrderReference));
+            }
+
+            if (!invoice.getBT0012ContractReference().isEmpty()) {
                 Element contractDocumentReference = new Element("ContractDocumentReference");
                 Element id = new Element("ID");
                 contractDocumentReference.addContent(id);
-                id.setText(cenInvoice.getBT0012ContractReference(0).getValue());
+                id.setText(invoice.getBT0012ContractReference(0).getValue());
                 root.addContent(contractDocumentReference);
             }
         }

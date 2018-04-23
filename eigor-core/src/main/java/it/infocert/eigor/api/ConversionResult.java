@@ -53,10 +53,10 @@ public class ConversionResult<R> {
     }
 
     /**
-     * @return List of issues caught during conversion.
+     * @return A never null list of issues caught during conversion.
      */
     public List<IConversionIssue> getIssues() {
-        return issues;
+        return issues != null ? issues : new ArrayList<IConversionIssue>();
     }
 
     /**

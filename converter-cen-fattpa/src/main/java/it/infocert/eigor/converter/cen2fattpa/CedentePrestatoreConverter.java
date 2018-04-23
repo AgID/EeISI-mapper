@@ -356,13 +356,13 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                             )));
                         }
                     } else {
-                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
+                        datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_01);
                         attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", value, System.lineSeparator()));
-                        log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_18);
+                        log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_01);
                     }
                 } else {
-                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_18);
-                    log.debug("Mapped RegimeFiscale with default value {} since BT-32 is empty", RegimeFiscaleType.RF_18);
+                    datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_01);
+                    log.debug("Mapped RegimeFiscale with default value {} since BT-32 is empty", RegimeFiscaleType.RF_01);
                 }
             } else {
                 final String message = "No DatiAnagrafici was found in current CedentePrestatore";

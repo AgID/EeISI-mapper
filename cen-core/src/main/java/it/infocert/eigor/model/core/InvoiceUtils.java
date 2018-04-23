@@ -172,7 +172,7 @@ public class InvoiceUtils {
     /**
      * Get the first child of an invoice at the given path
      *
-     * @param path the path of the child to return
+     * @param path    the path of the child to return
      * @param invoice the invoice to traverse
      * @return the first child found
      */
@@ -241,9 +241,9 @@ public class InvoiceUtils {
     /**
      * Returns all the existent BTs given a CEN path
      *
-     * @param parent the parent BG into which to search
+     * @param parent  the parent BG into which to search
      * @param cenPath the path to the BT
-     * @param bts    the list of found bts to populate
+     * @param bts     the list of found bts to populate
      * @return the populated bts list
      */
     public List<AbstractBT> getBtRecursively(BTBG parent, String cenPath, final List<AbstractBT> bts) {
