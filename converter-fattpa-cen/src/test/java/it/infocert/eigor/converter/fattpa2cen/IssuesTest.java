@@ -5,24 +5,30 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.mockito.Mockito.mock;
 
 public class IssuesTest {
 
+    @Ignore
     @Test
     public void issue252() throws SyntaxErrorInInvoiceFormatException, ConfigurationException {
 
         EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
+        //Properties properties = new Properties();
+        //EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
         InputStream sourceInvoiceStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
 
         FattPa2Cen f2c = new FattPa2Cen(new JavaReflections(), configuration);
