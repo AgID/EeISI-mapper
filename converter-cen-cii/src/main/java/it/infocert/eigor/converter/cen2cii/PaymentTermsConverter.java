@@ -20,7 +20,7 @@ import java.util.List;
 public class PaymentTermsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
         TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
@@ -48,8 +48,15 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             applicableHeaderTradeAgreement.addContent(specifiedTradePaymentTerms);
         }
 
-        if (!cenInvoice.getBT0009PaymentDueDate().isEmpty()) {
-            LocalDate bt0009 = cenInvoice.getBT0009PaymentDueDate(0).getValue();
+        if (!invoice.getBT0020PaymentTerms().isEmpty()) {
+            String bt0020 = invoice.getBT0020PaymentTerms(0).getValue();
+            Element description = new Element("Description", ramNs);
+            description.setText(bt0020);
+            specifiedTradePaymentTerms.addContent(description);
+        }
+
+        if (!invoice.getBT0009PaymentDueDate().isEmpty()) {
+            LocalDate bt0009 = invoice.getBT0009PaymentDueDate(0).getValue();
             Element dueDateDateTime = new Element("DueDateDateTime", ramNs);
             Element dateTimeString = new Element("DateTimeString", udtNs);
             dateTimeString.setAttribute("format", "102");
@@ -68,14 +75,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             }
         }
 
-        if (!cenInvoice.getBT0020PaymentTerms().isEmpty()) {
-            String bt0020 = cenInvoice.getBT0020PaymentTerms(0).getValue();
-            Element description = new Element("Description", ramNs);
-            description.setText(bt0020);
-            specifiedTradePaymentTerms.addContent(description);
-        }
-
-        List<BG0016PaymentInstructions> bg0016s = cenInvoice.getBG0016PaymentInstructions();
+        List<BG0016PaymentInstructions> bg0016s = invoice.getBG0016PaymentInstructions();
         if (!bg0016s.isEmpty()) {
             List<BG0019DirectDebit> bg0019s = bg0016s.get(0).getBG0019DirectDebit();
             if (!bg0019s.isEmpty()) {
@@ -89,8 +89,8 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             }
         }
 
-        if (!cenInvoice.getBG0022DocumentTotals().isEmpty()) {
-            BG0022DocumentTotals bg0022 = cenInvoice.getBG0022DocumentTotals(0);
+        if (!invoice.getBG0022DocumentTotals().isEmpty()) {
+            BG0022DocumentTotals bg0022 = invoice.getBG0022DocumentTotals(0);
 
             Element specifiedTradeSettlementHeaderMonetarySummation = findNamespaceChild(applicableHeaderTradeAgreement, namespacesInScope, "SpecifiedTradeSettlementHeaderMonetarySummation");
             if (specifiedTradeSettlementHeaderMonetarySummation == null) {
@@ -104,6 +104,23 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 try {
                     lineTotalAmount.setText(dblStrConverter.convert(bt0106));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(lineTotalAmount);
+                } catch (ConversionFailedException e) {
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
+                }
+            }
+
+            if (!bg0022.getBT0108SumOfChargesOnDocumentLevel().isEmpty()) {
+                Double bt0108 = bg0022.getBT0108SumOfChargesOnDocumentLevel(0).getValue();
+                Element chargeTotalAmount = new Element("ChargeTotalAmount", ramNs);
+                try {
+                    chargeTotalAmount.setText(dblStrConverter.convert(bt0108));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
                 } catch (ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),
@@ -132,22 +149,6 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 }
             }
 
-            if (!bg0022.getBT0108SumOfChargesOnDocumentLevel().isEmpty()) {
-                Double bt0108 = bg0022.getBT0108SumOfChargesOnDocumentLevel(0).getValue();
-                Element chargeTotalAmount = new Element("ChargeTotalAmount", ramNs);
-                try {
-                    chargeTotalAmount.setText(dblStrConverter.convert(bt0108));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
-            }
 
             if (!bg0022.getBT0109InvoiceTotalAmountWithoutVat().isEmpty()) {
                 Double bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0).getValue();
@@ -183,6 +184,25 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 }
             }
 
+            //FIXME BT-111
+
+            if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
+                Double bt0114 = bg0022.getBT0114RoundingAmount(0).getValue();
+                Element roundingAmount = new Element("RoundingAmount", ramNs);
+                try {
+                    roundingAmount.setText(dblStrConverter.convert(bt0114));
+                    specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
+                } catch (ConversionFailedException e) {
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
+                }
+            }
+
             if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
                 Double bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0).getValue();
                 Element grandTotalAmount = new Element("GrandTotalAmount", ramNs);
@@ -206,23 +226,6 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 try {
                     totalPrepaidAmount.setText(dblStrConverter.convert(bt0113));
                     specifiedTradeSettlementHeaderMonetarySummation.addContent(totalPrepaidAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
-            }
-
-            if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
-                Double bt0114 = bg0022.getBT0114RoundingAmount(0).getValue();
-                Element roundingAmount = new Element("RoundingAmount", ramNs);
-                try {
-                    roundingAmount.setText(dblStrConverter.convert(bt0114));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
                 } catch (ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),

@@ -80,6 +80,17 @@ public class ITGuaranteedInvoiceExamples {
     }
 
     @Test
+    public void name() throws Exception {
+        try (final FileInputStream fis = new FileInputStream(new File("C:\\Users\\matte\\Documents\\work\\InfoCert\\Eigor\\test-sara\\issue-271\\reports\\invoice-source.xml"))) {
+            final ConversionResult<byte[]> result = api.convert("cii", "ubl", fis);
+            try (final FileOutputStream fos = new FileOutputStream("C:\\Users\\matte\\Desktop\\out.xml")) {
+                fos.write(result.getResult());
+            }
+        }
+
+    }
+
+    @Test
     public void shouldConvertUblExampleWithoutErrors() throws Exception {
         Stream.of(testInvoices).filter(new Filter<File>() {
             @Override

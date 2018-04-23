@@ -18,7 +18,7 @@ import java.util.List;
 public class BuyerConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
         Namespace rsmNs = rootElement.getNamespace("rsm");
@@ -37,15 +37,15 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
             supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
         }
 
-        if(!cenInvoice.getBT0010BuyerReference().isEmpty()){
-            BT0010BuyerReference bt0010 = cenInvoice.getBT0010BuyerReference(0);
+        if (!invoice.getBT0010BuyerReference().isEmpty()) {
+            BT0010BuyerReference bt0010 = invoice.getBT0010BuyerReference(0);
             Element buyerReference = new Element("BuyerReference", ramNs);
             buyerReference.setText(bt0010.getValue());
             applicableHeaderTradeAgreement.addContent(buyerReference);
         }
 
-        if (!cenInvoice.getBG0007Buyer().isEmpty()) {
-            BG0007Buyer bg0007 = cenInvoice.getBG0007Buyer(0);
+        if (!invoice.getBG0007Buyer().isEmpty()) {
+            BG0007Buyer bg0007 = invoice.getBG0007Buyer(0);
             Element buyerTradeParty = findNamespaceChild(applicableHeaderTradeAgreement, namespacesInScope, "BuyerTradeParty");
             if (buyerTradeParty == null) {
                 buyerTradeParty = new Element("BuyerTradeParty", ramNs);
@@ -72,13 +72,6 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
             Element specifiedLegalOrganization = new Element("SpecifiedLegalOrganization", ramNs);
             buyerTradeParty.addContent(specifiedLegalOrganization);
 
-            if (!bg0007.getBT0045BuyerTradingName().isEmpty()) {
-                BT0045BuyerTradingName bt0045 = bg0007.getBT0045BuyerTradingName(0);
-                Element tradingBusinessName = new Element("TradingBusinessName", ramNs);
-                tradingBusinessName.setText(bt0045.getValue());
-                specifiedLegalOrganization.addContent(tradingBusinessName);
-            }
-
             if (!bg0007.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0047 = bg0007.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs);
@@ -89,28 +82,11 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 specifiedLegalOrganization.addContent(id);
             }
 
-            if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
-                Identifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0).getValue();
-                Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
-                Element id = new Element("ID", ramNs);
-                id.setText(bt0048.getIdentifier());
-                if (bt0048.getIdentificationSchema() != null) {
-                    id.setAttribute("schemeID", bt0048.getIdentificationSchema());
-                }
-                specifiedTaxRegistration.addContent(id);
-                buyerTradeParty.addContent(specifiedTaxRegistration);
-            }
-
-            if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-                Identifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0).getValue();
-                Element uriUniversalCommunication = new Element("URIUniversalCommunication", ramNs);
-                Element uriid = new Element("URIID", ramNs);
-                uriid.setText(bt0049.getIdentifier());
-                if (bt0049.getIdentificationSchema() != null) {
-                    uriid.setAttribute("schemeID", bt0049.getIdentificationSchema());
-                }
-                uriUniversalCommunication.addContent(uriid);
-                buyerTradeParty.addContent(uriUniversalCommunication);
+            if (!bg0007.getBT0045BuyerTradingName().isEmpty()) {
+                BT0045BuyerTradingName bt0045 = bg0007.getBT0045BuyerTradingName(0);
+                Element tradingBusinessName = new Element("TradingBusinessName", ramNs);
+                tradingBusinessName.setText(bt0045.getValue());
+                specifiedLegalOrganization.addContent(tradingBusinessName);
             }
 
             if (!bg0007.getBG0009BuyerContact().isEmpty()) {
@@ -184,20 +160,45 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                     postalTradeAddress.addContent(cityName);
                 }
 
-                if (!bg0008.getBT0054BuyerCountrySubdivision().isEmpty()) {
-                    BT0054BuyerCountrySubdivision bt0054 = bg0008.getBT0054BuyerCountrySubdivision(0);
-                    Element countrySubDivisionName = new Element("CountrySubDivisionName", ramNs);
-                    countrySubDivisionName.setText(bt0054.getValue());
-                    postalTradeAddress.addContent(countrySubDivisionName);
-                }
-
                 if (!bg0008.getBT0055BuyerCountryCode().isEmpty()) {
                     BT0055BuyerCountryCode bt0055 = bg0008.getBT0055BuyerCountryCode(0);
                     Element countryID = new Element("CountryID", ramNs);
                     countryID.setText(bt0055.getValue().getIso2charCode());
                     postalTradeAddress.addContent(countryID);
                 }
+
+                if (!bg0008.getBT0054BuyerCountrySubdivision().isEmpty()) {
+                    BT0054BuyerCountrySubdivision bt0054 = bg0008.getBT0054BuyerCountrySubdivision(0);
+                    Element countrySubDivisionName = new Element("CountrySubDivisionName", ramNs);
+                    countrySubDivisionName.setText(bt0054.getValue());
+                    postalTradeAddress.addContent(countrySubDivisionName);
+                }
             }
+
+            if (!bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                Identifier bt0049 = bg0007.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0).getValue();
+                Element uriUniversalCommunication = new Element("URIUniversalCommunication", ramNs);
+                Element uriid = new Element("URIID", ramNs);
+                uriid.setText(bt0049.getIdentifier());
+                if (bt0049.getIdentificationSchema() != null) {
+                    uriid.setAttribute("schemeID", bt0049.getIdentificationSchema());
+                }
+                uriUniversalCommunication.addContent(uriid);
+                buyerTradeParty.addContent(uriUniversalCommunication);
+            }
+
+            if (!bg0007.getBT0048BuyerVatIdentifier().isEmpty()) {
+                Identifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0).getValue();
+                Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
+                Element id = new Element("ID", ramNs);
+                id.setText(bt0048.getIdentifier());
+                if (bt0048.getIdentificationSchema() != null) {
+                    id.setAttribute("schemeID", bt0048.getIdentificationSchema());
+                }
+                specifiedTaxRegistration.addContent(id);
+                buyerTradeParty.addContent(specifiedTaxRegistration);
+            }
+
         }
     }
 }

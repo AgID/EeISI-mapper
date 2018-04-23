@@ -5,8 +5,6 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
-import it.infocert.eigor.model.core.model.BT0018InvoicedObjectIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0019BuyerAccountingReference;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -36,42 +34,6 @@ public class TenderRefInvoicedObjectID extends CustomConverterUtils implements C
         if (applicableHeaderTradeAgreement == null) {
             applicableHeaderTradeAgreement = new Element("ApplicableHeaderTradeAgreement", ramNs);
             supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
-        }
-
-        for (BT0017TenderOrLotReference bt0017 : cenInvoice.getBT0017TenderOrLotReference()) {
-            Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", ramNs);
-
-            Element typeCode = new Element("TypeCode", ramNs);
-            typeCode.setText("50");
-            additionalReferencedDocument.addContent(typeCode);
-
-            Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(bt0017.getValue());
-            additionalReferencedDocument.addContent(issuerAssignedID);
-
-            applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
-        }
-
-        for (BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 : cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier()) {
-            Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", ramNs);
-
-            Element typeCode = new Element("TypeCode", ramNs);
-            typeCode.setText("130");
-            additionalReferencedDocument.addContent(typeCode);
-
-            String identificationSchema = bt0018.getValue().getIdentificationSchema();
-            if (identificationSchema != null) {
-                Element referenceTypeCode = new Element("ReferenceTypeCode", ramNs);
-                referenceTypeCode.setText(identificationSchema);
-                additionalReferencedDocument.addContent(referenceTypeCode);
-            }
-
-            String identifier = bt0018.getValue().getIdentifier();
-            Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(identifier);
-            additionalReferencedDocument.addContent(issuerAssignedID);
-
-            applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
         }
 
         if (!cenInvoice.getBT0019BuyerAccountingReference().isEmpty()) {
