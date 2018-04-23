@@ -52,10 +52,12 @@ public class IssuesTest {
 
 
     @Test
-    public void issue252() throws Exception {
+    public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
         InputStream ciiInStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
         ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", ciiInStream);
-        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "aa", "bb");
+
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+
     }
 
     @Test

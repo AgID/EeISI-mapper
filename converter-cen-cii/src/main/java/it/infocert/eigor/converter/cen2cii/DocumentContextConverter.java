@@ -39,10 +39,10 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
         final Element businessProcessSpecifiedDocumentContextParameter = new Element("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
         final Element bId = new Element("ID", ramNs).setText("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
 
-        guidelineSpecifiedDocumentContextParameter.addContent(gId);
-        exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
         businessProcessSpecifiedDocumentContextParameter.addContent(bId);
         exchangedDocumentContext.addContent(businessProcessSpecifiedDocumentContextParameter);
+        guidelineSpecifiedDocumentContextParameter.addContent(gId);
+        exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
 
        /* if (!cenInvoice.getBG0002ProcessControl().isEmpty()) {
             BG0002ProcessControl bg0002 = cenInvoice.getBG0002ProcessControl(0);
