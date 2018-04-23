@@ -36,8 +36,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private static final String FORMAT = "cii";
 
-    private final String RAM_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
-    private final String RSM_URI = "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
     private final EigorConfiguration configuration;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
@@ -199,11 +197,11 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private void createRootNode(Document doc) {
         Element root = new Element("CrossIndustryInvoice");
-        root.addNamespaceDeclaration(Namespace.getNamespace("rsm", RSM_URI));
-        root.addNamespaceDeclaration(Namespace.getNamespace("ram", RAM_URI));
+        root.addNamespaceDeclaration(Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"));
+        root.addNamespaceDeclaration(Namespace.getNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"));
         root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
         root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
-        root.setNamespace(Namespace.getNamespace("rsm", RSM_URI));
+        root.setNamespace(Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"));
         doc.setRootElement(root);
     }
 }
