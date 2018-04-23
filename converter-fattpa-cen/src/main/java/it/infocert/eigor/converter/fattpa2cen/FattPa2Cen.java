@@ -17,7 +17,7 @@ import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntd
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
@@ -119,6 +119,69 @@ public class FattPa2Cen extends AbstractToCenConverter {
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
+
+
+        // fix https://gitlab.com/tgi-infocert-eigor/eigor/issues/252
+        BG0000Invoice invoice = result.getResult();
+        // bt-112
+        {
+            Double bt109 = null;
+            {
+                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                BT0109InvoiceTotalAmountWithoutVat bt109cen = bg022cen.getBT0109InvoiceTotalAmountWithoutVat(0);
+                bt109 = bt109cen.getValue();
+                if(bt109==null) bt109 = 0.0;
+            }
+
+            Double bt110 = null;
+            {
+                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                BT0110InvoiceTotalVatAmount bt110cen = bg022cen.getBT0110InvoiceTotalVatAmount(0);
+                bt110 = bt110cen.getValue();
+                if(bt110==null) bt110 = 0.0;
+            }
+
+            BT0112InvoiceTotalAmountWithVat bt112cen = new BT0112InvoiceTotalAmountWithVat( bt109 + bt110 );
+            invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat().set(0, bt112cen);
+
+
+        }
+
+        // bt-113
+        if(invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().isEmpty()){
+            invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(new BT0113PaidAmount(0.0));
+        }
+
+        // bt-115
+        {
+
+            {
+                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                Double bt112 = bg022cen.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+
+                Double bt114 = bg022cen.getBT0114RoundingAmount().isEmpty() ? 0.0 : bg022cen.getBT0114RoundingAmount(0).getValue();
+
+                Double bt113 = bg022cen.getBT0113PaidAmount().isEmpty() ? 0.0 : bg022cen.getBT0113PaidAmount(0).getValue();
+
+                Double bt115 = bt112 + bt114 -bt113;
+
+                List<BT0115AmountDueForPayment> bt115s = invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment();
+                if(bt115s.isEmpty()){
+                    bt115s.add(new BT0115AmountDueForPayment(bt115));
+                }else{
+                    bt115s.set(0, new BT0115AmountDueForPayment(bt115));
+                }
+
+            }
+        }
+
+        // when bt-115 is present, either bt-20 or bt-9
+        BT0020PaymentTerms bt20cen = null;
+        if( invoice.getBT0020PaymentTerms().isEmpty() ){
+            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
+        }
+
+
         return result;
     }
 

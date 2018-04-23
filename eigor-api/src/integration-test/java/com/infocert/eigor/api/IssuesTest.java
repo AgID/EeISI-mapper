@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
+import static it.infocert.eigor.test.Utils.invoiceAsStream;
+
 public class IssuesTest {
 
     @Rule
@@ -46,6 +48,16 @@ public class IssuesTest {
                 .withOutputFolder(tmp.newFolder())
                 .enableForce()
                 .build();
+    }
+
+
+    @Test
+    public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        InputStream ciiInStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", ciiInStream);
+
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+
     }
 
     @Test
@@ -74,12 +86,6 @@ public class IssuesTest {
         InputSource is = new InputSource( xmlStringReader );
         XPathExpression expr = xPath.compile(expression);
         return expr.evaluate(is);
-    }
-
-    private InputStream invoiceAsStream(String invoicePath) {
-        InputStream inputFatturaPaXml = getClass().getResourceAsStream(invoicePath);
-        Assert.assertNotNull(inputFatturaPaXml);
-        return inputFatturaPaXml;
     }
 
     private static class KeepByErrorCode implements Predicate<IConversionIssue> {
