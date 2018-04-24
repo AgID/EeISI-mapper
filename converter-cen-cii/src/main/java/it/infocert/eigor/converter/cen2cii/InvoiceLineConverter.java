@@ -173,8 +173,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             if (!bg0025.getBG0029PriceDetails().isEmpty()) {
                 BG0029PriceDetails bg0029 = bg0025.getBG0029PriceDetails(0);
 
-                Element grossPriceProductTradePrice = new Element("GrossPriceProductTradePrice", ramNs);
 
+                Element grossPriceProductTradePrice = new Element("GrossPriceProductTradePrice", ramNs);
 
                 if (!bg0029.getBT0148ItemGrossPrice().isEmpty()) {
                     Element chargeAmount = new Element("ChargeAmount", ramNs);
@@ -193,28 +193,26 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     }
                 } else if (!bg0029.getBT0146ItemNetPrice().isEmpty()) {
                     Element chargeAmount = new Element("ChargeAmount", ramNs);
-                    try {
-                        final Double net = bg0029.getBT0146ItemNetPrice(0).getValue();
-                        if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
+                    if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
+                        try {
+                            final Double net = bg0029.getBT0146ItemNetPrice(0).getValue();
                             final Double discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
                             chargeAmount.setText(dblStrConverter.convert(net - discount));
-                        } else {
-                            chargeAmount.setText(dblStrConverter.convert(net));
-                        }
+                            grossPriceProductTradePrice.addContent(chargeAmount);
 
-                        grossPriceProductTradePrice.addContent(chargeAmount);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
+                        } catch (NumberFormatException | ConversionFailedException e) {
+                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.INVALID,
+                                    e
+                            )));
+                        }
                     }
                 }
 
-                if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
+                if (grossPriceProductTradePrice.getChild("ChargeAmount") != null && !bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
                     Double bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
                     Element basisQuantity = new Element("BasisQuantity", ramNs);
                     if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
