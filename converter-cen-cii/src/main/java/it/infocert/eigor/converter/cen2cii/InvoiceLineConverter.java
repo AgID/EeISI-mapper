@@ -315,13 +315,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
                 specifiedLineTradeSettlement.addContent(applicableTradeTax);
             }
-            if (!specifiedLineTradeSettlement.getChildren().isEmpty()) {
-                includedSupplyChainTradeLineItem.addContent(specifiedLineTradeSettlement);
-            }
 
-            if (!specifiedLineTradeAgreement.getChildren().isEmpty()) {
-                includedSupplyChainTradeLineItem.addContent(specifiedLineTradeAgreement);
-            }
 
             // BillingSpecifiedPeriod
             if (!bg0025.getBG0026InvoiceLinePeriod().isEmpty()) {
@@ -574,6 +568,13 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedLineTradeSettlement.addContent(receivableSpecifiedTradeAccountingAccount);
             }
 
+            if (!specifiedLineTradeSettlement.getChildren().isEmpty()) {
+                includedSupplyChainTradeLineItem.addContent(specifiedLineTradeSettlement);
+            }
+
+            if (!specifiedLineTradeAgreement.getChildren().isEmpty()) {
+                includedSupplyChainTradeLineItem.addContent(specifiedLineTradeAgreement);
+            }
         }
 
         logger.error("{}, {}", supplyChainTradeTransaction.getName(), supplyChainTradeTransaction.getChildren());
