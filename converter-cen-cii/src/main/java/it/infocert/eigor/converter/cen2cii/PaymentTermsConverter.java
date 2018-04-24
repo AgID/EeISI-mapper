@@ -252,7 +252,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
     }
 
     private Element taxTotalAmount(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0022DocumentTotals bg0022, BG0000Invoice invoice) {
-        
+
         Element taxTotalAmount = null;
         if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
             Double bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();

@@ -241,7 +241,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         )));
                     }
                 }
-                specifiedLineTradeSettlement.addContent(billingSpecifiedPeriod);
+                if(!billingSpecifiedPeriod.getChildren().isEmpty()) {
+                    specifiedLineTradeSettlement.addContent(billingSpecifiedPeriod);
+                }
             }
 
             // SpecifiedTradeAllowanceCharge
