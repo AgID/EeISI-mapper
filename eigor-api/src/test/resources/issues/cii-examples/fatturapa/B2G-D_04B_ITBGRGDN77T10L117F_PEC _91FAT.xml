@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+  <FatturaElettronicaHeader>
+
+        <DatiTrasmissione>
+            <IdTrasmittente>
+                <IdPaese>IT</IdPaese>
+                <IdCodice>07945211006</IdCodice>
+            </IdTrasmittente>
+            <ProgressivoInvio>00001</ProgressivoInvio>
+            <FormatoTrasmissione>FPA12</FormatoTrasmissione>
+            <CodiceDestinatario>99YJBO</CodiceDestinatario>
+        </DatiTrasmissione>
+        <CedentePrestatore>
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese>
+                    <IdCodice>07945211006</IdCodice>
+                </IdFiscaleIVA>
+                <Anagrafica>
+                    <Denominazione>InfoCert SpA</Denominazione>
+                </Anagrafica>
+                <RegimeFiscale>RF01</RegimeFiscale>
+            </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>Piazza Sallustio 9</Indirizzo>
+                <CAP>00187</CAP>
+                <Comune>ROMA</Comune>
+                <Nazione>IE</Nazione>
+            </Sede>
+        </CedentePrestatore>
+        <CessionarioCommittente>
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese>
+                    <IdCodice>97735020584</IdCodice>
+                </IdFiscaleIVA>
+                <Anagrafica>
+                    <Denominazione>AgiD</Denominazione>
+                </Anagrafica>
+            </DatiAnagrafici>
+            <Sede>
+                <Indirizzo>Via Liszt 21</Indirizzo>
+                <CAP>00144</CAP>
+                <Comune>ROMA</Comune>
+                <Nazione>IT</Nazione>
+            </Sede>
+        </CessionarioCommittente>
+    
+  
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody>
+  <!--Invoice general data -->
+    <DatiGenerali>
+      <DatiGeneraliDocumento>
+        <TipoDocumento>TD01</TipoDocumento>
+        <Divisa>EUR</Divisa>
+        <Data>2017-01-18</Data>
+        <Numero>123</Numero>
+		<!-- not mandatory in FattPA but needed in CEN or to be calculated-->
+		<ImportoTotaleDocumento>122.00</ImportoTotaleDocumento>
+       </DatiGeneraliDocumento>
+    </DatiGenerali>
+    <DatiBeniServizi>
+      <DettaglioLinee>
+        <NumeroLinea>1</NumeroLinea>
+        <Descrizione>DESCRIZIONE DELLA FORNITURA</Descrizione>
+        <PrezzoUnitario>100.00</PrezzoUnitario>
+        <PrezzoTotale>100.00</PrezzoTotale>
+        <AliquotaIVA>22.00</AliquotaIVA>
+      </DettaglioLinee>
+      <DatiRiepilogo>
+        <AliquotaIVA>22.00</AliquotaIVA>
+        <ImponibileImporto>100.00</ImponibileImporto>
+        <Imposta>22.00</Imposta>
+       </DatiRiepilogo>
+    </DatiBeniServizi>
+	 <DatiPagamento>
+      <CondizioniPagamento>TP01</CondizioniPagamento>
+      <DettaglioPagamento>
+        <ModalitaPagamento>MP01</ModalitaPagamento>
+        <DataScadenzaPagamento>2017-02-18</DataScadenzaPagamento>
+        <ImportoPagamento>122.00</ImportoPagamento>
+      </DettaglioPagamento>
+    </DatiPagamento>
+ </FatturaElettronicaBody>
+</p:FatturaElettronica>
