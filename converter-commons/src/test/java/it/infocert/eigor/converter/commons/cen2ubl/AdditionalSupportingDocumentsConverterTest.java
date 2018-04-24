@@ -21,11 +21,11 @@ import static org.junit.Assert.assertTrue;
 public class AdditionalSupportingDocumentsConverterTest {
 
     @Test
-    public void additionalDocumentReferenceDocumentTypeCodeShouldBe916IfBG0024hasBT0122() throws Exception {
+    public void additionalDocumentReferenceDocumentTypeCodeShouldBe916IfBG0024hasBT0122ForCII() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0122();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
         Element documentTypeCode = additionalSupportingDocuments.getChild("DocumentTypeCode");
