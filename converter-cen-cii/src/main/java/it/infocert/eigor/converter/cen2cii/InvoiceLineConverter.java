@@ -161,28 +161,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             Element specifiedLineTradeAgreement = specifiedLineTradeAgreement(errors, callingLocation, dblStrConverter, ramNs, bg0025);
 
 
-            if (!bg0025.getBT0129InvoicedQuantity().isEmpty()) {
-                Double bt0129 = bg0025.getBT0129InvoicedQuantity(0).getValue();
-                Element specifiedLineTradeDelivery = new Element("SpecifiedLineTradeDelivery", ramNs);
-                Element billedQuantity = new Element("BilledQuantity", ramNs);
-                if (!bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
-                    UnitOfMeasureCodes bt0130 = bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue();
-                    billedQuantity.setAttribute("unitCode", bt0130.getCommonCode());
-                }
-                try {
-                    billedQuantity.setText(dblStrConverter.convert(bt0129));
-                    specifiedLineTradeDelivery.addContent(billedQuantity);
-                    includedSupplyChainTradeLineItem.addContent(specifiedLineTradeDelivery);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
-            }
+            Element specifiedLineTradeDelivery = specifiedLineTradeDelivery(errors, callingLocation, dblStrConverter, ramNs, bg0025);
 
             Element specifiedLineTradeSettlement = new Element("SpecifiedLineTradeSettlement", ramNs);
 
@@ -474,9 +453,14 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 includedSupplyChainTradeLineItem.addContent(specifiedLineTradeAgreement);
             }
 
+            if(specifiedLineTradeDelivery!=null){
+                includedSupplyChainTradeLineItem.addContent(specifiedLineTradeDelivery);
+            }
+
             if (!specifiedLineTradeSettlement.getChildren().isEmpty()) {
                 includedSupplyChainTradeLineItem.addContent(specifiedLineTradeSettlement);
             }
+
 
 
         }
@@ -489,6 +473,35 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
 
 
+
+
+    
+    private Element specifiedLineTradeDelivery(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
+        Element specifiedLineTradeDelivery = null;
+        if (!bg0025.getBT0129InvoicedQuantity().isEmpty()) {
+            Double bt0129 = bg0025.getBT0129InvoicedQuantity(0).getValue();
+            specifiedLineTradeDelivery = new Element("SpecifiedLineTradeDelivery", ramNs);
+            Element billedQuantity = new Element("BilledQuantity", ramNs);
+            if (!bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
+                UnitOfMeasureCodes bt0130 = bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue();
+                billedQuantity.setAttribute("unitCode", bt0130.getCommonCode());
+            }
+            try {
+                billedQuantity.setText(dblStrConverter.convert(bt0129));
+                specifiedLineTradeDelivery.addContent(billedQuantity);
+
+            } catch (NumberFormatException | ConversionFailedException e) {
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        e.getMessage(),
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.INVALID,
+                        e
+                )));
+            }
+        }
+        return specifiedLineTradeDelivery;
+    }
 
 
     private Element specifiedLineTradeAgreement(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
