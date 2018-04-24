@@ -544,8 +544,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
                         final Double discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
                         chargeAmount.setText(dblStrConverter.convert(net - discount));
-                    } else {
-                        chargeAmount.setText(dblStrConverter.convert(net));
                     }
 
                     grossPriceProductTradePrice.addContent(chargeAmount);
@@ -619,7 +617,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
-            if (!grossPriceProductTradePrice.getChildren().isEmpty()) {
+            if (grossPriceProductTradePrice.getChild("ChargeAmount") != null) {
                 specifiedLineTradeAgreement.addContent(grossPriceProductTradePrice);
             }
 
