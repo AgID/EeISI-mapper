@@ -538,9 +538,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
                         final Double discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
                         chargeAmount.setText(dblStrConverter.convert(net - discount));
+                        grossPriceProductTradePrice.addContent(chargeAmount);
                     }
-
-                    grossPriceProductTradePrice.addContent(chargeAmount);
                 } catch (NumberFormatException | ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),
