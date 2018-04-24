@@ -241,7 +241,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         )));
                     }
                 }
-                if(!billingSpecifiedPeriod.getChildren().isEmpty()) {
+                if (!billingSpecifiedPeriod.getChildren().isEmpty()) {
                     specifiedLineTradeSettlement.addContent(billingSpecifiedPeriod);
                 }
             }
@@ -454,7 +454,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 includedSupplyChainTradeLineItem.addContent(specifiedLineTradeAgreement);
             }
 
-            if(specifiedLineTradeDelivery!=null){
+            if (specifiedLineTradeDelivery != null) {
                 includedSupplyChainTradeLineItem.addContent(specifiedLineTradeDelivery);
             }
 
@@ -463,18 +463,10 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             }
 
 
-
         }
 
         logger.error("{}, {}", supplyChainTradeTransaction.getName(), supplyChainTradeTransaction.getChildren());
     }
-
-
-
-
-
-
-
 
 
     private Element specifiedLineTradeDelivery(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
@@ -619,11 +611,11 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
-            if (grossPriceProductTradePrice.getChild("ChargeAmount") != null) {
+            if (grossPriceProductTradePrice.getChild("ChargeAmount", ramNs) != null) {
                 specifiedLineTradeAgreement.addContent(grossPriceProductTradePrice);
             }
 
-            if(netPriceProductTradePrice!=null) {
+            if (netPriceProductTradePrice != null) {
                 specifiedLineTradeAgreement.addContent(netPriceProductTradePrice);
             }
 
