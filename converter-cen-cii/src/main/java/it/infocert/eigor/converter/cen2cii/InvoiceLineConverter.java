@@ -177,10 +177,31 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
 
                 if (!bg0029.getBT0148ItemGrossPrice().isEmpty()) {
-                    Double bt0148 = bg0029.getBT0148ItemGrossPrice(0).getValue();
                     Element chargeAmount = new Element("ChargeAmount", ramNs);
+                    Double bt0148 = bg0029.getBT0148ItemGrossPrice(0).getValue();
                     try {
                         chargeAmount.setText(dblStrConverter.convert(bt0148));
+                        grossPriceProductTradePrice.addContent(chargeAmount);
+                    } catch (NumberFormatException | ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
+                    }
+                } else if (!bg0029.getBT0146ItemNetPrice().isEmpty()) {
+                    Element chargeAmount = new Element("ChargeAmount", ramNs);
+                    try {
+                        final Double net = bg0029.getBT0146ItemNetPrice(0).getValue();
+                        if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
+                            final Double discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
+                            chargeAmount.setText(dblStrConverter.convert(net - discount));
+                        } else {
+                            chargeAmount.setText(dblStrConverter.convert(net));
+                        }
+
                         grossPriceProductTradePrice.addContent(chargeAmount);
                     } catch (NumberFormatException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(new EigorRuntimeException(
