@@ -42,10 +42,16 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
         }
 
+        Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
+        if (applicableHeaderTradeSettlement == null) {
+            applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
+            supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
+        }
+
         Element specifiedTradePaymentTerms = findNamespaceChild(applicableHeaderTradeAgreement, namespacesInScope, "SpecifiedTradePaymentTerms");
         if (specifiedTradePaymentTerms == null) {
             specifiedTradePaymentTerms = new Element("SpecifiedTradePaymentTerms", ramNs);
-            applicableHeaderTradeAgreement.addContent(specifiedTradePaymentTerms);
+            applicableHeaderTradeSettlement.addContent(specifiedTradePaymentTerms);
         }
 
         if (!invoice.getBT0020PaymentTerms().isEmpty()) {
@@ -95,7 +101,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             Element specifiedTradeSettlementHeaderMonetarySummation = findNamespaceChild(applicableHeaderTradeAgreement, namespacesInScope, "SpecifiedTradeSettlementHeaderMonetarySummation");
             if (specifiedTradeSettlementHeaderMonetarySummation == null) {
                 specifiedTradeSettlementHeaderMonetarySummation = new Element("SpecifiedTradeSettlementHeaderMonetarySummation", ramNs);
-                applicableHeaderTradeAgreement.addContent(specifiedTradeSettlementHeaderMonetarySummation);
+                applicableHeaderTradeSettlement.addContent(specifiedTradeSettlementHeaderMonetarySummation);
             }
 
             if (!bg0022.getBT0106SumOfInvoiceLineNetAmount().isEmpty()) {

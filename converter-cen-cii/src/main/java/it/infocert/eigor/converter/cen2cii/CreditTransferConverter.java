@@ -44,9 +44,6 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
             }
 
-            Element specifiedTradeSettlementPaymentMeans = new Element("SpecifiedTradeSettlementPaymentMeans", ramNs);
-            applicableHeaderTradeAgreement.addContent(specifiedTradeSettlementPaymentMeans);
-
             for (BG0019DirectDebit bg0019 : bg0016.getBG0019DirectDebit()) {
                 if (!bg0019.getBT0090BankAssignedCreditorIdentifier().isEmpty()) {
                     BT0090BankAssignedCreditorIdentifier bt0090 = bg0019.getBT0090BankAssignedCreditorIdentifier(0);
@@ -84,6 +81,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 applicableHeaderTradeSettlement.addContent(invoiceCurrencyCode);
             }
 
+            final Element specifiedTradeSettlementPaymentMeans = new Element("SpecifiedTradeSettlementPaymentMeans", ramNs);
 
             if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
                 Untdid4461PaymentMeansCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0).getValue();
@@ -194,7 +192,9 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 }
 
                 specifiedTradeSettlementPaymentMeans.addContent(payeePartyCreditorFinancialAccount);
+
             }
+            applicableHeaderTradeSettlement.addContent(specifiedTradeSettlementPaymentMeans);
 
             logger.error("{}, {}", supplyChainTradeTransaction.getName(), supplyChainTradeTransaction.getChildren());
         }
