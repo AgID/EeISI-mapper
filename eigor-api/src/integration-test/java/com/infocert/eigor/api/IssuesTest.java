@@ -50,6 +50,13 @@ public class IssuesTest {
                 .build();
     }
 
+    @Test
+    public void issue254FromUblToCii_scenario1() {
+        InputStream invoiceStream = invoiceAsStream("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML");
+        ConversionResult<byte[]> convert = api.convert("ubl", "cii", invoiceStream);
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+    }
+
 
     @Test
     public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {

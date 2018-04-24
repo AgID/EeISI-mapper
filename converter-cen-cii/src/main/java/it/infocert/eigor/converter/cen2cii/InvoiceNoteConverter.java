@@ -22,7 +22,7 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        if (!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
+
             TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
             Element rootElement = document.getRootElement();
@@ -71,6 +71,8 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
                 }
             }
 
+
+        if (!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
             List<BG0001InvoiceNote> bg0001InvoiceNote = cenInvoice.getBG0001InvoiceNote();
             for (BG0001InvoiceNote bg0001 : bg0001InvoiceNote) {
                 Element includedNote = new Element("IncludedNote", ramNs);
