@@ -161,6 +161,8 @@ public class InvoiceLineConverterTest {
 
         BG0029PriceDetails bg0029 = new BG0029PriceDetails();
 
+        bg0029.getBT0148ItemGrossPrice().add(new BT0148ItemGrossPrice(1D));
+
         BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(100D);
         bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
 

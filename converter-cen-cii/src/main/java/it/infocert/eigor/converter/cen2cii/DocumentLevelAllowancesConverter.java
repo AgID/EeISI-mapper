@@ -50,6 +50,22 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
             chargeIndicator.addContent(indicator);
             specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
+            if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+                try {
+                    Element calculationPercent = new Element("CalculationPercent");
+                    calculationPercent.setText(dblStrConverter.convert(bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue()));
+                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
+                } catch (NumberFormatException | ConversionFailedException e) {
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
+                }
+            }
+
             if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
                 try {
                     Element actualAmount = new Element("ActualAmount");
@@ -82,21 +98,6 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 }
             }
 
-            if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-                try {
-                    Element calculationPercent = new Element("CalculationPercent");
-                    calculationPercent.setText(dblStrConverter.convert(bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue()));
-                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
-            }
 
             Element categoryTradeTax = new Element("CategoryTradeTax");
             specifiedTradeAllowanceCharge.addContent(categoryTradeTax);

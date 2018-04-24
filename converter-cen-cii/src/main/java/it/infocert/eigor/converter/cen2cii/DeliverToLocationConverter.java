@@ -20,7 +20,7 @@ import java.util.List;
 public class DeliverToLocationConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
@@ -43,38 +43,13 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
             supplyChainTradeTransaction.addContent(applicableHeaderTradeDelivery);
         }
 
-        if (!cenInvoice.getBT0015ReceivingAdviceReference().isEmpty()) {
-            BT0015ReceivingAdviceReference bt0015 = cenInvoice.getBT0015ReceivingAdviceReference(0);
-            Element receivingAdviceReferencedDocument = new Element("ReceivingAdviceReferencedDocument", ramNs);
-            Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(bt0015.getValue());
-            receivingAdviceReferencedDocument.addContent(issuerAssignedID);
-            applicableHeaderTradeDelivery.addContent(receivingAdviceReferencedDocument);
-        }
-
-        if (!cenInvoice.getBT0016DespatchAdviceReference().isEmpty()) {
-            BT0016DespatchAdviceReference bt0016 = cenInvoice.getBT0016DespatchAdviceReference(0);
-            Element despatchAdviceReferencedDocument = new Element("DespatchAdviceReferencedDocument", ramNs);
-            Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(bt0016.getValue());
-            despatchAdviceReferencedDocument.addContent(issuerAssignedID);
-            applicableHeaderTradeDelivery.addContent(despatchAdviceReferencedDocument);
-        }
-
-        if (!cenInvoice.getBG0013DeliveryInformation().isEmpty()) {
-            BG0013DeliveryInformation bg0013 = cenInvoice.getBG0013DeliveryInformation(0);
+        if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+            BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
 
             Element shipToTradeParty = findNamespaceChild(applicableHeaderTradeDelivery, namespacesInScope, "ShipToTradeParty");
             if (shipToTradeParty == null) {
                 shipToTradeParty = new Element("ShipToTradeParty", ramNs);
                 applicableHeaderTradeDelivery.addContent(shipToTradeParty);
-            }
-
-            if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
-                BT0070DeliverToPartyName bt0070 = bg0013.getBT0070DeliverToPartyName(0);
-                Element name = new Element("Name", ramNs);
-                name.setText(bt0070.getValue());
-                shipToTradeParty.addContent(name);
             }
 
             if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
@@ -87,79 +62,11 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                 shipToTradeParty.addContent(id);
             }
 
-            if (!bg0013.getBT0072ActualDeliveryDate().isEmpty()) {
-                LocalDate bt0072 = bg0013.getBT0072ActualDeliveryDate(0).getValue();
-                Element dateTimeString = new Element("DateTimeString", udtNs);
-                dateTimeString.setAttribute("format", "102");
-                Element occurrenceDateTime = new Element("OccurrenceDateTime", ramNs);
-                Element actualDeliverySupplyChainEvent = new Element("ActualDeliverySupplyChainEvent", ramNs);
-                try {
-                    dateTimeString.setText(dateStrConverter.convert(bt0072));
-                    occurrenceDateTime.addContent(dateTimeString);
-                    actualDeliverySupplyChainEvent.addContent(occurrenceDateTime);
-                    applicableHeaderTradeDelivery.addContent(actualDeliverySupplyChainEvent);
-                } catch (IllegalArgumentException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
-            }
-
-            if (!bg0013.getBG0014InvoicingPeriod().isEmpty()) {
-                BG0014InvoicingPeriod bg0014 = bg0013.getBG0014InvoicingPeriod(0);
-
-                Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
-                if (applicableHeaderTradeSettlement == null) {
-                    applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
-                    supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
-                }
-
-                Element billingSpecifiedPeriod = new Element("BillingSpecifiedPeriod", ramNs);
-
-                if (!bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()) {
-                    LocalDate bt0134 = bg0014.getBT0073InvoicingPeriodStartDate(0).getValue();
-                    Element startDateTime = new Element("StartDateTime", ramNs);
-                    Element dateTimeString = new Element("DateTimeString", udtNs);
-                    try {
-                        dateTimeString.setText(dateStrConverter.convert(bt0134));
-                        dateTimeString.setAttribute("format", "102");
-                        startDateTime.addContent(dateTimeString);
-                        billingSpecifiedPeriod.addContent(startDateTime);
-                    } catch (IllegalArgumentException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
-                }
-
-                if (!bg0014.getBT0074InvoicingPeriodEndDate().isEmpty()) {
-                    LocalDate bt0135 = bg0014.getBT0074InvoicingPeriodEndDate(0).getValue();
-                    Element endDateTime = new Element("EndDateTime", ramNs);
-                    Element dateTimeString = new Element("DateTimeString", udtNs);
-                    try {
-                        dateTimeString.setText(dateStrConverter.convert(bt0135));
-                        dateTimeString.setAttribute("format", "102");
-                        endDateTime.addContent(dateTimeString);
-                        billingSpecifiedPeriod.addContent(endDateTime);
-                    } catch (IllegalArgumentException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
-                }
-                applicableHeaderTradeSettlement.addContent(billingSpecifiedPeriod);
+            if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
+                BT0070DeliverToPartyName bt0070 = bg0013.getBT0070DeliverToPartyName(0);
+                Element name = new Element("Name", ramNs);
+                name.setText(bt0070.getValue());
+                shipToTradeParty.addContent(name);
             }
 
             if (!bg0013.getBG0015DeliverToAddress().isEmpty()) {
@@ -167,6 +74,13 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
 
                 Element postalTradeAddress = new Element("PostalTradeAddress", ramNs);
                 shipToTradeParty.addContent(postalTradeAddress);
+
+                if (!bg0015.getBT0078DeliverToPostCode().isEmpty()) {
+                    BT0078DeliverToPostCode bt0078 = bg0015.getBT0078DeliverToPostCode(0);
+                    Element postcodeCode = new Element("PostcodeCode", ramNs);
+                    postcodeCode.setText(bt0078.getValue());
+                    postalTradeAddress.addContent(postcodeCode);
+                }
 
                 if (!bg0015.getBT0075DeliverToAddressLine1().isEmpty()) {
                     BT0075DeliverToAddressLine1 bt0075 = bg0015.getBT0075DeliverToAddressLine1(0);
@@ -196,11 +110,11 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                     postalTradeAddress.addContent(cityName);
                 }
 
-                if (!bg0015.getBT0078DeliverToPostCode().isEmpty()) {
-                    BT0078DeliverToPostCode bt0078 = bg0015.getBT0078DeliverToPostCode(0);
-                    Element postcodeCode = new Element("PostcodeCode", ramNs);
-                    postcodeCode.setText(bt0078.getValue());
-                    postalTradeAddress.addContent(postcodeCode);
+                if (!bg0015.getBT0080DeliverToCountryCode().isEmpty()) {
+                    BT0080DeliverToCountryCode bt0080 = bg0015.getBT0080DeliverToCountryCode(0);
+                    Element countryID = new Element("CountryID", ramNs);
+                    countryID.setText(bt0080.getValue().getIso2charCode());
+                    postalTradeAddress.addContent(countryID);
                 }
 
                 if (!bg0015.getBT0079DeliverToCountrySubdivision().isEmpty()) {
@@ -210,13 +124,48 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                     postalTradeAddress.addContent(countrySubDivisionName);
                 }
 
-                if (!bg0015.getBT0080DeliverToCountryCode().isEmpty()) {
-                    BT0080DeliverToCountryCode bt0080 = bg0015.getBT0080DeliverToCountryCode(0);
-                    Element countryID = new Element("CountryID", ramNs);
-                    countryID.setText(bt0080.getValue().getIso2charCode());
-                    postalTradeAddress.addContent(countryID);
+            }
+
+            if (!bg0013.getBT0072ActualDeliveryDate().isEmpty()) {
+                LocalDate bt0072 = bg0013.getBT0072ActualDeliveryDate(0).getValue();
+                Element dateTimeString = new Element("DateTimeString", udtNs);
+                dateTimeString.setAttribute("format", "102");
+                Element occurrenceDateTime = new Element("OccurrenceDateTime", ramNs);
+                Element actualDeliverySupplyChainEvent = new Element("ActualDeliverySupplyChainEvent", ramNs);
+                try {
+                    dateTimeString.setText(dateStrConverter.convert(bt0072));
+                    occurrenceDateTime.addContent(dateTimeString);
+                    actualDeliverySupplyChainEvent.addContent(occurrenceDateTime);
+                    applicableHeaderTradeDelivery.addContent(actualDeliverySupplyChainEvent);
+                } catch (IllegalArgumentException | ConversionFailedException e) {
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
                 }
             }
+
+            if (!invoice.getBT0016DespatchAdviceReference().isEmpty()) {
+                BT0016DespatchAdviceReference bt0016 = invoice.getBT0016DespatchAdviceReference(0);
+                Element despatchAdviceReferencedDocument = new Element("DespatchAdviceReferencedDocument", ramNs);
+                Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
+                issuerAssignedID.setText(bt0016.getValue());
+                despatchAdviceReferencedDocument.addContent(issuerAssignedID);
+                applicableHeaderTradeDelivery.addContent(despatchAdviceReferencedDocument);
+            }
+
+            if (!invoice.getBT0015ReceivingAdviceReference().isEmpty()) {
+                BT0015ReceivingAdviceReference bt0015 = invoice.getBT0015ReceivingAdviceReference(0);
+                Element receivingAdviceReferencedDocument = new Element("ReceivingAdviceReferencedDocument", ramNs);
+                Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
+                issuerAssignedID.setText(bt0015.getValue());
+                receivingAdviceReferencedDocument.addContent(issuerAssignedID);
+                applicableHeaderTradeDelivery.addContent(receivingAdviceReferencedDocument);
+            }
+
         }
     }
 }
