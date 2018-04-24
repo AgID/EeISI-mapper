@@ -20,7 +20,7 @@ import java.util.List;
 public class ProjectReferenceConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -39,25 +39,17 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
             supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
         }
 
-        if (!cenInvoice.getBT0011ProjectReference().isEmpty()) {
-            Element specifiedProcuringProject = new Element("SpecifiedProcuringProject", ramNs);
-            Element id = new Element("ID", ramNs);
-            id.setText(cenInvoice.getBT0011ProjectReference(0).getValue());
-            specifiedProcuringProject.addContent(id);
-            applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
-        }
-
-        if (!cenInvoice.getBT0012ContractReference().isEmpty()) {
-            BT0012ContractReference bt0012 = cenInvoice.getBT0012ContractReference(0);
-            Element contractReferencedDocument = new Element("ContractReferencedDocument", ramNs);
+        if (!invoice.getBT0014SalesOrderReference().isEmpty()) {
+            BT0014SalesOrderReference bt0014 = invoice.getBT0014SalesOrderReference(0);
+            Element sellerOrderReferencedDocument = new Element("SellerOrderReferencedDocument", ramNs);
             Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(bt0012.getValue());
-            contractReferencedDocument.addContent(issuerAssignedID);
-            applicableHeaderTradeAgreement.addContent(contractReferencedDocument);
+            issuerAssignedID.setText(bt0014.getValue());
+            sellerOrderReferencedDocument.addContent(issuerAssignedID);
+            applicableHeaderTradeAgreement.addContent(sellerOrderReferencedDocument);
         }
 
-        if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty()) {
-            BT0013PurchaseOrderReference bt0013 = cenInvoice.getBT0013PurchaseOrderReference(0);
+        if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
+            BT0013PurchaseOrderReference bt0013 = invoice.getBT0013PurchaseOrderReference(0);
             Element buyerOrderReferencedDocument = new Element("BuyerOrderReferencedDocument", ramNs);
             Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
             issuerAssignedID.setText(bt0013.getValue());
@@ -65,13 +57,13 @@ public class ProjectReferenceConverter extends CustomConverterUtils implements C
             applicableHeaderTradeAgreement.addContent(buyerOrderReferencedDocument);
         }
 
-        if (!cenInvoice.getBT0014SalesOrderReference().isEmpty()) {
-            BT0014SalesOrderReference bt0014 = cenInvoice.getBT0014SalesOrderReference(0);
-            Element sellerOrderReferencedDocument = new Element("SellerOrderReferencedDocument", ramNs);
+        if (!invoice.getBT0012ContractReference().isEmpty()) {
+            BT0012ContractReference bt0012 = invoice.getBT0012ContractReference(0);
+            Element contractReferencedDocument = new Element("ContractReferencedDocument", ramNs);
             Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
-            issuerAssignedID.setText(bt0014.getValue());
-            sellerOrderReferencedDocument.addContent(issuerAssignedID);
-            applicableHeaderTradeAgreement.addContent(sellerOrderReferencedDocument);
+            issuerAssignedID.setText(bt0012.getValue());
+            contractReferencedDocument.addContent(issuerAssignedID);
+            applicableHeaderTradeAgreement.addContent(contractReferencedDocument);
         }
     }
 }

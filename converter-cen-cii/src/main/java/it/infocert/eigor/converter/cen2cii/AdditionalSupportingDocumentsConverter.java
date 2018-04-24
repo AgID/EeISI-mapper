@@ -141,6 +141,15 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         additionalReferencedDocument.addContent(referenceTypeCode);
                     }
                 }
+
+                if (!invoice.getBT0011ProjectReference().isEmpty()) {
+                    Element specifiedProcuringProject = new Element("SpecifiedProcuringProject", ramNs);
+                    Element id = new Element("ID", ramNs);
+                    id.setText(invoice.getBT0011ProjectReference(0).getValue());
+                    specifiedProcuringProject.addContent(id);
+                    applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
+                }
+
                 applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
             }
         }
