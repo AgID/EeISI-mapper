@@ -51,33 +51,65 @@ public class IssuesTest {
     }
 
     @Test
-    public void issue254FromFattPaToCii() {
-        InputStream invoiceStream = invoiceAsStream("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML");
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", invoiceStream);
+    public void fatturapaToCiiExamples() {
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
+                "fatturapa", "cii");
+
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_PEC _91FAT.xml",
+                "fatturapa", "cii");
+    }
+
+    @Test
+    public void ublToCiiExamples() {
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_42CEN.XML",
+                "ubl", "cii");
+
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_PEC_42UBL.XML",
+                "ubl", "cii");
+
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_02UBL.XML",
+                "ubl", "cii");
+
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_PEC _02CEN.XML",
+                "ubl", "cii");
+
+        assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/urn_notier_SOGG-NOT-00196_2018_9780030222_CP_FATTURA_01_CEN.xml",
+                "ubl", "cii");
+
+    }
+
+    private void assertConversionWithoutErrors(String invoice, String source, String target) {
+        InputStream invoiceStream = invoiceAsStream(invoice);
+        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
         Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+    }
+
+    @Test
+    public void issue254FromFattPaToCii() {
+        assertConversionWithoutErrors("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML", "fatturapa", "cii");
     }
 
     @Test
     public void issue254FromUblToCii_scenario2() {
-        InputStream invoiceStream = invoiceAsStream("/issues/254/ubl_newB2G-C_01C_CII.XML");
-        ConversionResult<byte[]> convert = api.convert("ubl", "cii", invoiceStream);
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+        assertConversionWithoutErrors("/issues/254/ubl_newB2G-C_01C_CII.XML", "ubl", "cii");
     }
 
     @Test
     public void issue254FromUblToCii_scenario1() {
-        InputStream invoiceStream = invoiceAsStream("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML");
-        ConversionResult<byte[]> convert = api.convert("ubl", "cii", invoiceStream);
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+        assertConversionWithoutErrors("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML", "ubl", "cii");
     }
 
 
     @Test
     public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        InputStream fattpaInStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", fattpaInStream);
-
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+        assertConversionWithoutErrors("/issues/issue-252-fattpa.xml", "fatturapa", "ubl");
 
     }
 
