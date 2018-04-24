@@ -192,9 +192,13 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
                 Element id = new Element("ID", ramNs);
                 id.setText(bt0048.getIdentifier());
-                if (bt0048.getIdentificationSchema() != null) {
-                    id.setAttribute("schemeID", bt0048.getIdentificationSchema());
+
+                String identificationSchema = bt0048.getIdentificationSchema();
+                if (identificationSchema == null) {
+                    identificationSchema = "VA";
                 }
+                id.setAttribute("schemeID", identificationSchema);
+
                 specifiedTaxRegistration.addContent(id);
                 buyerTradeParty.addContent(specifiedTaxRegistration);
             }
