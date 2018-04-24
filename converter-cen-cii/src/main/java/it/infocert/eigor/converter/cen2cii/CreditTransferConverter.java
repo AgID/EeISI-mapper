@@ -191,7 +191,9 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     specifiedTradeSettlementPaymentMeans.addContent(institution);
                 }
 
-                specifiedTradeSettlementPaymentMeans.addContent(payeePartyCreditorFinancialAccount);
+                if(!payeePartyCreditorFinancialAccount.getChildren().isEmpty()) {
+                    specifiedTradeSettlementPaymentMeans.addContent(payeePartyCreditorFinancialAccount);
+                }
 
             }
             applicableHeaderTradeSettlement.addContent(specifiedTradeSettlementPaymentMeans);
