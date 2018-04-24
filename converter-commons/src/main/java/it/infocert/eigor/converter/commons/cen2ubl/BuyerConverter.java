@@ -6,6 +6,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -83,6 +84,49 @@ public class BuyerConverter implements CustomMapping<Document> {
 //                        if (schema != null) id.setAttribute("schemeID", schema);
                     }
 
+                    if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
+                        final BG0008BuyerPostalAddress bg0008 = buyer.getBG0008BuyerPostalAddress(0);
+
+                        Element postalAddress = party.getChild("PostalAddress");
+                        if (postalAddress == null) {
+                            postalAddress = new Element("PostalAddress");
+                            party.addContent(postalAddress);
+                        }
+
+                        if (!bg0008.getBT0050BuyerAddressLine1().isEmpty()) {
+                            BT0050BuyerAddressLine1 bt0050 = bg0008.getBT0050BuyerAddressLine1(0);
+                            Element streetName = new Element("StreetName");
+                            streetName.setText(bt0050.getValue());
+                            postalAddress.addContent(streetName);
+                        }
+
+                        if (!bg0008.getBT0052BuyerCity().isEmpty()) {
+                            BT0052BuyerCity bt0052 = bg0008.getBT0052BuyerCity(0);
+                            Element cityName = new Element("CityName");
+                            cityName.setText(bt0052.getValue());
+                            postalAddress.addContent(cityName);
+                        }
+
+                        if (!bg0008.getBT0053BuyerPostCode().isEmpty()) {
+                            BT0053BuyerPostCode bt0053 = bg0008.getBT0053BuyerPostCode(0);
+                            Element postalZone = new Element("PostalZone");
+                            postalZone.setText(bt0053.getValue());
+                            postalAddress.addContent(postalZone);
+                        }
+
+                        if (!bg0008.getBT0055BuyerCountryCode().isEmpty()) {
+                            BT0055BuyerCountryCode bt0055 = bg0008.getBT0055BuyerCountryCode(0);
+                            Element country = postalAddress.getChild("Country");
+                            if (country == null) {
+                                country = new Element("Country");
+                                postalAddress.addContent(country);
+                            }
+                            Element identificationCode = new Element("IdentificationCode");
+                            Iso31661CountryCodes code = bt0055.getValue();
+                            identificationCode.setText(code.name());
+                            country.addContent(identificationCode);
+                        }
+                    }
 
                     if (!buyer.getBT0048BuyerVatIdentifier().isEmpty()) {
                         BT0048BuyerVatIdentifier buyerVatIdentifier = buyer.getBT0048BuyerVatIdentifier(0);
