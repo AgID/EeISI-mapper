@@ -20,6 +20,7 @@ import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +39,12 @@ public class UblCn2CenConfigurationFileTest {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private MyUblCnToCenConverter sut;
+    private static MyUblCnToCenConverter sut;
     private List<ConversionIssue> conversionIssues;
+    private static XSDValidator xsdValidator;
 
-    @Before
-    public void setUp() throws ConfigurationException {
+    @BeforeClass
+    public static void setUp() throws ConfigurationException {
         EigorConfiguration conf = new PropertiesBackedConfiguration()
                 .addProperty("eigor.workdir", "classpath:")
                 .addProperty("eigor.converter.ublcn-cen.mapping.one-to-one", "converterdata/converter-ublcn-cen/mappings/one_to_one.properties")
@@ -56,6 +58,12 @@ public class UblCn2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ublcn-cen.cius.auto-update-xslt", "false");
         sut = new MyUblCnToCenConverter(new JavaReflections(), conf);
         sut.configure();
+    }
+
+    @BeforeClass
+    public static void setUpValidator() throws SAXException {
+        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsd/UBL-CreditNote-2.1.xsd");
+        xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBLCN_IN);
     }
 
     @Test
@@ -97,8 +105,7 @@ public class UblCn2CenConfigurationFileTest {
 
     private List<IConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsd/UBL-CreditNote-2.1.xsd");
-        XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBLCN_IN);
+
         return xsdValidator.validate(bytes);
     }
 
