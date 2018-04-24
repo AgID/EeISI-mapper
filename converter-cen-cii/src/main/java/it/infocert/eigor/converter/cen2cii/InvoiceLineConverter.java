@@ -475,7 +475,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
 
 
-    
+
     private Element specifiedLineTradeDelivery(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
         Element specifiedLineTradeDelivery = null;
         if (!bg0025.getBT0129InvoicedQuantity().isEmpty()) {
@@ -601,14 +601,14 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
+            Element netPriceProductTradePrice = null;
             if (!bg0029.getBT0146ItemNetPrice().isEmpty()) {
                 Double bt0146 = bg0029.getBT0146ItemNetPrice(0).getValue();
-                Element netPriceProductTradePrice = new Element("NetPriceProductTradePrice", ramNs);
+                netPriceProductTradePrice = new Element("NetPriceProductTradePrice", ramNs);
                 Element chargeAmount = new Element("ChargeAmount", ramNs);
                 try {
                     chargeAmount.setText(dblStrConverter.convert(bt0146));
                     netPriceProductTradePrice.addContent(chargeAmount);
-                    specifiedLineTradeAgreement.addContent(netPriceProductTradePrice);
                 } catch (NumberFormatException | ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),
@@ -620,10 +620,14 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
-
             if (!grossPriceProductTradePrice.getChildren().isEmpty()) {
                 specifiedLineTradeAgreement.addContent(grossPriceProductTradePrice);
             }
+
+            if(netPriceProductTradePrice!=null) {
+                specifiedLineTradeAgreement.addContent(netPriceProductTradePrice);
+            }
+
         }
         return specifiedLineTradeAgreement;
     }
