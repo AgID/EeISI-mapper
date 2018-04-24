@@ -9,6 +9,8 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
  * The Credit Transfer Custom Converter
  */
 public class CreditTransferConverter extends CustomConverterUtils implements CustomMapping<Document> {
+
+    private final static Logger logger = LoggerFactory.getLogger(CreditTransferConverter.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
@@ -41,21 +45,21 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
             Element specifiedTradeSettlementPaymentMeans = new Element("SpecifiedTradeSettlementPaymentMeans", ramNs);
             applicableHeaderTradeAgreement.addContent(specifiedTradeSettlementPaymentMeans);
 
-            if(!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()){
+            if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
                 Untdid4461PaymentMeansCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0).getValue();
                 Element typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText(String.valueOf(bt0081.getCode()));
                 specifiedTradeSettlementPaymentMeans.addContent(typeCode);
             }
 
-            if(!bg0016.getBT0082PaymentMeansText().isEmpty()){
+            if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
                 BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
                 Element information = new Element("Information", ramNs);
                 information.setText(bt0082.getValue());
                 specifiedTradeSettlementPaymentMeans.addContent(information);
             }
 
-            if(!bg0016.getBT0083RemittanceInformation().isEmpty()){
+            if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
                 BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
                 Element paymentReference = new Element("PaymentReference", ramNs);
                 paymentReference.setText(bt0083.getValue());
@@ -125,6 +129,8 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     specifiedTradeSettlementPaymentMeans.addContent(payerPartyDebtorFinancialAccount);
                 }
             }
+
+            logger.error("{}, {}", supplyChainTradeTransaction.getName(), supplyChainTradeTransaction.getChildren());
         }
     }
 }

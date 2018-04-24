@@ -97,13 +97,37 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         }
 
         if (!seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
-            Element companyID = new Element("CompanyID");
+
             Identifier id = seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(0).getValue();
-            companyID.setText(id.getIdentifier());
-            if (id.getIdentificationSchema() != null) {
-                companyID.setAttribute("schemeID", id.getIdentificationSchema());
+            String identificationSchema = id.getIdentificationSchema();
+
+            // Italy haven't yet registered their schemas, so in this case,
+            // the schemas has to be included directly in the value
+            if(identificationSchema!=null && identificationSchema.startsWith("IT:")){
+
+                StringBuilder companyIdBuffer = new StringBuilder();
+                if (identificationSchema != null) {
+                    companyIdBuffer.append(identificationSchema).append(":");
+                }
+                companyIdBuffer.append(id.getIdentifier());
+
+                Element companyID = new Element("CompanyID");
+                companyID.setText( companyIdBuffer.toString() );
+                partyLegalEntity.addContent(companyID);
+
             }
-            partyLegalEntity.addContent(companyID);
+            // For other countries, we'll keep on doing as before
+            else{
+
+                Element companyID = new Element("CompanyID");
+                companyID.setText(id.getIdentifier());
+                if (identificationSchema != null) {
+                    companyID.setAttribute("schemeID", identificationSchema);
+                }
+                partyLegalEntity.addContent(companyID);
+
+            }
+
         }
 
         if (!seller.getBG0006SellerContact().isEmpty()) {
