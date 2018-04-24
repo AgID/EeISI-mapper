@@ -6,6 +6,7 @@ import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -173,21 +174,9 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 }
             }
 
-            if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
-                Double bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();
-                Element taxTotalAmount = new Element("TaxTotalAmount", ramNs);
-                try {
-                    taxTotalAmount.setText(dblStrConverter.convert(bt0110));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+            Element taxTotalAmount = taxTotalAmount(errors, callingLocation, dblStrConverter, ramNs, bg0022, invoice);
+            if(taxTotalAmount!=null) {
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
             }
 
             //FIXME BT-111
@@ -260,6 +249,34 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 }
             }
         }
+    }
+
+    private Element taxTotalAmount(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0022DocumentTotals bg0022, BG0000Invoice invoice) {
+        
+        Element taxTotalAmount = null;
+        if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+            Double bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();
+            taxTotalAmount = new Element("TaxTotalAmount", ramNs);
+            try {
+                taxTotalAmount.setText(dblStrConverter.convert(bt0110));
+
+                if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                    Iso4217CurrenciesFundsCodes bt0005 = invoice.getBT0005InvoiceCurrencyCode(0).getValue();
+                    taxTotalAmount.setAttribute("currencyID", bt0005.getCode());
+                }
+
+
+            } catch (ConversionFailedException e) {
+                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                        e.getMessage(),
+                        callingLocation,
+                        ErrorCode.Action.HARDCODED_MAP,
+                        ErrorCode.Error.INVALID,
+                        e
+                )));
+            }
+        }
+        return taxTotalAmount;
     }
 }
 

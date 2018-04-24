@@ -51,6 +51,20 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue254FromFattPaToCii() {
+        InputStream invoiceStream = invoiceAsStream("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", invoiceStream);
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+    }
+
+    @Test
+    public void issue254FromUblToCii_scenario2() {
+        InputStream invoiceStream = invoiceAsStream("/issues/254/ubl_newB2G-C_01C_CII.XML");
+        ConversionResult<byte[]> convert = api.convert("ubl", "cii", invoiceStream);
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+    }
+
+    @Test
     public void issue254FromUblToCii_scenario1() {
         InputStream invoiceStream = invoiceAsStream("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML");
         ConversionResult<byte[]> convert = api.convert("ubl", "cii", invoiceStream);
