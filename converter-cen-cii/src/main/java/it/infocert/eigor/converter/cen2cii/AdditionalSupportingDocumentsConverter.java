@@ -16,10 +16,13 @@ import java.util.List;
 public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        if (!cenInvoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        if (!invoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {
             Element rootElement = document.getRootElement();
             List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
+            Namespace rsmNs = rootElement.getNamespace("rsm");
+            Namespace ramNs = rootElement.getNamespace("ram");
+
 
             Element supplyChainTradeTransaction = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
 
@@ -34,7 +37,7 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
             }
 
-            for (BG0024AdditionalSupportingDocuments bg0024 : cenInvoice.getBG0024AdditionalSupportingDocuments()) {
+            for (BG0024AdditionalSupportingDocuments bg0024 : invoice.getBG0024AdditionalSupportingDocuments()) {
                 Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", rootElement.getNamespace("ram"));
 
                 if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
@@ -44,11 +47,28 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     additionalReferencedDocument.addContent(issuerAssignedID);
                 }
 
-                if (!bg0024.getBT0123SupportingDocumentDescription().isEmpty()) {
-                    BT0123SupportingDocumentDescription bt0123 = bg0024.getBT0123SupportingDocumentDescription(0);
-                    Element name = new Element("Name", rootElement.getNamespace("ram"));
-                    name.setText(bt0123.getValue());
-                    additionalReferencedDocument.addContent(name);
+                if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
+
+                    final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
+
+                    Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
+                    issuerAssignedID.setText(bt0017.getValue());
+                    additionalReferencedDocument.addContent(issuerAssignedID);
+
+                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
+                }
+
+                if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                    final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
+
+                    String identificationSchema = bt0018.getValue().getIdentificationSchema();
+                    if (identificationSchema != null) {
+                        Element referenceTypeCode = new Element("ReferenceTypeCode", ramNs);
+                        referenceTypeCode.setText(identificationSchema);
+                        additionalReferencedDocument.addContent(referenceTypeCode);
+                    }
+
+                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
                 }
 
                 if (!bg0024.getBT0124ExternalDocumentLocation().isEmpty()) {
@@ -58,8 +78,42 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     additionalReferencedDocument.addContent(uriid);
                 }
 
-                if (!bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
-                    FileReference bt0125 = bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0).getValue();
+                if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
+                    BT0122SupportingDocumentReference bt0122 = bg0024.getBT0122SupportingDocumentReference(0);
+                    Element typeCode = new Element("TypeCode", ramNs);
+                    typeCode.setText(bt0122.getValue());
+                    additionalReferencedDocument.addContent(typeCode);
+                }
+
+                if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
+
+                    final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
+
+                    Element typeCode = new Element("TypeCode", ramNs);
+                    typeCode.setText(bt0017.getValue());
+                    additionalReferencedDocument.addContent(typeCode);
+
+                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
+                }
+
+                if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                    final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
+
+                    Element typeCode = new Element("TypeCode", ramNs);
+                    typeCode.setText(bt0018.getValue().getIdentifier());
+                    additionalReferencedDocument.addContent(typeCode);
+
+                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
+                }
+
+                for (BT0123SupportingDocumentDescription bt0123 : bg0024.getBT0123SupportingDocumentDescription()) {
+                    Element name = new Element("Name", rootElement.getNamespace("ram"));
+                    name.setText(bt0123.getValue());
+                    additionalReferencedDocument.addContent(name);
+                }
+
+                for (BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename filename : bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename()) {
+                    final FileReference bt0125 = filename.getValue();
                     Element attachmentBinaryObject = new Element("AttachmentBinaryObject", rootElement.getNamespace("ram"));
                     attachmentBinaryObject.setAttribute("mimeCode", bt0125.getMimeType().toString());
                     attachmentBinaryObject.setAttribute("filename", bt0125.getFileName());
@@ -76,6 +130,24 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                                 e
                         )));
                     }
+                }
+
+                if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                    final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
+                    String identificationSchema = bt0018.getValue().getIdentificationSchema();
+                    if (identificationSchema != null) {
+                        Element referenceTypeCode = new Element("ReferenceTypeCode", ramNs);
+                        referenceTypeCode.setText(identificationSchema);
+                        additionalReferencedDocument.addContent(referenceTypeCode);
+                    }
+                }
+
+                if (!invoice.getBT0011ProjectReference().isEmpty()) {
+                    Element specifiedProcuringProject = new Element("SpecifiedProcuringProject", ramNs);
+                    Element id = new Element("ID", ramNs);
+                    id.setText(invoice.getBT0011ProjectReference(0).getValue());
+                    specifiedProcuringProject.addContent(id);
+                    applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
                 }
 
                 applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
