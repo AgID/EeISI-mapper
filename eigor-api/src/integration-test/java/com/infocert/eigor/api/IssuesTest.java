@@ -134,6 +134,27 @@ public class IssuesTest {
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "VAT", evaluate);
     }
 
+    @Test
+    public void issue256() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-256-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+
+        Assert.assertTrue(evaluateAttachment!=null && !evaluateAttachment.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
+
+        Assert.assertTrue(evaluateAttachmentMimeCode!=null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "text/csv", evaluateAttachmentMimeCode);
+
+        Assert.assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Allegato", evaluateAttachmentFileName);
+    }
+
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
         InputSource is = new InputSource( xmlStringReader );
