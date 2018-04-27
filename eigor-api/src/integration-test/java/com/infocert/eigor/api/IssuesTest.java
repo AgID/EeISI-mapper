@@ -51,6 +51,16 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue276FromUblToUbl() {
+        assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
+    }
+
+    @Test
+    public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
+    }
+
+    @Test
     public void fatturapaToCiiExamples() {
         assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
@@ -83,12 +93,6 @@ public class IssuesTest {
                 "/issues/cii-examples/ubl/urn_notier_SOGG-NOT-00196_2018_9780030222_CP_FATTURA_01_CEN.xml",
                 "ubl", "cii");
 
-    }
-
-    private void assertConversionWithoutErrors(String invoice, String source, String target) {
-        InputStream invoiceStream = invoiceAsStream(invoice);
-        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
     }
 
     @Test
@@ -132,6 +136,27 @@ public class IssuesTest {
 
         Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "VAT", evaluate);
+    }
+
+    @Test
+    public void issue256() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-256-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+
+        Assert.assertTrue(evaluateAttachment!=null && !evaluateAttachment.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
+
+        Assert.assertTrue(evaluateAttachmentMimeCode!=null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "text/csv", evaluateAttachmentMimeCode);
+
+        Assert.assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Allegato", evaluateAttachmentFileName);
     }
 
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
@@ -182,5 +207,11 @@ public class IssuesTest {
                     .append("\n\n");
         }
         return issuesDescription.toString();
+    }
+
+    private void assertConversionWithoutErrors(String invoice, String source, String target) {
+        InputStream invoiceStream = invoiceAsStream(invoice);
+        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
     }
 }
