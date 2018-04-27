@@ -60,7 +60,7 @@ public class Cii2Cen extends AbstractToCenConverter {
              StringToJavaLocalDateConverter.newConverter("yyyyMMdd"),
 
 			// numbers
-			 StringToDoubleConverter.newConverter(),
+			 StringToBigDecimalConverter.newConverter(),
 
 			// string
              StringToStringConverter.newConverter()

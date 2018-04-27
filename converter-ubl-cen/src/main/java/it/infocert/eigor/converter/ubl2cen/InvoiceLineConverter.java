@@ -2,9 +2,7 @@ package it.infocert.eigor.converter.ubl2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -15,6 +13,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,8 +23,6 @@ import java.util.List;
 public class InvoiceLineConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0025InvoiceLine bg0025;
         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128;
@@ -65,9 +62,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             Element invoicedQuantity = findNamespaceChild(elemInv, namespacesInScope, "InvoicedQuantity");
             if (invoicedQuantity != null) {
                 try {
-                    BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(strDblConverter.convert(invoicedQuantity.getText()));
+                    BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(new BigDecimal(invoicedQuantity.getText()));
                     bg0025.getBT0129InvoicedQuantity().add(bt0129);
-                } catch (NumberFormatException | ConversionFailedException e) {
+                } catch (NumberFormatException e) {
                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                             .message(e.getMessage())
                             .location(callingLocation)
@@ -103,9 +100,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             Element lineExtensionAmount = findNamespaceChild(elemInv, namespacesInScope, "LineExtensionAmount");
             if (lineExtensionAmount != null) {
                 try {
-                    BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(strDblConverter.convert(lineExtensionAmount.getText()));
+                    BT0131InvoiceLineNetAmount bt0131 = new BT0131InvoiceLineNetAmount(new BigDecimal(lineExtensionAmount.getText()));
                     bg0025.getBT0131InvoiceLineNetAmount().add(bt0131);
-                } catch (NumberFormatException | ConversionFailedException e) {
+                } catch (NumberFormatException e) {
                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                             .message(e.getMessage())
                             .location(callingLocation)
@@ -212,9 +209,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element amount = findNamespaceChild(elemInvAll, namespacesInScope, "Amount");
                     if (amount != null) {
                         try {
-                            BT0136InvoiceLineAllowanceAmount bt0136 = new BT0136InvoiceLineAllowanceAmount(strDblConverter.convert(amount.getText()));
+                            BT0136InvoiceLineAllowanceAmount bt0136 = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(amount.getText()));
                             bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -288,9 +285,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element amount = findNamespaceChild(elemInvAll, namespacesInScope, "Amount");
                     if (amount != null) {
                         try {
-                            BT0141InvoiceLineChargeAmount bt0141 = new BT0141InvoiceLineChargeAmount(strDblConverter.convert(amount.getText()));
+                            BT0141InvoiceLineChargeAmount bt0141 = new BT0141InvoiceLineChargeAmount(new BigDecimal(amount.getText()));
                             bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -302,9 +299,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element baseAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BaseAmount");
                     if (baseAmount != null) {
                         try {
-                            BT0142InvoiceLineChargeBaseAmount bt0142 = new BT0142InvoiceLineChargeBaseAmount(strDblConverter.convert(baseAmount.getText()));
+                            BT0142InvoiceLineChargeBaseAmount bt0142 = new BT0142InvoiceLineChargeBaseAmount(new BigDecimal(baseAmount.getText()));
                             bg0028.getBT0142InvoiceLineChargeBaseAmount().add(bt0142);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -317,9 +314,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element multiplierFactorNumeric = findNamespaceChild(elemInvAll, namespacesInScope, "MultiplierFactorNumeric");
                     if (multiplierFactorNumeric != null) {
                         try {
-                            BT0143InvoiceLineChargePercentage bt0143 = new BT0143InvoiceLineChargePercentage(strDblConverter.convert(multiplierFactorNumeric.getText()));
+                            BT0143InvoiceLineChargePercentage bt0143 = new BT0143InvoiceLineChargePercentage(new BigDecimal(multiplierFactorNumeric.getText()));
                             bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
@@ -362,9 +359,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 Element priceAmount = findNamespaceChild(price, namespacesInScope, "PriceAmount");
                 if (priceAmount != null) {
                     try {
-                        BT0146ItemNetPrice bt0146 = new BT0146ItemNetPrice(strDblConverter.convert(priceAmount.getText()));
+                        BT0146ItemNetPrice bt0146 = new BT0146ItemNetPrice(new BigDecimal(priceAmount.getText()));
                         bg0029.getBT0146ItemNetPrice().add(bt0146);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                 .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
@@ -382,9 +379,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         Element amount = findNamespaceChild(allowanceCharge, namespacesInScope, "Amount");
                         if (amount != null) {
                             try {
-                                BT0147ItemPriceDiscount bt0147 = new BT0147ItemPriceDiscount(strDblConverter.convert(amount.getText()));
+                                BT0147ItemPriceDiscount bt0147 = new BT0147ItemPriceDiscount(new BigDecimal(amount.getText()));
                                 bg0029.getBT0147ItemPriceDiscount().add(bt0147);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -396,9 +393,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         Element baseAmount = findNamespaceChild(allowanceCharge, namespacesInScope, "BaseAmount");
                         if (baseAmount != null) {
                             try {
-                                BT0148ItemGrossPrice bt0148 = new BT0148ItemGrossPrice(strDblConverter.convert(baseAmount.getText()));
+                                BT0148ItemGrossPrice bt0148 = new BT0148ItemGrossPrice(new BigDecimal(baseAmount.getText()));
                                 bg0029.getBT0148ItemGrossPrice().add(bt0148);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -412,9 +409,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 Element baseQuantity = findNamespaceChild(price, namespacesInScope, "BaseQuantity");
                 if (baseQuantity != null) {
                     try {
-                        BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(strDblConverter.convert(baseQuantity.getText()));
+                        BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(new BigDecimal(baseQuantity.getText()));
                         bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                 .location(callingLocation)
                                 .action(ErrorCode.Action.HARDCODED_MAP)
@@ -444,7 +441,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         }
                     }
                 } else {
-                    BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(1d);
+                    BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(BigDecimal.ONE);
                     bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
                 }
                 bg0025.getBG0029PriceDetails().add(bg0029);
@@ -547,9 +544,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element percent = findNamespaceChild(classifiedTaxCategory, namespacesInScope, "Percent");
                     if (percent != null) {
                         try {
-                            BT0152InvoicedItemVatRate bt0152 = new BT0152InvoicedItemVatRate(strDblConverter.convert(percent.getText()));
+                            BT0152InvoicedItemVatRate bt0152 = new BT0152InvoicedItemVatRate(new BigDecimal(percent.getText()));
                             bg0030.getBT0152InvoicedItemVatRate().add(bt0152);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)

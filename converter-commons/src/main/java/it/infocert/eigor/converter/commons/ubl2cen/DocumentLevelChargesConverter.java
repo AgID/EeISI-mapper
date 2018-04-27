@@ -2,9 +2,6 @@ package it.infocert.eigor.converter.commons.ubl2cen;
 
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -14,6 +11,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -22,8 +20,6 @@ import java.util.List;
 public class DocumentLevelChargesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0021(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-
-        final TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         final Element rootElement = document.getRootElement();
         final List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -41,9 +37,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                 if (amount != null) {
                     final String text = amount.getText();
                     try {
-                        BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(strDblConverter.convert(text));
+                        BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(new BigDecimal(text));
                         bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -62,9 +58,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                 if (baseAmount != null) {
                     final String text = baseAmount.getText();
                     try {
-                        BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(strDblConverter.convert(text));
+                        BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(new BigDecimal(text));
                         bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -83,9 +79,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                 if (multiplierFactorNumeric != null) {
                     final String text = multiplierFactorNumeric.getText();
                     try {
-                        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(strDblConverter.convert(text));
+                        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(new BigDecimal(text));
                         bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -127,9 +123,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                     if (percent != null) {
                         final String text = percent.getText();
                         try {
-                            BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(strDblConverter.convert(text));
+                            BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(new BigDecimal(text));
                             bg0021.getBT0103DocumentLevelChargeVatRate().add(bt0103);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
                                     ErrorMessage.builder()

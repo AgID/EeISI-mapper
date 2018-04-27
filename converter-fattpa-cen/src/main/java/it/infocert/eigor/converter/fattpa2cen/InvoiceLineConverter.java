@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.converter.StringToUnitOfMeasureConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -14,6 +13,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,7 +23,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0025(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
         TypeConverter<String, Untdid5305DutyTaxFeeCategories> taxFeeCategoriesConverter = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
         TypeConverter<String, UnitOfMeasureCodes> strToUnitOfMeasure = StringToUnitOfMeasureConverter.newConverter();
 
@@ -48,9 +47,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element quantita = dettaglioLinee.getChild("Quantita");
                         if (quantita != null) {
                             try {
-                                BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(strDblConverter.convert(quantita.getText()));
+                                BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(new BigDecimal(quantita.getText()));
                                 bg0025.getBT0129InvoicedQuantity().add(invoicedQuantity);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -60,7 +59,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         } else {
-                            BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(1d);
+                            BT0129InvoicedQuantity invoicedQuantity = new BT0129InvoicedQuantity(BigDecimal.ONE);
                             bg0025.getBT0129InvoicedQuantity().add(invoicedQuantity);
                         }
                         Element unitaMisura = dettaglioLinee.getChild("UnitaMisura");
@@ -87,9 +86,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element prezzoTotale = dettaglioLinee.getChild("PrezzoTotale");
                         if (prezzoTotale != null) {
                             try {
-                                BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(strDblConverter.convert(prezzoTotale.getText()));
+                                BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(new BigDecimal(prezzoTotale.getText()));
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -104,9 +103,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element prezzoUnitario = dettaglioLinee.getChild("PrezzoUnitario");
                         if (prezzoUnitario != null) {
                             try {
-                                BT0146ItemNetPrice itemNetPrice = new BT0146ItemNetPrice(strDblConverter.convert(prezzoUnitario.getText()));
+                                BT0146ItemNetPrice itemNetPrice = new BT0146ItemNetPrice(new BigDecimal(prezzoUnitario.getText()));
                                 bg0029.getBT0146ItemNetPrice().add(itemNetPrice);
-                            } catch (ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -118,18 +117,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                         Element unitaMisuraDett = dettaglioLinee.getChild("UnitaMisura");
                         if (unitaMisuraDett != null) {
-                            try {
-                                BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(1d);
-                                bg0029.getBT0149ItemPriceBaseQuantity().add(itemPriceBaseQuantity);
-                            } catch (NumberFormatException e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                        .location(callingLocation)
-                                        .action(ErrorCode.Action.HARDCODED_MAP)
-                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                        .build());
-                                errors.add(ConversionIssue.newError(ere));
-                            }
+                            BT0149ItemPriceBaseQuantity itemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(BigDecimal.ONE);
+                            bg0029.getBT0149ItemPriceBaseQuantity().add(itemPriceBaseQuantity);
                         }
                         if (unitCode != null) {
                             try {
@@ -171,9 +160,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element aliquotaIVA = dettaglioLinee.getChild("AliquotaIVA");
                         if (aliquotaIVA != null) {
                             try {
-                                BT0152InvoicedItemVatRate invoicedItemVatRate = new BT0152InvoicedItemVatRate(strDblConverter.convert(aliquotaIVA.getText()));
+                                BT0152InvoicedItemVatRate invoicedItemVatRate = new BT0152InvoicedItemVatRate(new BigDecimal(aliquotaIVA.getText()));
                                 bg0030.getBT0152InvoicedItemVatRate().add(invoicedItemVatRate);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)

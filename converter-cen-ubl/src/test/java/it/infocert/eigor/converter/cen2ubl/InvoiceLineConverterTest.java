@@ -10,6 +10,7 @@ import org.jdom2.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
@@ -71,11 +72,11 @@ public class InvoiceLineConverterTest {
         BG0000Invoice invoice = new BG0000Invoice();
 
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-        BT0129InvoicedQuantity bt0129InvoicedQuantity = new BT0129InvoicedQuantity(2d);
+        BT0129InvoicedQuantity bt0129InvoicedQuantity = new BT0129InvoicedQuantity(new BigDecimal(2));
         invoiceLine.getBT0129InvoicedQuantity().add(bt0129InvoicedQuantity);
 
         BG0029PriceDetails bg0029PriceDetails = new BG0029PriceDetails();
-        BT0149ItemPriceBaseQuantity bt0149ItemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(2d);
+        BT0149ItemPriceBaseQuantity bt0149ItemPriceBaseQuantity = new BT0149ItemPriceBaseQuantity(new BigDecimal(2));
         bg0029PriceDetails.getBT0149ItemPriceBaseQuantity().add(bt0149ItemPriceBaseQuantity);
         invoiceLine.getBG0029PriceDetails().add(bg0029PriceDetails);
 

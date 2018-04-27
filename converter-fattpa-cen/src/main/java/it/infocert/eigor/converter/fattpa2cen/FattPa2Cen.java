@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FattPa2Cen extends AbstractToCenConverter {
 
     private final static Logger log = LoggerFactory.getLogger(FattPa2Cen.class);
-    private final static String FORMAT = "fatturapa";
+    private final static String FORMAT = "fatturapa" ;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -48,7 +49,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
             StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
             StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
             LookUpEnumConversion.newConverter(Iso4217CurrenciesFundsCodes.class),
-            StringToDoubleConverter.newConverter(),
+            StringToBigDecimalConverter.newConverter(),
             StringToStringConverter.newConverter(),
             ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
             ItalianCodeStringToUntdid4461PaymentMeansCode.newConverter(),
@@ -56,10 +57,10 @@ public class FattPa2Cen extends AbstractToCenConverter {
             StringToIdentifierConverter.newConverter()
     );
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one";
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one";
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many";
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one" ;
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one" ;
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many" ;
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom" ;
 
     private XSDValidator xsdValidator;
 
@@ -68,7 +69,8 @@ public class FattPa2Cen extends AbstractToCenConverter {
         this.configuration = checkNotNull(configuration);
     }
 
-    @Override public void configure() throws ConfigurationException {
+    @Override
+    public void configure() throws ConfigurationException {
         super.configure();
 
         // load the XSD.
@@ -125,31 +127,31 @@ public class FattPa2Cen extends AbstractToCenConverter {
         BG0000Invoice invoice = result.getResult();
         // bt-112
         {
-            Double bt109 = null;
+            BigDecimal bt109 = null;
             {
                 BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
                 BT0109InvoiceTotalAmountWithoutVat bt109cen = bg022cen.getBT0109InvoiceTotalAmountWithoutVat(0);
                 bt109 = bt109cen.getValue();
-                if(bt109==null) bt109 = 0.0;
+                if (bt109 == null) bt109 = BigDecimal.ZERO;
             }
 
-            Double bt110 = null;
+            BigDecimal bt110 = null;
             {
                 BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
                 BT0110InvoiceTotalVatAmount bt110cen = bg022cen.getBT0110InvoiceTotalVatAmount(0);
                 bt110 = bt110cen.getValue();
-                if(bt110==null) bt110 = 0.0;
+                if (bt110 == null) bt110 = BigDecimal.ZERO;
             }
 
-            BT0112InvoiceTotalAmountWithVat bt112cen = new BT0112InvoiceTotalAmountWithVat( bt109 + bt110 );
+            BT0112InvoiceTotalAmountWithVat bt112cen = new BT0112InvoiceTotalAmountWithVat(bt109.add(bt110));
             invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat().set(0, bt112cen);
 
 
         }
 
         // bt-113
-        if(invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().isEmpty()){
-            invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(new BT0113PaidAmount(0.0));
+        if (invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().isEmpty()) {
+            invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(new BT0113PaidAmount(BigDecimal.ZERO));
         }
 
         // bt-115
@@ -157,18 +159,16 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
             {
                 BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
-                Double bt112 = bg022cen.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+                BigDecimal bt112 = bg022cen.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+                BigDecimal bt114 = bg022cen.getBT0114RoundingAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0114RoundingAmount(0).getValue();
+                BigDecimal bt113 = bg022cen.getBT0113PaidAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0113PaidAmount(0).getValue();
 
-                Double bt114 = bg022cen.getBT0114RoundingAmount().isEmpty() ? 0.0 : bg022cen.getBT0114RoundingAmount(0).getValue();
-
-                Double bt113 = bg022cen.getBT0113PaidAmount().isEmpty() ? 0.0 : bg022cen.getBT0113PaidAmount(0).getValue();
-
-                Double bt115 = bt112 + bt114 -bt113;
+                BigDecimal bt115 = bt112.add(bt114).subtract(bt113);
 
                 List<BT0115AmountDueForPayment> bt115s = invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment();
-                if(bt115s.isEmpty()){
+                if (bt115s.isEmpty()) {
                     bt115s.add(new BT0115AmountDueForPayment(bt115));
-                }else{
+                } else {
                     bt115s.set(0, new BT0115AmountDueForPayment(bt115));
                 }
 
@@ -177,7 +177,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
         // when bt-115 is present, either bt-20 or bt-9
         BT0020PaymentTerms bt20cen = null;
-        if( invoice.getBT0020PaymentTerms().isEmpty() ){
+        if (invoice.getBT0020PaymentTerms().isEmpty()) {
             invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
         }
 
@@ -221,7 +221,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public boolean support(String format) {
-        if(format == null){
+        if (format == null) {
             log.error("NULL FORMAT");
             return false;
         }
@@ -235,11 +235,11 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
+        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?" ;
     }
 
     @Override
     public String getName() {
-        return "converter-fattpa-cen";
+        return "converter-fattpa-cen" ;
     }
 }

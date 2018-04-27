@@ -266,7 +266,7 @@ public class LineConverterTest {
         List<DettaglioLineeType> dettaglioLineeList = body.getDatiBeniServizi().getDettaglioLinee();
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
-            assertThat(dettaglioLinee.getAliquotaIVA(), is(Cen2FattPAConverterUtils.doubleToBigDecimalWith2Decimals(0d)));
+            assertThat(dettaglioLinee.getAliquotaIVA().toString(), is("0.00"));
             assertEquals(NaturaType.N_4, dettaglioLinee.getNatura());
         }
     }
@@ -280,7 +280,7 @@ public class LineConverterTest {
         for (int i = 0; i < 5; i++) {
             DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
             BigDecimal quantita = dettaglioLinee.getQuantita();
-            BigDecimal expected = Cen2FattPAConverterUtils.doubleToBigDecimalWithDecimals(2d, 8);
+            BigDecimal expected = new BigDecimal(2).setScale(8, RoundingMode.HALF_UP);
             assertThat(quantita, is(expected));
         }
     }
@@ -320,11 +320,11 @@ public class LineConverterTest {
 
     private void populateWithBG20() {
         BG0020DocumentLevelAllowances allowances = new BG0020DocumentLevelAllowances();
-        allowances.getBT0092DocumentLevelAllowanceAmount().add(new BT0092DocumentLevelAllowanceAmount(20.0));
-        allowances.getBT0093DocumentLevelAllowanceBaseAmount().add(new BT0093DocumentLevelAllowanceBaseAmount(21.0));
-        allowances.getBT0094DocumentLevelAllowancePercentage().add(new BT0094DocumentLevelAllowancePercentage(22.0));
+        allowances.getBT0092DocumentLevelAllowanceAmount().add(new BT0092DocumentLevelAllowanceAmount(new BigDecimal(20.0)));
+        allowances.getBT0093DocumentLevelAllowanceBaseAmount().add(new BT0093DocumentLevelAllowanceBaseAmount(new BigDecimal(21.0)));
+        allowances.getBT0094DocumentLevelAllowancePercentage().add(new BT0094DocumentLevelAllowancePercentage(new BigDecimal(22.0)));
         allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().add(new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.Z));
-        allowances.getBT0096DocumentLevelAllowanceVatRate().add(new BT0096DocumentLevelAllowanceVatRate(23.0));
+        allowances.getBT0096DocumentLevelAllowanceVatRate().add(new BT0096DocumentLevelAllowanceVatRate(new BigDecimal(23.0)));
         allowances.getBT0097DocumentLevelAllowanceReason().add(new BT0097DocumentLevelAllowanceReason("Reason"));
         allowances.getBT0098DocumentLevelAllowanceReasonCode().add(new BT0098DocumentLevelAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code42));
 
@@ -333,9 +333,9 @@ public class LineConverterTest {
 
     private void populateWithBG21() {
         BG0021DocumentLevelCharges charges = new BG0021DocumentLevelCharges();
-        charges.getBT0100DocumentLevelChargeBaseAmount().add(new BT0100DocumentLevelChargeBaseAmount(20.0));
+        charges.getBT0100DocumentLevelChargeBaseAmount().add(new BT0100DocumentLevelChargeBaseAmount(new BigDecimal(20.0)));
         charges.getBT0102DocumentLevelChargeVatCategoryCode().add(new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.Z));
-        charges.getBT0103DocumentLevelChargeVatRate().add(new BT0103DocumentLevelChargeVatRate(23.0));
+        charges.getBT0103DocumentLevelChargeVatRate().add(new BT0103DocumentLevelChargeVatRate(new BigDecimal(23.0)));
         charges.getBT0104DocumentLevelChargeReason().add(new BT0104DocumentLevelChargeReason("Reason"));
         charges.getBT0105DocumentLevelChargeReasonCode().add(new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.ABK));
 
@@ -374,7 +374,7 @@ public class LineConverterTest {
 
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {
         BG0027InvoiceLineAllowances invoiceLineAllowances = new BG0027InvoiceLineAllowances();
-        invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().add(new BT0136InvoiceLineAllowanceAmount(20.0));
+        invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().add(new BT0136InvoiceLineAllowanceAmount(new BigDecimal(20.0)));
         invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(new Identifier("EUR", "21.0")));
         invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(new Identifier("EUR", "22.0")));
         invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().add(new BT0139InvoiceLineAllowanceReason("Reason"));
@@ -386,9 +386,9 @@ public class LineConverterTest {
 
     private void populateBG25WithBG28(BG0025InvoiceLine invoiceLine) {
         BG0028InvoiceLineCharges invoiceLineCharges = new BG0028InvoiceLineCharges();
-        invoiceLineCharges.getBT0141InvoiceLineChargeAmount().add(new BT0141InvoiceLineChargeAmount(20.0));
-        invoiceLineCharges.getBT0142InvoiceLineChargeBaseAmount().add(new BT0142InvoiceLineChargeBaseAmount(21.0));
-        invoiceLineCharges.getBT0143InvoiceLineChargePercentage().add(new BT0143InvoiceLineChargePercentage(22.0));
+        invoiceLineCharges.getBT0141InvoiceLineChargeAmount().add(new BT0141InvoiceLineChargeAmount(new BigDecimal(20.0)));
+        invoiceLineCharges.getBT0142InvoiceLineChargeBaseAmount().add(new BT0142InvoiceLineChargeBaseAmount(new BigDecimal(21.0)));
+        invoiceLineCharges.getBT0143InvoiceLineChargePercentage().add(new BT0143InvoiceLineChargePercentage(new BigDecimal(22.0)));
         invoiceLineCharges.getBT0144InvoiceLineChargeReason().add(new BT0144InvoiceLineChargeReason("Reason"));
         invoiceLineCharges.getBT0145InvoiceLineChargeReasonCode().add(new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.AA));
 
@@ -397,10 +397,10 @@ public class LineConverterTest {
 
     private void populateBG25WithBG29(BG0025InvoiceLine invoiceLine) {
         BG0029PriceDetails priceDetails = new BG0029PriceDetails();
-        priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(20.0));
-        priceDetails.getBT0147ItemPriceDiscount().add(new BT0147ItemPriceDiscount(21.0));
-        priceDetails.getBT0148ItemGrossPrice().add(new BT0148ItemGrossPrice(22.0));
-        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(1.0));
+        priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(new BigDecimal(20.0)));
+        priceDetails.getBT0147ItemPriceDiscount().add(new BT0147ItemPriceDiscount(new BigDecimal(21.0)));
+        priceDetails.getBT0148ItemGrossPrice().add(new BT0148ItemGrossPrice(new BigDecimal(22.0)));
+        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(BigDecimal.ONE));
         priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
 
         invoiceLine.getBG0029PriceDetails().add(priceDetails);
@@ -409,7 +409,7 @@ public class LineConverterTest {
     private void populateBG25WithBG30(BG0025InvoiceLine invoiceLine) {
         BG0030LineVatInformation lineVatInformation = new BG0030LineVatInformation();
         lineVatInformation.getBT0151InvoicedItemVatCategoryCode().add(new BT0151InvoicedItemVatCategoryCode(Untdid5305DutyTaxFeeCategories.E));
-        lineVatInformation.getBT0152InvoicedItemVatRate().add(new BT0152InvoicedItemVatRate(0d));
+        lineVatInformation.getBT0152InvoicedItemVatRate().add(new BT0152InvoicedItemVatRate(BigDecimal.ZERO));
 
         invoiceLine.getBG0030LineVatInformation().add(lineVatInformation);
     }
@@ -440,7 +440,7 @@ public class LineConverterTest {
     }
 
     private void populateBG25WithBT129(BG0025InvoiceLine invoiceLine) {
-        BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(2d);
+        BT0129InvoicedQuantity bt0129 = new BT0129InvoicedQuantity(new BigDecimal(2));
         invoiceLine.getBT0129InvoicedQuantity().add(bt0129);
     }
 

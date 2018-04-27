@@ -249,8 +249,8 @@ public class UblCn2Cen extends AbstractToCenConverter {
                 JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
 
                 // numbers
-                StringToDoubleConverter.newConverter(),
-                DoubleToStringConverter.newConverter("#.00"),
+                StringToBigDecimalConverter.newConverter(),
+                BigDecimalToStringConverter.newConverter("#.00"),
 
                 // binaries
                 Base64StringToBinaryConverter.newConverter(),

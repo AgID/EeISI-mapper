@@ -29,7 +29,7 @@ public class FirstLevelElementsConverter implements CustomMapping<Document> {
             JavaLocalDateToStringConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToStringConverter.newConverter(),
             Untdid1001InvoiceTypeCodesToStringConverter.newConverter(),
-            DoubleToStringConverter.newConverter("0.00"),
+            BigDecimalToStringConverter.newConverter("0.00"),
             Iso31661CountryCodesToStringConverter.newConverter(),
             IdentifierToStringConverter.newConverter(),
             Untdid4461PaymentMeansCodeToString.newConverter()

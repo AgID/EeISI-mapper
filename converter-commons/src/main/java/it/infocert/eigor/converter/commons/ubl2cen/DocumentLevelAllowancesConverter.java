@@ -1,9 +1,6 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
@@ -13,6 +10,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,8 +19,6 @@ import java.util.List;
 public class DocumentLevelAllowancesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0020(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0020DocumentLevelAllowances bg0020;
 
@@ -43,9 +39,9 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 if (amount != null) {
                     final String value = amount.getValue();
                     try {
-                        BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(strDblConverter.convert(value));
+                        BT0092DocumentLevelAllowanceAmount bt0092 = new BT0092DocumentLevelAllowanceAmount(new BigDecimal(value));
                         bg0020.getBT0092DocumentLevelAllowanceAmount().add(bt0092);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -64,9 +60,9 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 if (baseAmount != null) {
                     final String text = baseAmount.getText();
                     try {
-                        BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(strDblConverter.convert(text));
+                        BT0093DocumentLevelAllowanceBaseAmount bt0093 = new BT0093DocumentLevelAllowanceBaseAmount(new BigDecimal(text));
                         bg0020.getBT0093DocumentLevelAllowanceBaseAmount().add(bt0093);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -85,9 +81,9 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 if (multiplierFactorNumeric != null) {
                     final String text = multiplierFactorNumeric.getText();
                     try {
-                        BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(strDblConverter.convert(text));
+                        BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(new BigDecimal(text));
                         bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
                                 e,
                                 ErrorMessage.builder()
@@ -129,9 +125,9 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     if (percent != null) {
                         final String text = percent.getText();
                         try {
-                            BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(strDblConverter.convert(text));
+                            BT0096DocumentLevelAllowanceVatRate bt0096 = new BT0096DocumentLevelAllowanceVatRate(new BigDecimal(text));
                             bg0020.getBT0096DocumentLevelAllowanceVatRate().add(bt0096);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
                                     ErrorMessage.builder()

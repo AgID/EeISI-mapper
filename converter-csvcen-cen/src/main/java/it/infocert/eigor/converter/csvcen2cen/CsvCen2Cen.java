@@ -50,8 +50,8 @@ public class CsvCen2Cen implements ToCenConversion {
             StringToUntdid5305DutyTaxFeeCategoriesConverter.newConverter(),
             LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
             StringToUnitOfMeasureConverter.newConverter(),
-            StringToDoublePercentageConverter.newConverter(),
-            StringToDoubleConverter.newConverter(),
+            StringToBigDecimalPercentageConverter.newConverter(),
+            StringToBigDecimalConverter.newConverter(),
             StringToStringConverter.newConverter(),
             StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
             StringToIdentifierConverter.newConverter()

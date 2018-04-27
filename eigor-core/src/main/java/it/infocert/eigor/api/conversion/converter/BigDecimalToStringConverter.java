@@ -1,22 +1,23 @@
 package it.infocert.eigor.api.conversion.converter;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-public class DoubleToStringConverter extends ToStringTypeConverter<Double>{
+public class BigDecimalToStringConverter extends ToStringTypeConverter<BigDecimal> {
 
     private final String formatPattern;
 
-    public static TypeConverter<Double, String> newConverter(String formatPattern){
-        return new DoubleToStringConverter(formatPattern);
+    public static TypeConverter<BigDecimal, String> newConverter(String formatPattern) {
+        return new BigDecimalToStringConverter(formatPattern);
     }
 
-    private DoubleToStringConverter(String formatPattern) {
+    private BigDecimalToStringConverter(String formatPattern) {
         this.formatPattern = formatPattern;
     }
 
     @Override
-    public String convert(Double value) {
+    public String convert(BigDecimal value) {
         DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
         dfs.setDecimalSeparator('.');
         DecimalFormat df = new DecimalFormat(formatPattern, dfs);
@@ -24,7 +25,7 @@ public class DoubleToStringConverter extends ToStringTypeConverter<Double>{
     }
 
     @Override
-    public Class<Double> getSourceClass() {
-        return Double.class;
+    public Class<BigDecimal> getSourceClass() {
+        return BigDecimal.class;
     }
 }
