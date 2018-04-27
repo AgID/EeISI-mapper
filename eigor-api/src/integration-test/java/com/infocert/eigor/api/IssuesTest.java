@@ -51,6 +51,11 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue276FromUblToUbl() {
+        assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
+    }
+
+    @Test
     public void fatturapaToCiiExamples() {
         assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
