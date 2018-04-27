@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,10 @@ public class Ubl2CenTest {
 
 	private static final Logger log = LoggerFactory.getLogger(Ubl2CenTest.class);
 
-	private Ubl2Cen sut;
+	static Ubl2Cen sut;
 
-	@Before
-	public void setUp() throws ConfigurationException {
+	@BeforeClass
+	public static void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
                 .addProperty("eigor.workdir", "classpath:")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")

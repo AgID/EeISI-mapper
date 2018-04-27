@@ -27,6 +27,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Cen2Cii extends AbstractFromCenConverter {
 
+    public static final Namespace RSM_NS = Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
+    public static final Namespace RAM_NS = Namespace.getNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100");
+    public static final Namespace QDT_NS = Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100");
+    public static final Namespace UDT_NS = Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100");
     private final Logger log = LoggerFactory.getLogger(Cen2Cii.class);
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-cii.mapping.one-to-one";
@@ -102,8 +106,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
         List<IConversionIssue> errors = new ArrayList<>(0);
-        Document document = new Document();
-        createRootNode(document);
+        Document document = createDocumentWithCiiRootElement();
 
         applyOne2OneTransformationsBasedOnMapping(invoice, document, errors);
         applyMany2OneTransformationsBasedOnMapping(invoice, document, errors);
@@ -139,6 +142,22 @@ public class Cen2Cii extends AbstractFromCenConverter {
         }
 
         return new BinaryConversionResult(documentByteArray, errors);
+    }
+
+    /**
+     * Utility method that creates a {@link Document} with
+     * only the CII root element.
+     */
+    public static Document createDocumentWithCiiRootElement() {
+        Document document = new Document();
+        Element root = new Element("CrossIndustryInvoice");
+        root.addNamespaceDeclaration(RSM_NS);
+        root.addNamespaceDeclaration(RAM_NS);
+        root.addNamespaceDeclaration(QDT_NS);
+        root.addNamespaceDeclaration(UDT_NS);
+        root.setNamespace(RSM_NS);
+        document.setRootElement(root);
+        return document;
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, Document document, List<IConversionIssue> errors) {
@@ -194,15 +213,5 @@ public class Cen2Cii extends AbstractFromCenConverter {
         return "converter-cen-cii";
     }
 
-
-    private void createRootNode(Document doc) {
-        Element root = new Element("CrossIndustryInvoice");
-        root.addNamespaceDeclaration(Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100"));
-        root.addNamespaceDeclaration(Namespace.getNamespace("udt", "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"));
-        root.setNamespace(Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"));
-        doc.setRootElement(root);
-    }
 }
 
