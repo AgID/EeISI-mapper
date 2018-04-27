@@ -154,6 +154,19 @@ public class IssuesTest {
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Allegato", evaluateAttachmentFileName);
     }
 
+    @Test
+    public void issue208() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-208-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiPagamento']//*[local-name()='DettaglioPagamento']//*[local-name()='Beneficiario']/text()");
+
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "PARTY NAME ACCOUNT NAME", evaluate);
+    }
+
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
         InputSource is = new InputSource( xmlStringReader );
