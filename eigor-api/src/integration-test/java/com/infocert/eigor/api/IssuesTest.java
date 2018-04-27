@@ -51,6 +51,11 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
+    }
+
+    @Test
     public void fatturapaToCiiExamples() {
         assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
@@ -83,12 +88,6 @@ public class IssuesTest {
                 "/issues/cii-examples/ubl/urn_notier_SOGG-NOT-00196_2018_9780030222_CP_FATTURA_01_CEN.xml",
                 "ubl", "cii");
 
-    }
-
-    private void assertConversionWithoutErrors(String invoice, String source, String target) {
-        InputStream invoiceStream = invoiceAsStream(invoice);
-        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
     }
 
     @Test
@@ -203,5 +202,11 @@ public class IssuesTest {
                     .append("\n\n");
         }
         return issuesDescription.toString();
+    }
+
+    private void assertConversionWithoutErrors(String invoice, String source, String target) {
+        InputStream invoiceStream = invoiceAsStream(invoice);
+        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
+        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
     }
 }
