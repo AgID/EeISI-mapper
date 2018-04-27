@@ -112,6 +112,13 @@ public class IssuesTest {
 
     }
 
+
+    @Test
+    public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
+
+    }
+
     @Test
     public void issue269() throws Exception {
         InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
