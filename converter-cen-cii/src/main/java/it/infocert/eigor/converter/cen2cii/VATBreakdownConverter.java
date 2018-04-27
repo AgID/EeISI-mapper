@@ -12,6 +12,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
@@ -40,6 +42,31 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
         if (applicableHeaderTradeSettlement == null) {
             applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
             supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
+        }
+
+        if(!invoice.getBG0013DeliveryInformation().isEmpty() &&
+                !invoice.getBG0013DeliveryInformation(0).getBG0014InvoicingPeriod().isEmpty()){
+
+            BG0014InvoicingPeriod bg14 = invoice.getBG0013DeliveryInformation(0).getBG0014InvoicingPeriod(0);
+            BT0073InvoicingPeriodStartDate bt73 = !bg14.getBT0073InvoicingPeriodStartDate().isEmpty() ? bg14.getBT0073InvoicingPeriodStartDate(0) : null;
+            BT0074InvoicingPeriodEndDate bt74 = !bg14.getBT0074InvoicingPeriodEndDate().isEmpty() ? bg14.getBT0074InvoicingPeriodEndDate(0) : null;
+
+            Element billingSpecifiedPeriod = new Element("BillingSpecifiedPeriod", ramNs);
+            if(bt73!=null){
+                billingSpecifiedPeriod.addContent(
+                    new Element("StartDateTime", ramNs)
+                        .addContent(toDateTimeStringElement(udtNs, bt73.getValue()))
+                );
+            }
+            if(bt74!=null){
+                billingSpecifiedPeriod.addContent(
+                        new Element("EndDateTime", ramNs)
+                                .addContent(toDateTimeStringElement(udtNs, bt74.getValue()))
+                );
+            }
+            applicableHeaderTradeSettlement.addContent( billingSpecifiedPeriod );
+
+
         }
 
         for (BG0023VatBreakdown bg0023 : invoice.getBG0023VatBreakdown()) {
@@ -164,5 +191,13 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
             applicableHeaderTradeSettlement.addContent(applicableTradeTax);
         }
+    }
+
+    private Element toDateTimeStringElement(Namespace udtNs, LocalDate value) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        String elementText = dateTimeFormatter.print(value);
+        return new Element("DateTimeString", udtNs)
+                .setText(elementText)
+                .setAttribute("format", "yyyy-mm-dd");
     }
 }
