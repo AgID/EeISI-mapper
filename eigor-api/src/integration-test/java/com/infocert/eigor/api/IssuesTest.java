@@ -51,6 +51,11 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue276FromUblToUbl() {
+        assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
+    }
+
+    @Test
     public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
         assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
     }
