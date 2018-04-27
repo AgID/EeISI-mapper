@@ -127,7 +127,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
                         for (BG0026InvoiceLinePeriod ignored : bg0026) {
                             Element invoicePeriod = new Element("InvoicePeriod");
-                            invoiceLine.addContent(invoicePeriod);
+                            if(invoicePeriod!=null && !invoicePeriod.getChildren().isEmpty()) {
+                                invoiceLine.addContent(invoicePeriod);
+                            }
                         }
                     }
 
