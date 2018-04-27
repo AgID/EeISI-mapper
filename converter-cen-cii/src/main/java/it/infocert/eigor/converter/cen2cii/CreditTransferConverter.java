@@ -53,18 +53,15 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 }
             }
 
-
-            if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
-                BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
-                Element paymentReference = new Element("PaymentReference", ramNs);
-                paymentReference.setText(bt0083.getValue());
-                applicableHeaderTradeAgreement.addContent(paymentReference);
-            }
-
             Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
             if (applicableHeaderTradeSettlement == null) {
                 applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
+            }
+
+            Element paymentReference = paymentReferenceOrNull(bg0016, ramNs);
+            if(paymentReference!=null){
+                applicableHeaderTradeSettlement.addContent(paymentReference);
             }
 
             if (!invoice.getBT0006VatAccountingCurrencyCode().isEmpty()) {
@@ -200,5 +197,15 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
 
             logger.error("{}, {}", supplyChainTradeTransaction.getName(), supplyChainTradeTransaction.getChildren());
         }
+    }
+
+    private Element paymentReferenceOrNull(BG0016PaymentInstructions bg0016, Namespace ramNs) {
+        Element paymentReference = null;
+        if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
+            BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
+            paymentReference = new Element("PaymentReference", ramNs);
+            paymentReference.setText(bt0083.getValue());
+        }
+        return paymentReference;
     }
 }
