@@ -50,7 +50,7 @@ public class IssuesTest {
                 .build();
     }
 
-    @Test
+    @Test @Ignore
     public void issue261FromFattPAToUbl() {
         assertConversionWithoutErrors("/issues/issue-261-fattpa.xml", "fatturapa", "ubl");
     }
