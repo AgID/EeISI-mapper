@@ -21,7 +21,8 @@ public class FirstLevelElementsConverterTest {
     public void InvoiceNoteShouldHavePrependedSubjectCodeIfBT0021(){
         BG0000Invoice invoice = createInvoiceWithBG0001InvoiceNoteAndBT0022(true);
         Document document = new Document(new Element("Invoice"));
-        FirstLevelElementsConverter converter = new FirstLevelElementsConverter();
+
+        NoteConverter converter = new NoteConverter();
         converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element note = document.getRootElement().getChild("Note");
@@ -34,7 +35,9 @@ public class FirstLevelElementsConverterTest {
     public void InvoiceNoteShouldNotHavePrependedSubjectCodeWithoutBT0021(){
         BG0000Invoice invoice = createInvoiceWithBG0001InvoiceNoteAndBT0022(false);
         Document document = new Document(new Element("Invoice"));
-        FirstLevelElementsConverter converter = new FirstLevelElementsConverter();
+
+        NoteConverter converter = new NoteConverter();
+
         converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
 
         Element note = document.getRootElement().getChild("Note");

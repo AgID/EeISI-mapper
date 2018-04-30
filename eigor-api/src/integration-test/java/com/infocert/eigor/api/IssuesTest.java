@@ -50,6 +50,11 @@ public class IssuesTest {
                 .build();
     }
 
+    @Test @Ignore("This is the reason of the refactoring")
+    public void issue261FromFattPAToUbl() {
+        assertConversionWithoutErrors("/issues/issue-261-fattpa.xml", "fatturapa", "ubl");
+    }
+
     @Test
     public void issue276FromUblToUbl() {
         assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
