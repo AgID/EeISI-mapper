@@ -117,6 +117,13 @@ public class IssuesTest {
 
     }
 
+
+    @Test
+    public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
+
+    }
+
     @Test
     public void issue269() throws Exception {
         InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
@@ -157,6 +164,19 @@ public class IssuesTest {
 
         Assert.assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Allegato", evaluateAttachmentFileName);
+    }
+
+    @Test
+    public void issue208() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-208-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiPagamento']//*[local-name()='DettaglioPagamento']//*[local-name()='Beneficiario']/text()");
+
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "PARTY NAME ACCOUNT NAME", evaluate);
     }
 
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
