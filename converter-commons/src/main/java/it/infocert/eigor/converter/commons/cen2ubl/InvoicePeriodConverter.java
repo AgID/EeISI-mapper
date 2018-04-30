@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(DeliveryOrInvoicePeriodConverter.class);
+public class InvoicePeriodConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(InvoicePeriodConverter.class);
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
@@ -91,31 +91,6 @@ public class DeliveryOrInvoicePeriodConverter implements CustomMapping<Document>
                 }
             }
 
-            if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
-                final String ORDER_REFERENCE = "OrderReference";
-                Element orderReference = root.getChild(ORDER_REFERENCE);
-                if (orderReference == null) {
-                    orderReference = new Element(ORDER_REFERENCE);
-                }
-                if (invoicePeriod != null) {
-                    final int index = root.indexOf(invoicePeriod); // + 1;
-                    root.removeChild(ORDER_REFERENCE);
-                    root.addContent(index, orderReference);
-                } else {
-                    log.debug("Maintaining OrderReference current position since no InvoicePeriod has been found.");
-                }
-
-                String purchaseOrderReference = invoice.getBT0013PurchaseOrderReference(0).getValue();
-                orderReference.setContent(new Element("ID").setText(purchaseOrderReference));
-            }
-
-            if (!invoice.getBT0012ContractReference().isEmpty()) {
-                Element contractDocumentReference = new Element("ContractDocumentReference");
-                Element id = new Element("ID");
-                contractDocumentReference.addContent(id);
-                id.setText(invoice.getBT0012ContractReference(0).getValue());
-                root.addContent(contractDocumentReference);
-            }
         }
     }
 }
