@@ -1,5 +1,6 @@
 package it.infocert.eigor.api;
 
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class CustomMappingLoader {
      * @throws InstantiationException
      * @throws IOException
      */
-    public List<CustomMapping<?>> loadCustomMapping() throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException {
+    public List<CustomMapping<?>> loadCustomMapping() throws IOException, ConfigurationException {
         if (customMappers == null) {
             this.customMappers = new ArrayList<>(0);
             BufferedReader bfr = new BufferedReader(new InputStreamReader(sourceStream, StandardCharsets.UTF_8));
@@ -51,7 +52,12 @@ public class CustomMappingLoader {
                 if ("".equals(current)) {
                     continue;
                 }
-                Object m = Class.forName(current).newInstance();
+                Object m = null;
+                try {
+                    m = Class.forName(current).newInstance();
+                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                    throw new ConfigurationException("An error occurred instantiating custom converter '" + current + "'.", e);
+                }
                 if (m instanceof CustomMapping) {
                     customMappers.add((CustomMapping<?>) m);
                 } else {

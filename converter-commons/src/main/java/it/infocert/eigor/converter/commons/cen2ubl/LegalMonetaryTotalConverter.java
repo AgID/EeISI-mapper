@@ -8,15 +8,12 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-public class DocumentTotalsConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(DocumentTotalsConverter.class);
+public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
@@ -29,54 +26,6 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
         Element root = document.getRootElement();
         if (root != null) {
-            for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
-
-                Element allowanceCharge = new Element("AllowanceCharge");
-
-                if (!bg0021.getBT0099DocumentLevelChargeAmount().isEmpty()) {
-                    BT0099DocumentLevelChargeAmount bt0099 = bg0021.getBT0099DocumentLevelChargeAmount(0);
-                    Element amount = new Element("Amount");
-                    final BigDecimal value = bt0099.getValue();
-                    amount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    amount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(amount);
-                }
-
-                if (!bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
-                    BT0100DocumentLevelChargeBaseAmount bt0100 = bg0021.getBT0100DocumentLevelChargeBaseAmount(0);
-                    Element baseAmount = new Element("BaseAmount");
-                    final BigDecimal value = bt0100.getValue();
-                    baseAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(baseAmount);
-                }
-
-                if (!bg0021.getBT0101DocumentLevelChargePercentage().isEmpty()) {
-                    BT0101DocumentLevelChargePercentage bt0101 = bg0021.getBT0101DocumentLevelChargePercentage(0);
-                    Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
-                    final BigDecimal value = bt0101.getValue();
-                    multiplierFactorNumeric.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    allowanceCharge.addContent(multiplierFactorNumeric);
-                }
-
-                if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
-                    BT0102DocumentLevelChargeVatCategoryCode bt0102 = bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0);
-                    Element taxCategory = new Element("TaxCategory");
-                    Element id = new Element("ID");
-                    taxCategory.addContent(id);
-                    id.setText(bt0102.getValue().name());
-                    allowanceCharge.addContent(taxCategory);
-                }
-
-                if (!bg0021.getBT0104DocumentLevelChargeReason().isEmpty()) {
-                    BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
-                    Element allowanceChargeReason = new Element("AllowanceChargeReason");
-                    allowanceChargeReason.setText(bt0104.getValue());
-                    allowanceCharge.addContent(allowanceChargeReason);
-                }
-
-                root.addContent(allowanceCharge);
-            }
 
             if (!cenInvoice.getBG0022DocumentTotals().isEmpty()) {
                 BG0022DocumentTotals bg0022 = cenInvoice.getBG0022DocumentTotals(0);

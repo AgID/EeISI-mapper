@@ -104,7 +104,7 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
                 try (InputStream inputStream = drl.getResource(configuration.getMandatoryString(resource)).getInputStream()) {
                     CustomMappingLoader cml = new CustomMappingLoader(inputStream);
                     customMappings = cml.loadCustomMapping();
-                } catch (IllegalAccessException | InstantiationException | IOException | ClassNotFoundException e) {
+                } catch (Exception e) {
                     throw new ConfigurationException(e);
                 }
             }
