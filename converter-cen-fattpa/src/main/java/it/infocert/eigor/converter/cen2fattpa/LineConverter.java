@@ -562,7 +562,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     try {
-                        dettaglioLinee.setQuantita(quantity.divide(baseQuantity).setScale(8, RoundingMode.HALF_UP));
+                        dettaglioLinee.setQuantita(quantity.divide(baseQuantity, RoundingMode.HALF_UP).setScale(8, RoundingMode.HALF_UP));
                     } catch (NumberFormatException e) {
                         ArrayList<String> zeroes = Lists.newArrayList();
                         if (quantity.compareTo(BigDecimal.ZERO) == 0) {

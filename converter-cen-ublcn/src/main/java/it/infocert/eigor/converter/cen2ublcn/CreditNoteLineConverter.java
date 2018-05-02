@@ -64,7 +64,7 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
 
                         if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
                             BigDecimal bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
-                            quantity = bt129Quantity.divide(bt0149BaseQuantity);
+                            quantity = bt129Quantity.divide(bt0149BaseQuantity, RoundingMode.HALF_UP);
                         } else {
                             quantity = bt129Quantity;
                         }
