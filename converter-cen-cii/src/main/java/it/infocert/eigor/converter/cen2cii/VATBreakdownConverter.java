@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -15,6 +14,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -24,7 +25,6 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
         Element rootElement = document.getRootElement();
@@ -75,19 +75,10 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
             if (!bg0023.getBT0117VatCategoryTaxAmount().isEmpty()) {
                 BT0117VatCategoryTaxAmount bt0117 = bg0023.getBT0117VatCategoryTaxAmount(0);
-                try {
-                    Element calculatedAmount = new Element("CalculatedAmount", ramNs);
-                    calculatedAmount.setText(dblStrConverter.convert(bt0117.getValue()));
-                    applicableTradeTax.addContent(calculatedAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element calculatedAmount = new Element("CalculatedAmount", ramNs);
+                BigDecimal value = bt0117.getValue();
+                calculatedAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                applicableTradeTax.addContent(calculatedAmount);
             }
 
             if (!bg0023.getBT0118VatCategoryCode().isEmpty()) {
@@ -106,19 +97,10 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
             if (!bg0023.getBT0116VatCategoryTaxableAmount().isEmpty()) {
                 BT0116VatCategoryTaxableAmount bt0116 = bg0023.getBT0116VatCategoryTaxableAmount(0);
-                try {
-                    Element basisAmount = new Element("BasisAmount", ramNs);
-                    basisAmount.setText(dblStrConverter.convert(bt0116.getValue()));
-                    applicableTradeTax.addContent(basisAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element basisAmount = new Element("BasisAmount", ramNs);
+                BigDecimal value = bt0116.getValue();
+                basisAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                applicableTradeTax.addContent(basisAmount);
             }
 
             if (!bg0023.getBT0118VatCategoryCode().isEmpty()) {
@@ -174,19 +156,10 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
             if (!bg0023.getBT0119VatCategoryRate().isEmpty()) {
                 BT0119VatCategoryRate bt0119 = bg0023.getBT0119VatCategoryRate(0);
-                try {
-                    Element rateApplicablePercent = new Element("RateApplicablePercent", ramNs);
-                    rateApplicablePercent.setText(dblStrConverter.convert(bt0119.getValue()));
-                    applicableTradeTax.addContent(rateApplicablePercent);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element rateApplicablePercent = new Element("RateApplicablePercent", ramNs);
+                BigDecimal value = bt0119.getValue();
+                rateApplicablePercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                applicableTradeTax.addContent(rateApplicablePercent);
             }
 
             applicableHeaderTradeSettlement.addContent(applicableTradeTax);

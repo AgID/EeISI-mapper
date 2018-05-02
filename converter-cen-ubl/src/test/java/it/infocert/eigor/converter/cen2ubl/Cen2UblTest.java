@@ -19,6 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -69,32 +70,32 @@ public class Cen2UblTest {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(ublXML));
 
-        String xPathLine = "/*[local-name()='Invoice']/*[name()='cac:InvoiceLine']";
+        String xPathLine = "/*[local-name()='Invoice']/*[name()='cac:InvoiceLine']" ;
 
-        String invoiceLineNumber = getStringByXPath(doc, xPathLine+"/*[name()='cbc:ID']/text()");
+        String invoiceLineNumber = getStringByXPath(doc, xPathLine + "/*[name()='cbc:ID']/text()");
         assertNotNull(invoiceLineNumber);
         assertEquals("9999", invoiceLineNumber);
 
-        String itemNetPrice = getStringByXPath(doc, xPathLine+"/*[name()='cac:Price']/*[name()='cbc:PriceAmount']/text()");
+        String itemNetPrice = getStringByXPath(doc, xPathLine + "/*[name()='cac:Price']/*[name()='cbc:PriceAmount']/text()");
         assertNotNull(itemNetPrice);
         assertEquals("20.00", itemNetPrice);
 
-        String ItemPriceBaseQuantity = getStringByXPath(doc, xPathLine+"/*[name()='cac:Price']/*[name()='cbc:BaseQuantity']/text()");
+        String ItemPriceBaseQuantity = getStringByXPath(doc, xPathLine + "/*[name()='cac:Price']/*[name()='cbc:BaseQuantity']/text()");
         assertNotNull(ItemPriceBaseQuantity);
         assertEquals("1.00", ItemPriceBaseQuantity);
 
-        String itemInformation = getStringByXPath(doc, xPathLine+"/*[name()='cac:Item']/*[name()='cbc:Name']/text()");
+        String itemInformation = getStringByXPath(doc, xPathLine + "/*[name()='cac:Item']/*[name()='cbc:Name']/text()");
         assertNotNull(itemInformation);
         assertEquals("Name", itemInformation);
     }
 
     @Test
-    public void shouldSupportUbl(){
+    public void shouldSupportUbl() {
         assertThat(converter.support("ubl"), is(true));
     }
 
     @Test
-    public void shouldSupportedFormatsUbl(){
+    public void shouldSupportedFormatsUbl() {
         assertThat(converter.getSupportedFormats(), contains("ubl"));
     }
 
@@ -111,19 +112,18 @@ public class Cen2UblTest {
     }
 
 
-
     private void populateWithBG25(BG0000Invoice invoice) {
-            BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-            invoiceLine.getBT0126InvoiceLineIdentifier().add(new BT0126InvoiceLineIdentifier("9999"));
-            populateBG25WithBG29(invoiceLine);
-            populateBG25WithBG31(invoiceLine);
-            invoice.getBG0025InvoiceLine().add(invoiceLine);
+        BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
+        invoiceLine.getBT0126InvoiceLineIdentifier().add(new BT0126InvoiceLineIdentifier("9999"));
+        populateBG25WithBG29(invoiceLine);
+        populateBG25WithBG31(invoiceLine);
+        invoice.getBG0025InvoiceLine().add(invoiceLine);
     }
 
     private void populateBG25WithBG29(BG0025InvoiceLine invoiceLine) {
         BG0029PriceDetails priceDetails = new BG0029PriceDetails();
-        priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(20.0));
-        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(1.0));
+        priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(new BigDecimal(20.0)));
+        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(BigDecimal.ONE));
         priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
 
         invoiceLine.getBG0029PriceDetails().add(priceDetails);

@@ -17,6 +17,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Properties;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
@@ -30,7 +31,6 @@ public class IssuesTest {
     @BeforeClass
     public static void setUpConf() throws IOException {
         File fattpaCenFolder = tmpFolder.newFolder();
-
 
 
         properties = new Properties();
@@ -98,7 +98,6 @@ public class IssuesTest {
         EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
 
 
-
         InputStream sourceInvoiceStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
 
         FattPa2Cen f2c = new FattPa2Cen(new JavaReflections(), configuration);
@@ -109,23 +108,23 @@ public class IssuesTest {
         {
             BG0000Invoice cen = result.getResult();
             BG0022DocumentTotals docTotals = cen.getBG0022DocumentTotals(0);
-            BT0112InvoiceTotalAmountWithVat bt12 = docTotals.getBT0112InvoiceTotalAmountWithVat(0);
+            BT0112InvoiceTotalAmountWithVat bt112 = docTotals.getBT0112InvoiceTotalAmountWithVat(0);
 
-            Assert.assertEquals(122.0, bt12.getValue(), 0.0001);
+            Assert.assertEquals("122.00", bt112.getValue().toString());
         }
 
         {
             BG0000Invoice cen = result.getResult();
             BG0022DocumentTotals docTotals = cen.getBG0022DocumentTotals(0);
             BT0115AmountDueForPayment bt115 = docTotals.getBT0115AmountDueForPayment(0);
-            Assert.assertEquals(122.0, bt115.getValue(), 0.0001);
+            Assert.assertEquals("122.00", bt115.getValue().toString());
         }
 
         {
             BG0000Invoice cen = result.getResult();
             BG0022DocumentTotals docTotals = cen.getBG0022DocumentTotals(0);
             BT0113PaidAmount bt113 = docTotals.getBT0113PaidAmount(0);
-            Assert.assertEquals(0.0, bt113.getValue(), 0.0001);
+            Assert.assertEquals(BigDecimal.ZERO, bt113.getValue());
 
         }
 
@@ -135,7 +134,6 @@ public class IssuesTest {
             Assert.assertEquals("N/A Payement Terms", bt020);
 
         }
-
 
 
     }

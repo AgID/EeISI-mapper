@@ -55,11 +55,11 @@ public class ConversionRegistryTest {
     }
 
     @Test
-    public void shouldNotConvertAStringToADoubleIfAStringIsNeeded() {
+    public void shouldNotConvertAStringToABigDecimalIfAStringIsNeeded() {
 
         // given
         ConversionRegistry sut = new ConversionRegistry(
-                StringToDoubleConverter.newConverter()
+                StringToBigDecimalConverter.newConverter()
         );
 
         // when

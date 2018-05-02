@@ -7,6 +7,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -146,7 +147,7 @@ public class InvoiceUtilsTest {
         invoice.getBG0025InvoiceLine().add(invoiceLine);
 
         for (int i = 0; i < num; i++) {
-            priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(2d));
+            priceDetails.getBT0146ItemNetPrice().add(new BT0146ItemNetPrice(BigDecimal.valueOf(2d)));
         }
     }
 }

@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -16,6 +15,8 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -27,7 +28,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
         Element rootElement = document.getRootElement();
@@ -158,9 +158,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             }
 
             //SpecifiedLineTradeAgreement
-            Element specifiedLineTradeAgreement = specifiedLineTradeAgreement(errors, callingLocation, dblStrConverter, ramNs, bg0025);
+            Element specifiedLineTradeAgreement = specifiedLineTradeAgreement(errors, callingLocation, ramNs, bg0025);
 
-            Element specifiedLineTradeDelivery = specifiedLineTradeDelivery(errors, callingLocation, dblStrConverter, ramNs, bg0025);
+            Element specifiedLineTradeDelivery = specifiedLineTradeDelivery(errors, callingLocation, ramNs, bg0025);
 
             Element specifiedLineTradeSettlement = new Element("SpecifiedLineTradeSettlement", ramNs);
 
@@ -177,22 +177,11 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     applicableTradeTax.addContent(categoryCode);
                 }
                 if (!bg0030.getBT0152InvoicedItemVatRate().isEmpty()) {
-                    Double bt0152 = bg0030.getBT0152InvoicedItemVatRate(0).getValue();
+                    BigDecimal bt0152 = bg0030.getBT0152InvoicedItemVatRate(0).getValue();
                     Element rateApplicablePercent = new Element("RateApplicablePercent", ramNs);
-                    try {
-                        rateApplicablePercent.setText(dblStrConverter.convert(bt0152));
-                        applicableTradeTax.addContent(rateApplicablePercent);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                    rateApplicablePercent.setText(bt0152.setScale(2, RoundingMode.HALF_UP).toString());
+                    applicableTradeTax.addContent(rateApplicablePercent);
                 }
-
                 specifiedLineTradeSettlement.addContent(applicableTradeTax);
             }
 
@@ -256,29 +245,19 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
                 if (!bg0027.getBT0136InvoiceLineAllowanceAmount().isEmpty()) {
-                    Double bt0136 = bg0027.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+                    BigDecimal bt0136 = bg0027.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                     Element actualAmount = new Element("ActualAmount", ramNs);
-                    try {
-                        actualAmount.setText(dblStrConverter.convert(bt0136));
-                        specifiedTradeAllowanceCharge.addContent(actualAmount);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                    actualAmount.setText(bt0136.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(actualAmount);
                 }
 
                 if (!bg0027.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
-                    Double bt0137 = Double.valueOf(bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue().getIdentifier());
+                    BigDecimal bt0137 = new BigDecimal(bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue().getIdentifier());
                     Element basisAmount = new Element("BasisAmount", ramNs);
                     try {
-                        basisAmount.setText(dblStrConverter.convert(bt0137));
+                        basisAmount.setText(bt0137.setScale(2, RoundingMode.HALF_UP).toString());
                         specifiedTradeAllowanceCharge.addContent(basisAmount);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                 e.getMessage(),
                                 callingLocation,
@@ -290,12 +269,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                    Double bt0138 = Double.valueOf(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
+                    BigDecimal bt0138 = new BigDecimal(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
                     Element calculationPercent = new Element("CalculationPercent", ramNs);
                     try {
-                        calculationPercent.setText(dblStrConverter.convert(bt0138));
+                        calculationPercent.setText(bt0138.setScale(2, RoundingMode.HALF_UP).toString());
                         specifiedTradeAllowanceCharge.addContent(calculationPercent);
-                    } catch (NumberFormatException | ConversionFailedException e) {
+                    } catch (NumberFormatException e) {
                         errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                 e.getMessage(),
                                 callingLocation,
@@ -332,54 +311,24 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
                 if (!bg0028.getBT0141InvoiceLineChargeAmount().isEmpty()) {
-                    Double bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
+                    BigDecimal bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
                     Element actualAmount = new Element("ActualAmount", ramNs);
-                    try {
-                        actualAmount.setText(dblStrConverter.convert(bt0141));
-                        specifiedTradeAllowanceCharge.addContent(actualAmount);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                    actualAmount.setText(bt0141.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(actualAmount);
                 }
 
                 if (!bg0028.getBT0142InvoiceLineChargeBaseAmount().isEmpty()) {
-                    Double bt0142 = bg0028.getBT0142InvoiceLineChargeBaseAmount(0).getValue();
+                    BigDecimal bt0142 = bg0028.getBT0142InvoiceLineChargeBaseAmount(0).getValue();
                     Element basisAmount = new Element("BasisAmount", ramNs);
-                    try {
-                        basisAmount.setText(dblStrConverter.convert(bt0142));
-                        specifiedTradeAllowanceCharge.addContent(basisAmount);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                    basisAmount.setText(bt0142.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(basisAmount);
                 }
 
                 if (!bg0028.getBT0143InvoiceLineChargePercentage().isEmpty()) {
-                    Double bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
+                    BigDecimal bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
                     Element calculationPercent = new Element("CalculationPercent", ramNs);
-                    try {
-                        calculationPercent.setText(dblStrConverter.convert(bt0143));
-                        specifiedTradeAllowanceCharge.addContent(calculationPercent);
-                    } catch (NumberFormatException | ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                    calculationPercent.setText(bt0143.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
                 }
 
                 if (!bg0028.getBT0144InvoiceLineChargeReason().isEmpty()) {
@@ -401,22 +350,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
             // SpecifiedTradeSettlementLineMonetarySummation
             if (!bg0025.getBT0131InvoiceLineNetAmount().isEmpty()) {
-                Double bt0131 = bg0025.getBT0131InvoiceLineNetAmount(0).getValue();
+                BigDecimal bt0131 = bg0025.getBT0131InvoiceLineNetAmount(0).getValue();
                 Element lineTotalAmount = new Element("LineTotalAmount", ramNs);
-                try {
-                    lineTotalAmount.setText(dblStrConverter.convert(bt0131));
-                    Element specifiedTradeSettlementLineMonetarySummation = new Element("SpecifiedTradeSettlementLineMonetarySummation", ramNs);
-                    specifiedTradeSettlementLineMonetarySummation.addContent(lineTotalAmount);
-                    specifiedLineTradeSettlement.addContent(specifiedTradeSettlementLineMonetarySummation);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                lineTotalAmount.setText(bt0131.setScale(2, RoundingMode.HALF_UP).toString());
+                Element specifiedTradeSettlementLineMonetarySummation = new Element("SpecifiedTradeSettlementLineMonetarySummation", ramNs);
+                specifiedTradeSettlementLineMonetarySummation.addContent(lineTotalAmount);
+                specifiedLineTradeSettlement.addContent(specifiedTradeSettlementLineMonetarySummation);
             }
 
             // AdditionalReferencedDocument
@@ -440,7 +379,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedLineTradeSettlement.addContent(additionalReferencedDocument);
             }
 
-// ReceivableSpecifiedTradeAccountingAccount
+            // ReceivableSpecifiedTradeAccountingAccount
             if (!bg0025.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
                 String bt0133 = bg0025.getBT0133InvoiceLineBuyerAccountingReference(0).getValue();
                 Element receivableSpecifiedTradeAccountingAccount = new Element("ReceivableSpecifiedTradeAccountingAccount", ramNs);
@@ -469,35 +408,24 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
     }
 
 
-    private Element specifiedLineTradeDelivery(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
+    private Element specifiedLineTradeDelivery(List<IConversionIssue> errors, ErrorCode.Location callingLocation, Namespace ramNs, BG0025InvoiceLine bg0025) {
         Element specifiedLineTradeDelivery = null;
         if (!bg0025.getBT0129InvoicedQuantity().isEmpty()) {
-            Double bt0129 = bg0025.getBT0129InvoicedQuantity(0).getValue();
+            BigDecimal bt0129 = bg0025.getBT0129InvoicedQuantity(0).getValue();
             specifiedLineTradeDelivery = new Element("SpecifiedLineTradeDelivery", ramNs);
             Element billedQuantity = new Element("BilledQuantity", ramNs);
             if (!bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
                 UnitOfMeasureCodes bt0130 = bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue();
                 billedQuantity.setAttribute("unitCode", bt0130.getCommonCode());
             }
-            try {
-                billedQuantity.setText(dblStrConverter.convert(bt0129));
-                specifiedLineTradeDelivery.addContent(billedQuantity);
-
-            } catch (NumberFormatException | ConversionFailedException e) {
-                errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                        e.getMessage(),
-                        callingLocation,
-                        ErrorCode.Action.HARDCODED_MAP,
-                        ErrorCode.Error.INVALID,
-                        e
-                )));
-            }
+            billedQuantity.setText(bt0129.setScale(2, RoundingMode.HALF_UP).toString());
+            specifiedLineTradeDelivery.addContent(billedQuantity);
         }
         return specifiedLineTradeDelivery;
     }
 
 
-    private Element specifiedLineTradeAgreement(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0025InvoiceLine bg0025) {
+    private Element specifiedLineTradeAgreement(List<IConversionIssue> errors, ErrorCode.Location callingLocation, Namespace ramNs, BG0025InvoiceLine bg0025) {
         Element specifiedLineTradeAgreement = new Element("SpecifiedLineTradeAgreement", ramNs);
 
         if (!bg0025.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
@@ -518,96 +446,46 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
 
             if (!bg0029.getBT0148ItemGrossPrice().isEmpty()) {
                 Element chargeAmount = new Element("ChargeAmount", ramNs);
-                Double bt0148 = bg0029.getBT0148ItemGrossPrice(0).getValue();
-                try {
-                    chargeAmount.setText(dblStrConverter.convert(bt0148));
-                    grossPriceProductTradePrice.addContent(chargeAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                BigDecimal bt0148 = bg0029.getBT0148ItemGrossPrice(0).getValue();
+                chargeAmount.setText(bt0148.setScale(2, RoundingMode.HALF_UP).toString());
+                grossPriceProductTradePrice.addContent(chargeAmount);
             } else if (!bg0029.getBT0146ItemNetPrice().isEmpty()) {
                 Element chargeAmount = new Element("ChargeAmount", ramNs);
-                try {
-                    final Double net = bg0029.getBT0146ItemNetPrice(0).getValue();
-                    if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
-                        final Double discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
-                        chargeAmount.setText(dblStrConverter.convert(net - discount));
-                        grossPriceProductTradePrice.addContent(chargeAmount);
-                    }
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
+                final BigDecimal net = bg0029.getBT0146ItemNetPrice(0).getValue();
+                if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
+                    final BigDecimal discount = bg0029.getBT0147ItemPriceDiscount(0).getValue();
+                    chargeAmount.setText(net.subtract(discount).setScale(2, RoundingMode.HALF_UP).toString());
+                    grossPriceProductTradePrice.addContent(chargeAmount);
                 }
             }
 
             if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                Double bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
+                BigDecimal bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
                 Element basisQuantity = new Element("BasisQuantity", ramNs);
                 if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
                     UnitOfMeasureCodes bt0150 = bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue();
                     basisQuantity.setAttribute("unitCode", bt0150.getCommonCode());
                 }
-                try {
-                    basisQuantity.setText(dblStrConverter.convert(bt0149));
-                    grossPriceProductTradePrice.addContent(basisQuantity);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                basisQuantity.setText(bt0149.setScale(2, RoundingMode.HALF_UP).toString());
+                grossPriceProductTradePrice.addContent(basisQuantity);
             }
 
             if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
-                Double bt0147 = bg0029.getBT0147ItemPriceDiscount(0).getValue();
+                BigDecimal bt0147 = bg0029.getBT0147ItemPriceDiscount(0).getValue();
                 Element appliedTradeAllowanceCharge = new Element("AppliedTradeAllowanceCharge", ramNs);
                 Element actualAmount = new Element("ActualAmount", ramNs);
-                try {
-                    actualAmount.setText(dblStrConverter.convert(bt0147));
-                    appliedTradeAllowanceCharge.addContent(actualAmount);
-                    grossPriceProductTradePrice.addContent(appliedTradeAllowanceCharge);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                actualAmount.setText(bt0147.setScale(2, RoundingMode.HALF_UP).toString());
+                appliedTradeAllowanceCharge.addContent(actualAmount);
+                grossPriceProductTradePrice.addContent(appliedTradeAllowanceCharge);
             }
 
             Element netPriceProductTradePrice = null;
             if (!bg0029.getBT0146ItemNetPrice().isEmpty()) {
-                Double bt0146 = bg0029.getBT0146ItemNetPrice(0).getValue();
+                BigDecimal bt0146 = bg0029.getBT0146ItemNetPrice(0).getValue();
                 netPriceProductTradePrice = new Element("NetPriceProductTradePrice", ramNs);
                 Element chargeAmount = new Element("ChargeAmount", ramNs);
-                try {
-                    chargeAmount.setText(dblStrConverter.convert(bt0146));
-                    netPriceProductTradePrice.addContent(chargeAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                chargeAmount.setText(bt0146.setScale(2, RoundingMode.HALF_UP).toString());
+                netPriceProductTradePrice.addContent(chargeAmount);
             }
 
             if (grossPriceProductTradePrice.getChild("ChargeAmount", ramNs) != null) {
@@ -617,7 +495,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             if (netPriceProductTradePrice != null) {
                 specifiedLineTradeAgreement.addContent(netPriceProductTradePrice);
             }
-
         }
         return specifiedLineTradeAgreement;
     }

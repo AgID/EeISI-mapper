@@ -12,6 +12,8 @@ import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -31,8 +33,8 @@ public class DocumentTotalsConverterTest {
     public void testTotals() throws Exception {
         document = createXmlInvoiceWithDatiBollo(new Document());
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
-        final Double value = invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat(0).getValue();
-        assertEquals(new Double(3.0d), value);
+        final BigDecimal value = invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat(0).getValue();
+        assertEquals(new BigDecimal(3.0d), value);
     }
 
     @Test
@@ -58,13 +60,13 @@ public class DocumentTotalsConverterTest {
         assertFalse(invoice.getBG0021DocumentLevelCharges().isEmpty());
         BG0021DocumentLevelCharges bg0021 = invoice.getBG0021DocumentLevelCharges().get(0);
 
-        assertThat(bg0021.getBT0099DocumentLevelChargeAmount(0).getValue(), is(0d));
-        assertThat(bg0021.getBT0100DocumentLevelChargeBaseAmount(0).getValue(), is(200.00));
-        assertThat(bg0021.getBT0101DocumentLevelChargePercentage(0).getValue(), is(20.00));
+        assertThat(bg0021.getBT0099DocumentLevelChargeAmount(0).getValue(), is(BigDecimal.ZERO));
+        assertThat(bg0021.getBT0100DocumentLevelChargeBaseAmount(0).getValue().toString(), is("200.00"));
+        assertThat(bg0021.getBT0101DocumentLevelChargePercentage(0).getValue().toString(), is("20.00"));
         assertThat(bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0).getValue(), is(Untdid5305DutyTaxFeeCategories.E));
         assertThat(bg0021.getBT0104DocumentLevelChargeReason(0).getValue(), is("RT01 A"));
 
-        assertThat(invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount(0).getValue(), is(200.00));
+        assertThat(invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount(0).getValue().toString(), is("200.00"));
         assertThat(invoice.getBT0020PaymentTerms(0).getValue(), is("BT-113 represents Withholding tax amount"));
     }
 

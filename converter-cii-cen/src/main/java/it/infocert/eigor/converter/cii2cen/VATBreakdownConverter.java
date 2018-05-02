@@ -1,9 +1,6 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -13,6 +10,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,8 +19,6 @@ import java.util.List;
 public class VATBreakdownConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0023VatBreakdown bg0023;
 
@@ -53,9 +49,9 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     if (basisAmount != null) {
                         final String text = basisAmount.getText();
                         try {
-                            BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(text));
+                            BT0116VatCategoryTaxableAmount bt0116 = new BT0116VatCategoryTaxableAmount(new BigDecimal(text));
                             bg0023.getBT0116VatCategoryTaxableAmount().add(bt0116);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                     .message(e.getMessage())
                                     .location(callingLocation)
@@ -70,9 +66,9 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     if (calculatedAmount != null) {
                         final String text = calculatedAmount.getText();
                         try {
-                            BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(strDblConverter.convert(text));
+                            BT0117VatCategoryTaxAmount bt0117 = new BT0117VatCategoryTaxAmount(new BigDecimal(text));
                             bg0023.getBT0117VatCategoryTaxAmount().add(bt0117);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                     .message(e.getMessage())
                                     .location(callingLocation)
@@ -93,9 +89,9 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     if (rateApplicablePercent != null) {
                         final String text = rateApplicablePercent.getText();
                         try {
-                            BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(text));
+                            BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(new BigDecimal(text));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                     .message(e.getMessage())
                                     .location(callingLocation)

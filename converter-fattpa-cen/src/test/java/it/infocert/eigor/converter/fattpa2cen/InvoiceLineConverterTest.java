@@ -32,7 +32,7 @@ public class InvoiceLineConverterTest {
     public void shouldApplyBT129Default() throws Exception {
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0129InvoicedQuantity bt129 = invoice.getBG0025InvoiceLine(0).getBT0129InvoicedQuantity(0);
-        assertEquals(new Double(1d), bt129.getValue());
+        assertEquals("1", bt129.getValue().toString());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class InvoiceLineConverterTest {
 
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0129InvoicedQuantity bt129 = invoice.getBG0025InvoiceLine(0).getBT0129InvoicedQuantity(0);
-        assertEquals(new Double(15d), bt129.getValue());
+        assertEquals("15", bt129.getValue().toString());
     }
 
     @Test

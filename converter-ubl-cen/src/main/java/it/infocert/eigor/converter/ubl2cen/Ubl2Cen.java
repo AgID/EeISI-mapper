@@ -4,7 +4,8 @@ import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -33,26 +34,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Ubl2Cen extends AbstractToCenConverter {
 
     private static final Logger log = LoggerFactory.getLogger(Ubl2Cen.class);
-    private static final String FORMAT = "ubl";
+    private static final String FORMAT = "ubl" ;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private static final ConversionRegistry conversionRegistry = initConversionStrategy();
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one";
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one";
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many";
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.custom";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-one" ;
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.many-to-one" ;
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.one-to-many" ;
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.ubl-cen.mapping.custom" ;
 
     private XSDValidator xsdValidator;
     private IXMLValidator ublValidator;
     private IXMLValidator ciusValidator;
 
     public Ubl2Cen(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry,  configuration, ErrorCode.Location.UBL_IN);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.UBL_IN);
         this.configuration = checkNotNull(configuration);
     }
 
-    @Override public void configure() throws ConfigurationException {
+    @Override
+    public void configure() throws ConfigurationException {
         super.configure();
 
         // load the XSD.
@@ -70,7 +72,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
         // load the UBL schematron validator.
         try {
-            Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron") );
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ubl-cen.schematron.auto-update-xslt"));
             ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
@@ -79,7 +81,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
         // load the CIUS schematron validator.
         try {
-            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius") );
+            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius"));
             boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius.auto-update-xslt"));
             ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
@@ -112,8 +114,8 @@ public class Ubl2Cen extends AbstractToCenConverter {
             clonedInputStream = new ByteArrayInputStream(bytes);
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
-            if(validationErrors.isEmpty()){
-            	log.info("Xsd validation successful!");
+            if (validationErrors.isEmpty()) {
+                log.info("Xsd validation successful!");
             }
 
             List<IConversionIssue> schematronErrors = ublValidator.validate(bytes);
@@ -126,7 +128,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
                 log.info("CIUS Schematron validation successful!");
             }
 
-			errors.addAll(validationErrors);
+            errors.addAll(validationErrors);
             errors.addAll(schematronErrors);
             errors.addAll(ciusErrors);
 
@@ -158,7 +160,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     public boolean support(String format) {
-        if(format == null){
+        if (format == null) {
             log.error("NULL FORMAT");
             return false;
         }
@@ -172,7 +174,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
+        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?" ;
     }
 
     @Override
@@ -197,10 +199,10 @@ public class Ubl2Cen extends AbstractToCenConverter {
 
     @Override
     public String getName() {
-        return "converter-ubl-cen";
+        return "converter-ubl-cen" ;
     }
 
-    private static ConversionRegistry initConversionStrategy(){
+    private static ConversionRegistry initConversionStrategy() {
         return new ConversionRegistry(
 
                 // enums
@@ -236,8 +238,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
                 JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
 
                 // numbers
-                StringToDoubleConverter.newConverter(),
-                DoubleToStringConverter.newConverter("#.00"),
+                StringToBigDecimalConverter.newConverter(),
 
                 // binaries
                 Base64StringToBinaryConverter.newConverter(),

@@ -1,14 +1,8 @@
 package it.infocert.eigor.converter.cen2ublcn;
 
-import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -19,6 +13,8 @@ import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class CreditNoteLineConverter implements CustomMapping<Document> {
@@ -26,8 +22,6 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("#0.00");
-        TypeConverter<Double, String> dblStrConverter8Decimals = DoubleToStringConverter.newConverter("#0.00000000");
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -64,30 +58,19 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
 
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
 
-                        Double quantity;
-                        Double bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ? 0 : elemBg25.getBT0129InvoicedQuantity(0).getValue();
+                        BigDecimal quantity;
+                        BigDecimal bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ?
+                                BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
 
                         if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                            Double bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
-                            quantity = bt129Quantity / bt0149BaseQuantity;
+                            BigDecimal bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
+                            quantity = bt129Quantity.divide(bt0149BaseQuantity, RoundingMode.HALF_UP);
                         } else {
                             quantity = bt129Quantity;
                         }
 
                         Element invoicedQuantity = new Element("CreditedQuantity");
-                        try {
-                            invoicedQuantity.setText(dblStrConverter8Decimals.convert(quantity));
-                        } catch (ConversionFailedException e) {
-                            errors.add(ConversionIssue.newError(
-                                    e,
-                                    e.getMessage(),
-                                    callingLocation,
-                                    ErrorCode.Action.HARDCODED_MAP,
-                                    ErrorCode.Error.ILLEGAL_VALUE,
-                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, quantity.toString())
-                            ));
-                        }
+                        invoicedQuantity.setText(quantity.setScale(8, RoundingMode.HALF_UP).toString());
 
                         if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
                             BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode(0);
@@ -103,20 +86,8 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                     if (!elemBg25.getBT0131InvoiceLineNetAmount().isEmpty()) {
                         BT0131InvoiceLineNetAmount bt0131 = elemBg25.getBT0131InvoiceLineNetAmount(0);
                         Element lineExtensionAmount = new Element("LineExtensionAmount");
-                        final Double value = bt0131.getValue();
-                        try {
-                            lineExtensionAmount.setText(dblStrConverter.convert(value));
-                        } catch (ConversionFailedException e) {
-                            errors.add(ConversionIssue.newError(
-                                    e,
-                                    e.getMessage(),
-                                    callingLocation,
-                                    ErrorCode.Action.HARDCODED_MAP,
-                                    ErrorCode.Error.ILLEGAL_VALUE,
-                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-                            ));
-                        }
+                        final BigDecimal value = bt0131.getValue();
+                        lineExtensionAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                         if (currencyCode != null) {
                             lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                         }
@@ -155,21 +126,9 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                                     if (!elemBg30.getBT0152InvoicedItemVatRate().isEmpty()) {
                                         BT0152InvoicedItemVatRate bt0152 = elemBg30.getBT0152InvoicedItemVatRate(0);
                                         Element percent = new Element("Percent");
-                                        final Double value = bt0152.getValue();
-                                        try {
-                                            percent.setText(dblStrConverter.convert(value));
-                                            classifiedTaxCategory.addContent(percent);
-                                        } catch (ConversionFailedException e) {
-                                            errors.add(ConversionIssue.newError(
-                                                    e,
-                                                    e.getMessage(),
-                                                    callingLocation,
-                                                    ErrorCode.Action.HARDCODED_MAP,
-                                                    ErrorCode.Error.ILLEGAL_VALUE,
-                                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-                                            ));
-                                        }
+                                        final BigDecimal value = bt0152.getValue();
+                                        percent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                                        classifiedTaxCategory.addContent(percent);
                                     }
                                     Element taxScheme = new Element("TaxScheme");
                                     Element id = new Element("ID");
@@ -212,20 +171,8 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                             if (!elemBg29.getBT0146ItemNetPrice().isEmpty()) {
                                 BT0146ItemNetPrice bt0146 = elemBg29.getBT0146ItemNetPrice(0);
                                 Element priceAmount = new Element("PriceAmount");
-                                final Double value = bt0146.getValue();
-                                try {
-                                    priceAmount.setText(dblStrConverter.convert(value));
-                                } catch (ConversionFailedException e) {
-                                    errors.add(ConversionIssue.newError(
-                                            e,
-                                            e.getMessage(),
-                                            callingLocation,
-                                            ErrorCode.Action.HARDCODED_MAP,
-                                            ErrorCode.Error.ILLEGAL_VALUE,
-                                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                            Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-                                    ));
-                                }
+                                final BigDecimal value = bt0146.getValue();
+                                priceAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                                 if (currencyCode != null) {
                                     priceAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                                 }
@@ -234,20 +181,8 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                             if (!elemBg29.getBT0149ItemPriceBaseQuantity().isEmpty()) {
                                 BT0149ItemPriceBaseQuantity bt0149 = elemBg29.getBT0149ItemPriceBaseQuantity(0);
                                 Element baseQuantity = new Element("BaseQuantity");
-                                final Double value = bt0149.getValue();
-                                try {
-                                    baseQuantity.setText(dblStrConverter.convert(value));
-                                } catch (ConversionFailedException e) {
-                                    errors.add(ConversionIssue.newError(
-                                            e,
-                                            e.getMessage(),
-                                            callingLocation,
-                                            ErrorCode.Action.HARDCODED_MAP,
-                                            ErrorCode.Error.ILLEGAL_VALUE,
-                                            Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                            Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-                                    ));
-                                }
+                                final BigDecimal value = bt0149.getValue();
+                                baseQuantity.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
 
                                 if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
                                     BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);

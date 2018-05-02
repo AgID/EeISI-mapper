@@ -19,6 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -78,10 +79,10 @@ public class Cen2FattPATest {
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
         invoiceLine.getBT0126InvoiceLineIdentifier().add(new BT0126InvoiceLineIdentifier("1"));
         BG0029PriceDetails priceDetails = new BG0029PriceDetails();
-        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(1d));
+        priceDetails.getBT0149ItemPriceBaseQuantity().add(new BT0149ItemPriceBaseQuantity(BigDecimal.ONE));
         priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().add(new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.ACRE_ACR));
         invoiceLine.getBG0029PriceDetails().add(priceDetails);
-        invoiceLine.getBT0131InvoiceLineNetAmount().add(new BT0131InvoiceLineNetAmount(12d));
+        invoiceLine.getBT0131InvoiceLineNetAmount().add(new BT0131InvoiceLineNetAmount(new BigDecimal("12")));
         invoice.getBG0025InvoiceLine().add(invoiceLine);
         return invoice;
     }

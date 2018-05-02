@@ -9,7 +9,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
-
+import java.math.BigDecimal;
 import static it.infocert.eigor.converter.commons.cen2ubl.Scenarios.invoiceWithAmounts;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -53,13 +53,13 @@ public class AllowanceChargeConverterTest {
     private void enrichInvoiceWithBG0021() {
         BG0021DocumentLevelCharges bg0021 = new BG0021DocumentLevelCharges();
 
-        BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(12.34);
+        BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(BigDecimal.valueOf(12.34));
         bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
 
-        BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(34.56);
+        BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(BigDecimal.valueOf(34.56));
         bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
 
-        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(56.78);
+        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(BigDecimal.valueOf(56.78));
         bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
 
         BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.E);

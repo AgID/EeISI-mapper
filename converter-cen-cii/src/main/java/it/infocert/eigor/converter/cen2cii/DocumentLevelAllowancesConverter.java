@@ -1,9 +1,8 @@
 package it.infocert.eigor.converter.cen2cii;
 
-import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.CustomConverterUtils;
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
@@ -11,6 +10,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -20,7 +21,6 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -51,51 +51,24 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
             specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
             if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-                try {
-                    Element calculationPercent = new Element("CalculationPercent");
-                    calculationPercent.setText(dblStrConverter.convert(bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue()));
-                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element calculationPercent = new Element("CalculationPercent");
+                BigDecimal value = bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue();
+                calculationPercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeAllowanceCharge.addContent(calculationPercent);
             }
 
             if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
-                try {
-                    Element actualAmount = new Element("ActualAmount");
-                    actualAmount.setText(dblStrConverter.convert(bg0020.getBT0092DocumentLevelAllowanceAmount(0).getValue()));
-                    specifiedTradeAllowanceCharge.addContent(actualAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element actualAmount = new Element("ActualAmount");
+                BigDecimal value = bg0020.getBT0092DocumentLevelAllowanceAmount(0).getValue();
+                actualAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeAllowanceCharge.addContent(actualAmount);
             }
 
             if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
-                try {
-                    Element basisAmount = new Element("BasisAmount");
-                    basisAmount.setText(dblStrConverter.convert(bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue()));
-                    specifiedTradeAllowanceCharge.addContent(basisAmount);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element basisAmount = new Element("BasisAmount");
+                BigDecimal value = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue();
+                basisAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeAllowanceCharge.addContent(basisAmount);
             }
 
 
@@ -109,19 +82,10 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
             }
 
             if (!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
-                try {
-                    Element rateApplicablePercent = new Element("RateApplicablePercent");
-                    rateApplicablePercent.setText(dblStrConverter.convert(bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue()));
-                    categoryTradeTax.addContent(rateApplicablePercent);
-                } catch (NumberFormatException | ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                Element rateApplicablePercent = new Element("RateApplicablePercent");
+                BigDecimal value = bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue();
+                rateApplicablePercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                categoryTradeTax.addContent(rateApplicablePercent);
             }
 
             if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {

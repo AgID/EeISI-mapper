@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -12,6 +11,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,7 +21,6 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
         TypeConverter<String, Untdid5305DutyTaxFeeCategories> dutyTaxFeeCategories = ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
 
         BG0023VatBreakdown bg0023;
@@ -39,9 +38,9 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         Element imponibileImporto = datiRiepilogo.getChild("ImponibileImporto");
                         if (imponibileImporto != null) {
                             try {
-                                BT0116VatCategoryTaxableAmount vatCategoryTaxableAmount = new BT0116VatCategoryTaxableAmount(strDblConverter.convert(imponibileImporto.getText()));
+                                BT0116VatCategoryTaxableAmount vatCategoryTaxableAmount = new BT0116VatCategoryTaxableAmount(new BigDecimal(imponibileImporto.getText()));
                                 bg0023.getBT0116VatCategoryTaxableAmount().add(vatCategoryTaxableAmount);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -56,9 +55,9 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         Element imposta = datiRiepilogo.getChild("Imposta");
                         if (imposta != null) {
                             try {
-                                BT0117VatCategoryTaxAmount vatCategoryTaxAmount = new BT0117VatCategoryTaxAmount(strDblConverter.convert(imposta.getText()));
+                                BT0117VatCategoryTaxAmount vatCategoryTaxAmount = new BT0117VatCategoryTaxAmount(new BigDecimal(imposta.getText()));
                                 bg0023.getBT0117VatCategoryTaxAmount().add(vatCategoryTaxAmount);
-                            } catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
                                         .action(ErrorCode.Action.HARDCODED_MAP)
@@ -89,9 +88,9 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
                         Element aliquotaIVA = datiRiepilogo.getChild("AliquotaIVA");
                         try {
-                            BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(strDblConverter.convert(aliquotaIVA.getText()));
+                            BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(new BigDecimal(aliquotaIVA.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
-                        } catch (NumberFormatException | ConversionFailedException e) {
+                        } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                     .location(callingLocation)
                                     .action(ErrorCode.Action.HARDCODED_MAP)

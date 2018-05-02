@@ -1,9 +1,6 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToDoubleConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -13,6 +10,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,8 +19,6 @@ import java.util.List;
 public class DocumentLevelChargesConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     public ConversionResult<BG0000Invoice> toBG0021(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-
-        TypeConverter<String, Double> strDblConverter = StringToDoubleConverter.newConverter();
 
         BG0021DocumentLevelCharges bg0021;
 
@@ -38,7 +34,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                 specifiedTradeAllowanceCharges = findNamespaceChildren(child1, namespacesInScope, "SpecifiedTradeAllowanceCharge");
             }
 
-            for(Element elem : specifiedTradeAllowanceCharges) {
+            for (Element elem : specifiedTradeAllowanceCharges) {
 
                 Element chargeIndicator = findNamespaceChild(elem, namespacesInScope, "ChargeIndicator");
                 if (chargeIndicator != null) {
@@ -61,9 +57,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
 
                         if (actualAmount != null) {
                             try {
-                                BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(strDblConverter.convert(actualAmount.getText()));
+                                BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(new BigDecimal(actualAmount.getText()));
                                 bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
-                            }catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -75,9 +71,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                         }
                         if (basisAmount != null) {
                             try {
-                                BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(strDblConverter.convert(basisAmount.getText()));
+                                BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(new BigDecimal(basisAmount.getText()));
                                 bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
-                            }catch (NumberFormatException | ConversionFailedException e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -89,9 +85,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                         }
                         if (calculationPercent != null) {
                             try {
-                                BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(strDblConverter.convert(calculationPercent.getText()));
+                                BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(new BigDecimal(calculationPercent.getText()));
                                 bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
-                            }catch (NumberFormatException | ConversionFailedException  e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -102,10 +98,10 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                             }
                         }
                         if (typeCode != null && categoryCode != null) {
-                            try{
+                            try {
                                 BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(categoryCode.getText()));
                                 bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
-                            }catch (IllegalArgumentException e) {
+                            } catch (IllegalArgumentException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -117,9 +113,9 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                         }
                         if (rateApplicablePercent != null) {
                             try {
-                                BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(strDblConverter.convert(rateApplicablePercent.getText()));
+                                BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(new BigDecimal(rateApplicablePercent.getText()));
                                 bg0021.getBT0103DocumentLevelChargeVatRate().add(bt0103);
-                            }catch (NumberFormatException | ConversionFailedException  e) {
+                            } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message(e.getMessage())
                                         .location(callingLocation)
@@ -134,10 +130,10 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                             bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
                         }
                         if (reasonCode != null) {
-                            try{
+                            try {
                                 BT0105DocumentLevelChargeReasonCode bt0105 = new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.valueOf(reasonCode.getText()));
                                 bg0021.getBT0105DocumentLevelChargeReasonCode().add(bt0105);
-                            }catch (IllegalArgumentException e) {
+                            } catch (IllegalArgumentException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
                                         .message("Untdid7161SpecialServicesCodes not found")
                                         .location(callingLocation)

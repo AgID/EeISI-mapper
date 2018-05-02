@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -13,6 +12,8 @@ import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -23,7 +24,6 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("0.00");
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -106,174 +106,81 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             }
 
             if (!bg0022.getBT0106SumOfInvoiceLineNetAmount().isEmpty()) {
-                Double bt0106 = bg0022.getBT0106SumOfInvoiceLineNetAmount(0).getValue();
+                BigDecimal bt0106 = bg0022.getBT0106SumOfInvoiceLineNetAmount(0).getValue();
                 Element lineTotalAmount = new Element("LineTotalAmount", ramNs);
-                try {
-                    lineTotalAmount.setText(dblStrConverter.convert(bt0106));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(lineTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                lineTotalAmount.setText(bt0106.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(lineTotalAmount);
             }
 
             if (!bg0022.getBT0108SumOfChargesOnDocumentLevel().isEmpty()) {
-                Double bt0108 = bg0022.getBT0108SumOfChargesOnDocumentLevel(0).getValue();
+                BigDecimal bt0108 = bg0022.getBT0108SumOfChargesOnDocumentLevel(0).getValue();
                 Element chargeTotalAmount = new Element("ChargeTotalAmount", ramNs);
-                try {
-                    chargeTotalAmount.setText(dblStrConverter.convert(bt0108));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                chargeTotalAmount.setText(bt0108.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(chargeTotalAmount);
             }
 
             if (!bg0022.getBT0107SumOfAllowancesOnDocumentLevel().isEmpty()) {
-                Double bt0107 = bg0022.getBT0107SumOfAllowancesOnDocumentLevel(0).getValue();
+                BigDecimal bt0107 = bg0022.getBT0107SumOfAllowancesOnDocumentLevel(0).getValue();
                 Element allowanceTotalAmount = new Element("AllowanceTotalAmount", ramNs);
-                try {
-                    allowanceTotalAmount.setText(dblStrConverter.convert(bt0107));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(allowanceTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                allowanceTotalAmount.setText(bt0107.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(allowanceTotalAmount);
             }
-
 
             if (!bg0022.getBT0109InvoiceTotalAmountWithoutVat().isEmpty()) {
-                Double bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0).getValue();
+                BigDecimal bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0).getValue();
                 Element taxBasisTotalAmount = new Element("TaxBasisTotalAmount", ramNs);
-                try {
-                    taxBasisTotalAmount.setText(dblStrConverter.convert(bt0109));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(taxBasisTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                taxBasisTotalAmount.setText(bt0109.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(taxBasisTotalAmount);
             }
 
-            Element taxTotalAmount = taxTotalAmount(errors, callingLocation, dblStrConverter, ramNs, bg0022, invoice);
-            if(taxTotalAmount!=null) {
+            Element taxTotalAmount = taxTotalAmount(errors, callingLocation, ramNs, bg0022, invoice);
+            if (taxTotalAmount != null) {
                 specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
             }
 
             //FIXME BT-111
 
             if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
-                Double bt0114 = bg0022.getBT0114RoundingAmount(0).getValue();
+                BigDecimal bt0114 = bg0022.getBT0114RoundingAmount(0).getValue();
                 Element roundingAmount = new Element("RoundingAmount", ramNs);
-                try {
-                    roundingAmount.setText(dblStrConverter.convert(bt0114));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                roundingAmount.setText(bt0114.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(roundingAmount);
             }
 
             if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
-                Double bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+                BigDecimal bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0).getValue();
                 Element grandTotalAmount = new Element("GrandTotalAmount", ramNs);
-                try {
-                    grandTotalAmount.setText(dblStrConverter.convert(bt0112));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(grandTotalAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                grandTotalAmount.setText(bt0112.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(grandTotalAmount);
             }
 
             if (!bg0022.getBT0113PaidAmount().isEmpty()) {
-                Double bt0113 = bg0022.getBT0113PaidAmount(0).getValue();
+                BigDecimal bt0113 = bg0022.getBT0113PaidAmount(0).getValue();
                 Element totalPrepaidAmount = new Element("TotalPrepaidAmount", ramNs);
-                try {
-                    totalPrepaidAmount.setText(dblStrConverter.convert(bt0113));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(totalPrepaidAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                totalPrepaidAmount.setText(bt0113.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(totalPrepaidAmount);
             }
 
             if (!bg0022.getBT0115AmountDueForPayment().isEmpty()) {
-                Double bt0115 = bg0022.getBT0115AmountDueForPayment(0).getValue();
+                BigDecimal bt0115 = bg0022.getBT0115AmountDueForPayment(0).getValue();
                 Element duePayableAmount = new Element("DuePayableAmount", ramNs);
-                try {
-                    duePayableAmount.setText(dblStrConverter.convert(bt0115));
-                    specifiedTradeSettlementHeaderMonetarySummation.addContent(duePayableAmount);
-                } catch (ConversionFailedException e) {
-                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                            e.getMessage(),
-                            callingLocation,
-                            ErrorCode.Action.HARDCODED_MAP,
-                            ErrorCode.Error.INVALID,
-                            e
-                    )));
-                }
+                duePayableAmount.setText(bt0115.setScale(2, RoundingMode.HALF_UP).toString());
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(duePayableAmount);
             }
         }
     }
 
-    private Element taxTotalAmount(List<IConversionIssue> errors, ErrorCode.Location callingLocation, TypeConverter<Double, String> dblStrConverter, Namespace ramNs, BG0022DocumentTotals bg0022, BG0000Invoice invoice) {
+    private Element taxTotalAmount(List<IConversionIssue> errors, ErrorCode.Location callingLocation, Namespace ramNs, BG0022DocumentTotals bg0022, BG0000Invoice invoice) {
 
         Element taxTotalAmount = null;
         if (!bg0022.getBT0110InvoiceTotalVatAmount().isEmpty()) {
-            Double bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();
+            BigDecimal bt0110 = bg0022.getBT0110InvoiceTotalVatAmount(0).getValue();
             taxTotalAmount = new Element("TaxTotalAmount", ramNs);
-            try {
-                taxTotalAmount.setText(dblStrConverter.convert(bt0110));
+            taxTotalAmount.setText(bt0110.setScale(2, RoundingMode.HALF_UP).toString());
 
-                if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                    Iso4217CurrenciesFundsCodes bt0005 = invoice.getBT0005InvoiceCurrencyCode(0).getValue();
-                    taxTotalAmount.setAttribute("currencyID", bt0005.getCode());
-                }
-
-
-            } catch (ConversionFailedException e) {
-                errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                        e.getMessage(),
-                        callingLocation,
-                        ErrorCode.Action.HARDCODED_MAP,
-                        ErrorCode.Error.INVALID,
-                        e
-                )));
+            if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                Iso4217CurrenciesFundsCodes bt0005 = invoice.getBT0005InvoiceCurrencyCode(0).getValue();
+                taxTotalAmount.setAttribute("currencyID", bt0005.getCode());
             }
         }
         return taxTotalAmount;

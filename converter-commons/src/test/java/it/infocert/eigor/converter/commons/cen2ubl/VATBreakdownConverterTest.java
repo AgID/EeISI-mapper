@@ -10,6 +10,8 @@ import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertTrue;
 
 public class VATBreakdownConverterTest {
@@ -48,8 +50,8 @@ public class VATBreakdownConverterTest {
         BG0000Invoice invoice = new BG0000Invoice();
 
         BG0022DocumentTotals bg0022 = new BG0022DocumentTotals();
-        bg0022.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(1000d));
-        bg0022.getBT0111InvoiceTotalVatAmountInAccountingCurrency().add(new BT0111InvoiceTotalVatAmountInAccountingCurrency(666d));
+        bg0022.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(new BigDecimal(1000)));
+        bg0022.getBT0111InvoiceTotalVatAmountInAccountingCurrency().add(new BT0111InvoiceTotalVatAmountInAccountingCurrency(new BigDecimal(666)));
         invoice.getBG0022DocumentTotals().add(bg0022);
 
         BT0005InvoiceCurrencyCode bt0005 = new BT0005InvoiceCurrencyCode(Iso4217CurrenciesFundsCodes.EUR);
@@ -61,8 +63,8 @@ public class VATBreakdownConverterTest {
         BG0000Invoice invoice = new BG0000Invoice();
 
         BG0022DocumentTotals bg0022 = new BG0022DocumentTotals();
-        bg0022.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(666d));
-        bg0022.getBT0111InvoiceTotalVatAmountInAccountingCurrency().add(new BT0111InvoiceTotalVatAmountInAccountingCurrency(1000d));
+        bg0022.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(new BigDecimal(666)));
+        bg0022.getBT0111InvoiceTotalVatAmountInAccountingCurrency().add(new BT0111InvoiceTotalVatAmountInAccountingCurrency(new BigDecimal(1000)));
         invoice.getBG0022DocumentTotals().add(bg0022);
 
         BT0005InvoiceCurrencyCode bt0005 = new BT0005InvoiceCurrencyCode(Iso4217CurrenciesFundsCodes.KPW);

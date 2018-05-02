@@ -14,6 +14,7 @@ import org.jdom2.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -161,9 +162,9 @@ public class InvoiceLineConverterTest {
 
         BG0029PriceDetails bg0029 = new BG0029PriceDetails();
 
-        bg0029.getBT0148ItemGrossPrice().add(new BT0148ItemGrossPrice(1D));
+        bg0029.getBT0148ItemGrossPrice().add(new BT0148ItemGrossPrice(BigDecimal.ONE));
 
-        BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(100D);
+        BT0149ItemPriceBaseQuantity bt0149 = new BT0149ItemPriceBaseQuantity(new BigDecimal(100));
         bg0029.getBT0149ItemPriceBaseQuantity().add(bt0149);
 
         BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = new BT0150ItemPriceBaseQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA);

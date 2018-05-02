@@ -26,13 +26,13 @@ public class ConversionRegistry {
             LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
             StringToUnitOfMeasureConverter.newConverter(),
             LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
-            StringToDoubleConverter.newConverter(),
+            StringToBigDecimalConverter.newConverter(),
             StringToStringConverter.newConverter(),
             JavaLocalDateToStringConverter.newConverter(),
             JavaLocalDateToStringConverter.newConverter("dd-MMM-yy"),
             Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
             Iso31661CountryCodesToStringConverter.newConverter(),
-            DoubleToStringConverter.newConverter ("#.00"),
+            BigDecimalToStringConverter.newConverter ("#.00"),
             UnitOfMeasureCodesToStringConverter.newConverter()
     );
 

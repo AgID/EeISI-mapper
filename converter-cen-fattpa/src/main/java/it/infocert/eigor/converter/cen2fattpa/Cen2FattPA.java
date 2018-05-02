@@ -26,6 +26,7 @@ import javax.xml.bind.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -55,12 +56,12 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             LookUpEnumConversion.newConverter(Untdid5305DutyTaxFeeCategories.class),
             StringToUnitOfMeasureConverter.newConverter(),
             LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
-            StringToDoubleConverter.newConverter(),
+            StringToBigDecimalConverter.newConverter(),
             StringToStringConverter.newConverter(),
             JavaLocalDateToStringConverter.newConverter(),
             Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
             Iso31661CountryCodesToStringConverter.newConverter(),
-            DoubleToStringConverter.newConverter("#.00"),
+            BigDecimalToStringConverter.newConverter("#.00"),
             UnitOfMeasureCodesToStringConverter.newConverter(),
             Untdid1001InvoiceTypeCodeToItalianCodeStringConverter.newConverter(),
             Untdid4461PaymentMeansCodeToItalianCodeString.newConverter(),
