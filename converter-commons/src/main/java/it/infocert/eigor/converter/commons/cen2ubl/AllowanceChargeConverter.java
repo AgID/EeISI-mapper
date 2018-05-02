@@ -4,7 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.DoubleToStringConverter;
+import it.infocert.eigor.api.conversion.converter.BigDecimalToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -14,13 +14,14 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class AllowanceChargeConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<Double, String> dblStrConverter = DoubleToStringConverter.newConverter("#0.00");
+        TypeConverter<BigDecimal, String> dblStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
 
         Iso4217CurrenciesFundsCodes currencyCode = null;
         if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
