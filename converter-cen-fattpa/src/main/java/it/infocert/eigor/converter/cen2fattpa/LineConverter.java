@@ -82,11 +82,50 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             mapBG20(invoice, fatturaElettronicaBody, errors, callingLocation);
             mapBG21(invoice, fatturaElettronicaBody, errors, callingLocation);
             mapBG25(invoice, fatturaElettronicaBody, errors, callingLocation);
+            mapBG13(invoice, fatturaElettronicaBody, errors, callingLocation);
 
             mapLineChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
             mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
 
             mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
+        }
+    }
+
+    private void mapBG13(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+        if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
+
+            List<DettaglioLineeType> dettaglioLineeList = fatturaElettronicaBody.getDatiBeniServizi().getDettaglioLinee();
+            if (dettaglioLineeList != null && !dettaglioLineeList.isEmpty()) {
+                BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
+
+                if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
+                    BT0070DeliverToPartyName bt0070 = bg0013.getBT0070DeliverToPartyName(0);
+                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato("BT-70");
+                    altriDatiGestionali.setRiferimentoTesto(bt0070.getValue());
+                    for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    }
+                }
+
+                if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
+                    Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
+                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+                    altriDatiGestionali.setTipoDato("BT-71");
+                    altriDatiGestionali.setRiferimentoTesto(bt0071.getIdentifier());
+                    for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
+                        dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
+                    }
+
+                    if (bt0071.getIdentificationSchema() != null) {
+                        AltriDatiGestionaliType datiGestionali = new AltriDatiGestionaliType();
+                        datiGestionali.setTipoDato("BT-71-1");
+                        datiGestionali.setRiferimentoTesto(bt0071.getIdentificationSchema());
+                        for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
+                            dettaglioLinee.getAltriDatiGestionali().add(datiGestionali);}
+                    }
+                }
+            }
         }
     }
 
@@ -739,7 +778,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
 
-                BigDecimal vatLine = BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP);
+                BigDecimal vatLine = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
                     BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
                     if (!lineVatInformation.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
@@ -1057,9 +1096,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 dettaglioLinee.setNumeroLinea(9999);
                 dettaglioLinee.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
                 String reason;
-                String baseAmount = "N/A" ;
-                String percentage = "N/A" ;
-                String converted = "" ;
+                String baseAmount = "N/A";
+                String percentage = "N/A";
+                String converted = "";
                 if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
                     Untdid7161SpecialServicesCodes code = charges.getBT0105DocumentLevelChargeReasonCode(0).getValue();
                     TypeConverter<Untdid7161SpecialServicesCodes, String> converter = Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter();
