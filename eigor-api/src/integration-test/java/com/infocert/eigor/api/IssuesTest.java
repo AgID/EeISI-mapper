@@ -124,6 +124,12 @@ public class IssuesTest {
 
 
     @Test
+    public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
+
+    }
+
+    @Test
     public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
         assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
 
