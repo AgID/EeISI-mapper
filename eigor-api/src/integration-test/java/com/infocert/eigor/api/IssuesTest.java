@@ -50,6 +50,13 @@ public class IssuesTest {
                 .build();
     }
 
+    @Test
+    public void issue279FromUblToFattPA() {
+        ConversionResult<byte[]> conversionResult = assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
+        String s = new String(conversionResult.getResult());
+        int i = s.indexOf("<DataOraConsegna>");
+        System.out.println(s.substring(i));
+    }
 
     @Test
     public void issue278FromUblToFattPA() {
@@ -240,9 +247,11 @@ public class IssuesTest {
         return issuesDescription.toString();
     }
 
-    private void assertConversionWithoutErrors(String invoice, String source, String target) {
+    private ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target) {
         InputStream invoiceStream = invoiceAsStream(invoice);
         ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
         Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+        return convert;
     }
+
 }
