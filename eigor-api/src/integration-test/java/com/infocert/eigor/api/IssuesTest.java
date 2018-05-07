@@ -50,12 +50,17 @@ public class IssuesTest {
                 .build();
     }
 
+
     @Test
-    public void issue279FromUblToFattPA() {
-        ConversionResult<byte[]> conversionResult = assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
-        String s = new String(conversionResult.getResult());
-        int i = s.indexOf("<DataOraConsegna>");
-        System.out.println(s.substring(i));
+    public void issue279FromUblToFattPA() throws Exception {
+        ConversionResult<byte[]> convert = assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiTrasporto']//*[local-name()='DataOraConsegna']/text()");
+
+        Assert.assertTrue(convert.getIssues().isEmpty()); // no warnings for text exceeding length limit
+
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "2017-10-15T00:00:00", evaluate);
     }
 
     @Test

@@ -9,6 +9,12 @@
 
                       parseMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateAdapter.unmarshal"
                       printMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateAdapter.marshal"/>
+
+        <jxb:javaType name="javax.xml.datatype.XMLGregorianCalendar"
+                      xmlType="xs:dateTime"
+
+                      parseMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateTimeAdapter.unmarshal"
+                      printMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateTimeAdapter.marshal"/>
     </jxb:globalBindings>
 
 </jxb:bindings>
