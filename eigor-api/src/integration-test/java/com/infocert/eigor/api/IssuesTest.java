@@ -197,6 +197,26 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue207() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-207-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String bt70 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-70']//*[local-name()='RiferimentoTesto']/text()");
+        Assert.assertTrue(bt70!=null && !bt70.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Delivery party name", bt70);
+
+        String bt71 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71']//*[local-name()='RiferimentoTesto']/text()");
+        Assert.assertTrue(bt71!=null && !bt71.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "6754238987648", bt71);
+
+        String bt71_1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71-1']//*[local-name()='RiferimentoTesto']/text()");
+        Assert.assertTrue(bt71_1!=null && !bt71_1.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "scheme00", bt71_1);
+    }
+
+    @Test
     public void issue208() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-208-ubl.xml");
