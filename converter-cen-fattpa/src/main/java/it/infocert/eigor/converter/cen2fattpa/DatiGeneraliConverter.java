@@ -45,7 +45,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
-            final String message = "Too many FatturaElettronicaBody found in current FatturaElettronica" ;
+            final String message = "Too many FatturaElettronicaBody found in current FatturaElettronica";
             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                     message,
                     callingLocation,
@@ -55,7 +55,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "FatturaElettronicaBody")
             )));
         } else if (size < 1) {
-            final String message = "No FatturaElettronicaBody found in current FatturaElettronica" ;
+            final String message = "No FatturaElettronicaBody found in current FatturaElettronica";
             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                     message,
                     callingLocation,
@@ -72,7 +72,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
             addIndirizzo(invoice, fatturaElettronica, errors);
             addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
-            addRiferimentoNormativo(invoice, body, errors);
+            addRiferimentoNormativo(invoice, body, errors, callingLocation);
             addDettaglioPagamento(invoice, body, errors, callingLocation);
         }
     }
@@ -99,7 +99,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                                 dettaglioPagamento.setBeneficiario(String.format("%s %s", beneficiario, bt0085Value));
                             }
                         } else {
-                            final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody" ;
+                            final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody";
                             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                     message,
                                     callingLocation,
@@ -110,7 +110,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                             )));
                         }
                     } else {
-                        final String message = "No DatiPagamento was found in current FatturaElettronicaBody" ;
+                        final String message = "No DatiPagamento was found in current FatturaElettronicaBody";
                         errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                 message,
                                 callingLocation,
@@ -208,7 +208,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
                 }
             } else {
-                final String message = "No DatiGeneraliDocumento was found in current DatiGenerali" ;
+                final String message = "No DatiGeneraliDocumento was found in current DatiGenerali";
                 errors.add(ConversionIssue.newError(new EigorRuntimeException(
                         message,
                         callingLocation,
@@ -218,7 +218,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiGeneraliDocumento"))));
             }
         } else {
-            final String message = "No DatiGenerali was found in current FatturaElettronicaBody" ;
+            final String message = "No DatiGenerali was found in current FatturaElettronicaBody";
             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                     message,
                     callingLocation,
@@ -282,9 +282,9 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     final List<BT0076DeliverToAddressLine2> addressLines2 = address.getBT0076DeliverToAddressLine2();
                     final List<BT0165DeliverToAddressLine3> addressLines3 = address.getBT0165DeliverToAddressLine3();
                     final StringBuilder sb = new StringBuilder();
-                    String addressLine1Value = "" ;
-                    String addressLine2Value = "" ;
-                    String addressLine3Value = "" ;
+                    String addressLine1Value = "";
+                    String addressLine2Value = "";
+                    String addressLine3Value = "";
                     if (!addressLines1.isEmpty()) {
                         final BT0075DeliverToAddressLine1 addressLine1 = addressLines1.get(0);
                         addressLine1Value = addressLine1.getValue();
@@ -412,7 +412,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
                     if (!deliverToCities.isEmpty()) {
                         final String city = deliverToCities.get(0).getValue();
-                        final String value = (city != null && !"".equalsIgnoreCase(city.trim())) ? city : "undefined" ;
+                        final String value = (city != null && !"".equalsIgnoreCase(city.trim())) ? city : "undefined";
                         indirizzoResa.setComune(value);
                     }
 
@@ -440,7 +440,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
 
                 } else {
-                    final String message = "No [BT-80] DeliverToCountryCode was found in current [BG-15] SellerPostalAddress" ;
+                    final String message = "No [BT-80] DeliverToCountryCode was found in current [BG-15] SellerPostalAddress";
                     final EigorRuntimeException e = new EigorRuntimeException(
                             message,
                             callingLocation,
@@ -459,18 +459,36 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
     }
 
-    private void addRiferimentoNormativo(BG0000Invoice invoice, FatturaElettronicaBodyType body, List<IConversionIssue> errors) {
-        List<BG0023VatBreakdown> breakdowns = invoice.getBG0023VatBreakdown();
-        if (!breakdowns.isEmpty()) {
-            List<BT0120VatExemptionReasonText> reasons = breakdowns.get(0).getBT0120VatExemptionReasonText();
-            if (!reasons.isEmpty()) {
-                String reason = reasons.get(0).getValue();
-                DatiBeniServiziType datiBeniServizi = Optional.fromNullable(body.getDatiBeniServizi()).or(new DatiBeniServiziType());
-                List<DatiRiepilogoType> datiRiepilogoList = datiBeniServizi.getDatiRiepilogo();
-                if (datiRiepilogoList.isEmpty()) datiRiepilogoList.add(new DatiRiepilogoType());
-                DatiRiepilogoType datiRiepilogo = datiRiepilogoList.get(0);
-                datiRiepilogo.setRiferimentoNormativo(reason);
-                body.setDatiBeniServizi(datiBeniServizi);
+    private void addRiferimentoNormativo(BG0000Invoice invoice, FatturaElettronicaBodyType body, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+
+        DatiBeniServiziType datiBeniServizi = body.getDatiBeniServizi();
+        if (datiBeniServizi != null) {
+            List<DatiRiepilogoType> datiRiepilogoList = datiBeniServizi.getDatiRiepilogo();
+            if (datiRiepilogoList != null) {
+                List<BG0023VatBreakdown> breakdowns = invoice.getBG0023VatBreakdown();
+
+                if (breakdowns.size() == datiRiepilogoList.size()) {
+                    for (int i = 0; i < breakdowns.size(); i++) {
+                        BG0023VatBreakdown bg0023 = breakdowns.get(i);
+
+                        if (!bg0023.getBT0120VatExemptionReasonText().isEmpty()) {
+                            String reason = bg0023.getBT0120VatExemptionReasonText().get(0).getValue();
+                            DatiRiepilogoType datiRiepilogo = datiRiepilogoList.get(i);
+                            datiRiepilogo.setRiferimentoNormativo(reason);
+                            body.setDatiBeniServizi(datiBeniServizi);
+                        }
+                    }
+                } else {
+                    final String message = "[BG-23] VatBreakdowns list is different size than number of DatiRiepilogo. [BT-120] VatExemptionReasonText were not mapped.";
+                    final EigorRuntimeException e = new EigorRuntimeException(
+                            message,
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.ILLEGAL_VALUE
+                    );
+                    log.error(e.getMessage(), e);
+                    errors.add(ConversionIssue.newError(e));
+                }
             }
         }
     }

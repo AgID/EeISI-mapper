@@ -931,7 +931,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                     try {
                         converted = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
-                        dettaglioLinee.setRiferimentoAmministrazione(converted);
+                        if(!converted.trim().isEmpty()){
+                            dettaglioLinee.setRiferimentoAmministrazione(converted);
+                        }
                     } catch (EigorRuntimeException | IllegalArgumentException e) {
                         errors.add(ConversionIssue.newError(
                                 e,

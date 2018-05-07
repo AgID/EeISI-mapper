@@ -50,6 +50,19 @@ public class IssuesTest {
                 .build();
     }
 
+    @Test
+    public void issue279FromUblToFattPA() {
+        ConversionResult<byte[]> conversionResult = assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
+        String s = new String(conversionResult.getResult());
+        int i = s.indexOf("<DataOraConsegna>");
+        System.out.println(s.substring(i));
+    }
+
+    @Test
+    public void issue278FromUblToFattPA() {
+        assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
+    }
+
     @Test @Ignore
     public void issue261FromFattPAToUbl() {
         assertConversionWithoutErrors("/issues/issue-261-fattpa.xml", "fatturapa", "ubl");
@@ -124,6 +137,12 @@ public class IssuesTest {
 
 
     @Test
+    public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
+
+    }
+
+    @Test
     public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
         assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
 
@@ -190,6 +209,19 @@ public class IssuesTest {
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "PARTY NAME ACCOUNT NAME", evaluate);
     }
 
+    @Test
+    public void issue238() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-238-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
+
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Text about exemption reason", evaluate);
+    }
+
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
         InputSource is = new InputSource( xmlStringReader );
@@ -240,9 +272,10 @@ public class IssuesTest {
         return issuesDescription.toString();
     }
 
-    private void assertConversionWithoutErrors(String invoice, String source, String target) {
+    private ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target) {
         InputStream invoiceStream = invoiceAsStream(invoice);
         ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
         Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+        return convert;
     }
 }
