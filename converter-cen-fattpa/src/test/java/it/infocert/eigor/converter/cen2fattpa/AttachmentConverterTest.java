@@ -49,10 +49,10 @@ public class AttachmentConverterTest {
         BG0000Invoice invoice = makeInvoiceWithBT122AndBT125();
         converter.map(invoice, fatturaElettronica, new ArrayList<IConversionIssue>(), ErrorCode.Location.FATTPA_OUT);
         AllegatiType allegati = fatturaElettronica.getFatturaElettronicaBody().get(0).getAllegati().get(0);
-        assertThat(allegati.getNomeAttachment(), is("file.txt"));
+        assertThat(allegati.getNomeAttachment(), is("Test Reference-file.txt"));
         assertThat(allegati.getDescrizioneAttachment(), is("description"));
         assertThat(allegati.getAttachment(), is("TESTCONTENT".getBytes()));
-//        assertThat(allegati.getFormatoAttachment(), is("csv"));
+        assertThat(allegati.getFormatoAttachment(), is("csv"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class AttachmentConverterTest {
         assertThat(allegatiAttached.getAttachment(), is("external".getBytes()));
 
         AllegatiType allegatiReference = fatturaElettronica.getFatturaElettronicaBody().get(0).getAllegati().get(1);
-        assertThat(allegatiReference.getNomeAttachment(), is("file.txt"));
+        assertThat(allegatiReference.getNomeAttachment(), is("Test Reference-file.txt"));
         assertThat(allegatiReference.getAttachment(), is("TESTCONTENT".getBytes()));
     }
 
