@@ -175,7 +175,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                         try {
                             allegatiEmbedded.setAttachment(FileUtils.readFileToByteArray(new File(file.getFilePath())));
                             allegatiEmbedded.setFormatoAttachment(new AttachmentUtil().getShortFileFormat(file.getMimeType()));
-                            allegatiEmbedded.setNomeAttachment(file.getFileName());
+                            allegatiEmbedded.setNomeAttachment(String.format("%s-%s",documentReference,file.getFileName()));
                             fatturaElettronicaBody.getAllegati().add(allegatiEmbedded);
                         } catch (IOException e) {
                             log.error(e.getMessage(), e);
