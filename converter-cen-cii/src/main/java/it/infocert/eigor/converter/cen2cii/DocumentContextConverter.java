@@ -3,14 +3,16 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+//import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+//import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.joda.time.LocalDate;
+//import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -22,7 +24,9 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
+        EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
+
+//        TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -35,10 +39,9 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
             rootElement.addContent(exchangedDocumentContext);
         }
         final Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
-        final Element gId = new Element("ID", ramNs).setText("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
+        final Element gId = new Element("ID", ramNs).setText(configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context"));
         final Element businessProcessSpecifiedDocumentContextParameter = new Element("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
-        final Element bId = new Element("ID", ramNs).setText("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
-
+        final Element bId = new Element("ID", ramNs).setText(configuration.getMandatoryString("eigor.converter.cen-cii.business-context"));
         businessProcessSpecifiedDocumentContextParameter.addContent(bId);
         exchangedDocumentContext.addContent(businessProcessSpecifiedDocumentContextParameter);
         guidelineSpecifiedDocumentContextParameter.addContent(gId);

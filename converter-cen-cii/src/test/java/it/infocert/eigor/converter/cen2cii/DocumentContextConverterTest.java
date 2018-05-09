@@ -1,10 +1,12 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0002ProcessControl;
-import it.infocert.eigor.model.core.model.BT0024SpecificationIdentifier;
+//import it.infocert.eigor.model.core.model.BT0024SpecificationIdentifier;
 import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -25,30 +27,32 @@ public class DocumentContextConverterTest {
 
     private Document document;
     private DocumentContextConverter converter;
+    private EigorConfiguration configuration;
 
     @Before
     public void setUp() {
         document = createInvoiceWithRootNode();
         converter = new DocumentContextConverter();
+        configuration = DefaultEigorConfigurationLoader.configuration();
     }
 
+//    @Test
+//    public void ifBT0024ThenInvoiceWillHaveGuidelineSpecifiedDocumentContextParameterId() {
+//        BG0000Invoice invoice = createInvoiceWithBT0024();
+//        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+//
+//        Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
+//        assertNotNull(exchangedDocumentContext);
+//
+//        Element guidelineSpecifiedDocumentContextParameter = exchangedDocumentContext.getChild("GuidelineSpecifiedDocumentContextParameter", ramNs);
+//        assertNotNull(guidelineSpecifiedDocumentContextParameter);
+//
+//        Element guidelineSpecifiedDocumentContextParameterId = guidelineSpecifiedDocumentContextParameter.getChild("ID", ramNs);
+//        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("TESTID"));
+//    }
+
     @Test
-    public void ifBT0024ThenInvoiceWillHaveGuidelineSpecifiedDocumentContextParameterId() {
-        BG0000Invoice invoice = createInvoiceWithBT0024();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
-
-        Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
-        assertNotNull(exchangedDocumentContext);
-
-        Element guidelineSpecifiedDocumentContextParameter = exchangedDocumentContext.getChild("GuidelineSpecifiedDocumentContextParameter", ramNs);
-        assertNotNull(guidelineSpecifiedDocumentContextParameter);
-
-        Element guidelineSpecifiedDocumentContextParameterId = guidelineSpecifiedDocumentContextParameter.getChild("ID", ramNs);
-        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"));
-    }
-
-    @Test
-    public void ifNoBT0024ThenInvoiceWillHaveDefaultValueForGuidelineSpecifiedDocumentContextParameterId() {
+    public void ifNoBT0024ThenInvoiceWillHaveDefaultValueForGuidelineSpecifiedDocumentContextParameterIdFromConfiguration() {
         BG0000Invoice invoice = createInvoiceWithBG0002();
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
@@ -59,17 +63,32 @@ public class DocumentContextConverterTest {
         assertNotNull(guidelineSpecifiedDocumentContextParameter);
 
         Element guidelineSpecifiedDocumentContextParameterId = guidelineSpecifiedDocumentContextParameter.getChild("ID", ramNs);
-        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"));
+        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is(configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context")));
     }
 
-    private BG0000Invoice createInvoiceWithBT0024() {
+    @Test
+    public void invoiceWillHaveValueForBusinessProcessSpecifiedDocumentContextParameterIdFromConfiguration() {
         BG0000Invoice invoice = createInvoiceWithBG0002();
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
 
-        BT0024SpecificationIdentifier bt0024 = new BT0024SpecificationIdentifier("TESTID");
-        invoice.getBG0002ProcessControl(0).getBT0024SpecificationIdentifier().add(bt0024);
+        Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
+        assertNotNull(exchangedDocumentContext);
 
-        return invoice;
+        Element businessProcessSpecifiedDocumentContextParameter = exchangedDocumentContext.getChild("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
+        assertNotNull(businessProcessSpecifiedDocumentContextParameter);
+
+        Element guidelineSpecifiedDocumentContextParameterId = businessProcessSpecifiedDocumentContextParameter.getChild("ID", ramNs);
+        assertThat(guidelineSpecifiedDocumentContextParameterId.getText(), is(configuration.getMandatoryString("eigor.converter.cen-cii.business-context")));
     }
+
+//    private BG0000Invoice createInvoiceWithBT0024() {
+//        BG0000Invoice invoice = createInvoiceWithBG0002();
+//
+//        BT0024SpecificationIdentifier bt0024 = new BT0024SpecificationIdentifier("TESTID");
+//        invoice.getBG0002ProcessControl(0).getBT0024SpecificationIdentifier().add(bt0024);
+//
+//        return invoice;
+//    }
 
     private BG0000Invoice createInvoiceWithBG0002() {
         BG0000Invoice invoice = new BG0000Invoice();
