@@ -17,6 +17,8 @@ public class StringToUnitOfMeasureConverterTest {
     @Test public void shouldFindByDescription() throws ConversionFailedException {
         assertThat(sut.convert("Each"),
                 is(UnitOfMeasureCodes.EACH_EA) );
+        assertThat(sut.convert("One"),
+                is(UnitOfMeasureCodes.C62_ONE));
     }
 
     @Test public void shouldThrowAnExceptionWhenUnitIsUnknown() {

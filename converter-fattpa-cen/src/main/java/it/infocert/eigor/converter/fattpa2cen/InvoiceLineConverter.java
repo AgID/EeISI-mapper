@@ -78,10 +78,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                         .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                         .build());
                                 errors.add(ConversionIssue.newError(ere));
-                                bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
+                                bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.C62_ONE));
                             }
                         } else {
-                            bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.EACH_EA));
+                            bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.C62_ONE));
                         }
                         Element prezzoTotale = dettaglioLinee.getChild("PrezzoTotale");
                         if (prezzoTotale != null) {

@@ -64,7 +64,7 @@ public class InvoiceLineConverterTest {
     public void shouldApplyBT130Default() throws Exception {
         sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
         final BT0130InvoicedQuantityUnitOfMeasureCode unitOfMeasureCode = invoice.getBG0025InvoiceLine(0).getBT0130InvoicedQuantityUnitOfMeasureCode(0);
-        assertEquals(UnitOfMeasureCodes.EACH_EA, unitOfMeasureCode.getValue());
+        assertEquals(UnitOfMeasureCodes.C62_ONE, unitOfMeasureCode.getValue());
     }
 
     private Document createXmlInvoice(Document document) {
