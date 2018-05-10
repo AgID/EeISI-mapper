@@ -2,6 +2,7 @@
 <jxb:bindings version="2.1"
               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              xmlns:fpa="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
               schemaLocation="../../../../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
     <jxb:globalBindings>
         <jxb:javaType name="javax.xml.datatype.XMLGregorianCalendar"
@@ -15,6 +16,12 @@
 
                       parseMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateTimeAdapter.unmarshal"
                       printMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.DateTimeAdapter.marshal"/>
+
+        <jxb:javaType name="java.math.BigDecimal"
+                      xmlType="fpa:RateType"
+
+                      parseMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.RateAdapter.unmarshal"
+                      printMethod="it.infocert.eigor.converter.cen2fattpa.jaxbindings.RateAdapter.marshal"/>
     </jxb:globalBindings>
 
 </jxb:bindings>
