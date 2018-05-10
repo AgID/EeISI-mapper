@@ -122,7 +122,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         datiGestionali.setTipoDato("BT-71-1");
                         datiGestionali.setRiferimentoTesto(bt0071.getIdentificationSchema());
                         for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
-                            dettaglioLinee.getAltriDatiGestionali().add(datiGestionali);}
+                            dettaglioLinee.getAltriDatiGestionali().add(datiGestionali);
+                        }
                     }
                 }
             }
@@ -473,6 +474,42 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 if (!invoiceLine.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
                     BT0133InvoiceLineBuyerAccountingReference invoiceLineBuyerAccountingReference = invoiceLine.getBT0133InvoiceLineBuyerAccountingReference(0);
                     dettaglioLinee.setRiferimentoAmministrazione(invoiceLineBuyerAccountingReference.getValue());
+                }
+
+                if (!invoiceLine.getBG0026InvoiceLinePeriod().isEmpty()) {
+                    BG0026InvoiceLinePeriod bg0026 = invoiceLine.getBG0026InvoiceLinePeriod(0);
+
+                    if (!bg0026.getBT0134InvoiceLinePeriodStartDate().isEmpty()) {
+                        BT0134InvoiceLinePeriodStartDate bt0134 = bg0026.getBT0134InvoiceLinePeriodStartDate(0);
+                        try {
+                            dettaglioLinee.setDataInizioPeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, bt0134.getValue()));
+                        } catch (RuntimeException e) {
+                            log.error("Failed converting BT-134.");
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE
+                            ));
+                        }
+                    }
+
+                    if (!bg0026.getBT0135InvoiceLinePeriodEndDate().isEmpty()) {
+                        BT0135InvoiceLinePeriodEndDate bt0135 = bg0026.getBT0135InvoiceLinePeriodEndDate(0);
+                        try {
+                            dettaglioLinee.setDataFinePeriodo(conversionRegistry.convert(LocalDate.class, XMLGregorianCalendar.class, bt0135.getValue()));
+                        } catch (RuntimeException e) {
+                            log.error("Failed converting BT-135.");
+                            errors.add(ConversionIssue.newError(
+                                    e,
+                                    e.getMessage(),
+                                    callingLocation,
+                                    ErrorCode.Action.HARDCODED_MAP,
+                                    ErrorCode.Error.ILLEGAL_VALUE
+                            ));
+                        }
+                    }
                 }
 
                 if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
@@ -931,7 +968,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     Untdid5189ChargeAllowanceDescriptionCodes code = allowances.getBT0098DocumentLevelAllowanceReasonCode(0).getValue();
                     try {
                         converted = conversionRegistry.convert(Untdid5189ChargeAllowanceDescriptionCodes.class, String.class, code);
-                        if(!converted.trim().isEmpty()){
+                        if (!converted.trim().isEmpty()) {
                             dettaglioLinee.setRiferimentoAmministrazione(converted);
                         }
                     } catch (EigorRuntimeException | IllegalArgumentException e) {

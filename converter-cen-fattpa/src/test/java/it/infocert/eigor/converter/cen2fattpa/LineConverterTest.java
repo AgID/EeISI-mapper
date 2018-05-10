@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -76,23 +77,32 @@ public class LineConverterTest {
     }
 
     @Test
-    public void shouldNotMapBt73And74IfOthersArePresent() throws Exception {
+    public void shouldMapBt134AndBt135EvenIfBt73And74ArePresent() throws Exception {
         final long now = System.currentTimeMillis();
         final long after = System.currentTimeMillis() + 1000;
 
         populateWithDates(now, after);
         populateWithBG20();
         populateWithBG25();
-        setupBG26(now, after);
+
+        final long bg26start = 1514764800000l;
+        final long bg26end = 1515974400000l;
+        setupBG26(bg26start, bg26end);
 
         convert();
 
         List<DettaglioLineeType> dettaglioLinee = fatturaElettronica.getFatturaElettronicaBody().get(0).getDatiBeniServizi().getDettaglioLinee();
 
-        for (DettaglioLineeType linea : dettaglioLinee) {
+        for (int i = 0; i < 5; i++) {
+            DettaglioLineeType linea = dettaglioLinee.get(i);
 
-            assertNull(linea.getDataInizioPeriodo());
-            assertNull(linea.getDataFinePeriodo());
+            assertThat(linea.getDataInizioPeriodo().getYear(), is(2018));
+            assertThat(linea.getDataInizioPeriodo().getMonth(), is(1));
+            assertThat(linea.getDataInizioPeriodo().getDay(), is(1));
+
+            assertThat(linea.getDataFinePeriodo().getYear(), is(2018));
+            assertThat(linea.getDataFinePeriodo().getMonth(), is(1));
+            assertThat(linea.getDataFinePeriodo().getDay(), is(15));
         }
     }
 
