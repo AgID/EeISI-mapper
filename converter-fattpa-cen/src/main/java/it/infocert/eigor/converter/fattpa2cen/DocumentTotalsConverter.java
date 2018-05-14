@@ -6,8 +6,11 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -196,29 +199,23 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             }
 
                             Element natura = datiCassaPrevidenziale.getChild("Natura");
-//                            if (natura != null) {
-//
-//                                if(!invoice.getBG0023VatBreakdown().isEmpty()){
-//                                    BG0023VatBreakdown bg0023 = invoice.getBG0023VatBreakdown(0);
-//                                    if(!bg0023.getBT0118VatCategoryCode().isEmpty()){
-//                                        BT0118VatCategoryCode bt0118 = bg0023.getBT0118VatCategoryCode(0);
-//                                    }
-//                                }
-//
-////                                If BT-118=N1,N2,N4 or N6 than BT-121 has the same values ?!
-//                                try {
-//                                    BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(Untdid5305DutyTaxFeeCategories.valueOf(natura.getText()));
-//                                } catch (RuntimeException e) {
-//                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-//                                            .location(callingLocation)
-//                                            .action(ErrorCode.Action.HARDCODED_MAP)
-//                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-//                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-//                                            .build());
-//                                    errors.add(ConversionIssue.newError(ere));
-//                                }
-////                                new BT0021InvoiceNoteSubjectCode()
-//                            }
+                            if (natura != null) {
+                                TypeConverter<String, Untdid5305DutyTaxFeeCategories> stringUntdid5305 =
+                                        ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
+                                try {
+                                    BT0102DocumentLevelChargeVatCategoryCode bt0102 =
+                                            new BT0102DocumentLevelChargeVatCategoryCode(stringUntdid5305.convert(natura.getText()));
+                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
+                                } catch (ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
 
                             Element riferimentoAmministrazione = datiCassaPrevidenziale.getChild("RiferimentoAmministrazione");
                             if (riferimentoAmministrazione != null) {
