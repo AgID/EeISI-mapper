@@ -867,7 +867,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
                 //ALLOWANCES
-                BigDecimal allowancesSum = BigDecimal.ZERO;
                 if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                     for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
                         DettaglioLineeType lineaSconto = new DettaglioLineeType();
@@ -886,7 +885,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         allowanceAmount = allowanceAmount.negate(); //allowanceAmount *= -1.0;
                         BigDecimal prezzo = allowanceAmount.setScale(2, RoundingMode.HALF_UP);
-                        allowancesSum = allowancesSum.add(prezzo);
                         lineaSconto.setPrezzoUnitario(prezzo);
                         lineaSconto.setPrezzoTotale(prezzo);
                         lineaSconto.setAliquotaIVA(vatLine);
@@ -917,7 +915,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
                 //CHARGES
-                BigDecimal chargesSum = BigDecimal.ZERO;
                 if (!invoiceLine.getBG0028InvoiceLineCharges().isEmpty()) {
                     for (BG0028InvoiceLineCharges invoiceLineCharges : invoiceLine.getBG0028InvoiceLineCharges()) {
                         DettaglioLineeType lineaMaggiorazione = new DettaglioLineeType();
@@ -932,7 +929,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         }
                         BigDecimal chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
                         BigDecimal prezzo = chargeAmount.setScale(2, RoundingMode.HALF_UP);
-                        chargesSum = chargesSum.add(prezzo);
                         lineaMaggiorazione.setPrezzoUnitario(prezzo);
                         lineaMaggiorazione.setPrezzoTotale(prezzo);
                         lineaMaggiorazione.setAliquotaIVA(vatLine);
