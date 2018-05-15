@@ -634,7 +634,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     BigDecimal itemNetPrice = priceDetails.getBT0146ItemNetPrice().isEmpty() ? BigDecimal.ZERO : priceDetails.getBT0146ItemNetPrice(0).getValue();
                     String quantityUnitOfMeasureCode = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty() ? "" : invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
-                    BigDecimal baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? BigDecimal.ONE : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
+                    BigDecimal baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ?
+                            BigDecimal.ONE.setScale(2, RoundingMode.HALF_UP) :
+                            priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue().setScale(2, RoundingMode.HALF_UP);
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     try {
@@ -682,7 +684,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (baseQuantity.compareTo(BigDecimal.ONE) > 0) {
                         AltriDatiGestionaliType altriDatiGestionaliQty = new AltriDatiGestionaliType();
                         altriDatiGestionaliQty.setTipoDato(IConstants.ITEM_BASE_QTY);
-                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity.setScale(2, RoundingMode.HALF_UP));
+                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity);
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
 
 
