@@ -67,6 +67,14 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 Element name = new Element("Name", ramNs);
                 name.setText(bt0044.getValue());
                 buyerTradeParty.addContent(name);
+            } else if(!bg0007.getBG0009BuyerContact().isEmpty()){
+                BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
+                if(!bg0009.getBT0056BuyerContactPoint().isEmpty()){
+                    BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
+                    Element name = new Element("Name", ramNs);
+                    name.setText(bt0056.getValue());
+                    buyerTradeParty.addContent(name);
+                }
             }
 
             Element specifiedLegalOrganization = new Element("SpecifiedLegalOrganization", ramNs);
