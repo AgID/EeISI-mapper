@@ -661,10 +661,20 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, zeroes.toString())
                         ));
                     }
-                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
-                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
-                        dettaglioLinee.setPrezzoTotale(value.setScale(2, RoundingMode.HALF_UP));
-                    }
+
+
+                    // prezzoTotale is (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
+
+                    final BigDecimal prezzoTotale = itemNetPrice.multiply(
+                            quantity.divide(baseQuantity, RoundingMode.HALF_UP))
+                            .subtract(getSumOfAllowancesForLine(invoiceLine).add(getSumOfChargesForLine(invoiceLine)));
+
+                    dettaglioLinee.setPrezzoTotale(prezzoTotale);
+
+//                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
+//                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
+//                        dettaglioLinee.setPrezzoTotale(value.setScale(2, RoundingMode.HALF_UP));
+//                    }
 
                     if (!priceDetails.getBT0147ItemPriceDiscount().isEmpty()) {
                         final BigDecimal itemPriceDiscount = priceDetails.getBT0147ItemPriceDiscount(0).getValue();
@@ -857,6 +867,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
                 //ALLOWANCES
+                BigDecimal allowancesSum = BigDecimal.ZERO;
                 if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                     for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
                         DettaglioLineeType lineaSconto = new DettaglioLineeType();
@@ -875,6 +886,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         allowanceAmount = allowanceAmount.negate(); //allowanceAmount *= -1.0;
                         BigDecimal prezzo = allowanceAmount.setScale(2, RoundingMode.HALF_UP);
+                        allowancesSum = allowancesSum.add(prezzo);
                         lineaSconto.setPrezzoUnitario(prezzo);
                         lineaSconto.setPrezzoTotale(prezzo);
                         lineaSconto.setAliquotaIVA(vatLine);
@@ -905,6 +917,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 }
                 //CHARGES
+                BigDecimal chargesSum = BigDecimal.ZERO;
                 if (!invoiceLine.getBG0028InvoiceLineCharges().isEmpty()) {
                     for (BG0028InvoiceLineCharges invoiceLineCharges : invoiceLine.getBG0028InvoiceLineCharges()) {
                         DettaglioLineeType lineaMaggiorazione = new DettaglioLineeType();
@@ -919,6 +932,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         }
                         BigDecimal chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
                         BigDecimal prezzo = chargeAmount.setScale(2, RoundingMode.HALF_UP);
+                        chargesSum = chargesSum.add(prezzo);
                         lineaMaggiorazione.setPrezzoUnitario(prezzo);
                         lineaMaggiorazione.setPrezzoTotale(prezzo);
                         lineaMaggiorazione.setAliquotaIVA(vatLine);
@@ -1275,5 +1289,27 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             dettaglioLineeList.add(l);
             log.trace("Set NumeroLinea with value {}", ln);
         }
+    }
+
+    private BigDecimal getSumOfAllowancesForLine(BG0025InvoiceLine invoiceLine) {
+        BigDecimal allowancesSum = BigDecimal.ZERO;
+
+        for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
+            BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+            allowancesSum = allowancesSum.subtract(allowanceAmount);
+        }
+
+        return allowancesSum.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal getSumOfChargesForLine(BG0025InvoiceLine invoiceLine) {
+        BigDecimal chargesSum = BigDecimal.ZERO;
+
+        for (BG0028InvoiceLineCharges invoiceLineCharges : invoiceLine.getBG0028InvoiceLineCharges()) {
+            BigDecimal chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
+            chargesSum = chargesSum.add(chargeAmount);
+        }
+
+        return chargesSum.setScale(2, RoundingMode.HALF_UP);
     }
 }
