@@ -641,7 +641,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     try {
                         dettaglioLinee.setQuantita(quantity.divide(baseQuantity, RoundingMode.HALF_UP).setScale(8, RoundingMode.HALF_UP));
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException | ArithmeticException e) {
                         ArrayList<String> zeroes = Lists.newArrayList();
                         if (quantity.compareTo(BigDecimal.ZERO) == 0) {
                             zeroes.add("BT0129");
@@ -663,13 +663,30 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
 
 
-                    // prezzoTotale is (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
+                    // FIXME PrezzoTotale is defined as (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
 
-                    final BigDecimal prezzoTotale = itemNetPrice.multiply(
-                            quantity.divide(baseQuantity, RoundingMode.HALF_UP))
-                            .subtract(getSumOfAllowancesForLine(invoiceLine).add(getSumOfChargesForLine(invoiceLine)));
+//                    final BigDecimal prezzoTotale = itemNetPrice.multiply(
+//                            quantity.divide(baseQuantity, RoundingMode.HALF_UP))
+//                            .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
 
-                    dettaglioLinee.setPrezzoTotale(prezzoTotale);
+                    // FIXME  but only matches provided excel calculation like so
+
+                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.divide(baseQuantity, RoundingMode.HALF_UP));
+
+                    dettaglioLinee.setPrezzoTotale(prezzoTotale.setScale(8, RoundingMode.HALF_UP));
+
+
+//                    if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+//                        BG0023VatBreakdown bg0023VatBreakdown = invoice.getBG0023VatBreakdown(1);
+//                        if (!bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount().isEmpty()) {
+//                            BigDecimal bt0116 = bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount(0).getValue();
+//                            BigDecimal total = itemNetPrice.multiply(
+//                                    quantity.divide(baseQuantity, RoundingMode.HALF_UP))
+//                                    .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
+//
+//                            BigDecimal roundingDifference = bt0116.subtract(total);
+//                        }
+//                    }
 
 //                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
 //                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
@@ -1292,10 +1309,10 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
         for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
             BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
-            allowancesSum = allowancesSum.subtract(allowanceAmount);
+            allowancesSum = allowancesSum.add(allowanceAmount);
         }
 
-        return allowancesSum.setScale(2, RoundingMode.HALF_UP);
+        return allowancesSum;
     }
 
     private BigDecimal getSumOfChargesForLine(BG0025InvoiceLine invoiceLine) {
@@ -1306,6 +1323,6 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             chargesSum = chargesSum.add(chargeAmount);
         }
 
-        return chargesSum.setScale(2, RoundingMode.HALF_UP);
+        return chargesSum;
     }
 }
