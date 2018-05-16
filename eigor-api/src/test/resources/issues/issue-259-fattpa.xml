@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+  <FatturaElettronicaHeader>
+  <!--Transmission data -->
+    <DatiTrasmissione>
+      <IdTrasmittente>
+        <IdPaese>IT</IdPaese>
+        <IdCodice>01234567890</IdCodice>
+      </IdTrasmittente>
+      <ProgressivoInvio>00001</ProgressivoInvio>
+      <FormatoTrasmissione>FPA12</FormatoTrasmissione>
+      <CodiceDestinatario>AAAAAA</CodiceDestinatario>
+	  <ContattiTrasmittente>
+		<Telefono>02122495030</Telefono>
+		<Email>trasmittente@gmail.com</Email>
+	  </ContattiTrasmittente>
+	  <!--Only for B2B, please not that in this case CodiceDestinatario shall be 0000000-->
+	  <!--PECDestinatario>destinatario@pec.it</PECDestinatario-->
+    </DatiTrasmissione>
+	<!--Seller -->
+    <CedentePrestatore>
+      <DatiAnagrafici>
+        <IdFiscaleIVA>
+          <IdPaese>IT</IdPaese>
+          <IdCodice>01234567890</IdCodice>
+        </IdFiscaleIVA>
+		<CodiceFiscale>01234567890</CodiceFiscale>
+        <Anagrafica>
+		<!-- In case of legal entity-->
+          <Denominazione>ALPHA SRL</Denominazione>
+		  <!--In case of natural person-->
+		  <!--Nome>Mario</Nome>
+		  <Cognome>Rossi</Cognome-->
+		  <Titolo>Super</Titolo>
+		  <CodEORI>0123456789012</CodEORI>
+        </Anagrafica>
+		<AlboProfessionale>Ordine Commercialisti</AlboProfessionale>
+		<ProvinciaAlbo>MI</ProvinciaAlbo>
+		<NumeroIscrizioneAlbo>43DDD</NumeroIscrizioneAlbo>
+		<DataIscrizioneAlbo>1991-06-18</DataIscrizioneAlbo>
+        <RegimeFiscale>RF01</RegimeFiscale>
+      </DatiAnagrafici>
+	  <!--Seller address -->
+      <Sede>
+        <Indirizzo>VIALE ROMA</Indirizzo>
+		<NumeroCivico>543</NumeroCivico>
+        <CAP>07100</CAP>
+        <Comune>SASSARI</Comune>
+        <Provincia>SS</Provincia>
+        <Nazione>IT</Nazione>
+      </Sede>
+	  <StabileOrganizzazione>
+			<Indirizzo>VIA MILANO</Indirizzo>
+			<NumeroCivico>22</NumeroCivico>
+			<CAP>24100</CAP>
+			<Comune>Seriate</Comune>
+			<Provincia>BG</Provincia>
+			<Nazione>IT</Nazione>
+	  </StabileOrganizzazione>
+	  <IscrizioneREA>
+		<Ufficio>BG</Ufficio>
+		<NumeroREA>2344tf566</NumeroREA>
+		<CapitaleSociale>150000.00</CapitaleSociale>
+		<SocioUnico>SM</SocioUnico>
+		<StatoLiquidazione>LN</StatoLiquidazione>
+	  </IscrizioneREA>
+	  <Contatti>
+		<Telefono>035204938</Telefono>
+		<Fax>0354859485</Fax>
+		<Email>cedente@gmail.com</Email>
+	  </Contatti>
+	  <RiferimentoAmministrazione>ABCF45667</RiferimentoAmministrazione>
+    </CedentePrestatore>
+	<!--Seller tax representative-->
+	<RappresentanteFiscale>
+		<DatiAnagrafici>
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese>
+			  <IdCodice>112343447890</IdCodice>
+			</IdFiscaleIVA>
+			<CodiceFiscale>11234567890</CodiceFiscale>
+			 <Anagrafica>
+			<!-- In case of legal entity-->
+			  <Denominazione>ALPHA Rappresentante fiscale</Denominazione>
+			  <!--In case of natural person-->
+			  <!--Nome>Paolo</Nome>
+			  <Cognome>Rossi</Cognome-->
+			  <Titolo>Super rap</Titolo>
+			  <CodEORI>1123456789012</CodEORI>
+			</Anagrafica>
+		</DatiAnagrafici>
+	</RappresentanteFiscale>
+	<!--Buyer -->
+    <CessionarioCommittente>
+      <DatiAnagrafici>
+		<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese>
+			  <IdCodice>212343447890</IdCodice>
+			</IdFiscaleIVA>
+        <CodiceFiscale>09876543210</CodiceFiscale>
+        <Anagrafica>
+		<!-- In case of legal entity-->
+          <Denominazione>AMMINISTRAZIONE BETA</Denominazione>
+		  <!--In case of natural person-->
+			  <!--Nome>Mario</Nome>
+			  <Cognome>Verdi</Cognome-->
+			  <Titolo>Super com</Titolo>
+			  <CodEORI>2123456789012</CodEORI>
+        </Anagrafica>
+      </DatiAnagrafici>
+	  <!--Buyer address -->
+      <Sede>
+        <Indirizzo>VIA TORINO</Indirizzo>
+		<NumeroCivico>38 B</NumeroCivico>
+        <CAP>00145</CAP>
+        <Comune>ROMA</Comune>
+        <Provincia>RM</Provincia>
+        <Nazione>IT</Nazione>
+      </Sede>
+	   <StabileOrganizzazione>
+			<Indirizzo>VIA Bergamo</Indirizzo>
+			<NumeroCivico>22</NumeroCivico>
+			<CAP>24100</CAP>
+			<Comune>Milano</Comune>
+			<Provincia>MI</Provincia>
+			<Nazione>IT</Nazione>
+	  </StabileOrganizzazione>
+	  <!--Buyer tax representative-->
+	<RappresentanteFiscale>
+		
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese>
+			  <IdCodice>212343447890</IdCodice>
+			</IdFiscaleIVA>
+			
+			<!-- In case of legal entity-->
+			  <Denominazione>BETA Rappresentante fiscale</Denominazione>
+			  <!--In case of natural person-->
+			  <!--Nome>Paolo</Nome>
+			  <Cognome>Verdi</Cognome-->
+			
+		
+	</RappresentanteFiscale>
+    </CessionarioCommittente>
+	<TerzoIntermediarioOSoggettoEmittente>
+		<DatiAnagrafici>
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese>
+			  <IdCodice>312343447890</IdCodice>
+			</IdFiscaleIVA>
+			<CodiceFiscale>31234567890</CodiceFiscale>
+			 <Anagrafica>
+			<!-- In case of legal entity-->
+			  <Denominazione>GAMMA intermediario</Denominazione>
+			  <!--In case of natural person-->
+			  <!--Nome>Mario</Nome>
+			  <Cognome>Bianchi</Cognome-->
+			  <Titolo>Super i</Titolo>
+			  <CodEORI>3123456789012</CodEORI>
+			</Anagrafica>
+		</DatiAnagrafici>
+	</TerzoIntermediarioOSoggettoEmittente>
+	<SoggettoEmittente>TZ</SoggettoEmittente>
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody>
+  <!--Invoice general data -->
+    <DatiGenerali>
+      <DatiGeneraliDocumento>
+        <TipoDocumento>TD01</TipoDocumento>
+        <Divisa>EUR</Divisa>
+        <Data>2017-01-18</Data>
+        <Numero>123</Numero>
+		<DatiRitenuta>
+			<TipoRitenuta>RT01</TipoRitenuta>
+			<ImportoRitenuta>200.00</ImportoRitenuta>
+			<AliquotaRitenuta>20.00</AliquotaRitenuta>
+			<CausalePagamento>A</CausalePagamento>
+		</DatiRitenuta>
+		<DatiBollo>
+			<BolloVirtuale>SI</BolloVirtuale>
+			<ImportoBollo>2.00</ImportoBollo>
+		</DatiBollo>
+		<DatiCassaPrevidenziale>
+			<TipoCassa>TC01</TipoCassa>
+			<AlCassa>4.00</AlCassa>
+			<ImportoContributoCassa>40.00</ImportoContributoCassa>
+			<ImponibileCassa>1000.00</ImponibileCassa>
+			<AliquotaIVA>0.00</AliquotaIVA>
+			<Ritenuta>SI</Ritenuta>
+			<Natura>N4</Natura>
+			<RiferimentoAmministrazione>FGFJ234</RiferimentoAmministrazione>
+		</DatiCassaPrevidenziale>
+		<ScontoMaggiorazione>
+			<Tipo>SC</Tipo>
+			<Percentuale>10.00</Percentuale>
+			<Importo>100.00</Importo>
+		</ScontoMaggiorazione>
+		<ScontoMaggiorazione>
+			<Tipo>MG</Tipo>
+			<Percentuale>10.00</Percentuale>
+			<Importo>100.00</Importo>
+		</ScontoMaggiorazione>
+		
+		<!-- not mandatory in FattPA but needed in CEN or to be calculated-->
+		<ImportoTotaleDocumento>1220.00</ImportoTotaleDocumento>
+		<Arrotondamento>0.00</Arrotondamento>
+		
+		<Causale>Causale 1 per la fattura</Causale>
+		<Causale>Causale 2 per la fattura</Causale>
+		<Art73>SI</Art73>
+       </DatiGeneraliDocumento>
+	   <DatiOrdineAcquisto>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+			<IdDocumento>123</IdDocumento>
+			<Data>2017-01-14</Data>
+			<NumItem>34A</NumItem>
+			<CodiceCommessaConvenzione>jkl34</CodiceCommessaConvenzione>
+			<CodiceCUP>1122</CodiceCUP>
+			<CodiceCIG>aabb</CodiceCIG>
+		</DatiOrdineAcquisto>
+		<DatiContratto>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+			<IdDocumento>123</IdDocumento>
+			<Data>2017-01-13</Data>
+			<NumItem>34b</NumItem>
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione>
+			<CodiceCUP>11d22</CodiceCUP>
+			<CodiceCIG>aadbb</CodiceCIG>
+		</DatiContratto>
+		<DatiConvenzione>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+			<IdDocumento>123</IdDocumento>
+			<Data>2017-01-12</Data>
+			<NumItem>34c</NumItem>
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione>
+			<CodiceCUP>11dsd22</CodiceCUP>
+			<CodiceCIG>aadssdbb</CodiceCIG>
+		</DatiConvenzione>
+		<DatiRicezione>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+			<IdDocumento>123</IdDocumento>
+			<Data>2017-01-11</Data>
+			<NumItem>34d</NumItem>
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione>
+			<CodiceCUP>11dcvcsd22</CodiceCUP>
+			<CodiceCIG>aacvcdssdbb</CodiceCIG>
+		</DatiRicezione>
+		<DatiFattureCollegate>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+			<IdDocumento>123</IdDocumento>
+			<Data>2017-01-10</Data>
+			<NumItem>34e</NumItem>
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione>
+			<CodiceCUP>11dcbbvcsd22</CodiceCUP>
+			<CodiceCIG>aacbbvcdssdbb</CodiceCIG>
+		</DatiFattureCollegate>
+		<DatiSAL>
+			<RiferimentoFase>3</RiferimentoFase>
+		</DatiSAL>
+		<DatiDDT>
+			<NumeroDDT>12345</NumeroDDT>
+			<DataDDT>2017-01-08</DataDDT>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea>
+		</DatiDDT>
+		<DatiTrasporto>
+			<DatiAnagraficiVettore>
+				<IdFiscaleIVA>
+				  <IdPaese>IT</IdPaese>
+				  <IdCodice>412343447890</IdCodice>
+				</IdFiscaleIVA>
+				<CodiceFiscale>41234567890</CodiceFiscale>
+				 <Anagrafica>
+				<!-- In case of legal entity-->
+				  <Denominazione>Vettore</Denominazione>
+				  <!--In case of natural person-->
+				  <!--Nome>Mario</Nome>
+				  <Cognome>Rosa</Cognome-->
+				  <Titolo>Super vett</Titolo>
+				  <CodEORI>4123456789012</CodEORI>
+				</Anagrafica>
+			
+			<NumeroLicenzaGuida>kjiA1234idoj</NumeroLicenzaGuida>
+			</DatiAnagraficiVettore>
+			<MezzoTrasporto>Furgone</MezzoTrasporto>
+			<CausaleTrasporto>causale del trasporto</CausaleTrasporto>
+			<NumeroColli>4</NumeroColli>
+			<Descrizione>Casse legno 1 mq</Descrizione>
+			<UnitaMisuraPeso>quintale</UnitaMisuraPeso>
+			<PesoLordo>15.00</PesoLordo>
+			<PesoNetto>13.35</PesoNetto>
+			<DataOraRitiro>2017-01-08T06:00:00</DataOraRitiro>
+			<DataInizioTrasporto>2017-01-09</DataInizioTrasporto>
+			<TipoResa>CPT</TipoResa>
+			<IndirizzoResa>
+				<Indirizzo>VIA Paglia</Indirizzo>
+				<NumeroCivico>16</NumeroCivico>
+				<CAP>24065</CAP>
+				<Comune>Castro</Comune>
+				<Provincia>BG</Provincia>
+				<Nazione>IT</Nazione>
+			</IndirizzoResa>
+			<DataOraConsegna>2017-01-10T10:00:00</DataOraConsegna>
+		</DatiTrasporto>
+    </DatiGenerali>
+    <DatiBeniServizi>
+      <DettaglioLinee>
+        <NumeroLinea>1</NumeroLinea>
+		<CodiceArticolo>
+			<CodiceTipo>CPV</CodiceTipo>
+			<CodiceValore>klji12</CodiceValore>
+		
+		</CodiceArticolo>
+        <Descrizione>DESCRIZIONE DELLA LINEA 1</Descrizione>
+		<Quantita>2.00</Quantita>
+		<UnitaMisura>C62</UnitaMisura>
+		<DataInizioPeriodo>2017-01-18</DataInizioPeriodo>
+		<DataFinePeriodo>2017-01-18</DataFinePeriodo>
+        <PrezzoUnitario>500.00</PrezzoUnitario>
+		<ScontoMaggiorazione>
+			<Tipo>SC</Tipo>
+			<Percentuale>2.00</Percentuale>
+			<Importo>10.00</Importo>
+		</ScontoMaggiorazione>
+		<ScontoMaggiorazione>
+			<Tipo>MG</Tipo>
+			<Percentuale>2.00</Percentuale>
+			<Importo>10.00</Importo>
+		</ScontoMaggiorazione>
+        <PrezzoTotale>1000.00</PrezzoTotale>
+        <AliquotaIVA>22.00</AliquotaIVA>
+		<Ritenuta>SI</Ritenuta>
+		<RiferimentoAmministrazione>rifamm123</RiferimentoAmministrazione>
+		<AltriDatiGestionali>
+			<TipoDato>colore</TipoDato>
+			<RiferimentoTesto>bianco</RiferimentoTesto>		
+		</AltriDatiGestionali>
+      </DettaglioLinee>
+	  <DettaglioLinee>
+        <NumeroLinea>2</NumeroLinea>
+		<CodiceArticolo>
+			<CodiceTipo>TARIC</CodiceTipo>
+			<CodiceValore>klji12</CodiceValore>
+		
+		</CodiceArticolo>
+        <Descrizione>DESCRIZIONE DELLA LINEA 2</Descrizione>
+		<Quantita>10.00</Quantita>
+		<UnitaMisura>C62</UnitaMisura>
+		<DataInizioPeriodo>2017-01-18</DataInizioPeriodo>
+		<DataFinePeriodo>2017-01-18</DataFinePeriodo>
+        <PrezzoUnitario>1.00</PrezzoUnitario>
+		
+        <PrezzoTotale>10.00</PrezzoTotale>
+        <AliquotaIVA>0.00</AliquotaIVA>
+		<Natura>N3</Natura>
+		<AltriDatiGestionali>
+			<TipoDato>materiale</TipoDato>
+			<RiferimentoTesto>carta</RiferimentoTesto>		
+		</AltriDatiGestionali>
+      </DettaglioLinee>
+	  <DettaglioLinee>
+        <NumeroLinea>3</NumeroLinea>
+		<TipoCessionePrestazione>SC</TipoCessionePrestazione>
+        <Descrizione>DESCRIZIONE DELLA LINEA di sconto</Descrizione>
+		<PrezzoUnitario>10.00</PrezzoUnitario>
+		<PrezzoTotale>10.00</PrezzoTotale>
+        <AliquotaIVA>0.00</AliquotaIVA>
+		<Natura>N3</Natura>
+	  </DettaglioLinee>
+	   <DettaglioLinee>
+        <NumeroLinea>4</NumeroLinea>
+		<TipoCessionePrestazione>AC</TipoCessionePrestazione>
+        <Descrizione>DESCRIZIONE DELLA LINEA spesa accessoria</Descrizione>
+		<PrezzoUnitario>10.00</PrezzoUnitario>
+		<PrezzoTotale>10.00</PrezzoTotale>
+        <AliquotaIVA>22.00</AliquotaIVA>
+		
+	  </DettaglioLinee>
+	   <DettaglioLinee>
+        <NumeroLinea>5</NumeroLinea>
+		<TipoCessionePrestazione>SC</TipoCessionePrestazione>
+        <Descrizione>DESCRIZIONE DELLA LINEA sconto con iva</Descrizione>
+		<PrezzoUnitario>10.00</PrezzoUnitario>
+		<PrezzoTotale>10.00</PrezzoTotale>
+        <AliquotaIVA>22.00</AliquotaIVA>
+		
+	  </DettaglioLinee>
+      <DatiRiepilogo>
+        <AliquotaIVA>22.00</AliquotaIVA>
+		<SpeseAccessorie>10.00</SpeseAccessorie>
+		<Arrotondamento>0.00</Arrotondamento>
+		<ImponibileImporto>1000.00</ImponibileImporto>
+        <Imposta>220.00</Imposta>
+		<EsigibilitaIVA>I</EsigibilitaIVA>
+       </DatiRiepilogo>
+	   <DatiRiepilogo>
+        <AliquotaIVA>0.00</AliquotaIVA>
+		<Natura>N3</Natura>
+		<Arrotondamento>0.00</Arrotondamento>
+		<ImponibileImporto>0.00</ImponibileImporto>
+        <Imposta>0.00</Imposta>
+		<EsigibilitaIVA>I</EsigibilitaIVA>
+		<RiferimentoNormativo>art 584T</RiferimentoNormativo>
+       </DatiRiepilogo>
+    </DatiBeniServizi>
+	<DatiVeicoli>
+		<Data>1990-01-01</Data>
+		<TotalePercorso>4800</TotalePercorso>
+	</DatiVeicoli>
+	 <DatiPagamento>
+		  <CondizioniPagamento>TP01</CondizioniPagamento>
+		  <DettaglioPagamento>
+				<Beneficiario>Nome del beneficiario</Beneficiario>
+				<ModalitaPagamento>MP05</ModalitaPagamento>
+				<DataRiferimentoTerminiPagamento>2017-01-18</DataRiferimentoTerminiPagamento>
+				<GiorniTerminiPagamento>30</GiorniTerminiPagamento>
+				<DataScadenzaPagamento>2017-02-18</DataScadenzaPagamento>
+				<ImportoPagamento>1020.00</ImportoPagamento>
+				<CodUfficioPostale>Bergamo23</CodUfficioPostale>
+				<IstitutoFinanziario>UBI</IstitutoFinanziario>
+				<IBAN>IT02L1234512345123456789012</IBAN>
+				<ABI>12345</ABI>
+				<CAB>12345</CAB>
+				<BIC>BLOPIT22XXX</BIC>
+				<ScontoPagamentoAnticipato>10.00</ScontoPagamentoAnticipato>
+				<DataLimitePagamentoAnticipato>2017-02-01</DataLimitePagamentoAnticipato>
+				<PenalitaPagamentiRitardati>10.00</PenalitaPagamentiRitardati>
+				<DataDecorrenzaPenale>2017-03-15</DataDecorrenzaPenale>
+				<CodicePagamento>codpag123</CodicePagamento>
+			
+		  </DettaglioPagamento>
+    </DatiPagamento>
+	<!--<Allegati>-->
+		<!--<NomeAttachment>Allegato 1</NomeAttachment>-->
+		<!--<AlgoritmoCompressione>zip</AlgoritmoCompressione>-->
+		<!--<FormatoAttachment>csv</FormatoAttachment>-->
+		<!--<DescrizioneAttachment>Descrizione allegato uno</DescrizioneAttachment>-->
+		<!--<Attachment>ZUlHT1IgYXR0YWNobWVudCB0ZXN0</Attachment>-->
+	<!--</Allegati>-->
+	<!--<Allegati>-->
+		<!--<NomeAttachment>Allegato 2</NomeAttachment>-->
+		<!--<FormatoAttachment>csv</FormatoAttachment>-->
+		<!--<DescrizioneAttachment>Descrizione allegato due</DescrizioneAttachment>-->
+		<!--<Attachment>ZUlHT1IgYXR0YWNobWVudCB0ZXN0</Attachment>-->
+	<!--</Allegati>-->
+ </FatturaElettronicaBody>
+</p:FatturaElettronica>
