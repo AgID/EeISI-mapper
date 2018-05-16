@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import org.codehaus.plexus.util.Base64;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.xml.sax.InputSource;
@@ -199,6 +200,56 @@ public class IssuesTest {
 
         Assert.assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
         Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Allegato", evaluateAttachmentFileName);
+    }
+
+    @Test
+    public void issue259() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-259-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+
+        String taxCategory = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
+        Assert.assertTrue(taxCategory!=null && !taxCategory.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "E", taxCategory);
+
+        String multiplier = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
+        Assert.assertTrue(multiplier!=null && !multiplier.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "4.00", multiplier);
+
+        String baseAmount = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
+        Assert.assertTrue(baseAmount!=null && !baseAmount.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "1000.00", baseAmount);
+
+        // Ritenuta will go to not-mapped-values attachment
+
+        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+
+        Assert.assertTrue(evaluateAttachment!=null && !evaluateAttachment.trim().isEmpty());
+        String attachment = new String(Base64.decodeBase64(evaluateAttachment.getBytes()));
+
+        Assert.assertTrue(attachment.contains("Ritenuta: SI"));
+
+        Assert.assertTrue(evaluateAttachmentMimeCode!=null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "text/csv", evaluateAttachmentMimeCode);
+
+        Assert.assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "not-mapped-values", evaluateAttachmentFileName);
+    }
+
+    @Test
+    public void issue257() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-257-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(buildMsgForFailedAssertion(convert, new KeepAll()), "Text about exemption reason Art15", evaluate);
     }
 
     @Test

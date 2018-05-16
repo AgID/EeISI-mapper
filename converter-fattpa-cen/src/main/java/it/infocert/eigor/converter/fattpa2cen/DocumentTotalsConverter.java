@@ -6,9 +6,13 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -20,6 +24,8 @@ import java.util.List;
 
 public class DocumentTotalsConverter implements CustomMapping<Document> {
     private final static Logger log = LoggerFactory.getLogger(DocumentTotalsConverter.class);
+
+    private final AttachmentUtil aUtil = new AttachmentUtil();
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
@@ -108,6 +114,112 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                         errors.add(ConversionIssue.newError(ere));
                                     }
                                 }
+                            }
+                        }
+
+                        List<Element> datiCassaPrevidenzialeList = datiGeneraliDocumento.getChildren("DatiCassaPrevidenziale");
+                        for (Element datiCassaPrevidenziale : datiCassaPrevidenzialeList) {
+                            BG0021DocumentLevelCharges bg0021 = new BG0021DocumentLevelCharges();
+                            invoice.getBG0021DocumentLevelCharges().add(bg0021);
+
+                            Element tipoCassa = datiCassaPrevidenziale.getChild("TipoCassa");
+                            if (tipoCassa != null) {
+                                BT0105DocumentLevelChargeReasonCode bt0105 = new BT0105DocumentLevelChargeReasonCode(Untdid7161SpecialServicesCodes.ABK);
+                                bg0021.getBT0105DocumentLevelChargeReasonCode().add(bt0105);
+                            }
+
+                            Element alCassa = datiCassaPrevidenziale.getChild("AlCassa");
+                            if (alCassa != null) {
+                                try {
+                                    BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(new BigDecimal(alCassa.getValue()));
+                                    bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
+                                } catch (NumberFormatException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
+
+                            Element importoContributoCassa = datiCassaPrevidenziale.getChild("ImportoContributoCassa");
+                            if (importoContributoCassa != null) {
+                                try {
+                                    BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(new BigDecimal(importoContributoCassa.getValue()));
+                                    bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
+                                } catch (NumberFormatException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
+
+                            Element imponibileCassa = datiCassaPrevidenziale.getChild("ImponibileCassa");
+                            if (imponibileCassa != null) {
+                                try {
+                                    BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(new BigDecimal(imponibileCassa.getValue()));
+                                    bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
+                                } catch (NumberFormatException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
+
+                            Element aliquotaIVA = datiCassaPrevidenziale.getChild("AliquotaIVA");
+                            if (aliquotaIVA != null) {
+                                try {
+                                    BT0103DocumentLevelChargeVatRate bt0103 = new BT0103DocumentLevelChargeVatRate(new BigDecimal(aliquotaIVA.getValue()));
+                                    bg0021.getBT0103DocumentLevelChargeVatRate().add(bt0103);
+                                } catch (NumberFormatException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+
+                            }
+
+                            Element ritenuta = datiCassaPrevidenziale.getChild("Ritenuta");
+                            if (ritenuta != null) {
+                                aUtil.addValuesToAttachment(invoice, "Ritenuta: " + ritenuta.getValue(), errors);
+                            }
+
+                            Element natura = datiCassaPrevidenziale.getChild("Natura");
+                            if (natura != null) {
+                                TypeConverter<String, Untdid5305DutyTaxFeeCategories> stringUntdid5305 =
+                                        ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter.newConverter();
+                                try {
+                                    BT0102DocumentLevelChargeVatCategoryCode bt0102 =
+                                            new BT0102DocumentLevelChargeVatCategoryCode(stringUntdid5305.convert(natura.getText()));
+                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
+                                } catch (ConversionFailedException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
+
+                            Element riferimentoAmministrazione = datiCassaPrevidenziale.getChild("RiferimentoAmministrazione");
+                            if (riferimentoAmministrazione != null) {
+                                aUtil.addValuesToAttachment(invoice, "RiferimentoAmministrazione: " + riferimentoAmministrazione.getValue(), errors);
                             }
                         }
 

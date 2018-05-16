@@ -137,22 +137,27 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     Element taxExemptionReasonCode = findNamespaceChild(taxCategory, namespacesInScope, "TaxExemptionReasonCode");
                     if (taxExemptionReasonCode != null) {
                         final String text = taxExemptionReasonCode.getText();
-                        try {
-                            BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(text));
-                            bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
-                        } catch (IllegalArgumentException e) {
-                            EigorRuntimeException ere = new EigorRuntimeException(
-                                    e,
-                                    ErrorMessage.builder()
-                                            .message(e.getMessage())
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
-                                            .build());
-                            errors.add(ConversionIssue.newError(ere));
-                        }
+
+                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(text);
+                        bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
+
+//                        #237
+//                        try {
+//                            BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(text));
+//                            bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
+//                        } catch (IllegalArgumentException e) {
+//                            EigorRuntimeException ere = new EigorRuntimeException(
+//                                    e,
+//                                    ErrorMessage.builder()
+//                                            .message(e.getMessage())
+//                                            .location(callingLocation)
+//                                            .action(ErrorCode.Action.HARDCODED_MAP)
+//                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+//                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+//                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
+//                                            .build());
+//                            errors.add(ConversionIssue.newError(ere));
+//                        }
                     }
 
                     invoice.getBG0023VatBreakdown().add(bg0023);
