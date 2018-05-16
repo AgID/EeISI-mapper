@@ -243,6 +243,18 @@ public class IssuesTest {
     }
 
     @Test
+    public void issue257() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-257-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
+        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        Assert.assertEquals( conversion.buildMsgForFailedAssertion(convert, new KeepAll()), "Text about exemption reason Art15", evaluate);
+    }
+
+    @Test
     public void issue207() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-207-ubl.xml");
@@ -320,7 +332,6 @@ public class IssuesTest {
         XPathExpression expr = xPath.compile(expression);
         return expr.evaluate(is);
     }
-
 
 
 

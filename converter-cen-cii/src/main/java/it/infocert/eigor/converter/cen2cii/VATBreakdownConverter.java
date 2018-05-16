@@ -6,6 +6,7 @@ import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
+import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -114,7 +115,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             if (!bg0023.getBT0121VatExemptionReasonCode().isEmpty()) {
                 BT0121VatExemptionReasonCode bt0121 = bg0023.getBT0121VatExemptionReasonCode(0);
                 Element exemptionReasonCode = new Element("ExemptionReasonCode", ramNs);
-                exemptionReasonCode.setText(bt0121.getValue().name());
+                exemptionReasonCode.setText(bt0121.getValue());
                 applicableTradeTax.addContent(exemptionReasonCode);
             }
 

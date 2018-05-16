@@ -15,6 +15,7 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -470,11 +471,21 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 if (breakdowns.size() == datiRiepilogoList.size()) {
                     for (int i = 0; i < breakdowns.size(); i++) {
                         BG0023VatBreakdown bg0023 = breakdowns.get(i);
+                        DatiRiepilogoType datiRiepilogo = datiRiepilogoList.get(i);
 
                         if (!bg0023.getBT0120VatExemptionReasonText().isEmpty()) {
-                            String reason = bg0023.getBT0120VatExemptionReasonText().get(0).getValue();
-                            DatiRiepilogoType datiRiepilogo = datiRiepilogoList.get(i);
-                            datiRiepilogo.setRiferimentoNormativo(reason);
+                            String bt0120 = bg0023.getBT0120VatExemptionReasonText().get(0).getValue();
+
+                            if (bg0023.getBT0121VatExemptionReasonCode().isEmpty()) {
+                                datiRiepilogo.setRiferimentoNormativo(bt0120);
+                            } else {
+                                String bt0121 = bg0023.getBT0121VatExemptionReasonCode(0).getValue();
+                                datiRiepilogo.setRiferimentoNormativo(String.format("%s %s", bt0120, bt0121));
+                            }
+                            body.setDatiBeniServizi(datiBeniServizi);
+                        } else if(!bg0023.getBT0121VatExemptionReasonCode().isEmpty()){
+                            String bt0121 = bg0023.getBT0121VatExemptionReasonCode(0).getValue();
+                            datiRiepilogo.setRiferimentoNormativo(bt0121);
                             body.setDatiBeniServizi(datiBeniServizi);
                         }
                     }
