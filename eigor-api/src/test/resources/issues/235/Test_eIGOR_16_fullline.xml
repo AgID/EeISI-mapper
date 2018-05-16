@@ -54,15 +54,12 @@
 	<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
+	
 	
 	<cac:ProjectReference>
 		<cbc:ID>ContractCUPID</cbc:ID>
@@ -372,7 +369,7 @@
 		</cac:CommodityClassification>
 			<cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
-				 <cbc:Percent>10</cbc:Percent>
+				 <cbc:Percent>10.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>

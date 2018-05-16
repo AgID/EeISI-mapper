@@ -54,15 +54,12 @@
 	<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
+	
 	
 	<cac:ProjectReference>
 		<cbc:ID>ContractCUPID</cbc:ID>
@@ -338,8 +335,8 @@
         <cbc:TaxInclusiveAmount currencyID="EUR">3520.00</cbc:TaxInclusiveAmount>
 		<cbc:AllowanceTotalAmount currencyID="EUR">126.67</cbc:AllowanceTotalAmount> 
 		<cbc:ChargeTotalAmount currencyID="EUR">126.67</cbc:ChargeTotalAmount>
-		<cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
-		<cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="EUR">0.00</cbc:PayableRoundingAmount>
         <cbc:PayableAmount currencyID="EUR">3520.00</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
 	

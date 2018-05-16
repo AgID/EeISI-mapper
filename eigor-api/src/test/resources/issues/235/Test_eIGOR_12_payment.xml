@@ -54,15 +54,12 @@
 	<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
+	
 	
 	<cac:ProjectReference>
 		<cbc:ID>ContractCUPID</cbc:ID>
@@ -199,7 +196,7 @@
 	
 	<!--PAYMENT-->
 	<cac:PaymentMeans>
-        <cbc:PaymentMeansCode>20</cbc:PaymentMeansCode>
+        <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>
 		<cbc:PaymentID>Remittance information</cbc:PaymentID>
 		<!--payment card info-->
 		<cac:CardAccount>
