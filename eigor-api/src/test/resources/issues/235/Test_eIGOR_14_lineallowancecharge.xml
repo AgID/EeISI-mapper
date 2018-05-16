@@ -51,18 +51,15 @@
 		<!--remember that in XMLPA it is mandatory to have the attachment BT-125 thus MAPR-DE-117 should create a new csv file with the BT-122 value -->
     </cac:AdditionalDocumentReference>
 	
-	<!--ATTACHMENT-->
+<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
+	
 	
 	<cac:ProjectReference>
 		<cbc:ID>ContractCUPID</cbc:ID>
@@ -299,8 +296,8 @@
         <cbc:TaxInclusiveAmount currencyID="EUR">3520.00</cbc:TaxInclusiveAmount>
 		<cbc:AllowanceTotalAmount currencyID="EUR">116.67</cbc:AllowanceTotalAmount> 
 		<cbc:ChargeTotalAmount currencyID="EUR">116.67</cbc:ChargeTotalAmount>
-		<cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
-		<cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="EUR">0.00</cbc:PayableRoundingAmount>
         <cbc:PayableAmount currencyID="EUR">3520.00</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
 	
@@ -335,7 +332,7 @@
 		<cbc:Name>Article 1</cbc:Name>
 			<cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
-				 <cbc:Percent>10</cbc:Percent>
+				 <cbc:Percent>10.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -346,8 +343,8 @@
 			<!--ITEM allowance-->
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-				<cbc:Amount currencyID="EUR">5</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">3205</cbc:BaseAmount>
+				<cbc:Amount currencyID="EUR">5.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">3205.00</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>

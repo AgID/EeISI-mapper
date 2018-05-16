@@ -54,14 +54,10 @@
 	<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
 	
 	<cac:ProjectReference>
@@ -301,8 +297,8 @@
         <cbc:TaxInclusiveAmount currencyID="EUR">2043658658.50</cbc:TaxInclusiveAmount>
 		<cbc:AllowanceTotalAmount currencyID="EUR">78.39</cbc:AllowanceTotalAmount> 
 		<cbc:ChargeTotalAmount currencyID="EUR">43.64</cbc:ChargeTotalAmount>
-		<cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
-		<cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="EUR">0.00</cbc:PayableRoundingAmount>
         <cbc:PayableAmount currencyID="EUR">2043658658.50</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
 	
@@ -339,7 +335,7 @@
 		<cbc:Name>Article 1</cbc:Name>
 			<cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
-				 <cbc:Percent>23</cbc:Percent>
+				 <cbc:Percent>23.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -381,7 +377,7 @@
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReason>Packing cost</cbc:AllowanceChargeReason>
 			<cbc:MultiplierFactorNumeric>0.02</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">0.6</cbc:Amount>
+			<cbc:Amount currencyID="EUR">0.60</cbc:Amount>
 			<cbc:BaseAmount currencyID="EUR">29.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		
@@ -391,7 +387,7 @@
 		<cbc:Name>Article 2</cbc:Name>
 			<cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
-				 <cbc:Percent>10</cbc:Percent>
+				 <cbc:Percent>10.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>

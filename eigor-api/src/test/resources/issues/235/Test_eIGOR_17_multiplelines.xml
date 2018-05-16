@@ -54,15 +54,12 @@
 	<!--ATTACHMENT-->
 	<cac:AdditionalDocumentReference>
         <cbc:ID>eIGOR.csv</cbc:ID>
-        <cbc:DocumentType>Timesheet</cbc:DocumentType>
-		<cbc:DocumentDescription>to test the attachment</cbc:DocumentDescription>
+       <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
         <cac:Attachment>
             <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
+		</cac:Attachment>
     </cac:AdditionalDocumentReference>
+	
 	
 	<cac:ProjectReference>
 		<cbc:ID>ContractCUPID</cbc:ID>
@@ -297,8 +294,7 @@
             <cac:TaxCategory>
                 <cbc:ID>E</cbc:ID>
                 <cbc:Percent>0</cbc:Percent>
-				<cbc:TaxExemptionReasonCode>Art15</cbc:TaxExemptionReasonCode>
-				
+				<cbc:TaxExemptionReason>Art15</cbc:TaxExemptionReason>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -310,7 +306,8 @@
             <cac:TaxCategory>
                 <cbc:ID>Z</cbc:ID>
                 <cbc:Percent>0</cbc:Percent>
-				<cbc:TaxExemptionReason>Text about exemption reason</cbc:TaxExemptionReason>
+            	
+				
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -324,8 +321,8 @@
         <cbc:TaxInclusiveAmount currencyID="EUR">7520.00</cbc:TaxInclusiveAmount>
 		<cbc:AllowanceTotalAmount currencyID="EUR">116.67</cbc:AllowanceTotalAmount> 
 		<cbc:ChargeTotalAmount currencyID="EUR">116.67</cbc:ChargeTotalAmount>
-		<cbc:PrepaidAmount currencyID="EUR">0</cbc:PrepaidAmount>
-		<cbc:PayableRoundingAmount currencyID="EUR">0</cbc:PayableRoundingAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="EUR">0.00</cbc:PayableRoundingAmount>
         <cbc:PayableAmount currencyID="EUR">7520.00</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
 	
@@ -397,7 +394,7 @@
 		</cac:CommodityClassification>
 			<cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
-				 <cbc:Percent>10</cbc:Percent>
+				 <cbc:Percent>10.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -418,8 +415,8 @@
 			<!--ITEM allowance-->
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-				<cbc:Amount currencyID="EUR">5</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">3205</cbc:BaseAmount>
+				<cbc:Amount currencyID="EUR">5.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">3205.00</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>
@@ -454,14 +451,14 @@
 			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode> 
 			<cbc:AllowanceChargeReason>Service discount exempt</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.10</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">10</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">100</cbc:BaseAmount>
+			<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">100.00</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReason>Service charge exempt</cbc:AllowanceChargeReason>
-			<cbc:Amount currencyID="EUR">10</cbc:Amount>
+			<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
 		</cac:AllowanceCharge>
 		
 		
@@ -488,7 +485,7 @@
 		</cac:CommodityClassification>
 		<cac:ClassifiedTaxCategory>
                 <cbc:ID>E</cbc:ID>
-				 <cbc:Percent>0</cbc:Percent>
+				 <cbc:Percent>0.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -505,8 +502,8 @@
 			<!--ITEM allowance-->
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-				<cbc:Amount currencyID="EUR">5</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">1005</cbc:BaseAmount>
+				<cbc:Amount currencyID="EUR">5.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">1005.00</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>
@@ -545,7 +542,7 @@
 		</cac:SellersItemIdentification>
 		<cac:ClassifiedTaxCategory>
                 <cbc:ID>Z</cbc:ID>
-				 <cbc:Percent>0</cbc:Percent>
+				 <cbc:Percent>0.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>

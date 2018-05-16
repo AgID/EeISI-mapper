@@ -2,34 +2,28 @@
 <Invoice  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
-	<cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
-    <cbc:ID>Test_eIGOR_2</cbc:ID>
+    <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+    <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+    <cbc:ID>Test_eIGOR_1</cbc:ID>
     <cbc:IssueDate>2017-09-12</cbc:IssueDate>
 	<cbc:DueDate>2017-10-30</cbc:DueDate>
-    <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
-    <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
-	<!--ATTACHMENT-->
-	<cac:AdditionalDocumentReference>
-        <cbc:ID>IDattachment</cbc:ID>
-        <cbc:DocumentDescription>Timesheet</cbc:DocumentDescription>
-        <cac:Attachment>
-            <cbc:EmbeddedDocumentBinaryObject mimeCode="text/csv" filename="eIGOR.csv">ZUlHT1IgYXR0YWNobWVudCB0ZXN0</cbc:EmbeddedDocumentBinaryObject>
-			<cac:ExternalReference>
-				<cbc:URI>external document location</cbc:URI>
-			</cac:ExternalReference>
-        </cac:Attachment>
-    </cac:AdditionalDocumentReference>
-
+    <cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode listID="ISO4217">EUR</cbc:DocumentCurrencyCode>
+    <cbc:BuyerReference>0150abc</cbc:BuyerReference>
+    
 	<!--SELLER-->
 	<cac:AccountingSupplierParty>
         <cac:Party>
-			
+            <cbc:EndpointID schemeID="0088">9482348239847239874</cbc:EndpointID>
+            <cac:PartyName>
+				<cbc:Name>Seller name</cbc:Name>
+			</cac:PartyName>
 			<cac:PostalAddress>
 				<cbc:StreetName>Street seller</cbc:StreetName>
                 <cbc:CityName>City seller</cbc:CityName>
-                <cbc:PostalZone>43211</cbc:PostalZone>
+                <cbc:PostalZone>11111</cbc:PostalZone>
                 <cac:Country>
-                    <cbc:IdentificationCode>DK</cbc:IdentificationCode>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">DK</cbc:IdentificationCode>
                 </cac:Country>
             </cac:PostalAddress>
 			<cac:PartyTaxScheme>
@@ -48,12 +42,15 @@
     <cac:AccountingCustomerParty>
         <cac:Party>
 			<cbc:EndpointID schemeID="IT:IPA">999999</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Buyer name</cbc:Name>
+			</cac:PartyName>
 			<cac:PostalAddress>
                 <cbc:StreetName>Street customer</cbc:StreetName>
                 <cbc:CityName>City customer</cbc:CityName>
                 <cbc:PostalZone>38251</cbc:PostalZone>
                 <cac:Country>
-                    <cbc:IdentificationCode>NL</cbc:IdentificationCode>
+                    <cbc:IdentificationCode listID="ISO3166-1:Alpha2">NL</cbc:IdentificationCode>
                 </cac:Country>
             </cac:PostalAddress>
 			<cac:PartyTaxScheme>
@@ -69,7 +66,7 @@
    </cac:AccountingCustomerParty>
     
 	<cac:PaymentMeans>
-        <cbc:PaymentMeansCode>20</cbc:PaymentMeansCode>
+        <cbc:PaymentMeansCode listID="UNCL4461">20</cbc:PaymentMeansCode>
     </cac:PaymentMeans>
 	<!--TOTALS-->
     <cac:TaxTotal>
@@ -78,7 +75,7 @@
             <cbc:TaxableAmount currencyID="EUR">3200.00</cbc:TaxableAmount>
             <cbc:TaxAmount currencyID="EUR">320.00</cbc:TaxAmount>
             <cac:TaxCategory>
-                <cbc:ID>S</cbc:ID>
+                <cbc:ID schemeID="UNCL5305">S</cbc:ID>
                 <cbc:Percent>10</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
@@ -95,13 +92,13 @@
 	<!--LINE-->
     <cac:InvoiceLine>
         <cbc:ID>1</cbc:ID>
-        <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+        <cbc:InvoicedQuantity unitCode="EA" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">3200.00</cbc:LineExtensionAmount>
         
 		<cac:Item>
 		<cbc:Name>Article 1</cbc:Name>
 			<cac:ClassifiedTaxCategory>
-                <cbc:ID>S</cbc:ID>
+                <cbc:ID schemeID="UNCL5305">S</cbc:ID>
 				 <cbc:Percent>10</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
