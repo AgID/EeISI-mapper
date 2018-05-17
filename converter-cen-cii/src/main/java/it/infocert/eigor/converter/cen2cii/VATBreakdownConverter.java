@@ -6,6 +6,7 @@ import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
+import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;

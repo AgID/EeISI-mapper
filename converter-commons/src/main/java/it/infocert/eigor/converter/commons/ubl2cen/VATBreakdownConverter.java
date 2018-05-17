@@ -138,7 +138,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     if (taxExemptionReasonCode != null) {
                         final String text = taxExemptionReasonCode.getText();
 
-                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(text);
+                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode( text );
                         bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
 
 //                        #237
