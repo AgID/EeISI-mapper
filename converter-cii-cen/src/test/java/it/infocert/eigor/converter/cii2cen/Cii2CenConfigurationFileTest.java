@@ -260,7 +260,9 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		ConversionResult<BG0000Invoice> result = bg0023.toBG0023(document, invoice, errors, ErrorCode.Location.CII_IN);
 
 		assertEquals("provaReason", invoice.getBG0023VatBreakdown(0).getBT0120VatExemptionReasonText(0).getValue());
-		assertEquals(VatExemptionReasonsCodes.AAA, invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
+		assertEquals("AAA", invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
+		//		#237
+		//		assertEquals(VatExemptionReasonsCodes.AAA, invoice.getBG0023VatBreakdown(0).getBT0121VatExemptionReasonCode(0).getValue());
 	}
 
 	@Test
