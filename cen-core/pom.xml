@@ -257,13 +257,13 @@
                             <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID2475/UNTDID-2475.csv
                             </pathToCsv>
                             <pathToTemplate>
-                                ${project.basedir}/src/main/resources/TemplateFiles/UNTDID2475/Untdid2475DateTimePeriodQualifiers.java.vm
+                                ${project.basedir}/src/main/resources/TemplateFiles/UNTDID2475/Untdid2475PaymentTimeReference.java.vm
                             </pathToTemplate>
                             <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
                             </pathToOutputFolder>
                             <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
                             <fileNameTemplate>
-                                it/infocert/eigor/model/core/enums/Untdid2475DateTimePeriodQualifiers.java
+                                it/infocert/eigor/model/core/enums/Untdid2475PaymentTimeReference.java
                             </fileNameTemplate>
                         </configuration>
                     </execution>

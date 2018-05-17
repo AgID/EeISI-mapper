@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core.enums;
 
-public enum Untdid2475DateTimePeriodQualifiers {
+public enum Untdid2475PaymentTimeReference {
 
     // 1: ID
     // 2: ShortDescription
@@ -18,15 +18,15 @@ public enum Untdid2475DateTimePeriodQualifiers {
     private String shortDescritpion;
     private String longDescription;
 
-    Untdid2475DateTimePeriodQualifiers(int code, String shortDescritpion, String longDescription) {
+    Untdid2475PaymentTimeReference(int code, String shortDescritpion, String longDescription) {
         this.code = code;
         this.shortDescritpion = shortDescritpion;
         this.longDescription = longDescription;
     }
 
-    public static Untdid2475DateTimePeriodQualifiers fromCode(String s) {
+    public static Untdid2475PaymentTimeReference fromCode(String s) {
         Integer code = Integer.valueOf(s);
-        for (Untdid2475DateTimePeriodQualifiers q : values()) {
+        for (Untdid2475PaymentTimeReference q : values()) {
             if (q.code == code) {
                 return q;
             }
@@ -40,7 +40,7 @@ public enum Untdid2475DateTimePeriodQualifiers {
 
     @Override
     public String toString() {
-        return "Untdid2005DateTimePeriodQualifiers{" +
+        return "Untdid2475PaymentTimeReference{" +
                 "code='" + code + '\'' +
                 ", shortDescritpion='" + shortDescritpion + '\'' +
                 ", longDescription='" + longDescription + '\'' +
