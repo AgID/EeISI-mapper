@@ -31,15 +31,97 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
 
         Element root = document.getRootElement();
         if (root != null) {
-            // W I P
-//            for (BG0020DocumentLevelAllowances bg0020 : cenInvoice.getBG0020DocumentLevelAllowances()) {
-//
-//                Element allowanceCharge = new Element("AllowanceCharge");
-//                allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
-//
-//                root.addContent(allowanceCharge);
-//
-//            }
+            for (BG0020DocumentLevelAllowances bg0020 : cenInvoice.getBG0020DocumentLevelAllowances()) {
+
+                Element allowanceCharge = new Element("AllowanceCharge");
+                allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
+
+                if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
+                    BT0092DocumentLevelAllowanceAmount bt0092 = bg0020.getBT0092DocumentLevelAllowanceAmount(0);
+                    Element amount = new Element("Amount");
+                    try {
+                        amount.setText(bdStrConverter.convert(bt0092.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0092.toString())
+                        ));
+                    }
+                    amount.setAttribute("currencyID", currencyCode.getCode());
+                    allowanceCharge.addContent(amount);
+                }
+
+                if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+                    BT0093DocumentLevelAllowanceBaseAmount bt0093 = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0);
+                    Element baseAmount = new Element("BaseAmount");
+                    try {
+                        baseAmount.setText(bdStrConverter.convert(bt0093.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0093.toString())
+                        ));
+                    }
+                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                    allowanceCharge.addContent(baseAmount);
+                }
+
+                if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+                    BT0094DocumentLevelAllowancePercentage bt0094 = bg0020.getBT0094DocumentLevelAllowancePercentage(0);
+                    Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                    try {
+                        multiplierFactorNumeric.setText(bdStrConverter.convert(bt0094.getValue()));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0094.toString())
+                        ));
+                    }
+                    allowanceCharge.addContent(multiplierFactorNumeric);
+                }
+
+                if(!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()){
+                    BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode(0);
+                    Element taxCategory = new Element("TaxCategory");
+                    Element id = new Element("ID");
+                    taxCategory.addContent(id);
+                    id.setText(bt0095.getValue().name());
+                    allowanceCharge.addContent(taxCategory);
+                }
+
+//                if(!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()){
+//                    BT0096DocumentLevelAllowanceVatRate bt0096 = bg0020.getBT0096DocumentLevelAllowanceVatRate(0);
+//                }
+
+                if(!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()){
+                    BT0097DocumentLevelAllowanceReason bt0097 = bg0020.getBT0097DocumentLevelAllowanceReason(0);
+                    Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                    allowanceChargeReason.setText(bt0097.getValue());
+                    allowanceCharge.addContent(allowanceChargeReason);
+                }
+
+//                if(!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()){
+//                    BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
+//                }
+
+                root.addContent(allowanceCharge);
+
+            }
 
 
             for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
