@@ -45,6 +45,9 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element issuerAssignedID = new Element("IssuerAssignedID", rootElement.getNamespace("ram"));
                     issuerAssignedID.setText(bt0122.getValue());
                     additionalReferencedDocument.addContent(issuerAssignedID);
+                    Element typeCode = new Element("TypeCode", ramNs);
+                    typeCode.setText("916");
+                    additionalReferencedDocument.addContent(typeCode);
                 }
 
                 if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
@@ -76,13 +79,6 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element uriid = new Element("URIID", rootElement.getNamespace("ram"));
                     uriid.setText(bt0124.getValue());
                     additionalReferencedDocument.addContent(uriid);
-                }
-
-                if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
-                    BT0122SupportingDocumentReference bt0122 = bg0024.getBT0122SupportingDocumentReference(0);
-                    Element typeCode = new Element("TypeCode", ramNs);
-                    typeCode.setText(bt0122.getValue());
-                    additionalReferencedDocument.addContent(typeCode);
                 }
 
                 if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
