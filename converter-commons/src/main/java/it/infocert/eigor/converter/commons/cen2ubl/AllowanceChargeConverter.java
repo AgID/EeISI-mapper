@@ -21,7 +21,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<BigDecimal, String> dblStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
+        TypeConverter<BigDecimal, String> bdStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
 
         Iso4217CurrenciesFundsCodes currencyCode = null;
         if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
@@ -31,15 +31,27 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
 
         Element root = document.getRootElement();
         if (root != null) {
+            // W I P
+//            for (BG0020DocumentLevelAllowances bg0020 : cenInvoice.getBG0020DocumentLevelAllowances()) {
+//
+//                Element allowanceCharge = new Element("AllowanceCharge");
+//                allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
+//
+//                root.addContent(allowanceCharge);
+//
+//            }
+
+
             for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
 
                 Element allowanceCharge = new Element("AllowanceCharge");
+                allowanceCharge.addContent(new Element("ChargeIndicator").setText("true"));
 
                 if (!bg0021.getBT0099DocumentLevelChargeAmount().isEmpty()) {
                     BT0099DocumentLevelChargeAmount bt0099 = bg0021.getBT0099DocumentLevelChargeAmount(0);
                     Element amount = new Element("Amount");
                     try {
-                        amount.setText(dblStrConverter.convert(bt0099.getValue()));
+                        amount.setText(bdStrConverter.convert(bt0099.getValue()));
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -59,7 +71,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     BT0100DocumentLevelChargeBaseAmount bt0100 = bg0021.getBT0100DocumentLevelChargeBaseAmount(0);
                     Element baseAmount = new Element("BaseAmount");
                     try {
-                        baseAmount.setText(dblStrConverter.convert(bt0100.getValue()));
+                        baseAmount.setText(bdStrConverter.convert(bt0100.getValue()));
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -79,7 +91,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     BT0101DocumentLevelChargePercentage bt0101 = bg0021.getBT0101DocumentLevelChargePercentage(0);
                     Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
                     try {
-                        multiplierFactorNumeric.setText(dblStrConverter.convert(bt0101.getValue()));
+                        multiplierFactorNumeric.setText(bdStrConverter.convert(bt0101.getValue()));
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
