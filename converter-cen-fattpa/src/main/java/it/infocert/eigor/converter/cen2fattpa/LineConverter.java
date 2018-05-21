@@ -634,12 +634,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     BigDecimal itemNetPrice = priceDetails.getBT0146ItemNetPrice().isEmpty() ? BigDecimal.ZERO : priceDetails.getBT0146ItemNetPrice(0).getValue();
                     String quantityUnitOfMeasureCode = invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty() ? "" : invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
-                    BigDecimal baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ? BigDecimal.ONE : priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue();
+                    BigDecimal baseQuantity = priceDetails.getBT0149ItemPriceBaseQuantity().isEmpty() ?
+                            BigDecimal.ONE.setScale(2, RoundingMode.HALF_UP) :
+                            priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue().setScale(2, RoundingMode.HALF_UP);
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
 
                     try {
                         dettaglioLinee.setQuantita(quantity.divide(baseQuantity, RoundingMode.HALF_UP).setScale(8, RoundingMode.HALF_UP));
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException | ArithmeticException e) {
                         ArrayList<String> zeroes = Lists.newArrayList();
                         if (quantity.compareTo(BigDecimal.ZERO) == 0) {
                             zeroes.add("BT0129");
@@ -659,10 +661,37 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, zeroes.toString())
                         ));
                     }
-                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
-                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
-                        dettaglioLinee.setPrezzoTotale(value.setScale(2, RoundingMode.HALF_UP));
-                    }
+
+
+                    // FIXME PrezzoTotale is defined as (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
+
+//                    final BigDecimal prezzoTotale = itemNetPrice.multiply(
+//                            quantity.divide(baseQuantity, RoundingMode.HALF_UP))
+//                            .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
+
+                    // FIXME  but only matches provided excel calculation like so
+
+                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.divide(baseQuantity, RoundingMode.HALF_UP));
+
+                    dettaglioLinee.setPrezzoTotale(prezzoTotale.setScale(8, RoundingMode.HALF_UP));
+
+
+//                    if (!invoice.getBG0023VatBreakdown().isEmpty()) {
+//                        BG0023VatBreakdown bg0023VatBreakdown = invoice.getBG0023VatBreakdown(1);
+//                        if (!bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount().isEmpty()) {
+//                            BigDecimal bt0116 = bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount(0).getValue();
+//                            BigDecimal total = itemNetPrice.multiply(
+//                                    quantity.divide(baseQuantity, RoundingMode.HALF_UP))
+//                                    .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
+//
+//                            BigDecimal roundingDifference = bt0116.subtract(total);
+//                        }
+//                    }
+
+//                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
+//                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
+//                        dettaglioLinee.setPrezzoTotale(value.setScale(2, RoundingMode.HALF_UP));
+//                    }
 
                     if (!priceDetails.getBT0147ItemPriceDiscount().isEmpty()) {
                         final BigDecimal itemPriceDiscount = priceDetails.getBT0147ItemPriceDiscount(0).getValue();
@@ -682,7 +711,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (baseQuantity.compareTo(BigDecimal.ONE) > 0) {
                         AltriDatiGestionaliType altriDatiGestionaliQty = new AltriDatiGestionaliType();
                         altriDatiGestionaliQty.setTipoDato(IConstants.ITEM_BASE_QTY);
-                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity.setScale(2, RoundingMode.HALF_UP));
+                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity);
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
 
 
@@ -1273,5 +1302,27 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             dettaglioLineeList.add(l);
             log.trace("Set NumeroLinea with value {}", ln);
         }
+    }
+
+    private BigDecimal getSumOfAllowancesForLine(BG0025InvoiceLine invoiceLine) {
+        BigDecimal allowancesSum = BigDecimal.ZERO;
+
+        for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
+            BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+            allowancesSum = allowancesSum.add(allowanceAmount);
+        }
+
+        return allowancesSum;
+    }
+
+    private BigDecimal getSumOfChargesForLine(BG0025InvoiceLine invoiceLine) {
+        BigDecimal chargesSum = BigDecimal.ZERO;
+
+        for (BG0028InvoiceLineCharges invoiceLineCharges : invoiceLine.getBG0028InvoiceLineCharges()) {
+            BigDecimal chargeAmount = invoiceLineCharges.getBT0141InvoiceLineChargeAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineCharges.getBT0141InvoiceLineChargeAmount(0).getValue();
+            chargesSum = chargesSum.add(chargeAmount);
+        }
+
+        return chargesSum;
     }
 }

@@ -287,6 +287,28 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll()), "PARTY NAME ACCOUNT NAME", evaluate);
     }
 
+
+    @Test
+    public void issue220() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-220-ubl.xml");
+
+        ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
+
+        String arrotondamento0 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiGeneraliDocumento']//*[local-name()='Arrotondamento']/text()");
+        assertTrue(arrotondamento0!=null && !arrotondamento0.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll()), "0.00", arrotondamento0);
+
+        String arrotondamento1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='10.00']//*[local-name()='Arrotondamento']/text()");
+        assertTrue(arrotondamento1!=null && !arrotondamento1.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll()), "-0.00400000", arrotondamento1);
+
+        String arrotondamento2 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='23.00']//*[local-name()='Arrotondamento']/text()");
+        assertTrue(arrotondamento2!=null && !arrotondamento2.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll()), "0.00160000", arrotondamento2);
+    }
+
+
     @Test
     public void issue238() throws Exception {
 

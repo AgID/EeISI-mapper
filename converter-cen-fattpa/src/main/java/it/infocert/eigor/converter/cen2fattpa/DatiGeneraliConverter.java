@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,6 +75,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             addIndirizzo(invoice, fatturaElettronica, errors);
             addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
             addRiferimentoNormativo(invoice, body, errors, callingLocation);
+            addArrotondamento(invoice, body, errors, callingLocation);
             addDettaglioPagamento(invoice, body, errors, callingLocation);
         }
     }
@@ -482,7 +485,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                                 datiRiepilogo.setRiferimentoNormativo(String.format("%s %s", bt0120, bt0121));
                             }
                             body.setDatiBeniServizi(datiBeniServizi);
-                        } else if(!bg0023.getBT0121VatExemptionReasonCode().isEmpty()){
+                        } else if (!bg0023.getBT0121VatExemptionReasonCode().isEmpty()) {
                             String bt0121 = bg0023.getBT0121VatExemptionReasonCode(0).getValue();
                             datiRiepilogo.setRiferimentoNormativo(bt0121);
                             body.setDatiBeniServizi(datiBeniServizi);
@@ -498,6 +501,30 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     );
                     log.error(e.getMessage(), e);
                     errors.add(ConversionIssue.newError(e));
+                }
+            }
+        }
+    }
+
+    private void addArrotondamento(BG0000Invoice invoice, FatturaElettronicaBodyType body, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+
+        DatiBeniServiziType datiBeniServizi = body.getDatiBeniServizi();
+        if (datiBeniServizi != null) {
+            List<DatiRiepilogoType> datiRiepilogoList = datiBeniServizi.getDatiRiepilogo();
+            if (datiRiepilogoList != null) {
+                for (DatiRiepilogoType datiRiepilogo : datiRiepilogoList) {
+                    BigDecimal imponibileImporto = datiRiepilogo.getImponibileImporto();
+                    BigDecimal aliquotaIVA = datiRiepilogo.getAliquotaIVA();
+                    BigDecimal imposta = datiRiepilogo.getImposta();
+
+                    if (imponibileImporto != null && aliquotaIVA != null && imposta != null) {
+                        BigDecimal arrotondamento = imposta.subtract(imponibileImporto.multiply(aliquotaIVA).scaleByPowerOfTen(-2));
+
+                        // no point to add Arrotondamento=0.00000000 if the difference is beyond the 8 decimals
+                        if (arrotondamento.setScale(8, RoundingMode.HALF_UP).signum() != 0) {
+                            datiRiepilogo.setArrotondamento(arrotondamento.negate());
+                        }
+                    }
                 }
             }
         }
