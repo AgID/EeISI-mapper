@@ -3,12 +3,14 @@ package com.infocert.eigor.api;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import org.junit.Assert;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.util.List;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 
@@ -21,9 +23,17 @@ public class ConversionUtil {
     }
 
     ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target) {
+        Predicate<IConversionIssue> predicate = new KeepAll();
+        return assertConversionWithoutErrors(invoice, source, target, predicate);
+    }
+
+    ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
         InputStream invoiceStream = invoiceAsStream(invoice);
         ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream);
-        Assert.assertFalse( buildMsgForFailedAssertion(convert, new KeepAll()), convert.hasIssues() );
+
+        List<IConversionIssue> issues = Lists.newArrayList( Iterables.filter(convert.getIssues(), errorsToKeep) );
+
+        Assert.assertTrue( buildMsgForFailedAssertion(convert, errorsToKeep), issues.isEmpty() );
         return convert;
     }
 
@@ -47,6 +57,8 @@ public class ConversionUtil {
         return issuesDescription.toString();
     }
 
+
+
     static class KeepByErrorCode implements Predicate<IConversionIssue> {
         private final String errorCode;
 
@@ -67,6 +79,18 @@ public class ConversionUtil {
         @Override
         public boolean apply(@Nullable IConversionIssue input) {
             return true;
+        }
+    }
+
+    static class KeepXSDErrorsOnly implements Predicate<IConversionIssue> {
+
+        @Override
+        public boolean apply(@Nullable IConversionIssue input) {
+            try{
+                return input.getErrorMessage().getErrorCode().getAction().toString().equals("XSD_VALIDATION");
+            }catch(NullPointerException npe){
+                return false;
+            }
         }
     }
 

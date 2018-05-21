@@ -71,9 +71,15 @@ public class IssuesTest {
         conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
     }
 
-    @Test @Ignore
+    @Test
     public void issue261FromFattPAToUbl() {
-        conversion.assertConversionWithoutErrors("/issues/issue-261-fattpa.xml", "fatturapa", "ubl");
+        conversion.assertConversionWithoutErrors(
+                "/issues/issue-261-fattpa.xml",
+                "fatturapa",
+                "ubl",
+                new ConversionUtil.KeepXSDErrorsOnly()
+                //new ConversionUtil.KeepAll()
+        );
     }
 
     @Test

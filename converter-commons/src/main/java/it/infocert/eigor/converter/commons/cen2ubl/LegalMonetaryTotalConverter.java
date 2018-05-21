@@ -30,6 +30,8 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
             if (!cenInvoice.getBG0022DocumentTotals().isEmpty()) {
                 BG0022DocumentTotals bg0022 = cenInvoice.getBG0022DocumentTotals(0);
                 Element legalMonetaryTotal = new Element("LegalMonetaryTotal");
+
+                // <xsd:element ref="cbc:LineExtensionAmount" minOccurs="0" maxOccurs="1">
                 if (!bg0022.getBT0106SumOfInvoiceLineNetAmount().isEmpty()) {
                     BT0106SumOfInvoiceLineNetAmount bt0106 = bg0022.getBT0106SumOfInvoiceLineNetAmount(0);
                     Element lineExtensionAmount = new Element("LineExtensionAmount");
@@ -37,6 +39,8 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     lineExtensionAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                     legalMonetaryTotal.addContent(lineExtensionAmount);
                 }
+
+                // <xsd:element ref="cbc:TaxExclusiveAmount" minOccurs="0" maxOccurs="1">
                 if (!bg0022.getBT0109InvoiceTotalAmountWithoutVat().isEmpty()) {
                     BT0109InvoiceTotalAmountWithoutVat bt0109 = bg0022.getBT0109InvoiceTotalAmountWithoutVat(0);
                     Element taxExclusiveAmount = new Element("TaxExclusiveAmount");
@@ -45,6 +49,7 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     legalMonetaryTotal.addContent(taxExclusiveAmount);
                 }
 
+                // <xsd:element ref="cbc:TaxInclusiveAmount" minOccurs="0" maxOccurs="1">
                 if (!bg0022.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
                     BT0112InvoiceTotalAmountWithVat bt0112 = bg0022.getBT0112InvoiceTotalAmountWithVat(0);
                     Element taxInclusiveAmount = new Element("TaxInclusiveAmount");
@@ -53,6 +58,25 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     legalMonetaryTotal.addContent(taxInclusiveAmount);
                 }
 
+                // <xsd:element ref="cbc:AllowanceTotalAmount" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:ChargeTotalAmount" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:PrepaidAmount" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:PayableRoundingAmount" minOccurs="0" maxOccurs="1">
+                if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
+                    BT0114RoundingAmount bt0114 = bg0022.getBT0114RoundingAmount(0);
+                    Element payableRoundingAmount = new Element("PayableRoundingAmount");
+                    final BigDecimal value = bt0114.getValue();
+                    payableRoundingAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                    legalMonetaryTotal.addContent(payableRoundingAmount);
+                }
+
+                // <xsd:element ref="cbc:PayableAmount" minOccurs="1" maxOccurs="1">
                 if (!bg0022.getBT0115AmountDueForPayment().isEmpty()) {
                     BT0115AmountDueForPayment bt0115 = bg0022.getBT0115AmountDueForPayment(0);
                     Element payableAmount = new Element("PayableAmount");
@@ -61,13 +85,8 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     legalMonetaryTotal.addContent(payableAmount);
                 }
 
-                if (!bg0022.getBT0114RoundingAmount().isEmpty()) {
-                    BT0114RoundingAmount bt0114 = bg0022.getBT0114RoundingAmount(0);
-                    Element payableRoundingAmount = new Element("PayableRoundingAmount");
-                    final BigDecimal value = bt0114.getValue();
-                    payableRoundingAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    legalMonetaryTotal.addContent(payableRoundingAmount);
-                }
+                // <xsd:element ref="cbc:PayableAlternativeAmount" minOccurs="0" maxOccurs="1">
+                // not used
 
                 if (currencyCode != null) {
                     for (Element element : legalMonetaryTotal.getChildren()) {
