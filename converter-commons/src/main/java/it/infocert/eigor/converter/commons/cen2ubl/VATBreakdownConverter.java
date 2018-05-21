@@ -123,6 +123,23 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     taxCategory.addContent(taxScheme.addContent(taxSchemeId.setText("VAT")));
                 }
 
+                Element taxExemptionReason = new Element("TaxExemptionReason");
+                if (!elemBg23.getBT0120VatExemptionReasonText().isEmpty()) {
+                    BT0120VatExemptionReasonText bt0120 = elemBg23.getBT0120VatExemptionReasonText(0);
+                    taxExemptionReason.setText(bt0120.getValue());
+                    taxCategory.addContent(taxExemptionReason);
+                } else if(bt0118!=null && Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue())){
+                    taxExemptionReason.setText(bt0118.getValue().getShortDescritpion());
+                    taxCategory.addContent(taxExemptionReason);
+                }
+
+                if (!elemBg23.getBT0121VatExemptionReasonCode().isEmpty()) {
+                    BT0121VatExemptionReasonCode bt0121 = elemBg23.getBT0121VatExemptionReasonCode(0);
+                    Element taxExemptionReasonCode = new Element("TaxExemptionReasonCode");
+                    taxExemptionReasonCode.setText(bt0121.getValue());
+                    taxCategory.addContent(taxExemptionReasonCode);
+                }
+
                 if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
                     BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
                     Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
