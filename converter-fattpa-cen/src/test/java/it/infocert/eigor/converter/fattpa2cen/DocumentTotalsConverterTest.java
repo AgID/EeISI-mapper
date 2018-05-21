@@ -44,11 +44,6 @@ public class DocumentTotalsConverterTest {
         assertFalse(invoice.getBG0021DocumentLevelCharges().isEmpty());
         BG0021DocumentLevelCharges bg0021 = invoice.getBG0021DocumentLevelCharges().get(0);
 
-        assertTrue(bg0021.getBT0099DocumentLevelChargeAmount().isEmpty());
-        assertTrue(bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty());
-        assertTrue(bg0021.getBT0101DocumentLevelChargePercentage().isEmpty());
-        assertTrue(bg0021.getBT0103DocumentLevelChargeVatRate().isEmpty());
-
         BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
         assertThat(bt0104.getValue(), is("SI"));
     }

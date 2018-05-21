@@ -90,7 +90,9 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                 if ("SI".equals(bolloVirtualeText)) {
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason(bolloVirtualeText);
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
-                                } else if (importoBollo != null) {
+                                }
+
+                                if (importoBollo != null) {
 
                                     BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(BigDecimal.ZERO);
                                     bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
