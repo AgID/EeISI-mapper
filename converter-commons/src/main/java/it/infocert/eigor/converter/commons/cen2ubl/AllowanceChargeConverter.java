@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -41,6 +42,10 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element amount = new Element("Amount");
                     try {
                         amount.setText(bdStrConverter.convert(bt0092.getValue()));
+                        if (currencyCode != null) {
+                            amount.setAttribute("currencyID", currencyCode.getCode());
+                        }
+                        allowanceCharge.addContent(amount);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -52,8 +57,6 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0092.toString())
                         ));
                     }
-                    amount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(amount);
                 }
 
                 if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
@@ -61,6 +64,11 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element baseAmount = new Element("BaseAmount");
                     try {
                         baseAmount.setText(bdStrConverter.convert(bt0093.getValue()));
+                        if (currencyCode != null) {
+
+                            baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                        }
+                        allowanceCharge.addContent(baseAmount);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -72,8 +80,6 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0093.toString())
                         ));
                     }
-                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(baseAmount);
                 }
 
                 if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
@@ -81,6 +87,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
                     try {
                         multiplierFactorNumeric.setText(bdStrConverter.convert(bt0094.getValue()));
+                        allowanceCharge.addContent(multiplierFactorNumeric);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -92,35 +99,73 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0094.toString())
                         ));
                     }
-                    allowanceCharge.addContent(multiplierFactorNumeric);
                 }
 
-                if(!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()){
+                if (!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
+                    BigDecimal percentValue = bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue();
+
+                    Element taxCategory = new Element("TaxCategory");
+                    Element id = new Element("ID");
+
+                    if (!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
+                        BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode(0);
+                        id.setText(bt0095.getValue().name());
+                    } else if (BigDecimal.ZERO.compareTo(percentValue) == 0) {
+                        id.setText(Untdid5305DutyTaxFeeCategories.Z.name());
+                    } else {
+                        id.setText(Untdid5305DutyTaxFeeCategories.S.name());
+                    }
+                    taxCategory.addContent(id);
+
+                    Element percent = new Element("Percent");
+                    try {
+                        percent.setText(bdStrConverter.convert(percentValue));
+                        taxCategory.addContent(percent);
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, percentValue.toString())
+                        ));
+                    }
+                    allowanceCharge.addContent(taxCategory);
+                } else if (!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                     BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode(0);
                     Element taxCategory = new Element("TaxCategory");
                     Element id = new Element("ID");
                     taxCategory.addContent(id);
                     id.setText(bt0095.getValue().name());
+
+                    if (Untdid5305DutyTaxFeeCategories.E.equals(bt0095.getValue())) {
+                        Element percent = new Element("Percent");
+                        percent.setText("0.00");
+                        taxCategory.addContent(percent);
+                    }
+
                     allowanceCharge.addContent(taxCategory);
                 }
 
-//                if(!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()){
-//                    BT0096DocumentLevelAllowanceVatRate bt0096 = bg0020.getBT0096DocumentLevelAllowanceVatRate(0);
-//                }
-
-                if(!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()){
+                Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
                     BT0097DocumentLevelAllowanceReason bt0097 = bg0020.getBT0097DocumentLevelAllowanceReason(0);
-                    Element allowanceChargeReason = new Element("AllowanceChargeReason");
                     allowanceChargeReason.setText(bt0097.getValue());
-                    allowanceCharge.addContent(allowanceChargeReason);
+                } else {
+                    allowanceChargeReason.setText("Sconto documento");
+                }
+                allowanceCharge.addContent(allowanceChargeReason);
+
+                if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+                    BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
+                    Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                    allowanceChargeReasonCode.setText(bt0098.getValue().name());
+                    allowanceCharge.addContent(allowanceChargeReasonCode);
                 }
 
-//                if(!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()){
-//                    BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
-//                }
-
                 root.addContent(allowanceCharge);
-
             }
 
 
@@ -134,6 +179,10 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element amount = new Element("Amount");
                     try {
                         amount.setText(bdStrConverter.convert(bt0099.getValue()));
+                        if (currencyCode != null) {
+                            amount.setAttribute("currencyID", currencyCode.getCode());
+                        }
+                        allowanceCharge.addContent(amount);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -145,8 +194,6 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0099.toString())
                         ));
                     }
-                    amount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(amount);
                 }
 
                 if (!bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
@@ -154,6 +201,10 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element baseAmount = new Element("BaseAmount");
                     try {
                         baseAmount.setText(bdStrConverter.convert(bt0100.getValue()));
+                        if (currencyCode != null) {
+                            baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                        }
+                        allowanceCharge.addContent(baseAmount);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -165,8 +216,6 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0100.toString())
                         ));
                     }
-                    baseAmount.setAttribute("currencyID", currencyCode.getCode());
-                    allowanceCharge.addContent(baseAmount);
                 }
 
                 if (!bg0021.getBT0101DocumentLevelChargePercentage().isEmpty()) {
@@ -174,6 +223,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
                     try {
                         multiplierFactorNumeric.setText(bdStrConverter.convert(bt0101.getValue()));
+                        allowanceCharge.addContent(multiplierFactorNumeric);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
                                 e,
@@ -185,29 +235,75 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                                 Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0101.toString())
                         ));
                     }
-                    allowanceCharge.addContent(multiplierFactorNumeric);
                 }
 
-                if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
+                if (!bg0021.getBT0103DocumentLevelChargeVatRate().isEmpty()) {
+                    BigDecimal percentValue = bg0021.getBT0103DocumentLevelChargeVatRate(0).getValue();
+
+
+                    Element taxCategory = new Element("TaxCategory");
+                    Element id = new Element("ID");
+
+                    if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
+                        BT0102DocumentLevelChargeVatCategoryCode bt0102 = bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0);
+                        id.setText(bt0102.getValue().name());
+                    } else if (BigDecimal.ZERO.compareTo(percentValue) == 0) {
+                        id.setText(Untdid5305DutyTaxFeeCategories.Z.name());
+                    } else {
+                        id.setText(Untdid5305DutyTaxFeeCategories.S.name());
+                    }
+                    taxCategory.addContent(id);
+
+                    Element percent = new Element("Percent");
+                    try {
+                        percent.setText(bdStrConverter.convert(percentValue));
+                        taxCategory.addContent(percent);
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, percentValue.toString())
+                        ));
+                    }
+                    allowanceCharge.addContent(taxCategory);
+                } else if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
                     BT0102DocumentLevelChargeVatCategoryCode bt0102 = bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0);
                     Element taxCategory = new Element("TaxCategory");
                     Element id = new Element("ID");
                     taxCategory.addContent(id);
                     id.setText(bt0102.getValue().name());
+
+                    if (Untdid5305DutyTaxFeeCategories.E.equals(bt0102.getValue())) {
+                        Element percent = new Element("Percent");
+                        percent.setText("0.00");
+                        taxCategory.addContent(percent);
+                    }
+
                     allowanceCharge.addContent(taxCategory);
                 }
 
+                Element allowanceChargeReason = new Element("AllowanceChargeReason");
                 if (!bg0021.getBT0104DocumentLevelChargeReason().isEmpty()) {
                     BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
-                    Element allowanceChargeReason = new Element("AllowanceChargeReason");
                     allowanceChargeReason.setText(bt0104.getValue());
-                    allowanceCharge.addContent(allowanceChargeReason);
+                } else {
+                    allowanceChargeReason.setText("Maggiorazione documento");
+                }
+                allowanceCharge.addContent(allowanceChargeReason);
+
+                if (!bg0021.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
+                    BT0105DocumentLevelChargeReasonCode bt0105 = bg0021.getBT0105DocumentLevelChargeReasonCode(0);
+                    Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                    allowanceChargeReasonCode.setText(bt0105.getValue().name());
+                    allowanceCharge.addContent(allowanceChargeReasonCode);
                 }
 
                 root.addContent(allowanceCharge);
             }
-
-
         }
     }
 }
