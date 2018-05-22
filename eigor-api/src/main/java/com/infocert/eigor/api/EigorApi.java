@@ -8,6 +8,7 @@ import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.conversion.ObservableValidation;
+import it.infocert.eigor.api.io.RecursiveNavigator;
 import it.infocert.eigor.api.utils.EigorVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,6 +43,18 @@ public class EigorApi {
      * @return The invoice converted in the given target format.
      */
     public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice) {
+        return this.convert(sourceFormat, targetFormat, invoice, null);
+    }
+
+    /**
+     * Convert the provided invoice assuming it is expresses in the given source format.
+     * @param sourceFormat The format of the invoice to be converted.
+     * @param targetFormat The format the invoice will be converted to.
+     * @param invoice The invoice to convert.
+     * @param callbacks The list of callbacks to add to the transformation or null if no callbacks are needed.
+     * @return The invoice converted in the given target format.
+     */
+    public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice, ConversionCallback... callbacks) {
         log.debug(EigorVersion.getAsString());
 
         String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
@@ -48,7 +63,7 @@ public class EigorApi {
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
         outputFolderForThisTransformation.mkdirs();
 
-        ConversionCallback callback = new DebugConversionCallback(
+        ConversionCallback debugCallback = new DebugConversionCallback(
                 outputFolderForThisTransformation
         );
 
@@ -61,14 +76,23 @@ public class EigorApi {
                 builder.getConversionRepository().findConversionFromCen(targetFormat),
                 "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
 
-        return new ObservableConversion(
+        ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(debugCallback);
+        if(callbacks!=null && callbacks.length > 0){
+            fullListOfCallbacks.addAll(Arrays.asList(callbacks) );
+        }
+
+        ObservableConversion conversion = new ObservableConversion(
                 builder.getRuleRepository(),
                 toCen,
                 fromCen,
                 invoice,
                 builder.isForceConversion(),
                 "invoice",
-                Lists.newArrayList(callback)).conversion();
+                fullListOfCallbacks);
+
+
+
+        return conversion.conversion();
 
     }
 

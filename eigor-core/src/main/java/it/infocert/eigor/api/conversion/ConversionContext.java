@@ -6,6 +6,9 @@ import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
+/**
+ * Gives access to all the info used by the converter during a transformation.
+ */
 public class ConversionContext {
 
     private ConversionResult<BG0000Invoice> toCenResult;
