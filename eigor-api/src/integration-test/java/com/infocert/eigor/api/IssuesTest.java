@@ -15,6 +15,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -32,6 +33,7 @@ public class IssuesTest {
 
     private static DocumentBuilder documentBuilder;
     private static XPath xPath;
+    private File apiFolder;
 
     @BeforeClass public static void setUpXmlInfrastructure() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -43,9 +45,11 @@ public class IssuesTest {
     }
 
     @Before public void initApi() throws IOException, ConfigurationException {
+
+        apiFolder = tmp.newFolder();
         api = new EigorApiBuilder()
                 .enableAutoCopy()
-                .withOutputFolder(tmp.newFolder())
+                .withOutputFolder(apiFolder)
                 .enableForce()
                 .build();
 
@@ -73,6 +77,9 @@ public class IssuesTest {
 
     @Test
     public void issue261FromFattPAToUbl() {
+
+        System.out.println( apiFolder.getAbsolutePath() );
+
         conversion.assertConversionWithoutErrors(
                 "/issues/issue-261-fattpa.xml",
                 "fatturapa",
