@@ -102,6 +102,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 Element taxCategory = new Element("TaxCategory");
                 taxSubtotal.addContent(taxCategory);
 
+                // <xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1">
                 if (bt0118 != null) {
                     Element id = new Element("ID");
                     Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0118.getValue();
@@ -109,7 +110,10 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     taxCategory.addContent(id);
                 }
 
+                // <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
+                // not used
 
+                // <xsd:element ref="cbc:Percent" minOccurs="0" maxOccurs="1">
                 if (bt0119 != null) {
                     Element percent = new Element("Percent");
                     final BigDecimal value = bt0119.getValue();
@@ -117,10 +121,31 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                     taxCategory.addContent(percent);
                 }
 
+                // <xsd:element ref="cbc:BaseUnitMeasure" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:PerUnitAmount" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:TaxExemptionReasonCode" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:TaxExemptionReason" minOccurs="0" maxOccurs="unbounded">
+                // not used
+
+                // <xsd:element ref="cbc:TierRange" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cbc:TierRatePercent" minOccurs="0" maxOccurs="1">
+                // not used
+
+                // <xsd:element ref="cac:TaxScheme" minOccurs="1" maxOccurs="1">
                 {
-                    Element taxScheme = new Element("TaxScheme");
                     Element taxSchemeId = new Element("ID");
-                    taxCategory.addContent(taxScheme.addContent(taxSchemeId.setText("VAT")));
+                    taxSchemeId.setText("VAT");
+                    Element taxScheme = new Element("TaxScheme");
+                    taxScheme.addContent(taxSchemeId);
+                    taxCategory.addContent(taxScheme);
                 }
 
                 Element taxExemptionReason = new Element("TaxExemptionReason");

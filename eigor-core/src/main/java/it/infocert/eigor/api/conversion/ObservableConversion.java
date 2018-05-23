@@ -31,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <li>a conversion completed with errors</li>
  * <li>etc...</li>
  * </ul>
+ * Just provide them in the constructor.
  * For details, please check {@link ConversionCallback}.
  * </p>
  */

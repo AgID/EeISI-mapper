@@ -196,6 +196,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     }
                 }
 
+                // <xsd:element ref="cbc:BaseAmount" minOccurs="0" maxOccurs="1">
                 if (!bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
                     BT0100DocumentLevelChargeBaseAmount bt0100 = bg0021.getBT0100DocumentLevelChargeBaseAmount(0);
                     Element baseAmount = new Element("BaseAmount");
@@ -282,7 +283,8 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                         percent.setText("0.00");
                         taxCategory.addContent(percent);
                     }
-
+                    Element taxScheme = new Element("TaxScheme").addContent(new Element("ID").setText("VAT"));
+                    taxCategory.addContent(taxScheme);
                     allowanceCharge.addContent(taxCategory);
                 }
 

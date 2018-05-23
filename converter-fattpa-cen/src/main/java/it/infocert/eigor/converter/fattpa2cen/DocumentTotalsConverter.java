@@ -88,20 +88,28 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                                 String bolloVirtualeText = bolloVirtuale.getText();
                                 if ("SI".equals(bolloVirtualeText)) {
+
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason(bolloVirtualeText);
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
+
+                                }else {
+
+                                    BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason("BT-100 represents Bollo amount, Bollo virtuale assolto ai sensi dell’ art. 6, c. 2 del DM 17 giugno 2014");
+                                    bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
+
                                 }
 
+
+                                BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(BigDecimal.ZERO);
+                                bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
+
+                                BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(BigDecimal.ZERO);
+                                bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
+
+                                BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.E);
+                                bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
+
                                 if (importoBollo != null) {
-
-                                    BT0099DocumentLevelChargeAmount bt0099 = new BT0099DocumentLevelChargeAmount(BigDecimal.ZERO);
-                                    bg0021.getBT0099DocumentLevelChargeAmount().add(bt0099);
-
-                                    BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(BigDecimal.ZERO);
-                                    bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
-
-                                    BT0102DocumentLevelChargeVatCategoryCode bt0102 = new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.E);
-                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(bt0102);
 
                                     try {
                                         BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(new BigDecimal(importoBollo.getText()));

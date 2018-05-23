@@ -4,16 +4,20 @@ import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid4451InvoiceNoteSubjectCode;
 import it.infocert.eigor.model.core.model.*;
 
+import java.util.Arrays;
+
 public class DumpVisitor implements Visitor {
 
     private final StringBuilder sb = new StringBuilder();
     private boolean lineAlreadyPrinted = false;
+    private int nestingLevel;
 
     @Override
     public void startInvoice(BG0000Invoice invoice) {
         sb.append("========================================\n");
         sb.append("INVOICE                                 \n");
         sb.append("========================================\n");
+        nestingLevel = 0;
     }
 
     @Override
@@ -28,12 +32,21 @@ public class DumpVisitor implements Visitor {
         }else{
             sb.append("----------------------------------------\n");
         }
-        sb.append(String.format("%3s |%6s | %-10s \n", order, name, value));
+
+        sb.append(String.format("%s%3s | %6s | %-10s | %s\n", nestingSpacer(), order, name, value, btbg.name()));
+
+        if(btbg.denomination().startsWith("BG")){
+            nestingLevel++;
+        }
     }
 
     @Override
     public void endBTBG(BTBG btbg) {
-
+        if(btbg.denomination().startsWith("BG")){
+            sb.append("----------------------------------------\n");
+            nestingLevel--;
+            sb.append(String.format("%s%3s | %6s | %-10s \n", nestingSpacer(), "---", btbg.denomination() + " ended", ""));
+        }
     }
 
     @Override
@@ -77,5 +90,11 @@ public class DumpVisitor implements Visitor {
         DumpVisitor v = new DumpVisitor();
         invoice.accept(v);
         System.out.println(v.toString());
+    }
+
+    private String nestingSpacer() {
+        byte[] nesting = new byte[nestingLevel * 3];
+        Arrays.fill(nesting, " ".getBytes()[0]);
+        return new String(nesting);
     }
 }
