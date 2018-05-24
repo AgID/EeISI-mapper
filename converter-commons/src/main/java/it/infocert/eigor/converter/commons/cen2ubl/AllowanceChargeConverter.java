@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -40,7 +41,8 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                 if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                     BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
                     Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
-                    allowanceChargeReasonCode.setText(bt0098.getValue().name());
+                    String value = String.valueOf(bt0098.getValue().getCode());
+                    allowanceChargeReasonCode.setText(value);
                     allowanceCharge.addContent(allowanceChargeReasonCode);
                 }
 
@@ -304,5 +306,19 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                 root.addContent(allowanceCharge);
             }
         }
+    }
+
+    private String getUNCL5189FromUntdid5189(Untdid5189ChargeAllowanceDescriptionCodes value) {
+        switch (value){
+            case Code42:
+                return "PR";
+            case Code57:
+                break;
+            case Code95:
+                break;
+            case Code100:
+                return "AB";
+        }
+        return null;
     }
 }

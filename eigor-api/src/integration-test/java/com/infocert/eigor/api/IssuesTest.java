@@ -364,16 +364,7 @@ public class IssuesTest {
 
     @Test
     public void issue281FattpaToUBL() throws Exception {
-
-//        conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
-
-        // Until we get the codelist for UNTDID4465 to UNCL 5189, there will be just this validation error
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
-        for (IConversionIssue issue : convert.getIssues()) {
-            assertTrue(issue.getMessage().contains("[BR-CL-19]-Coded allowance reasons MUST belong to the UNCL 5189 code list"));
-        }
-
+        conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
 //    @Test
