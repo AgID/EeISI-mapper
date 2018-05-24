@@ -2,6 +2,7 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import org.codehaus.plexus.util.Base64;
 import org.junit.*;
@@ -360,6 +361,25 @@ public class IssuesTest {
         assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
     }
+
+    @Test
+    public void issue281FattpaToUBL() throws Exception {
+
+//        conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
+
+        // Until we get the codelist for UNTDID4465 to UNCL 5189, there will be just this validation error
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+        for (IConversionIssue issue : convert.getIssues()) {
+            assertTrue(issue.getMessage().contains("[BR-CL-19]-Coded allowance reasons MUST belong to the UNCL 5189 code list"));
+        }
+
+    }
+
+//    @Test
+//    public void issue281FattpaToCII() throws Exception {
+//        conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
+//    }
 
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
