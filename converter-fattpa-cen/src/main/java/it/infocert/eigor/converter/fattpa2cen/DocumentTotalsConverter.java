@@ -92,7 +92,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason(bolloVirtualeText);
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
 
-                                }else {
+                                } else {
 
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason("BT-100 represents Bollo amount, Bollo virtuale assolto ai sensi dell’ art. 6, c. 2 del DM 17 giugno 2014");
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
@@ -346,8 +346,6 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                 }
             }
-
-
         }
     }
 }
