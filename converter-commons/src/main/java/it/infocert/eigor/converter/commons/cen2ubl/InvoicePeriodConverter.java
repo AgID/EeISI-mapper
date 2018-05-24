@@ -85,7 +85,7 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
                         BT0008ValueAddedTaxPointDateCode bt0008 = invoice.getBT0008ValueAddedTaxPointDateCode(0);
                         Element descriptionCode = new Element("DescriptionCode");
                         Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
-                        descriptionCode.setText(code.name());
+                        descriptionCode.setText(String.valueOf(code.getCode()));
                         invoicePeriod.addContent(descriptionCode);
                     }
                 }

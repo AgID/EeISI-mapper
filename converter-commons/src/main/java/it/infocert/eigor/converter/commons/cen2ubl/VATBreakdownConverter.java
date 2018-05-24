@@ -2,8 +2,6 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.conversion.converter.BigDecimalToStringConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -23,7 +21,6 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        TypeConverter<BigDecimal, String> bigStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -127,11 +124,22 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 // <xsd:element ref="cbc:PerUnitAmount" minOccurs="0" maxOccurs="1">
                 // not used
 
-                // <xsd:element ref="cbc:TaxExemptionReasonCode" minOccurs="0" maxOccurs="1">
-                // not used
+                if (!elemBg23.getBT0121VatExemptionReasonCode().isEmpty()) {
+                    BT0121VatExemptionReasonCode bt0121 = elemBg23.getBT0121VatExemptionReasonCode(0);
+                    Element taxExemptionReasonCode = new Element("TaxExemptionReasonCode");
+                    taxExemptionReasonCode.setText(bt0121.getValue());
+                    taxCategory.addContent(taxExemptionReasonCode);
+                }
 
-                // <xsd:element ref="cbc:TaxExemptionReason" minOccurs="0" maxOccurs="unbounded">
-                // not used
+                Element taxExemptionReason = new Element("TaxExemptionReason");
+                if (!elemBg23.getBT0120VatExemptionReasonText().isEmpty()) {
+                    BT0120VatExemptionReasonText bt0120 = elemBg23.getBT0120VatExemptionReasonText(0);
+                    taxExemptionReason.setText(bt0120.getValue());
+                    taxCategory.addContent(taxExemptionReason);
+                } else if (bt0118 != null && Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue())) {
+                    taxExemptionReason.setText(bt0118.getValue().getShortDescritpion());
+                    taxCategory.addContent(taxExemptionReason);
+                }
 
                 // <xsd:element ref="cbc:TierRange" minOccurs="0" maxOccurs="1">
                 // not used

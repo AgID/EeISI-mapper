@@ -24,77 +24,80 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
+        Namespace rsmNs = rootElement.getNamespace("rsm");
+        Namespace ramNs = rootElement.getNamespace("ram");
+        Namespace udtNs = rootElement.getNamespace("udt");
 
         Element supplyChainTradeTransaction = findNamespaceChild(rootElement, namespacesInScope, "SupplyChainTradeTransaction");
         Element applicableHeaderTradeSettlement = null;
 
         if (supplyChainTradeTransaction == null) {
-            supplyChainTradeTransaction = new Element("SupplyChainTradeTransaction", rootElement.getNamespace("rsm"));
-            applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", rootElement.getNamespace("ram"));
+            supplyChainTradeTransaction = new Element("SupplyChainTradeTransaction", rsmNs);
+            applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
             supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             rootElement.addContent(supplyChainTradeTransaction);
         } else {
             applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
             if (applicableHeaderTradeSettlement == null) {
-                applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", rootElement.getNamespace("ram"));
+                applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             }
         }
 
         for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
-            Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", rootElement.getNamespace("ram"));
+            Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
 
-            Element chargeIndicator = new Element("ChargeIndicator", rootElement.getNamespace("ram"));
-            Element indicator = new Element("Indicator", rootElement.getNamespace("ram"));
+            Element chargeIndicator = new Element("ChargeIndicator", ramNs);
+            Element indicator = new Element("Indicator", udtNs);
             indicator.setText("true");
             chargeIndicator.addContent(indicator);
             specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
             if (!bg0021.getBT0099DocumentLevelChargeAmount().isEmpty()) {
-                Element actualAmount = new Element("ActualAmount");
+                Element actualAmount = new Element("ActualAmount", ramNs);
                 BigDecimal value = bg0021.getBT0099DocumentLevelChargeAmount(0).getValue();
                 actualAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                 specifiedTradeAllowanceCharge.addContent(actualAmount);
             }
 
             if (!bg0021.getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
-                Element basisAmount = new Element("BasisAmount");
+                Element basisAmount = new Element("BasisAmount", ramNs);
                 BigDecimal value = bg0021.getBT0100DocumentLevelChargeBaseAmount(0).getValue();
                 basisAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                 specifiedTradeAllowanceCharge.addContent(basisAmount);
             }
 
             if (!bg0021.getBT0101DocumentLevelChargePercentage().isEmpty()) {
-                Element calculationPercent = new Element("CalculationPercent");
+                Element calculationPercent = new Element("CalculationPercent", ramNs);
                 BigDecimal value = bg0021.getBT0101DocumentLevelChargePercentage(0).getValue();
                 calculationPercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                 specifiedTradeAllowanceCharge.addContent(calculationPercent);
             }
 
-            Element categoryTradeTax = new Element("CategoryTradeTax");
+            Element categoryTradeTax = new Element("CategoryTradeTax", ramNs);
             specifiedTradeAllowanceCharge.addContent(categoryTradeTax);
 
             if (!bg0021.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
-                Element categoryCode = new Element("CategoryCode");
+                Element categoryCode = new Element("CategoryCode", ramNs);
                 categoryCode.setText(bg0021.getBT0102DocumentLevelChargeVatCategoryCode(0).getValue().name());
                 categoryTradeTax.addContent(categoryCode);
             }
 
             if (!bg0021.getBT0103DocumentLevelChargeVatRate().isEmpty()) {
-                Element rateApplicablePercent = new Element("RateApplicablePercent");
+                Element rateApplicablePercent = new Element("RateApplicablePercent", ramNs);
                 BigDecimal value = bg0021.getBT0103DocumentLevelChargeVatRate(0).getValue();
                 rateApplicablePercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                 categoryTradeTax.addContent(rateApplicablePercent);
             }
 
             if (!bg0021.getBT0104DocumentLevelChargeReason().isEmpty()) {
-                Element reason = new Element("Reason");
+                Element reason = new Element("Reason", ramNs);
                 reason.setText(bg0021.getBT0104DocumentLevelChargeReason(0).getValue());
                 specifiedTradeAllowanceCharge.addContent(reason);
             }
 
             if (!bg0021.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
-                Element reasonCode = new Element("ReasonCode");
+                Element reasonCode = new Element("ReasonCode", ramNs);
                 reasonCode.setText(bg0021.getBT0105DocumentLevelChargeReasonCode(0).getValue().name());
                 specifiedTradeAllowanceCharge.addContent(reasonCode);
             }

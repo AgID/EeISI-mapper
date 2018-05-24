@@ -36,7 +36,7 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
             }
 
-            final Element sellerTaxRepresentativeTradeParty = new Element("SellerTaxRepresentativeTradeParty");
+            final Element sellerTaxRepresentativeTradeParty = new Element("SellerTaxRepresentativeTradeParty", ramNs);
             applicableHeaderTradeAgreement.addContent(sellerTaxRepresentativeTradeParty);
 
 

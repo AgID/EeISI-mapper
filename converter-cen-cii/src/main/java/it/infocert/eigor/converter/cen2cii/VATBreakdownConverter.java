@@ -4,9 +4,10 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.Untdid2005DateTimePeriodQualifiersToUntdid2475PaymentTimeReferenceConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
-import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
+import it.infocert.eigor.model.core.enums.Untdid2475PaymentTimeReference;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -27,6 +28,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
+        TypeConverter<Untdid2005DateTimePeriodQualifiers, Untdid2475PaymentTimeReference> untdid2005To2475Converter = Untdid2005DateTimePeriodQualifiersToUntdid2475PaymentTimeReferenceConverter.newConverter();
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -143,8 +145,19 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             Element dueDateTypeCode = null;
             if (!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
                 Untdid2005DateTimePeriodQualifiers bt0008 = invoice.getBT0008ValueAddedTaxPointDateCode(0).getValue();
-                dueDateTypeCode = new Element("DueDateTypeCode", ramNs);
-                dueDateTypeCode.setText(String.valueOf(bt0008.getCode()));
+                try {
+                    String value = String.valueOf(untdid2005To2475Converter.convert(bt0008).getCode());
+                    dueDateTypeCode = new Element("DueDateTypeCode", ramNs);
+                    dueDateTypeCode.setText(value);
+                } catch (ConversionFailedException e) {
+                    errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                            e.getMessage(),
+                            callingLocation,
+                            ErrorCode.Action.HARDCODED_MAP,
+                            ErrorCode.Error.INVALID,
+                            e
+                    )));
+                }
             }
             if (taxPointDate != null) {
                 applicableTradeTax.addContent(taxPointDate.clone());

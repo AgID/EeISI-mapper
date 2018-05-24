@@ -248,6 +248,27 @@
                     </execution>
 
                     <execution>
+                        <id>generate-untdid-2475</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <pathToCsv>${project.basedir}/src/main/resources/TemplateFiles/UNTDID2475/UNTDID-2475.csv
+                            </pathToCsv>
+                            <pathToTemplate>
+                                ${project.basedir}/src/main/resources/TemplateFiles/UNTDID2475/Untdid2475PaymentTimeReference.java.vm
+                            </pathToTemplate>
+                            <pathToOutputFolder>${project.build.directory}/generated-sources/fromcsv
+                            </pathToOutputFolder>
+                            <contextMode>ONE_CONTEXT_PER_CSV</contextMode>
+                            <fileNameTemplate>
+                                it/infocert/eigor/model/core/enums/Untdid2475PaymentTimeReference.java
+                            </fileNameTemplate>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>generate-unit-of-measure</id>
                         <phase>generate-sources</phase>
                         <goals>

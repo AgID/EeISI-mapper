@@ -108,7 +108,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         bg0023.getBT0120VatExemptionReasonText().add(bt0120);
                     }
                     if (exemptionReasonCode != null) {
-                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode( exemptionReasonCode.getText() );
+                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(exemptionReasonCode.getText());
 //                        #237
 //                        BT0121VatExemptionReasonCode bt0121 = new BT0121VatExemptionReasonCode(VatExemptionReasonsCodes.valueOf(exemptionReasonCode.getText()));
                         bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
