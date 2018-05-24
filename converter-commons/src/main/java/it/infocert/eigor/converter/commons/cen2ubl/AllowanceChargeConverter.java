@@ -307,18 +307,4 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
             }
         }
     }
-
-    private String getUNCL5189FromUntdid5189(Untdid5189ChargeAllowanceDescriptionCodes value) {
-        switch (value){
-            case Code42:
-                return "PR";
-            case Code57:
-                break;
-            case Code95:
-                break;
-            case Code100:
-                return "AB";
-        }
-        return null;
-    }
 }
