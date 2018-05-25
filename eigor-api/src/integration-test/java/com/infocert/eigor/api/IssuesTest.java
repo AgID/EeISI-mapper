@@ -367,10 +367,15 @@ public class IssuesTest {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
-//    @Test
-//    public void issue281FattpaToCII() throws Exception {
-//        conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
-//    }
+    @Test
+    public void issue281FattpaToCII() throws Exception {
+        //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
+        conversion.assertConversionWithoutErrors(
+                "/issues/issue-281-fattpa.xml",
+                "fatturapa",
+                "cii",
+                new ConversionUtil.KeepXSDErrorsOnly());
+    }
 
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
