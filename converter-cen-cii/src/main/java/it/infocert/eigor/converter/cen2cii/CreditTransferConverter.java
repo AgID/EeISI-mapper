@@ -180,6 +180,10 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     payeePartyCreditorFinancialAccount.addContent(accountName);
                 }
 
+                if(!payeePartyCreditorFinancialAccount.getChildren().isEmpty()) {
+                    specifiedTradeSettlementPaymentMeans.addContent(payeePartyCreditorFinancialAccount);
+                }
+
                 if (!bg0017.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
                     Element bicid = new Element("BICID", ramNs);
                     bicid.setText(bg0017.getBT0086PaymentServiceProviderIdentifier(0).getValue());
@@ -187,11 +191,6 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     institution.addContent(bicid);
                     specifiedTradeSettlementPaymentMeans.addContent(institution);
                 }
-
-                if(!payeePartyCreditorFinancialAccount.getChildren().isEmpty()) {
-                    specifiedTradeSettlementPaymentMeans.addContent(payeePartyCreditorFinancialAccount);
-                }
-
             }
             applicableHeaderTradeSettlement.addContent(specifiedTradeSettlementPaymentMeans);
 
