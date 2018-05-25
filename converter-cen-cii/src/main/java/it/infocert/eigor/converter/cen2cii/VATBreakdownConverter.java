@@ -8,6 +8,7 @@ import it.infocert.eigor.api.conversion.converter.Untdid2005DateTimePeriodQualif
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.enums.Untdid2475PaymentTimeReference;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -99,12 +100,9 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 applicableTradeTax.addContent(calculatedAmount);
             }
 
-            if (!bg0023.getBT0118VatCategoryCode().isEmpty()) {
-
                 Element typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("VAT");
                 applicableTradeTax.addContent(typeCode);
-            }
 
             if (!bg0023.getBT0120VatExemptionReasonText().isEmpty()) {
                 BT0120VatExemptionReasonText bt0120 = bg0023.getBT0120VatExemptionReasonText(0);
@@ -126,6 +124,11 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
 
                 Element categoryCode = new Element("CategoryCode", ramNs);
                 categoryCode.setText(bt0118.getValue().name());
+                if(Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue()) && bg0023.getBT0120VatExemptionReasonText().isEmpty()){
+                    Element exemptionReason = new Element("ExemptionReason", ramNs);
+                    exemptionReason.setText(bt0118.getValue().getShortDescritpion());
+                    applicableTradeTax.addContent(exemptionReason);
+                }
                 applicableTradeTax.addContent(categoryCode);
             }
 
