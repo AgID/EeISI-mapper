@@ -55,17 +55,32 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             BT0074InvoicingPeriodEndDate bt74 = !bg14.getBT0074InvoicingPeriodEndDate().isEmpty() ? bg14.getBT0074InvoicingPeriodEndDate(0) : null;
 
             Element billingSpecifiedPeriod = new Element("BillingSpecifiedPeriod", ramNs);
-            if(bt73!=null){
+
+            //According to Schematron rule BR-29 the EndDateTime must be greater than the StartDateTime, yet the format
+            //specified is yyyy-MM-dd, which will cause fail of said rule for 2 dates with consecutive times on the same
+            //calendar day. Given the format, in this case, just StartDateTime element should suffice.
+            if (bt73 != null && bt74 != null &&
+                    bt73.getValue().getYear() == bt74.getValue().getYear() &&
+                    bt73.getValue().getMonthOfYear() == bt74.getValue().getMonthOfYear() &&
+                    bt73.getValue().getDayOfMonth() == bt74.getValue().getDayOfMonth()) {
+
                 billingSpecifiedPeriod.addContent(
-                    new Element("StartDateTime", ramNs)
-                        .addContent(toDateTimeStringElement(udtNs, bt73.getValue()))
+                        new Element("StartDateTime", ramNs)
+                                .addContent(toDateTimeStringElement(udtNs, bt73.getValue()))
                 );
-            }
-            if(bt74!=null){
-                billingSpecifiedPeriod.addContent(
-                        new Element("EndDateTime", ramNs)
-                                .addContent(toDateTimeStringElement(udtNs, bt74.getValue()))
-                );
+            } else {
+                if (bt73 != null) {
+                    billingSpecifiedPeriod.addContent(
+                            new Element("StartDateTime", ramNs)
+                                    .addContent(toDateTimeStringElement(udtNs, bt73.getValue()))
+                    );
+                }
+                if (bt74 != null) {
+                    billingSpecifiedPeriod.addContent(
+                            new Element("EndDateTime", ramNs)
+                                    .addContent(toDateTimeStringElement(udtNs, bt74.getValue()))
+                    );
+                }
             }
             applicableHeaderTradeSettlement.addContent( billingSpecifiedPeriod );
 
