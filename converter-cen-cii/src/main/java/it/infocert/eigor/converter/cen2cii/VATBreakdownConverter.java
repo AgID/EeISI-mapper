@@ -48,8 +48,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
         }
 
-        if(!invoice.getBG0013DeliveryInformation().isEmpty() &&
-                !invoice.getBG0013DeliveryInformation(0).getBG0014InvoicingPeriod().isEmpty()){
+        if (!invoice.getBG0013DeliveryInformation().isEmpty() &&
+                !invoice.getBG0013DeliveryInformation(0).getBG0014InvoicingPeriod().isEmpty()) {
 
             BG0014InvoicingPeriod bg14 = invoice.getBG0013DeliveryInformation(0).getBG0014InvoicingPeriod(0);
             BT0073InvoicingPeriodStartDate bt73 = !bg14.getBT0073InvoicingPeriodStartDate().isEmpty() ? bg14.getBT0073InvoicingPeriodStartDate(0) : null;
@@ -83,7 +83,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     );
                 }
             }
-            applicableHeaderTradeSettlement.addContent( billingSpecifiedPeriod );
+            applicableHeaderTradeSettlement.addContent(billingSpecifiedPeriod);
 
 
         }
@@ -91,7 +91,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
         for (BG0023VatBreakdown bg0023 : invoice.getBG0023VatBreakdown()) {
             Element applicableTradeTax = new Element("ApplicableTradeTax", ramNs);
 
-
+//          <xsd:element name="CalculatedAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             if (!bg0023.getBT0117VatCategoryTaxAmount().isEmpty()) {
                 BT0117VatCategoryTaxAmount bt0117 = bg0023.getBT0117VatCategoryTaxAmount(0);
                 Element calculatedAmount = new Element("CalculatedAmount", ramNs);
@@ -100,17 +100,34 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 applicableTradeTax.addContent(calculatedAmount);
             }
 
-                Element typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("VAT");
-                applicableTradeTax.addContent(typeCode);
+//			<xsd:element name="TypeCode" type="qdt:TaxTypeCodeType" minOccurs="0"/>
+            Element typeCode = new Element("TypeCode", ramNs);
+            typeCode.setText("VAT");
+            applicableTradeTax.addContent(typeCode);
 
-            if (!bg0023.getBT0120VatExemptionReasonText().isEmpty()) {
-                BT0120VatExemptionReasonText bt0120 = bg0023.getBT0120VatExemptionReasonText(0);
-                Element exemptionReason = new Element("ExemptionReason", ramNs);
-                exemptionReason.setText(bt0120.getValue());
-                applicableTradeTax.addContent(exemptionReason);
+            BT0118VatCategoryCode bt0118 = null;
+            if (!bg0023.getBT0118VatCategoryCode().isEmpty()) {
+                bt0118 = bg0023.getBT0118VatCategoryCode(0);
             }
 
+//			<xsd:element name="ExemptionReason" type="udt:TextType" minOccurs="0"/>
+            Element exemptionReason = new Element("ExemptionReason", ramNs);
+            if (!bg0023.getBT0120VatExemptionReasonText().isEmpty()) {
+                BT0120VatExemptionReasonText bt0120 = bg0023.getBT0120VatExemptionReasonText(0);
+                exemptionReason.setText(bt0120.getValue());
+                applicableTradeTax.addContent(exemptionReason);
+            } else {
+                if (bt0118 != null && Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue())) {
+                    exemptionReason.setText(bt0118.getValue().getShortDescritpion());
+                    applicableTradeTax.addContent(exemptionReason);
+                }
+            }
+
+//			<xsd:element name="CalculatedRate" type="udt:RateType" minOccurs="0"/>
+//			<xsd:element name="CalculationSequenceNumeric" type="udt:NumericType" minOccurs="0"/>
+//			<xsd:element name="BasisQuantity" type="udt:QuantityType" minOccurs="0"/>
+
+//			<xsd:element name="BasisAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             if (!bg0023.getBT0116VatCategoryTaxableAmount().isEmpty()) {
                 BT0116VatCategoryTaxableAmount bt0116 = bg0023.getBT0116VatCategoryTaxableAmount(0);
                 Element basisAmount = new Element("BasisAmount", ramNs);
@@ -119,19 +136,24 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 applicableTradeTax.addContent(basisAmount);
             }
 
-            if (!bg0023.getBT0118VatCategoryCode().isEmpty()) {
-                BT0118VatCategoryCode bt0118 = bg0023.getBT0118VatCategoryCode(0);
+//			<xsd:element name="UnitBasisAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
+//			<xsd:element name="LineTotalBasisAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
+//			<xsd:element name="AllowanceChargeBasisAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
+
+//			<xsd:element name="CategoryCode" type="qdt:TaxCategoryCodeType" minOccurs="0"/>
+            if (bt0118 != null) {
+                bt0118 = bg0023.getBT0118VatCategoryCode(0);
 
                 Element categoryCode = new Element("CategoryCode", ramNs);
                 categoryCode.setText(bt0118.getValue().name());
-                if(Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue()) && bg0023.getBT0120VatExemptionReasonText().isEmpty()){
-                    Element exemptionReason = new Element("ExemptionReason", ramNs);
-                    exemptionReason.setText(bt0118.getValue().getShortDescritpion());
-                    applicableTradeTax.addContent(exemptionReason);
-                }
                 applicableTradeTax.addContent(categoryCode);
             }
 
+//			<xsd:element name="CurrencyCode" type="qdt:CurrencyCodeType" minOccurs="0"/>
+//			<xsd:element name="Jurisdiction" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
+//			<xsd:element name="CustomsDutyIndicator" type="udt:IndicatorType" minOccurs="0"/>
+
+//			<xsd:element name="ExemptionReasonCode" type="udt:CodeType" minOccurs="0"/>
             if (!bg0023.getBT0121VatExemptionReasonCode().isEmpty()) {
                 BT0121VatExemptionReasonCode bt0121 = bg0023.getBT0121VatExemptionReasonCode(0);
                 Element exemptionReasonCode = new Element("ExemptionReasonCode", ramNs);
@@ -139,16 +161,18 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 applicableTradeTax.addContent(exemptionReasonCode);
             }
 
+//			<xsd:element name="TaxBasisAllowanceRate" type="udt:RateType" minOccurs="0"/>
 
-            Element taxPointDate = null;
+//			<xsd:element name="TaxPointDate" type="udt:DateType" minOccurs="0"/>
             if (!invoice.getBT0007ValueAddedTaxPointDate().isEmpty()) {
                 LocalDate bt0007 = invoice.getBT0007ValueAddedTaxPointDate(0).getValue();
                 Element dateString = new Element("DateString", udtNs);
                 dateString.setAttribute("format", "102");
                 try {
                     dateString.setText(dateStrConverter.convert(bt0007));
-                    taxPointDate = new Element("TaxPointDate", ramNs);
+                    Element taxPointDate = new Element("TaxPointDate", ramNs);
                     taxPointDate.addContent(dateString);
+                    applicableTradeTax.addContent(taxPointDate);
                 } catch (ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),
@@ -160,13 +184,18 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 }
             }
 
-            Element dueDateTypeCode = null;
+//			<xsd:element name="Type" type="udt:TextType" minOccurs="0"/>
+//			<xsd:element name="InformationAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
+//			<xsd:element name="CategoryName" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
+
+//			<xsd:element name="DueDateTypeCode" type="qdt:TimeReferenceCodeType" minOccurs="0"/>
             if (!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
                 Untdid2005DateTimePeriodQualifiers bt0008 = invoice.getBT0008ValueAddedTaxPointDateCode(0).getValue();
                 try {
                     String value = String.valueOf(untdid2005To2475Converter.convert(bt0008).getCode());
-                    dueDateTypeCode = new Element("DueDateTypeCode", ramNs);
+                    Element dueDateTypeCode = new Element("DueDateTypeCode", ramNs);
                     dueDateTypeCode.setText(value);
+                    applicableTradeTax.addContent(dueDateTypeCode);
                 } catch (ConversionFailedException e) {
                     errors.add(ConversionIssue.newError(new EigorRuntimeException(
                             e.getMessage(),
@@ -177,15 +206,8 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     )));
                 }
             }
-            if (taxPointDate != null) {
-                applicableTradeTax.addContent(taxPointDate.clone());
-            }
 
-            if (dueDateTypeCode != null) {
-                applicableTradeTax.addContent(dueDateTypeCode.clone());
-            }
-
-
+//			<xsd:element name="RateApplicablePercent" type="udt:PercentType" minOccurs="0"/>
             if (!bg0023.getBT0119VatCategoryRate().isEmpty()) {
                 BT0119VatCategoryRate bt0119 = bg0023.getBT0119VatCategoryRate(0);
                 Element rateApplicablePercent = new Element("RateApplicablePercent", ramNs);
@@ -193,6 +215,15 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                 rateApplicablePercent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
                 applicableTradeTax.addContent(rateApplicablePercent);
             }
+
+//			<xsd:element name="SpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0" maxOccurs="unbounded"/>
+//			<xsd:element name="ServiceSupplyTradeCountry" type="ram:TradeCountryType" minOccurs="0"/>
+//			<xsd:element name="BuyerRepayableTaxSpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0"/>
+//			<xsd:element name="SellerPayableTaxSpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0"/>
+//			<xsd:element name="SellerRefundableTaxSpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0"/>
+//			<xsd:element name="BuyerDeductibleTaxSpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0"/>
+//			<xsd:element name="BuyerNonDeductibleTaxSpecifiedTradeAccountingAccount" type="ram:TradeAccountingAccountType" minOccurs="0"/>
+//			<xsd:element name="PlaceApplicableTradeLocation" type="ram:TradeLocationType" minOccurs="0" maxOccurs="unbounded"/>
 
             applicableHeaderTradeSettlement.addContent(applicableTradeTax);
         }
