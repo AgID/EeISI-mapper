@@ -51,10 +51,14 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                 Identifier bt0063 = bg0011.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue();
                 Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
                 Element id = new Element("ID", ramNs);
-                id.setText(bt0063.getIdentifier());
                 String schema = bt0063.getIdentificationSchema();
+                String identifier = bt0063.getIdentifier();
+                if (schema != null) {
+                    id.setText(String.format("%s %s", schema, identifier));
+                } else {
+                    id.setText(identifier);
+                }
                 id.setAttribute("schemeID", "VA");
-
                 specifiedTaxRegistration.addContent(id);
                 sellerTaxRepresentativeTradeParty.addContent(specifiedTaxRegistration);
             }
