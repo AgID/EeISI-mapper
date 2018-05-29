@@ -47,22 +47,6 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                 sellerTaxRepresentativeTradeParty.addContent(name);
             }
 
-            if (!bg0011.getBT0063SellerTaxRepresentativeVatIdentifier().isEmpty()) {
-                Identifier bt0063 = bg0011.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue();
-                Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
-                Element id = new Element("ID", ramNs);
-                String schema = bt0063.getIdentificationSchema();
-                String identifier = bt0063.getIdentifier();
-                if (schema != null) {
-                    id.setText(String.format("%s %s", schema, identifier));
-                } else {
-                    id.setText(identifier);
-                }
-                id.setAttribute("schemeID", "VA");
-                specifiedTaxRegistration.addContent(id);
-                sellerTaxRepresentativeTradeParty.addContent(specifiedTaxRegistration);
-            }
-
             if (!bg0011.getBG0012SellerTaxRepresentativePostalAddress().isEmpty()) {
                 BG0012SellerTaxRepresentativePostalAddress bg0012 = bg0011.getBG0012SellerTaxRepresentativePostalAddress(0);
 
@@ -116,6 +100,22 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                     Element countryID = new Element("CountryID", ramNs);
                     countryID.setText(bt0069.getValue().getIso2charCode());
                     postalTradeAddress.addContent(countryID);
+                }
+
+                if (!bg0011.getBT0063SellerTaxRepresentativeVatIdentifier().isEmpty()) {
+                    Identifier bt0063 = bg0011.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue();
+                    Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
+                    Element id = new Element("ID", ramNs);
+                    String schema = bt0063.getIdentificationSchema();
+                    String identifier = bt0063.getIdentifier();
+                    if (schema != null) {
+                        id.setText(String.format("%s %s", schema, identifier));
+                    } else {
+                        id.setText(identifier);
+                    }
+                    id.setAttribute("schemeID", "VA");
+                    specifiedTaxRegistration.addContent(id);
+                    sellerTaxRepresentativeTradeParty.addContent(specifiedTaxRegistration);
                 }
             }
         }
