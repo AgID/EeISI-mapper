@@ -52,7 +52,7 @@ public class VATBreakdownConverterBG14Test {
                 .child("BillingSpecifiedPeriod", RAM_NS)
                 .selectStartingFrom(doc.getRootElement());
 
-        Assert.assertEquals( "<ram:BillingSpecifiedPeriod xmlns:ram=\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\"><ram:StartDateTime><udt:DateTimeString xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\" format=\"yyyy-mm-dd\">2001-01-31</udt:DateTimeString></ram:StartDateTime><ram:EndDateTime><udt:DateTimeString xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\" format=\"yyyy-mm-dd\">2007-02-28</udt:DateTimeString></ram:EndDateTime></ram:BillingSpecifiedPeriod>", elementToString(billingSpecifiedPeriod));
+        Assert.assertEquals( "<ram:BillingSpecifiedPeriod xmlns:ram=\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\"><ram:StartDateTime><udt:DateTimeString xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\" format=\"102\">2001-01-31</udt:DateTimeString></ram:StartDateTime><ram:EndDateTime><udt:DateTimeString xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\" format=\"102\">2007-02-28</udt:DateTimeString></ram:EndDateTime></ram:BillingSpecifiedPeriod>", elementToString(billingSpecifiedPeriod));
 
 
     }
