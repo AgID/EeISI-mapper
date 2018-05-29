@@ -53,9 +53,8 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                 Element id = new Element("ID", ramNs);
                 id.setText(bt0063.getIdentifier());
                 String schema = bt0063.getIdentificationSchema();
-                if (schema != null) {
-                    id.setAttribute("schemeID", schema);
-                }
+                id.setAttribute("schemeID", "VA");
+
                 specifiedTaxRegistration.addContent(id);
                 sellerTaxRepresentativeTradeParty.addContent(specifiedTaxRegistration);
             }
