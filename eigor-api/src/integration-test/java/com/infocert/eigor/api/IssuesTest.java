@@ -36,7 +36,8 @@ public class IssuesTest {
     private static XPath xPath;
     private File apiFolder;
 
-    @BeforeClass public static void setUpXmlInfrastructure() throws ParserConfigurationException {
+    @BeforeClass
+    public static void setUpXmlInfrastructure() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         documentBuilder = factory.newDocumentBuilder();
@@ -45,7 +46,8 @@ public class IssuesTest {
         xPath = xPathFactory.newXPath();
     }
 
-    @Before public void initApi() throws IOException, ConfigurationException {
+    @Before
+    public void initApi() throws IOException, ConfigurationException {
 
         apiFolder = tmp.newFolder();
         api = new EigorApiBuilder()
@@ -58,7 +60,6 @@ public class IssuesTest {
     }
 
 
-
     @Test
     public void issue279FromUblToFattPA() throws Exception {
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
@@ -67,7 +68,7 @@ public class IssuesTest {
 
         assertTrue(convert.getIssues().isEmpty()); // no warnings for text exceeding length limit
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "2017-10-15T00:00:00", evaluate);
     }
 
@@ -79,7 +80,7 @@ public class IssuesTest {
     @Test
     public void issue261FromFattPAToUbl() {
 
-        System.out.println( apiFolder.getAbsolutePath() );
+        System.out.println(apiFolder.getAbsolutePath());
 
         conversion.assertConversionWithoutErrors(
                 "/issues/issue-261-fattpa.xml",
@@ -193,7 +194,7 @@ public class IssuesTest {
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
     }
 
@@ -208,13 +209,13 @@ public class IssuesTest {
         String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
         String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
 
-        assertTrue(evaluateAttachment!=null && !evaluateAttachment.trim().isEmpty());
+        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
 
-        assertTrue(evaluateAttachmentMimeCode!=null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
 
-        assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
+        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
     }
 
@@ -227,15 +228,15 @@ public class IssuesTest {
 
 
         String taxCategory = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
-        assertTrue(taxCategory!=null && !taxCategory.trim().isEmpty());
+        assertTrue(taxCategory != null && !taxCategory.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "E", taxCategory);
 
         String multiplier = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
-        assertTrue(multiplier!=null && !multiplier.trim().isEmpty());
+        assertTrue(multiplier != null && !multiplier.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "4.00", multiplier);
 
         String baseAmount = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
-        assertTrue(baseAmount!=null && !baseAmount.trim().isEmpty());
+        assertTrue(baseAmount != null && !baseAmount.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "1000.00", baseAmount);
 
         // Ritenuta will go to not-mapped-values attachment
@@ -244,15 +245,15 @@ public class IssuesTest {
         String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
         String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
 
-        assertTrue(evaluateAttachment!=null && !evaluateAttachment.trim().isEmpty());
+        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
         String attachment = new String(Base64.decodeBase64(evaluateAttachment.getBytes()));
 
         assertTrue(attachment.contains("Ritenuta: SI"));
 
-        assertTrue(evaluateAttachmentMimeCode!=null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
 
-        assertTrue(evaluateAttachmentFileName!=null && !evaluateAttachmentFileName.trim().isEmpty());
+        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values", evaluateAttachmentFileName);
     }
 
@@ -264,8 +265,8 @@ public class IssuesTest {
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
-        Assert.assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
-        Assert.assertEquals( conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason Art15", evaluate);
+        Assert.assertTrue(evaluate != null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason Art15", evaluate);
     }
 
     @Test
@@ -276,15 +277,15 @@ public class IssuesTest {
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
         String bt70 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-70']//*[local-name()='RiferimentoTesto']/text()");
-        assertTrue(bt70!=null && !bt70.trim().isEmpty());
+        assertTrue(bt70 != null && !bt70.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Delivery party name", bt70);
 
         String bt71 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71']//*[local-name()='RiferimentoTesto']/text()");
-        assertTrue(bt71!=null && !bt71.trim().isEmpty());
+        assertTrue(bt71 != null && !bt71.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "6754238987648", bt71);
 
         String bt71_1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71-1']//*[local-name()='RiferimentoTesto']/text()");
-        assertTrue(bt71_1!=null && !bt71_1.trim().isEmpty());
+        assertTrue(bt71_1 != null && !bt71_1.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "scheme00", bt71_1);
     }
 
@@ -297,7 +298,7 @@ public class IssuesTest {
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiPagamento']//*[local-name()='DettaglioPagamento']//*[local-name()='Beneficiario']/text()");
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "PARTY NAME ACCOUNT NAME", evaluate);
     }
 
@@ -310,15 +311,15 @@ public class IssuesTest {
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
         String arrotondamento0 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiGeneraliDocumento']//*[local-name()='Arrotondamento']/text()");
-        assertTrue(arrotondamento0!=null && !arrotondamento0.trim().isEmpty());
+        assertTrue(arrotondamento0 != null && !arrotondamento0.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "0.00", arrotondamento0);
 
         String arrotondamento1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='10.00']//*[local-name()='Arrotondamento']/text()");
-        assertTrue(arrotondamento1!=null && !arrotondamento1.trim().isEmpty());
+        assertTrue(arrotondamento1 != null && !arrotondamento1.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "-0.00400000", arrotondamento1);
 
         String arrotondamento2 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='23.00']//*[local-name()='Arrotondamento']/text()");
-        assertTrue(arrotondamento2!=null && !arrotondamento2.trim().isEmpty());
+        assertTrue(arrotondamento2 != null && !arrotondamento2.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "0.00160000", arrotondamento2);
     }
 
@@ -332,7 +333,7 @@ public class IssuesTest {
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason", evaluate);
     }
 
@@ -345,7 +346,7 @@ public class IssuesTest {
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='Allegati'][./Attachment/text()='WlVsSFQxSWdZWFIwWVdOb2JXVnVkQ0IwWlhOMA==']//*[local-name()='NomeAttachment']/text()");
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "IDattachment-eIGOR.csv", evaluate);
     }
 
@@ -358,7 +359,7 @@ public class IssuesTest {
 
         String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AliquotaIVA']/text()");
 
-        assertTrue(evaluate!=null && !evaluate.trim().isEmpty());
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
     }
 
@@ -370,22 +371,20 @@ public class IssuesTest {
     @Test
     public void issue281FattpaToCII() throws Exception {
         //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
-        conversion.assertConversionWithoutErrors(
-                "/issues/issue-281-fattpa.xml",
-                "fatturapa",
-                "cii",
-                new ConversionUtil.KeepXSDErrorsOnly());
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
+        for (IConversionIssue issue : convert.getIssues()) {
+            assertTrue(issue.getMessage().contains("[CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
+        }
     }
 
     private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
-        InputSource is = new InputSource( xmlStringReader );
+        InputSource is = new InputSource(xmlStringReader);
         XPathExpression expr = xPath.compile(expression);
         return expr.evaluate(is);
     }
-
-
-
 
 
 }
