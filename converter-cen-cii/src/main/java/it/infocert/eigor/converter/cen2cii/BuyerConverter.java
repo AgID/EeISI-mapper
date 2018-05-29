@@ -67,9 +67,9 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 Element name = new Element("Name", ramNs);
                 name.setText(bt0044.getValue());
                 buyerTradeParty.addContent(name);
-            } else if(!bg0007.getBG0009BuyerContact().isEmpty()){
+            } else if (!bg0007.getBG0009BuyerContact().isEmpty()) {
                 BG0009BuyerContact bg0009 = bg0007.getBG0009BuyerContact(0);
-                if(!bg0009.getBT0056BuyerContactPoint().isEmpty()){
+                if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
                     BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
                     Element name = new Element("Name", ramNs);
                     name.setText(bt0056.getValue());
@@ -199,13 +199,14 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 Identifier bt0048 = bg0007.getBT0048BuyerVatIdentifier(0).getValue();
                 Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
                 Element id = new Element("ID", ramNs);
-                id.setText(bt0048.getIdentifier());
-
-                String identificationSchema = bt0048.getIdentificationSchema();
-                if (identificationSchema == null) {
-                    identificationSchema = "VA";
+                String identifier = bt0048.getIdentifier();
+                String schema = bt0048.getIdentificationSchema();
+                if (schema != null) {
+                    id.setText(String.format("%s %s", schema, identifier));
+                } else {
+                    id.setText(identifier);
                 }
-                id.setAttribute("schemeID", identificationSchema);
+                id.setAttribute("schemeID", "VA");
 
                 specifiedTaxRegistration.addContent(id);
                 buyerTradeParty.addContent(specifiedTaxRegistration);
