@@ -2,11 +2,13 @@ package it.infocert.eigor.converter.cen2fattpa.jaxbindings;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class Amount2DecimalAdapter {
 
     public static String marshal(BigDecimal v) {
-        return new DecimalFormat("#0.00").format(v);
+        return new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US)).format(v);
     }
 
     public static BigDecimal unmarshal(String v) {
