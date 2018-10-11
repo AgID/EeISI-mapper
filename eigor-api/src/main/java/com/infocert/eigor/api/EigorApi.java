@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EigorApi {
 
     private final static Logger log = LoggerFactory.getLogger(EigorApi.class);
-
+    private final static String FULL_DATE = "yyyy-MM-dd-HH-dd-ss-SSS";
     private final EigorApiBuilder builder;
 
     EigorApi(EigorApiBuilder eigorApiBuilder) {
@@ -57,7 +57,7 @@ public class EigorApi {
     public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice, ConversionCallback... callbacks) {
         log.debug(EigorVersion.getAsString());
 
-        String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
+        String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
 
         String folderName = String.format( "conversion-%s-%s-%s-%s", stringAsDate, sourceFormat, targetFormat, (int)(Math.random()*100000));
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
@@ -99,7 +99,7 @@ public class EigorApi {
     public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
         log.debug(EigorVersion.getAsString());
 
-        String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
+        String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
 
         String folderName = String.format( "validation-%s-%s-%s", stringAsDate, sourceFormat, (int)(Math.random()*100000));
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
