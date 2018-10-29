@@ -2,7 +2,7 @@ package com.infocert.eigor.api;
 
 
 
-import com.amoerie.jstreams.functions.Filter;
+
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
 import org.junit.Before;

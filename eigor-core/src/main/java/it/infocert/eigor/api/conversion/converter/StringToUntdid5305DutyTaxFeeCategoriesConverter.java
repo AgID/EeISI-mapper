@@ -1,7 +1,9 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+
+import java.util.function.Predicate;
 
 public class StringToUntdid5305DutyTaxFeeCategoriesConverter extends FilteringEnumConversion<String, Untdid5305DutyTaxFeeCategories> {
 
@@ -13,11 +15,14 @@ public class StringToUntdid5305DutyTaxFeeCategoriesConverter extends FilteringEn
         super(Untdid5305DutyTaxFeeCategories.class);
     }
 
-    @Override protected Filter<Untdid5305DutyTaxFeeCategories> buildFilter(final String value) {
-        return new Filter<Untdid5305DutyTaxFeeCategories>() {
-            @Override public boolean apply(Untdid5305DutyTaxFeeCategories c) {
+    @Override protected Predicate<Untdid5305DutyTaxFeeCategories> buildFilter(final String value) {
+        return new Predicate<Untdid5305DutyTaxFeeCategories>() {
+            @Override
+            public boolean test(Untdid5305DutyTaxFeeCategories c) {
                 return c.getShortDescritpion().equalsIgnoreCase(value);
+
             }
+
         };
     }
 

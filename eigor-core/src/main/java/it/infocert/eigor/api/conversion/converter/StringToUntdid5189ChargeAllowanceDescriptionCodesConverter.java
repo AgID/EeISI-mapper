@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 
 public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverter extends FilteringEnumConversion<String, Untdid5189ChargeAllowanceDescriptionCodes> {

@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 
 public class StringToUntdid4461PaymentMeansCode extends FilteringEnumConversion<String,Untdid4461PaymentMeansCode> {

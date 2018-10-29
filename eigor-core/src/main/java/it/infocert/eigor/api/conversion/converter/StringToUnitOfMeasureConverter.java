@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.conversion.converter;
 
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.api.conversion.ConversionBetweenTypesFailedException;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;

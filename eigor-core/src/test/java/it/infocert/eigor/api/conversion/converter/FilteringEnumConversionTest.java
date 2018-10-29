@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import org.junit.Assert;
 import org.junit.Test;

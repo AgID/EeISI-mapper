@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;

@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
 import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
 import org.slf4j.Logger;
