@@ -5,8 +5,6 @@
         <version>1.5.2.RELEASE</version>
     </parent>
 
-
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
@@ -23,7 +21,7 @@
         <site>
             <id>eigor</id>
             <name>eigor</name>
-            <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
+            <url>https://gitlab.mgmt.infocert.it/linvoice/invoice.eeisi.git</url>
         </site>
     </distributionManagement>
 

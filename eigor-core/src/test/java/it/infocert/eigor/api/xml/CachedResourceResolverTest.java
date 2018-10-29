@@ -8,12 +8,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.ls.LSInput;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class CachedResourceResolverTest {

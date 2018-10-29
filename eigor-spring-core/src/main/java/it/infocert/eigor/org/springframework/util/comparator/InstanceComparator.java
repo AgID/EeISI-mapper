@@ -16,9 +16,9 @@
 
 package it.infocert.eigor.org.springframework.util.comparator;
 
-import java.util.Comparator;
-
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.util.Comparator;
 
 /**
  * Compares objects based on an arbitrary class order. Allows objects to be sorted based

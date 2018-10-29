@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen.converters;
 
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
+
 import static it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode.*;
 
 public class ItalianCodeStringToUntdid4461PaymentMeansCode implements TypeConverter<String,Untdid4461PaymentMeansCode> {

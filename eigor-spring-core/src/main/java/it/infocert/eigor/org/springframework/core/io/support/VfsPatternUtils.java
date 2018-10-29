@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
+import it.infocert.eigor.org.springframework.core.io.VfsUtils;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-
-import it.infocert.eigor.org.springframework.core.io.VfsUtils;
 
 /**
  * Artificial class used for accessing the {@link VfsUtils} methods

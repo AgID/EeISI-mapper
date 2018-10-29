@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Read-only {@code Map<String, String>} implementation that is backed by system

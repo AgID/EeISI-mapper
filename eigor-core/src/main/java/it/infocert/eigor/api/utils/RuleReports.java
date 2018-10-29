@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.utils;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Consumer;
+
+
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
@@ -26,7 +26,7 @@ public class RuleReports {
                     }
                 }
             };
-            Stream.create( ruleReport.getAll() ).forEach( entryConsumer );
+            Stream.of .create( ruleReport.getAll() ).forEach( entryConsumer );
             printer.flush();
             printer.close();
         } catch (Exception e) {

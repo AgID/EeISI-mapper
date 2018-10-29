@@ -1,8 +1,9 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeConverter<Untdid1001InvoiceTypeCode> {
 
@@ -24,12 +25,16 @@ public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeCo
 
         final Integer finalCode = code;
 
-        Filter<Untdid1001InvoiceTypeCode> f = new Filter<Untdid1001InvoiceTypeCode>() {
-            @Override public boolean apply(Untdid1001InvoiceTypeCode u) {
+
+
+        Predicate<Untdid1001InvoiceTypeCode> f = new Predicate<Untdid1001InvoiceTypeCode>() {
+            @Override
+            public boolean test(Untdid1001InvoiceTypeCode u) {
                 return (finalCode != null && u.getCode() == finalCode) || u.getShortDescritpion().equals(s);
             }
+
         };
-        Untdid1001InvoiceTypeCode first = Stream.create(Untdid1001InvoiceTypeCode.values()).filter(f).first();
+        Untdid1001InvoiceTypeCode first = Stream.of(Untdid1001InvoiceTypeCode.values()).filter(f).findFirst().orElse(null);
 
         if(first == null) throw new IllegalArgumentException("Not found");
 

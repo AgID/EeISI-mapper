@@ -16,16 +16,15 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
-import java.util.Iterator;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.StringUtils;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.util.Iterator;
 
 /**
  * SAX {@code ContentHandler} that writes to a {@code XMLStreamWriter}.

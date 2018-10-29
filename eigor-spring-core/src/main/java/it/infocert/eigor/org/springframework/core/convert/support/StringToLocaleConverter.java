@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.util.Locale;
-
 import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 import it.infocert.eigor.org.springframework.util.StringUtils;
+
+import java.util.Locale;
 
 /**
  * Converts a String to a Locale.

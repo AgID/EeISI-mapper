@@ -16,6 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
+import it.infocert.eigor.org.springframework.core.io.Resource;
+import it.infocert.eigor.org.springframework.util.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -23,13 +26,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Properties;
-
-import it.infocert.eigor.org.springframework.core.io.Resource;
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.util.DefaultPropertiesPersister;
-import it.infocert.eigor.org.springframework.util.PropertiesPersister;
-import it.infocert.eigor.org.springframework.util.ResourceUtils;
 
 /**
  * Convenient utility methods for loading of {@code java.util.Properties},

@@ -1,10 +1,8 @@
 package it.infocert.eigor.rules;
 
-import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
-import net.sf.saxon.trans.Err;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;

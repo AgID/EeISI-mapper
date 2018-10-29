@@ -16,13 +16,7 @@
 
 package it.infocert.eigor.org.springframework.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;

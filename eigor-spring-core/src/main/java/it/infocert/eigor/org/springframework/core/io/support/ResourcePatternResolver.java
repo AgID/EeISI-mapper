@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
-import java.io.IOException;
-
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
+
+import java.io.IOException;
 
 /**
  * Strategy interface for resolving a location pattern (for example,

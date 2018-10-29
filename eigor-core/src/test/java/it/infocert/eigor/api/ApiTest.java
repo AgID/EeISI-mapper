@@ -1,7 +1,7 @@
 package it.infocert.eigor.api;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Consumer;
+
+
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.api.utils.IReflections;

@@ -19,10 +19,7 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.amoerie</groupId>
-            <artifactId>jstreams</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>

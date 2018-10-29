@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.convert;
 
-import java.lang.annotation.Annotation;
-
-import it.infocert.eigor.org.springframework.core.MethodParameter;
 import it.infocert.eigor.org.springframework.core.GenericCollectionTypeResolver;
+import it.infocert.eigor.org.springframework.core.MethodParameter;
+
+import java.lang.annotation.Annotation;
 
 /**
  * @author Keith Donald

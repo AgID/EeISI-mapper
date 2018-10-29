@@ -16,9 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.task;
 
-import java.io.Serializable;
-
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.io.Serializable;
 
 /**
  * {@link TaskExecutor} implementation that executes each task <i>synchronously</i>

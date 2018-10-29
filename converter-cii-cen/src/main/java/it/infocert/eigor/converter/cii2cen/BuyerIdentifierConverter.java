@@ -8,7 +8,6 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;

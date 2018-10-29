@@ -2,8 +2,8 @@ package it.infocert.eigor.rules.repositories;
 
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.rules.cardinality.CardinalityRule;
 import it.infocert.eigor.rules.MalformedRuleException;
+import it.infocert.eigor.rules.cardinality.CardinalityRule;
 
 import java.util.*;
 

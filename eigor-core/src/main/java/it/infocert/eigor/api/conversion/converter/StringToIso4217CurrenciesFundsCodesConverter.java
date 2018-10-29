@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 
 /**

@@ -16,18 +16,13 @@
 
 package it.infocert.eigor.org.springframework.core.enums;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.CachingMapDecorator;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.CachingMapDecorator;
+import java.util.*;
 
 /**
  * Abstract base class for {@link LabeledEnumResolver} implementations,

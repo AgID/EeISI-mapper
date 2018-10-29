@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-
 import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 import it.infocert.eigor.org.springframework.util.ObjectUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Converts an array to a comma-delimited String. First adapts the source array

@@ -4,7 +4,6 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.IReflections;
 import org.junit.Test;
 
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

@@ -16,15 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.annotation;
 
-import static java.lang.String.format;
+import it.infocert.eigor.org.springframework.core.type.AnnotationMetadata;
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.StringUtils;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import it.infocert.eigor.org.springframework.core.type.AnnotationMetadata;
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.StringUtils;
+import static java.lang.String.format;
 
 /**
  * {@link LinkedHashMap} subclass representing annotation attribute key/value pairs

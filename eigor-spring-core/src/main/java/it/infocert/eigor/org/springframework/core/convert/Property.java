@@ -16,19 +16,19 @@
 
 package it.infocert.eigor.org.springframework.core.convert;
 
+import it.infocert.eigor.org.springframework.core.GenericTypeResolver;
+import it.infocert.eigor.org.springframework.core.MethodParameter;
+import it.infocert.eigor.org.springframework.util.ConcurrentReferenceHashMap;
+import it.infocert.eigor.org.springframework.util.ObjectUtils;
+import it.infocert.eigor.org.springframework.util.ReflectionUtils;
+import it.infocert.eigor.org.springframework.util.StringUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.core.GenericTypeResolver;
-import it.infocert.eigor.org.springframework.core.MethodParameter;
-import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.util.ReflectionUtils;
-import it.infocert.eigor.org.springframework.util.ConcurrentReferenceHashMap;
-import it.infocert.eigor.org.springframework.util.StringUtils;
 
 /**
  * A description of a JavaBeans Property that allows us to avoid a dependency on

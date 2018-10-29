@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import com.amoerie.jstreams.Stream;
+
 import com.amoerie.jstreams.functions.Filter;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;

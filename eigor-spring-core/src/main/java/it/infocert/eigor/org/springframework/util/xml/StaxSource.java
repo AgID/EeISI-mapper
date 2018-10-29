@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.sax.SAXSource;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 /**
  * Implementation of the {@code Source} tagging interface for StAX readers. Can be constructed with

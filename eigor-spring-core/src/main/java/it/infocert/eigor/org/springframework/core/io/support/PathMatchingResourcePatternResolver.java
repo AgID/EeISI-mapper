@@ -16,6 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
+import it.infocert.eigor.org.springframework.core.io.*;
+import it.infocert.eigor.org.springframework.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -30,23 +35,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
-import it.infocert.eigor.org.springframework.core.io.Resource;
-import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.UrlResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.VfsResource;
-import it.infocert.eigor.org.springframework.util.AntPathMatcher;
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.util.PathMatcher;
-import it.infocert.eigor.org.springframework.util.ReflectionUtils;
-import it.infocert.eigor.org.springframework.util.ResourceUtils;
-import it.infocert.eigor.org.springframework.util.StringUtils;
 
 /**
  * A {@link ResourcePatternResolver} implementation that is able to resolve a

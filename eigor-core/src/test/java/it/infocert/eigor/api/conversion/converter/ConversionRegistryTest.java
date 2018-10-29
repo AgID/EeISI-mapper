@@ -2,7 +2,6 @@ package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import org.joda.time.LocalDate;

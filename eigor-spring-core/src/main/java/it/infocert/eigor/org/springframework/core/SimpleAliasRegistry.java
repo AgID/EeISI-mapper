@@ -16,15 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.StringUtils;
+import it.infocert.eigor.org.springframework.util.StringValueResolver;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.StringUtils;
-import it.infocert.eigor.org.springframework.util.StringValueResolver;
 
 /**
  * Simple implementation of the {@link AliasRegistry} interface.

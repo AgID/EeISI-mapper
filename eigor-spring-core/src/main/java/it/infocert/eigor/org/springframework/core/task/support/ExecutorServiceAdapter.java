@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.task.support;
 
+import it.infocert.eigor.org.springframework.core.task.TaskExecutor;
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import it.infocert.eigor.org.springframework.core.task.TaskExecutor;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Adapter that takes a Spring {@link TaskExecutor})

@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.util.comparator;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * A comparator that chains a sequence of one or more more Comparators.

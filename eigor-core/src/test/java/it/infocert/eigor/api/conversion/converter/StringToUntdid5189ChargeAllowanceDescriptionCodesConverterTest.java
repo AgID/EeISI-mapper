@@ -1,12 +1,11 @@
 package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid5189ChargeAllowanceDescriptionCodesConverter;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverterTest {

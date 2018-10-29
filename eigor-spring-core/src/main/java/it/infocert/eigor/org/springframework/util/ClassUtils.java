@@ -20,20 +20,8 @@ import it.infocert.eigor.org.springframework.core.BridgeMethodResolver;
 import it.infocert.eigor.org.springframework.core.io.ClassPathResource;
 
 import java.beans.Introspector;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Miscellaneous class utility methods.

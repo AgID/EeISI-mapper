@@ -1,6 +1,6 @@
 package it.infocert.eigor.api.impl;
 
-import com.amoerie.jstreams.Stream;
+
 import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.rules.Br002AnInvoiceShallHaveAnInvoiceNumberRule;
 import it.infocert.eigor.model.core.rules.Rule;

@@ -26,10 +26,7 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-spring-core</artifactId>
         </dependency>
-		<dependency>
-			<groupId>com.amoerie</groupId>
-			<artifactId>jstreams</artifactId>
-		</dependency>
+
 
         <!-- TEST -->
 		<dependency>

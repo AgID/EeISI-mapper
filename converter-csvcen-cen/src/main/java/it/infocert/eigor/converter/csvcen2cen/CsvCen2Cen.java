@@ -1,11 +1,10 @@
 package it.infocert.eigor.converter.csvcen2cen;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
 import com.google.common.base.Charsets;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -31,6 +30,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class CsvCen2Cen implements ToCenConversion {
@@ -131,12 +132,11 @@ public class CsvCen2Cen implements ToCenConversion {
                 } else {
 
                     // double chacks BThas only one single arg constructor
-                    List<Constructor<?>> constructors = Stream.create(Arrays.asList(btBgClass.getConstructors())).filter(new Filter<Constructor<?>>() {
-                        @Override
-                        public boolean apply(Constructor<?> c) {
-                            return c.getParameterTypes().length == 1;
-                        }
-                    }).toList();
+
+                    List<Constructor<?>> constructors = Stream.of(btBgClass.getConstructors())
+                            .filter( c -> c.getParameterTypes().length == 1 )
+                            .collect(Collectors.toList());
+
                     if (constructors.size() != 1) {
                         throw new IllegalArgumentException("Just one constructor with one argument expected, " + constructors.size() + " found instead." );
                     }
@@ -148,13 +148,11 @@ public class CsvCen2Cen implements ToCenConversion {
                     try {
                         if (bgbtValueFromCsv.matches("\\w*\\{.*}" )) {
                             final String currentBtValue = bgbtValueFromCsv;
-                            final Object taken = Stream.of(constructorParamType.getEnumConstants()).filter(new Filter<Object>() {
 
-                                @Override
-                                public boolean apply(Object o) {
-                                    return currentBtValue.equals(o.toString());
-                                }
-                            }).first();
+                            final Object taken = Arrays.stream(constructorParamType.getEnumConstants())
+                                    .filter(item -> currentBtValue.equals(((Object) item).toString()))
+                                    .findFirst().orElse(null);
+
                             if (taken != null) {
                                 convert = taken;
                             } else {

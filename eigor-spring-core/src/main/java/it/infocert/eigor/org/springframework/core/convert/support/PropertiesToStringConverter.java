@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-
-import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 
 /**
  * Converts from a Properties to a String by calling {@link Properties#store(java.io.OutputStream, String)}.

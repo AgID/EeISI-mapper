@@ -16,15 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * This class can be used to parse other classes containing constant definitions

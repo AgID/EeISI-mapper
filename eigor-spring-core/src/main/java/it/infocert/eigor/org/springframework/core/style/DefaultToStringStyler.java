@@ -16,9 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.style;
 
+import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Spring's default {@code toString()} styler.

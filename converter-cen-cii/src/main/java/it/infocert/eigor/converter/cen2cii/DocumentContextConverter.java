@@ -5,16 +5,17 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-//import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
-//import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-//import org.joda.time.LocalDate;
 
 import java.util.List;
+
+//import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+//import it.infocert.eigor.api.conversion.converter.TypeConverter;
+//import org.joda.time.LocalDate;
 
 /**
  * The Document Context Converter

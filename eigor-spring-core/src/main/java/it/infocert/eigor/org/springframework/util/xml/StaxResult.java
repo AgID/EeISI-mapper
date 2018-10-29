@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
+import org.xml.sax.ContentHandler;
+
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.sax.SAXResult;
-
-import org.xml.sax.ContentHandler;
 
 /**
  * Implementation of the {@code Result} tagging interface for StAX writers. Can be constructed with

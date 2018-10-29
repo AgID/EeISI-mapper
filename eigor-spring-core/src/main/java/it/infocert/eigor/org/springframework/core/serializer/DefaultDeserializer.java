@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.serializer;
 
+import it.infocert.eigor.org.springframework.core.NestedIOException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-
-import it.infocert.eigor.org.springframework.core.NestedIOException;
 
 /**
  * Deserializer that reads an input stream using Java Serialization.

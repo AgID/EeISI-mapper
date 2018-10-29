@@ -16,22 +16,16 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.stax.StAXResult;
-import javax.xml.transform.stax.StAXSource;
-
+import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 
-import it.infocert.eigor.org.springframework.util.Assert;
+import javax.xml.stream.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.stax.StAXResult;
+import javax.xml.transform.stax.StAXSource;
 
 /**
  * Convenience methods for working with the StAX API.

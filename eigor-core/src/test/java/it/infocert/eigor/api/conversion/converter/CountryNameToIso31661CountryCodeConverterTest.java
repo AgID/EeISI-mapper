@@ -1,7 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.CountryNameToIso31661CountryCodeConverter;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class CountryNameToIso31661CountryCodeConverterTest {
 
         assertThat( denmark, is(Iso31661CountryCodes.DK) );
     }
-    
+
     @Test(expected = ConversionFailedException.class) public void shouldThrowExceptionIfConversionIsNotPossible() throws ConversionFailedException {
 
         // given

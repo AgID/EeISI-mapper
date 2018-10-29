@@ -16,16 +16,16 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.Set;
-
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.util.ReflectionUtils;
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Converts an entity identifier to a entity reference by calling a static finder method

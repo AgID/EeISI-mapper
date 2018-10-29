@@ -16,21 +16,20 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
+import it.infocert.eigor.org.springframework.core.env.Environment;
+import it.infocert.eigor.org.springframework.core.env.PropertyResolver;
+import it.infocert.eigor.org.springframework.core.env.StandardEnvironment;
+import it.infocert.eigor.org.springframework.core.io.Resource;
+import it.infocert.eigor.org.springframework.util.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import it.infocert.eigor.org.springframework.core.io.Resource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import it.infocert.eigor.org.springframework.core.env.Environment;
-import it.infocert.eigor.org.springframework.core.env.PropertyResolver;
-import it.infocert.eigor.org.springframework.core.env.StandardEnvironment;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Editor for {@link Resource} arrays, to

@@ -1,6 +1,5 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
@@ -16,9 +15,7 @@ import org.jdom2.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * The Seller Custom Converter

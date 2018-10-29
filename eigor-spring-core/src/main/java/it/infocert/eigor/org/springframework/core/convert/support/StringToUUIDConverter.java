@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.util.UUID;
-
 import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 import it.infocert.eigor.org.springframework.util.StringUtils;
+
+import java.util.UUID;
 
 /**
  * Converts from a String to a java.util.UUID by calling {@link UUID#fromString(String)}.

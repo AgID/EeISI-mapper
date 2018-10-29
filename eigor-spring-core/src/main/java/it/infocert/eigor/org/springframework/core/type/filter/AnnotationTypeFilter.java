@@ -16,13 +16,13 @@
 
 package it.infocert.eigor.org.springframework.core.type.filter;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Inherited;
-
-import it.infocert.eigor.org.springframework.core.type.classreading.MetadataReader;
-import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.core.annotation.AnnotationUtils;
 import it.infocert.eigor.org.springframework.core.type.AnnotationMetadata;
+import it.infocert.eigor.org.springframework.core.type.classreading.MetadataReader;
+import it.infocert.eigor.org.springframework.util.ClassUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 
 /**
  * A simple filter which matches classes with a given annotation,

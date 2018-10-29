@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.convert;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * @author Keith Donald

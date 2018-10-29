@@ -16,18 +16,18 @@
 
 package it.infocert.eigor.org.springframework.core.annotation;
 
+import it.infocert.eigor.org.springframework.core.BridgeMethodResolver;
+import it.infocert.eigor.org.springframework.core.type.AnnotationMetadata;
+import it.infocert.eigor.org.springframework.core.type.StandardAnnotationMetadata;
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.ReflectionUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import it.infocert.eigor.org.springframework.core.BridgeMethodResolver;
-import it.infocert.eigor.org.springframework.core.type.AnnotationMetadata;
-import it.infocert.eigor.org.springframework.core.type.StandardAnnotationMetadata;
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.ReflectionUtils;
 
 /**
  * General utility methods for working with annotations, handling bridge methods (which the compiler

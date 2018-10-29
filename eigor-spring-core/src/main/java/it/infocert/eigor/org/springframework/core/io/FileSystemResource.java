@@ -16,17 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URL;
-
 import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.StringUtils;
+
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * {@link Resource} implementation for {@code java.io.File} handles.

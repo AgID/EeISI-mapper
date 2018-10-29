@@ -4,7 +4,8 @@ import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.conversion.ConversionRegistry;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
@@ -33,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @SuppressWarnings("unchecked")
 public class Cii2Cen extends AbstractToCenConverter {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(Cii2Cen.class);
 	private static final String FORMAT = "cii";
 	private final DefaultResourceLoader drl = new DefaultResourceLoader();
@@ -120,7 +121,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 	@Override
 	public ConversionResult<BG0000Invoice> convert(InputStream sourceInvoiceStream)
 			throws SyntaxErrorInInvoiceFormatException {
-		
+
 		List<IConversionIssue> errors = new ArrayList<>();
 
 		InputStream clonedInputStream = null;

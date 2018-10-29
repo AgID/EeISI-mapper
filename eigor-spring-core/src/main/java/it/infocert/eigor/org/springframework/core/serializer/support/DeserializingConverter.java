@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.serializer.support;
 
-import java.io.ByteArrayInputStream;
-
+import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 import it.infocert.eigor.org.springframework.core.serializer.DefaultDeserializer;
 import it.infocert.eigor.org.springframework.core.serializer.Deserializer;
-import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * A {@link Converter} that delegates to a {@link Deserializer}
