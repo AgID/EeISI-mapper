@@ -113,7 +113,7 @@ public class SellerTaxRepresentativePartyConverter extends CustomConverterUtils 
                     } else {
                         id.setText(identifier);
                     }
-                    id.setAttribute("schemeID", "VA");
+                    id.setAttribute("schemeID", "VAT");
                     specifiedTaxRegistration.addContent(id);
                     sellerTaxRepresentativeTradeParty.addContent(specifiedTaxRegistration);
                 }

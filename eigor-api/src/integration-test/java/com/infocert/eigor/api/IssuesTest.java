@@ -375,7 +375,7 @@ public class IssuesTest {
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
         ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
         for (IConversionIssue issue : convert.getIssues()) {
-            assertTrue(issue.getMessage().contains("[CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
+            assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
         }
     }
 

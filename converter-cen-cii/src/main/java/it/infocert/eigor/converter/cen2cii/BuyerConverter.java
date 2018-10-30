@@ -206,7 +206,7 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 } else {
                     id.setText(identifier);
                 }
-                id.setAttribute("schemeID", "VA");
+                id.setAttribute("schemeID", "VAT");
 
                 specifiedTaxRegistration.addContent(id);
                 buyerTradeParty.addContent(specifiedTaxRegistration);
