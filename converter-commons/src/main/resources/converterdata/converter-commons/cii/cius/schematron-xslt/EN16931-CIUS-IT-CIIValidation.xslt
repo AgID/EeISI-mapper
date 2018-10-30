@@ -289,10 +289,10 @@
 		<!--ASSERT -->
 <xsl:choose>
     <xsl:when
-            test="exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']) or exists(ram:GlobalID[@schemeID = 'IT:CF']) or exists(ram:GlobalID[@schemeID = 'IT:VAT'])"/>
+            test="exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT']) or exists(ram:GlobalID[@schemeID = 'IT:CF']) or exists(ram:GlobalID[@schemeID = 'IT:VAT'])"/>
       <xsl:otherwise>
           <svrl:failed-assert
-                  test="exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']) or exists(ram:GlobalID[@schemeID = 'IT:CF']) or exists(ram:GlobalID[@schemeID = 'IT:VAT'])">
+                  test="exists(ram:SpecifiedTaxRegistration/ram:ID and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT']) or exists(ram:GlobalID[@schemeID = 'IT:CF']) or exists(ram:GlobalID[@schemeID = 'IT:VAT'])">
           <xsl:attribute name="id">CIUS-BR-14</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -347,10 +347,10 @@
 		<!--ASSERT -->
 <xsl:choose>
     <xsl:when
-            test=" (exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID ='VA']) or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and  ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA'])"/>
+            test=" (exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID ='VAT']) or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and  ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT'])"/>
       <xsl:otherwise>
           <svrl:failed-assert
-                  test="(exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID ='VA']) or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA'])">
+                  test="(exists(ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID ='VAT']) or (exists(ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID) and ram:SellerTaxRepresentativeTradeParty/ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT'])">
           <xsl:attribute name="id">CIUS-CA-9</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -868,10 +868,10 @@
         <!--ASSERT -->
         <xsl:choose>
             <xsl:when
-                    test="(exists(ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA'] ) or ( exists(ram:ID) and exists(ram:GlobalID[@schemeID]) )"/>
+                    test="(exists(ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT'] ) or ( exists(ram:ID) and exists(ram:GlobalID[@schemeID]) )"/>
             <xsl:otherwise>
                 <svrl:failed-assert
-                        test="(exists(ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA'] ) or ( exists(ram:ID) and exists(ram:GlobalID[@schemeID]) )">
+                        test="(exists(ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT'] ) or ( exists(ram:ID) and exists(ram:GlobalID[@schemeID]) )">
           <xsl:attribute name="id">CIUS-VD-53</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
@@ -886,10 +886,10 @@
 		<!--ASSERT -->
 <xsl:choose>
     <xsl:when
-            test="not (exists (ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']) or (string-length(ram:SpecifiedTaxRegistration/ram:ID) &lt;= 30 and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']) "/>
+            test="not (exists (ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT']) or (string-length(ram:SpecifiedTaxRegistration/ram:ID) &lt;= 30 and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT']) "/>
       <xsl:otherwise>
           <svrl:failed-assert
-                  test="not (exists (ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']) or (string-length(ram:SpecifiedTaxRegistration/ram:ID) &lt;= 30 and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA'])">
+                  test="not (exists (ram:SpecifiedTaxRegistration/ram:ID) and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT']) or (string-length(ram:SpecifiedTaxRegistration/ram:ID) &lt;= 30 and ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VAT'])">
           <xsl:attribute name="id">CIUS-VD-43</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
@@ -1178,9 +1178,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-    <xsl:when test="string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VA']"/>
+    <xsl:when test="string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VAT']"/>
       <xsl:otherwise>
-          <svrl:failed-assert test="string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VA']">
+          <svrl:failed-assert test="string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VAT']">
           <xsl:attribute name="id">CIUS-VD-42</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
@@ -1613,10 +1613,10 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-    <xsl:when test="not (ram:ID[@schemeID = 'VA']) or (string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VA'])"/>
+    <xsl:when test="not (ram:ID[@schemeID = 'VAT']) or (string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VAT'])"/>
       <xsl:otherwise>
           <svrl:failed-assert
-                  test="not (ram:ID[@schemeID = 'VA']) or (string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VA'])">
+                  test="not (ram:ID[@schemeID = 'VAT']) or (string-length(ram:ID) &lt;= 30 and ram:ID[@schemeID='VAT'])">
           <xsl:attribute name="id">CIUS-VD-41</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
