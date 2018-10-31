@@ -38,7 +38,8 @@ public abstract class FilteringEnumConversion<Source, Target extends Enum<Target
             throw new RuntimeException(e);
         }
 
-        Target result = Stream.of(enumValues).filter(f).findFirst().orElse(null);
+        Target result = enumValues.stream()
+                .filter(f).findFirst().orElse(null);
         if(result==null) throw new EnumConversionFailedException( String.format("Value '%s' not found among %d entries in %s.", value, enumValues.size(), theEnum.getSimpleName()) );
         return result;
 

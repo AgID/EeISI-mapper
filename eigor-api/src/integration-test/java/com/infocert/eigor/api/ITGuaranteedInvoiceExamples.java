@@ -13,6 +13,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
@@ -35,7 +36,7 @@ public class ITGuaranteedInvoiceExamples {
         final File examplesDirectory = new File(resource.getFile());
         if (examplesDirectory.isDirectory()) {
             final File[] files = Preconditions.checkNotNull(examplesDirectory.listFiles(), "No files found in resources/working-examples" );
-            this.testInvoices = Stream.of(files).filter(new Filter<File>() {
+            this.testInvoices = Arrays.stream(files).filter(new Filter<File>() {
                 @Override
                 public boolean apply(File file) {
                     return file.getName().endsWith(".xml" );
@@ -57,7 +58,7 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertFattpaExampleWithoutErrors() throws Exception {
-        Stream.of(testInvoices).filter(new Filter<File>() {
+        testInvoices.stream().filter(new Filter<File>() {
             @Override
             public boolean apply(File file) {
                 return file.getName().startsWith("fattpa" );
@@ -81,7 +82,7 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertUblExampleWithoutErrors() throws Exception {
-        Stream.of(testInvoices).filter(new Filter<File>() {
+        testInvoices.stream().filter(new Filter<File>() {
             @Override
             public boolean apply(File file) {
                 return file.getName().startsWith("ubl" );
@@ -103,7 +104,7 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertACSVDumpToCSVCenAndFatturaPA() throws Exception {
-        Stream.of(testInvoices).filter(new Filter<File>() {
+        testInvoices.stream().filter(new Filter<File>() {
             @Override
             public boolean apply(File file) {
                 return file.getName().startsWith("ubl");

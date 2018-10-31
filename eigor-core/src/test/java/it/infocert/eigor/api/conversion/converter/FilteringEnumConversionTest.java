@@ -5,6 +5,8 @@ import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.function.Predicate;
+
 import static org.hamcrest.Matchers.equalTo;
 
 
@@ -17,7 +19,7 @@ public class FilteringEnumConversionTest {
         FilteringEnumConversion<Integer, Untdid1001InvoiceTypeCode> sut = new FilteringEnumConversion<Integer, Untdid1001InvoiceTypeCode>(Untdid1001InvoiceTypeCode.class) {
 
             @Override
-            protected Filter<Untdid1001InvoiceTypeCode> buildFilter(Integer value) {
+            protected Predicate<Untdid1001InvoiceTypeCode> buildFilter(Integer value) {
                 return null;
             }
 

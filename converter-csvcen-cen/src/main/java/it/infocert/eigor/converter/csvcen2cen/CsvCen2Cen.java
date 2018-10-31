@@ -133,7 +133,7 @@ public class CsvCen2Cen implements ToCenConversion {
 
                     // double chacks BThas only one single arg constructor
 
-                    List<Constructor<?>> constructors = Stream.of(btBgClass.getConstructors())
+                    List<Constructor<?>> constructors = Arrays.stream(btBgClass.getConstructors())
                             .filter( c -> c.getParameterTypes().length == 1 )
                             .collect(Collectors.toList());
 

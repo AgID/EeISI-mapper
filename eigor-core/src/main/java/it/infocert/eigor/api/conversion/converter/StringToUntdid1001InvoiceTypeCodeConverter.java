@@ -2,6 +2,7 @@ package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeCo
             }
 
         };
-        Untdid1001InvoiceTypeCode first = Stream.of(Untdid1001InvoiceTypeCode.values()).filter(f).findFirst().orElse(null);
+        Untdid1001InvoiceTypeCode first = Arrays.stream(Untdid1001InvoiceTypeCode.values()).filter(f).findFirst().orElse(null);
 
         if(first == null) throw new IllegalArgumentException("Not found");
 

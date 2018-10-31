@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public abstract class GenericTransformer {
 
@@ -159,20 +161,24 @@ public abstract class GenericTransformer {
 
                 Constructor<?>[] constructors = btClass.getConstructors();
                 final ArrayList<BTBG> bt = new ArrayList<>(1);
-                com.amoerie.jstreams.functions.Consumer<Constructor<?>> k = new com.amoerie.jstreams.functions.Consumer<Constructor<?>>() {
+                Consumer<Constructor<?>> k = new Consumer<Constructor<?>>() {
                     @Override
-                    public void consume(final Constructor<?> constructor) {
+                    public void accept(final Constructor<?> constructor) {
                         try {
                             if (constructor.getParameterTypes().length == 0) {
                                 bt.add((BTBG) constructor.newInstance());
                             } else {
                                 Class<?>[] parameterTypes = constructor.getParameterTypes();
                                 List<Class<?>> classes = Arrays.asList(parameterTypes);
-                                Stream<Class<?>> classes1 = Stream.create(classes);
+
+                                Stream<Class<?>> classes1 = classes.stream();
 
                                 classes1.forEach(new Consumer<Class<?>>() {
+
+
                                     @Override
-                                    public void consume(Class<?> paramType) {
+                                    public void accept(Class<?> paramType) {
+
 
                                         try {
                                             constructorParam[0] = conversionRegistry.convert(String.class, paramType, xPathText);
@@ -209,7 +215,7 @@ public abstract class GenericTransformer {
                         }
                     }
                 };
-                Stream.create(Arrays.asList(constructors)).forEach(k);
+                Arrays.stream(constructors).forEach(k);
 
                 log.trace(cenPath + " - bt element created: " + bt);
 

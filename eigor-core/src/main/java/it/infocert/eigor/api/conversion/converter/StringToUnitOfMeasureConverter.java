@@ -6,6 +6,9 @@ import it.infocert.eigor.api.conversion.ConversionBetweenTypesFailedException;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 public class
 StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCodes> {
 
@@ -21,13 +24,11 @@ StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCode
 
         }
 
-        Filter<UnitOfMeasureCodes> f = new Filter<UnitOfMeasureCodes>() {
-            @Override public boolean apply(UnitOfMeasureCodes uom) {
-                return uom.getName().equalsIgnoreCase(s) || uom.getCommonCode().equalsIgnoreCase(s);
-            }
-        };
+        Predicate<UnitOfMeasureCodes> f = unitOfMeasureCodes -> unitOfMeasureCodes.getName().equalsIgnoreCase(s) || unitOfMeasureCodes.getCommonCode().equalsIgnoreCase(s);
 
-        UnitOfMeasureCodes result = Stream.create(UnitOfMeasureCodes.values()).filter(f).first();
+        UnitOfMeasureCodes result = Arrays.stream(UnitOfMeasureCodes.values())
+                .filter(f)
+                .findFirst().orElse(null);
 
         if(result == null) throw new ConversionBetweenTypesFailedException(
                 String.class, UnitOfMeasureCodes.class,

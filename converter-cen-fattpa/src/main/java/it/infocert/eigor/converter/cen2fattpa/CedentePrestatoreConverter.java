@@ -126,7 +126,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             allegato.setFormatoAttachment("txt");
             allegati.add(allegato);
         } else {
-            allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+            allegato = allegati.stream().filter(new Filter<AllegatiType>() {
                 @Override
                 public boolean apply(AllegatiType allegato) {
                     return "not-mapped-values".equals(allegato.getNomeAttachment());
@@ -207,7 +207,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                     allegato.setFormatoAttachment("txt");
                                     allegati.add(allegato);
                                 } else {
-                                    allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                                    allegato = allegati.stream().filter(new Filter<AllegatiType>() {
                                         @Override
                                         public boolean apply(AllegatiType allegato) {
                                             return "not-mapped-values".equals(allegato.getNomeAttachment());

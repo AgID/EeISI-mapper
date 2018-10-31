@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +18,7 @@ public class EnumsLookUp {
 
         Constructor<?>[] constructors = enumClass.getDeclaredConstructors();
 
-        Set<Constructor<?>> validConstructors = Stream.of(constructors)
+        Set<Constructor<?>> validConstructors = Arrays.stream(constructors)
                 .filter( constructor ->
                     {
                         int count = 0;

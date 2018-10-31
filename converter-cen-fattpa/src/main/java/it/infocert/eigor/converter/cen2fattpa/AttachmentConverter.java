@@ -129,7 +129,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 allegato.setAttachment(attachment.getBytes());
                 allegati.add(allegato);
             } else {
-                AllegatiType unmapped = Stream.of(allegati).filter(new Filter<AllegatiType>() {
+                AllegatiType unmapped = allegati.stream() .filter(new Filter<AllegatiType>() {
                     @Override
                     public boolean apply(AllegatiType allegato) {
                         return "not-mapped-values".equals(allegato.getNomeAttachment());
