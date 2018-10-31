@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
@@ -129,12 +130,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 allegato.setAttachment(attachment.getBytes());
                 allegati.add(allegato);
             } else {
-                AllegatiType unmapped = allegati.stream() .filter(new Filter<AllegatiType>() {
-                    @Override
-                    public boolean apply(AllegatiType allegato) {
-                        return "not-mapped-values".equals(allegato.getNomeAttachment());
-                    }
-                }).first();
+                AllegatiType unmapped = allegati.stream() .filter(allegato -> "not-mapped-values".equals(allegato.getNomeAttachment())).findFirst().orElse(null);
                 unmapped.setAttachment(attachment.getBytes());
             }
         }

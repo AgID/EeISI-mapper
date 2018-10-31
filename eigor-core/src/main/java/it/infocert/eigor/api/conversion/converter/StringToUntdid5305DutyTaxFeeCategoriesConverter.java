@@ -16,14 +16,7 @@ public class StringToUntdid5305DutyTaxFeeCategoriesConverter extends FilteringEn
     }
 
     @Override protected Predicate<Untdid5305DutyTaxFeeCategories> buildFilter(final String value) {
-        return new Predicate<Untdid5305DutyTaxFeeCategories>() {
-            @Override
-            public boolean test(Untdid5305DutyTaxFeeCategories c) {
-                return c.getShortDescritpion().equalsIgnoreCase(value);
-
-            }
-
-        };
+        return c -> c.getShortDescritpion().equalsIgnoreCase(value);
     }
 
     @Override

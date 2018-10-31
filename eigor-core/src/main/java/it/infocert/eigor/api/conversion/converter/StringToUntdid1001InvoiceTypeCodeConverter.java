@@ -28,13 +28,7 @@ public class StringToUntdid1001InvoiceTypeCodeConverter extends FromStringTypeCo
 
 
 
-        Predicate<Untdid1001InvoiceTypeCode> f = new Predicate<Untdid1001InvoiceTypeCode>() {
-            @Override
-            public boolean test(Untdid1001InvoiceTypeCode u) {
-                return (finalCode != null && u.getCode() == finalCode) || u.getShortDescritpion().equals(s);
-            }
-
-        };
+        Predicate<Untdid1001InvoiceTypeCode> f = u -> (finalCode != null && u.getCode() == finalCode) || u.getShortDescritpion().equals(s);
         Untdid1001InvoiceTypeCode first = Arrays.stream(Untdid1001InvoiceTypeCode.values()).filter(f).findFirst().orElse(null);
 
         if(first == null) throw new IllegalArgumentException("Not found");

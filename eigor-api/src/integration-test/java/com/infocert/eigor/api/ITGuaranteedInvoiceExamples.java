@@ -15,6 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.*;
 
@@ -36,12 +39,7 @@ public class ITGuaranteedInvoiceExamples {
         final File examplesDirectory = new File(resource.getFile());
         if (examplesDirectory.isDirectory()) {
             final File[] files = Preconditions.checkNotNull(examplesDirectory.listFiles(), "No files found in resources/working-examples" );
-            this.testInvoices = Arrays.stream(files).filter(new Filter<File>() {
-                @Override
-                public boolean apply(File file) {
-                    return file.getName().endsWith(".xml" );
-                }
-            }).toList();
+            this.testInvoices = Arrays.stream(files).filter(file -> file.getName().endsWith(".xml" )).collect(Collectors.toList());
 
         }
 
@@ -58,22 +56,14 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertFattpaExampleWithoutErrors() throws Exception {
-        testInvoices.stream().filter(new Filter<File>() {
-            @Override
-            public boolean apply(File file) {
-                return file.getName().startsWith("fattpa" );
-            }
-        }).forEach(new Consumer<File>() {
-            @Override
-            public void consume(File invoice) {
-                try {
-                    final ConversionResult<byte[]> result = api.convert("fatturapa" , "ubl" , new FileInputStream(invoice));
-                    assertFalse(result.hasIssues());
-                    assertTrue(result.isSuccessful());
-                    assertTrue(result.hasResult());
-                } catch (FileNotFoundException e) {
-                    fail();
-                }
+        testInvoices.stream().filter(file -> file.getName().startsWith("fattpa" )).forEach(invoice -> {
+            try {
+                final ConversionResult<byte[]> result = api.convert("fatturapa" , "ubl" , new FileInputStream(invoice));
+                assertFalse(result.hasIssues());
+                assertTrue(result.isSuccessful());
+                assertTrue(result.hasResult());
+            } catch (FileNotFoundException e) {
+                fail();
             }
         });
 
@@ -82,14 +72,9 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertUblExampleWithoutErrors() throws Exception {
-        testInvoices.stream().filter(new Filter<File>() {
+        testInvoices.stream().filter(file -> file.getName().startsWith("ubl" )).forEach(new Consumer<File>() {
             @Override
-            public boolean apply(File file) {
-                return file.getName().startsWith("ubl" );
-            }
-        }).forEach(new Consumer<File>() {
-            @Override
-            public void consume(File invoice) {
+            public void accept(File invoice) {
                 try {
                     final ConversionResult<byte[]> result = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
                     assertFalse(result.hasIssues());
@@ -104,30 +89,27 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertACSVDumpToCSVCenAndFatturaPA() throws Exception {
-        testInvoices.stream().filter(new Filter<File>() {
+        testInvoices.stream().filter(new Predicate<File>() {
             @Override
-            public boolean apply(File file) {
+            public boolean test(File file) {
                 return file.getName().startsWith("ubl");
             }
-        }).forEach(new Consumer<File>() {
-            @Override
-            public void consume(File invoice) {
-                try {
-                    final ConversionResult<byte[]> _ = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
-                    File[] tempFiles = tmp.getRoot().listFiles();
-                    tempFiles = tempFiles != null ? tempFiles : new File[]{};
-                    final File invoiceCen = findInvoiceCen(tempFiles, null);
-                    assertNotNull(invoiceCen);
-                    final FileInputStream cenIs = new FileInputStream(invoiceCen);
-                    final ConversionResult<byte[]> result = api.convert("csvcen" , "fatturapa" , cenIs);
+        }).forEach(invoice -> {
+            try {
+                final ConversionResult<byte[]> _ = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
+                File[] tempFiles = tmp.getRoot().listFiles();
+                tempFiles = tempFiles != null ? tempFiles : new File[]{};
+                final File invoiceCen = findInvoiceCen(tempFiles, null);
+                assertNotNull(invoiceCen);
+                final FileInputStream cenIs = new FileInputStream(invoiceCen);
+                final ConversionResult<byte[]> result = api.convert("csvcen" , "fatturapa" , cenIs);
 
-                    assertTrue(result.isSuccessful());
-                    assertFalse(result.hasIssues());
-                } catch (FileNotFoundException e) {
-                    fail();
-                }
-
+                assertTrue(result.isSuccessful());
+                assertFalse(result.hasIssues());
+            } catch (FileNotFoundException e) {
+                fail();
             }
+
         });
     }
 

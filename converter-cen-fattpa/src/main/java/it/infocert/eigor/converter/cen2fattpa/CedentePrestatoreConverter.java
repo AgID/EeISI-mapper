@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,12 +127,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             allegato.setFormatoAttachment("txt");
             allegati.add(allegato);
         } else {
-            allegato = allegati.stream().filter(new Filter<AllegatiType>() {
-                @Override
-                public boolean apply(AllegatiType allegato) {
-                    return "not-mapped-values".equals(allegato.getNomeAttachment());
-                }
-            }).first();
+            allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
             content = new String(allegato.getAttachment());
         }
         StringBuilder sb = new StringBuilder(content + System.lineSeparator())
@@ -207,12 +203,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                     allegato.setFormatoAttachment("txt");
                                     allegati.add(allegato);
                                 } else {
-                                    allegato = allegati.stream().filter(new Filter<AllegatiType>() {
-                                        @Override
-                                        public boolean apply(AllegatiType allegato) {
-                                            return "not-mapped-values".equals(allegato.getNomeAttachment());
-                                        }
-                                    }).first();
+                                    allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
                                     content = new String(allegato.getAttachment());
                                 }
                                 String updated = content +

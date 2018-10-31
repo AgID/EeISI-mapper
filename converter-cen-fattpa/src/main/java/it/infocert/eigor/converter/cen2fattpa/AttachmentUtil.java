@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.activation.MimeType;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Utility class to deal with FattPA Attachment
@@ -35,12 +36,7 @@ class AttachmentUtil {
             allegato.setFormatoAttachment("txt");
             allegati.add(allegato);
         } else {
-            allegato = allegati.stream().filter(new Filter<AllegatiType>() {
-                @Override
-                public boolean apply(AllegatiType allegato) {
-                    return "not-mapped-values".equals(allegato.getNomeAttachment());
-                }
-            }).first();
+            allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
             content = new String(allegato.getAttachment());
         }
         final String updated = "".equalsIgnoreCase(content) ? input : content + System.lineSeparator() + input;
