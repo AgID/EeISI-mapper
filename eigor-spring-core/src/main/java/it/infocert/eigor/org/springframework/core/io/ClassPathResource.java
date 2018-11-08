@@ -16,15 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.ClassUtils;
+import it.infocert.eigor.org.springframework.util.ObjectUtils;
+import it.infocert.eigor.org.springframework.util.StringUtils;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.util.StringUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * {@link Resource} implementation for class path resources.

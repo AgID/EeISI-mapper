@@ -1,6 +1,6 @@
 package it.infocert.eigor.test;
 
-import com.google.common.base.Predicate;
+
 import com.google.common.collect.Collections2;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -39,7 +41,9 @@ public class Files {
     @Nullable
     public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         List<File> files = Arrays.asList(outputDir.listFiles());
-        Collection<File> filter = Collections2.filter(files, col);
+
+        Collection<File> filter = files.stream().filter( col ).collect(Collectors.toList());
+
         return filter != null && !filter.isEmpty() ? filter.iterator().next() : null;
     }
 
@@ -48,12 +52,7 @@ public class Files {
      */
     @Nullable
     public static File findFirstFileByNameOrNull(File outputDir, final String name) {
-        return findFirstFileOrNull(outputDir, new Predicate<File>() {
-            @Override
-            public boolean apply(File input) {
-                return input.getName().equals(name);
-            }
-        });
+        return findFirstFileOrNull(outputDir, input -> input.getName().equals(name));
     }
 
     /**

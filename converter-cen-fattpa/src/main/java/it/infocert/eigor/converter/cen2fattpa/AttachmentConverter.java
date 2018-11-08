@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
+
+
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
@@ -129,12 +130,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 allegato.setAttachment(attachment.getBytes());
                 allegati.add(allegato);
             } else {
-                AllegatiType unmapped = Stream.of(allegati).filter(new Filter<AllegatiType>() {
-                    @Override
-                    public boolean apply(AllegatiType allegato) {
-                        return "not-mapped-values".equals(allegato.getNomeAttachment());
-                    }
-                }).first();
+                AllegatiType unmapped = allegati.stream() .filter(allegato -> "not-mapped-values".equals(allegato.getNomeAttachment())).findFirst().orElse(null);
                 unmapped.setAttachment(attachment.getBytes());
             }
         }

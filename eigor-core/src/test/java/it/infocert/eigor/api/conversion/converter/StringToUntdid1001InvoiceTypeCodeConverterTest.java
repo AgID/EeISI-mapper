@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import it.infocert.eigor.api.conversion.converter.StringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import org.junit.Test;
 

@@ -1,8 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToUnitOfMeasureConverter;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import org.junit.Test;
 

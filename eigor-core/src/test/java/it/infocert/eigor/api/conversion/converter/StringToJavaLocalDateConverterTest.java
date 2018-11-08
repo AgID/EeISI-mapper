@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -30,7 +29,7 @@ public class StringToJavaLocalDateConverterTest {
         LocalDate parsed = LocalDate.parse("23-gen-2017", formatterFor("dd-MMM-yyyy", Locale.ITALIAN));
         assertEquals( "2017-01-23", parsed.toString() );
     }
-    
+
     @Test public void shouldCovertDateWithTrailingSpaces() {
         LocalDate parsed = LocalDate.parse("23-gen-2017                          ".trim(), formatterFor("dd-MMM-yyyy", Locale.ITALIAN));
         assertEquals( "2017-01-23", parsed.toString() );

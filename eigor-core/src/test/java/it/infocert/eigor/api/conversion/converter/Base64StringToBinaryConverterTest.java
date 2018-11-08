@@ -1,6 +1,5 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import it.infocert.eigor.api.conversion.converter.Base64StringToBinaryConverter;
 import it.infocert.eigor.model.core.datatypes.Binary;
 import org.codehaus.plexus.util.Base64;
 import org.junit.Assert;

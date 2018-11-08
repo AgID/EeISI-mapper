@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.type.classreading;
 
-import java.io.IOException;
-
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+
+import java.io.IOException;
 
 /**
  * Simple implementation of the {@link MetadataReaderFactory} interface,

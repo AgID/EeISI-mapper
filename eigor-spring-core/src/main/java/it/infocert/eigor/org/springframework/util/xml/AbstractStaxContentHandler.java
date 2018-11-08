@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Abstract base class for SAX {@code ContentHandler} implementations that use StAX as a basis. All methods

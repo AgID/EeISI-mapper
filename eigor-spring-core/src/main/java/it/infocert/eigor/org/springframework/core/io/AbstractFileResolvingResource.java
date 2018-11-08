@@ -16,6 +16,8 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
+import it.infocert.eigor.org.springframework.util.ResourceUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +25,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-
-import it.infocert.eigor.org.springframework.util.ResourceUtils;
 
 /**
  * Abstract base class for resources which resolve URLs into File references,

@@ -16,13 +16,13 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import it.infocert.eigor.org.springframework.core.env.PropertiesPropertySource;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import it.infocert.eigor.org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Subclass of {@link PropertiesPropertySource} that loads a {@link Properties}

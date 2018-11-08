@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+import joptsimple.OptionSet;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import it.infocert.eigor.org.springframework.util.Assert;
-import joptsimple.OptionSet;
 
 /**
  * {@link CommandLinePropertySource} implementation backed by a JOpt {@link OptionSet}.

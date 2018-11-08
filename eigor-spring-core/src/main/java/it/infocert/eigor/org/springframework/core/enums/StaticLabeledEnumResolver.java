@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.enums;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.TreeSet;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * {@link LabeledEnumResolver} that resolves statically defined enumerations.

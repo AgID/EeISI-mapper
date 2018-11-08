@@ -16,42 +16,38 @@
  */
 package it.techgap.maven.sch2xslt;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.xml.transform.ErrorListener;
-
+import com.helger.commons.error.IResourceError;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.file.FilenameHelper;
+import com.helger.commons.io.resource.FileSystemResource;
+import com.helger.commons.io.resource.IReadableResource;
 import com.helger.commons.xml.CXML;
 import com.helger.commons.xml.namespace.MapBasedNamespaceContext;
+import com.helger.commons.xml.serialize.write.XMLWriter;
 import com.helger.commons.xml.serialize.write.XMLWriterSettings;
+import com.helger.commons.xml.transform.AbstractTransformErrorListener;
 import com.helger.schematron.svrl.CSVRL;
+import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
+import com.helger.schematron.xslt.SCHTransformerCustomizer;
+import com.helger.schematron.xslt.SchematronResourceSCHCache;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.slf4j.impl.StaticLoggerBinder;
-import org.apache.commons.io.FileUtils;
-
-import com.helger.commons.error.IResourceError;
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.file.FilenameHelper;
-import com.helger.commons.io.resource.FileSystemResource;
-import com.helger.commons.io.resource.IReadableResource;
-import com.helger.commons.xml.serialize.write.XMLWriter;
-import com.helger.commons.xml.transform.AbstractTransformErrorListener;
-import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
-import com.helger.schematron.xslt.SCHTransformerCustomizer;
-import com.helger.schematron.xslt.SchematronResourceSCHCache;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import javax.annotation.Nonnull;
+import javax.xml.transform.ErrorListener;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Converts one or more Schematron schema files into XSLT scripts.

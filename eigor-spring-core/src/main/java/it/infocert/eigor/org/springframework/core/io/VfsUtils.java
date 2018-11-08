@@ -16,6 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
+import it.infocert.eigor.org.springframework.core.NestedIOException;
+import it.infocert.eigor.org.springframework.util.ReflectionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,11 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-
-import it.infocert.eigor.org.springframework.core.NestedIOException;
-import it.infocert.eigor.org.springframework.util.ReflectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Utility for detecting the JBoss VFS version available in the classpath.

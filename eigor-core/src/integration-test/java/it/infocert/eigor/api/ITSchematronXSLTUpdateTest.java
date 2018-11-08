@@ -1,6 +1,5 @@
 package it.infocert.eigor.api;
 
-import it.infocert.eigor.api.errors.ErrorCode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

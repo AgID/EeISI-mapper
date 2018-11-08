@@ -1,7 +1,7 @@
 package it.infocert.eigor.api;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Consumer;
+
+
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.api.utils.IReflections;
@@ -15,6 +15,7 @@ import org.reflections.Reflections;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class ApiTest {
@@ -47,11 +48,9 @@ public class ApiTest {
         final BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
         List<Rule> rules = ruleRepository.rules();
 
-        Stream.create(rules).forEach(new Consumer<Rule>() {
-            @Override public void consume(Rule rule) {
-                RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
-                ruleReport.store(ruleOutcome, rule);
-            }
+        rules.stream().forEach(rule -> {
+            RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
+            ruleReport.store(ruleOutcome, rule);
         });
 
         byte[] converted = fromCen.convert(cenInvoice).getResult();

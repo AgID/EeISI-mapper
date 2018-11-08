@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.convert.converter;
 
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.comparator.ComparableComparator;
+
 import java.util.Comparator;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
-import it.infocert.eigor.org.springframework.util.comparator.ComparableComparator;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * A {@link Comparator} that converts values before they are compared. The specified

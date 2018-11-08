@@ -1,11 +1,14 @@
 package it.infocert.eigor.model.core.model.structure;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
+
 import com.google.common.collect.Collections2;
 import it.infocert.eigor.model.core.model.CenStructureSource;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Gives access to the CEN structure tree.
@@ -42,17 +45,13 @@ public class CenStructure extends CenStructureSource {
 
     private Item findItemByBgBtName(final BtBgName name) {
 
-        Predicate<Item> predicate = new Predicate<Item>() {
-            @Override public boolean apply(Item i) {
-                return i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals(String.valueOf(name.number()));
-            }
-        };
+        Predicate<Item> predicate = i -> i.getBtBg().equalsIgnoreCase(name.bgOrBt()) && i.getNumber().equals(String.valueOf(name.number()));
 
         List<Item> unfiltered = Arrays.asList(items);
 
         ArrayList<Item> filtered = new ArrayList<>();
         for (Item item : unfiltered) {
-            if( predicate.apply(item) ) filtered.add(item);
+            if( predicate.test(item) ) filtered.add(item);
         }
 
         if(!filtered.isEmpty()){
@@ -94,20 +93,24 @@ public class CenStructure extends CenStructureSource {
     private Set<BtBgNode> childrenOf(BtBgNode btBgNode) {
         final String key = btBgNode.getBtOrBg() + String.format("%04d", btBgNode.getNumber());
 
-        Collection<Item> filter = Collections2.filter(Arrays.asList(items), new com.google.common.base.Predicate<Item>() {
+        Collection<Item> filter = Arrays.asList(items).stream().filter(new Predicate<Item>() {
 
             @Override
-            public boolean apply(Item item) {
+            public boolean test(Item item) {
                 return item.getParent().startsWith(key);
             }
-        });
+        }).collect(Collectors.toList());
 
-        return new LinkedHashSet<>( Collections2.transform(filter, new com.google.common.base.Function<Item, BtBgNode>(){
-            @Override
-            public BtBgNode apply(Item item) {
-                return new BtBgNode(item,CenStructure.this);
-            }
-        }));
+        return new LinkedHashSet(
+                filter
+                        .stream()
+                        .map( new Function<Item, BtBgNode>(){
+                                @Override
+                                public BtBgNode apply(Item item) {
+                                    return new BtBgNode(item,CenStructure.this);
+                                }
+                            })
+                        .collect(Collectors.toSet()));
 
     }
 

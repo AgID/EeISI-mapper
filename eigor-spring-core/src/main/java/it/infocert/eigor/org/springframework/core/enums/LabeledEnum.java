@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.enums;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 import it.infocert.eigor.org.springframework.util.comparator.CompoundComparator;
 import it.infocert.eigor.org.springframework.util.comparator.NullSafeComparator;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * An interface for objects that represent a labeled enumeration.

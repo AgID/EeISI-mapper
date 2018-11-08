@@ -15,12 +15,12 @@
  */
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
+import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
+
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 /**
  * Simply calls {@link Object#toString()} to convert any supported Object to a String.

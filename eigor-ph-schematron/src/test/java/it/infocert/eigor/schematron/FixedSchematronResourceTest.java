@@ -12,7 +12,8 @@ import javax.xml.transform.stream.StreamSource;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class FixedSchematronResourceTest {
 

@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Contains common behavior relating to {@link javax.xml.transform.Transformer Transformers}, and the

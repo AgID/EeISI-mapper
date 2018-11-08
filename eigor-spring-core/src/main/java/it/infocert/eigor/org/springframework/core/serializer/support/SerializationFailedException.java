@@ -16,9 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.serializer.support;
 
+import it.infocert.eigor.org.springframework.core.NestedRuntimeException;
 import it.infocert.eigor.org.springframework.core.serializer.Deserializer;
 import it.infocert.eigor.org.springframework.core.serializer.Serializer;
-import it.infocert.eigor.org.springframework.core.NestedRuntimeException;
 
 /**
  * Wrapper for the native IOException (or similar) when a

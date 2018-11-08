@@ -16,16 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import it.infocert.eigor.org.springframework.core.CollectionFactory;
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+
+import java.util.*;
 
 /**
  * Converts a Map to another Map.

@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import it.infocert.eigor.org.springframework.util.FileCopyUtils;
 
 /**
  * {@code ClassLoader} that does <i>not</i> always delegate to the

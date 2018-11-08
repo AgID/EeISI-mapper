@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Abstract base class for {@code XMLStreamReader}s.

@@ -16,13 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamClass;
-
 import it.infocert.eigor.org.springframework.util.ClassUtils;
+
+import java.io.*;
 
 /**
  * Special ObjectInputStream subclass that resolves class names

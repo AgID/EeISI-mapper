@@ -16,13 +16,13 @@
 
 package it.infocert.eigor.org.springframework.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
 
 /**
  * Convenience class that features simple methods for custom log4j configuration.

@@ -16,34 +16,17 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import it.infocert.eigor.org.springframework.core.GenericTypeResolver;
-import it.infocert.eigor.org.springframework.core.convert.ConversionException;
-import it.infocert.eigor.org.springframework.core.convert.ConversionFailedException;
-import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalConverter;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConverterRegistry;
-import it.infocert.eigor.org.springframework.core.convert.converter.GenericConverter;
+import it.infocert.eigor.org.springframework.core.convert.*;
+import it.infocert.eigor.org.springframework.core.convert.converter.*;
+import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
-import it.infocert.eigor.org.springframework.core.convert.ConverterNotFoundException;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
-import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConverterFactory;
-import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.StringUtils;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base {@link ConversionService} implementation suitable for use in most environments.

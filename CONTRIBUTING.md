@@ -24,12 +24,12 @@ Create a `toolchains.xml` file in your `$HOME/.m2/` folder and copy the followin
     <toolchain>
         <type>jdk</type>
         <provides>
-            <version>1.7.0</version>
+            <version>1.8.0</version>
             <vendor>YOUR_VENDOR (openjdk or oracle)</vendor>
-            <id>jdk-1.7.0</id>
+            <id>jdk-1.8.0</id>
         </provides>
         <configuration>
-            <jdkHome>/path/to/your/java/home</jdkHome>
+            <jdkHome>/path/to/your/java/1.8/home</jdkHome>
         </configuration>
     </toolchain>
 </toolchains>

@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+import it.infocert.eigor.org.springframework.core.convert.converter.ConverterRegistry;
+
 import java.util.Locale;
 import java.util.UUID;
-
-import it.infocert.eigor.org.springframework.core.convert.converter.ConverterRegistry;
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 
 /**
  * A specialization of {@link GenericConversionService} configured by default with

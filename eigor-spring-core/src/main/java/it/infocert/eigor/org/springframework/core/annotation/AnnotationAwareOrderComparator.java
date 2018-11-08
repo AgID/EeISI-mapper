@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.annotation;
 
+import it.infocert.eigor.org.springframework.core.OrderComparator;
+import it.infocert.eigor.org.springframework.core.Ordered;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import it.infocert.eigor.org.springframework.core.OrderComparator;
-import it.infocert.eigor.org.springframework.core.Ordered;
 
 /**
  * {@link java.util.Comparator} implementation that checks

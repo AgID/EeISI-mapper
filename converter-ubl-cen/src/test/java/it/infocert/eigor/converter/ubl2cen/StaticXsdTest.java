@@ -7,7 +7,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.util.List;
 
 import static org.hamcrest.Matchers.empty;

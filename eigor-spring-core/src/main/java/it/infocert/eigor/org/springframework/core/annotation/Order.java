@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.annotation;
 
+import it.infocert.eigor.org.springframework.core.Ordered;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import it.infocert.eigor.org.springframework.core.Ordered;
 
 /**
  * Annotation that defines ordering. The value is optional, and represents order value

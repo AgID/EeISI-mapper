@@ -16,10 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
+import it.infocert.eigor.org.springframework.util.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * A {@link PropertySource} implementation capable of interrogating its

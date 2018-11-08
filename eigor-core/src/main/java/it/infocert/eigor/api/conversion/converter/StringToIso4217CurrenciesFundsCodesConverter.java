@@ -1,7 +1,8 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+
+import java.util.function.Predicate;
 
 /**
  * Converts "EURO" and "euro" in {@link it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes#EUR},
@@ -17,11 +18,14 @@ public class StringToIso4217CurrenciesFundsCodesConverter extends FilteringEnumC
         super(Iso4217CurrenciesFundsCodes.class);
     }
 
-    protected Filter<Iso4217CurrenciesFundsCodes> buildFilter(final String value) {
+    protected Predicate<Iso4217CurrenciesFundsCodes> buildFilter(final String value) {
         return new FilterByValue<Iso4217CurrenciesFundsCodes, String>(value){
-            @Override public boolean apply(Iso4217CurrenciesFundsCodes iso) {
+
+            @Override
+            public boolean test(Iso4217CurrenciesFundsCodes iso) {
                 return iso.getCurrency().equalsIgnoreCase(value);
             }
+
         };
     }
 

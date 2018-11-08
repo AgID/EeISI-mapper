@@ -16,6 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.convert;
 
+import it.infocert.eigor.org.springframework.core.MethodParameter;
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.ClassUtils;
+import it.infocert.eigor.org.springframework.util.ObjectUtils;
+
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -23,13 +29,6 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.core.MethodParameter;
-import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
-
-import javax.annotation.Nullable;
 
 /**
  * Context about a type to convert from or to.

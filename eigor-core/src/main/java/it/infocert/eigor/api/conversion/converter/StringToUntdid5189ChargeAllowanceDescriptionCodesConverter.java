@@ -1,7 +1,9 @@
 package it.infocert.eigor.api.conversion.converter;
 
-import com.amoerie.jstreams.functions.Filter;
+
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
+
+import java.util.function.Predicate;
 
 public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverter extends FilteringEnumConversion<String, Untdid5189ChargeAllowanceDescriptionCodes> {
 
@@ -15,24 +17,14 @@ public class StringToUntdid5189ChargeAllowanceDescriptionCodesConverter extends 
     }
 
     @Override
-    protected Filter<Untdid5189ChargeAllowanceDescriptionCodes> buildFilter(String value) {
+    protected Predicate<Untdid5189ChargeAllowanceDescriptionCodes> buildFilter(String value) {
         final int k;
         try {
             k = Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return new Filter<Untdid5189ChargeAllowanceDescriptionCodes>() {
-                @Override
-                public boolean apply(Untdid5189ChargeAllowanceDescriptionCodes untdid5189ChargeAllowanceDescriptionCodes) {
-                    return false;
-                }
-            };
+            return untdid5189ChargeAllowanceDescriptionCodes -> false;
         }
-        return new Filter<Untdid5189ChargeAllowanceDescriptionCodes>() {
-            @Override
-            public boolean apply(Untdid5189ChargeAllowanceDescriptionCodes item) {
-                return item.getCode() == k;
-            }
-        };
+        return item -> item.getCode() == k;
     }
 
     public static TypeConverter<String, Untdid5189ChargeAllowanceDescriptionCodes> newConverter() {

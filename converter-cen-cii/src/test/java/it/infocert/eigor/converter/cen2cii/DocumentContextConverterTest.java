@@ -6,7 +6,6 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0002ProcessControl;
-//import it.infocert.eigor.model.core.model.BT0024SpecificationIdentifier;
 import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -17,6 +16,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
+//import it.infocert.eigor.model.core.model.BT0024SpecificationIdentifier;
 
 public class DocumentContextConverterTest {
     private final Namespace rsmNs = Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");

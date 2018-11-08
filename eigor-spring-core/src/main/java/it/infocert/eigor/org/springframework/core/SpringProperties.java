@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.core.env.AbstractEnvironment;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
-
-import it.infocert.eigor.org.springframework.core.env.AbstractEnvironment;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Static holder for local Spring properties, i.e. defined at the Spring library level.

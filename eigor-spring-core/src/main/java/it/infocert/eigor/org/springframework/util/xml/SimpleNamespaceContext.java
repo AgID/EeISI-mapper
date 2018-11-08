@@ -16,16 +16,11 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-
-import it.infocert.eigor.org.springframework.util.Assert;
+import java.util.*;
 
 /**
  * Simple {@code javax.xml.namespace.NamespaceContext} implementation. Follows the standard

@@ -8,7 +8,6 @@ import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.conversion.ObservableValidation;
-import it.infocert.eigor.api.io.RecursiveNavigator;
 import it.infocert.eigor.api.utils.EigorVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
