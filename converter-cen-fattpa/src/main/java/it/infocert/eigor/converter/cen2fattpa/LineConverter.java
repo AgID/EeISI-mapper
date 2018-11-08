@@ -171,7 +171,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     }
 
     private boolean datesAlreadyExistent(BG0000Invoice invoice) {
-        Stream<BG0026InvoiceLinePeriod> notNullPeriodsStream = invoice.getBG0025InvoiceLine()
+
+        List<BG0026InvoiceLinePeriod> notNullPeriodsStream = invoice.getBG0025InvoiceLine()
                 .stream()
                 .map(bg0025InvoiceLine -> {
                     List<BG0026InvoiceLinePeriod> periods = bg0025InvoiceLine.getBG0026InvoiceLinePeriod();
@@ -180,14 +181,15 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                     return null;
                 })
-                .filter(bg0026InvoiceLinePeriod -> bg0026InvoiceLinePeriod != null);
+                .filter(bg0026InvoiceLinePeriod -> bg0026InvoiceLinePeriod != null)
+                .collect(Collectors.toList());
 
-        int bt134Counter = notNullPeriodsStream
+        int bt134Counter = notNullPeriodsStream.stream()
                 .filter(bg0026InvoiceLinePeriod -> !bg0026InvoiceLinePeriod.getBT0134InvoiceLinePeriodStartDate().isEmpty())
                 .map(bg0026InvoiceLinePeriod -> bg0026InvoiceLinePeriod.getBT0134InvoiceLinePeriodStartDate(0))
                 .collect(Collectors.toList()).size();
 
-        int bt135Counter = (int) notNullPeriodsStream
+        int bt135Counter = (int) notNullPeriodsStream.stream()
                 .filter(period -> !period.getBT0135InvoiceLinePeriodEndDate().isEmpty())
                 .map(period -> period.getBT0135InvoiceLinePeriodEndDate(0))
                 .count();
