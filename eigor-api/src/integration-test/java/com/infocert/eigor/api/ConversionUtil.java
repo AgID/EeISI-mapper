@@ -1,9 +1,6 @@
 package com.infocert.eigor.api;
 
 import com.google.common.base.Preconditions;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.AbstractConversionCallback;
