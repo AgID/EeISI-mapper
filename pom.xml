@@ -27,7 +27,6 @@
 
     <modules>
         <module>eigor-parent</module>
-        <module>ph-sch2xslt-maven-plugin</module>
         <module>cen-core</module>
         <module>converter-fattpa-cen</module>
         <module>converter-cen-fattpa</module>
@@ -46,7 +45,6 @@
         <module>converter-cen-ublcn</module>
         <module>eigor-test-schemas</module>
         <module>eigor-commons</module>
-        <module>eigor-ph-schematron</module>
     </modules>
 
     <reporting>

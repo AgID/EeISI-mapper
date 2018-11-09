@@ -37,7 +37,7 @@
         <jopt-simple.version>5.0.3</jopt-simple.version>
         <pitest-maven.version>1.1.11</pitest-maven.version>
         <commons-compress.version>1.9</commons-compress.version>
-        <phschematron.version>3.0.1</phschematron.version>
+        <phschematron.version>5.0.6</phschematron.version>
         <plexus-utils.version>3.0.24</plexus-utils.version>
         <jdom.version>2.0.6</jdom.version>
         <jaxen.version>1.1.6</jaxen.version>
@@ -187,11 +187,6 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>eigor-ph-schematron</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

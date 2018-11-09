@@ -96,7 +96,7 @@ public class ITGuaranteedInvoiceExamples {
             }
         }).forEach(invoice -> {
             try {
-                final ConversionResult<byte[]> _ = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
+                final ConversionResult<byte[]> unused = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
                 File[] tempFiles = tmp.getRoot().listFiles();
                 tempFiles = tempFiles != null ? tempFiles : new File[]{};
                 final File invoiceCen = findInvoiceCen(tempFiles, null);

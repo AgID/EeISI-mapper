@@ -38,9 +38,9 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>it.infocert.eigor</groupId>
+                        <groupId>com.helger.maven</groupId>
                         <artifactId>ph-sch2xslt-maven-plugin</artifactId>
-                        <version>${project.version}</version>
+                        <version>${phschematron.version}</version>
                         <executions>
                             <execution>
                                 <id>ubl-xslt-generation</id>
@@ -114,9 +114,9 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>it.infocert.eigor</groupId>
+                        <groupId>com.helger.maven</groupId>
                         <artifactId>ph-sch2xslt-maven-plugin</artifactId>
-                        <version>${project.version}</version>
+                        <version>${phschematron.version}</version>
                         <executions>
                             <execution>
                                 <id>ubl-xslt-generation</id>
