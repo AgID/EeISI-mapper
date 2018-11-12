@@ -102,10 +102,10 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             StringToIdentifierConverter.newConverter()
     );
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one" ;
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one" ;
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many" ;
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom" ;
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-one" ;
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.many-to-one" ;
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-many" ;
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.custom" ;
 
     private XSDValidator xsdValidator;
 
@@ -141,10 +141,8 @@ public class XmlCen2Cen extends AbstractToCenConverter {
         List<IConversionIssue> errors = new ArrayList<>();
         InputStream clonedInputStream = null;
 
-        /*
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-
             clonedInputStream = new ByteArrayInputStream(bytes);
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
@@ -156,6 +154,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.XMLCEN_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
+
         org.jdom2.Document document;
         try {
             document = getDocument(clonedInputStream);
@@ -163,6 +162,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.XMLCEN_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
 
+        /*
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
