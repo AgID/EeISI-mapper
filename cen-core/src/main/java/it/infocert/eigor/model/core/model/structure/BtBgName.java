@@ -114,12 +114,17 @@ public class BtBgName {
     }
 
     /**
+     * Returns {@code "BT"} or {@code "BG"} uppercase.
      * @return {@code "BT"} or {@code "BG"} uppercase.
      */
     public String bgOrBt() {
         return bgOrBt;
     }
 
+
+    /**
+     * Returns the number associated to a BT or BG. For instance, for {@code BG0003} returns {@code 3}.
+     */
     public int number() {
         return number;
     }

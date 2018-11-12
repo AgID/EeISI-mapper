@@ -5,7 +5,7 @@ public interface Visitor {
 
     void endInvoice(BG0000Invoice invoice);
 
-    void startBTBG(BTBG invoiceNumber);
+    void startBTBG(BTBG btBg);
 
-    void endBTBG(BTBG invoiceNumber);
+    void endBTBG(BTBG btBg);
 }
