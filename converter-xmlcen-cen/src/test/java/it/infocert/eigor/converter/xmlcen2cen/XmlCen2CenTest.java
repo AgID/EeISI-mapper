@@ -7,7 +7,14 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
+import it.infocert.eigor.model.core.model.BG0022DocumentTotals;
+import it.infocert.eigor.model.core.model.BT0035SellerAddressLine1;
+import it.infocert.eigor.model.core.model.BT0106SumOfInvoiceLineNetAmount;
+import it.infocert.eigor.model.core.model.BT0112InvoiceTotalAmountWithVat;
+import it.infocert.eigor.model.core.model.BT0152InvoicedItemVatRate;
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -19,6 +26,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
+import static org.junit.Assert.assertFalse;
 
 public class XmlCen2CenTest {
 
@@ -86,5 +94,29 @@ public class XmlCen2CenTest {
         xmlCen2Cen.configure();
 
         ConversionResult<BG0000Invoice> result = xmlCen2Cen.convert(sourceInvoiceStream);
+
+        assertFalse(result.hasIssues());
+
+        {
+            BG0000Invoice cen = result.getResult();
+            final BT0035SellerAddressLine1 bt35 = cen.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0035SellerAddressLine1().get(0);
+
+            Assert.assertEquals("Via Carlo Bo", bt35.getValue());
+        }
+
+        {
+            BG0000Invoice cen = result.getResult();
+            BG0022DocumentTotals docTotals = cen.getBG0022DocumentTotals(0);
+            BT0106SumOfInvoiceLineNetAmount bt106 = docTotals.getBT0106SumOfInvoiceLineNetAmount().get(0);
+
+            Assert.assertEquals("1100", bt106.getValue().toString());
+        }
+
+        {
+            BG0000Invoice cen = result.getResult();
+            final BT0152InvoicedItemVatRate bt152 = cen.getBG0025InvoiceLine().get(0).getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0);
+
+            Assert.assertEquals("10.00", bt152.getValue().toString());
+        }
     }
 }
