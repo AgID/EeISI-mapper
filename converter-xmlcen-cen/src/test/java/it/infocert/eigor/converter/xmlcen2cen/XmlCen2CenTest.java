@@ -7,11 +7,12 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
+import it.infocert.eigor.model.core.model.BG0016PaymentInstructions;
 import it.infocert.eigor.model.core.model.BG0022DocumentTotals;
 import it.infocert.eigor.model.core.model.BT0035SellerAddressLine1;
+import it.infocert.eigor.model.core.model.BT0082PaymentMeansText;
 import it.infocert.eigor.model.core.model.BT0106SumOfInvoiceLineNetAmount;
-import it.infocert.eigor.model.core.model.BT0112InvoiceTotalAmountWithVat;
+import it.infocert.eigor.model.core.model.BT0124ExternalDocumentLocation;
 import it.infocert.eigor.model.core.model.BT0152InvoicedItemVatRate;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -85,7 +86,7 @@ public class XmlCen2CenTest {
     }
 
     @Test
-    public void convert() throws ConfigurationException, SyntaxErrorInInvoiceFormatException {
+    public void convertXmlMandatoryFieldsOnly() throws ConfigurationException, SyntaxErrorInInvoiceFormatException {
         EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
 
         InputStream sourceInvoiceStream = invoiceAsStream("/semanticCEN.xml");
@@ -117,6 +118,41 @@ public class XmlCen2CenTest {
             final BT0152InvoicedItemVatRate bt152 = cen.getBG0025InvoiceLine().get(0).getBG0030LineVatInformation().get(0).getBT0152InvoicedItemVatRate().get(0);
 
             Assert.assertEquals("10.00", bt152.getValue().toString());
+        }
+    }
+
+    @Test
+    public void convertXmlAllFields() throws ConfigurationException, SyntaxErrorInInvoiceFormatException {
+        EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
+
+        InputStream sourceInvoiceStream = invoiceAsStream("/Test_EeISI_300_CENfullmodel.xml");
+
+        XmlCen2Cen xmlCen2Cen = new XmlCen2Cen(new JavaReflections(), configuration);
+        xmlCen2Cen.configure();
+
+        ConversionResult<BG0000Invoice> result = xmlCen2Cen.convert(sourceInvoiceStream);
+
+        assertFalse(result.hasIssues());
+
+        {
+            BG0000Invoice cen = result.getResult();
+            final BT0035SellerAddressLine1 bt35 = cen.getBG0004Seller().get(0).getBG0005SellerPostalAddress().get(0).getBT0035SellerAddressLine1().get(0);
+            Assert.assertEquals("Seller address line 1", bt35.getValue());
+        }
+
+        {
+            BG0000Invoice cen = result.getResult();
+            final BG0016PaymentInstructions bg16 = cen.getBG0016PaymentInstructions().get(0);
+            final BT0082PaymentMeansText bt82 = bg16.getBT0082PaymentMeansText().get(0);
+
+            Assert.assertEquals("SEPA", bt82.getValue().toString());
+        }
+
+        {
+            BG0000Invoice cen = result.getResult();
+            final BT0124ExternalDocumentLocation bt124 = cen.getBG0024AdditionalSupportingDocuments().get(0).getBT0124ExternalDocumentLocation().get(0);
+
+            Assert.assertEquals("External document location", bt124.getValue().toString());
         }
     }
 }

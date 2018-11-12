@@ -10,7 +10,6 @@ import it.infocert.eigor.api.CustomMappingLoader;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -31,48 +30,22 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
-import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.model.AbstractBT;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0022DocumentTotals;
-import it.infocert.eigor.model.core.model.BT0001InvoiceNumber;
-import it.infocert.eigor.model.core.model.BT0002InvoiceIssueDate;
-import it.infocert.eigor.model.core.model.BT0003InvoiceTypeCode;
-import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
-import it.infocert.eigor.model.core.model.BT0020PaymentTerms;
-import it.infocert.eigor.model.core.model.BT0109InvoiceTotalAmountWithoutVat;
-import it.infocert.eigor.model.core.model.BT0110InvoiceTotalVatAmount;
-import it.infocert.eigor.model.core.model.BT0112InvoiceTotalAmountWithVat;
-import it.infocert.eigor.model.core.model.BT0113PaidAmount;
-import it.infocert.eigor.model.core.model.BT0115AmountDueForPayment;
-import it.infocert.eigor.model.core.model.structure.CenStructure;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
-import org.jdom2.Element;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -162,7 +135,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.XMLCEN_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
 
-        /*
+
         ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
         result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
@@ -170,6 +143,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
 
 
         // fix https://gitlab.com/tgi-infocert-eigor/eigor/issues/252
+        /*
         BG0000Invoice invoice = result.getResult();
         // bt-112
         {
@@ -225,11 +199,9 @@ public class XmlCen2Cen extends AbstractToCenConverter {
         BT0020PaymentTerms bt20cen = null;
         if (invoice.getBT0020PaymentTerms().isEmpty()) {
             invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
-        }
+        }*/
 
-
-        return result;*/
-        return null;
+        return result;
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, org.jdom2.Document document, List<IConversionIssue> errors) {
