@@ -47,6 +47,7 @@
         <module>eigor-test-schemas</module>
         <module>eigor-commons</module>
         <module>eigor-ph-schematron</module>
+        <module>converter-xmlcen-cen</module>
     </modules>
 
     <reporting>
