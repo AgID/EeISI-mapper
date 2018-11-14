@@ -11,6 +11,7 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public String extension() {
-        return null;
+        return "xmlcen";
     }
 
     @Override
@@ -117,7 +118,10 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
         public String getXml() throws IOException {
             StringWriter sw = new StringWriter();
-            new XMLOutputter().output( this.invoice, sw);
+            XMLOutputter xmlOutputter = new XMLOutputter();
+            Format newFormat = Format.getPrettyFormat();
+            xmlOutputter.setFormat(newFormat);
+            xmlOutputter.output( this.invoice, sw);
             return sw.toString();
         }
     }

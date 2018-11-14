@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2xmlcen;
 
 
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -10,6 +11,7 @@ import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -27,23 +30,43 @@ public class ConverterTest {
 
     private static XPathFactory xFactory;
 
+    CenToXmlCenConverter sut;
+
     @BeforeClass
     static public void setUpFactory() {
         xFactory = XPathFactory.instance();
     }
 
+    @Before
+    public void setUpSut() throws ConfigurationException {
+        sut = new CenToXmlCenConverter();
+        sut.configure();
+    }
+
+    @Test
+    public void shouldNotProvideAnyRegEx() {
+
+        assertThat( sut.getMappingRegex(), nullValue() );
+
+    }
+
     @Test
     public void shouldSupportXmlCen() {
 
-        CenToXmlCenConverter sut = new CenToXmlCenConverter();
         assertThat( sut.getSupportedFormats(), hasItems("xmlcen") );
+
+    }
+
+    @Test
+    public void shouldSupportXmlCenExtension() {
+
+        assertThat( sut.extension(), equalTo("xmlcen") );
 
     }
 
     @Test
     public void shouldSupportXmlCenAsFormat() {
 
-        CenToXmlCenConverter sut = new CenToXmlCenConverter();
         assertTrue( sut.support("xmlcen") );
         assertFalse( sut.support("xxx") );
 
@@ -53,8 +76,6 @@ public class ConverterTest {
     public void shouldConvertAnInvoice() throws SyntaxErrorInInvoiceFormatException, JDOMException, IOException {
 
         // given
-        CenToXmlCenConverter sut = new CenToXmlCenConverter();
-
         BG0000Invoice invoice = aCenInvoice();
 
         // when
@@ -68,8 +89,8 @@ public class ConverterTest {
                 result
         );
 
-        assertThat( selectOneElement(cenXml, "/bg-1").getText(), equalTo(""));
-        assertThat( selectOneElement(cenXml, "/bt-1").getText(), equalTo("123333"));
+        assertThat( selectOneElement(cenXml, "/bg-0").getText().trim(), equalTo(""));
+        assertThat( selectOneElement(cenXml, "/bg-0/bt-1").getText().trim(), equalTo("12345"));
 
     }
 

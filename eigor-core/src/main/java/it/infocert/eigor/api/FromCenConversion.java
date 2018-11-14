@@ -44,8 +44,7 @@ public interface FromCenConversion extends Named, Configurable {
     String extension();
 
     /**
-     *
-     * Regex string for mapping key validation
+     * Regex string for mapping key validation.
      */
     String getMappingRegex();
 }
