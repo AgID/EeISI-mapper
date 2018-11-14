@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>eigor</artifactId>
+        <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
         <version>3.4.1</version>
         <relativePath>../eigor-parent</relativePath>
@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>converter-cen-xml-cen</artifactId>
+    <name>Eigor :: Converter :: CEN - CENXML (${project.artifactId})</name>
 
     <dependencies>
 
@@ -33,21 +34,15 @@
             <artifactId>eigor-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-core</artifactId>
-            <version>3.4.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>cen-core</artifactId>
-            <version>3.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>eigor-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>converter-commons</artifactId>
+        </dependency>
+
+
 
     </dependencies>
 
