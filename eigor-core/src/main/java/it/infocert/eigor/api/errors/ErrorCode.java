@@ -67,7 +67,8 @@ public class ErrorCode implements Serializable {
         CII_OUT,
         UBLCN_IN,
         UBLCN_OUT,
-        CSVCEN_IN
+        CSVCEN_IN,
+        XMLCEN_IN,
     }
 
     public enum Action {
