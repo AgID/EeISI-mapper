@@ -145,14 +145,14 @@ public class XmlCen2CenTest {
             final BG0016PaymentInstructions bg16 = cen.getBG0016PaymentInstructions().get(0);
             final BT0082PaymentMeansText bt82 = bg16.getBT0082PaymentMeansText().get(0);
 
-            Assert.assertEquals("SEPA", bt82.getValue().toString());
+            Assert.assertEquals("SEPA", bt82.getValue());
         }
 
         {
             BG0000Invoice cen = result.getResult();
             final BT0124ExternalDocumentLocation bt124 = cen.getBG0024AdditionalSupportingDocuments().get(0).getBT0124ExternalDocumentLocation().get(0);
 
-            Assert.assertEquals("External document location", bt124.getValue().toString());
+            Assert.assertEquals("External document location", bt124.getValue());
         }
     }
 }

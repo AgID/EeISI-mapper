@@ -6,13 +6,16 @@
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
         <version>3.4.1</version>
-        <relativePath>../eigor-parent/pom.xml</relativePath>
+        <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>converter-xmlcen-cen</artifactId>
 
+    <name>Eigor :: Converter :: XMLCEN - CEN (${project.artifactId})</name>
+
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cen-core</artifactId>
@@ -28,38 +31,64 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom2</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-country-codes</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/fromcsv</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <packageName>it.infocert.eigor.converter.xmlcen2cen.models</packageName>
+                    <sources>
+                        <source>
+                            ../converter-commons/src/main/resources/converterdata/converter-commons/xmlcen/xsdstatic
+                        </source>
+                    </sources>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
