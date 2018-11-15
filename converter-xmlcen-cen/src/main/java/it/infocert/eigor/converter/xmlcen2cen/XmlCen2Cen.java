@@ -23,6 +23,8 @@ import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter
 import it.infocert.eigor.api.conversion.converter.StringToStringConverter;
 import it.infocert.eigor.api.conversion.converter.StringToUnitOfMeasureConverter;
 import it.infocert.eigor.api.conversion.converter.StringToUntdid1001InvoiceTypeCodeConverter;
+import it.infocert.eigor.api.conversion.converter.StringToUntdid2005DateTimePeriodQualifiers;
+import it.infocert.eigor.api.conversion.converter.StringToUntdid4461PaymentMeansCode;
 import it.infocert.eigor.api.conversion.converter.StringToUntdid5189ChargeAllowanceDescriptionCodesConverter;
 import it.infocert.eigor.api.conversion.converter.StringToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -34,6 +36,7 @@ import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
@@ -72,7 +75,10 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             StringToBigDecimalConverter.newConverter(),
             StringToStringConverter.newConverter(),
             StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
-            StringToIdentifierConverter.newConverter()
+            StringToIdentifierConverter.newConverter(),
+            StringToUntdid2005DateTimePeriodQualifiers.newConverter(),
+            StringToUntdid4461PaymentMeansCode.newConverter(),
+            LookUpEnumConversion.newConverter(Untdid7161SpecialServicesCodes.class)
     );
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-one" ;
