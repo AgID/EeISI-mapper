@@ -8,6 +8,7 @@
         </provides>
         <configuration>
             <jdkHome>/usr/lib/jvm/java-7-openjdk-amd64</jdkHome>
+            <!-- /nas_workspace/jenkins2/tools/hudson.model.JDK/Java8/bin/java -->
         </configuration>
     </toolchain>
 </toolchains>
