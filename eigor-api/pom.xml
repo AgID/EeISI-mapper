@@ -19,58 +19,56 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cen-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-csvcen-cen</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-fattpa-cen</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-fattpa</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-ubl-cen</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-ublcn-cen</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cii-cen</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-cii</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-ubl</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-ublcn</artifactId>
-            <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-xmlcen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-xmlcen-cen</artifactId>
+        </dependency>
+
 
         <!-- test -->
         <dependency>

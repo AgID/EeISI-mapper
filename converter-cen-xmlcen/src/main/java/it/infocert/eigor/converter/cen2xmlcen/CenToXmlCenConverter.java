@@ -7,7 +7,10 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.jdom2.Document;
@@ -74,7 +77,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public String getName() {
-        return null;
+        return "converter-cen-xmlcen";
     }
 
     @Override
@@ -124,23 +127,66 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
                 Element newElement = new Element(String.format("%s-%d", btbgName.bgOrBt().toUpperCase(), btbgName.number()));
 
+                AbstractBT bt = (AbstractBT)btbg;
+                Object btValue = bt.getValue();
 
-                if(btbg instanceof BT0034SellerElectronicAddressAndSchemeIdentifier) {
-                    Identifier id = ((BT0034SellerElectronicAddressAndSchemeIdentifier) btbg).getValue();
-                    newElement.setAttribute("scheme", id.getIdentificationSchema());
-                }else if(btbg instanceof BT0008ValueAddedTaxPointDateCode) {
-                    String name = String.valueOf(((BT0008ValueAddedTaxPointDateCode) btbg).getValue().getCode());
-                    newElement.setText(name);
-                }else if(btbg instanceof BT0055BuyerCountryCode) {
-                    String name = String.valueOf (((BT0055BuyerCountryCode) btbg).getValue().getIso2charCode());
-                    newElement.setText(name);
-                }else if(btbg instanceof BT0151InvoicedItemVatCategoryCode) {
-                    String name = ((BT0151InvoicedItemVatCategoryCode) btbg).getValue().name();
-                    newElement.setText(name);
-                } else if(btbg instanceof BT0118VatCategoryCode) {
-                    String name = ((BT0118VatCategoryCode) btbg).getValue().name();
-                    newElement.setText(name);
+                boolean done = true;
+
+                if(btValue instanceof Identifier) {
+                    Identifier id = ((Identifier) btValue);
+                    String identificationSchema = id.getIdentificationSchema();
+                    if(identificationSchema!=null) {
+                        newElement.setAttribute("scheme", identificationSchema);
+                    }else{
+                        newElement.setAttribute("scheme", "");
+                    }
+                    newElement.setText(id.getIdentifier());
+                }else if(btValue instanceof Untdid5305DutyTaxFeeCategories) {
+                    Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
+                    newElement.setText( value.name() );
+                }else if(btValue instanceof Untdid1001InvoiceTypeCode) {
+                    Untdid1001InvoiceTypeCode value = (Untdid1001InvoiceTypeCode) btValue;
+                    newElement.setText( String.valueOf( value.getCode() ) );
                 }else{
+                    done = false;
+                }
+
+
+                if(!done) {
+                    done = true;
+                    if (btbg instanceof BT0008ValueAddedTaxPointDateCode) {
+                        String name = String.valueOf(((BT0008ValueAddedTaxPointDateCode) btbg).getValue().getCode());
+                        newElement.setText(name);
+                    } else if (btbg instanceof BT0055BuyerCountryCode) {
+                        String name = String.valueOf(((BT0055BuyerCountryCode) btbg).getValue().getIso2charCode());
+                        newElement.setText(name);
+                    } else if (btbg instanceof BT0151InvoicedItemVatCategoryCode) {
+                        String name = ((BT0151InvoicedItemVatCategoryCode) btbg).getValue().name();
+                        newElement.setText(name);
+                    } else if (btbg instanceof BT0118VatCategoryCode) {
+                        String name = ((BT0118VatCategoryCode) btbg).getValue().name();
+                        newElement.setText(name);
+                    } else if (btbg instanceof BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename) {
+                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename theBt = (BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename) btbg;
+                        // <BT-125 mime="application/pdf" filename="filename0">ZGVmYXVsdA==</BT-125>
+                        FileReference value = theBt.getValue();
+
+                        if(value.getMimeType()!=null) {
+                            newElement.setAttribute("mime", value.getMimeType().toString());
+                        }
+
+                        if(value.getFileName()!=null){
+                            newElement.setAttribute("filename", value.getFileName());
+                        }
+                        // TODO: Base64
+                        newElement.setText("Q2lhbyBhbWljaQ==");
+
+                    } else{
+                        done = false;
+                    }
+                }
+
+                if(!done) {
                     newElement.setText(btbg.toString());
                 }
                 stack.peek().addContent(newElement);

@@ -59,6 +59,10 @@ public class IssuesTest {
         conversion = new ConversionUtil(api);
     }
 
+    @Test
+    public void convertXmlCenToCenToXmlCen() {
+        ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+    }
 
     @Test
     public void issue279FromUblToFattPA() throws Exception {
