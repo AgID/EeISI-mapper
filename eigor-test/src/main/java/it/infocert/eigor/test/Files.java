@@ -1,7 +1,6 @@
 package it.infocert.eigor.test;
 
 
-import com.google.common.collect.Collections2;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -42,7 +41,7 @@ public class Files {
     public static File findFirstFileOrNull(File outputDir, Predicate<File> col) {
         List<File> files = Arrays.asList(outputDir.listFiles());
 
-        Collection<File> filter = files.stream().filter( col ).collect(Collectors.toList());
+        Collection<File> filter = files.stream().filter(col).collect(Collectors.toList());
 
         return filter != null && !filter.isEmpty() ? filter.iterator().next() : null;
     }
@@ -183,7 +182,6 @@ public class Files {
         }
 
     }
-
 
     public static void setPermission(File file, PosixFilePermission... permissions) throws IOException {
 

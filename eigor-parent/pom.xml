@@ -261,6 +261,16 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>converter-xmlcen-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>converter-cen-xmlcen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-test-schemas</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
