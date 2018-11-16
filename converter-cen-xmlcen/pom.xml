@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>converter-cen-xml-cen</artifactId>
+    <artifactId>converter-cen-xmlcen</artifactId>
     <name>Eigor :: Converter :: CEN - CENXML (${project.artifactId})</name>
 
     <dependencies>
