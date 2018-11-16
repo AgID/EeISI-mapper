@@ -26,6 +26,8 @@ public interface FromCenConversion extends Named, Configurable {
 
     /**
      * Whether the given format is supported or not.
+     * The "format" is not a file extension, instead is the "nickname" of the format as provided through the command line
+     * to define a specific conversion.
      */
     boolean support(String format);
 
@@ -42,8 +44,7 @@ public interface FromCenConversion extends Named, Configurable {
     String extension();
 
     /**
-     *
-     * Regex string for mapping key validation
+     * Regex string for mapping key validation.
      */
     String getMappingRegex();
 }

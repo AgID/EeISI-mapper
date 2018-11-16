@@ -28,10 +28,6 @@
             <artifactId>cen-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-ph-schematron</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.helger</groupId>
             <artifactId>ph-schematron</artifactId>
         </dependency>
