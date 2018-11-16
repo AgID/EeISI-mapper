@@ -4,17 +4,17 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0010Payee;
 import it.infocert.eigor.model.core.model.BT0060PayeeIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier;
-import org.codehaus.plexus.util.StringUtils;
+import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class PayeeConverter implements CustomMapping<Document> {
 
@@ -31,26 +31,18 @@ public class PayeeConverter implements CustomMapping<Document> {
             
             final List<Element> bt60s = rootElement.getChild("BG-10").getChildren("BT-60");
             bt60s.forEach(bt60 -> {
-                final BT0060PayeeIdentifierAndSchemeIdentifier payeeIdentifierAndSchemeIdentifier;
-                if(Objects.nonNull(bt60.getAttribute("scheme")) && StringUtils.isNotEmpty(bt60.getAttribute("scheme").getValue())) {
-                    final String scheme = bt60.getAttribute("scheme").getValue();
-                    payeeIdentifierAndSchemeIdentifier = new BT0060PayeeIdentifierAndSchemeIdentifier(new Identifier(scheme, bt60.getText()));
-                } else {
-                    payeeIdentifierAndSchemeIdentifier = new BT0060PayeeIdentifierAndSchemeIdentifier(new Identifier(bt60.getText()));
+                final Optional<BTBG> bt0060 = ConverterUtils.getBt.apply("BT0060", bt60);
+                if(bt0060.isPresent()) {
+                    payee.getBT0060PayeeIdentifierAndSchemeIdentifier().add((BT0060PayeeIdentifierAndSchemeIdentifier) bt0060.get());
                 }
-                payee.getBT0060PayeeIdentifierAndSchemeIdentifier().add(payeeIdentifierAndSchemeIdentifier);
             });
 
             final List<Element> bt61s = rootElement.getChild("BG-10").getChildren("BT-61");
             bt61s.forEach(bt61 -> {
-                final BT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier payeeLegalRegistrationIdentifierAndSchemeIdentifier;
-                if(Objects.nonNull(bt61.getAttribute("scheme")) && StringUtils.isNotEmpty(bt61.getAttribute("scheme").getValue())) {
-                    final String scheme = bt61.getAttribute("scheme").getValue();
-                    payeeLegalRegistrationIdentifierAndSchemeIdentifier = new BT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(scheme, bt61.getText()));
-                } else {
-                    payeeLegalRegistrationIdentifierAndSchemeIdentifier = new BT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(bt61.getText()));
+                final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0061", bt61);
+                if(bt.isPresent()) {
+                    payee.getBT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier().add((BT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier) bt.get());
                 }
-                payee.getBT0061PayeeLegalRegistrationIdentifierAndSchemeIdentifier().add(payeeLegalRegistrationIdentifierAndSchemeIdentifier);
             });
         }
 

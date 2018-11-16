@@ -4,18 +4,18 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 import it.infocert.eigor.model.core.model.BG0031ItemInformation;
 import it.infocert.eigor.model.core.model.BT0157ItemStandardIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier;
-import org.codehaus.plexus.util.StringUtils;
+import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ItemInformationConverter implements CustomMapping<Document> {
 
@@ -38,31 +38,18 @@ public class ItemInformationConverter implements CustomMapping<Document> {
                 final BG0031ItemInformation itemInformation = invoiceLine.getBG0031ItemInformation().get(0);
                 final List<Element> bt157s = bg25.getChild("BG-31").getChildren("BT-157");
                 bt157s.forEach(bt157 -> {
-                    final BT0157ItemStandardIdentifierAndSchemeIdentifier itemStandardIdentifierAndSchemeIdentifier;
-                    if(Objects.nonNull(bt157.getAttribute("scheme")) && StringUtils.isNotEmpty(bt157.getAttribute("scheme").getValue())) {
-                        final String scheme = bt157.getAttribute("scheme").getValue();
-                        itemStandardIdentifierAndSchemeIdentifier = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(scheme, bt157.getText()));
-                    } else {
-                        itemStandardIdentifierAndSchemeIdentifier = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(bt157.getText()));
+                    final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0157", bt157);
+                    if(bt.isPresent()) {
+                        itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add((BT0157ItemStandardIdentifierAndSchemeIdentifier) bt.get());
                     }
-                    itemInformation.getBT0157ItemStandardIdentifierAndSchemeIdentifier().add(itemStandardIdentifierAndSchemeIdentifier);
                 });
 
                 final List<Element> bt158s = bg25.getChild("BG-31").getChildren("BT-158");
                 bt158s.forEach(bt158 -> {
-                    final BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier itemStandardIdentifierAndSchemeIdentifier;
-                    if(Objects.nonNull(bt158.getAttribute("scheme")) && StringUtils.isNotEmpty(bt158.getAttribute("scheme").getValue())) {
-                        final String scheme = bt158.getAttribute("scheme").getValue();
-                        if(Objects.nonNull(bt158.getAttribute("version")) && StringUtils.isNotEmpty(bt158.getAttribute("version").getValue())) {
-                            final String version = bt158.getAttribute("version").getValue();
-                            itemStandardIdentifierAndSchemeIdentifier = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(scheme, version, bt158.getText()));
-                        } else {
-                            itemStandardIdentifierAndSchemeIdentifier = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(scheme, bt158.getText()));
-                        }
-                    } else {
-                        itemStandardIdentifierAndSchemeIdentifier = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(bt158.getText()));
+                    final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0158", bt158);
+                    if(bt.isPresent()) {
+                        itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add((BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier) bt.get());
                     }
-                    itemInformation.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().add(itemStandardIdentifierAndSchemeIdentifier);
                 });
             }
         }
