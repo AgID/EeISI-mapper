@@ -81,7 +81,7 @@ public class CenToXmlCenConverterTest {
 
     }
 
-    @Test @Ignore
+    @Test
     public void shouldConvertAnInvoice() throws SyntaxErrorInInvoiceFormatException, JDOMException, IOException {
 
         // given
@@ -125,6 +125,8 @@ public class CenToXmlCenConverterTest {
 
     private BG0000Invoice aMinimalCenInvoice() {
 
+        Identifier attribute = new Identifier("schema", "version", "identifier");
+
         Calendar instance = GregorianCalendar.getInstance();
         instance.set(Calendar.DATE, 22);
         instance.set(Calendar.MONTH, Calendar.MARCH);
@@ -132,6 +134,7 @@ public class CenToXmlCenConverterTest {
         LocalDate localDate = LocalDate.fromCalendarFields( instance );
 
         BG0002ProcessControl bg0002 = new BG0002ProcessControl();
+        bg0002.getBT0023BusinessProcessType().add(new BT0023BusinessProcessType("bt23"));
         bg0002.getBT0024SpecificationIdentifier().add( new BT0024SpecificationIdentifier("spec") );
 
         BG0003PrecedingInvoiceReference bg3 = new BG0003PrecedingInvoiceReference();
@@ -139,7 +142,18 @@ public class CenToXmlCenConverterTest {
         bg3.getBT0026PrecedingInvoiceIssueDate().add(new BT0026PrecedingInvoiceIssueDate(localDate));
 
         BG0005SellerPostalAddress bg05 = new BG0005SellerPostalAddress();
+        bg05.getBT0035SellerAddressLine1().add(new BT0035SellerAddressLine1("bt35"));
+        bg05.getBT0036SellerAddressLine2().add(new BT0036SellerAddressLine2("bt36"));
+        bg05.getBT0037SellerCity().add(new BT0037SellerCity("bt37"));
+        bg05.getBT0038SellerPostCode().add(new BT0038SellerPostCode("bt38"));
+        bg05.getBT0039SellerCountrySubdivision().add(new BT0039SellerCountrySubdivision("bt39"));
         bg05.getBT0040SellerCountryCode().add(new BT0040SellerCountryCode(Iso31661CountryCodes.DK));
+        bg05.getBT0162SellerAddressLine3().add( new BT0162SellerAddressLine3("bt162") );
+
+        BG0006SellerContact bg06 = new BG0006SellerContact();
+        bg06.getBT0041SellerContactPoint().add(new BT0041SellerContactPoint("bt41"));
+        bg06.getBT0042SellerContactTelephoneNumber().add(new BT0042SellerContactTelephoneNumber("bt42"));
+        bg06.getBT0043SellerContactEmailAddress().add(new BT0043SellerContactEmailAddress("a@a.com"));
 
         BG0004Seller bg004Seller = new BG0004Seller();
         bg004Seller.getBT0027SellerName().add(new BT0027SellerName("Jonh"));
@@ -147,14 +161,24 @@ public class CenToXmlCenConverterTest {
         bg004Seller.getBT0031SellerVatIdentifier().add(new BT0031SellerVatIdentifier("vatIdentifier"));
         bg004Seller.getBT0032SellerTaxRegistrationIdentifier().add( new BT0032SellerTaxRegistrationIdentifier("identifier") );
         bg004Seller.getBT0033SellerAdditionalLegalInformation().add( new BT0033SellerAdditionalLegalInformation( "legalInfo" ));
-        bg004Seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add( new BT0034SellerElectronicAddressAndSchemeIdentifier(new Identifier("schema", "version", "identifier")) );
+
+        bg004Seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add( new BT0034SellerElectronicAddressAndSchemeIdentifier(attribute) );
         bg004Seller.getBG0005SellerPostalAddress().add(bg05);
+        bg004Seller.getBG0006SellerContact().add(bg06);
 
         BG0008BuyerPostalAddress bg0008 = new BG0008BuyerPostalAddress();
-        bg0008.getBT0055BuyerCountryCode().add( new BT0055BuyerCountryCode(Iso31661CountryCodes.IT) );
+        bg0008.getBT0050BuyerAddressLine1().add( new BT0050BuyerAddressLine1("line1") );
+        bg0008.getBT0051BuyerAddressLine2().add( new BT0051BuyerAddressLine2("line2") );
+        bg0008.getBT0052BuyerCity().add( new BT0052BuyerCity("line3") );
+        bg0008.getBT0053BuyerPostCode().add( new BT0053BuyerPostCode("bt53") );
+        bg0008.getBT0054BuyerCountrySubdivision().add( new BT0054BuyerCountrySubdivision("bt54") );
+        bg0008.getBT0055BuyerCountryCode().add( new BT0055BuyerCountryCode(Iso31661CountryCodes.DZ) );
+        bg0008.getBT0163BuyerAddressLine3().add( new BT0163BuyerAddressLine3("bt163") );
 
         BG0007Buyer bg007Buyer = new BG0007Buyer();
         bg007Buyer.getBT0044BuyerName().add(new BT0044BuyerName("name"));
+        bg007Buyer.getBT0045BuyerTradingName().add(new BT0045BuyerTradingName("bt45"));
+        bg007Buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().add(new BT0046BuyerIdentifierAndSchemeIdentifier(attribute));
         bg007Buyer.getBG0008BuyerPostalAddress().add(bg0008);
 
         BG0022DocumentTotals bg22 = new BG0022DocumentTotals();
