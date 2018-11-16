@@ -9,7 +9,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>3.4.1</version>
+    <version>4.0.0-SNAPSHOT</version>
     <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -27,27 +27,26 @@
 
     <modules>
         <module>eigor-parent</module>
-        <module>ph-sch2xslt-maven-plugin</module>
-        <module>cen-core</module>
-        <module>converter-fattpa-cen</module>
-        <module>converter-cen-fattpa</module>
         <module>eigor-cli</module>
         <module>eigor-test</module>
         <module>eigor-core</module>
+        <module>eigor-api</module>
+        <module>eigor-spring-core</module>
+        <module>eigor-test-schemas</module>
+        <module>eigor-commons</module>
+        <module>cen-core</module>
+        <module>converter-fattpa-cen</module>
+        <module>converter-cen-fattpa</module>
         <module>converter-csvcen-cen</module>
         <module>converter-commons</module>
         <module>converter-ubl-cen</module>
         <module>converter-ublcn-cen</module>
-        <module>eigor-api</module>
         <module>converter-cii-cen</module>
         <module>converter-cen-cii</module>
-        <module>eigor-spring-core</module>
         <module>converter-cen-ubl</module>
         <module>converter-cen-ublcn</module>
-        <module>eigor-test-schemas</module>
-        <module>eigor-commons</module>
-        <module>eigor-ph-schematron</module>
         <module>converter-xmlcen-cen</module>
+        <module>converter-cen-xml-cen</module>
     </modules>
 
     <reporting>

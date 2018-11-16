@@ -89,7 +89,7 @@ public class XmlCen2CenTest {
     public void convertXmlMandatoryFieldsOnly() throws ConfigurationException, SyntaxErrorInInvoiceFormatException {
         EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
 
-        InputStream sourceInvoiceStream = invoiceAsStream("/semanticCEN.xml");
+        InputStream sourceInvoiceStream = invoiceAsStream("/examples/xmlcen/semanticCEN.xml");
 
         XmlCen2Cen xmlCen2Cen = new XmlCen2Cen(new JavaReflections(), configuration);
         xmlCen2Cen.configure();
@@ -125,7 +125,7 @@ public class XmlCen2CenTest {
     public void convertXmlAllFields() throws ConfigurationException, SyntaxErrorInInvoiceFormatException {
         EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
 
-        InputStream sourceInvoiceStream = invoiceAsStream("/Test_EeISI_300_CENfullmodel.xml");
+        InputStream sourceInvoiceStream = invoiceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml");
 
         XmlCen2Cen xmlCen2Cen = new XmlCen2Cen(new JavaReflections(), configuration);
         xmlCen2Cen.configure();
