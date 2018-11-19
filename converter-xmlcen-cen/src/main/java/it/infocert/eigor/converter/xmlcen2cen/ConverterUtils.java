@@ -15,20 +15,23 @@ import java.util.function.BiFunction;
 
 public final class ConverterUtils {
 
+    private static final String SCHEME = "scheme";
+    private static final String VERSION = "version";
+
     private ConverterUtils() {};
 
     public static BiFunction<String, Element, Optional<BTBG>> getBt = (s, el) -> {
         try {
-            final String scheme = el.getAttribute("scheme").getValue();
             final Class<? extends BTBG> btBgByName = new InvoiceUtils(new JavaReflections()).getBtBgByName(s);
             Constructor<? extends BTBG> constructor = btBgByName.getConstructor(Identifier.class);
             Identifier id;
-            if(Objects.nonNull(el.getAttribute("scheme")) && StringUtils.isNotEmpty(el.getAttribute("scheme").getValue())) {
-                if(Objects.nonNull(el.getAttribute("version")) && StringUtils.isNotEmpty(el.getAttribute("version").getValue())) {
-                    final String version = el.getAttribute("version").getValue();
-                    id = new Identifier(scheme, version, el.getText());
+            if(Objects.nonNull(el.getAttribute(SCHEME)) && StringUtils.isNotEmpty(el.getAttribute(SCHEME).getValue())) {
+                final String schemeValue = el.getAttribute(SCHEME).getValue();
+                if(Objects.nonNull(el.getAttribute(VERSION)) && StringUtils.isNotEmpty(el.getAttribute(VERSION).getValue())) {
+                    final String versionValue = el.getAttribute(VERSION).getValue();
+                    id = new Identifier(schemeValue, versionValue, el.getText());
                 } else {
-                    id = new Identifier(scheme, el.getText());
+                    id = new Identifier(schemeValue, el.getText());
                 }
             } else {
                 id = new Identifier(el.getText());
