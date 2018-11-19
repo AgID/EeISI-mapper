@@ -2,9 +2,9 @@
     <toolchain>
         <type>jdk</type>
         <provides>
-            <version>1.7.0</version>
+            <version>1.8.0</version>
             <vendor>openjdk</vendor>
-            <id>openjdk-jdk-1.7.0</id>
+            <id>openjdk-jdk-1.8.0</id>
         </provides>
         <configuration>
             <!--<jdkHome>/usr/lib/jvm/java-7-openjdk-amd64</jdkHome>-->
