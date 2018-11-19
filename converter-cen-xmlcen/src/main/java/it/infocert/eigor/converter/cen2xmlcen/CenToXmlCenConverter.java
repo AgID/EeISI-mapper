@@ -128,6 +128,12 @@ public class CenToXmlCenConverter implements FromCenConversion {
                 if(btbg instanceof BT0034SellerElectronicAddressAndSchemeIdentifier) {
                     Identifier id = ((BT0034SellerElectronicAddressAndSchemeIdentifier) btbg).getValue();
                     newElement.setAttribute("scheme", id.getIdentificationSchema());
+                }else if(btbg instanceof BT0008ValueAddedTaxPointDateCode) {
+                    String name = String.valueOf(((BT0008ValueAddedTaxPointDateCode) btbg).getValue().getCode());
+                    newElement.setText(name);
+                }else if(btbg instanceof BT0055BuyerCountryCode) {
+                    String name = String.valueOf (((BT0055BuyerCountryCode) btbg).getValue().getIso2charCode());
+                    newElement.setText(name);
                 }else if(btbg instanceof BT0151InvoicedItemVatCategoryCode) {
                     String name = ((BT0151InvoicedItemVatCategoryCode) btbg).getValue().name();
                     newElement.setText(name);
