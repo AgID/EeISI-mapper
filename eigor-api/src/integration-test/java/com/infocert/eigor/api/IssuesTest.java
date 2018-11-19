@@ -4,24 +4,28 @@ import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.Base64;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class IssuesTest {
@@ -60,8 +64,23 @@ public class IssuesTest {
     }
 
     @Test
-    public void convertXmlCenToCenToXmlCen() {
+    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
+
+        // check conversion xmlcen -> xmlcen is without errors.
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+
+        InputStream resourceAsStream = getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml");
+        String originalXmlStr = IOUtils.toString(resourceAsStream, "UTF-8");
+        originalXmlStr = originalXmlStr.replaceAll("<!--.+-->","");
+        originalXmlStr = originalXmlStr.replaceAll(" +\\n","");
+
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( originalXmlStr.getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( convert.getResult() )));
+
+        assertEquals( originalXml, convertedXml );
+
+
     }
 
     @Test
@@ -388,6 +407,23 @@ public class IssuesTest {
         InputSource is = new InputSource(xmlStringReader);
         XPathExpression expr = xPath.compile(expression);
         return expr.evaluate(is);
+    }
+
+    private static String printDocument(Document doc) throws IOException, TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
+        transformer.transform(new DOMSource(doc),
+                new StreamResult(writer));
+        return new String(out.toByteArray());
     }
 
 

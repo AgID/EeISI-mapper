@@ -9,8 +9,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.jdom2.Document;
@@ -111,6 +110,8 @@ public class CenToXmlCenConverter implements FromCenConversion {
         @Override
         public void startBTBG(BTBG btbg) {
 
+            System.out.println(btbg.getClass().getSimpleName());
+
 
             BtBgName btbgName = BtBgName.parse(btbg.denomination());
 
@@ -162,6 +163,24 @@ public class CenToXmlCenConverter implements FromCenConversion {
                     } else if (btValue instanceof Untdid1001InvoiceTypeCode) {
                         Untdid1001InvoiceTypeCode value = (Untdid1001InvoiceTypeCode) btValue;
                         newElement.setText(String.valueOf(value.getCode()));
+                    } else if (btValue instanceof Iso4217CurrenciesFundsCodes) {
+                        Iso4217CurrenciesFundsCodes value = (Iso4217CurrenciesFundsCodes) btValue;
+                        newElement.setText(String.valueOf(value.getCode()));
+                    } else if (btValue instanceof Iso31661CountryCodes) {
+                        Iso31661CountryCodes value = (Iso31661CountryCodes) btValue;
+                        newElement.setText(String.valueOf(value.getIso2charCode()));
+                    } else if(btValue instanceof Untdid4461PaymentMeansCode) {
+                        Untdid4461PaymentMeansCode value = (Untdid4461PaymentMeansCode) btValue;
+                        newElement.setText(String.valueOf(value.getCode()));
+                    } else if(btValue instanceof Untdid7161SpecialServicesCodes) {
+                        Untdid7161SpecialServicesCodes value = (Untdid7161SpecialServicesCodes) btValue;
+                        newElement.setText(String.valueOf(value.name()));
+                    } else if(btValue instanceof Untdid5189ChargeAllowanceDescriptionCodes) {
+                        Untdid5189ChargeAllowanceDescriptionCodes value = (Untdid5189ChargeAllowanceDescriptionCodes) btValue;
+                        newElement.setText(String.valueOf(value.getCode()));
+                    } else if(btValue instanceof UnitOfMeasureCodes) {
+                        UnitOfMeasureCodes value = (UnitOfMeasureCodes)btValue;
+                        newElement.setText(String.valueOf(value.getCommonCode()));
                     } else {
                         done = false;
                     }
