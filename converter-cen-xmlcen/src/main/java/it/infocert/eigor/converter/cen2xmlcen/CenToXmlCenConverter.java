@@ -130,25 +130,41 @@ public class CenToXmlCenConverter implements FromCenConversion {
                 AbstractBT bt = (AbstractBT)btbg;
                 Object btValue = bt.getValue();
 
-                boolean done = true;
+                boolean done = false;
 
-                if(btValue instanceof Identifier) {
-                    Identifier id = ((Identifier) btValue);
-                    String identificationSchema = id.getIdentificationSchema();
-                    if(identificationSchema!=null) {
-                        newElement.setAttribute("scheme", identificationSchema);
+                if(!done) {
+                    if (btbg instanceof BT0048BuyerVatIdentifier || btbg instanceof BT0063SellerTaxRepresentativeVatIdentifier
+                    || btbg instanceof BT0090BankAssignedCreditorIdentifier
+                    || btbg instanceof BT0137InvoiceLineAllowanceBaseAmount
+                    || btbg instanceof BT0138InvoiceLineAllowancePercentage) {
+                        done = true;
+                        String theValue = ((AbstractBT)btbg).getValue().toString();
+                        newElement.setText( theValue );
                     }else{
-                        newElement.setAttribute("scheme", "");
+                        done = false;
                     }
-                    newElement.setText(id.getIdentifier());
-                }else if(btValue instanceof Untdid5305DutyTaxFeeCategories) {
-                    Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
-                    newElement.setText( value.name() );
-                }else if(btValue instanceof Untdid1001InvoiceTypeCode) {
-                    Untdid1001InvoiceTypeCode value = (Untdid1001InvoiceTypeCode) btValue;
-                    newElement.setText( String.valueOf( value.getCode() ) );
-                }else{
-                    done = false;
+                }
+
+                if(!done) {
+                    done = true;
+                    if (btValue instanceof Identifier) {
+                        Identifier id = ((Identifier) btValue);
+                        String identificationSchema = id.getIdentificationSchema();
+                        if (identificationSchema != null) {
+                            newElement.setAttribute("scheme", identificationSchema);
+                        } else {
+                            newElement.setAttribute("scheme", "");
+                        }
+                        newElement.setText(id.getIdentifier());
+                    } else if (btValue instanceof Untdid5305DutyTaxFeeCategories) {
+                        Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
+                        newElement.setText(value.name());
+                    } else if (btValue instanceof Untdid1001InvoiceTypeCode) {
+                        Untdid1001InvoiceTypeCode value = (Untdid1001InvoiceTypeCode) btValue;
+                        newElement.setText(String.valueOf(value.getCode()));
+                    } else {
+                        done = false;
+                    }
                 }
 
 
