@@ -95,7 +95,19 @@ public class EigorApi {
 
     }
 
+    public ConversionResult<Void> validateSyntax(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validateSyntax();
+    }
+
+    public ConversionResult<Void> validateSemantic(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validateSemantics();
+    }
+
     public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validate();
+    }
+
+    private ObservableValidation setupObservable(final String sourceFormat, final InputStream invoice) {
         log.debug(EigorVersion.getAsString());
 
         String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
@@ -114,6 +126,6 @@ public class EigorApi {
                 "invoice",
                 Lists.newArrayList(callback),
                 builder.getRuleRepository()
-                ).validate();
+        );
     }
 }
