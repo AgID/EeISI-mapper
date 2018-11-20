@@ -34,7 +34,7 @@ public class InvoiceConverter implements CustomMapping<Document> {
             }
 
             final List<Element> bt125s = bg24.getChildren("BT-125");
-            TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.FATTPA_IN, "mime");
+            TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.XMLCEN_IN, "mime");
             bt125s.forEach(bt125 -> {
                 final BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename attachedDocument;
 
@@ -47,7 +47,7 @@ public class InvoiceConverter implements CustomMapping<Document> {
                             e,
                             ErrorMessage.builder()
                                     .message(e.getMessage())
-                                    .location(ErrorCode.Location.FATTPA_IN)
+                                    .location(ErrorCode.Location.XMLCEN_IN)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())

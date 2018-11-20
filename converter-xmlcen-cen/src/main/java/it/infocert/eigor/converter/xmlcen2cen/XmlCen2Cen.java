@@ -32,38 +32,52 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.datatypes.FileReference;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
+import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class XmlCen2Cen extends AbstractToCenConverter {
 
     private Logger log = LoggerFactory.getLogger(XmlCen2Cen.class);
-    private final static String FORMAT = "xmlcen" ;
+    private final static String FORMAT = "xmlcen";
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
+    private final InvoiceUtils utils;
+    private final ErrorCode.Action errorAction = ErrorCode.Action.CONFIGURED_MAP;
+    private final ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_IN;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             CountryNameToIso31661CountryCodeConverter.newConverter(),
             LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
-            StringToJavaLocalDateConverter.newConverter("dd-MMM-yy" ),
-            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd" ),
+            StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
+            StringToJavaLocalDateConverter.newConverter("yyyy-MM-dd"),
             StringToUntdid1001InvoiceTypeCodeConverter.newConverter(),
             LookUpEnumConversion.newConverter(Untdid1001InvoiceTypeCode.class),
             StringToIso4217CurrenciesFundsCodesConverter.newConverter(),
@@ -81,16 +95,17 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             LookUpEnumConversion.newConverter(Untdid7161SpecialServicesCodes.class)
     );
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-one" ;
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.many-to-one" ;
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-many" ;
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.custom" ;
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.custom";
 
     private XSDValidator xsdValidator;
 
     public XmlCen2Cen(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.XMLCEN_IN);
         this.configuration = checkNotNull(configuration);
+        this.utils = new InvoiceUtils(reflections);
     }
 
     @Override
@@ -141,13 +156,114 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             throw new EigorRuntimeException(new ErrorMessage(e.getMessage(), ErrorCode.Location.XMLCEN_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID), e);
         }
 
-
-        ConversionResult<BG0000Invoice> result = applyOne2OneTransformationsBasedOnMapping(document, errors);
-        result = applyMany2OneTransformationsBasedOnMapping(result.getResult(), document, errors);
-        result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
+        ConversionResult<BG0000Invoice> result = convertXmlToCen(document, errors);
         applyCustomMapping(result.getResult(), document, errors);
 
         return result;
+    }
+
+    public ConversionResult<BG0000Invoice> convertXmlToCen(Document document, List<IConversionIssue> errors) {
+        BG0000Invoice invoice = new BG0000Invoice();
+
+        final Element root = document.getRootElement();
+        traverseTree(root, invoice, errors);
+
+        return new ConversionResult<>(errors, invoice);
+    }
+
+    public void traverseTree(Element root, BTBG bg, List<IConversionIssue> errors) {
+        final List<Element> children = root.getChildren();
+        children.forEach(child -> {
+            //If is a leaf
+            if (child.getName().startsWith("BT-")) {
+                Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
+                Optional<Constructor<?>> cons = Arrays.stream(btBgByName.getConstructors())
+                        .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]) ||
+                                FileReference.class.equals(constructor.getParameterTypes()[0]))
+                        .findFirst();
+                if (!cons.isPresent()) {
+                    Constructor<?>[] constructors = btBgByName.getConstructors();
+                    final Object[] constructorParam = new Object[]{null};
+                    final ArrayList<BTBG> bt = new ArrayList<>(1);
+                    Consumer<Constructor<?>> k = new Consumer<Constructor<?>>() {
+                        @Override
+                        public void accept(final Constructor<?> constructor) {
+                            try {
+                                if (constructor.getParameterTypes().length == 0) {
+                                    bt.add((BTBG) constructor.newInstance());
+                                } else {
+                                    Class<?>[] parameterTypes = constructor.getParameterTypes();
+                                    List<Class<?>> classes = Arrays.asList(parameterTypes);
+
+                                    Stream<Class<?>> classes1 = classes.stream();
+
+                                    classes1.forEach(new Consumer<Class<?>>() {
+
+                                        @Override
+                                        public void accept(Class<?> paramType) {
+
+
+                                            try {
+                                                constructorParam[0] = conversionRegistry.convert(String.class, paramType, child.getValue());
+                                                try {
+                                                    bt.add((BTBG) constructor.newInstance(constructorParam[0]));
+                                                } catch (InstantiationException | IllegalAccessException e) {
+                                                    log.error(e.getMessage(), e);
+                                                    errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                                                } catch (InvocationTargetException e) {
+                                                    String message = constructorParam[0] == null ?
+                                                            String.format("%s - Constructor parameter conversion yielded null for %s with value %s",
+                                                                    child.getName(),
+                                                                    paramType.getSimpleName(),
+                                                                    child.getValue()
+                                                            )
+                                                            : e.getClass().getSimpleName();
+                                                    log.error(e.getMessage() == null ?
+                                                                    message
+                                                                    : e.getMessage()
+                                                            , e);
+                                                    errors.add(ConversionIssue.newError(e, message, callingLocation, errorAction, ErrorCode.Error.INVALID));
+                                                }
+                                            } catch (IllegalArgumentException e) {
+                                                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.ILLEGAL_VALUE));
+                                            }
+                                        }
+                                    });
+
+                                }
+                            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                                log.error(e.getMessage(), e);
+                                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                            }
+                        }
+                    };
+                    Arrays.stream(constructors).forEach(k);
+
+                    try {
+                        utils.addChild(bg, bt.get(0));
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        log.error(e.getMessage(), e);
+                        errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                    }
+                }
+
+            } else {
+                Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
+                Stream.of(btBgByName.getConstructors())
+                        .findFirst()
+                        .ifPresent(c -> {
+                            try {
+                                final BTBG btbg = (BTBG) c.newInstance();
+                                utils.addChild(bg, btbg);
+                                traverseTree(child, btbg, errors);
+                            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                                log.error(e.getMessage(), e);
+                                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                            }
+                        });
+            }
+        });
+
     }
 
     private void applyCustomMapping(BG0000Invoice invoice, org.jdom2.Document document, List<IConversionIssue> errors) {
@@ -194,11 +310,12 @@ public class XmlCen2Cen extends AbstractToCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?" ;
+        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
     }
 
     @Override
     public String getName() {
-        return "converter-xmlcen-cen" ;
+        return "converter-xmlcen-cen";
     }
+
 }
