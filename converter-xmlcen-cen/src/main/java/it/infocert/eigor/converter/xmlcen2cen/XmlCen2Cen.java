@@ -67,13 +67,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class XmlCen2Cen extends AbstractToCenConverter {
 
     private Logger log = LoggerFactory.getLogger(XmlCen2Cen.class);
-    private final static String FORMAT = "xmlcen";
+    private static final String FORMAT = "xmlcen";
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private final InvoiceUtils utils;
-    private final ErrorCode.Action errorAction = ErrorCode.Action.CONFIGURED_MAP;
-    private final ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_IN;
-    private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
+    private static final ErrorCode.Action errorAction = ErrorCode.Action.CONFIGURED_MAP;
+    private static final ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_IN;
+    private static final ConversionRegistry conversionRegistry = new ConversionRegistry(
             CountryNameToIso31661CountryCodeConverter.newConverter(),
             LookUpEnumConversion.newConverter(Iso31661CountryCodes.class),
             StringToJavaLocalDateConverter.newConverter("dd-MMM-yy"),
@@ -148,7 +148,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
             if (validationErrors.isEmpty()) {
-                log.info("Xsd validation succesful!");
+                log.info("Xsd validation successful!");
             }
             errors.addAll(validationErrors);
         } catch (IOException | IllegalArgumentException e) {
@@ -180,9 +180,9 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     private void traverseTree(Element root, BTBG bg, List<IConversionIssue> errors) {
         final List<Element> children = root.getChildren();
         children.forEach(child -> {
+            Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
             if (child.getName().startsWith("BT-")) {
                 //If the element is a leaf, build it and add it to the bg
-                Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
                 Optional<Constructor<?>> cons = Arrays.stream(btBgByName.getConstructors())
                         //Ignore Identifier and FileReference, custom mappings will handle them
                         .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]) ||
@@ -210,7 +210,6 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                 }
             } else {
                 //If it's not a leaf is a node, then just create the node and traverse the subtree
-                Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
                 Stream.of(btBgByName.getConstructors())
                         .findFirst()
                         .ifPresent(c -> {
@@ -294,27 +293,25 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                     classes1.forEach(paramType -> {
                         try {
                             constructorParam[0] = conversionRegistry.convert(String.class, paramType, child.getValue());
-                            try {
-                                bt.add((BTBG) constructor.newInstance(constructorParam[0]));
-                            } catch (InstantiationException | IllegalAccessException e) {
-                                log.error(e.getMessage(), e);
-                                errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
-                            } catch (InvocationTargetException e) {
-                                String message = constructorParam[0] == null ?
-                                        String.format("%s - Constructor parameter conversion yielded null for %s with value %s",
-                                                child.getName(),
-                                                paramType.getSimpleName(),
-                                                child.getValue()
-                                        )
-                                        : e.getClass().getSimpleName();
-                                log.error(e.getMessage() == null ?
-                                                message
-                                                : e.getMessage()
-                                        , e);
-                                errors.add(ConversionIssue.newError(e, message, callingLocation, errorAction, ErrorCode.Error.INVALID));
-                            }
+                            bt.add((BTBG) constructor.newInstance(constructorParam[0]));
                         } catch (IllegalArgumentException e) {
                             errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.ILLEGAL_VALUE));
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            log.error(e.getMessage(), e);
+                            errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                        } catch (InvocationTargetException e) {
+                            String message = constructorParam[0] == null ?
+                                    String.format("%s - Constructor parameter conversion yielded null for %s with value %s",
+                                            child.getName(),
+                                            paramType.getSimpleName(),
+                                            child.getValue()
+                                    )
+                                    : e.getClass().getSimpleName();
+                            log.error(e.getMessage() == null ?
+                                            message
+                                            : e.getMessage()
+                                    , e);
+                            errors.add(ConversionIssue.newError(e, message, callingLocation, errorAction, ErrorCode.Error.INVALID));
                         }
                     });
                 }
