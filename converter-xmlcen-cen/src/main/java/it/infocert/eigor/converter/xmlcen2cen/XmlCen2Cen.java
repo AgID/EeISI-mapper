@@ -290,9 +290,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                 } else {
                     Class<?>[] parameterTypes = constructor.getParameterTypes();
                     List<Class<?>> classes = Arrays.asList(parameterTypes);
-
                     Stream<Class<?>> classes1 = classes.stream();
-
                     classes1.forEach(paramType -> {
                         try {
                             constructorParam[0] = conversionRegistry.convert(String.class, paramType, child.getValue());
@@ -325,7 +323,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                 errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
             }
         };
-        Arrays.stream(constructors).forEach(k);
+        Stream.of(constructors).forEach(k);
         return bt.get(0);
     }
 
