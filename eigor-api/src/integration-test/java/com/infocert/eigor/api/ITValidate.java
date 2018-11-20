@@ -63,4 +63,15 @@ public class ITValidate {
             assertTrue(result.hasIssues());
         }
     }
+
+    @Test
+    public void shouldFindOneSemanticIssue() throws Exception {
+        try (final FileInputStream fis = new FileInputStream(brokenInvoice)) {
+            final ConversionResult<Void> result = api.validateSyntax("ubl", fis);
+            assertNotNull(result);
+            assertFalse(result.isSuccessful());
+            assertTrue(result.hasIssues());
+            assertEquals(result.getIssues().size(), 1);
+        }
+    }
 }
