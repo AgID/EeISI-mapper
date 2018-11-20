@@ -13,14 +13,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public final class ConverterUtils {
+final class ConverterUtils {
 
     private static final String SCHEME = "scheme";
     private static final String VERSION = "version";
 
     private ConverterUtils() {};
 
-    public static BiFunction<String, Element, Optional<BTBG>> getBt = (s, el) -> {
+    static BiFunction<String, Element, Optional<BTBG>> getBt = (s, el) -> {
         try {
             final Class<? extends BTBG> btBgByName = new InvoiceUtils(new JavaReflections()).getBtBgByName(s);
             Constructor<? extends BTBG> constructor = btBgByName.getConstructor(Identifier.class);
@@ -41,4 +41,5 @@ public final class ConverterUtils {
             return Optional.empty();
         }
     };
+
 }
