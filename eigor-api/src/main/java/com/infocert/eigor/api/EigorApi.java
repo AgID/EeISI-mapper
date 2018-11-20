@@ -89,8 +89,6 @@ public class EigorApi {
                 "invoice",
                 fullListOfCallbacks);
 
-
-
         return conversion.conversion();
 
     }
