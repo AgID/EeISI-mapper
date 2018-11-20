@@ -4,18 +4,18 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0034SellerElectronicAddressAndSchemeIdentifier;
-import org.codehaus.plexus.util.StringUtils;
+import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SellerConverter implements CustomMapping<Document> {
 
@@ -32,38 +32,27 @@ public class SellerConverter implements CustomMapping<Document> {
             
             final List<Element> bt29s = rootElement.getChild("BG-4").getChildren("BT-29");
             bt29s.forEach(bt29 -> {
-                final BT0029SellerIdentifierAndSchemeIdentifier sellerIdentifierAndSchemeIdentifier;
-                if(Objects.nonNull(bt29.getAttribute("scheme")) && StringUtils.isNotEmpty(bt29.getAttribute("scheme").getValue())) {
-                    final String scheme = bt29.getAttribute("scheme").getValue();
-                    sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(scheme, bt29.getText()));
-                } else {
-                    sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(bt29.getText()));
+                final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0029", bt29);
+                if(bt.isPresent()) {
+                    seller.getBT0029SellerIdentifierAndSchemeIdentifier().add((BT0029SellerIdentifierAndSchemeIdentifier) bt.get());
                 }
-                seller.getBT0029SellerIdentifierAndSchemeIdentifier().add(sellerIdentifierAndSchemeIdentifier);
             });
 
             final List<Element> bt30s = rootElement.getChild("BG-4").getChildren("BT-30");
             bt30s.forEach(bt30 -> {
                 final BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerIdentifierAndSchemeIdentifier;
-                if(Objects.nonNull(bt30.getAttribute("scheme")) && StringUtils.isNotEmpty(bt30.getAttribute("scheme").getValue())) {
-                    final String scheme = bt30.getAttribute("scheme").getValue();
-                    sellerIdentifierAndSchemeIdentifier = new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(scheme, bt30.getText()));
-                } else {
-                    sellerIdentifierAndSchemeIdentifier = new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(bt30.getText()));
+                final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0030", bt30);
+                if(bt.isPresent()) {
+                    seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add((BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier) bt.get());
                 }
-                seller.getBT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier().add(sellerIdentifierAndSchemeIdentifier);
             });
 
             final List<Element> bt34s = rootElement.getChild("BG-4").getChildren("BT-34");
             bt34s.forEach(bt34 -> {
-                final BT0034SellerElectronicAddressAndSchemeIdentifier sellerIdentifierAndSchemeIdentifier;
-                if(Objects.nonNull(bt34.getAttribute("scheme")) && StringUtils.isNotEmpty(bt34.getAttribute("scheme").getValue())) {
-                    final String scheme = bt34.getAttribute("scheme").getValue();
-                    sellerIdentifierAndSchemeIdentifier = new BT0034SellerElectronicAddressAndSchemeIdentifier(new Identifier(scheme, bt34.getText()));
-                } else {
-                    sellerIdentifierAndSchemeIdentifier = new BT0034SellerElectronicAddressAndSchemeIdentifier(new Identifier(bt34.getText()));
+                final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0034", bt34);
+                if(bt.isPresent()) {
+                    seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add((BT0034SellerElectronicAddressAndSchemeIdentifier) bt.get());
                 }
-                seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add(sellerIdentifierAndSchemeIdentifier);
             });
         }
 

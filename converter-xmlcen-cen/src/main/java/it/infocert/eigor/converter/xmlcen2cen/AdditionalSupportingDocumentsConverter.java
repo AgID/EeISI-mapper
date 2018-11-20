@@ -4,15 +4,14 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0018InvoicedObjectIdentifierAndSchemeIdentifier;
-import org.codehaus.plexus.util.StringUtils;
+import it.infocert.eigor.model.core.model.BTBG;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 public class AdditionalSupportingDocumentsConverter implements CustomMapping<Document> {
 
@@ -22,14 +21,10 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
 
         final List<Element> bt18s = rootElement.getChildren("BT-18");
         bt18s.forEach(bt18 -> {
-            final BT0018InvoicedObjectIdentifierAndSchemeIdentifier invoicedObjectIdentifierAndSchemeIdentifier;
-            if(Objects.nonNull(bt18.getAttribute("scheme")) && StringUtils.isNotEmpty(bt18.getAttribute("scheme").getValue())) {
-                final String scheme = bt18.getAttribute("scheme").getValue();
-                invoicedObjectIdentifierAndSchemeIdentifier = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(scheme, bt18.getText()));
-            } else {
-                invoicedObjectIdentifierAndSchemeIdentifier = new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier(bt18.getText()));
+            final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0018", bt18);
+            if(bt.isPresent()) {
+                invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add((BT0018InvoicedObjectIdentifierAndSchemeIdentifier) bt.get());
             }
-            invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(invoicedObjectIdentifierAndSchemeIdentifier);
         });
 
         return new ConversionResult<>(errors, invoice);

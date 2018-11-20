@@ -2,13 +2,13 @@
     <toolchain>
         <type>jdk</type>
         <provides>
-            <version>1.7.0</version>
+            <version>1.8.162</version>
             <vendor>openjdk</vendor>
-            <id>openjdk-jdk-1.7.0</id>
+            <id>openjdk-jdk-1.8.162</id>
         </provides>
         <configuration>
-            <jdkHome>/usr/lib/jvm/java-7-openjdk-amd64</jdkHome>
-            <!-- /nas_workspace/jenkins2/tools/hudson.model.JDK/Java8/bin/java -->
+            <!--<jdkHome>/usr/lib/jvm/java-7-openjdk-amd64</jdkHome>-->
+            <jdkHome>/nas_workspace/jenkins2/tools/hudson.model.JDK/Java8u162</jdkHome>
         </configuration>
     </toolchain>
 </toolchains>

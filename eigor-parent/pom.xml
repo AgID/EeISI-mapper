@@ -60,6 +60,16 @@
             <name>eigor</name>
             <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
         </site>
+        <repository>
+            <id>central</id>
+            <name>infocert.linvoice.release</name>
+            <url>https://integrazione.mgmt.infocert.it/artifactory/linvoice-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>infocert.linvoice.snapshot</name>
+            <url>https://integrazione.mgmt.infocert.it/artifactory/linvoice-snapshot-local</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <pluginRepositories>
@@ -346,6 +356,7 @@
                 </plugin>
 
                 <!-- defaults to force compilation with desired JDK -->
+                <!--
                 <plugin>
                     <artifactId>maven-toolchains-plugin</artifactId>
                     <version>1.1</version>
@@ -364,6 +375,7 @@
                         </execution>
                     </executions>
                 </plugin>
+                -->
 
                 <plugin>
                     <groupId>com.danidemi</groupId>
