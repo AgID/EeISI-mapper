@@ -38,8 +38,7 @@ public class ObservableValidation extends AbstractObservable {
     };
     private Predicate<IConversionIssue> isSemanticIssue = i -> {
         if(Objects.nonNull(i.getErrorMessage()) && Objects.nonNull(i.getErrorMessage().getErrorCode())) {
-            return ErrorCode.Action.XSD_VALIDATION.equals(i.getErrorMessage().getErrorCode().getAction())
-                    || ErrorCode.Action.SCH_VALIDATION.equals(i.getErrorMessage().getErrorCode().getAction());
+            return ErrorCode.Action.SCH_VALIDATION.equals(i.getErrorMessage().getErrorCode().getAction());
         }
         return false;
     };
@@ -63,7 +62,7 @@ public class ObservableValidation extends AbstractObservable {
     }
 
     public ConversionResult<Void> validateSemantics() {
-        return validate(isSemanticIssue, false);
+        return validate(isSyntaxIssue.or(isSemanticIssue), false);
     }
 
     public ConversionResult<Void> validate() {

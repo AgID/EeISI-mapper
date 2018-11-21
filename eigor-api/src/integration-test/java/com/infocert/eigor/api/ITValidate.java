@@ -67,7 +67,7 @@ public class ITValidate {
     }
 
     @Test
-    public void shouldFindOneSemanticIssue() throws Exception {
+    public void shouldFindOneSyntaxIssue() throws Exception {
         try (final FileInputStream fis = new FileInputStream(brokenInvoice)) {
             final ConversionResult<Void> result = api.validateSyntax("ubl", fis);
             assertNotNull(result);
@@ -78,7 +78,7 @@ public class ITValidate {
     }
 
     @Test
-    public void shouldFindOneSemanticAndTwoSyntaxIssue() throws Exception {
+    public void shouldFindOneSyntaxAndTwoSemanticIssue() throws Exception {
         try (final FileInputStream fis = new FileInputStream(brokenInvoice)) {
             final ConversionResult<Void> result = api.validateSemantic("ubl", fis);
             assertNotNull(result);
@@ -96,4 +96,5 @@ public class ITValidate {
             assertEquals(2L, semanticIssues);
         }
     }
+
 }
