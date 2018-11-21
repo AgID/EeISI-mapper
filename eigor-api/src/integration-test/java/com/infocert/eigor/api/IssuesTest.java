@@ -11,6 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,9 +24,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class IssuesTest {
@@ -67,19 +71,12 @@ public class IssuesTest {
     public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
 
         // check conversion xmlcen -> xmlcen is without errors.
-        ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
 
-        InputStream resourceAsStream = getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml");
-        String originalXmlStr = IOUtils.toString(resourceAsStream, "UTF-8");
-        originalXmlStr = originalXmlStr.replaceAll("<!--.+-->","");
-        originalXmlStr = originalXmlStr.replaceAll(" +\\n","");
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
 
-
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( originalXmlStr.getBytes() )));
-        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( convert.getResult() )));
-
-        assertEquals( originalXml, convertedXml );
-
+        assertThat( convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
     }
 
@@ -102,8 +99,6 @@ public class IssuesTest {
 
     @Test
     public void issue261FromFattPAToUbl() {
-
-        System.out.println(apiFolder.getAbsolutePath());
 
         conversion.assertConversionWithoutErrors(
                 "/issues/issue-261-fattpa.xml",
@@ -425,6 +420,5 @@ public class IssuesTest {
                 new StreamResult(writer));
         return new String(out.toByteArray());
     }
-
 
 }

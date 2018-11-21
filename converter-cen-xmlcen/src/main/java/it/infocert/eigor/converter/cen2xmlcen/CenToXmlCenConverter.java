@@ -12,6 +12,7 @@ import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
+import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -20,6 +21,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
@@ -110,9 +112,6 @@ public class CenToXmlCenConverter implements FromCenConversion {
         @Override
         public void startBTBG(BTBG btbg) {
 
-            System.out.println(btbg.getClass().getSimpleName());
-
-
             BtBgName btbgName = BtBgName.parse(btbg.denomination());
 
 
@@ -150,12 +149,19 @@ public class CenToXmlCenConverter implements FromCenConversion {
                     done = true;
                     if (btValue instanceof Identifier) {
                         Identifier id = ((Identifier) btValue);
+
                         String identificationSchema = id.getIdentificationSchema();
                         if (identificationSchema != null) {
                             newElement.setAttribute("scheme", identificationSchema);
                         } else {
                             newElement.setAttribute("scheme", "");
                         }
+
+                        String schemaVersion = id.getSchemaVersion();
+                        if( schemaVersion!=null && !schemaVersion.isEmpty() ) {
+                            newElement.setAttribute("version", schemaVersion);
+                        }
+
                         newElement.setText(id.getIdentifier());
                     } else if (btValue instanceof Untdid5305DutyTaxFeeCategories) {
                         Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
@@ -213,8 +219,19 @@ public class CenToXmlCenConverter implements FromCenConversion {
                         if(value.getFileName()!=null){
                             newElement.setAttribute("filename", value.getFileName());
                         }
-                        // TODO: Base64
-                        newElement.setText("Q2lhbyBhbWljaQ==");
+
+                        try {
+                            newElement.setText(IOUtils.toString(new FileInputStream(value.getFilePath()), "UTF-8"));
+                        }catch (Exception e){
+                            throw new RuntimeException(e);
+                        }
+//                        // TODO: Base64
+//                        try {
+//                            byte[] base64Bytes = Base64.getEncoder().encode(IOUtils.toByteArray(new FileInputStream(value.getFilePath())));
+//                            newElement.setText( new String(base64Bytes) );
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
                     } else{
                         done = false;
