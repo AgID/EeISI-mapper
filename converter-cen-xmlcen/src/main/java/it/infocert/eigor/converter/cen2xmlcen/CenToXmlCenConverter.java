@@ -138,9 +138,18 @@ public class CenToXmlCenConverter implements FromCenConversion {
                     || btbg instanceof BT0137InvoiceLineAllowanceBaseAmount
                     || btbg instanceof BT0138InvoiceLineAllowancePercentage) {
                         done = true;
-                        String theValue = ((AbstractBT)btbg).getValue().toString();
-                        newElement.setText( theValue );
-                    }else{
+                        String theValue = ((AbstractBT) btbg).getValue().toString();
+                        newElement.setText(theValue);
+                    }
+                    else if(btbg instanceof BT0018InvoicedObjectIdentifierAndSchemeIdentifier) {
+                        done = true;
+                        Identifier theValue = ((BT0018InvoicedObjectIdentifierAndSchemeIdentifier) btbg).getValue();
+                        newElement.setText( theValue.getIdentifier() );
+                        if(theValue.getIdentificationSchema()!=null && !theValue.getIdentificationSchema().isEmpty()) {
+                            newElement.setAttribute("scheme", theValue.getIdentificationSchema());
+                        }
+                    }
+                    else{
                         done = false;
                     }
                 }

@@ -125,7 +125,8 @@ public class CenToXmlCenConverterTest {
 
     private BG0000Invoice aMinimalCenInvoice() {
 
-        Identifier attribute = new Identifier("schema", "version", "identifier");
+        Identifier fullIdentifier = new Identifier("schema", "version", "identifier");
+        Identifier incompleteIdentifier = new Identifier("identifier");
 
         Calendar instance = GregorianCalendar.getInstance();
         instance.set(Calendar.DATE, 22);
@@ -162,7 +163,7 @@ public class CenToXmlCenConverterTest {
         bg004Seller.getBT0032SellerTaxRegistrationIdentifier().add( new BT0032SellerTaxRegistrationIdentifier("identifier") );
         bg004Seller.getBT0033SellerAdditionalLegalInformation().add( new BT0033SellerAdditionalLegalInformation( "legalInfo" ));
 
-        bg004Seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add( new BT0034SellerElectronicAddressAndSchemeIdentifier(attribute) );
+        bg004Seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().add( new BT0034SellerElectronicAddressAndSchemeIdentifier(incompleteIdentifier) );
         bg004Seller.getBG0005SellerPostalAddress().add(bg05);
         bg004Seller.getBG0006SellerContact().add(bg06);
 
@@ -178,7 +179,7 @@ public class CenToXmlCenConverterTest {
         BG0007Buyer bg007Buyer = new BG0007Buyer();
         bg007Buyer.getBT0044BuyerName().add(new BT0044BuyerName("name"));
         bg007Buyer.getBT0045BuyerTradingName().add(new BT0045BuyerTradingName("bt45"));
-        bg007Buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().add(new BT0046BuyerIdentifierAndSchemeIdentifier(attribute));
+        bg007Buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().add(new BT0046BuyerIdentifierAndSchemeIdentifier( incompleteIdentifier ));
         bg007Buyer.getBG0008BuyerPostalAddress().add(bg0008);
 
         BG0022DocumentTotals bg22 = new BG0022DocumentTotals();

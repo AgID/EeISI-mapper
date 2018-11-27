@@ -76,7 +76,7 @@ public class IssuesTest {
         String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
         String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
 
-        assertThat( convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
+        assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
     }
 
