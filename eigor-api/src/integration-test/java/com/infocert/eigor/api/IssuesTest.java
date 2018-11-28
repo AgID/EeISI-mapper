@@ -32,40 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class IssuesTest {
-
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
-
-    EigorApi api;
-    ConversionUtil conversion;
-
-    private static DocumentBuilder documentBuilder;
-    private static XPath xPath;
-    private File apiFolder;
-
-    @BeforeClass
-    public static void setUpXmlInfrastructure() throws ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        documentBuilder = factory.newDocumentBuilder();
-
-        XPathFactory xPathFactory = XPathFactory.newInstance();
-        xPath = xPathFactory.newXPath();
-    }
-
-    @Before
-    public void initApi() throws IOException, ConfigurationException {
-
-        apiFolder = tmp.newFolder();
-        api = new EigorApiBuilder()
-                .enableAutoCopy()
-                .withOutputFolder(apiFolder)
-                .enableForce()
-                .build();
-
-        conversion = new ConversionUtil(api);
-    }
+public class IssuesTest extends AbstractIssueTest {
 
     @Test
     public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
@@ -395,30 +362,6 @@ public class IssuesTest {
         for (IConversionIssue issue : convert.getIssues()) {
             assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
         }
-    }
-
-    private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
-        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
-        InputSource is = new InputSource(xmlStringReader);
-        XPathExpression expr = xPath.compile(expression);
-        return expr.evaluate(is);
-    }
-
-    private static String printDocument(Document doc) throws IOException, TransformerException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
-        transformer.transform(new DOMSource(doc),
-                new StreamResult(writer));
-        return new String(out.toByteArray());
     }
 
 }

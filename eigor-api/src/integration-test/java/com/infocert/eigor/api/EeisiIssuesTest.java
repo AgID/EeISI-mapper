@@ -41,40 +41,9 @@ import static org.junit.Assert.assertTrue;
  * Tests of issues discovered and fixed during the 2nd phase of development,
  * called 'eeisi'.
  */
-public class EeisiIssuesTest {
+public class EeisiIssuesTest extends AbstractIssueTest {
 
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
 
-    EigorApi api;
-    ConversionUtil conversion;
-
-    private static DocumentBuilder documentBuilder;
-    private static XPath xPath;
-    private File apiFolder;
-
-    @BeforeClass
-    public static void setUpXmlInfrastructure() throws ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        documentBuilder = factory.newDocumentBuilder();
-
-        XPathFactory xPathFactory = XPathFactory.newInstance();
-        xPath = xPathFactory.newXPath();
-    }
-
-    @Before
-    public void initApi() throws IOException, ConfigurationException {
-
-        apiFolder = tmp.newFolder();
-        api = new EigorApiBuilder()
-                .enableAutoCopy()
-                .withOutputFolder(apiFolder)
-                .enableForce()
-                .build();
-
-        conversion = new ConversionUtil(api);
-    }
 
     /**
      * Let's suppose to have an UBL invoice with very long fields like:
@@ -108,11 +77,6 @@ public class EeisiIssuesTest {
 
     }
 
-    private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
-        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
-        InputSource is = new InputSource(xmlStringReader);
-        XPathExpression expr = xPath.compile(expression);
-        return expr.evaluate(is);
-    }
+
 
 }
