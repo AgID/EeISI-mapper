@@ -83,6 +83,18 @@
             <artifactId>eigor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-xmlcen-cen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-xmlcen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-xmlcen</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
