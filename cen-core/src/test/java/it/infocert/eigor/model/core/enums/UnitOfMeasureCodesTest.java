@@ -11,4 +11,10 @@ public class UnitOfMeasureCodesTest {
         assertNotNull( UnitOfMeasureCodes.C62_ONE );
     }
 
+    @Test
+    public void CodesForMhoShouldBeIncluded() {
+        assertNotNull( UnitOfMeasureCodes.MHO_NQ );
+        assertNotNull( UnitOfMeasureCodes.MICROMHO_NR );
+    }
+
 }

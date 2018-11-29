@@ -1125,7 +1125,7 @@ E5,metric long ton,Use ton (UK) or long ton (US) (common code LTN),,2,METRIC_LON
 TIC,metric ton including container,A unit of mass defining the number of metric tons of a product including its container.,,2,METRIC_TON_INCLUDING_CONTAINER_TIC,1
 TIP,metric ton including inner packaging,A unit of mass defining the number of metric tons of a product including its inner packaging materials.,,2,METRIC_TON_INCLUDING_INNER_PACKAGING_TIP,1
 LUB,metric ton lubricating oil,A unit of mass defining the number of metric tons of lubricating oil.,,2,METRIC_TON_LUBRICATING_OIL_LUB,1
-NQ,mho,,,1,MHO_NQ,0
+NQ,mho,,,1,MHO_NQ,1
 M7,micro_inch,,µin,1,MICRO_INCH_M7,0
 B84,microampere,,µA,1,MICROAMPERE_B84,0
 B85,microbar,,µbar,1,MICROBAR_B85,0
@@ -1156,7 +1156,7 @@ G99,microhenry per ohm,,µH/Ω,1,MICROHENRY_PER_OHM_G99,0
 J36,microlitre per litre,,µl/l,1,MICROLITRE_PER_LITRE_J36,0
 4H,micrometre (micron),,µm,1,MICROMETRE_MICRON_4H,0
 F50,micrometre per kelvin,,µm/K,1,MICROMETRE_PER_KELVIN_F50,0
-NR,micromho,,,1,MICROMHO_NR,0
+NR,micromho,,,1,MICROMHO_NR,1
 FH,micromole,,µmol,1,MICROMOLE_FH,0
 B92,micronewton,,µN,1,MICRONEWTON_B92,0
 B93,micronewton metre,,µN*m,1,MICRONEWTON_METRE_B93,0

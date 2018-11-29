@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class InvoiceConverter implements CustomMapping<Document> {
 
-    public ConversionResult<BG0000Invoice> toBG0000(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
+    public ConversionResult<BG0000Invoice> toBG0024(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
         Element rootElement = document.getRootElement();
         Element bg24 = rootElement.getChild("BG-24");
@@ -34,10 +34,8 @@ public class InvoiceConverter implements CustomMapping<Document> {
             }
 
             final List<Element> bt125s = bg24.getChildren("BT-125");
-            TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.FATTPA_IN, "mime");
+            TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.XMLCEN_IN, "mime");
             bt125s.forEach(bt125 -> {
-                final BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename attachedDocument;
-
                 final Element attachment = bg24.getChild("BT-125");
                 try {
                     BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(attachment));
@@ -47,7 +45,7 @@ public class InvoiceConverter implements CustomMapping<Document> {
                             e,
                             ErrorMessage.builder()
                                     .message(e.getMessage())
-                                    .location(ErrorCode.Location.FATTPA_IN)
+                                    .location(ErrorCode.Location.XMLCEN_IN)
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
@@ -62,6 +60,6 @@ public class InvoiceConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
-        toBG0000(document, cenInvoice, errors);
+        toBG0024(document, cenInvoice, errors);
     }
 }

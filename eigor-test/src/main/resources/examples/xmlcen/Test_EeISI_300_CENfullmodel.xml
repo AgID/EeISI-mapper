@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SEMANTIC-INVOICE
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="">
-    <!--Test_EeISI_300 -->
+<SEMANTIC-INVOICE>
     <BT-1>Test_EeISI_100</BT-1>
     <BT-2>2018-11-12</BT-2>
     <BT-3>380</BT-3>
     <BT-5>EUR</BT-5>
     <BT-6>NOK</BT-6>
-    <!--<BT-7>2018-11-12</BT-7>-->
     <BT-8>35</BT-8>
     <BT-9>2018-11-30</BT-9>
     <BT-10>123</BT-10>
@@ -117,7 +113,7 @@
         </BG-14>
         <BG-15>
             <BT-75>Deliver to address line 1</BT-75>
-            <BT-76>Deliver to address  line 2</BT-76>
+            <BT-76>Deliver to address line 2</BT-76>
             <BT-165>Deliver to address line 3</BT-165>
             <BT-77>Deliver to city</BT-77>
             <BT-78>98765</BT-78>
@@ -158,7 +154,6 @@
         <BT-97>Doc allowance reason text</BT-97>
         <BT-98>55</BT-98>
     </BG-20>
-    
     <BG-21>
         <BT-99>10.00</BT-99>
         <BT-100>1000.00</BT-100>
@@ -168,7 +163,6 @@
         <BT-104>Doc charge reason text</BT-104>
         <BT-105>AAA</BT-105>
     </BG-21>
-    
     <BG-22>
         <BT-106>2000.00</BT-106>
         <BT-107>10.00</BT-107>
@@ -186,7 +180,6 @@
         <BT-117>50</BT-117>
         <BT-118>S</BT-118>
         <BT-119>5.00</BT-119>
-       
     </BG-23>
     <BG-23>
         <BT-116>1000</BT-116>
@@ -202,7 +195,6 @@
         <BT-124>External document location</BT-124>
         <BT-125 mime="application/pdf" filename="filename0">ZGVmYXVsdA==</BT-125>
     </BG-24>
-   
     <BG-25>
         <BT-126>1a</BT-126>
         <BT-127>Invoice line note</BT-127>
@@ -223,7 +215,6 @@
             <BT-139>Invoice line allowance reason</BT-139>
             <BT-140>55</BT-140>
         </BG-27>
-       
         <BG-28>
             <BT-141>10</BT-141>
             <BT-142>1000</BT-142>
@@ -231,7 +222,6 @@
             <BT-144>Invoice line charge reason</BT-144>
             <BT-145>AAA</BT-145>
         </BG-28>
-        
         <BG-29>
             <BT-146>10</BT-146>
             <BT-147>1</BT-147>
@@ -268,7 +258,7 @@
         <BT-131>1000</BT-131>
         <BG-29>
             <BT-146>10</BT-146>
-            
+
         </BG-29>
         <BG-30>
             <BT-151>E</BT-151>
@@ -276,7 +266,6 @@
         </BG-30>
         <BG-31>
             <BT-153>Item name 2</BT-153>
-           
         </BG-31>
     </BG-25>
 </SEMANTIC-INVOICE>

@@ -4,61 +4,48 @@ import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.Base64;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class IssuesTest {
+public class IssuesTest extends AbstractIssueTest {
 
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
+    @Test
+    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
 
-    EigorApi api;
-    ConversionUtil conversion;
+        // check conversion xmlcen -> xmlcen is without errors.
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
 
-    private static DocumentBuilder documentBuilder;
-    private static XPath xPath;
-    private File apiFolder;
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
 
-    @BeforeClass
-    public static void setUpXmlInfrastructure() throws ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        documentBuilder = factory.newDocumentBuilder();
+        assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
-        XPathFactory xPathFactory = XPathFactory.newInstance();
-        xPath = xPathFactory.newXPath();
     }
-
-    @Before
-    public void initApi() throws IOException, ConfigurationException {
-
-        apiFolder = tmp.newFolder();
-        api = new EigorApiBuilder()
-                .enableAutoCopy()
-                .withOutputFolder(apiFolder)
-                .enableForce()
-                .build();
-
-        conversion = new ConversionUtil(api);
-    }
-
 
     @Test
     public void issue279FromUblToFattPA() throws Exception {
@@ -79,8 +66,6 @@ public class IssuesTest {
 
     @Test
     public void issue261FromFattPAToUbl() {
-
-        System.out.println(apiFolder.getAbsolutePath());
 
         conversion.assertConversionWithoutErrors(
                 "/issues/issue-261-fattpa.xml",
@@ -378,13 +363,5 @@ public class IssuesTest {
             assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
         }
     }
-
-    private String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
-        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
-        InputSource is = new InputSource(xmlStringReader);
-        XPathExpression expr = xPath.compile(expression);
-        return expr.evaluate(is);
-    }
-
 
 }

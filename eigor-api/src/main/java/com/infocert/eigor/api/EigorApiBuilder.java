@@ -115,7 +115,8 @@ public class EigorApiBuilder {
         for (Named converter : converters) {
             String pathSegment = converter.getName();
             if (copy) {
-                new Copier(new File(dest, pathSegment))
+                File dest1 = new File(dest, pathSegment);
+                new Copier(dest1)
                         .withCallback(new Copier.Callback() {
                             @Override
                             public void afterFileCopied(File file) throws IOException {

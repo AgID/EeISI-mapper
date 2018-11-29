@@ -26,7 +26,11 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public abstract class AbstractToCenConverter implements ToCenConversion {
 
@@ -128,7 +132,6 @@ public abstract class AbstractToCenConverter implements ToCenConversion {
         if(oneToOneMappings == null) {
             return new ConversionResult<>(errors, invoice);
         }
-
 
         for (Map.Entry<String, String> entry : oneToOneMappings.entries()) {
             GenericOneToOneTransformer transformer = new GenericOneToOneTransformer(entry.getValue(), entry.getKey(), reflections, conversionRegistry, callingLocation);
