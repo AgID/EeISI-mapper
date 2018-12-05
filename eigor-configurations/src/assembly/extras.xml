@@ -92,13 +92,5 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
-
-        <fileSet>
-            <outputDirectory>.</outputDirectory>
-            <directory>../eigor-cli/env/release</directory>
-            <includes>
-                <include>eigor.properties</include>
-            </includes>
-        </fileSet>
     </fileSets>
 </assembly>
