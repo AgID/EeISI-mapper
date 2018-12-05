@@ -34,6 +34,7 @@
         <module>eigor-spring-core</module>
         <module>eigor-test-schemas</module>
         <module>eigor-commons</module>
+        <module>eigor-configurations</module>
         <module>cen-core</module>
         <module>converter-fattpa-cen</module>
         <module>converter-cen-fattpa</module>
