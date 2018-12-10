@@ -4,9 +4,7 @@ import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
@@ -16,7 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class Issue235Test {
 
     @Rule
@@ -62,7 +60,7 @@ public class Issue235Test {
     }
 
 
-    @Test
+    //@Test
     public void test() {
         conversion.assertConversionWithoutErrors( "/issues/235/" + ublInvoice.getName(), "ubl", "fatturapa" );
     }
