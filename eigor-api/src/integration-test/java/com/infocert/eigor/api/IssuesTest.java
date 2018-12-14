@@ -8,7 +8,9 @@ import org.codehaus.plexus.util.Base64;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.xml.sax.InputSource;
 
@@ -27,6 +29,7 @@ import java.io.StringReader;
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.junit.Assert.assertTrue;
 
+@Ignore("To be ignored 'til all mappings have been applied")
 public class IssuesTest {
 
     @Rule
@@ -63,7 +66,7 @@ public class IssuesTest {
     }
 
 
-    //@Test
+    @Test
     public void issue279FromUblToFattPA() throws Exception {
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
 
@@ -75,12 +78,12 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "2017-10-15T00:00:00", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue278FromUblToFattPA() {
         conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
     }
 
-    //@Test
+    @Test
     public void issue261FromFattPAToUbl() {
 
         System.out.println(apiFolder.getAbsolutePath());
@@ -94,17 +97,17 @@ public class IssuesTest {
         );
     }
 
-    //@Test
+    @Test
     public void issue276FromUblToUbl() {
         conversion.assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
     }
 
-    //@Test
+    @Test
     public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
     }
 
-    //@Test
+    @Test
     public void fatturapaToCiiExamples() {
         conversion.assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
@@ -115,7 +118,7 @@ public class IssuesTest {
                 "fatturapa", "cii");
     }
 
-    //@Test
+    @Test
     public void ublToCiiExamples() {
         conversion.assertConversionWithoutErrors(
                 "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_42CEN.XML",
@@ -139,48 +142,48 @@ public class IssuesTest {
 
     }
 
-    //@Test
+    @Test
     public void issue254FromFattPaToCii() {
         conversion.assertConversionWithoutErrors("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML", "fatturapa", "cii");
     }
 
-    //@Test
+    @Test
     public void issue254FromUblToCii_scenario2() {
         conversion.assertConversionWithoutErrors("/issues/254/ubl_newB2G-C_01C_CII.XML", "ubl", "cii");
     }
 
-    //@Test
+    @Test
     public void issue254FromUblToCii_scenario1() {
         conversion.assertConversionWithoutErrors("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML", "ubl", "cii");
     }
 
 
-    //@Test
+    @Test
     public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-252-fattpa.xml", "fatturapa", "ubl");
 
     }
 
 
-    //@Test
+    @Test
     public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
 
     }
 
-    //@Test
+    @Test
     public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
 
     }
 
-    //@Test
+    @Test
     public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
 
     }
 
-    //@Test
+    @Test
     public void issue269() throws Exception {
         InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
         ConversionResult<byte[]> convert = api.convert("cii", "fatturapa", ciiInStream);
@@ -188,7 +191,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "97735020584", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue245() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-245-fattpa.xml");
@@ -201,7 +204,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue256() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-256-fattpa.xml");
@@ -222,7 +225,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
     }
 
-    //@Test
+    @Test
     public void issue259() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-259-fattpa.xml");
@@ -260,7 +263,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values", evaluateAttachmentFileName);
     }
 
-    //@Test
+    @Test
     public void issue257() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-257-ubl.xml");
@@ -272,7 +275,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason Art15", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue207() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-207-ubl.xml");
@@ -292,7 +295,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "scheme00", bt71_1);
     }
 
-    //@Test
+    @Test
     public void issue208() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-208-ubl.xml");
@@ -306,7 +309,7 @@ public class IssuesTest {
     }
 
 
-    //@Test
+    @Test
     public void issue220() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-220-ubl.xml");
@@ -327,7 +330,7 @@ public class IssuesTest {
     }
 
 
-    //@Test
+    @Test
     public void issue238() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-238-ubl.xml");
@@ -340,7 +343,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue242() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-242-ubl.xml");
@@ -353,7 +356,7 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "IDattachment-eIGOR.csv", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue280() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-280-ubl.xml");
@@ -366,12 +369,12 @@ public class IssuesTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
     }
 
-    //@Test
+    @Test
     public void issue281FattpaToUBL() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
-    //@Test
+    @Test
     public void issue281FattpaToCII() throws Exception {
         //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
 
