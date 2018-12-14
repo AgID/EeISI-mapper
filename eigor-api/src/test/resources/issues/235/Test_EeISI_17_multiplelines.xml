@@ -5,7 +5,7 @@
  <!--INVOICE INFO-->
 	<cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
 	<cbc:ProfileID>BT-23 Business Process Type</cbc:ProfileID>
-    <cbc:ID>Test_eIGOR_17</cbc:ID>
+    <cbc:ID>Test_EeISI_17</cbc:ID>
     <cbc:IssueDate>2017-09-12</cbc:IssueDate>
 	<cbc:DueDate>2017-10-30</cbc:DueDate>
     <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
@@ -304,9 +304,9 @@
             <cbc:TaxableAmount currencyID="EUR">3000.00</cbc:TaxableAmount>
             <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
             <cac:TaxCategory>
-                <cbc:ID>Z</cbc:ID>
+                <cbc:ID>G</cbc:ID>
                 <cbc:Percent>0</cbc:Percent>
-            	
+            	<cbc:TaxExemptionReason>Export</cbc:TaxExemptionReason>
 				
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
@@ -336,7 +336,7 @@
 		
 		
         <cbc:LineExtensionAmount currencyID="EUR">3200.00</cbc:LineExtensionAmount>
-		<cbc:AccountingCost>Project accounting cost code 5555</cbc:AccountingCost>
+		<cbc:AccountingCost>5555</cbc:AccountingCost>
 		
 		<cac:InvoicePeriod>
 		   <cbc:StartDate>2017-09-01</cbc:StartDate>
@@ -451,14 +451,14 @@
 			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode> 
 			<cbc:AllowanceChargeReason>Service discount exempt</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.10</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">100.00</cbc:BaseAmount>
+			<cbc:Amount currencyID="EUR">10</cbc:Amount>
+			<cbc:BaseAmount currencyID="EUR">100</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReason>Service charge exempt</cbc:AllowanceChargeReason>
-			<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
+			<cbc:Amount currencyID="EUR">10</cbc:Amount>
 		</cac:AllowanceCharge>
 		
 		
@@ -497,13 +497,13 @@
 		</cac:Item>	
 		<!-- ITEM PRICE-->
 		<cac:Price>
-            <cbc:PriceAmount currencyID="EUR">1000.00</cbc:PriceAmount>
+            <cbc:PriceAmount currencyID="EUR">1000</cbc:PriceAmount>
 			 <cbc:BaseQuantity unitCode="C62">1</cbc:BaseQuantity>
 			<!--ITEM allowance-->
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-				<cbc:Amount currencyID="EUR">5.00</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">1005.00</cbc:BaseAmount>
+				<cbc:Amount currencyID="EUR">5</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">1005</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>
@@ -519,7 +519,7 @@
         <cbc:InvoicedQuantity unitCode="C62">1</cbc:InvoicedQuantity>
 		
 		
-        <cbc:LineExtensionAmount currencyID="EUR">3000.00</cbc:LineExtensionAmount>
+        <cbc:LineExtensionAmount currencyID="EUR">3000</cbc:LineExtensionAmount>
 		
 		<cac:InvoicePeriod>
 		   <cbc:StartDate>2017-09-01</cbc:StartDate>
@@ -533,7 +533,7 @@
 		
 		<!--ITEM-->
 		<cac:Item>
-		<cbc:Description>description of item line zero rated</cbc:Description>
+		<cbc:Description>description of item line export rated</cbc:Description>
 		<cbc:Name>Goods zero rated</cbc:Name>
 		
 		<!-- ITEM IDENTIFIERS-->
@@ -541,7 +541,7 @@
 		   <cbc:ID>45rty</cbc:ID>
 		</cac:SellersItemIdentification>
 		<cac:ClassifiedTaxCategory>
-                <cbc:ID>Z</cbc:ID>
+                <cbc:ID>G</cbc:ID>
 				 <cbc:Percent>0.00</cbc:Percent>
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>

@@ -1,0 +1,124 @@
+<rsm:CrossIndustryInvoice xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+    xmlns:qdt="urn:un:unece:uncefact:data:Standard:QualifiedDataType:100"
+    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100 ../uncefact/data/standard/CrossIndustryInvoice_100pD16B.xsd">
+     <rsm:ExchangedDocumentContext>
+	<ram:BusinessProcessSpecifiedDocumentContextParameter>
+      <ram:ID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</ram:ID>
+    </ram:BusinessProcessSpecifiedDocumentContextParameter>
+	  <ram:GuidelineSpecifiedDocumentContextParameter>
+      <ram:ID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</ram:ID>
+    </ram:GuidelineSpecifiedDocumentContextParameter>
+  </rsm:ExchangedDocumentContext>
+    <rsm:ExchangedDocument>
+        <ram:ID>Test EeISI 20 CII</ram:ID>
+        <ram:TypeCode>380</ram:TypeCode>
+        <ram:IssueDateTime>
+            <udt:DateTimeString format="102">20150401</udt:DateTimeString>
+        </ram:IssueDateTime>
+        
+    </rsm:ExchangedDocument>
+    <rsm:SupplyChainTradeTransaction>
+        <ram:IncludedSupplyChainTradeLineItem>
+            <ram:AssociatedDocumentLineDocument>
+                <ram:LineID>1</ram:LineID>
+            </ram:AssociatedDocumentLineDocument>
+            <ram:SpecifiedTradeProduct>
+                <ram:Name>Prodotto</ram:Name>
+
+            </ram:SpecifiedTradeProduct>
+            <ram:SpecifiedLineTradeAgreement>
+                <ram:NetPriceProductTradePrice>
+                    <ram:ChargeAmount>49.00</ram:ChargeAmount>
+                </ram:NetPriceProductTradePrice>
+            </ram:SpecifiedLineTradeAgreement>
+            <ram:SpecifiedLineTradeDelivery>
+                <ram:BilledQuantity unitCode="EA">3.00</ram:BilledQuantity>
+            </ram:SpecifiedLineTradeDelivery>
+			
+            <ram:SpecifiedLineTradeSettlement>
+               
+                <ram:ApplicableTradeTax>
+                    <ram:TypeCode>VAT</ram:TypeCode>
+                    <ram:CategoryCode>S</ram:CategoryCode>
+                    <ram:RateApplicablePercent>21.00</ram:RateApplicablePercent>
+                </ram:ApplicableTradeTax>
+               
+                <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                    <ram:LineTotalAmount>147.00</ram:LineTotalAmount>
+                </ram:SpecifiedTradeSettlementLineMonetarySummation>
+            </ram:SpecifiedLineTradeSettlement>
+					
+			
+			
+        </ram:IncludedSupplyChainTradeLineItem>
+        <ram:ApplicableHeaderTradeAgreement>
+            <ram:SellerTradeParty>
+                <ram:Name>Seller name</ram:Name>
+               
+                
+                <ram:PostalTradeAddress>
+                    <ram:PostcodeCode>01345</ram:PostcodeCode>
+                    <ram:LineOne>Seller street</ram:LineOne>
+                    <ram:CityName>Seller City</ram:CityName>
+                    <ram:CountryID>GB</ram:CountryID>
+                </ram:PostalTradeAddress>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="VAT">GB123456789</ram:ID>
+                </ram:SpecifiedTaxRegistration>
+				
+            </ram:SellerTradeParty>
+             <ram:BuyerTradeParty>
+                <ram:Name>Buyer name</ram:Name>
+
+                <ram:PostalTradeAddress>
+                    <ram:PostcodeCode>00144</ram:PostcodeCode>
+                    <ram:LineOne>Buyer street</ram:LineOne>
+                    <ram:CityName>Buyer city</ram:CityName>
+                    <ram:CountryID>IT</ram:CountryID>
+                </ram:PostalTradeAddress>
+				
+
+                <ram:URIUniversalCommunication>
+                    <ram:URIID schemeID="IT:IPA">ABC123</ram:URIID>
+                </ram:URIUniversalCommunication>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="VAT">IT97735020584</ram:ID>
+                </ram:SpecifiedTaxRegistration>
+            </ram:BuyerTradeParty>
+           
+        </ram:ApplicableHeaderTradeAgreement>
+        <ram:ApplicableHeaderTradeDelivery/>
+        <ram:ApplicableHeaderTradeSettlement>
+            <ram:PaymentReference>2015 0483 0000 0000</ram:PaymentReference>
+            <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
+            <ram:SpecifiedTradeSettlementPaymentMeans>
+                <ram:TypeCode>20</ram:TypeCode>
+            </ram:SpecifiedTradeSettlementPaymentMeans>
+           
+            <ram:ApplicableTradeTax>
+                <ram:CalculatedAmount>30.87</ram:CalculatedAmount>
+                <ram:TypeCode>VAT</ram:TypeCode>
+                <ram:BasisAmount>147.00</ram:BasisAmount>
+                <ram:CategoryCode>S</ram:CategoryCode>
+                <ram:RateApplicablePercent>21.00</ram:RateApplicablePercent>
+            </ram:ApplicableTradeTax>
+            <ram:SpecifiedTradePaymentTerms>
+                <ram:Description>30 days</ram:Description>
+				<ram:DueDateDateTime>
+            <udt:DateTimeString format="102">20150501</udt:DateTimeString>
+			</ram:DueDateDateTime>
+            </ram:SpecifiedTradePaymentTerms>
+
+            <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+                <ram:LineTotalAmount>147.00</ram:LineTotalAmount>
+                <ram:TaxBasisTotalAmount>147.00</ram:TaxBasisTotalAmount>
+                <ram:TaxTotalAmount currencyID="EUR">30.87</ram:TaxTotalAmount>
+                <ram:GrandTotalAmount>177.87</ram:GrandTotalAmount>
+                <ram:DuePayableAmount>177.87</ram:DuePayableAmount>
+            </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+        </ram:ApplicableHeaderTradeSettlement>
+    </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>
