@@ -13,9 +13,41 @@ import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.converter.cen2fattpa.models.CessionarioCommittenteType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiBeniServiziType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiDDTType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiDocumentiCorrelatiType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliDocumentoType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiPagamentoType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiRiepilogoType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasportoType;
+import it.infocert.eigor.converter.cen2fattpa.models.DettaglioPagamentoType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.converter.cen2fattpa.models.IndirizzoType;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
+import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
+import it.infocert.eigor.model.core.model.BG0015DeliverToAddress;
+import it.infocert.eigor.model.core.model.BG0016PaymentInstructions;
+import it.infocert.eigor.model.core.model.BG0017CreditTransfer;
+import it.infocert.eigor.model.core.model.BG0023VatBreakdown;
+import it.infocert.eigor.model.core.model.BT0016DespatchAdviceReference;
+import it.infocert.eigor.model.core.model.BT0021InvoiceNoteSubjectCode;
+import it.infocert.eigor.model.core.model.BT0025PrecedingInvoiceReference;
+import it.infocert.eigor.model.core.model.BT0072ActualDeliveryDate;
+import it.infocert.eigor.model.core.model.BT0075DeliverToAddressLine1;
+import it.infocert.eigor.model.core.model.BT0076DeliverToAddressLine2;
+import it.infocert.eigor.model.core.model.BT0077DeliverToCity;
+import it.infocert.eigor.model.core.model.BT0078DeliverToPostCode;
+import it.infocert.eigor.model.core.model.BT0079DeliverToCountrySubdivision;
+import it.infocert.eigor.model.core.model.BT0080DeliverToCountryCode;
+import it.infocert.eigor.model.core.model.BT0082PaymentMeansText;
+import it.infocert.eigor.model.core.model.BT0085PaymentAccountName;
+import it.infocert.eigor.model.core.model.BT0165DeliverToAddressLine3;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,10 +191,6 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         if (datiGenerali != null) {
             DatiGeneraliDocumentoType datiGeneraliDocumento = datiGenerali.getDatiGeneraliDocumento();
             if (datiGeneraliDocumento != null) {
-                if (!invoice.getBT0020PaymentTerms().isEmpty()) {
-                    BT0020PaymentTerms paymentTerms = invoice.getBT0020PaymentTerms(0);
-                    datiGeneraliDocumento.getCausale().add(paymentTerms.getValue());
-                }
                 if (!invoice.getBG0001InvoiceNote().isEmpty()) {
                     for (BG0001InvoiceNote invoiceNote : invoice.getBG0001InvoiceNote()) {
                         final StringBuilder sb = new StringBuilder();
@@ -180,26 +208,6 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         final String note = sb.toString();
                         if (!"".equalsIgnoreCase(note) && !" ".equalsIgnoreCase(note)) {
                             manageNoteText(datiGeneraliDocumento, note);
-                        }
-                    }
-                }
-                if (!invoice.getBG0004Seller().isEmpty()) {
-                    BG0004Seller seller = invoice.getBG0004Seller(0);
-                    if (!seller.getBG0006SellerContact().isEmpty()) {
-                        BG0006SellerContact sellerContact = seller.getBG0006SellerContact(0);
-                        if (!sellerContact.getBT0041SellerContactPoint().isEmpty()) {
-                            BT0041SellerContactPoint sellerContactPoint = sellerContact.getBT0041SellerContactPoint(0);
-                            datiGeneraliDocumento.getCausale().add(sellerContactPoint.getValue());
-                        }
-                    }
-                }
-                if (!invoice.getBG0007Buyer().isEmpty()) {
-                    BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-                    if (!buyer.getBG0009BuyerContact().isEmpty()) {
-                        BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact(0);
-                        if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
-                            BT0056BuyerContactPoint buyerContactPoint = buyerContact.getBT0056BuyerContactPoint(0);
-                            datiGeneraliDocumento.getCausale().add(buyerContactPoint.getValue());
                         }
                     }
                 }

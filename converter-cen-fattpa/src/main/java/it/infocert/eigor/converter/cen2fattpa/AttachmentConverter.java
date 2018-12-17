@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 
-
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -27,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 
 public class AttachmentConverter implements CustomMapping<FatturaElettronicaType> {
@@ -40,11 +38,14 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             "/BT0010",
             "/BT0014",
             "/BT0018",
+            "/BT0020",
             "/BG0002/BT0023",
             "/BG0004/BT0028",
             "/BG0004/BT0033",
             "/BG0004/BT0034",
+            "/BG0004/BG0006/BT0041",
             "/BG0007/BT0045",
+            "/BG0007/BG0009/BT0056",
             "/BG0007/BG0009/BT0057",
             "/BG0007/BG0009/BT0058",
             "/BG0010/BT0060",
@@ -108,7 +109,6 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
             for (AbstractBT bt : foundBts) {
                 Object value = bt.getValue();
                 sb.append(bt.denomination()).append(": ").append(value).append(System.lineSeparator());
-
             }
         }
 
