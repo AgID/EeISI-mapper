@@ -148,6 +148,22 @@ with `develop` as the branch for the next version:
   
 * [git flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)  
 
+### Configurations Dependencies
+In case you need to import all mapping configurations for each module in an external project, 
+please add as your dependency `eigor-configurations` module
+
+
+    <dependency>
+        <groupId>it.infocert.eigor</groupId>
+        <artifactId>eigor-configurations</artifactId>
+        <version>${version.eeisi}</version>
+    </dependency>
+    
+By adding this dependency, all mappings will be available and will have to be copied "manually" right under resources 
+folder of your app. Please notice `eigor.properties` is not included in this jar, you are supposed to customize it 
+always with your own configurations, anyway you can check on the repo our custom settings in case you need hints.   
+
+
 ### WARNING
 Since `develop` is now a protected branch, all merges to it must be done through GitLab by opening a 
 [merge request](https://gitlab.com/tgi-infocert-eigor/eigor/merge_requests/new).  
