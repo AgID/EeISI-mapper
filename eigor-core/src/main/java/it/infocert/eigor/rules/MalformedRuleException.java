@@ -2,9 +2,9 @@ package it.infocert.eigor.rules;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.model.core.rules.Rule;
 
 import java.util.List;

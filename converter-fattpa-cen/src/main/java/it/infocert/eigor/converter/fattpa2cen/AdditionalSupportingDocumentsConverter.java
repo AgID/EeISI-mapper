@@ -12,7 +12,6 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import javax.activation.MimeType;
 import java.util.List;
 
 /**

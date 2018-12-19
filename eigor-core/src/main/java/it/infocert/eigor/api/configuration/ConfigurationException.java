@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.configuration;
 
-import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.EigorException;
+import it.infocert.eigor.api.errors.ErrorMessage;
 
 /**
  * Thrown by {@link Configurable configurable objects} when the configuration fails for whatever reason.

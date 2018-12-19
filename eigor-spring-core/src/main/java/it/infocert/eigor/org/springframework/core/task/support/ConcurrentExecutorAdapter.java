@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.task.support;
 
-import java.util.concurrent.Executor;
-
 import it.infocert.eigor.org.springframework.core.task.TaskExecutor;
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.util.concurrent.Executor;
 
 /**
  * Adapter that exposes the {@link java.util.concurrent.Executor} interface

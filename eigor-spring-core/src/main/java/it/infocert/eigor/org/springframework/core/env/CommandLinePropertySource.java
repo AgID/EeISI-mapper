@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
+import it.infocert.eigor.org.springframework.util.StringUtils;
+
 import java.util.Collection;
 import java.util.List;
-
-import it.infocert.eigor.org.springframework.util.StringUtils;
 
 /**
  * Abstract base class for {@link PropertySource} implementations backed by command line

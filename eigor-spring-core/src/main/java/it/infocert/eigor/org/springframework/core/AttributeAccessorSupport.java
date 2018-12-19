@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Support class for {@link AttributeAccessor AttributeAccessors}, providing

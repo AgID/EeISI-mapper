@@ -16,15 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
+import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
+import it.infocert.eigor.org.springframework.util.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
-import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 /**
  * Converts an array to another array. First adapts the source array to a List,

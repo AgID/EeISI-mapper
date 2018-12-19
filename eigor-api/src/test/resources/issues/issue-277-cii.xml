@@ -66,7 +66,7 @@
                     <ram:CountryID>IE</ram:CountryID>
                 </ram:PostalTradeAddress>
                 <ram:SpecifiedTaxRegistration>
-                    <ram:ID schemeID="VA">IE07945211006</ram:ID>
+                    <ram:ID schemeID="VAT">IE07945211006</ram:ID>
                 </ram:SpecifiedTaxRegistration>
 				
             </ram:SellerTradeParty>
@@ -84,7 +84,7 @@
                     <ram:URIID schemeID="IT:IPA">WS0000</ram:URIID>
                 </ram:URIUniversalCommunication>
                 <ram:SpecifiedTaxRegistration>
-                    <ram:ID schemeID="VA">IE02483810392</ram:ID>
+                    <ram:ID schemeID="VAT">IE02483810392</ram:ID>
                 </ram:SpecifiedTaxRegistration>
             </ram:BuyerTradeParty>
            

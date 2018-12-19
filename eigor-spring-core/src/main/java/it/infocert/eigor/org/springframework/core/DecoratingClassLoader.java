@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Base class for decorating ClassLoaders such as {@link OverridingClassLoader}

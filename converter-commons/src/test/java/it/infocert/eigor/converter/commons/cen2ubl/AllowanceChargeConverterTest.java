@@ -9,7 +9,9 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.math.BigDecimal;
+
 import static it.infocert.eigor.converter.commons.cen2ubl.Scenarios.invoiceWithAmounts;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;

@@ -12,32 +12,23 @@ public enum UnitOfMeasureCodes {
          * <p>${row.data.Symbol}</p>
          * <p>${row.data.Annex}</p>
          */
-        ${row.data.Alias}("${row.data.CommonCode}", "${row.data.Name}", "${row.data.Description}", "${row.data.Symbol}", ${row.data.Annex})#if($meta.count.lastIndex==$row.meta.index);#else,#end
+        ${row.data.Alias}("${row.data.CommonCode}", "${row.data.Name}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
         #end
     #end
 
     private String commonCode;
     private String name;
-    private String description;
-    private String symbol;
-    private int annex;
 
-    UnitOfMeasureCodes(String commonCode, String name, String description, String symbol, int annex) {
+    UnitOfMeasureCodes(String commonCode, String name) {
         this.commonCode = commonCode;
         this.name = name;
-        this.description = description;
-        this.symbol = symbol;
-        this.annex = annex;
     }
 
     @Override
     public String toString() {
         return "UnitOfMeasureCodes{" +
                 "commonCode='" + commonCode + '\'' +
-                "| name='" + name + '\'' +
-                "| description='" + description + '\'' +
-                "| symbol='" + symbol + '\'' +
-                "| annex=" + annex +
+                "| name='" + name +
                 '}';
     }
 
@@ -49,15 +40,5 @@ public enum UnitOfMeasureCodes {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public int getAnnex() {
-        return annex;
-    }
 }

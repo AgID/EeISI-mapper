@@ -4,16 +4,14 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.file.FilenameHelper;
 import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.commons.io.resource.IReadableResource;
-import com.helger.commons.xml.CXML;
-import com.helger.commons.xml.namespace.MapBasedNamespaceContext;
-import com.helger.commons.xml.serialize.write.XMLWriter;
-import com.helger.commons.xml.serialize.write.XMLWriterSettings;
 import com.helger.schematron.svrl.CSVRL;
 import com.helger.schematron.xslt.ISchematronXSLTBasedProvider;
 import com.helger.schematron.xslt.SCHTransformerCustomizer;
 import com.helger.schematron.xslt.SchematronResourceSCHCache;
-
-import it.infocert.eigor.api.errors.ErrorCode;
+import com.helger.xml.CXML;
+import com.helger.xml.namespace.MapBasedNamespaceContext;
+import com.helger.xml.serialize.write.XMLWriter;
+import com.helger.xml.serialize.write.XMLWriterSettings;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.slf4j.Logger;
@@ -149,7 +147,7 @@ class SchematronXSLTFileUpdater {
                             final MapBasedNamespaceContext aNSContext = new MapBasedNamespaceContext()
                                     .addMapping("svrl", CSVRL.SVRL_NAMESPACE_URI);
                             // Add all namespaces from XSLT document root
-                            final String sNSPrefix = CXML.XML_ATTR_XMLNS + ":";
+                            final String sNSPrefix = CXML.XML_ATTR_XSI_SCHEMALOCATION + ":";
 
                             Element documentElement = xsltProvider.getXSLTDocument().getDocumentElement();
                             NamedNodeMap attributes = documentElement.getAttributes();

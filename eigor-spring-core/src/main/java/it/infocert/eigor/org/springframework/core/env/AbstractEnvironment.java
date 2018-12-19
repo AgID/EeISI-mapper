@@ -16,12 +16,6 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
-import java.security.AccessControlException;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import it.infocert.eigor.org.springframework.core.SpringProperties;
 import it.infocert.eigor.org.springframework.core.convert.support.ConfigurableConversionService;
 import it.infocert.eigor.org.springframework.util.Assert;
@@ -30,7 +24,13 @@ import it.infocert.eigor.org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static java.lang.String.*;
+import java.security.AccessControlException;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static java.lang.String.format;
 
 /**
  * Abstract base class for {@link Environment} implementations. Supports the notion of

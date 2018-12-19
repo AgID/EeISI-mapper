@@ -7,7 +7,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.4.1</version>
+    <version>4.0.0</version>
     <name>Eigor :: Parent (${project.artifactId})</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -23,7 +23,7 @@
         <dependency.locations.enabled>false</dependency.locations.enabled>
 
         <!-- java -->
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
 
         <!-- dependencies -->
         <powermock.version>1.6.6</powermock.version>
@@ -37,8 +37,7 @@
         <jopt-simple.version>5.0.3</jopt-simple.version>
         <pitest-maven.version>1.1.11</pitest-maven.version>
         <commons-compress.version>1.9</commons-compress.version>
-        <phschematron.version>3.0.1</phschematron.version>
-        <jstreams.version>1.1</jstreams.version>
+        <phschematron.version>5.0.6</phschematron.version>
         <plexus-utils.version>3.0.24</plexus-utils.version>
         <jdom.version>2.0.6</jdom.version>
         <jaxen.version>1.1.6</jaxen.version>
@@ -51,7 +50,6 @@
         <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
         <template-generator-maven-plugin.version>0.0.7</template-generator-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
     </properties>
 
@@ -61,6 +59,16 @@
             <name>eigor</name>
             <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
         </site>
+        <repository>
+            <id>central</id>
+            <name>infocert.linvoice.release</name>
+            <url>https://integrazione.mgmt.infocert.it/artifactory/linvoice-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>infocert.linvoice.snapshot</name>
+            <url>https://integrazione.mgmt.infocert.it/artifactory/linvoice-snapshot-local</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <pluginRepositories>
@@ -135,11 +143,6 @@
                 <version>${commons-csv.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.amoerie</groupId>
-                <artifactId>jstreams</artifactId>
-                <version>${jstreams.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jdom</groupId>
                 <artifactId>jdom2</artifactId>
                 <version>${jdom.version}</version>
@@ -193,11 +196,6 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>eigor-ph-schematron</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -268,6 +266,16 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>eigor-spring-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>converter-xmlcen-cen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>converter-cen-xmlcen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -347,13 +355,14 @@
                 </plugin>
 
                 <!-- defaults to force compilation with desired JDK -->
+                <!--
                 <plugin>
                     <artifactId>maven-toolchains-plugin</artifactId>
                     <version>1.1</version>
                     <configuration>
                         <toolchains>
                             <jdk>
-                                <version>[1.7,1.8)</version>
+                                <version>[1.8,1.9)</version>
                             </jdk>
                         </toolchains>
                     </configuration>
@@ -365,6 +374,7 @@
                         </execution>
                     </executions>
                 </plugin>
+                -->
 
                 <plugin>
                     <groupId>com.danidemi</groupId>
@@ -494,21 +504,6 @@
                 </executions>
             </plugin>
 
-            <!-- Jacoco currently disabled because it seems its reports are not used at all -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>

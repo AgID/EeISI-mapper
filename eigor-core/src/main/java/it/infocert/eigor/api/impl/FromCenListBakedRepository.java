@@ -7,7 +7,9 @@ import it.infocert.eigor.api.configuration.Configurable;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FromCenListBakedRepository implements FromCenConversionRepository, Configurable {
 

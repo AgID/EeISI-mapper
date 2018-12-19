@@ -16,9 +16,10 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import it.infocert.eigor.org.springframework.util.StringUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
@@ -28,11 +29,9 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
-
-import it.infocert.eigor.org.springframework.util.StringUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * SAX {@code ContentHandler} that transforms callback calls to {@code XMLEvent}s

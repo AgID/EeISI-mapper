@@ -5,9 +5,7 @@ import it.infocert.eigor.model.core.rules.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.FAILED;
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.SUCCESS;
-import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.UNAPPLICABLE;
+import static it.infocert.eigor.model.core.rules.RuleOutcome.Outcome.*;
 import static it.infocert.eigor.model.core.rules.RuleOutcome.newOutcome;
 import static org.junit.Assert.assertEquals;
 

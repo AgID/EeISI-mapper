@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Static factory to conceal the automatic choice of the ControlFlow

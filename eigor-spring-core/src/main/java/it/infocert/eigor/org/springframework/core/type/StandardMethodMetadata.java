@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core.type;
 
+import it.infocert.eigor.org.springframework.core.annotation.AnnotationAttributes;
+import it.infocert.eigor.org.springframework.core.annotation.AnnotationUtils;
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.core.annotation.AnnotationAttributes;
-import it.infocert.eigor.org.springframework.core.annotation.AnnotationUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * {@link MethodMetadata} implementation that uses standard reflection

@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
+
 import java.io.ByteArrayInputStream;
 import java.util.Properties;
-
-import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 
 /**
  * Converts a String to a Properties by calling Properties#load(java.io.InputStream).

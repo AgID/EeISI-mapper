@@ -20,11 +20,7 @@ import it.infocert.eigor.org.springframework.core.io.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 
 /**
  * Utility methods for resolving resource locations to files in the

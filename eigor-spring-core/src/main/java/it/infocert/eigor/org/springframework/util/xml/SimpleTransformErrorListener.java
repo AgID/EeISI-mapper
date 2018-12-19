@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.util.xml;
 
+import org.apache.commons.logging.Log;
+
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
-
-import org.apache.commons.logging.Log;
 
 /**
  * Simple {@code javax.xml.transform.ErrorListener} implementation:

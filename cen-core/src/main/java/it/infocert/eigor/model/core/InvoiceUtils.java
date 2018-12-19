@@ -1,6 +1,6 @@
 package it.infocert.eigor.model.core;
 
-import com.google.common.base.Predicate;
+
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.utils.IReflections;
@@ -11,9 +11,12 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.lang.reflect.Modifier.isAbstract;
@@ -95,13 +98,14 @@ public class InvoiceUtils {
      */
     public List<BTBG> getChildrenAsList(BTBG parent, final String childName) {
         List<Method> methods = Arrays.asList(parent.getClass().getMethods());
-        Collection<Method> filter = Collections2.filter(methods, new Predicate<Method>() {
+
+        Collection<Method> filter = methods.stream().filter( new Predicate<Method>() {
             @Override
-            public boolean apply(Method method) {
+            public boolean test(Method method) {
                 return method.getName().startsWith("get" + BtBgName.formatPadded(childName)) &&
                         method.getParameterTypes().length == 0;
             }
-        });
+        } ).collect(Collectors.toList());
 
         if (filter == null || filter.isEmpty()) return null;
 
@@ -128,12 +132,14 @@ public class InvoiceUtils {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
-        Collection<Class<? extends BTBG>> filtered = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
-            @Override
-            public boolean apply(Class<? extends BTBG> c) {
-                return c.getSimpleName().startsWith(BtBgName.formatPadded(name));
-            }
-        });
+        Collection<Class<? extends BTBG>> filtered =
+                subTypesOf.stream()
+                .filter(new Predicate<Class<? extends BTBG>>() {
+                    @Override
+                    public boolean test(@Nullable Class<? extends BTBG> input) {
+                        return input.getSimpleName().startsWith(BtBgName.formatPadded(name));
+                    }
+                }).collect(Collectors.toList());
 
         if (filtered == null || filtered.isEmpty()) return null;
         else return filtered.iterator().next();
@@ -150,17 +156,14 @@ public class InvoiceUtils {
 
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
-        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, new Predicate<Class<? extends BTBG>>() {
-            @Override
-            public boolean apply(Class<? extends BTBG> c) {
+        Collection<Class<? extends BTBG>> filter = Collections2.filter(subTypesOf, c -> {
 
-                if (isAbstract(c.getModifiers())) return false;
+            if (isAbstract(c.getModifiers())) return false;
 
-                String substring = c.getSimpleName().substring(0, 6);
-                BtBgName parse = BtBgName.parse(substring);
-                return parse.equals(name);
+            String substring = c.getSimpleName().substring(0, 6);
+            BtBgName parse = BtBgName.parse(substring);
+            return parse.equals(name);
 
-            }
         });
 
         if (filter == null || filter.isEmpty()) return null;

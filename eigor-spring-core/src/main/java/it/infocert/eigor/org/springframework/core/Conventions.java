@@ -16,6 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.ClassUtils;
+
 import java.io.Externalizable;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -24,9 +27,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.util.ClassUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Provides methods to support various naming and other conventions used

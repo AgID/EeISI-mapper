@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.collect.Lists;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.models.*;

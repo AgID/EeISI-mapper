@@ -8,7 +8,6 @@ import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.conversion.ObservableValidation;
-import it.infocert.eigor.api.io.RecursiveNavigator;
 import it.infocert.eigor.api.utils.EigorVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EigorApi {
 
     private final static Logger log = LoggerFactory.getLogger(EigorApi.class);
-
+    private final static String FULL_DATE = "yyyy-MM-dd-HH-dd-ss-SSS";
     private final EigorApiBuilder builder;
 
     EigorApi(EigorApiBuilder eigorApiBuilder) {
@@ -57,7 +56,7 @@ public class EigorApi {
     public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice, ConversionCallback... callbacks) {
         log.debug(EigorVersion.getAsString());
 
-        String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
+        String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
 
         String folderName = String.format( "conversion-%s-%s-%s-%s", stringAsDate, sourceFormat, targetFormat, (int)(Math.random()*100000));
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
@@ -90,16 +89,26 @@ public class EigorApi {
                 "invoice",
                 fullListOfCallbacks);
 
-
-
         return conversion.conversion();
 
     }
 
+    public ConversionResult<Void> validateSyntax(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validateSyntax();
+    }
+
+    public ConversionResult<Void> validateSemantic(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validateSemantics();
+    }
+
     public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
+        return setupObservable(sourceFormat, invoice).validate();
+    }
+
+    private ObservableValidation setupObservable(final String sourceFormat, final InputStream invoice) {
         log.debug(EigorVersion.getAsString());
 
-        String stringAsDate = new SimpleDateFormat("yyyy-mm-dd-HH-MM-ss-SSS").format(new Date());
+        String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
 
         String folderName = String.format( "validation-%s-%s-%s", stringAsDate, sourceFormat, (int)(Math.random()*100000));
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
@@ -115,6 +124,6 @@ public class EigorApi {
                 "invoice",
                 Lists.newArrayList(callback),
                 builder.getRuleRepository()
-                ).validate();
+        );
     }
 }

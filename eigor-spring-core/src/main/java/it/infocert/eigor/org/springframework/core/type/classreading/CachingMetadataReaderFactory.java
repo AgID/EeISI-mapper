@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.type.classreading;
 
+import it.infocert.eigor.org.springframework.core.io.Resource;
+import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import it.infocert.eigor.org.springframework.core.io.Resource;
-import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
 
 /**
  * Caching implementation of the {@link MetadataReaderFactory} interface,

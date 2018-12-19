@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.beans.PropertyEditorSupport;
-
 import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.beans.PropertyEditorSupport;
 
 /**
  * Adapter that exposes a {@link java.beans.PropertyEditor} for any given

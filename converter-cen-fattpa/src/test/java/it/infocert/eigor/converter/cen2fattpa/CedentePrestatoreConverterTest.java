@@ -22,33 +22,33 @@ public class CedentePrestatoreConverterTest {
     private CedentePrestatoreConverter sut;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         invoice = new BG0000Invoice();
         sut = new CedentePrestatoreConverter();
     }
 
     @Test
-    public void shouldConvertBT29WithoutSchemeId() {
+    public void shouldConvertBT29WithoutDescrizioneAlbo() {
         this.invoice = setUpInvoice(invoice);
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
         final String code = "1234567890";
-        final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(null, "IT:CF:" + code));
+        final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(null, "IT:ALBO:ING:" + code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
         sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
-        final String codiceFiscale = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
-        assertEquals(code, codiceFiscale);
+        final String iscrizioneAlbo = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getNumeroIscrizioneAlbo();
+        assertEquals(code, iscrizioneAlbo);
     }
 
     @Test
-    public void shouldConvertBT29WithSchemeId() {
+    public void shouldConvertBT29WithEori() {
         this.invoice = setUpInvoice(invoice);
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
         final String code = "1234567890";
-        final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier("IT:CF", code));
+        final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier("IT:EORI", code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
         sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
-        final String codiceFiscale = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getCodiceFiscale();
-        assertEquals(code, codiceFiscale);
+        final String codeEori = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getAnagrafica().getCodEORI();
+        assertEquals(code, codeEori);
     }
 
 

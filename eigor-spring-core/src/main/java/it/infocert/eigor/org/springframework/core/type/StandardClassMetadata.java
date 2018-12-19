@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.type;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * {@link ClassMetadata} implementation that uses standard reflection

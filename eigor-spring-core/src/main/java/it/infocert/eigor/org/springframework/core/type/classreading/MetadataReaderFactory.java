@@ -16,9 +16,9 @@
 
 package it.infocert.eigor.org.springframework.core.type.classreading;
 
-import java.io.IOException;
-
 import it.infocert.eigor.org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 /**
  * Factory interface for {@link MetadataReader} instances.

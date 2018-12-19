@@ -1,7 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToIso4217CurrenciesFundsCodesConverter;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import org.junit.Test;
 

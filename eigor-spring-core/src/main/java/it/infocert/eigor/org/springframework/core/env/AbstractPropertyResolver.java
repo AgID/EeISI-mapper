@@ -16,16 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import it.infocert.eigor.org.springframework.core.convert.support.ConfigurableConversionService;
 import it.infocert.eigor.org.springframework.core.convert.support.DefaultConversionService;
+import it.infocert.eigor.org.springframework.util.PropertyPlaceholderHelper;
 import it.infocert.eigor.org.springframework.util.SystemPropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import it.infocert.eigor.org.springframework.core.convert.support.ConfigurableConversionService;
-import it.infocert.eigor.org.springframework.util.PropertyPlaceholderHelper;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Abstract base class for resolving properties against any underlying source.

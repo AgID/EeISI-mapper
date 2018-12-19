@@ -1,7 +1,6 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
@@ -15,10 +14,12 @@ import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.org.springframework.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,12 +127,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
             allegato.setFormatoAttachment("txt");
             allegati.add(allegato);
         } else {
-            allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
-                @Override
-                public boolean apply(AllegatiType allegato) {
-                    return "not-mapped-values".equals(allegato.getNomeAttachment());
-                }
-            }).first();
+            allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
             content = new String(allegato.getAttachment());
         }
         StringBuilder sb = new StringBuilder(content + System.lineSeparator())
@@ -186,10 +182,6 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                 anagrafica.setCodEORI(identifier);
                                 break;
 
-                            case "IT:CF":
-                                datiAnagrafici.setCodiceFiscale(identifier);
-                                break;
-
                             case "IT:ALBO":
                                 String[] slices = identifier.split(":");
                                 if (slices.length == 2) {
@@ -207,12 +199,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                                     allegato.setFormatoAttachment("txt");
                                     allegati.add(allegato);
                                 } else {
-                                    allegato = Stream.of(allegati).filter(new Filter<AllegatiType>() {
-                                        @Override
-                                        public boolean apply(AllegatiType allegato) {
-                                            return "not-mapped-values".equals(allegato.getNomeAttachment());
-                                        }
-                                    }).first();
+                                    allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
                                     content = new String(allegato.getAttachment());
                                 }
                                 String updated = content +
@@ -339,6 +326,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
                     BT0032SellerTaxRegistrationIdentifier identifier = seller.getBT0032SellerTaxRegistrationIdentifier(0);
                     final String value = identifier.getValue();
+
                     if (!seller.getBT0031SellerVatIdentifier().isEmpty() && seller.getBT0031SellerVatIdentifier(0).getValue().startsWith("IT")) {
                         try {
                             datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(value));
@@ -360,6 +348,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", value, System.lineSeparator()));
                         log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_01);
                     }
+                    addCodiceFiscale(datiAnagrafici, seller);
                 } else {
                     datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_01);
                     log.debug("Mapped RegimeFiscale with default value {} since BT-32 is empty", RegimeFiscaleType.RF_01);
@@ -388,5 +377,16 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
         }
     }
 
+    public void addCodiceFiscale(DatiAnagraficiCedenteType datiAnagrafici, BG0004Seller seller) {
+        if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
+            BT0032SellerTaxRegistrationIdentifier identifier = seller.getBT0032SellerTaxRegistrationIdentifier(0);
+            final String value = identifier.getValue();
+            if (!CollectionUtils.isEmpty(seller.getBG0005SellerPostalAddress()) && !CollectionUtils.isEmpty(seller.getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode())
+                    && "IT".equals(seller.getBG0005SellerPostalAddress().get(0).getBT0040SellerCountryCode().get(0).getValue().getIso2charCode())) {
+                datiAnagrafici.setCodiceFiscale(value);
+                log.debug("Mapped BT0032 to CodiceFiscale with value {}", value);
+            }
+        }
+    }
 
 }

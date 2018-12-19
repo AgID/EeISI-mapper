@@ -1,16 +1,15 @@
 package it.infocert.eigor.api.utils;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
-import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EnumsLookUp {
     private static final Logger log = LoggerFactory.getLogger(EnumsLookUp.class);
@@ -18,27 +17,27 @@ public class EnumsLookUp {
     public static Enum getEnumElementFromFields(Class<? extends Enum> enumClass, final Object... parameters) {
 
         Constructor<?>[] constructors = enumClass.getDeclaredConstructors();
-        Set<Constructor<?>> validConstructors = Stream.create(constructors).filter(new Filter<Constructor<?>>() {
-            @Override
-            public boolean apply(Constructor<?> constructor) {
-                int count = 0;
-                Class<?>[] parameterTypes = constructor.getParameterTypes();
-                for (int i = 2; i < parameterTypes.length; i++) {
-                    int valid = 0;
-                    for (Object parameter : parameters) {
-                        if (parameterTypes[i].equals(parameter.getClass())) {
-                            valid++;
-                        }
-                    }
-                    if (valid > 0) {
-                        count++;
-                    }
-                }
 
-                int actualLenght = parameterTypes.length - 2 ;
-                return count == actualLenght && actualLenght == parameters.length;
-            }
-        }).toSet();
+        Set<Constructor<?>> validConstructors = Arrays.stream(constructors)
+                .filter( constructor ->
+                    {
+                        int count = 0;
+                        Class<?>[] parameterTypes = constructor.getParameterTypes();
+                        for (int i = 2; i < parameterTypes.length; i++) {
+                            int valid = 0;
+                            for (Object parameter : parameters) {
+                                if (parameterTypes[i].equals(parameter.getClass())) {
+                                    valid++;
+                                }
+                            }
+                            if (valid > 0) {
+                                count++;
+                            }
+                        }
+                        int actualLenght = parameterTypes.length - 2 ;
+                        return count == actualLenght && actualLenght == parameters.length;
+                    })
+                .collect(Collectors.toSet());
 
         for (Constructor<?> validConstructor : validConstructors) {
             try {

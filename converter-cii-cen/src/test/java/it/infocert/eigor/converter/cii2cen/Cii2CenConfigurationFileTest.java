@@ -10,7 +10,6 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.apache.commons.io.FileUtils;
 import org.jdom2.Document;
@@ -90,7 +89,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		String temp;
 		for(IConversionIssue conversionIssue : errors){
 			temp = conversionIssue.getMessage();
-            assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[BR-S-08]") || temp.contains("[CII-SR-014]"));
+            assertTrue(temp.contains("[BR-02]") || temp.contains("[BR-04]") || temp.contains("[BR-S-02]") || temp.contains("[BR-S-08]") || temp.contains("[CII-SR-014]"));
 		}
 	}
 
@@ -300,7 +299,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 	   	XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.CII_IN);
 	   	return xsdValidator.validate(bytes);
 	}
-	
+
 	private List<IConversionIssue> validateXmlWithCiiSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		File schematronFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt");
@@ -314,7 +313,7 @@ public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
 		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, false, ErrorCode.Location.CII_IN);
 		return ciiCIUSValidator.validate(bytes);
 	}
-	
+
 	private ConversionResult<BG0000Invoice> oneToOneMapping(InputStream sourceInvoiceStream) throws Exception {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		InputStream clonedInputStream = new ByteArrayInputStream(bytes);

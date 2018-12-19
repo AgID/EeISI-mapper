@@ -16,14 +16,6 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-
 import it.infocert.eigor.org.springframework.core.OrderComparator;
 import it.infocert.eigor.org.springframework.core.io.UrlResource;
 import it.infocert.eigor.org.springframework.util.Assert;
@@ -31,6 +23,10 @@ import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * General purpose factory loading mechanism for internal use within the framework.

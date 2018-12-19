@@ -6,7 +6,10 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
+import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -75,7 +78,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                         if (idTax != null) {
                             schemeIDTax = idTax.getAttribute("schemeID");
                             if (schemeIDTax != null) {
-                                if (schemeIDTax.getValue().equals("VA")) {
+                                if (schemeIDTax.getValue().equals("VAT")) {
                                     bt0031 = new BT0031SellerVatIdentifier(idTax.getText());
                                     invoice.getBG0004Seller(0).getBT0031SellerVatIdentifier().add(bt0031);
                                 } else if (schemeIDTax.getValue().equals("FC")) {

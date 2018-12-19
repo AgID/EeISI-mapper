@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
-import java.beans.PropertyEditorSupport;
-import java.io.IOException;
-
 import it.infocert.eigor.org.springframework.core.env.Environment;
 import it.infocert.eigor.org.springframework.core.env.PropertyResolver;
+import it.infocert.eigor.org.springframework.core.env.StandardEnvironment;
 import it.infocert.eigor.org.springframework.util.Assert;
 import it.infocert.eigor.org.springframework.util.StringUtils;
-import it.infocert.eigor.org.springframework.core.env.StandardEnvironment;
+
+import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 
 /**
  * {@link java.beans.PropertyEditor Editor} for {@link Resource}

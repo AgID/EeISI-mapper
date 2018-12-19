@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
 
 /**
  * Converts String to a Boolean.

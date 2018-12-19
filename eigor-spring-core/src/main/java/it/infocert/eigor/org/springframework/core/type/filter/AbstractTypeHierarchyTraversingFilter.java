@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.type.filter;
 
-import java.io.IOException;
-
+import it.infocert.eigor.org.springframework.core.type.ClassMetadata;
 import it.infocert.eigor.org.springframework.core.type.classreading.MetadataReader;
 import it.infocert.eigor.org.springframework.core.type.classreading.MetadataReaderFactory;
-import it.infocert.eigor.org.springframework.core.type.ClassMetadata;
+
+import java.io.IOException;
 
 /**
  * Type filter that is aware of traversing over hierarchy.

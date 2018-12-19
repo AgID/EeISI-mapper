@@ -1,7 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import org.junit.Test;
 

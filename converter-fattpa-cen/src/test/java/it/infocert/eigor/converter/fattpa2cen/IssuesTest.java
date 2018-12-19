@@ -135,6 +135,13 @@ public class IssuesTest {
 
         }
 
+        {
+            BG0000Invoice cen = result.getResult();
+            String bt032 = cen.getBG0004Seller().get(0).getBT0032SellerTaxRegistrationIdentifier().get(0).getValue();
+            Assert.assertEquals("02313821007", bt032);
+
+        }
+
 
     }
 

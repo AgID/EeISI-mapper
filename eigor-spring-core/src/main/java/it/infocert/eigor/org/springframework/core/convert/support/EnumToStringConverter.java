@@ -16,11 +16,11 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import it.infocert.eigor.org.springframework.util.ClassUtils;
 import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalConverter;
 import it.infocert.eigor.org.springframework.core.convert.converter.Converter;
+import it.infocert.eigor.org.springframework.util.ClassUtils;
 
 /**
  * Calls {@link Enum#name()} to convert a source Enum to a String.  This converter will

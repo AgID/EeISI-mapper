@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
+import it.infocert.eigor.org.springframework.core.convert.ConversionService;
+import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
+import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-
-import it.infocert.eigor.org.springframework.core.convert.ConversionService;
-import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
-import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 /**
  * Converts a Collection to an array.

@@ -16,14 +16,13 @@
 
 package it.infocert.eigor.org.springframework.core.env;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import it.infocert.eigor.org.springframework.util.Assert;
-import it.infocert.eigor.org.springframework.util.StringUtils;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Default implementation of the {@link PropertySources} interface.

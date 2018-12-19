@@ -16,10 +16,10 @@
 
 package it.infocert.eigor.org.springframework.util.comparator;
 
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.io.Serializable;
 import java.util.Comparator;
-
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * A decorator for a comparator, with an "ascending" flag denoting

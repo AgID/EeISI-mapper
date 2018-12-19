@@ -16,15 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
+import it.infocert.eigor.org.springframework.core.io.Resource;
+import it.infocert.eigor.org.springframework.util.Assert;
+import it.infocert.eigor.org.springframework.util.ObjectUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-
-import it.infocert.eigor.org.springframework.core.io.Resource;
-import it.infocert.eigor.org.springframework.util.ObjectUtils;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * Holder that combines a {@link Resource} descriptor with a specific encoding

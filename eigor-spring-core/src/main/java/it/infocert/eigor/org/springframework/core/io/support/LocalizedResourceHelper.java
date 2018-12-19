@@ -16,12 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.io.support;
 
-import java.util.Locale;
-
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import it.infocert.eigor.org.springframework.core.io.ResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.util.Locale;
 
 /**
  * Helper class for loading a localized resource,

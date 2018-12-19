@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -49,6 +50,9 @@ public class Cen2FattPATest {
         Document doc = builder.parse(new ByteArrayInputStream(fattpaXML));
 
         String lineNumber = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[1]/NumeroLinea/text()");
+
+        getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici[1]");
+
         assertNotNull(lineNumber);
         assertEquals("1", lineNumber);
     }
@@ -58,6 +62,20 @@ public class Cen2FattPATest {
         BinaryConversionResult conversionResult = converter.convert(createInvoice());
 
         assertNotNull(conversionResult.getResult());
+    }
+
+    @Test
+    public void checkBt32CodiceFiscale() throws Exception{
+        byte[] fattpaXML = converter.convert(createInvoice()).getResult();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new ByteArrayInputStream(fattpaXML));
+
+        String bt32 = getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici[1]/CodiceFiscale");
+
+        assertNotNull(bt32);
+        assertEquals("01234567", bt32);
     }
 
     @Test
@@ -75,7 +93,13 @@ public class Cen2FattPATest {
         invoice.getBT0001InvoiceNumber().add(new BT0001InvoiceNumber("1"));
         BG0004Seller seller = new BG0004Seller();
         seller.getBT0027SellerName().add(new BT0027SellerName("seller-name"));
+        seller.getBT0032SellerTaxRegistrationIdentifier().add(new BT0032SellerTaxRegistrationIdentifier("01234567"));
+
+        final BG0005SellerPostalAddress sellerPostalAddress = new BG0005SellerPostalAddress();
+        sellerPostalAddress.getBT0040SellerCountryCode().add(new BT0040SellerCountryCode(Iso31661CountryCodes.IT));
+        seller.getBG0005SellerPostalAddress().add(sellerPostalAddress);
         invoice.getBG0004Seller().add(seller);
+
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
         invoiceLine.getBT0126InvoiceLineIdentifier().add(new BT0126InvoiceLineIdentifier("1"));
         BG0029PriceDetails priceDetails = new BG0029PriceDetails();

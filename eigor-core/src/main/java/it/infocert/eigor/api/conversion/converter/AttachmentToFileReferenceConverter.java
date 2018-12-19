@@ -23,12 +23,17 @@ public class AttachmentToFileReferenceConverter implements TypeConverter<Element
     private final static Logger log = LoggerFactory.getLogger(AttachmentToFileReferenceConverter.class);
     private final File workdir;
     private final ErrorCode.Location callingLocation;
+    private final String mimeAttribute;
 
-    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation){
-        return new AttachmentToFileReferenceConverter(eigorConfiguration, callingLocation);
+    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation, String mimeAttribute){
+        return new AttachmentToFileReferenceConverter(eigorConfiguration, callingLocation, mimeAttribute);
     }
 
-    private AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation) {
+    public static TypeConverter<Element, FileReference> newConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation){
+        return new AttachmentToFileReferenceConverter(eigorConfiguration, callingLocation, "mimeCode");
+    }
+
+    private AttachmentToFileReferenceConverter(EigorConfiguration eigorConfiguration, ErrorCode.Location callingLocation, String mimeAttribute) {
         this.callingLocation = callingLocation;
         File workdir;
         String workdirS = eigorConfiguration.getMandatoryString("eigor.workdir");
@@ -40,13 +45,15 @@ public class AttachmentToFileReferenceConverter implements TypeConverter<Element
             log.error(e.getMessage(), e);
             workdir = null;
         }
+
         this.workdir = workdir;
+        this.mimeAttribute = mimeAttribute;
     }
 
     @Override
     public FileReference convert(Element element) {
         String content = element.getText();
-        String mimeCode = element.getAttributeValue("mimeCode");
+        String mimeCode = element.getAttributeValue(mimeAttribute);
         String filename = element.getAttributeValue("filename");
 
         if (mimeCode == null || filename == null) {

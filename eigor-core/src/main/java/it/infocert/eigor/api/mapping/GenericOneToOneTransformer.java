@@ -1,7 +1,7 @@
 package it.infocert.eigor.api.mapping;
 
-import com.amoerie.jstreams.Stream;
-import com.amoerie.jstreams.functions.Filter;
+
+
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -17,7 +17,9 @@ import org.jdom2.Element;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Generic class to transform both cen objects in XML elements and viceversa,
@@ -85,12 +87,9 @@ public class GenericOneToOneTransformer extends GenericTransformer {
         log.trace(logPrefix + "resolving");
 
         Class<? extends BTBG> btBgByName = invoiceUtils.getBtBgByName(cenPath.substring(cenPath.lastIndexOf('/')+1));
-        Constructor<?> cons = Stream.create(btBgByName.getConstructors()).filter(new Filter<Constructor<?>>() {
-            @Override
-            public boolean apply(Constructor<?> constructor) {
-                return Identifier.class.equals(constructor.getParameterTypes()[0]);
-            }
-        }).first();
+        Constructor<?> cons = Arrays.stream(btBgByName.getConstructors())
+                .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]))
+                .findFirst().orElse(null);
         if (cons != null) {
             final Element node = getSingleNodeFromXpath(document, xPath);
 

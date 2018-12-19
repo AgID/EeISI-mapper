@@ -16,14 +16,14 @@
 
 package it.infocert.eigor.org.springframework.core.io;
 
+import it.infocert.eigor.org.springframework.core.NestedIOException;
+import it.infocert.eigor.org.springframework.util.Assert;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-
-import it.infocert.eigor.org.springframework.core.NestedIOException;
-import it.infocert.eigor.org.springframework.util.Assert;
 
 /**
  * VFS based {@link Resource} implementation.

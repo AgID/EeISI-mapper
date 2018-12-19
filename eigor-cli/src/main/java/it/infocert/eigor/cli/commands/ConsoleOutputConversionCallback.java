@@ -1,10 +1,12 @@
 package it.infocert.eigor.cli.commands;
 
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.BinaryConversionResult;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.api.conversion.AbstractConversionCallback;
 import it.infocert.eigor.api.conversion.ConversionContext;
-import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.model.core.rules.RuleOutcome;
 

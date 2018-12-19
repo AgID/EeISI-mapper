@@ -16,17 +16,12 @@
 
 package it.infocert.eigor.org.springframework.core.task.support;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RejectedExecutionException;
-
 import it.infocert.eigor.org.springframework.core.task.AsyncTaskExecutor;
 import it.infocert.eigor.org.springframework.core.task.TaskExecutor;
 import it.infocert.eigor.org.springframework.core.task.TaskRejectedException;
 import it.infocert.eigor.org.springframework.util.Assert;
+
+import java.util.concurrent.*;
 
 /**
  * Adapter that takes a JDK {@code java.util.concurrent.Executor} and

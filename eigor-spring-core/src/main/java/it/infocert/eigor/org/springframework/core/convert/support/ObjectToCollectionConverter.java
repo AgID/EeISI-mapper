@@ -16,16 +16,15 @@
 
 package it.infocert.eigor.org.springframework.core.convert.support;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
 import it.infocert.eigor.org.springframework.core.CollectionFactory;
 import it.infocert.eigor.org.springframework.core.convert.ConversionService;
 import it.infocert.eigor.org.springframework.core.convert.TypeDescriptor;
 import it.infocert.eigor.org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Converts an Object to a single-element Collection containing the Object.
