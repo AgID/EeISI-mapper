@@ -1,0 +1,144 @@
+<project>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.infocert.eigor</groupId>
+    <artifactId>eigor</artifactId>
+    <packaging>pom</packaging>
+    <version>4.0.1-SNAPSHOT</version>
+    <name>Eigor :: Aggregator</name>
+    <description>Electronic Invoice GO Regional</description>
+    <organization>
+        <name>Infocert</name>
+        <url>https://www.infocert.it/</url>
+    </organization>
+
+    <distributionManagement>
+        <site>
+            <id>eigor</id>
+            <name>eigor</name>
+            <url>https://gitlab.mgmt.infocert.it/linvoice/invoice.eeisi.git</url>
+        </site>
+    </distributionManagement>
+
+    <modules>
+        <module>eigor-parent</module>
+        <module>eigor-cli</module>
+        <module>eigor-test</module>
+        <module>eigor-core</module>
+        <module>eigor-api</module>
+        <module>eigor-spring-core</module>
+        <module>eigor-test-schemas</module>
+        <module>eigor-commons</module>
+        <module>eigor-configurations</module>
+        <module>cen-core</module>
+        <module>converter-fattpa-cen</module>
+        <module>converter-cen-fattpa</module>
+        <module>converter-csvcen-cen</module>
+        <module>converter-commons</module>
+        <module>converter-ubl-cen</module>
+        <module>converter-ublcn-cen</module>
+        <module>converter-cii-cen</module>
+        <module>converter-cen-cii</module>
+        <module>converter-cen-ubl</module>
+        <module>converter-cen-ublcn</module>
+        <module>converter-xmlcen-cen</module>
+        <module>converter-cen-xmlcen</module>
+    </modules>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <id>info-reports</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>modules</report>
+                            <report>index</report>
+                            <!--
+                            <report>scm</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>project-team</report>
+                            -->
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>overwrite-pitest-index</id>
+                                <phase>post-site</phase>
+                                <configuration>
+                                    <target>
+                                        <move
+                                                file="target/site/pit-reports/index_pits.html"
+                                                tofile="target/site/pit-reports/index.html"
+                                                verbose="yes" quiet="false"
+                                        />
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>1.1.11</version>
+                        <configuration>
+                            <skip>false</skip>
+                            <sourceDataFormats>
+                                <sourceDataFormat>HTML</sourceDataFormat>
+                            </sourceDataFormats>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+
+
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
+
+
+
+</project>

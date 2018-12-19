@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dogs>
+    <dog id="dog1" age="12" sex="m">Abbot</dog>
+    <dog id="dog1" age="2" sex="f">Fufi</dog>
+    <dog id="dog1" age="-2" sex="x">007</dog>
+    <dog id="dog1" age="-2" >007</dog>
+    <dog id="dog1" age="-2" >007</dog>
+    <dog id="dog1" age="-2" >007</dog>
+    <dog id="dog1" age="-2" >007</dog>
+</dogs>

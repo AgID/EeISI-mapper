@@ -1,0 +1,60 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Untdid5305DutyTaxFeeCategories {
+
+    // 1 - PlusSign,
+    // 2 - Code,
+    // 3 - ShortDesc,
+    // 4 - LongDesc
+    #foreach( $row in $rows )
+        /** ${row.data.ShortDesc}. */
+    ${row.data.Code}(#if(${row.data.PlusSign.equals("+")}) true #else false #end,"${row.data.ShortDesc}", "${row.data.LongDesc}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    #end
+
+    private boolean hasPlusSign;
+    private String shortDescritpion;
+    private String longDescription;
+
+    Untdid5305DutyTaxFeeCategories(boolean hasPlusSign, String shortDescritpion, String longDescription) {
+        this.hasPlusSign = hasPlusSign;
+        this.shortDescritpion = shortDescritpion;
+        this.longDescription = longDescription;
+    }
+
+    public String toDetailedString() {
+        return String.format("%s%s|%s|%s", (this.hasPlusSign ? "+":""), super.toString(), shortDescritpion, longDescription);
+    }
+
+    @Override
+    public String toString() {
+        return "Untdid5305DutyTaxFeeCategories{" +
+                "hasPlusSign=" + hasPlusSign +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
+    }
+
+    public boolean isHasPlusSign() {
+        return hasPlusSign;
+    }
+
+    public void setHasPlusSign(boolean hasPlusSign) {
+        this.hasPlusSign = hasPlusSign;
+    }
+
+    public String getShortDescritpion() {
+        return shortDescritpion;
+    }
+
+    public void setShortDescritpion(String shortDescritpion) {
+        this.shortDescritpion = shortDescritpion;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+}

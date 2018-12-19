@@ -1,0 +1,59 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Iso4217CurrenciesFundsCodes {
+
+    // 1: Code
+    // 2: Num
+    // 3: NumberOfDecimalDigits
+    // 4: Currency
+ #foreach( $row in $rows )
+
+     /**
+      * ${row.data.Code}
+      * <p>${row.data.Num}</p>
+      * <p>${row.data.NumberOfDecimalDigits}</p>
+      * <p>${row.data.Currency}</p>
+      * <p>${row.data.LocationsUsingThisCurrency}</p>
+      */
+     ${row.data.Code}("${row.data.Code}", ${row.data.Num}, ${row.data.NumberOfDecimalDigits}, "${row.data.Currency}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+ #end
+
+
+    private String code;
+    private int num;
+    private int numberOfDecimalDigits;
+    private String currency;
+
+    Iso4217CurrenciesFundsCodes(String code, int num, int numberOfDecimalDigits, String currency) {
+        this.code = code;
+        this.num = num;
+        this.numberOfDecimalDigits = numberOfDecimalDigits;
+        this.currency = currency;
+    }
+
+    @Override
+    public String toString() {
+        return "Iso4217CurrenciesFundsCodes{" +
+                "code='" + code + '\'' +
+                "| num=" + num +
+                "| numberOfDecimalDigits=" + numberOfDecimalDigits +
+                "| currency='" + currency + '\'' +
+                '}';
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public int getNumberOfDecimalDigits() {
+        return numberOfDecimalDigits;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+}

@@ -1,0 +1,565 @@
+Sign,ID,Description
+,AAA,[1018] Reference number assigned by the seller to his acknowledgement of an order.
+,AAB,[1088] Reference number assigned by the seller to a Proforma Invoice.
+,AAC,[1172] Reference number assigned by issuing bank to a Documentary credit.
+,AAD,[1318] Reference number assigned by the issuer to a Contract Addendum.
+,AAE,Reference number assigned to a goods declaration.
+,AAG,Reference number assigned by issuing party to an offer.
+,AAJ,Reference number assigned by issuer to a delivery order.
+,AAK,Reference number assigned by issuing party to a despatch advice.
+,AAL,Reference number identifying a specific product drawing.
+,AAM,Reference number assigned to a waybill see: 1001 = 700.
+,AAN,Reference number assigned by buyer to a delivery schedule.
+,AAO,[1362] Reference assigned by the consignee to a shipment.
+,AAP,[1310] Reference to a specific consignment forming part of a contract allowing part deliveries.
+,AAQ,[8260] Marks (letters and/or numbers) which identify a unit load device e.g. freight container.
+,AAS,[1188] Reference assigned by the carrier or his agent to the transport document.
+,AAT,Identifies the master label number of any package type.
+,AAU,[1128] Reference number assigned by the seller to a Despatch Note.
+,AAV,Reference number assigned to an enquiry.
+,AAY,Reference number assigned by the carriers agent to a transaction.
+,AAZ,For maritime shipments this code qualifies a Standard Alpha Carrier Code (SCAC) as issued by the United Stated National Motor Traffic Association Inc.
+,ABA,Reference by an importing party to a previous decision made by a Customs administration regarding the valuation of goods.
+,ABB,Reference issued by a Customs administration authorizing a preferential rate of duty if a product is used for a specified purpose see: 1001 = 990.
+,ABC,Reference issued by a Customs administration pertaining to a past or current investigation of goods \"dumped\" at a price lower than the exporter's domestic market price.
+,ABD,[7282] Code number of the goods in accordance with the tariff nomenclature system of classification in use where the Customs declaration is made.
+,ABE,Unique reference number assigned to a document or a message by the declarant for identification purposes.
+,ABG,Reference issued by Customs pertaining to a pending tariff classification decision requested by an importer or agent.
+,ABH,Reference assigned to a sub-house bill of lading.
+,ABI,[1168] Reference or indication of the deferred payment of duty/tax.
+,ABJ,Reference number allocated by a government authority to identify a quota.
+,ABK,Reference number to identify the guarantee or security provided for Customs transit operation (CCC).
+,ABL,Reference assigned to a Customs guarantee.
+,ABM,New part number which replaces the existing part number.
+,ABN,Identification number assigned to a seller's catalogue.
+,ABO,Self explanatory.
+,ABP,Reference to the party whose posted bond or security is being declared in order to accept responsibility for a goods declaration and the applicable duties and taxes.
+,ABQ,Reference number assigned by the importer to identify a particular shipment for his own purposes.
+,ABR,Reference number of the clearance instructions given by the consignor through different means.
+,ABS,Reference number of the import clearance instructions given by the consignor/consignee through different means.
+,ABT,[1426] Number assigned or accepted by Customs to identify a Goods declaration.
+,ABU,Self explanatory.
+#,ABV,To define routing within a plant.
+,ABW,Self explanatory.
+,ABX,The reference used within a given TEI (Text Element Identifier) which is to be deleted.
+,ABY,Reference assigned to guarantied capacity on one or more specific flights on specific date(s) to third parties as agents and other airlines.
+,ABZ,Number of the licence issued for a vehicle by an agency of government.
+,AC,Description to be provided.
+,ACA,Reference assigned to the cargo acceptance order.
+,ACB,Description to be provided.
+,ACC,Identifying marks on the outermost unit that is used to transport merchandise.
+,ACD,Reference number provided in addition to another given reference.
+|,ACE,Reference number identifying a related document.
+,ACF,Description to be provided.
+,ACG,Reference number assigned to an ATA carnet.
+,ACH,Identifying marks on packing units.
+,ACI,(7070) Identifying marks on packing units contained within an outermost shipping unit.
+,ACJ,Number for a material specification given by customer.
+,ACK,Cross reference issued by financial institution.
+,ACL,Description to be provided.
+,ACM,Description to be provided.
+,ACN,[1030] Number of the Advice of Collection attached to the Rail Consignment Note (CIM 75).
+,ACO,Number attributed to the iron charge for the production of steel products.
+,ACP,Number attributed to a hot roll coil.
+,ACQ,Number attributed to a cold roll coil.
+,ACR,(8320) Registered identification initials and numbers of railway wagon. Synonym: Rail car number.
+,ACS,Description to be provided.
+,ACT,Description to be provided.
+,ACU,To reference to the unique number that is assigned to each major loss hitting the reinsurance industry.
+,ACV,Reference number assigned by the ordering party of the estimate order.
+,ACW,Reference number assigned to the message which was previously issued (e.g. in the case of a cancellation the primary reference of the message to be cancelled will be quoted in this element).
+,ACX,Reference number for banker's acceptance issued by the accepting financial institution.
+,ACY,Reference number assigned by customs to a duty memo.
+,ACZ,Reference assigned to a specific equipment transportation charge.
+,ADA,Reference number assigned by the buyer to an item.
+,ADB,Reference number for certificate of deposit allocated by issuing financial institution.
+,ADC,Reference number for loan allocated by lending financial institution.
+,ADD,Number given to a specific analysis or test operation.
+,ADE,Identification number of an account.
+,ADF,Self explanatory.
+,ADG,Self explanatory.
+,ADH,Description to be provided.
+,ADI,Description to be provided.
+,ADJ,Description to be provided.
+,ADK,Description to be provided.
+,ADL,Reference number assigned to the consignment by the ordering customer.
+,ADM,Reference number assigned by the shipowner as an authorization number to transport certain goods (such as hazardous goods cool or reefer goods).
+,ADN,Reference number assigned by the principal to the transport order for inland carriage.
+,ADO,Reference number assigned by the principal to the work order for a (set of) container(s).
+,ADP,Description to be provided.
+,ADQ,Description to be provided.
+,ADR,Description to be provided.
+,ADS,Description to be provided.
+,ADT,Description to be provided.
+,ADU,Description to be provided.
+,ADV,Description to be provided.
+,ADW,Self explanatory.
+,ADY,Reference to a report to Customs by a carrier at the point of entry encompassing both conveyance and consignment information.
+,ADZ,Number assigned by a Customs authority which uniquely identifies a trader (i.e. importer exporter or declarant) for Customs purposes.
+,AE,Description to be provided.
+,AEA,Coded reference number that pertains to the business of a government agency.
+,AEB,Self explanatory.
+,AEC,Self explanatory.
+,AED,Self explanatory.
+,AEE,Reference number assigned to a Eur 1 certificate.
+,AEF,Retrieval number for a process specification defined by customer.
+,AEG,Retrieval number for a specification defined by customer.
+,AEH,Instructions or standards applicable for the whole message or a message line item. These instructions or standards may be published by a neutral organization or authority or another party concerned.
+,AEI,Registration number of the Customs declaration lodged for the previous Customs procedure.
+,AEJ,Reference to a message related to a post-entry.
+,AEK,Self explanatory.
+,AEL,Reference number by which a haulier/carrier will announce himself at the container terminal or depot when delivering equipment.
+,AEM,A predefined and identified sequence of points where goods are collected agreed between partners e.g. the party in charge of organizing the transport and the parties where goods will be collected. The same collecting points may be included in different transport routes but in a different sequence.
+,AEN,Number assigned by customer to a unique unit for inventory purposes.
+,AEO,Number assigned by seller to identify reservation of specified products.
+,AEP,Reference number assigned to a project.
+,AEQ,Reference number identifying a drawing list.
+,AER,Reference number identifying a project specification.
+,AES,Description to be provided.
+,AET,Self explanatory.
+,AEU,Reference to a file regarding a control of the supplier carried out on departure of the goods.
+,AEV,Reference number assigned to a shipping note see: 1001 = 630.
+,AEW,Reference number assigned to an empty container bill see: 1001 = 708.
+,AEX,Reference number assigned to a sea waybill see: 1001 = 712.
+,AEY,Reference number assigned to a substitute air waybill see: 1001 = 743.
+,AEZ,(1128) Reference number assigned to a despatch note (post parcels) see: 1001 = 750.
+,AF,(8110) Identification of a commercial flight by carrier code and number as assigned by the airline (IATA).
+,AFA,Reference number assigned to a through bill of lading see: 1001 = 761.
+,AFB,Reference number assigned to a cargo manifest see: 1001 = 785.
+,AFC,Reference number assigned to a bordereau see: 1001 = 787.
+,AFD,Number (1496 in CST) assigned by the declarant to an item.
+,AFE,Reference number to relevant item within Commodity Control List covering actual products change functionality.
+,AFF,Reference where marking/label information derives from.
+,AFG,Self explanatory.
+,AFH,Purchase order number specified by the buyer for the assignment to vendor's replenishment orders in a vendor managed inventory program.
+,AFI,Self explanatory.
+,AFJ,Self explanatory.
+,AFK,Self explanatory.
+,AFL,Self explanatory.
+,AFM,Self explanatory.
+,AFN,Reference of the account party.
+,AFO,Reference of the beneficiary.
+,AFP,Reference of the second beneficiary.
+,AFQ,Reference number of the applicant's bank.
+,AFR,Reference number of the issuing bank.
+,AFS,Reference number of the beneficiary's bank.
+,AFT,Reference number assigned to a direct payment valuation.
+,AFU,Reference number assigned to a direct payment valuation request.
+,AFV,Reference number assigned to a quantity valuation.
+,AFW,Reference number assigned to a quantity valuation request.
+,AFX,Reference number assigned to a bill of quantities.
+,AFY,Reference number assigned to a payment valuation.
+,AFZ,Common reference number given to documents concerning a determined period of works.
+,AGA,Self explanatory.
+,AGB,Reference number assigned to a party for a particular contract.
+,AGC,Reference number of the account party's bank.
+,AGD,Reference number issued by the agent's bank.
+,AGE,Reference number of the agent.
+,AGF,Reference number of the applicant.
+,AGG,Reference number to a dispute notice.
+,AGH,Reference number assigned by a credit rating agency to a debtor.
+,AGI,Self explanatory.
+,AGJ,Self explanatory.
+,AGK,Self explanatory.
+,AGL,Formal identification of delivery verification certificate which is a formal document from Customs etc. confirming that physical goods have been delivered. It may be needed to support a tax reclaim based on an invoice.
+,AGM,Number assigned by customs to identify consignment in transit.
+,AGN,Reference number quoted on the statement sent to the beneficiary for information purposes.
+,AGO,The reference provided by the sender of the original message.
+,AGP,Owner/operator non-government issued equipment reference number.
+,AGQ,Airline flight number assigned to a flight originating and terminating within the same country.
+,AGR,Airline flight number assigned to a flight originating and terminating across national borders.
+,AGS,Reference number assigned by a service/processing bureau to an employer.
+,AGT,Identification used for a group of services.
+,AGU,Reference number assigned to a person as a member of a group of persons or a service scheme.
+,AGV,Reference number previously assigned to a member.
+,AGW,Reference number assigned to a service scheme or plan.
+,AGX,Reference number previously assigned to a service scheme or plan.
+,AGY,Identification used by the receiving party for a member of a service scheme or group of persons.
+,AGZ,Reference number assigned to the payroll of an organisation.
+,AHA,Reference number of documentation specifying the technical detail of packaging requirements.
+,AHB,Identification issued by an authority e.g. government airport authority.
+,AHC,Non-revenue producing airline flight for training purposes.
+,AHD,Reference number to identify appropriation and branch chargeable for item.
+,AHE,Reference number to identify a signal.
+,AHF,Reference number according to Major Force Program (US).
+,AHG,Reference number assigned by a shipper to a request commitment-to-ship on a pipeline system.
+,AHH,Reference number is the official registration number of the laboratory.
+,AHI,Reference number of a transport contract.
+,AHJ,Reference number of the party to be paid.
+,AHK,Reference number of the party who pays.
+,AHL,Reference number of the party to whom a debt is owed.
+,AHM,Reference number of the party who owes an amount of money.
+,AHN,Reference number assigned to a joint venture agreement.
+,AHO,The registration number by which a company/organization is known to the Chamber of Commerce.
+,AHP,The registration number by which a company/organization is identified with the tax administration.
+,AHQ,Shipping Identification Mark (SIM) allocated to a wool consignment by a shipping company.
+,AHR,Reference or indication of the payment of wool tax.
+,AHS,Registration number allocated to a registered meat packing establishment by the local quarantine and inspection authority.
+,AHT,Coded quarantine/treatment status of a container and its cargo and packing materials generated by a shipping company based upon declarations presented by a shipper.
+,AHU,Reference number assigned by the requestor to a request for quote.
+,AHV,Number allocated to allow the manual processing of an entity.
+,AHW,Reference number assigned by the issuing authority to an import permit for goods.
+,AHX,Reference assigned to a specific rate.
+,AHY,An identification code of a Freight Forwarder.
+,AHZ,A code associated to a requirement that must be presented to gain the release of goods by Customs.
+,AIA,Number assigned to indicate regulatory compliance.
+,AIB,Number of a bond assigned by the department of transportation.
+,AIC,Number to identify export establishment.
+,AID,Certificate certifying the conformity to predefined definitions.
+,AIE,Certificate of approval for components which are subject to legal restrictions and must be approved by the government.
+,AIF,The identification of a previous delivery instruction.
+,AIG,Number assigned to a passport.
+,AIH,Reference number applicable to different underlying individual transactions.
+,AII,Bank's reference number allocated by the bank to different underlying individual transactions.
+,AIJ,Customer's reference number allocated by the customer to one specific transaction.
+,AIK,Bank's reference number allocated by the bank to one specific transaction.
+,AIL,Customer's reference number allocated by the customer to different underlying individual transactions.
+,AIM,Reference number applying to one specific transaction.
+,AIN,Reference number assigned to a product sourcing agreement.
+,AIO,Approval number issued by Customs for cargo to be transhipped under Customs control.
+,AIP,The number assigned by Customs to a preference inquiry.
+,AIQ,Number to identify packing establishment.
+,AIR,Number giving reference to an original certificate number.
+,AIS,Number to identify processing plant.
+,AIT,Number to identify slaughter plant.
+,AIU,Number to identify charge card account.
+,AIV,A number identifying an event.
+,AIW,A number identifying a transport section.
+,AIX,A product number identifying the product which is used for mechanical analysis considered valid for a group of products.
+,AIY,A product number identifying the product which is used for chemical analysis considered valid for a group of products.
+,AIZ,Invoice number into which other invoices are consolidated.
+,AJA,To designate the number which provides a cross reference between parts contained in a drawing and a parts catalogue.
+,AJB,A reference indicating a citation from the U.S. Code of Federal Regulations (CFR).
+,AJC,A number indicating a clause applicable to a purchasing activity.
+,AJD,A reference indicating a citation from the U.S. Defense Federal Acquisition Regulation Supplement.
+,AJE,A number indicating a clause applicable to a particular agency.
+,AJF,A number specifying a circular publication.
+,AJG,A reference indicating a citation from the U.S. Federal Acquisition Regulation.
+,AJH,A reference indicating a citation from U.S. General Services Administration Regulation.
+,AJI,A reference indicating a citation from U.S. Federal Information Resources Management Regulation.
+,AJJ,A reference indicating a paragraph cited as the source of information.
+,AJK,A number indicating a citation used for special instructions.
+,AJL,A number indicating a set of site specific procedures terms and conditions.
+,AJM,A number indicating a master solicitation containing procedures terms and conditions.
+,AJN,A reference indicating a citation from the U.S. Department of Veterans Affairs Acquisition Regulation.
+,AJO,A number indicating an interdepartmental purchase request used by the military.
+,AJP,A number specifying a sale to a foreign military.
+,AJQ,A reference indicating a priority rating assigned to allocate resources for defense purchases.
+,AJR,A number specifying a wage determination.
+,AJS,A number specifying an agreement between parties.
+,AJT,A number specifying a standard industry classification.
+,AJU,A number specifying the end item applicable to a subordinate item.
+,AJV,A number specifying an item listed in a federal supply schedule.
+,AJW,A number specifying a technical document.
+,AJX,A reference to an order that specifies a technical change.
+,AJY,A reference to specify a suffix added to the end of a basic identifier.
+,AJZ,An account number to be charged or credited for transportation.
+,AKA,Reference assigned to the empty container disposition order.
+,AKB,The first part of the unique identification of a container formed by an alpha code identifying the owner of the container.
+,AKC,Reference known at the address to return equipment to.
+,AKD,Reference number assigned by the ordering party to the transport equipment survey order.
+,AKE,Reference number used by a party to identify its transport equipment survey report.
+,AKF,Reference number assigned to the order to stuff goods in transport equipment.
+,AKG,The identification number which uniquely distinguishes one vehicle from another through the lifespan of the vehicle.
+,AKH,Bill of lading as defined by the government.
+,AKI,Ordering customer's second reference number.
+,AKJ,Reference number assigned to the direct debit operation.
+#,AKK,Meter reading at the beginning of the delivery.
+,AKL,Meter reading at the end of the delivery.
+,AKM,Starting number of a range of purchase order numbers assigned by the buyer to vendor's replenishment orders.
+,AKN,Reference number of the third bank.
+,AKO,A reference number authorizing an action.
+,AKP,The number identifying a type of funding for a specific purpose (appropriation).
+,AKQ,Number which authorises a change in form fit or function of a product.
+,AKR,Reference number identifying a particular general cargo (non-containerised or break bulk) consignment.
+,AKS,A number which uniquely identifies an item within a catalogue according to a standard numbering system.
+,AKT,Reference number assigned to the forwarding order by the ordering customer.
+,AKU,Reference number known at the address where the transport equipment will be or has been surveyed.
+,AKV,Reference number of the lease contract.
+,AKW,Reference number of the transport costs.
+,AKX,Reference number assigned to the order to strip goods from transport equipment.
+,AKY,The number of the prior policy.
+,AKZ,Number assigned to a policy.
+|,ALA,A number which uniquely identifies a procurement budget against which commitments or invoices can be allocated.
+,ALB,Code to identify the management of domestic inventory.
+,ALC,Identification number of the previous balance of payments information from customer message.
+,ALD,Reference number of the previous \"Credit advice\" message.
+,ALE,Reference number assigned to the reporting form.
+,ALF,Reference number allocated by an authority. This number contains an approval concerning exceptions on the existing dangerous goods regulations.
+,ALG,Reference number allocated by an authority in order to control the dangerous goods on board of a specific means of transport for dangerous goods security purposes.
+,ALH,Licence number allocated by an authority as to the permission of carrying dangerous goods by a specific means of transport.
+,ALI,Number to identify the previous rental agreement number.
+,ALJ,Number to identify the reason for the next rental agreement.
+,ALK,The invoice number assigned by a consignee.
+,ALL,A number identifying a batch of messages.
+,ALM,A reference number identifying a previous delivery schedule.
+,ALN,A reference to a re-count of physically held inventory.
+,ALO,A reference number to a receiving advice.
+,ALP,A reference number identifying a returnable container.
+,ALQ,A reference number to a returns notice.
+,ALR,A reference number identifying a sales forecast.
+,ALS,A reference number identifying a sales report.
+,ALT,A reference number identifying a previous tax control number.
+,ALU,Identifies the equipment required to conduct maintenance.
+,ALV,Registered capital reference of a company.
+,ALW,Code identifying the standard number of the inspection document supplied.
+,ALX,A reference used to identify a model.
+,ALY,A financial management reference.
+,ALZ,A reference assigned by a consignor to a notification document which indicates the availability of goods for collection.
+,AMA,Number to identify a previous request for a recording or reading of a measuring device.
+,AMB,Number to identify the next rental agreement.
+,AMC,Number to identify a request for a recording or reading of a measuring device to be taken.
+,AMD,A number which uniquely identifies a request to hasten an action.
+,AME,A number which uniquely identifies a request for data about repairs.
+,AMF,A number which identifies a request for consumption data.
+,AMG,Reference number allocated to a discrete set of criteria.
+,AMH,Number assigned to a case.
+,AMI,A number which identifies the level of quality assurance and control required by the government for an article.
+,AMJ,A number which uniquely identifies a payment plan.
+X,AMK,A number which uniquely identifies a procurement budget against which commitments or invoices can be allocated.
+,AML,Ending number of a range of purchase order numbers assigned by the buyer to vendor's replenishment orders.
+,AMM,A unique reference number assigned by the insurer.
+,AMN,An excise entry number assigned by the Canadian Customs.
+,AMO,Identifies the premium rate table.
+,AMP,Financial institution through which the advising bank is to advise the documentary credit.
+,AMQ,A bond surety code assigned by the United States Department of Transportation (DOT).
+,AMR,An establishment indicator assigned by the United States Food and Drug Administration.
+,AMS,A number known as the United States Federal Communications Commission (FCC) import condition number applying to certain types of regulated communications equipment.
+,AMT,An identification number assigned to an organization collecting Goods and Services Taxes (GST).
+,AMU,Provides the identification of the reference which allows cross referencing of items between different areas of integrated logistics support.
+,AMV,Number assigned to a department within an organization.
+,AMW,Identification of a catalogue maintained by a buyer.
+,AMX,Reference number of the party who is responsible for the financial settlement.
+,AMY,The version number assigned to a standard.
+,AMZ,Number to identify a pipeline.
++,ANA,Reference number of the account servicing bank.
++,ANB,A reference to a payment request for completed units.
++,ANC,A reference to a request for payment in advance.
++,AND,Identifies the parent file in a structure of related files.
++,ANE,Identifies the sub file in a structure of related files.
++,ANF,Reference number identifying a layer convention for a file in a Computer Aided Design (CAD) environment.
++,ANG,Reference number identifying a technical regulation.
++,ANH,Reference number indicating that the file is a plot file.
++,ANI,Reference number identifying a journal recording details about conversion operations between file formats.
++,ANJ,A number which uniquely identifies an authorization.
++,ANK,Reference number assigned by a third party.
++,ANM,Reference number of the named bank.
++,ANN,Reference number of the drawee.
++,ANO,Reference number of the case of need party.
++,ANP,Reference number of the collecting bank.
++,ANQ,Reference number of the remitting bank.
++,ANR,Reference number of the principal's bank.
++,ANS,Reference number of the presenting bank.
++,ANT,Reference number of the consignee.
++,ANU,Reference number of the financial transaction.
++,ANV,The reference number of a credit instruction.
++,ANW,Authorization number of the receiving bank.
++,ANX,Reference allocated by a clearing procedure.
++,ANY,Reference number of the sending bank.
++,ANZ,Reference of the direct debit.
++,AOA,Reference of the documentary payment.
++,AOB,Reference assigned by a third bank.
++,AOC,The second reference number of the ordering customer.
++,AOD,Reference of an accounting file.
++,AOE,File reference number assigned by the sender.
++,AOF,File reference number assigned by the receiver.
++,AOG,Reference number assigned to a source document for internal usage.
++,AOH,Reference number of the principal.
++,AOI,The reference number of a debit instruction.
+,AP,Reference number assigned by accounts receivable department to the account of a specific debtor.
+,ASC,Description to be provided.
+#,AU,A number assigned by a requestor to an offer incoming following request for quote.
+,AV,Reference number assigned by accounts payable department to the account of a specific creditor.
+,AWA,Number assigned by a buyer to rate a product.
+,AWB,Reference number assigned to an air waybill see: 1001 = 740.
+,AWC,Number of the amendment of the documentary credit.
+,AWD,Reference number of the advising bank.
+,AWE,A number identifying a cost centre.
+,AWF,A reference assigned to a work item quantity determination.
+,AWG,A number identifying an internal data process.
+,AWH,A reference identifying a category of work.
+,AWI,Number assigned to a policy form.
+,BA,Meter reading at the beginning of an invoicing period.
+,BC,Reference number assigned by buyer to a contract.
+,BD,Number assigned by a submitter of a bid to his bid.
+,BE,Meter reading at the beginning of an invoicing period where an actual reading is not available.
+,BH,Reference number assigned to a house bill of lading see: 1001 = 714.
+,BM,Reference number assigned to a bill of lading see: 1001 = 705.
+,BN,[1016] Reference number assigned by the carrier or his agent when cargo space is reserved prior to loading.
+,BO,Reference number assigned by the order issuer to a blanket order.
+,BR,Self explanatory.
+,BT,Reference number assigned by manufacturer to a series of similar products or goods produced under similar conditions.
+,BW,The batch/lot/package number a product is blended with.
+,CAS,Code issued by IATA to identify agent locations for CASS billing purposes.
+,CD,Reference number assigned to a credit note.
+,CEC,Company selling obligations to a third party.
+,CFE,Reference of an order given by the consignee after departure of the means of transport.
+,CFO,Reference of an order given by the consignor after departure of the means of transport.
+,CG,Self explanatory.
+,CH,Number identifying a catalogue for customer's usage.
+,CK,Unique number assigned to one specific cheque.
+,CKN,Number assigned by checking party to one specific check action.
+,CM,Reference number assigned by issuer to a credit memo.
+,CMR,Reference number assigned to a road consignment note see: 1001 = 730.
+,CN,Reference number assigned by carrier to a consignment.
+,CNO,[1070] Indication in pre-printed form that a Charges note has been established and is attached to the Rail Consignment Note (CIM 76).
+,CO,[1022] Reference number assigned by the buyer to an order.
+,COF,Self explanatory.
+,CP,Reference number identifying the conditions of purchase relevant to a purchase.
+,CR,Reference number assigned by the customer to a transaction.
+,CRN,[8028] Unique reference given by the carrier to a certain journey or departure of a means of transport (generic term).
+,CS,Reference number identifying the conditions of sale relevant to a sale.
+,CST,Team number assigned to a group that is responsible for working a particular transaction.
+,CT,Reference number of a contract concluded between parties.
+,CU,[1140] Reference number assigned by a consignor to a particular shipment for his own purposes or for those of the consignee.
+,CV,Reference number assigned by the party operating or controlling the transport container to a transaction or consignment.
+,CW,(7070) Reference number identifying a package or carton within a consignment.
+,CZ,Number issued by a party concerned given to a contract on cooperation of two or more parties.
+,DA,Number assigned by authorities to a party to approve deferment of payment of tax or duties.
+,DAN,Reference number assigned by issuer to a debit account.
+,DB,Reference number assigned to a debtor.
+,DI,Reference number assigned by issuer to a distributor invoice.
+,DL,Reference number assigned by issuer to a debit note.
+,DM,[1004] Reference number assigned to the document by the issuer.
+,DQ,Reference number assigned by the issuer to a delivery note.
+,DR,Number of the cargo receipt submitted when cargo is delivered to a marine terminal.
+,EA,Meter reading at the end of an invoicing period.
+,EB,Reference number assigned by issuer to an embargo permit.
+,ED,Number assigned by the exporter to his export declaration number submitted to an authority.
+,EE,Meter reading at the end of an invoicing period where an actual reading is not available.
+,EI,Number issued by an authority to identify an employer.
+,EN,Number assigned to specific goods or a family of goods in a classification of embargo measures.
+,EP,Reference number assigned by issuing authority to an export permit for products.
+,EQ,Number assigned by the manufacturer to specific equipment.
+,ER,Number of the Equipment Interchange Receipt issued for full or empty equipment received.
+,ERN,Reference to a party exporting goods.
+,ET,Number assigned to excess transport.
+,EX,[1208] Reference number assigned by issuing authority to an Export Licence.
+,FC,Tax payer's number. Number assigned to individual persons as well as to corporates by a public institution. This number is different from the VAT registration number.
+,FF,[1460] Reference number assigned to the consignment by the freight forwarder.
+,FI,Number assigned by the file issuer or sender to identify a specific line.
+,FLW,Number given to a usual sender which has regular expeditions of the same goods to the same destination defining all general conditions of the transport.
+,FN,Reference number assigned by issuing party to a freight bill.
+,FO,Exchange of two currencies at an agreed rate.
+,FS,Self explanatory.
+,FT,Identifier to specify the territory of a State where any goods introduced are generally regarded insofar as import duties and taxes are concerned as being outside the Customs territory and are not subject to usual Customs control (CCC).
+,FV,Number given to a version of an identified file.
+,FX,Reference number identifying a foreign exchange contract.
+,GA,Number to identify a standardization description (e.g. ISO 9375).
+,GC,Number assigned to a specific government/public contract.
+,GD,Number to identify a specific parameter within a standardization description (e.g. M5 for screws or DIN A4 for paper).
+,GDN,Number of the declaration of incoming goods out of a vessel.
+,GN,Description to be provided.
+,HS,Number specifying the goods classification under the Harmonised Commodity Description and Coding System of the Customs Co-operation Council (CCC).
+,HWB,Reference number assigned to a house waybill see: 1001 = 703.
+,IA,Number identifying the company-internal vending department/unit.
+,IB,Customs assigned number that is used to control the movement of imported cargo prior to its formal Customs clearing.
+,ICA,Code issued by IATA identify each IATA Cargo Agent whose name is entered on the Cargo Agency List.
+,ICE,Self explanatory.
+,ICO,Self explanatory.
+,II,Inspection report number given to the initial sample inspection.
+,IL,Number assigned to an order for internal handling/follow up.
+,INB,Description to be provided.
+,INN,Number assigned by the interchange sender to identify one specific interchange. This number points to the actual interchange.
+,INO,Number assigned by the interchange sender to identify one specific interchange. This number points to the previous interchange.
+,IP,[1106] Reference number assigned by the issuing authority to an Import Licence.
+,IS,A number added at the end of an invoice number.
+,IT,Number assigned by a seller supplier etc. to identify a customer within his enterprise.
+,IV,[1334] Reference number assigned by the seller to a Commercial Invoice.
+,JB,Identifies a piece of work.
+,JE,Description to be provided.
+,LA,Self explanatory.
+,LAN,[4092] A number assigned to the loading authorization granted by the forwarding station when the consignment is subject to traffic limitations (CIM 43).
+,LAR,Lower article number in a range.
+,LB,Type of cash management system offered by financial institutions to provide for collection of customers \'receivables\'.
+,LC,Reference number identifying the letter of credit document.
+,LI,(1156) Reference number identifying a particular line in a document.
+,LO,Self explanatory.
+,LS,Self explanatory.
+,MA,Self explanatory.
+,MB,Reference number assigned to a master bill of lading see: 1001 = 704.
+,MF,Reference number assigned by the manufacturer to his product or part.
+,MG,Number identifying a unique meter unit.
+,MH,Reference number assigned by manufacturer for a given production quantity of products.
+,MR,Self explanatory.
+,MRN,Identifies the party designated by the importer to receive certain customs correspondence in lieu of its being mailed directly to the importer.
+,MS,Self explanatory.
+,MSS,Self explanatory.
+,MWB,Reference number assigned to a master air waybill see: 1001 = 741.
+,NA,Reference to materials designated as hazardous for purposes of transportation in North American commerce.
+,OH,Reference number identifying the current invoice.
+,OI,Reference number identifying a previously issued invoice.
+,ON,[1022] Reference number assigned by the buyer to an order.
+,OP,Reference to the order previously sent.
+,OR,Customs number assigned to imported merchandise that has been left unclaimed and subsequently moved to a Customs bonded warehouse for storage.
+,PB,Originated company account number (ACH transfer) check draft or wire.
+,PC,Number assigned by the manufacturer to a specified article or batch to identify the manufacturing date etc. for subsequent reference.
+,PD,Number assigned by a vendor to a special promotion activity.
+,PE,Description to be provided.
+,PF,Reference number assigned by the client to the contract of the prime contractor.
+,PI,Self explanatory.
+,PK,(1014) Reference number assigned to a packing list see: 1001 = 271.
+,PL,Reference number assigned to a price list.
+,POR,Reference number assigned by the seller to an order response.
+,PP,Reference number assigned by a buyer for a revision of a purchase order.
+,PQ,Reference number assigned to a payment.
+,PR,Reference number assigned by the seller to a quote.
+,PS,A number added at the end of a purchase order number.
+,PW,Reference number of a purchase order previously sent to the supplier.
+,PY,Receiving company account number (ACH transfer) check draft or wire.
+,RA,Self explanatory.
+,RC,International Western and Eastern European route code used in all rail organizations and specified in the international tariffs (rail tariffs) known by the customers.
+,RCN,Reference number assigned to a rail consignment note see: 1001 = 720.
+,RE,Reference number assigned to identify a release of a set of rules conventions conditions etc.
+,REN,[1150] Number assigned to a rail consignment upon its arrival at its destination station (CIM 84).
+,RF,Reference number given to an export shipment.
+,RR,ODFI (ACH transfer).
+,RT,RDFI Transit routing number (ACH transfer).
+,SA,Identification number of a sales person.
+,SB,Description to be provided.
+,SD,Description to be provided.
+,SE,Identification number of an item which distinguishes this specific item out of an number of identical items.
+,SF,Description to be provided.
+,SH,Number of the latest schedule of a previous period (ODETTE DELINS).
+,SI,Description to be provided.
+,SM,Description to be provided.
+,SN,[9308] Identification number on Customs or other seals affixed to containers or other transport units.
+,SP,Description to be provided.
+,SQ,A temporary reference number identifying a particular piece of equipment within a series of pieces of equipment.
+,SRN,Reference number assigned to a shipment.
+,SS,Reference number assigned to a transaction by the seller.
+,STA,International UIC code assigned to every European rail station (CIM convention).
+,SW,Number assigned by the seller to a swap order (see definition of DE 1001 code 229).
+,SZ,Number assigned by the issuer to his specification.
+,TB,A cargo list/description issued by a motor carrier of freight.
+,TE,Reference number identifying a telex message.
+,TF,An extra number assigned to goods or a container which functions as a reference number or as an authorization number to get the goods or container released from a certain party.
+,TI,Reference number assigned to a TIR carnet.
+,TL,Number assigned by the tax authorities to a party indicating its tax exemption authorization. This number could relate to a specified business type a specified local area or a class of products.
+,TN,Reference applied to a transaction between two or more parties over a defined life cycle; e.g. number applied by importer or broker to obtain release from Customs may then used to control declaration through final accounting (synonyms: declaration entry number).
+,TP,Reference number identifying a test report document relevant to the product.
+,UAR,Upper serial number in a range for declaration of incoming goods.
+,UC,The originator's reference number as forwarded in a sequence of parties involved.
+,UCN,(1202) Unique reference of a consignment (UCRN) used for identification purposes in documents and messages exchanged between parties in international trade. See also: Unique Identifier Code (UNIC) in UN/ECE Recommendation No. 8 March 1992.
+,UN,[7124] Unique serial number assigned within the United Nations to substances and articles contained in a list of the dangerous goods most commonly carried.
+,UO,The originator's order number as forwarded in a sequence of parties involved.
+,VA,Unique number assigned by the relevant tax authority to identify a party for use in relation to Value Added Tax (VAT).
+,VC,Number assigned by the vendor to a contract.
+,VM,(8123) Reference identifying a vessel (UN/ECE Recommendation No 10).
+,VN,Reference number assigned by supplier to a buyer's purchase order.
+,VON,[8228] Reference number assigned by the carrier or his agent to the voyage of the vessel.
+,VP,Number assigned by vendor to another manufacturer's product.
+,VR,Description to be provided.
+,VS,Description to be provided.
+,VT,(Reference identifying a motor vehicle used for transport) normally is the vehicle registration number.
+,VV,Reference number identifying a voucher.
+,WE,Entry number under which imported merchandise was placed in a Customs bonded warehouse.
+,WM,Description to be provided.
+,WN,A number assigned to a shaft sunk into the ground.
+,WR,Self explanatory.
+,WS,Self explanatory.
+,WY,Self explanatory.
+,XA,Company registration and place as legally required.
+,XC,Reference used to identify and control a carrier and consignment from initial entry into a country until release of the cargo by Customs.
+,XP,Where a consignment is deconsolidated and/or transferred to the control of another carrier or freight forwarder (e.g. housebill abstract) this references the previous (e.g. master) cargo control number.
+,ZZZ,Number based on party agreement.

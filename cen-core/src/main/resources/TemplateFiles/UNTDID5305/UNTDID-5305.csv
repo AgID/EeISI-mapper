@@ -1,0 +1,14 @@
+PlusSign,Code,ShortDesc,LongDesc
+,A,Mixed tax rate,Self explanatory.
++,AA,Lower rate,Tax rate is lower than standard rate.
++,AB,Exempt for resale,A tax category code indicating the item is tax exempt,when the item is bought for future resale.
++,AC,Value Added Tax (VAT) not now due for payment,A code to indicate that the Value Added Tax (VAT) amount,which is due on the current invoice is to be paid on,receipt of a separate VAT payment request.
++,AD,Value Added Tax (VAT) due from a previous invoice,A code to indicate that the Value Added Tax (VAT) amount,of a previous invoice is to be paid.
+,B,Transferred (VAT),VAT not to be paid to the issuer of the invoice but,directly to relevant tax authority.
+,C,Duty paid by supplier,Duty associated with shipment of goods is paid by the,supplier; customer receives goods with duty paid.
+,E,Exempt from tax,Self explanatory.
+,G,Free export item,tax not charged,Self explanatory.
+,H,Higher rate,Self explanatory.
+,O,Services outside scope of tax,Self explanatory.
+,S,Standard rate,Self explanatory.
+,Z,Zero rated goods,Self explanatory.

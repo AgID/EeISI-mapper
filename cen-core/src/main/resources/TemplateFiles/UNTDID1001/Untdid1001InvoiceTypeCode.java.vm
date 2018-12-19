@@ -1,0 +1,55 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Untdid1001InvoiceTypeCode {
+
+    // 1: Sign
+    // 2: ID
+    // 3: ShortDescription
+    // 4: LongDescription
+    #foreach( $row in $rows )
+    /**
+     * Code ${row.data.ID}
+     * <p>${row.data.ShortDescription}</p>
+     * <p>${row.data.LongDescription}</p>
+     */
+    Code${row.data.ID}("${row.data.Sign}" ,${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}" )#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    #end
+
+    private String sign;
+    private int code;
+    private String shortDescritpion;
+    private String longDescription;
+
+    Untdid1001InvoiceTypeCode(String sign, int code, String shortDescritpion, String longDescription) {
+        this.sign = sign;
+        this.code = code;
+        this.shortDescritpion = shortDescritpion;
+        this.longDescription = longDescription;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public String getShortDescritpion() {
+        return shortDescritpion;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    @Override
+    public String toString() {
+        return "Untdid1001InvoiceTypeCode{" +
+                "sign='" + sign + '\'' +
+                "| code=" + code +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
+    }
+}

@@ -1,0 +1,44 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum UnitOfMeasureCodes {
+
+    #foreach($row in $rows)
+        #if($row.data.Active == 1)
+        /**
+         * ${row.data.Alias}
+         * <p>${row.data.CommonCode}</p>
+         * <p>${row.data.Name}</p>
+         * <p>${row.data.Description}</p>
+         * <p>${row.data.Symbol}</p>
+         * <p>${row.data.Annex}</p>
+         */
+        ${row.data.Alias}("${row.data.CommonCode}", "${row.data.Name}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+        #end
+    #end
+
+    private String commonCode;
+    private String name;
+
+    UnitOfMeasureCodes(String commonCode, String name) {
+        this.commonCode = commonCode;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "UnitOfMeasureCodes{" +
+                "commonCode='" + commonCode + '\'' +
+                "| name='" + name +
+                '}';
+    }
+
+    public String getCommonCode() {
+        return commonCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+}

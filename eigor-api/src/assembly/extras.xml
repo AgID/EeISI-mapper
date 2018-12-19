@@ -1,0 +1,111 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>extras</id>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+    </formats>
+
+    <baseDirectory>eigor-api-extras</baseDirectory>
+
+    <fileSets>
+        <!-- Converter commons -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-commons/</outputDirectory>
+            <directory>../converter-commons/src/main/resources/converterdata/converter-commons/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- UBL/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-ubl-cen/</outputDirectory>
+            <directory>../converter-ubl-cen/src/main/resources/converterdata/converter-ubl-cen/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- UBLCN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-ublcn-cen/</outputDirectory>
+            <directory>../converter-ublcn-cen/src/main/resources/converterdata/converter-ublcn-cen/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/FATTPA -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-fattpa</outputDirectory>
+            <directory>../converter-cen-fattpa/src/main/resources/converterdata/converter-cen-fattpa</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- FATTPA/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-fattpa-cen</outputDirectory>
+            <directory>../converter-fattpa-cen/src/main/resources/converterdata/converter-fattpa-cen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CII/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cii-cen</outputDirectory>
+            <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/CII -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-cii</outputDirectory>
+            <directory>../converter-cen-cii/src/main/resources/converterdata/converter-cen-cii</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/UBL -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-ubl</outputDirectory>
+            <directory>../converter-cen-ubl/src/main/resources/converterdata/converter-cen-ubl</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/UBLCN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-ublcn</outputDirectory>
+            <directory>../converter-cen-ublcn/src/main/resources/converterdata/converter-cen-ublcn</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>.</outputDirectory>
+            <directory>src/assembly/samples</directory>
+            <includes>
+                <include>eigor.properties</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>.</outputDirectory>
+            <directory>${project.build.directory}</directory>
+            <includes>
+                <include>eigor-api-full-*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

@@ -1,0 +1,36 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Untdid7161SpecialServicesCodes {
+
+    // 1 - PlusSign,
+    // 2 - Code,
+    // 3 - ShortDesc,
+    // 4 - LongDesc
+    #foreach( $row in $rows )
+        /** ${row.data.ShortDesc}. */
+    ${row.data.Code}(#if(${row.data.PlusSign.equals("+")}) true #else false #end,"${row.data.ShortDesc}", "${row.data.LongDesc}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    #end
+
+    private boolean hasPlusSign;
+    private String shortDescritpion;
+    private String longDescription;
+
+    Untdid7161SpecialServicesCodes(boolean hasPlusSign, String shortDescritpion, String longDescription) {
+        this.hasPlusSign = hasPlusSign;
+        this.shortDescritpion = shortDescritpion;
+        this.longDescription = longDescription;
+    }
+
+    public String toDetailedString() {
+        return String.format("%s%s|%s|%s", (this.hasPlusSign ? "+":""), super.toString(), shortDescritpion, longDescription);
+    }
+
+    @Override
+    public String toString() {
+        return "Untdid7161SpecialServicesCodes{" +
+                "hasPlusSign=" + hasPlusSign +
+                "| shortDescritpion='" + shortDescritpion + '\'' +
+                "| longDescription='" + longDescription + '\'' +
+                '}';
+    }
+}

@@ -1,0 +1,37 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum VatExemptionReasonsCodes {
+
+    // 1: Sign
+    // 2: ID
+    // 3: ShortDescription
+    // 4: LongDescription
+    #foreach( $row in $rows )
+        /**
+         * ${row.Code}
+         * <p>${row.data.Description}</p>
+         * <p>${row.data.Explanation}</p>
+         * <p>${row.data.ApplicationGuideline}</p>
+         */
+        ${row.data.Code}("${row.data.Description}", "${row.data.Explanation}", "${row.data.ApplicationGuideline}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    #end
+
+    private String description;
+    private String explanation;
+    private String applicationGuideline;
+
+    VatExemptionReasonsCodes(String description, String explanation, String applicationGuideline) {
+        this.description = description;
+        this.explanation = explanation;
+        this.applicationGuideline = applicationGuideline;
+    }
+
+    @Override
+    public String toString() {
+        return "VatExemptionReasonsCodes{" +
+                "description='" + description + '\'' +
+                "| explanation='" + explanation + '\'' +
+                "| applicationGuideline='" + applicationGuideline + '\'' +
+                '}';
+    }
+}

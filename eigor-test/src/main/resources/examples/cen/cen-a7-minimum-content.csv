@@ -1,0 +1,78 @@
+BG/BT,Level,Card,Description,Value
+BT-1,+,1..1,Invoice number,TOSL110
+BT-2,+,1..1,Invoice issue date,10-Apr-13
+BT-3,+,1..1,Invoice type code,Invoice
+BT-5,+,1..1,Invoice currency code,Danish Krone
+BT-9,+,0..1,Payment due date,10-May-13
+BG-2,+,1..1,PROCESS CONTROL,
+BT-24,++,1..1,Specification identification,urn:cen.eu:en16931:2017
+BG-4,+,1..1,SELLER,
+BT-27,++,1..1,Seller name,SellerCompany
+BT-31,++,0..1,Seller VAT identifier,123456789MVA [DK:VAT]
+BG-5,++,1..1,SELLER POSTAL ADDRESS,
+BT-35,3,0..1,Seller address line 1,Indirizzo obbligatorio
+BT-37,3,0..1,Seller city,comune obbligatorio
+BT-38,3,0..1,Seller post code,20100
+BT-40,+++,1..1,Seller country code,Denmark
+BG-7,+,1..1,BUYER,
+BT-44,++,1..1,Buyer name,Buyercompany ltd
+BT-48,2,0..1,Buyer VAT identifier,
+BT-49,2,0..1,Buyer electronic address,UFF123
+BT-49-1,3,1..1,Buyer electronic address identification scheme identifier,FPA12
+BG-8,++,1..1,BUYER POSTAL ADDRESS,
+BT-50,3,0..1,Buyer address line 1,Indirizzo obbligatorio
+BT-52,3,0..1,Buyer city,comune obbligatorio
+BT-53,3,0..1,Buyer post code,20100
+BT-55,+++,1..1,Buyer country code,Denmark
+BG-22,+,1..1,DOCUMENT TOTALS,
+BT-106,++,1..1,Sum of Invoice line net amount,4000
+BT-109,++,1..1,Invoice total amount without VAT,4000
+BT-110,++,0..1,Invoice total VAT amount,675
+BT-112,++,1..1,Invoice total amount with VAT,4675
+BT-115,++,1..1,Amount due for payment,4675
+BG-23,+,1..n,VAT BREAKDOWN,
+BT-116,++,1..1,VAT category taxable amount,1500
+BT-117,++,1..1,VAT category tax amount,375
+BT-118,++,1..1,VAT category code,Standard rate
+BT-119,++,0..1,VAT category rate,25%
+BG-23,+,1..n,VAT BREAKDOWN,
+BT-116,++,1..1,VAT category taxable amount,2500
+BT-117,++,1..1,VAT category tax amount,300
+BT-118,++,1..1,VAT category code,Standard rate
+BT-119,++,0..1,VAT category rate,12%
+BG-25,+,1..n,INVOICE LINE,
+BT-126,++,1..1,Invoice line identifier,1
+BT-129,++,1..1,Invoiced quantity,1000
+BT-130,++,1..1,Invoiced quantity unit of measure,Each
+BT-131,++,1..1,Invoice line net amount,1000
+BG-29,++,1..1,PRICE DETAILS,
+BT-146,+++,1..1,Item net price,1
+BG-30,++,1..1,LINE VAT INFORMATION,
+BT-151,+++,1..1,Invoiced item VAT category code,Standard rate
+BT-152,+++,0..1,Invoiced item VAT rate,25%
+BG-31,++,1..1,ITEM INFORMATION,
+BT-153,+++,1..1,Item name,Printing paper
+BG-25,+,1..n,INVOICE LINE,
+BT-126,++,1..1,Invoice line identifier,2
+BT-129,++,1..1,Invoiced quantity,100
+BT-130,++,1..1,Invoiced quantity unit of measure,Each
+BT-131,++,1..1,Invoice line net amount,500
+BG-29,++,1..1,PRICE DETAILS,
+BT-146,+++,1..1,Item net price,5
+BG-30,++,1..1,LINE VAT INFORMATION,
+BT-151,+++,1..1,Invoiced item VAT category code,Standard rate
+BT-152,+++,0..1,Invoiced item VAT rate,25%
+BG-31,++,1..1,ITEM INFORMATION,
+BT-153,+++,1..1,Item name,Parker Pen
+BG-25,+,1..n,INVOICE LINE,
+BT-126,++,1..1,Invoice line identifier,3
+BT-129,++,1..1,Invoiced quantity,500
+BT-130,++,1..1,Invoiced quantity unit of measure,Each
+BT-131,++,1..1,Invoice line net amount,2500
+BG-29,++,1..1,PRICE DETAILS,
+BT-146,+++,1..1,Item net price,5
+BG-30,++,1..1,LINE VAT INFORMATION,
+BT-151,+++,1..1,Invoiced item VAT category code,Standard rate
+BT-152,+++,0..1,Invoiced item VAT rate,12%
+BG-31,++,1..1,ITEM INFORMATION,
+BT-153,+++,1..1,Item name,American Cookies

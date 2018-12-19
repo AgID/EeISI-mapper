@@ -1,0 +1,49 @@
+package it.infocert.eigor.model.core.enums;
+
+public enum Untdid2475PaymentTimeReference {
+
+    // 1: ID
+    // 2: ShortDescription
+    // 3: LongDescription
+    #foreach( $row in $rows )
+        /**
+         * Code ${row.data.ID}
+         * <p>${row.data.ShortDescription}</p>
+         * <p>${row.data.LongDescription}</p>
+         */
+        Code${row.data.ID}(${row.data.ID}, "${row.data.ShortDescription}", "${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    #end
+
+    private int code;
+    private String shortDescritpion;
+    private String longDescription;
+
+    Untdid2475PaymentTimeReference(int code, String shortDescritpion, String longDescription) {
+        this.code = code;
+        this.shortDescritpion = shortDescritpion;
+        this.longDescription = longDescription;
+    }
+
+    public static Untdid2475PaymentTimeReference fromCode(String s) {
+        Integer code = Integer.valueOf(s);
+        for (Untdid2475PaymentTimeReference q : values()) {
+            if (q.code == code) {
+                return q;
+            }
+        }
+        return null;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String toString() {
+        return "Untdid2475PaymentTimeReference{" +
+                "code='" + code + '\'' +
+                ", shortDescritpion='" + shortDescritpion + '\'' +
+                ", longDescription='" + longDescription + '\'' +
+                '}';
+    }
+    }

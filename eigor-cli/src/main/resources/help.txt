@@ -1,0 +1,35 @@
+NAME
+    eigor[.bat|.sh] - transform an invoice in another format
+
+SYNOPSIS
+    eigor[.bat|.sh] --input <original_invoice> --source <original_invoice_format> --output <output_folder> --target <transformed_invoice_format>
+
+DESCRIPTION
+
+    --input
+        path to the file of the invoice to transform.
+
+    --source
+        format of the invoice specified with '--input', as 'fatturapa', 'ubl', ...
+
+    --output
+        path of the folder where the converted invoice will be stored along with other files.
+
+    --target
+        format of the transformed invoice, support the same formats of '--source'.
+
+    --force
+        continue conversion process even if errors are encountered.
+
+EXAMPLES
+
+    ./eigor.sh --input 012.xml --source fatturapa --output ~/transformed --target ubl --force
+
+    Transform the 'fatturapa' input file '012.xml' into a ubl invoice and stores the result in '~/transformed', without stopping because of errors.
+
+
+
+    eigor --input examples\ubl\UBL-Invoice-2.1-Example.xml --source ubl --output reports --target fatturapa
+
+    Transform the 'UBL' input file 'UBL-Invoice-2.1-Example.xml' into a 'Fattura PA' invoice and stores the result in 'reports', stopping when the first error occurs.
+    This example should work straight out of the box.

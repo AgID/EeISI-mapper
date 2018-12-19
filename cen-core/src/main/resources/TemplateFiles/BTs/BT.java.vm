@@ -1,0 +1,64 @@
+## ============================
+#set( $ClassName = ${rows[0].data.BTBGClassName} )
+## ============================
+package it.infocert.eigor.model.core.model;
+
+import com.google.common.base.Preconditions;
+import it.infocert.eigor.model.core.enums.*;
+import java.util.*;
+import com.google.common.base.Preconditions;
+
+import java.util.Objects;
+
+/**
+* ${rows[0].data.BusinessTerm}
+* child of {@link it.infocert.eigor.model.core.model.${rows[0].data.ParentClass}}.
+* <p>${rows[0].data.Description}</p>
+* <strong>Automatically generated, please don't change.</strong>
+*/
+public class ${ClassName} extends AbstractBT {
+
+    private final ${rows[0].data.AttributeFQN} attribute;
+
+    public ${ClassName}(final ${rows[0].data.AttributeFQN} attribute) {
+        this.attribute = Preconditions.checkNotNull( attribute );
+    }
+
+    @Override
+    public String toString() {
+        return attribute.toString();
+    }
+
+    @Override
+    public ${rows[0].data.AttributeFQN} getValue() {
+        return this.attribute;
+    }
+
+    @Override
+    public int order() {
+        return ${rows[0].data.OrderInCEN};
+    }
+
+    public void accept(final Visitor v) {
+        v.startBTBG(this);
+        v.endBTBG(this);
+    }
+
+    @Override
+    public String name() {
+        return "${rows[0].data.BusinessTerm}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ${ClassName})) return false;
+        ${ClassName} that = (${ClassName}) o;
+        return Objects.equals(attribute, that.attribute);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attribute);
+    }
+}
