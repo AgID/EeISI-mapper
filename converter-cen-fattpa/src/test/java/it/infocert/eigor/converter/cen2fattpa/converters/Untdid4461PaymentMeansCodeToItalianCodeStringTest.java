@@ -15,6 +15,14 @@ public class Untdid4461PaymentMeansCodeToItalianCodeStringTest {
         assertEquals("MP01",  sut.convert(Untdid4461PaymentMeansCode.Code10));
     }
 
+    @Test public void shouldSetMP01AsDefault() throws ConversionFailedException {
+        assertEquals("MP01",  sut.convert(Untdid4461PaymentMeansCode.Code2));
+    }
+
+    @Test public void shouldConvertCode30() throws ConversionFailedException {
+        assertEquals("MP05",  sut.convert(Untdid4461PaymentMeansCode.Code30));
+    }
+
     @Test(expected = ConversionFailedException.class) public void shouldNotConvertNull() throws ConversionFailedException {
         sut.convert(null);
     }

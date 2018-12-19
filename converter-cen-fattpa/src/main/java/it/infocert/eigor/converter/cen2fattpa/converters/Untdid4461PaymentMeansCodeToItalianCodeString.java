@@ -44,7 +44,7 @@ public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeC
             case Code1:
                 return ModalitaPagamentoType.MP_22.value();
             default:
-                return "";
+                return ModalitaPagamentoType.MP_01.value();
         }
     }
 
