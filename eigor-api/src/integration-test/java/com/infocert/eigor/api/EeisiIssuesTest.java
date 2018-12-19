@@ -31,6 +31,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.hamcrest.Matchers.is;
@@ -43,6 +44,22 @@ import static org.junit.Assert.assertTrue;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
+    @Test
+    public void issueEeisi7() throws Exception {
+
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/issues/issue-eeisi7-cen.xml", "xmlcen", "fatturapa");
+
+        // The CSV in base 64 is the 3rd attachment in this case.
+        String truncatedValuesCSVInBase64 = evalXpathExpression(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
+
+        System.out.println( new String( conversion.getResult() ) );
+
+        assertThat(
+                conversion.getIssues().stream()
+                        .map(issue -> issue +  "\n" )
+                        .collect(Collectors.joining()), conversion.hasIssues(), is(false) );
+
+    }
 
 
     /**
