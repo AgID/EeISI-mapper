@@ -5,10 +5,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class StringToJavaLocalDateConverter extends FromStringTypeConverter<LocalDate> {
 
     private final DateTimeFormatter formatter;
+    private final Pattern regex = Pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}:[0-9]{2}$");
 
     public static TypeConverter<String, LocalDate> newConverter(String format) {
         return new StringToJavaLocalDateConverter(format);
@@ -32,6 +34,9 @@ public class StringToJavaLocalDateConverter extends FromStringTypeConverter<Loca
 
     @Override
     public LocalDate convert(String s) {
+        if(regex.matcher(s).matches()) {
+            return LocalDate.parse(s.trim().substring(0,10), formatter);
+        }
         return LocalDate.parse(s.trim(), formatter);
     }
 
