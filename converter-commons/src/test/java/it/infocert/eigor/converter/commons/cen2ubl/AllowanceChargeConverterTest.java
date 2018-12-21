@@ -4,7 +4,13 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0021DocumentLevelCharges;
+import it.infocert.eigor.model.core.model.BT0099DocumentLevelChargeAmount;
+import it.infocert.eigor.model.core.model.BT0100DocumentLevelChargeBaseAmount;
+import it.infocert.eigor.model.core.model.BT0101DocumentLevelChargePercentage;
+import it.infocert.eigor.model.core.model.BT0102DocumentLevelChargeVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0104DocumentLevelChargeReason;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
@@ -45,7 +51,7 @@ public class AllowanceChargeConverterTest {
         assertThat(baseAmount.getText(), is("34.56"));
 
         Element multiplierFactorNumeric = allowanceCharge.getChild("MultiplierFactorNumeric");
-        assertThat(multiplierFactorNumeric.getText(), is("56.78"));
+        assertThat(multiplierFactorNumeric.getText(), is("0.57"));
 
         Element allowanceChargeReason = allowanceCharge.getChild("AllowanceChargeReason");
         assertThat(allowanceChargeReason.getText(), is("BT-104"));

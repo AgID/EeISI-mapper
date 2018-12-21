@@ -1,12 +1,25 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
 
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0021DocumentLevelCharges;
+import it.infocert.eigor.model.core.model.BT0099DocumentLevelChargeAmount;
+import it.infocert.eigor.model.core.model.BT0100DocumentLevelChargeBaseAmount;
+import it.infocert.eigor.model.core.model.BT0101DocumentLevelChargePercentage;
+import it.infocert.eigor.model.core.model.BT0102DocumentLevelChargeVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0103DocumentLevelChargeVatRate;
+import it.infocert.eigor.model.core.model.BT0104DocumentLevelChargeReason;
+import it.infocert.eigor.model.core.model.BT0105DocumentLevelChargeReasonCode;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -79,7 +92,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
                 if (multiplierFactorNumeric != null) {
                     final String text = multiplierFactorNumeric.getText();
                     try {
-                        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(new BigDecimal(text));
+                        BT0101DocumentLevelChargePercentage bt0101 = new BT0101DocumentLevelChargePercentage(new BigDecimal(text).multiply(BigDecimal.valueOf(100)));
                         bg0021.getBT0101DocumentLevelChargePercentage().add(bt0101);
                     } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
