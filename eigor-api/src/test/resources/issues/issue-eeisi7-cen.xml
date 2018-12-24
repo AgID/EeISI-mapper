@@ -47,32 +47,64 @@
             <BT-86>BCITITMM</BT-86>
         </BG-17>
     </BG-16>
+
+    <!-- monetary totals -->
     <BG-22>
+        <!-- Sum of all Invoice line net amounts in the Invoice. -->
         <BT-106>1000</BT-106>
+        <!-- The total amount of the Invoice without VAT. -->
         <BT-109>1000</BT-109>
+        <!-- The total VAT amount for the Invoice. -->
         <BT-110>100</BT-110>
+        <!-- The total amount of the Invoice with VAT. -->
         <BT-112>1100</BT-112>
+        <!-- The outstanding amount that is requested to be paid. -->
         <BT-115>1100</BT-115>
     </BG-22>
+
+    <!-- VAT -->
     <BG-23>
+        <!-- Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable). -->
         <BT-116>1000</BT-116>
+        <!-- The total VAT amount for a given VAT category. -->
         <BT-117>100</BT-117>
+        <!-- VAT Category -->
         <BT-118>S</BT-118>
+        <!-- VAT RATE -->
         <BT-119>10</BT-119>
     </BG-23>
+
+    <!-- line -->
     <BG-25>
+
+        <!-- line id -->
         <BT-126>1</BT-126>
+
+        <!-- quantity -->
         <BT-129>2</BT-129>
+
+        <!-- unit of measure -->
         <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
         <BT-131>1000</BT-131>
+
+        <!-- price details -->
         <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
             <BT-146>500</BT-146>
         </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
         <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
             <BT-151>S</BT-151>
+            <!-- VAT rate as percentage -->
             <BT-152>10.00</BT-152>
         </BG-30>
+        <!-- info about goods -->
         <BG-31>
+            <!-- a name for the line -->
             <BT-153>name</BT-153>
         </BG-31>
     </BG-25>
