@@ -1,108 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SEMANTIC-INVOICE>
-    <BT-1>12345</BT-1>
-    <BT-2>2007-03-22</BT-2>
-    <BT-3>381</BT-3>
+    <!--Test_EeISI_310 -->
+    <BT-1>Test_EeISI_310</BT-1>
+    <BT-2>2018-12-20</BT-2>
+    <BT-3>380</BT-3>
     <BT-5>EUR</BT-5>
-    <BT-6>EUR</BT-6>
-    <BT-7>2007-03-22</BT-7>
-    <BT-8>432</BT-8>
-    <BT-9>2007-03-22</BT-9>
-    <BT-10>buyer reference</BT-10>
-    <BT-11>bt11</BT-11>
-    <BT-12>bt12</BT-12>
-    <BT-13>bt13</BT-13>
-    <BT-14>bt14</BT-14>
-    <BT-15>bt15</BT-15>
-    <BT-16>bt16</BT-16>
-    <BT-17>bt17</BT-17>
-    <BT-18 scheme="sch">id</BT-18>
-    <BT-19>bt19</BT-19>
-    <BT-20>bt20</BT-20>
+    <BT-9>2019-01-20</BT-9>
     <BG-2>
-        <BT-23>bt23</BT-23>
-        <BT-24>spec</BT-24>
+        <BT-24>urn:cen.eu:en16931:2017</BT-24>
     </BG-2>
-    <BG-3>
-        <BT-25>bt25</BT-25>
-        <BT-26>2007-03-22</BT-26>
-    </BG-3>
     <BG-4>
-        <BT-27>Jonh</BT-27>
-        <BT-28>bt28</BT-28>
-
-        <!-- country + vat number -->
+        <BT-27>1267731</BT-27>
+        <BT-28>InfoCert SPA</BT-28>
+        <BT-29>IT:ALBO:ING:1234</BT-29>
         <BT-31>IT12345678901</BT-31>
-
-        <!-- Seller tax registration identifier -->
+        <!--
         <BT-32>RF01</BT-32>
-        <BT-33>legalInfo</BT-33>
-        <BT-34 scheme="">identifier</BT-34>
+        -->
         <BG-5>
-            <BT-35>bt35</BT-35>
-            <BT-36>bt36</BT-36>
-            <BT-162>bt162</BT-162>
-            <BT-37>bt37</BT-37>
-
-            <!-- Seller post code -->
+            <BT-35>Corso Italia</BT-35>
+            <BT-37>Milano</BT-37>
             <BT-38>20100</BT-38>
-            <BT-39>bt39</BT-39>
-            <BT-40>DK</BT-40>
+            <BT-39>MI</BT-39>
+            <BT-40>IT</BT-40>
         </BG-5>
-        <BG-6>
-            <BT-41>bt41</BT-41>
-
-            <!-- Seller contact telephone number -->
-            <BT-42>+39020304565</BT-42>
-            <BT-43>a@a.com</BT-43>
-        </BG-6>
     </BG-4>
     <BG-7>
-        <BT-44>name</BT-44>
-        <BT-45>bt45</BT-45>
-        <BT-46 scheme=""></BT-46>
-        <!--
-            Buyer electronic address
-            Scheme identifier
-        -->
-        <BT-49 scheme="IT:PEC">utente@utente.com</BT-49>
+        <BT-44>Buyer</BT-44>
+        <BT-46>IT:CF:SDCASFE71E712X</BT-46>
+        <BT-48>IT2389039840298</BT-48>
+        <BT-49 scheme="IT:PEC">klfs@ksjd.it</BT-49>
         <BG-8>
-            <BT-50>line1</BT-50>
-            <BT-51>line2</BT-51>
-            <BT-163>bt163</BT-163>
-            <BT-52>line3</BT-52>
-
-            <!-- Buyer post code -->
-            <BT-53>40123</BT-53>
-            <BT-54>bt54</BT-54>
-            <BT-55>DZ</BT-55>
+            <BT-50>buyer street</BT-50>
+            <BT-52>buyer city</BT-52>
+            <BT-53>90100</BT-53>
+            <BT-54>PA</BT-54>
+            <BT-55>IT</BT-55>
         </BG-8>
     </BG-7>
+
+    <BG-16>
+        <!-- this should be one of the supported 4461 -->
+        <BT-81>30</BT-81>
+        <BG-17>
+            <BT-84>IT57035123456789</BT-84>
+            <BT-86>BCITITMM</BT-86>
+        </BG-17>
+    </BG-16>
     <BG-22>
-        <BT-106>1</BT-106>
-        <BT-109>1</BT-109>
-        <BT-112>1</BT-112>
-        <BT-115>1</BT-115>
+        <BT-106>1000</BT-106>
+        <BT-109>1000</BT-109>
+        <BT-110>100</BT-110>
+        <BT-112>1100</BT-112>
+        <BT-115>1100</BT-115>
     </BG-22>
     <BG-23>
-        <BT-116>1</BT-116>
-        <BT-117>1</BT-117>
-        <BT-118>G</BT-118>
+        <BT-116>1000</BT-116>
+        <BT-117>100</BT-117>
+        <BT-118>S</BT-118>
+        <BT-119>10</BT-119>
     </BG-23>
     <BG-25>
-        <BT-126>id</BT-126>
-        <BT-129>1</BT-129>
-        <BT-130>TE</BT-130>
-        <BT-131>1</BT-131>
+        <BT-126>1</BT-126>
+        <BT-129>2</BT-129>
+        <BT-130>EA</BT-130>
+        <BT-131>1000</BT-131>
         <BG-29>
-            <BT-146>1</BT-146>
+            <BT-146>500</BT-146>
         </BG-29>
         <BG-30>
-            <BT-151>E</BT-151>
-            <BT-152>0.2</BT-152>
+            <BT-151>S</BT-151>
+            <BT-152>10.00</BT-152>
         </BG-30>
         <BG-31>
-            <BT-153>bt153</BT-153>
+            <BT-153>name</BT-153>
         </BG-31>
     </BG-25>
 </SEMANTIC-INVOICE>
