@@ -73,8 +73,18 @@
         <!-- VAT RATE -->
         <BT-119>10</BT-119>
     </BG-23>
+    <BG-23>
+        <!-- Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable). -->
+        <BT-116>3000</BT-116>
+        <!-- The total VAT amount for a given VAT category. -->
+        <BT-117>0</BT-117>
+        <!-- VAT Category -->
+        <BT-118>Z</BT-118>
+        <!-- VAT RATE -->
+        <BT-119>0</BT-119>
+    </BG-23>
 
-    <!-- line -->
+    <!-- line #1 -->
     <BG-25>
 
         <!-- line id -->
@@ -106,6 +116,111 @@
         <BG-31>
             <!-- a name for the line -->
             <BT-153>name</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #2 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>AAAA</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>Z</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>Toronto</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #3 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>003</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>Z</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>Brussels</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #4 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>grasp</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>Z</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>Copenaghen</BT-153>
         </BG-31>
     </BG-25>
 </SEMANTIC-INVOICE>
