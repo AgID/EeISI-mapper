@@ -1,42 +1,19 @@
 package com.infocert.eigor.api;
 
-import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.configuration.ConfigurationException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matchers;
 import org.junit.*;
-import org.junit.rules.TemporaryFolder;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xmlunit.matchers.CompareMatcher;
+import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Tests of issues discovered and fixed during the 2nd phase of development,
@@ -50,7 +27,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/issues/issue-eeisi7-cen.xml", "xmlcen", "fatturapa");
 
         // The CSV in base 64 is the 3rd attachment in this case.
-        String truncatedValuesCSVInBase64 = evalXpathExpression(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
+        String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
 
         System.out.println( new String( conversion.getResult() ) );
 
@@ -58,6 +35,18 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 conversion.getIssues().stream()
                         .map(issue -> issue +  "\n" )
                         .collect(Collectors.joining()), conversion.hasIssues(), is(false) );
+
+        NodeList lines = evalXpathExpressionAsNodeList(conversion, "//NumeroLinea");
+
+        assertEquals("1", lines.item(0).getTextContent() );
+        assertEquals("2", lines.item(1).getTextContent() );
+        assertEquals("3", lines.item(2).getTextContent() );
+        assertEquals("4", lines.item(3).getTextContent() );
+
+//        assertEquals("1", evalXpathExpressionAsString( conversion, "/ns3:FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/NumeroLinea"));
+//        assertEquals("2", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][2]/text()"));
+//        assertEquals("3", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][3]/text()"));
+//        assertEquals("4", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][4]/text()"));
 
     }
 
@@ -77,7 +66,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/issues/issue-eeisi22-ubl.xml", "ubl", "fatturapa");
 
         // The CSV in base 64 is the 3rd attachment in this case.
-        String truncatedValuesCSVInBase64 = evalXpathExpression(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
+        String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
 
         String csvSource = new String(Base64.getDecoder().decode(truncatedValuesCSVInBase64));
 

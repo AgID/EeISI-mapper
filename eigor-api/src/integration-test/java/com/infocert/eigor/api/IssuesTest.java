@@ -40,7 +40,7 @@ public class IssuesTest extends AbstractIssueTest {
     public void issue279FromUblToFattPA() throws Exception {
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiTrasporto']//*[local-name()='DataOraConsegna']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiTrasporto']//*[local-name()='DataOraConsegna']/text()");
 
         assertTrue(convert.getIssues().isEmpty()); // no warnings for text exceeding length limit
 
@@ -155,7 +155,7 @@ public class IssuesTest extends AbstractIssueTest {
     public void issue269() throws Exception {
         InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
         ConversionResult<byte[]> convert = api.convert("cii", "fatturapa", ciiInStream);
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='CessionarioCommittente']//*[local-name()='IdCodice']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CessionarioCommittente']//*[local-name()='IdCodice']/text()");
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "97735020584", evaluate);
     }
 
@@ -166,7 +166,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
@@ -179,9 +179,9 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
 
-        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
-        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
-        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+        String evaluateAttachment = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
 
         assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
@@ -201,23 +201,23 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
 
 
-        String taxCategory = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
+        String taxCategory = evalXpathExpressionAsString(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
         assertTrue(taxCategory != null && !taxCategory.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "E", taxCategory);
 
-        String multiplier = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
+        String multiplier = evalXpathExpressionAsString(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
         assertTrue(multiplier != null && !multiplier.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "4.00", multiplier);
 
-        String baseAmount = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
+        String baseAmount = evalXpathExpressionAsString(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
         assertTrue(baseAmount != null && !baseAmount.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "1000.00", baseAmount);
 
         // Ritenuta will go to not-mapped-values attachment
 
-        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
-        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
-        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+        String evaluateAttachment = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
 
         assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
         String attachment = new String(Base64.decodeBase64(evaluateAttachment.getBytes()));
@@ -238,7 +238,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
         Assert.assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason Art15", evaluate);
     }
@@ -250,15 +250,15 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String bt70 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-70']//*[local-name()='RiferimentoTesto']/text()");
+        String bt70 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-70']//*[local-name()='RiferimentoTesto']/text()");
         assertTrue(bt70 != null && !bt70.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Delivery party name", bt70);
 
-        String bt71 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71']//*[local-name()='RiferimentoTesto']/text()");
+        String bt71 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71']//*[local-name()='RiferimentoTesto']/text()");
         assertTrue(bt71 != null && !bt71.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "6754238987648", bt71);
 
-        String bt71_1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71-1']//*[local-name()='RiferimentoTesto']/text()");
+        String bt71_1 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AltriDatiGestionali'][./TipoDato/text()='BT-71-1']//*[local-name()='RiferimentoTesto']/text()");
         assertTrue(bt71_1 != null && !bt71_1.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "scheme00", bt71_1);
     }
@@ -270,7 +270,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiPagamento']//*[local-name()='DettaglioPagamento']//*[local-name()='Beneficiario']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiPagamento']//*[local-name()='DettaglioPagamento']//*[local-name()='Beneficiario']/text()");
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "PARTY NAME ACCOUNT NAME", evaluate);
@@ -284,15 +284,15 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String arrotondamento0 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiGeneraliDocumento']//*[local-name()='Arrotondamento']/text()");
+        String arrotondamento0 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiGenerali']//*[local-name()='DatiGeneraliDocumento']//*[local-name()='Arrotondamento']/text()");
         assertTrue(arrotondamento0 != null && !arrotondamento0.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "0.00", arrotondamento0);
 
-        String arrotondamento1 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='10.00']//*[local-name()='Arrotondamento']/text()");
+        String arrotondamento1 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='10.00']//*[local-name()='Arrotondamento']/text()");
         assertTrue(arrotondamento1 != null && !arrotondamento1.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "-0.00400000", arrotondamento1);
 
-        String arrotondamento2 = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='23.00']//*[local-name()='Arrotondamento']/text()");
+        String arrotondamento2 = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo'][./AliquotaIVA/text()='23.00']//*[local-name()='Arrotondamento']/text()");
         assertTrue(arrotondamento2 != null && !arrotondamento2.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "0.00160000", arrotondamento2);
     }
@@ -305,7 +305,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DatiRiepilogo']//*[local-name()='RiferimentoNormativo']/text()");
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Text about exemption reason", evaluate);
@@ -318,7 +318,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='Allegati'][./Attachment/text()='WlVsSFQxSWdZWFIwWVdOb2JXVnVkQ0IwWlhOMA==']//*[local-name()='NomeAttachment']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='Allegati'][./Attachment/text()='WlVsSFQxSWdZWFIwWVdOb2JXVnVkQ0IwWlhOMA==']//*[local-name()='NomeAttachment']/text()");
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "IDattachment-eIGOR.csv", evaluate);
@@ -331,7 +331,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> convert = api.convert("ubl", "fatturapa", inputFatturaPaXml);
 
-        String evaluate = evalXpathExpression(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AliquotaIVA']/text()");
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='FatturaElettronicaBody']//*[local-name()='DatiBeniServizi']//*[local-name()='DettaglioLinee']//*[local-name()='AliquotaIVA']/text()");
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
