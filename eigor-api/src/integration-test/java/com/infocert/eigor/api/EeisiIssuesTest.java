@@ -38,15 +38,10 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
         NodeList lines = evalXpathExpressionAsNodeList(conversion, "//NumeroLinea");
 
-        assertEquals("1", lines.item(0).getTextContent() );
-        assertEquals("2", lines.item(1).getTextContent() );
-        assertEquals("3", lines.item(2).getTextContent() );
-        assertEquals("4", lines.item(3).getTextContent() );
-
-//        assertEquals("1", evalXpathExpressionAsString( conversion, "/ns3:FatturaElettronica/FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee[2]/NumeroLinea"));
-//        assertEquals("2", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][2]/text()"));
-//        assertEquals("3", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][3]/text()"));
-//        assertEquals("4", evalXpathExpressionAsString( conversion, "//*[local-name()='NumeroLinea'][4]/text()"));
+        assertEquals("3", lines.item(0).getTextContent() );
+        assertEquals("5", lines.item(1).getTextContent() );
+        assertEquals("4", lines.item(2).getTextContent() );
+        assertEquals("6", lines.item(3).getTextContent() );
 
     }
 

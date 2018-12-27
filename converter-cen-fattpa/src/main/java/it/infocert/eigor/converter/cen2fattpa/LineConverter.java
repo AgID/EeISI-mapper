@@ -28,10 +28,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("Duplicates")
 public class LineConverter implements CustomMapping<FatturaElettronicaType> {
@@ -63,7 +60,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
+    private final LinePostFixSupport linepostfix;
 
+    public LineConverter() {
+        linepostfix = new LinePostFixSupport();
+    }
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
@@ -90,6 +91,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
 
             mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
+
+            linepostfix.postfix();
         }
     }
 
@@ -383,8 +386,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 createMissingLines(dettaglioLineeList, n);
             }
             for (int i = 0; i < invoice.getBG0025InvoiceLine().size(); i++) {
+
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
+
+                linepostfix.registerForPostFix(invoiceLine, dettaglioLinee);
+
                 final Optional<String> lineIdentifier;
                 if (!invoiceLine.getBT0126InvoiceLineIdentifier().isEmpty()) {
                     lineIdentifier = Optional.of(invoiceLine.getBT0126InvoiceLineIdentifier(0).getValue());
