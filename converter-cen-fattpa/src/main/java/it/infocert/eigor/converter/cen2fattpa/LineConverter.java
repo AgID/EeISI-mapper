@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -10,15 +11,68 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-import it.infocert.eigor.api.conversion.converter.*;
+import it.infocert.eigor.api.conversion.converter.BigDecimalToStringConverter;
+import it.infocert.eigor.api.conversion.converter.CountryNameToIso31661CountryCodeConverter;
+import it.infocert.eigor.api.conversion.converter.Iso31661CountryCodesToStringConverter;
+import it.infocert.eigor.api.conversion.converter.Iso4217CurrenciesFundsCodesToStringConverter;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.LocalDateToXMLGregorianCalendarConverter;
+import it.infocert.eigor.api.conversion.converter.StringToBigDecimalConverter;
+import it.infocert.eigor.api.conversion.converter.StringToIso4217CurrenciesFundsCodesConverter;
+import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
+import it.infocert.eigor.api.conversion.converter.StringToStringConverter;
+import it.infocert.eigor.api.conversion.converter.StringToUnitOfMeasureConverter;
+import it.infocert.eigor.api.conversion.converter.StringToUntdid1001InvoiceTypeCodeConverter;
+import it.infocert.eigor.api.conversion.converter.StringToUntdid5305DutyTaxFeeCategoriesConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.UnitOfMeasureCodesToStringConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid4461PaymentMeansCodeToItalianCodeString;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.converters.Untdid7161SpecialServicesCodesToItalianCodeStringConverter;
+import it.infocert.eigor.converter.cen2fattpa.models.AltriDatiGestionaliType;
+import it.infocert.eigor.converter.cen2fattpa.models.CodiceArticoloType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiBeniServiziType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiDocumentiCorrelatiType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliType;
+import it.infocert.eigor.converter.cen2fattpa.models.DettaglioLineeType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.converter.cen2fattpa.models.NaturaType;
+import it.infocert.eigor.converter.cen2fattpa.models.TipoCessionePrestazioneType;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.*;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
+import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
+import it.infocert.eigor.model.core.model.BG0014InvoicingPeriod;
+import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
+import it.infocert.eigor.model.core.model.BG0021DocumentLevelCharges;
+import it.infocert.eigor.model.core.model.BG0023VatBreakdown;
+import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
+import it.infocert.eigor.model.core.model.BG0026InvoiceLinePeriod;
+import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
+import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
+import it.infocert.eigor.model.core.model.BG0029PriceDetails;
+import it.infocert.eigor.model.core.model.BG0030LineVatInformation;
+import it.infocert.eigor.model.core.model.BG0031ItemInformation;
+import it.infocert.eigor.model.core.model.BG0032ItemAttributes;
+import it.infocert.eigor.model.core.model.BT0070DeliverToPartyName;
+import it.infocert.eigor.model.core.model.BT0127InvoiceLineNote;
+import it.infocert.eigor.model.core.model.BT0133InvoiceLineBuyerAccountingReference;
+import it.infocert.eigor.model.core.model.BT0134InvoiceLinePeriodStartDate;
+import it.infocert.eigor.model.core.model.BT0135InvoiceLinePeriodEndDate;
+import it.infocert.eigor.model.core.model.BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +82,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("Duplicates")
 public class LineConverter implements CustomMapping<FatturaElettronicaType> {
@@ -401,10 +453,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 }
 
                 if (!invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                    Identifier bt0128 = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0).getValue();
                     CodiceArticoloType codiceArticolo = new CodiceArticoloType();
-                    codiceArticolo.setCodiceValore(bt0128.getIdentifier());
-                    codiceArticolo.setCodiceTipo(bt0128.getIdentificationSchema());
+                    final UnaryOperator<String> getOrDefault = s -> Strings.isNullOrEmpty(s)?"ZZZ":s;
+
+                    Identifier bt0128 = invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0).getValue();
+                    codiceArticolo.setCodiceValore(getOrDefault.apply(bt0128.getIdentifier()));
+                    codiceArticolo.setCodiceTipo(getOrDefault.apply(bt0128.getIdentificationSchema()));
                     dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
                     log.trace("Set BT128 as CodiceArticolo with value {}", bt0128.getIdentifier());
                 }

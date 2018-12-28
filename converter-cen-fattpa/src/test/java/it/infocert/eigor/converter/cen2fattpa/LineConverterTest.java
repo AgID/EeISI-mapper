@@ -3,13 +3,73 @@ package it.infocert.eigor.converter.cen2fattpa;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.converter.cen2fattpa.models.AltriDatiGestionaliType;
+import it.infocert.eigor.converter.cen2fattpa.models.CodiceArticoloType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiBeniServiziType;
+import it.infocert.eigor.converter.cen2fattpa.models.DatiDocumentiCorrelatiType;
+import it.infocert.eigor.converter.cen2fattpa.models.DettaglioLineeType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.converter.cen2fattpa.models.NaturaType;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
+import it.infocert.eigor.model.core.model.BG0014InvoicingPeriod;
+import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
+import it.infocert.eigor.model.core.model.BG0021DocumentLevelCharges;
+import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
+import it.infocert.eigor.model.core.model.BG0026InvoiceLinePeriod;
+import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
+import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
+import it.infocert.eigor.model.core.model.BG0029PriceDetails;
+import it.infocert.eigor.model.core.model.BG0030LineVatInformation;
+import it.infocert.eigor.model.core.model.BG0031ItemInformation;
+import it.infocert.eigor.model.core.model.BT0073InvoicingPeriodStartDate;
+import it.infocert.eigor.model.core.model.BT0074InvoicingPeriodEndDate;
+import it.infocert.eigor.model.core.model.BT0092DocumentLevelAllowanceAmount;
+import it.infocert.eigor.model.core.model.BT0093DocumentLevelAllowanceBaseAmount;
+import it.infocert.eigor.model.core.model.BT0094DocumentLevelAllowancePercentage;
+import it.infocert.eigor.model.core.model.BT0095DocumentLevelAllowanceVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0096DocumentLevelAllowanceVatRate;
+import it.infocert.eigor.model.core.model.BT0097DocumentLevelAllowanceReason;
+import it.infocert.eigor.model.core.model.BT0098DocumentLevelAllowanceReasonCode;
+import it.infocert.eigor.model.core.model.BT0100DocumentLevelChargeBaseAmount;
+import it.infocert.eigor.model.core.model.BT0102DocumentLevelChargeVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0103DocumentLevelChargeVatRate;
+import it.infocert.eigor.model.core.model.BT0104DocumentLevelChargeReason;
+import it.infocert.eigor.model.core.model.BT0105DocumentLevelChargeReasonCode;
+import it.infocert.eigor.model.core.model.BT0127InvoiceLineNote;
+import it.infocert.eigor.model.core.model.BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0129InvoicedQuantity;
+import it.infocert.eigor.model.core.model.BT0132ReferencedPurchaseOrderLineReference;
+import it.infocert.eigor.model.core.model.BT0133InvoiceLineBuyerAccountingReference;
+import it.infocert.eigor.model.core.model.BT0134InvoiceLinePeriodStartDate;
+import it.infocert.eigor.model.core.model.BT0135InvoiceLinePeriodEndDate;
+import it.infocert.eigor.model.core.model.BT0136InvoiceLineAllowanceAmount;
+import it.infocert.eigor.model.core.model.BT0137InvoiceLineAllowanceBaseAmount;
+import it.infocert.eigor.model.core.model.BT0138InvoiceLineAllowancePercentage;
+import it.infocert.eigor.model.core.model.BT0139InvoiceLineAllowanceReason;
+import it.infocert.eigor.model.core.model.BT0140InvoiceLineAllowanceReasonCode;
+import it.infocert.eigor.model.core.model.BT0141InvoiceLineChargeAmount;
+import it.infocert.eigor.model.core.model.BT0142InvoiceLineChargeBaseAmount;
+import it.infocert.eigor.model.core.model.BT0143InvoiceLineChargePercentage;
+import it.infocert.eigor.model.core.model.BT0144InvoiceLineChargeReason;
+import it.infocert.eigor.model.core.model.BT0145InvoiceLineChargeReasonCode;
+import it.infocert.eigor.model.core.model.BT0146ItemNetPrice;
+import it.infocert.eigor.model.core.model.BT0147ItemPriceDiscount;
+import it.infocert.eigor.model.core.model.BT0148ItemGrossPrice;
+import it.infocert.eigor.model.core.model.BT0149ItemPriceBaseQuantity;
+import it.infocert.eigor.model.core.model.BT0150ItemPriceBaseQuantityUnitOfMeasureCode;
+import it.infocert.eigor.model.core.model.BT0151InvoicedItemVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0152InvoicedItemVatRate;
+import it.infocert.eigor.model.core.model.BT0153ItemName;
+import it.infocert.eigor.model.core.model.BT0154ItemDescription;
+import it.infocert.eigor.model.core.model.BT0157ItemStandardIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +81,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -321,6 +382,34 @@ public class LineConverterTest {
             String codiceTipo = dettaglioLinee.getCodiceArticolo().get(2).getCodiceTipo();
             assertThat(codiceTipo, is("BT-158-1 BT-158-2"));
         }
+    }
+
+    @Test
+    public void shouldMapBT128WithDefault() {
+        Predicate<CodiceArticoloType> defaultCodiceArticolo = ca -> "ZZZ".equals(ca.getCodiceTipo()) || "ZZZ".equals(ca.getCodiceValore());
+        populateWithBG25();
+        convert();
+        FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+
+        boolean match = body.getDatiBeniServizi().getDettaglioLinee()
+                .stream()
+                .map(DettaglioLineeType::getCodiceArticolo)
+                .flatMap(List::stream)
+                .anyMatch(defaultCodiceArticolo.negate());
+        assertTrue(match);
+
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier("", ""));
+        invoice.getBG0025InvoiceLine().get(0).getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().clear();
+        invoice.getBG0025InvoiceLine().get(0).getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt128);
+        convert();
+        body = fatturaElettronica.getFatturaElettronicaBody().get(0);
+
+        match = body.getDatiBeniServizi().getDettaglioLinee()
+                .stream()
+                .map(DettaglioLineeType::getCodiceArticolo)
+                .flatMap(List::stream)
+                .anyMatch(defaultCodiceArticolo);
+        assertTrue(match);
     }
 
     private void convert() {
