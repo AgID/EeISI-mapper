@@ -48,6 +48,30 @@ public class LinePostFixSupportTest {
         verify(fattpaLine2).setNumeroLinea(2);
     }
 
+    @Test
+    public void aComplexTest() {
+
+        // given
+        LinePostFixSupport sut = new LinePostFixSupport();
+
+        FattpaLine fattpaLine1 = fattpaLine();
+        FattpaLine fattpaLine2 = fattpaLine();
+        FattpaLine fattpaLine3 = fattpaLine();
+        FattpaLine fattpaLine4 = fattpaLine();
+
+        sut.registerForPostFix(masterLine("003"), fattpaLine1);
+        sut.registerForPostFix(masterLine("A-1"), fattpaLine2);
+        sut.registerForPostFix(masterLine("004"), fattpaLine3);
+        sut.registerForPostFix(masterLine("10000"), fattpaLine3);
+
+        sut.postfix();
+
+        verify(fattpaLine1).setNumeroLinea(3);
+        verify(fattpaLine2).setNumeroLinea(5);
+        verify(fattpaLine3).setNumeroLinea(4);
+        verify(fattpaLine3).setNumeroLinea(6);
+    }
+
     private FattpaLine fattpaLine() {
         FattpaLine mock = mock(FattpaLine.class);
         return mock;

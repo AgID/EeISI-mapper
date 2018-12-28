@@ -10,44 +10,40 @@ import java.util.Set;
 
 class LinePostFixSupport {
 
-    private Map<CenLine, FattpaLine> map = new LinkedHashMap<>();
+    private Map<CenLine, FattpaLine> cenLinesToCorrespondingFattpaLine = new LinkedHashMap<>();
 
-    public void registerForPostFix(BG0025InvoiceLine masterCenLine, DettaglioLineeType renderedFattpaLine) {
-        CenLineBG0025InvoiceLine key = new CenLineBG0025InvoiceLine(masterCenLine);
-        FattpaLineImpl value = new FattpaLineImpl(renderedFattpaLine);
-        registerForPostFix(key, value);
+    public void registerForPostFix(BG0025InvoiceLine cenLine, DettaglioLineeType fattpaLine) {
+        registerForPostFix(new CenLineBG0025InvoiceLine(cenLine), new FattpaLineImpl(fattpaLine));
     }
 
-    public void registerForPostFix(CenLine key, FattpaLine value) {
-        map.put(key, value);
+    public void registerForPostFix(CenLine cenLine, FattpaLine fattpaLine) {
+        cenLinesToCorrespondingFattpaLine.put(cenLine, fattpaLine);
     }
 
     public void postfix() {
 
 
-        Set<CenLine> bg0025InvoiceLines = map.keySet();
+        Set<CenLine> bg25InvoiceLines = cenLinesToCorrespondingFattpaLine.keySet();
 
         int max = -1;
-        for (CenLine bg0025InvoiceLine : bg0025InvoiceLines) {
+        for (CenLine bg25InvoiceLine : bg25InvoiceLines) {
             try {
-                int theInt = Integer.parseInt(bg0025InvoiceLine.lineIdentifier());
-                if(theInt>=10000) {
+                int identifierOfLine = Integer.parseInt(bg25InvoiceLine.lineIdentifier());
+                if(identifierOfLine>=10000) {
                     throw new NumberFormatException();
                 }
-
-
-                max = Math.max(max, theInt);
+                max = Math.max(max, identifierOfLine);
             } catch (NumberFormatException e) {
-
+                // it is not a number after all
             }
         }
 
         int current = max == -1 ? 1 : max;
-        Set<Map.Entry<CenLine, FattpaLine>> entries = map.entrySet();
-        for (Map.Entry<CenLine, FattpaLine> entry : entries) {
+        Set<Map.Entry<CenLine, FattpaLine>> cenLinesAndFattpaLines = cenLinesToCorrespondingFattpaLine.entrySet();
+        for (Map.Entry<CenLine, FattpaLine> cenLineAndFattpaLine : cenLinesAndFattpaLines) {
 
-            CenLine key = entry.getKey();
-            FattpaLine dettaglioLinea = entry.getValue();
+            CenLine key = cenLineAndFattpaLine.getKey();
+            FattpaLine dettaglioLinea = cenLineAndFattpaLine.getValue();
             try {
                 int originalLineNumber = Integer.parseInt(key.lineIdentifier());
                 if(originalLineNumber>=10000) {
