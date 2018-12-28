@@ -57,6 +57,14 @@
             <artifactId>converter-cen-ublcn</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-xmlcen-cen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-xmlcen</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>1.5.2.RELEASE</version>
