@@ -21,6 +21,15 @@
             </includes>
         </fileSet>
 
+        <!-- XMLCEN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-xmlcen-cen/</outputDirectory>
+            <directory>../converter-xmlcen-cen/src/main/resources/converterdata/converter-xmlcen-cen/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- UBL/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/</outputDirectory>
@@ -88,6 +97,15 @@
         <fileSet>
             <outputDirectory>converterdata/converter-cen-ublcn</outputDirectory>
             <directory>../converter-cen-ublcn/src/main/resources/converterdata/converter-cen-ublcn</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/XMLCEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-xmlcen</outputDirectory>
+            <directory>../converter-cen-xmlcen/src/main/resources/converterdata/converter-cen-xmlcen</directory>
             <includes>
                 <include>**/*</include>
             </includes>
