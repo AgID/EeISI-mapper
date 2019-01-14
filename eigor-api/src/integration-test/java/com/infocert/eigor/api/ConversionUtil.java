@@ -29,9 +29,13 @@ public class ConversionUtil {
         return assertConversionWithoutErrors(invoice, source, target, predicate);
     }
 
-    ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
-        InputStream invoiceStream = invoiceAsStream(invoice);
+    ConversionResult<byte[]> assertConversionWithoutErrors(String invoiceStreamSource, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
+        InputStream invoiceStream = invoiceAsStream(invoiceStreamSource);
 
+        return assertConversionWithoutErrors(invoiceStream, source, target, errorsToKeep);
+    }
+
+    ConversionResult<byte[]> assertConversionWithoutErrors(InputStream invoiceStream, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
         final BG0000Invoice[] intermediateInvoice = new BG0000Invoice[1];
         class MyConversionCallback extends AbstractConversionCallback {
 

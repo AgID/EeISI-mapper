@@ -283,22 +283,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                     Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
-                    switch (category) {
-                        case Z:
-                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                            break;
-                        case E:
-                            dettaglioLinee.setNatura(NaturaType.N_4);
-                            break;
-                        case G:
-                            dettaglioLinee.setNatura(NaturaType.N_2);
-                            break;
-                        case O:
-                            dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                            break;
-                        default:
-                            dettaglioLinee.setNatura(null);
-                    }
+                    mapTaxCategory(dettaglioLinee, category);
                     log.trace("Set BT95 as Natura with value {}", dettaglioLinee.getNatura());
                 }
 
@@ -341,6 +326,34 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
+    private void mapTaxCategory(DettaglioLineeType dettaglioLinee, Untdid5305DutyTaxFeeCategories cenCategory) {
+        NaturaType naturaType = mapTaxCategory(cenCategory);
+        dettaglioLinee.setNatura(naturaType);
+    }
+
+    private NaturaType mapTaxCategory(Untdid5305DutyTaxFeeCategories cenCategory) {
+        NaturaType naturaType = null;
+        switch (cenCategory) {
+            case Z:
+                //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
+                naturaType = NaturaType.N_3;
+                break;
+            case E:
+                naturaType = NaturaType.N_4;
+                break;
+            case G:
+                naturaType = NaturaType.N_2;
+                break;
+            case O:
+                naturaType = NaturaType.N_2;
+                //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
+                break;
+            default:
+                naturaType = null;
+        }
+        return naturaType;
+    }
+
     private void mapBG21(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
         if (!invoice.getBG0021DocumentLevelCharges().isEmpty()) {
             DatiBeniServiziType datiBeniServizi = fatturaElettronicaBody.getDatiBeniServizi();
@@ -375,22 +388,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!charges.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
                     Untdid5305DutyTaxFeeCategories category = charges.getBT0102DocumentLevelChargeVatCategoryCode(0).getValue();
-                    switch (category) {
-                        case Z:
-                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                            break;
-                        case E:
-                            dettaglioLinee.setNatura(NaturaType.N_4);
-                            break;
-                        case G:
-                            dettaglioLinee.setNatura(NaturaType.N_2);
-                            break;
-                        case O:
-                            dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                            break;
-                        default:
-                            dettaglioLinee.setNatura(null);
-                    }
+                    mapTaxCategory(dettaglioLinee, category);
                     log.trace("Set BT102 as Natura with value {}", dettaglioLinee.getNatura());
                 }
 
@@ -881,22 +879,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
                     if (!lineVatInformation.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
                         Untdid5305DutyTaxFeeCategories category = lineVatInformation.getBT0151InvoicedItemVatCategoryCode(0).getValue();
-                        switch (category) {
-                            case Z:
-                                dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                                break;
-                            case E:
-                                dettaglioLinee.setNatura(NaturaType.N_4);
-                                break;
-                            case G:
-                                dettaglioLinee.setNatura(NaturaType.N_2);
-                                break;
-                            case O:
-                                dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                                break;
-                            default:
-                                dettaglioLinee.setNatura(null);
-                        }
+                        mapTaxCategory(dettaglioLinee, category);
                     }
 
                     if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
@@ -941,22 +924,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             BG0020DocumentLevelAllowances allowances = invoice.getBG0020DocumentLevelAllowances(0);
                             if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                                 Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
-                                switch (category) {
-                                    case Z:
-                                        lineaSconto.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                                        break;
-                                    case E:
-                                        lineaSconto.setNatura(NaturaType.N_4);
-                                        break;
-                                    case G:
-                                        lineaSconto.setNatura(NaturaType.N_2);
-                                        break;
-                                    case O:
-                                        lineaSconto.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                                        break;
-                                    default:
-                                        lineaSconto.setNatura(null);
-                                }
+                                mapTaxCategory(lineaSconto, category);
                             }
                         }
 
@@ -985,22 +953,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             BG0020DocumentLevelAllowances allowances = invoice.getBG0020DocumentLevelAllowances(0);
                             if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                                 Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
-                                switch (category) {
-                                    case Z:
-                                        lineaMaggiorazione.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                                        break;
-                                    case E:
-                                        lineaMaggiorazione.setNatura(NaturaType.N_4);
-                                        break;
-                                    case G:
-                                        lineaMaggiorazione.setNatura(NaturaType.N_2);
-                                        break;
-                                    case O:
-                                        lineaMaggiorazione.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                                        break;
-                                    default:
-                                        lineaMaggiorazione.setNatura(null);
-                                }
+                                mapTaxCategory(lineaMaggiorazione, category);
                             }
                         }
                         datiBeniServizi.getDettaglioLinee().add(lineaMaggiorazione);
@@ -1127,22 +1080,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!allowances.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
                     Untdid5305DutyTaxFeeCategories category = allowances.getBT0095DocumentLevelAllowanceVatCategoryCode(0).getValue();
-                    switch (category) {
-                        case Z:
-                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                            break;
-                        case E:
-                            dettaglioLinee.setNatura(NaturaType.N_4);
-                            break;
-                        case G:
-                            dettaglioLinee.setNatura(NaturaType.N_2);
-                            break;
-                        case O:
-                            dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                            break;
-                        default:
-                            dettaglioLinee.setNatura(null);
-                    }
+                    mapTaxCategory(dettaglioLinee, category);
                 } else {
                     log.trace("No BT0095 found");
                 }
@@ -1260,22 +1198,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!charges.getBT0102DocumentLevelChargeVatCategoryCode().isEmpty()) {
                     Untdid5305DutyTaxFeeCategories category = charges.getBT0102DocumentLevelChargeVatCategoryCode(0).getValue();
-                    switch (category) {
-                        case Z:
-                            dettaglioLinee.setNatura(NaturaType.N_3); //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
-                            break;
-                        case E:
-                            dettaglioLinee.setNatura(NaturaType.N_4);
-                            break;
-                        case G:
-                            dettaglioLinee.setNatura(NaturaType.N_2);
-                            break;
-                        case O:
-                            dettaglioLinee.setNatura(NaturaType.N_2); //TODO assert in which case this must be N_2 or N_1 (see code list mapping)
-                            break;
-                        default:
-                            dettaglioLinee.setNatura(null);
-                    }
+                    mapTaxCategory(dettaglioLinee, category);
                 } else {
                     log.trace("No BT0102 found");
                 }

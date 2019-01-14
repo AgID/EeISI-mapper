@@ -4,6 +4,7 @@ import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.org.springframework.util.StringUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +44,27 @@ import static org.junit.Assert.assertTrue;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
+    @Test
+    public void issueEeisi28() throws XPathExpressionException, IOException {
 
+        String invoiceTemplate = IOUtils.toString(new InputStreamReader( getClass().getResourceAsStream("/examples/xmlcen/eisi-28-issue.xml") ));
+        String s = "E";
+        invoiceTemplate = invoiceTemplate.replace("@@BT-95@@", s);
+        invoiceTemplate = invoiceTemplate.replace("@@BT-102@@", s);
+        invoiceTemplate = invoiceTemplate.replace("@@BT-118@@", s);
+        invoiceTemplate = invoiceTemplate.replace("@@BT-151@@", s);
+
+
+        // a conversion UBL - fatturaPA withouth errors.
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+                IOUtils.toInputStream(invoiceTemplate, "UTF-8"), "xmlcen", "fatturapa",  new KeepAll());
+
+        // The CSV in base 64 is the 3rd attachment in this case.
+        String truncatedValuesCSVInBase64 = evalXpathExpression(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
+
+        System.out.println( new String( conversion.getResult() ) );
+
+    }
 
     /**
      * Let's suppose to have an UBL invoice with very long fields like:
