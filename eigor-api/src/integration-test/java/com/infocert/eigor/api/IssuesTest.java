@@ -5,6 +5,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.Base64;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,11 +18,29 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Ignore("To be ignored 'til all mappings have been applied")
 public class IssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void eisi121() throws IOException, SAXException, TransformerException {
+
+        String invoice = "/eisi-121.xml";
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(invoice, "xmlcen", "xmlcen");
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream(invoice), "UTF-8").getBytes() )));
+
+        ByteArrayInputStream convertedInvoice = new ByteArrayInputStream(conversion.getResult());
+        String convertedXml = new String(conversion.getResult(), "UTF-8");
+
+        try {
+            documentBuilder.parse(convertedInvoice);
+        } catch(Exception e) {
+            fail( "========\n" + originalXml + "========\n" + convertedXml);
+        }
+
+    }
 
     @Test
     public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
