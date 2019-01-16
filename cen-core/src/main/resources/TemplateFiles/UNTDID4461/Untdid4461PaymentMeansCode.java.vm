@@ -11,14 +11,14 @@ public enum Untdid4461PaymentMeansCode {
      * <p>${row.data.ShortDescription}</p>
      * <p>${row.data.LongDescription}</p>
      */
-    Code${row.data.ID}(${row.data.ID},"${row.data.ShortDescription}" ,"${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+    Code${row.data.ID}("${row.data.ID}","${row.data.ShortDescription}" ,"${row.data.LongDescription}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
     #end
 
-    private int code;
+    private String code;
     private String shortDescritpion;
     private String longDescription;
 
-    Untdid4461PaymentMeansCode(int code, String shortDescritpion, String longDescription) {
+    Untdid4461PaymentMeansCode(String code, String shortDescritpion, String longDescription) {
         this.code = code;
         this.shortDescritpion = shortDescritpion;
         this.longDescription = longDescription;
@@ -33,7 +33,7 @@ public enum Untdid4461PaymentMeansCode {
                 '}';
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
