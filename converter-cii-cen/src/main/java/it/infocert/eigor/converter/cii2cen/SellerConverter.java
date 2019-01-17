@@ -78,7 +78,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                         if (idTax != null) {
                             schemeIDTax = idTax.getAttribute("schemeID");
                             if (schemeIDTax != null) {
-                                if (schemeIDTax.getValue().equals("VAT")) {
+                                if (schemeIDTax.getValue().equals("VA")) {
                                     bt0031 = new BT0031SellerVatIdentifier(idTax.getText());
                                     invoice.getBG0004Seller(0).getBT0031SellerVatIdentifier().add(bt0031);
                                 } else if (schemeIDTax.getValue().equals("FC")) {
