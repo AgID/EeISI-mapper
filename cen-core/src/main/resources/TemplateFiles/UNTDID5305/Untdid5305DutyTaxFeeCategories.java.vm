@@ -1,5 +1,8 @@
 package it.infocert.eigor.model.core.enums;
 
+/**
+* UN/EDIFACT <a href="http://www.unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5305.htm">5305 Duty or tax or fee category codes</a>.
+*/
 public enum Untdid5305DutyTaxFeeCategories {
 
     // 1 - PlusSign,
