@@ -40,7 +40,7 @@ public class Untdid5305DutyTaxFeeCategoriesToNaturaType implements TypeConverter
         return Untdid5305DutyTaxFeeCategories.class;
     }
 
-    public static TypeConverter<Untdid5305DutyTaxFeeCategories,NaturaType> newConverter() {
+    public static Untdid5305DutyTaxFeeCategoriesToNaturaType newConverter() {
         return new Untdid5305DutyTaxFeeCategoriesToNaturaType();
     }
 }
