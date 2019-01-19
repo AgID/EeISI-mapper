@@ -23,7 +23,7 @@ import java.util.List;
 public class DocumentContextConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
 

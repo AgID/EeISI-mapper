@@ -1,21 +1,15 @@
 package it.infocert.eigor.converter.cen2ubl;
 
-import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0011ProjectReference;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -31,7 +25,7 @@ public class ProjectReferenceTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         ProjectReferenceConverter converter = new ProjectReferenceConverter();
-        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT);
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element projectReference = rootElement.getChild("ProjectReference");
@@ -48,18 +42,6 @@ public class ProjectReferenceTest {
         invoice.getBT0011ProjectReference().add(projectReference);
 
         return invoice;
-    }
-
-    protected byte[] createXmlFromDocument(Document document, List<IConversionIssue> errors) {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            XMLOutputter outputter = new XMLOutputter();
-            outputter.setFormat(Format.getPrettyFormat());
-            outputter.output(document, bos);
-            return bos.toByteArray();
-        } catch (IOException e) {
-            return null;
-        }
     }
 
 }

@@ -188,7 +188,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
-            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT);
+            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT, this.getConfiguration());
         }
     }
 

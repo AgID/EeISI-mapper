@@ -6,19 +6,24 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 
@@ -30,28 +35,74 @@ public class Cen2UblTest {
     private static final Logger log = LoggerFactory.getLogger(Cen2UblTest.class);
 
     private Cen2Ubl converter;
-    private XPathFactory xPathFactory;
+    static XPathFactory xPathFactory;
+    static DocumentBuilderFactory factory;
+
+    @BeforeClass
+    public static void setUpStatic() {
+        factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+
+        xPathFactory = XPathFactory.newInstance();
+    }
 
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
         converter = new Cen2Ubl(new JavaReflections(), conf);
         converter.configure();
-        xPathFactory = XPathFactory.newInstance();
     }
+
+    @Test
+    public void eisi121_MissingBt24ShouldBeRenderedAs_En16931_2017() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+
+        // given an invoice without BT24
+        BG0000Invoice invoice = new BG0000Invoice();
+        BG0002ProcessControl bg2 = new BG0002ProcessControl();
+        invoice.getBG0002ProcessControl().add(bg2);
+
+        // when
+        Document dom = resultToDom(converter.convert(invoice));
+
+        // then
+        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
+
+        assertEquals( DomUtils.toPrettyXml(dom), "urn:cen.eu:en16931:2017", profileId );
+
+    }
+
+    @Test
+    public void eisi121_SpecifiedBt24ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+
+        // given an invoice without BT24
+        BG0000Invoice invoice = new BG0000Invoice();
+        BG0002ProcessControl bg2 = new BG0002ProcessControl();
+        bg2.getBT0024SpecificationIdentifier().add(new BT0024SpecificationIdentifier("xyz"));
+        invoice.getBG0002ProcessControl().add(bg2);
+
+        // when
+        Document dom = resultToDom(converter.convert(invoice));
+
+        // then
+        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
+
+        assertEquals( DomUtils.toPrettyXml(dom), "xyz", profileId );
+
+    }
+
+
 
     @Test
     public void shouldApplyCustomMappings() throws Exception {
         byte[] ublXML = converter.convert(createInvoice()).getResult();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new ByteArrayInputStream(ublXML));
+
+        Document doc = bytesToDom(ublXML);
 
         String invoiceNumber = getStringByXPath(doc, "/*[local-name()='Invoice']/*[name()='cbc:ID']/text()");
         assertNotNull(invoiceNumber);
         assertEquals("1", invoiceNumber);
     }
+
 
     @Test
     public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
@@ -135,4 +186,15 @@ public class Cen2UblTest {
 
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
     }
+
+    private Document bytesToDom(byte[] ublXML) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(new ByteArrayInputStream(ublXML));
+    }
+
+    private Document resultToDom(BinaryConversionResult result) throws ParserConfigurationException, SAXException, IOException {
+        Document document = bytesToDom(result.getResult());
+        return document;
+    }
+
 }

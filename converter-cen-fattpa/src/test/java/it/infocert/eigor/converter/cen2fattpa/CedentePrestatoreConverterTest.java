@@ -34,7 +34,7 @@ public class CedentePrestatoreConverterTest {
         final String code = "1234567890";
         final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(null, "IT:ALBO:ING:" + code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String iscrizioneAlbo = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getNumeroIscrizioneAlbo();
         assertEquals(code, iscrizioneAlbo);
     }
@@ -46,7 +46,7 @@ public class CedentePrestatoreConverterTest {
         final String code = "1234567890";
         final BT0029SellerIdentifierAndSchemeIdentifier bt29 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier("IT:EORI", code));
         invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt29);
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String codeEori = fattura.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici().getAnagrafica().getCodEORI();
         assertEquals(code, codeEori);
     }

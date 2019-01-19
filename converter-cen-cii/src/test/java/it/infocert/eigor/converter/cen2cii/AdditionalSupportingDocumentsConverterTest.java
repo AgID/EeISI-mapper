@@ -33,7 +33,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = createInvoiceWithBG0024();
         Document document = createInvoiceWithRootNode();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);

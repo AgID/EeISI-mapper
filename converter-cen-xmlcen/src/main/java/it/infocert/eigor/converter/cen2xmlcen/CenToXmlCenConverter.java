@@ -6,6 +6,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -15,15 +16,11 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.*;
 
 
@@ -39,11 +36,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
         invoice.accept(v);
 
         byte[] xmlBytes;
-        try {
-            xmlBytes = v.getXml().getBytes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        xmlBytes = v.getXml().getBytes();
 
         List<IConversionIssue> issues = xsdValidator.validate(xmlBytes);
 
@@ -262,13 +255,8 @@ public class CenToXmlCenConverter implements FromCenConversion {
             }
         }
 
-        public String getXml() throws IOException {
-            StringWriter sw = new StringWriter();
-            XMLOutputter xmlOutputter = new XMLOutputter();
-            Format newFormat = Format.getPrettyFormat();
-            xmlOutputter.setFormat(newFormat);
-            xmlOutputter.output(this.invoice, sw);
-            return sw.toString();
+        public String getXml() {
+            return DomUtils.toPrettyXml(this.invoice);
         }
     }
 }

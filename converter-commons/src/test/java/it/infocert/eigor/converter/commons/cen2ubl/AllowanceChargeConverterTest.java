@@ -38,7 +38,7 @@ public class AllowanceChargeConverterTest {
 
         Document doc = new Document(new Element("Invoice"));
         enrichInvoiceWithBG0021();
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element allowanceCharge = doc.getRootElement().getChild("AllowanceCharge");
 

@@ -27,7 +27,7 @@ public class VATBreakdownConverterTest {
     @Test
     public void taxAmountFromBT0111AndCurrencyIdIfBT0006Exists() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBG0022AndBT0110AndBT0111AndBT0006();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
         Element taxTotal = document.getRootElement().getChild("TaxTotal");
         Element taxAmount = taxTotal.getChild("TaxAmount");
 
@@ -38,7 +38,7 @@ public class VATBreakdownConverterTest {
     @Test
     public void taxAmountFromBT0110AndCurrencyIdFromBT0005IfBT0006DoesNotExists() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBG0022AndBT0110AndBT0111AndBT0005();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
         Element taxTotal = document.getRootElement().getChild("TaxTotal");
         Element taxAmount = taxTotal.getChild("TaxAmount");
 

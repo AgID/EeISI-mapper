@@ -190,7 +190,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN, null);
         }
     }
 

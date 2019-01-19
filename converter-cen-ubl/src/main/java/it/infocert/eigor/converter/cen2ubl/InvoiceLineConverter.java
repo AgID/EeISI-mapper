@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
@@ -21,7 +22,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(InvoiceLineConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         Element root = document.getRootElement();
         if (root != null) {

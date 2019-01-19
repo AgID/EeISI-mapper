@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasmissioneType;
@@ -22,7 +23,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
     private static final String ipa = "IT:IPA";
 
     @Override
-    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         if (!cenInvoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = cenInvoice.getBG0007Buyer(0);
             if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {

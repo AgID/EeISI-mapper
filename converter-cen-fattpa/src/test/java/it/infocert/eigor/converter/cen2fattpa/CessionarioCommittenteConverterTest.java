@@ -35,7 +35,7 @@ public class CessionarioCommittenteConverterTest {
         address.getBT0053BuyerPostCode().add(new BT0053BuyerPostCode(code));
         address.getBT0055BuyerCountryCode().add(new BT0055BuyerCountryCode(Iso31661CountryCodes.IT));
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String cap = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCAP();
         assertEquals(code, cap);
     }
@@ -48,7 +48,7 @@ public class CessionarioCommittenteConverterTest {
         address.getBT0053BuyerPostCode().add(new BT0053BuyerPostCode(code));
         address.getBT0055BuyerCountryCode().add(new BT0055BuyerCountryCode(Iso31661CountryCodes.DK));
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String cap = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCAP();
         assertEquals(code, cap);
     }
@@ -61,7 +61,7 @@ public class CessionarioCommittenteConverterTest {
         address.getBT0053BuyerPostCode().add(new BT0053BuyerPostCode(code));
         address.getBT0055BuyerCountryCode().add(new BT0055BuyerCountryCode(Iso31661CountryCodes.DK));
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String cap = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getCAP();
         assertEquals("99999", cap);
     }
@@ -74,7 +74,7 @@ public class CessionarioCommittenteConverterTest {
         address.getBT0054BuyerCountrySubdivision().add(new BT0054BuyerCountrySubdivision(subdivision));
         address.getBT0055BuyerCountryCode().add(new BT0055BuyerCountryCode(Iso31661CountryCodes.IT));
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String provincia = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
         assertEquals(subdivision, provincia);
     }
@@ -87,7 +87,7 @@ public class CessionarioCommittenteConverterTest {
         address.getBT0054BuyerCountrySubdivision().add(new BT0054BuyerCountrySubdivision(subdivision));
         address.getBT0055BuyerCountryCode().add(new BT0055BuyerCountryCode(Iso31661CountryCodes.DK));
         final FatturaElettronicaType fattura = setUpFatturaElettronica(new FatturaElettronicaType());
-        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        sut.map(invoice, fattura, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
         final String provincia = fattura.getFatturaElettronicaHeader().getCessionarioCommittente().getSede().getProvincia();
         assertNull(provincia);
     }

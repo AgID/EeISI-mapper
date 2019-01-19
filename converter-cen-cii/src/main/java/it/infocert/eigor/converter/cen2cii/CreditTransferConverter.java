@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -24,7 +25,7 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
     private final static Logger logger = LoggerFactory.getLogger(CreditTransferConverter.class);
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
             BG0016PaymentInstructions bg0016 = invoice.getBG0016PaymentInstructions(0);
             Element rootElement = document.getRootElement();
