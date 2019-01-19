@@ -19,7 +19,6 @@
     <logger name="it.infocert.eigor.api.io" level="all" />
     <logger name="it.infocert.eigor.LowLevelAPIUsage" level="all" />
     <logger name="com.helger.commons.xml.ls" level="info" />
-    <logger name="it.infocert.eigor.api.xml.CachedResourceResolver" level="all" />
     <logger name="it.infocert" level="error" />
     -->
 
