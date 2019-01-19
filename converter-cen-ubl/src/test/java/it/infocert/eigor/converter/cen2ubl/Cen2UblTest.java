@@ -54,7 +54,26 @@ public class Cen2UblTest {
     }
 
     @Test
-    public void eisi121_MissingBt24ShouldBeRenderedAs_En16931_2017() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public void eisi121_Bt23ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+
+        // given an invoice without BT24
+        BG0000Invoice invoice = new BG0000Invoice();
+        BG0002ProcessControl bg2 = new BG0002ProcessControl();
+        bg2.getBT0023BusinessProcessType().add(new BT0023BusinessProcessType("this-is-bt23"));
+        invoice.getBG0002ProcessControl().add(bg2);
+
+        // when
+        Document dom = resultToDom(converter.convert(invoice));
+
+        // then
+        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
+
+        assertEquals( DomUtils.toPrettyXml(dom), "this-is-bt23", profileId );
+
+    }
+
+    @Test
+    public void eisi121_MissingBt23ShouldBeRenderedAsEmpty() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         // given an invoice without BT24
         BG0000Invoice invoice = new BG0000Invoice();
@@ -66,6 +85,24 @@ public class Cen2UblTest {
 
         // then
         String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
+
+        assertEquals( DomUtils.toPrettyXml(dom), "", profileId );
+
+    }
+
+    @Test
+    public void eisi121_MissingBt24ShouldBeRenderedAs_En16931_2017() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+
+        // given an invoice without BT24
+        BG0000Invoice invoice = new BG0000Invoice();
+        BG0002ProcessControl bg2 = new BG0002ProcessControl();
+        invoice.getBG0002ProcessControl().add(bg2);
+
+        // when
+        Document dom = resultToDom(converter.convert(invoice));
+
+        // then
+        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:CustomizationID']/text()");
 
         assertEquals( DomUtils.toPrettyXml(dom), "urn:cen.eu:en16931:2017", profileId );
 
@@ -84,7 +121,7 @@ public class Cen2UblTest {
         Document dom = resultToDom(converter.convert(invoice));
 
         // then
-        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
+        String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:CustomizationID']/text()");
 
         assertEquals( DomUtils.toPrettyXml(dom), "xyz", profileId );
 

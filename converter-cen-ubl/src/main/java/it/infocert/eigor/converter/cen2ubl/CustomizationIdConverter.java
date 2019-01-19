@@ -11,32 +11,33 @@ import org.jdom2.Element;
 
 import java.util.List;
 
-public class ProfileIdConverter implements CustomMapping<Document> {
+public class CustomizationIdConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         final Element root = document.getRootElement();
 
-        String profileID = bt23ToProfileID(bt23(cenInvoice));
-        if(profileID!=null)
-            root.addContent(new Element("ProfileID").setText(profileID));
+        String profileID = bt24ToProfileID(eigorConfiguration, bt24(cenInvoice));
+        root.addContent(new Element("CustomizationID").setText(profileID));
 
     }
 
-    private String bt23ToProfileID(String bt23) {
+    private String bt24ToProfileID(EigorConfiguration eigorConfiguration, String bt24) {
         String profileID = null;
-        if (!StringUtils.isEmpty(bt23)) {
-            profileID = bt23;
+        if(StringUtils.isEmpty(bt24)) {
+            profileID = eigorConfiguration.getMandatoryString("eigor.converter.cen-ubl.customization-id");
+        }else{
+            profileID = bt24;
         }
         return profileID;
     }
 
-    private String bt23(BG0000Invoice cenInvoice) {
+    private String bt24(BG0000Invoice cenInvoice) {
         try {
-            return cenInvoice.getBG0002ProcessControl(0).getBT0023BusinessProcessType(0).getValue();
+            return cenInvoice.getBG0002ProcessControl(0).getBT0024SpecificationIdentifier(0).getValue();
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            return "";
+            return null;
         }
     }
 

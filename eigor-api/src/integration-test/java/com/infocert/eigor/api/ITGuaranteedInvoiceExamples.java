@@ -5,6 +5,7 @@ package com.infocert.eigor.api;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,11 +60,15 @@ public class ITGuaranteedInvoiceExamples {
         testInvoices.stream().filter(file -> file.getName().startsWith("fattpa" )).forEach(invoice -> {
             try {
                 final ConversionResult<byte[]> result = api.convert("fatturapa" , "ubl" , new FileInputStream(invoice));
-                assertFalse(result.hasIssues());
+
+                String original = FileUtils.readFileToString(invoice, "UTF-8");
+                String converted = new String( result.getResult() );
+
+                assertFalse("original\n\n" + original + "\n\nconverted\n\n" + converted + "\n\nissues\n\n" + result.getIssues().toString().replaceAll(",", "\n"), result.hasIssues());
                 assertTrue(result.isSuccessful());
                 assertTrue(result.hasResult());
-            } catch (FileNotFoundException e) {
-                fail();
+            } catch (Exception e) {
+                fail(e.toString());
             }
         });
 
