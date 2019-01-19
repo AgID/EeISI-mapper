@@ -78,7 +78,7 @@ public class DebugConversionCallback extends AbstractConversionCallback {
     }
 
     @Override
-    public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
+    public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 

@@ -83,19 +83,16 @@ public class ConversionCommand implements CliCommand {
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
 
-        List<ConversionCallback> conversionCallbacks = new ArrayList<>();
-        conversionCallbacks.add(new ConsoleOutputConversionCallback(this, out));
-        conversionCallbacks.add(new DebugConversionCallback(outputFolderFile));
-
-        String invoiceFileName = inputInvoice.toFile().getName();
-
         new ObservableConversion(
                 ruleRepository,
                 toCen,
                 fromCen,
                 invoiceInSourceFormat,
-                forceConversion, invoiceFileName, conversionCallbacks)
-                .conversion();
+                forceConversion,
+                inputInvoice.toFile().getName(),
+                new ConsoleOutputConversionCallback(this, out),
+                new DebugConversionCallback(outputFolderFile)
+        ).conversion();
 
     }
 

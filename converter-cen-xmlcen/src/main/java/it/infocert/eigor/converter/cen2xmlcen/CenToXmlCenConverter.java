@@ -68,7 +68,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public String extension() {
-        return "xmlcen";
+        return "xml";
     }
 
     @Override

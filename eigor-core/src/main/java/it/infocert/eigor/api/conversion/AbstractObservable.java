@@ -86,7 +86,7 @@ public abstract class AbstractObservable {
     protected void fireOnFailedVerifyingCenRules(ConversionContext ctx) {
         for (ConversionCallback listener : listeners) {
             try {
-                listener.onFailedVerifingCenRules(ctx);
+                listener.onFailedVerifyingCenRules(ctx);
             } catch (Exception e) {
                 log.warn("An error occurred while notifying listener '" + listener + "'. The error is logged but ignored.", e);
             }
