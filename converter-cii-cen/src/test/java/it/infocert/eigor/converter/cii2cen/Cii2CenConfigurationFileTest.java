@@ -16,6 +16,7 @@ import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +33,15 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class Cii2CenConfigurationFileTest { //} extends Cii2Cen {
+public class Cii2CenConfigurationFileTest {
 
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenConfigurationFileTest.class);
 
-	private MyCiiToCenConverter sut;
-	private List<ConversionIssue> conversionIssues;
+	static MyCiiToCenConverter sut;
+	List<ConversionIssue> conversionIssues;
 
-	@Before
-	public void setUp() throws ConfigurationException {
+	@BeforeClass
+	public static void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
 				.addProperty("eigor.workdir", "file:")
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
