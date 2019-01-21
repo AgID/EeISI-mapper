@@ -40,9 +40,17 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
             rootElement.addContent(exchangedDocumentContext);
         }
         final Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
-        final Element gId = new Element("ID", ramNs).setText(configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context"));
+
+        String guidId = bt24OrNull(cenInvoice);
+        if(guidId == null || guidId.trim().isEmpty()) guidId = configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context");
+
+        final Element gId = new Element("ID", ramNs).setText(guidId);
         final Element businessProcessSpecifiedDocumentContextParameter = new Element("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
-        final Element bId = new Element("ID", ramNs).setText(configuration.getMandatoryString("eigor.converter.cen-cii.business-context"));
+
+        String bizProcId = bt23OrNull(cenInvoice);
+        if(bizProcId == null || guidId.trim().isEmpty()) bizProcId = ""; //configuration.getMandatoryString("eigor.converter.cen-cii.business-context");
+        final Element bId = new Element("ID", ramNs).setText(bizProcId);
+
         businessProcessSpecifiedDocumentContextParameter.addContent(bId);
         exchangedDocumentContext.addContent(businessProcessSpecifiedDocumentContextParameter);
         guidelineSpecifiedDocumentContextParameter.addContent(gId);
@@ -78,4 +86,21 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
             }
         }*/
     }
+
+    private String bt23OrNull(BG0000Invoice cenInvoice) {
+        try {
+            return cenInvoice.getBG0002ProcessControl(0).getBT0023BusinessProcessType(0).getValue();
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    private String bt24OrNull(BG0000Invoice cenInvoice) {
+        try {
+            return cenInvoice.getBG0002ProcessControl(0).getBT0024SpecificationIdentifier(0).getValue();
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
 }
