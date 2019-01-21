@@ -81,7 +81,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 //            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron"));
 //            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
 //            peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
-//            
+//
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolbsi.schematron"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
             peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
@@ -190,7 +190,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
     @Override
     public String getName() {
-        return "converter-cen-ubl";
+        return "converter-cen-peppolbsi";
     }
 
 
