@@ -10,7 +10,6 @@ import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,20 +30,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
-public class Cen2UblTest {
+public class Cen2UblTest extends ConverterUnitTest {
     private static final Logger log = LoggerFactory.getLogger(Cen2UblTest.class);
 
     private Cen2Ubl converter;
-    static XPathFactory xPathFactory;
-    static DocumentBuilderFactory factory;
-
-    @BeforeClass
-    public static void setUpStatic() {
-        factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-
-        xPathFactory = XPathFactory.newInstance();
-    }
 
     @Before
     public void setUp() throws ConfigurationException {
@@ -54,7 +43,7 @@ public class Cen2UblTest {
     }
 
     @Test
-    public void eisi121_Bt23ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public void eisi122_Bt23ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         // given an invoice without BT24
         BG0000Invoice invoice = new BG0000Invoice();
@@ -63,7 +52,8 @@ public class Cen2UblTest {
         invoice.getBG0002ProcessControl().add(bg2);
 
         // when
-        Document dom = resultToDom(converter.convert(invoice));
+        Document document = bytesToDom(converter.convert(invoice).getResult());
+        Document dom = document;
 
         // then
         String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
@@ -73,7 +63,7 @@ public class Cen2UblTest {
     }
 
     @Test
-    public void eisi121_MissingBt23ShouldBeRenderedAsEmpty() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public void eisi122_MissingBt23ShouldBeRenderedAsEmpty() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         // given an invoice without BT24
         BG0000Invoice invoice = new BG0000Invoice();
@@ -81,7 +71,8 @@ public class Cen2UblTest {
         invoice.getBG0002ProcessControl().add(bg2);
 
         // when
-        Document dom = resultToDom(converter.convert(invoice));
+        Document document = bytesToDom(converter.convert(invoice).getResult());
+        Document dom = document;
 
         // then
         String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:ProfileID']/text()");
@@ -91,7 +82,7 @@ public class Cen2UblTest {
     }
 
     @Test
-    public void eisi121_MissingBt24ShouldBeRenderedAs_En16931_2017() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public void eisi122_MissingBt24ShouldBeRenderedAs_En16931_2017() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         // given an invoice without BT24
         BG0000Invoice invoice = new BG0000Invoice();
@@ -99,7 +90,8 @@ public class Cen2UblTest {
         invoice.getBG0002ProcessControl().add(bg2);
 
         // when
-        Document dom = resultToDom(converter.convert(invoice));
+        Document document = bytesToDom(converter.convert(invoice).getResult());
+        Document dom = document;
 
         // then
         String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:CustomizationID']/text()");
@@ -109,7 +101,7 @@ public class Cen2UblTest {
     }
 
     @Test
-    public void eisi121_SpecifiedBt24ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public void eisi122_SpecifiedBt24ShouldBeRenderedAsItIs() throws SyntaxErrorInInvoiceFormatException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         // given an invoice without BT24
         BG0000Invoice invoice = new BG0000Invoice();
@@ -118,7 +110,8 @@ public class Cen2UblTest {
         invoice.getBG0002ProcessControl().add(bg2);
 
         // when
-        Document dom = resultToDom(converter.convert(invoice));
+        Document document = bytesToDom(converter.convert(invoice).getResult());
+        Document dom = document;
 
         // then
         String profileId = getStringByXPath(dom, "/*[local-name()='Invoice']/*[name()='cbc:CustomizationID']/text()");
@@ -193,12 +186,6 @@ public class Cen2UblTest {
         return invoice;
     }
 
-    private String getStringByXPath(Document doc, String xpath) throws XPathExpressionException {
-        XPath xPath = xPathFactory.newXPath();
-        XPathExpression xPathExpression = xPath.compile(xpath);
-        return (String) xPathExpression.evaluate(doc, XPathConstants.STRING);
-    }
-
 
     private void populateWithBG25(BG0000Invoice invoice) {
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
@@ -222,16 +209,6 @@ public class Cen2UblTest {
         itemInformation.getBT0153ItemName().add(new BT0153ItemName("Name"));
 
         invoiceLine.getBG0031ItemInformation().add(itemInformation);
-    }
-
-    private Document bytesToDom(byte[] ublXML) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(new ByteArrayInputStream(ublXML));
-    }
-
-    private Document resultToDom(BinaryConversionResult result) throws ParserConfigurationException, SAXException, IOException {
-        Document document = bytesToDom(result.getResult());
-        return document;
     }
 
 }
