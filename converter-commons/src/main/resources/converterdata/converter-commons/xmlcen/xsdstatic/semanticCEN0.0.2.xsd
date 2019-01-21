@@ -26,7 +26,7 @@
                 <xs:element minOccurs="0" name="BT-7" type="xs:date">
                     <xs:annotation><xs:documentation>Value added tax point date</xs:documentation></xs:annotation>
                 </xs:element>
-                <xs:element minOccurs="0" name="BT-8" type="UNTDID2005">
+                <xs:element minOccurs="0" name="BT-8" type="UNTDID2475">
                     <xs:annotation><xs:documentation>Value added tax point date code</xs:documentation></xs:annotation>
                 </xs:element>
                 <xs:element minOccurs="0" name="BT-9" type="xs:date">
@@ -876,6 +876,13 @@
             <xs:enumeration value="3"/>
             <xs:enumeration value="35"/>
             <xs:enumeration value="432"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="UNTDID2475">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="29"/>
+            <xs:enumeration value="72"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="UNTDID5305">
