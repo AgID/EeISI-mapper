@@ -85,7 +85,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
             }
 
             Element categoryTradeTax = new Element("CategoryTradeTax", ramNs);
-            Element typeCode = new Element("TypeCode", ramNs).setText("VAT");
+            Element typeCode = new Element("TypeCode", ramNs).setText("VA");
             categoryTradeTax.addContent(typeCode);
             specifiedTradeAllowanceCharge.addContent(categoryTradeTax);
 
