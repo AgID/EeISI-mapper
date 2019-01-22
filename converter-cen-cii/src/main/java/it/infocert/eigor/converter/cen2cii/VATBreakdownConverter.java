@@ -86,7 +86,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
             }
 
             Element typeCode = new Element("TypeCode", ramNs);
-            typeCode.setText("VAT");
+            typeCode.setText("VA");
             applicableTradeTax.addContent(typeCode);
 
             BT0118VatCategoryCode bt0118 = null;
