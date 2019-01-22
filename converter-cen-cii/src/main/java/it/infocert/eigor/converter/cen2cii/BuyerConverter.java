@@ -56,9 +56,9 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
             if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0046 = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs); // maybe GlobalID ?
-                id.setText(bt0046.getIdentifier());
+                id.setText(bt0046.toString());
                 if (bt0046.getIdentificationSchema() != null) {
-                    id.setAttribute("schemeID", bt0046.getIdentificationSchema());
+                    id.setAttribute("schemeID", "");
                 }
                 buyerTradeParty.addContent(id);
             }
