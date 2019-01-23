@@ -49,7 +49,7 @@
 			</ram:SpecifiedLineTradeDelivery>
 			<ram:SpecifiedLineTradeSettlement>
 				<ram:ApplicableTradeTax>
-					<ram:TypeCode>VAT</ram:TypeCode>
+					<ram:TypeCode>VA</ram:TypeCode>
 					<ram:CategoryCode>S</ram:CategoryCode>
 					<ram:RateApplicablePercent>21</ram:RateApplicablePercent>
 				</ram:ApplicableTradeTax>
@@ -87,7 +87,7 @@
 					<ram:CountryID>NL</ram:CountryID>
 				</ram:PostalTradeAddress>
 				<ram:SpecifiedTaxRegistration>
-					<ram:ID schemeID="VAT">NL809163160B01</ram:ID>
+					<ram:ID schemeID="VA">NL809163160B01</ram:ID>
 				</ram:SpecifiedTaxRegistration>
 			</ram:SellerTradeParty>
 			<ram:BuyerTradeParty>
@@ -124,7 +124,7 @@
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:ApplicableTradeTax>
 				<ram:CalculatedAmount>30.87</ram:CalculatedAmount>
-				<ram:TypeCode>VAT</ram:TypeCode>
+				<ram:TypeCode>VA</ram:TypeCode>
 				<ram:BasisAmount>147</ram:BasisAmount>
 				<ram:CategoryCode>S</ram:CategoryCode>
 				<ram:RateApplicablePercent>21</ram:RateApplicablePercent>

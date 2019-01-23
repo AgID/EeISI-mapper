@@ -183,8 +183,9 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
         // when bt-115 is present, either bt-20 or bt-9
         BT0020PaymentTerms bt20cen = null;
-        if (invoice.getBT0020PaymentTerms().isEmpty()) {
-            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
+        if (!invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment().isEmpty() &&
+                invoice.getBT0009PaymentDueDate().isEmpty() && invoice.getBT0020PaymentTerms().isEmpty()) {
+            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payment Terms"));
         }
 
 
