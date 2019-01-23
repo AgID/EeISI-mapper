@@ -76,7 +76,7 @@ public class Cii2CenConfigurationFileTest {
 		assertTrue(issue.getMessage().endsWith("XSD validation failed"));
 	}
 
-	@Ignore("Ignore until schematron is being updated EISI-127")
+	//TODO works because schematron CII was updated manually to accept VA instead of VAT, will be ok when EISI-127 is done
 	@Test
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example9M.xml");
