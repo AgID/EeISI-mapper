@@ -100,6 +100,21 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                     .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
+                        Element riferimentoNormativo = datiRiepilogo.getChild("RiferimentoNormativo");
+                        try {
+                            if(riferimentoNormativo != null) {
+                                BT0120VatExemptionReasonText bt0120 = new BT0120VatExemptionReasonText(riferimentoNormativo.getText());
+                                bg0023.getBT0120VatExemptionReasonText().add(bt0120);
+                            }
+                        } catch (NumberFormatException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                    .location(callingLocation)
+                                    .action(ErrorCode.Action.HARDCODED_MAP)
+                                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                    .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
                         invoice.getBG0023VatBreakdown().add(bg0023);
                     }
                 }
