@@ -33,6 +33,11 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     currencyCode = bt0005.getValue();
                 }
 
+                if(!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
+                	
+                	BT0003InvoiceTypeCode BT003  = cenInvoice.getBT0003InvoiceTypeCode(0);                	
+                }
+                
                 List<BG0025InvoiceLine> bg0025 = cenInvoice.getBG0025InvoiceLine();
                 for (BG0025InvoiceLine elemBg25 : bg0025) {
                     Element invoiceLine = new Element("InvoiceLine");
