@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2xmlcen;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.conversion.AbstractConversionCallback;
 import it.infocert.eigor.api.conversion.ConversionContext;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -22,6 +23,11 @@ public class DumpIntermediateCenInvoiceAsCenXmlCallback extends AbstractConversi
     public DumpIntermediateCenInvoiceAsCenXmlCallback(File outputFolderFile) {
         this.outputFolderFile = outputFolderFile;
         cenToXmlCenConverter = new CenToXmlCenConverter();
+        try {
+            cenToXmlCenConverter.configure();
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
