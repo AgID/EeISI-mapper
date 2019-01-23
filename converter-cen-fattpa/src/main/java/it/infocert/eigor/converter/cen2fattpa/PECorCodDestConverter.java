@@ -32,12 +32,14 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                     datiTrasmissione = new DatiTrasmissioneType();
                     fatturaElettronicaType.getFatturaElettronicaHeader().setDatiTrasmissione(datiTrasmissione);
                 }
-                BT0049BuyerElectronicAddressAndSchemeIdentifier address = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                if (address.getValue().getIdentificationSchema() != null) {
-                    String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
-                    String identifier = address.getValue().getIdentifier();
+                BT0049BuyerElectronicAddressAndSchemeIdentifier bt49AddressAndScheme = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                if (bt49AddressAndScheme.getValue().getIdentificationSchema() != null) {
+
+                    String identificationSchema = bt49AddressAndScheme.getValue().getIdentificationSchema().toUpperCase();
+                    String identifier = bt49AddressAndScheme.getValue().getIdentifier();
                     mapDestinatario(errors, datiTrasmissione, identificationSchema, identifier);
                     mapFormatoTrasmissione(fatturaElettronicaType, identificationSchema);
+
                 }
             }
         }
@@ -52,7 +54,8 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 break;
             case coddest:
             case ipa:
-                datiTrasmissione.setCodiceDestinatario(identifier);
+                // see https://jira.infocert.it/browse/EISI-119
+                datiTrasmissione.setCodiceDestinatario("9921");
                 break;
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()

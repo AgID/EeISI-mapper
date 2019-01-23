@@ -79,13 +79,17 @@ public class BuyerConverter implements CustomMapping<Document> {
                 Element codiceDestinatario = datiTrasmissione.getChild("CodiceDestinatario");
                 Element pecDestinatario = datiTrasmissione.getChild("PECDestinatario");
                 if (codiceDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(ipa, codiceDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier =
+                            new BT0049BuyerElectronicAddressAndSchemeIdentifier(
+                                new Identifier("9921", codiceDestinatario.getText())
+                            );
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
                     invoice.getBG0007Buyer(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().add(buyerElectronicAddressAndSchemeIdentifier);
                 } else if (pecDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(pec, pecDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(
+                            new Identifier(pec, pecDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
