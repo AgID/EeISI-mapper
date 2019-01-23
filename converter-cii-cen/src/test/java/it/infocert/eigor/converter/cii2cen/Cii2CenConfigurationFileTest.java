@@ -15,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -80,7 +79,7 @@ public class Cii2CenConfigurationFileTest {
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example9M.xml");
 		List<IConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
-	   	assertTrue(errors.isEmpty());
+	   	assertTrue(errors.stream().map(error -> error.getErrorMessage().toString() +"\n").reduce("", (acc, str) -> acc = acc+str ), errors.isEmpty());
 	}
 
 	@Test
