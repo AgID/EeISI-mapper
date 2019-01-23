@@ -17,6 +17,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,7 @@ public class Cii2CenConfigurationFileTest {
 		assertTrue(issue.getMessage().endsWith("XSD validation failed"));
 	}
 
+	@Ignore("Ignore until schematron is being updated EISI-127")
 	@Test
 	public void shouldAcceptACiiInvoiceThatSatisfiesTheCiiSchematron() throws Exception {
 		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example9M.xml");
