@@ -10,16 +10,17 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
     }
 
     @Override
-    public TipoDocumentoType convert(Untdid1001InvoiceTypeCode untdid1001InvoiceTypeCode) {
-        switch (untdid1001InvoiceTypeCode.getCode()) {
-            case 380:
-            case 389:
+    public TipoDocumentoType convert(Untdid1001InvoiceTypeCode typeCode) {
+        switch (typeCode) {
+            case Code380:
                 return TipoDocumentoType.TD_01;
-            case 381:
+            case Code389:
+                return TipoDocumentoType.TD_01;
+            case Code381:
                 return TipoDocumentoType.TD_04;
-            case 383:
+            case Code383:
                 return TipoDocumentoType.TD_05;
-            case 386:
+            case Code386:
                 return TipoDocumentoType.TD_02;
             default:
                 return null;
