@@ -4,11 +4,9 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.ToCenConversion;
-import it.infocert.eigor.api.conversion.ConversionCallback;
-import it.infocert.eigor.api.conversion.DebugConversionCallback;
-import it.infocert.eigor.api.conversion.ObservableConversion;
-import it.infocert.eigor.api.conversion.ObservableValidation;
+import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.utils.EigorVersion;
+import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +60,6 @@ public class EigorApi {
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
         outputFolderForThisTransformation.mkdirs();
 
-        ConversionCallback debugCallback = new DebugConversionCallback(
-                outputFolderForThisTransformation
-        );
 
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
@@ -75,7 +70,12 @@ public class EigorApi {
                 builder.getConversionRepository().findConversionFromCen(targetFormat),
                 "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
 
-        ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(debugCallback);
+        ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(
+                new DebugConversionCallback(outputFolderForThisTransformation),
+                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderForThisTransformation),
+                new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderForThisTransformation)
+
+        );
         if(callbacks!=null && callbacks.length > 0){
             fullListOfCallbacks.addAll(Arrays.asList(callbacks) );
         }

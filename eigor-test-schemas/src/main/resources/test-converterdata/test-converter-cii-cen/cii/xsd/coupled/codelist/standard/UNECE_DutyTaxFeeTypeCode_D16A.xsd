@@ -68,7 +68,7 @@ This document and the information contained herein is provided on an "AS IS" bas
 			<xsd:enumeration value="TOX"/>
 			<xsd:enumeration value="TTA"/>
 			<xsd:enumeration value="VAD"/>
-			<xsd:enumeration value="VA"/>
+			<xsd:enumeration value="VAT"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>

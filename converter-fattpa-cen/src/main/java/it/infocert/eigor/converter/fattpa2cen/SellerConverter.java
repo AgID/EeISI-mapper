@@ -62,7 +62,7 @@ public class SellerConverter implements CustomMapping<Document> {
                     BT0029SellerIdentifierAndSchemeIdentifier sellerIdentifierAndSchemeIdentifier;
                     if (anagrafica != null && codEORI != null) {
                         if (nazioneStr.equals("IT")) {
-                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(eori, codEORI.getText()));
+                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(eori + ":" + codEORI.getText()));
                         } else {
                             sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(codEORI.getText()));
                         }
@@ -71,7 +71,7 @@ public class SellerConverter implements CustomMapping<Document> {
                     }
                     if (alboProfessionale != null && numeroIscrizioneAlbo != null) {
                         if (nazioneStr.equals("IT")) {
-                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(albo, alboProfessionale.getText() + ":" + numeroIscrizioneAlbo.getText()));
+                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(albo + ":" + alboProfessionale.getText() + ":" + numeroIscrizioneAlbo.getText()));
                         } else {
                             sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(alboProfessionale.getText() + ":" + numeroIscrizioneAlbo.getText()));
                         }
@@ -89,7 +89,7 @@ public class SellerConverter implements CustomMapping<Document> {
                     if (nazioneStr.equals("IT")) {
                         if (ufficio != null && numeroREA != null) {
                             BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier sellerLegalRegistrationIdentifierAndSchemeIdentifier =
-                                    new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(rea, ufficio.getText() + ":" + numeroREA.getText()));
+                                    new BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(rea + ":" + ufficio.getText() + ":" + numeroREA.getText()));
                             if (invoice.getBG0004Seller().isEmpty()) {
                                 invoice.getBG0004Seller().add(new BG0004Seller());
                             }
