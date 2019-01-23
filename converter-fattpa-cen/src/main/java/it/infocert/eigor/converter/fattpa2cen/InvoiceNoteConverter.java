@@ -38,7 +38,9 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
                                 bg0001.getBT0022InvoiceNote().add(invoiceNote);
                             }
                         }
-                        invoice.getBG0001InvoiceNote().add(bg0001);
+                        if(bg0001.getBT0022InvoiceNote().size() != 0) {
+                            invoice.getBG0001InvoiceNote().add(bg0001);
+                        }
                     }
                 }
             }

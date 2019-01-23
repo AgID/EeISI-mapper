@@ -135,7 +135,7 @@ public class IssuesTest {
         {
             BG0000Invoice cen = result.getResult();
             String bt020 = cen.getBT0020PaymentTerms().get(0).getValue();
-            Assert.assertEquals("N/A Payement Terms", bt020);
+            Assert.assertEquals("N/A Payment Terms", bt020);
 
         }
 

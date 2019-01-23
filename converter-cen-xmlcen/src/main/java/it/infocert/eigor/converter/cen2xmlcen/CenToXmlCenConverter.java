@@ -1,5 +1,6 @@
 package it.infocert.eigor.converter.cen2xmlcen;
 
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.IConversionIssue;
@@ -30,6 +31,8 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public BinaryConversionResult convert(it.infocert.eigor.model.core.model.BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
+
+        Preconditions.checkState(xsdValidator!=null, "Converter not configured().");
 
         MyVisitor v = new MyVisitor();
 
