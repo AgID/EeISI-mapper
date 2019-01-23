@@ -4,7 +4,15 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2peoppl.InvoiceLineConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
+import it.infocert.eigor.model.core.model.BG0029PriceDetails;
+import it.infocert.eigor.model.core.model.BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0129InvoicedQuantity;
+import it.infocert.eigor.model.core.model.BT0130InvoicedQuantityUnitOfMeasureCode;
+import it.infocert.eigor.model.core.model.BT0149ItemPriceBaseQuantity;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -14,6 +22,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class InvoiceLineConverterTest {
@@ -57,6 +66,20 @@ public class InvoiceLineConverterTest {
         assertTrue(invoicedQuantity.getText().equals("1.00000000"));
     }
 
+    @Test
+    public void invoiceLineWithBT130AndBT150Empty() {
+        final BG0000Invoice cenInvoice = makeCenInvoiceWithBT0130AndBT0150();
+
+        InvoiceLineConverter converter = new InvoiceLineConverter();
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT);
+
+        Element rootElement = document.getRootElement();
+        Element invoiceLine = rootElement.getChild("InvoiceLine");
+
+        final Attribute attribute = invoiceLine.getChild("Price").getChild("BaseQuantity").getAttribute("unitCode");
+        assertEquals(UnitOfMeasureCodes.TOTE_TE.getCommonCode(), attribute.getValue());
+    }
+
 
     private BG0000Invoice makeCenInvoiceWithBT0128() {
         BG0000Invoice invoice = new BG0000Invoice();
@@ -82,6 +105,17 @@ public class InvoiceLineConverterTest {
         invoiceLine.getBG0029PriceDetails().add(bg0029PriceDetails);
 
         invoice.getBG0025InvoiceLine().add(invoiceLine);
+        return invoice;
+    }
+
+    private BG0000Invoice makeCenInvoiceWithBT0130AndBT0150() {
+        BG0000Invoice invoice = makeCenInvoiceWithBT0129AndBT0149();
+
+        BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine().get(0);
+        final BT0130InvoicedQuantityUnitOfMeasureCode bt130 = new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.TOTE_TE);
+        invoiceLine.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt130);
+
+        //invoice.getBG0025InvoiceLine().add(invoiceLine);
         return invoice;
     }
 }
