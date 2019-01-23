@@ -6,7 +6,25 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
+import it.infocert.eigor.model.core.model.BG0026InvoiceLinePeriod;
+import it.infocert.eigor.model.core.model.BG0029PriceDetails;
+import it.infocert.eigor.model.core.model.BG0030LineVatInformation;
+import it.infocert.eigor.model.core.model.BG0031ItemInformation;
+import it.infocert.eigor.model.core.model.BG0032ItemAttributes;
+import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
+import it.infocert.eigor.model.core.model.BT0126InvoiceLineIdentifier;
+import it.infocert.eigor.model.core.model.BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0130InvoicedQuantityUnitOfMeasureCode;
+import it.infocert.eigor.model.core.model.BT0131InvoiceLineNetAmount;
+import it.infocert.eigor.model.core.model.BT0146ItemNetPrice;
+import it.infocert.eigor.model.core.model.BT0149ItemPriceBaseQuantity;
+import it.infocert.eigor.model.core.model.BT0151InvoicedItemVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0152InvoicedItemVatRate;
+import it.infocert.eigor.model.core.model.BT0153ItemName;
+import it.infocert.eigor.model.core.model.BT0160ItemAttributeName;
+import it.infocert.eigor.model.core.model.BT0161ItemAttributeValue;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -190,11 +208,19 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 final BigDecimal value = bt0149.getValue();
                                 baseQuantity.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
 
-                                if (!elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                                    BT0150ItemPriceBaseQuantityUnitOfMeasureCode bt0150 = elemBg29.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0);
-                                    UnitOfMeasureCodes unitOfMeasureCodes = bt0150.getValue();
-                                    Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.getCommonCode());
-                                    baseQuantity.setAttribute(unitCode);
+                                /*
+                                 In case BT-130 different from BT-150 set BT-150=BT-130.
+                                 If different from UNECE 20 and 21 BT-130 is set =EA or C62. No values for BT-150 thus cannot be different
+                                 (Following previous rule, actually BT150 won't be mapped and BT130 value is used instead, except for C62 and EA
+                                  which are will not be mapped)
+                                 */
+                                if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
+                                    final BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().get(0);
+                                    UnitOfMeasureCodes unitOfMeasureCodes = bt0130.getValue();
+                                    if(!UnitOfMeasureCodes.C62_ONE.equals(unitOfMeasureCodes) && !UnitOfMeasureCodes.EACH_EA.equals(unitOfMeasureCodes)) {
+                                        Attribute unitCode = new Attribute("unitCode", unitOfMeasureCodes.getCommonCode());
+                                        baseQuantity.setAttribute(unitCode);
+                                    }
                                 }
                                 price.addContent(baseQuantity);
                             }
