@@ -108,7 +108,7 @@
 			</ram:SpecifiedTradeSettlementPaymentMeans>
 			<ram:ApplicableTradeTax>
 				<ram:CalculatedAmount>30.87</ram:CalculatedAmount>
-				<ram:TypeCode>VAT</ram:TypeCode>
+				<ram:TypeCode>VA</ram:TypeCode>
 				<ram:BasisAmount>147.00</ram:BasisAmount>
 				<ram:CategoryCode>S</ram:CategoryCode>
 				<ram:RateApplicablePercent>21.00</ram:RateApplicablePercent>

@@ -202,7 +202,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                     Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
                     Element id = new Element("ID", ramNs);
                     id.setText(bt0031.getValue());
-                    id.setAttribute("schemeID", "VAT");
+                    id.setAttribute("schemeID", "VA");
                     specifiedTaxRegistration.addContent(id);
                     sellerTradeParty.addContent(specifiedTaxRegistration);
                 }

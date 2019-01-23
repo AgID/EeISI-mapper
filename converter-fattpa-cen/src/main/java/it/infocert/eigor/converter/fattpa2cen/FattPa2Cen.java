@@ -176,10 +176,16 @@ public class FattPa2Cen extends AbstractToCenConverter {
             }
         }
 
+        // set BG-2 with BG-24 default value urn:cen.eu:en16931:2017
+        BG0002ProcessControl bg0002 = new BG0002ProcessControl();
+        bg0002.getBT0024SpecificationIdentifier().add(new BT0024SpecificationIdentifier("urn:cen.eu:en16931:2017"));
+        invoice.getBG0002ProcessControl().add(bg0002);
+
         // when bt-115 is present, either bt-20 or bt-9
         BT0020PaymentTerms bt20cen = null;
-        if (invoice.getBT0020PaymentTerms().isEmpty()) {
-            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
+        if (!invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment().isEmpty() &&
+                invoice.getBT0009PaymentDueDate().isEmpty() && invoice.getBT0020PaymentTerms().isEmpty()) {
+            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payment Terms"));
         }
 
 

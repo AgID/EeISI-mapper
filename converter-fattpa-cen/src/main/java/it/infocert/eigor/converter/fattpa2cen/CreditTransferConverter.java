@@ -43,7 +43,9 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                         if (invoice.getBG0016PaymentInstructions().isEmpty()) {
                             invoice.getBG0016PaymentInstructions().add(new BG0016PaymentInstructions());
                         }
-                        invoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer().add(bg0017);
+                        if(bg0017.getBT0084PaymentAccountIdentifier().size() != 0 || bg0017.getBT0086PaymentServiceProviderIdentifier().size() != 0) {
+                            invoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer().add(bg0017);
+                        }
                     }
                 }
             }
