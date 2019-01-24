@@ -66,7 +66,7 @@
                     <ram:CountryID>GB</ram:CountryID>
                 </ram:PostalTradeAddress>
                 <ram:SpecifiedTaxRegistration>
-                    <ram:ID schemeID="VAT">GB123456789</ram:ID>
+                    <ram:ID schemeID="VA">GB123456789</ram:ID>
                 </ram:SpecifiedTaxRegistration>
 				
             </ram:SellerTradeParty>
@@ -85,7 +85,7 @@
                     <ram:URIID schemeID="IT:IPA">ABC123</ram:URIID>
                 </ram:URIUniversalCommunication>
                 <ram:SpecifiedTaxRegistration>
-                    <ram:ID schemeID="VAT">IT97735020584</ram:ID>
+                    <ram:ID schemeID="VA">IT97735020584</ram:ID>
                 </ram:SpecifiedTaxRegistration>
             </ram:BuyerTradeParty>
            

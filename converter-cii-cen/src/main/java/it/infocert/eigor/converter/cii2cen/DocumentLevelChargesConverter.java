@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -153,7 +154,7 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0021(document, cenInvoice, errors, callingLocation);
     }
 }

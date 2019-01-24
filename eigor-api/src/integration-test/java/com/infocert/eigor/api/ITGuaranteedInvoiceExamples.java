@@ -5,6 +5,7 @@ package com.infocert.eigor.api;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,11 +60,15 @@ public class ITGuaranteedInvoiceExamples {
         testInvoices.stream().filter(file -> file.getName().startsWith("fattpa" )).forEach(invoice -> {
             try {
                 final ConversionResult<byte[]> result = api.convert("fatturapa" , "ubl" , new FileInputStream(invoice));
-                assertFalse(result.hasIssues());
+
+                String original = FileUtils.readFileToString(invoice, "UTF-8");
+                String converted = new String( result.getResult() );
+
+                assertFalse("original\n\n" + original + "\n\nconverted\n\n" + converted + "\n\nissues\n\n" + result.getIssues().toString().replaceAll(",", "\n"), result.hasIssues());
                 assertTrue(result.isSuccessful());
                 assertTrue(result.hasResult());
-            } catch (FileNotFoundException e) {
-                fail();
+            } catch (Exception e) {
+                fail(e.toString());
             }
         });
 
@@ -89,18 +94,27 @@ public class ITGuaranteedInvoiceExamples {
 
     @Test
     public void shouldConvertACSVDumpToCSVCenAndFatturaPA() throws Exception {
-        testInvoices.stream().filter(new Predicate<File>() {
+
+        List<File> ublFiles = testInvoices.stream().filter(new Predicate<File>() {
             @Override
             public boolean test(File file) {
                 return file.getName().startsWith("ubl");
             }
-        }).forEach(invoice -> {
+        }).collect(Collectors.toList());
+
+
+        for (File invoice : ublFiles) {
             try {
                 final ConversionResult<byte[]> unused = api.convert("ubl" , "fatturapa" , new FileInputStream(invoice));
+
                 File[] tempFiles = tmp.getRoot().listFiles();
                 tempFiles = tempFiles != null ? tempFiles : new File[]{};
+
                 final File invoiceCen = findInvoiceCen(tempFiles, null);
-                assertNotNull(invoiceCen);
+
+                String message = "Not found in " + Arrays.stream(tempFiles).map(f -> f.getAbsolutePath()).reduce((ass, f) -> ass = ass + f);
+                assertNotNull(message, invoiceCen);
+
                 final FileInputStream cenIs = new FileInputStream(invoiceCen);
                 final ConversionResult<byte[]> result = api.convert("csvcen" , "fatturapa" , cenIs);
 
@@ -109,8 +123,8 @@ public class ITGuaranteedInvoiceExamples {
             } catch (FileNotFoundException e) {
                 fail();
             }
+        }
 
-        });
     }
 
     public static String getFileContent(
@@ -130,6 +144,7 @@ public class ITGuaranteedInvoiceExamples {
         }
     }
 
+    /** Recursively find files which name contains 'invoice-cen'. */
     private File findInvoiceCen(final File[] files, final List<File> filesFound) {
         final List<File> _t = filesFound != null ? filesFound : new ArrayList<File>();
         for (File tempFile : files) {

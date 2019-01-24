@@ -17,25 +17,28 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+
+<<<<<<< HEAD
 //@Ignore("To be ignored 'til all mappings have been applied")
+=======
+>>>>>>> develop
 public class IssuesTest extends AbstractIssueTest {
 
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
-    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
+    public void issue281FattpaToCII() throws Exception {
+        //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
 
-        // check conversion xmlcen -> xmlcen is without errors.
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
-
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
-        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
-
-        assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
-
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
+        for (IConversionIssue issue : convert.getIssues()) {
+            assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
+        }
     }
 
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issueeisi41() throws IOException, SAXException, TransformerException {
     	
@@ -61,6 +64,77 @@ public class IssuesTest extends AbstractIssueTest {
 
         assertTrue(evaluate != null && !evaluate.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "2017-10-15T00:00:00", evaluate);
+    }
+
+    @Ignore("To be ignored 'til all mappings have been applied")
+    @Test
+    public void issue259() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-259-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+
+        String taxCategory = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
+        assertTrue(taxCategory != null && !taxCategory.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "E", taxCategory);
+
+        String multiplier = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
+        assertTrue(multiplier != null && !multiplier.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "4.00", multiplier);
+
+        String baseAmount = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
+        assertTrue(baseAmount != null && !baseAmount.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "1000.00", baseAmount);
+
+        // Ritenuta will go to not-mapped-values attachment
+
+        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+
+        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
+        String attachment = new String(Base64.decodeBase64(evaluateAttachment.getBytes()));
+
+        assertTrue(attachment.contains("Ritenuta: SI"));
+
+        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
+
+        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values", evaluateAttachmentFileName);
+    }
+
+    @Test
+    public void eisi121() throws IOException, SAXException, TransformerException {
+
+        String invoice = "/eisi-121.xml";
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(invoice, "xmlcen", "xmlcen");
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream(invoice), "UTF-8").getBytes() )));
+
+        ByteArrayInputStream convertedInvoice = new ByteArrayInputStream(conversion.getResult());
+        String convertedXml = new String(conversion.getResult(), "UTF-8");
+
+        try {
+            documentBuilder.parse(convertedInvoice);
+        } catch(Exception e) {
+            fail( "========\n" + originalXml + "========\n" + convertedXml);
+        }
+
+    }
+
+    @Test
+    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
+
+        // check conversion xmlcen -> xmlcen is without errors.
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
+
+        assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
+
     }
 
     @Test
@@ -208,43 +282,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
     }
 
-    @Test
-    public void issue259() throws Exception {
 
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-259-fattpa.xml");
-
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
-
-
-        String taxCategory = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='TaxCategory']//*[local-name()='ID']/text()");
-        assertTrue(taxCategory != null && !taxCategory.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "E", taxCategory);
-
-        String multiplier = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='MultiplierFactorNumeric']/text()");
-        assertTrue(multiplier != null && !multiplier.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "4.00", multiplier);
-
-        String baseAmount = evalXpathExpression(convert, "//*[local-name()='AllowanceCharge'][*[local-name()='Amount']/text()='40.00']//*[local-name()='BaseAmount']/text()");
-        assertTrue(baseAmount != null && !baseAmount.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "1000.00", baseAmount);
-
-        // Ritenuta will go to not-mapped-values attachment
-
-        String evaluateAttachment = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
-        String evaluateAttachmentMimeCode = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
-        String evaluateAttachmentFileName = evalXpathExpression(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
-
-        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
-        String attachment = new String(Base64.decodeBase64(evaluateAttachment.getBytes()));
-
-        assertTrue(attachment.contains("Ritenuta: SI"));
-
-        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
-
-        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values", evaluateAttachmentFileName);
-    }
 
     @Test
     public void issue257() throws Exception {
@@ -357,15 +395,5 @@ public class IssuesTest extends AbstractIssueTest {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
-    @Test
-    public void issue281FattpaToCII() throws Exception {
-        //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
-
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
-        for (IConversionIssue issue : convert.getIssues()) {
-            assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
-        }
-    }
 
 }

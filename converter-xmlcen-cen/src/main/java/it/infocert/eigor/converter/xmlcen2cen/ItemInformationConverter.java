@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.xmlcen2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
@@ -58,7 +59,7 @@ public class ItemInformationConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0031(document, cenInvoice, errors);
     }
 }

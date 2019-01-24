@@ -18,11 +18,8 @@
     <logger name="it.infocert.eigor.api.xml.XSDValidator" level="info" />
     <logger name="it.infocert.eigor.api.SchematronValidator" level="info" />
     <logger name="it.infocert.eigor.api.io" level="warn" />
-
     <logger name="it.infocert.eigor.LowLevelAPIUsage" level="all" />
-
     <logger name="com.helger.commons.xml.ls" level="info" />
-    <logger name="it.infocert.eigor.api.xml.CachedResourceResolver" level="all" />
     <logger name="it.infocert.eigor.LowLevelAPIUsage" level="all" />
     <logger name="com.helger.jaxb.validation.LoggingValidationEventHandler" level="off" />
     <logger name="it.infocert" level="error" />

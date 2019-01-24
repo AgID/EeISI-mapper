@@ -5,6 +5,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -85,7 +86,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
 //    /Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBT0029_31_32(document, cenInvoice, errors, callingLocation);
         mapBankIdentifier(cenInvoice, document);
     }

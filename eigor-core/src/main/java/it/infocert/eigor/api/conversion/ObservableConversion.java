@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +45,39 @@ public class ObservableConversion extends AbstractObservable {
     private final Boolean forceConversion;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCen, FromCenConversion fromCen, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, List<ConversionCallback> listeners) {
-        super(checkNotNull(listeners), ruleRepository);
-        this.toCen = checkNotNull(toCen);
-        this.fromCen = checkNotNull(fromCen);
+    /**
+     * @param ruleRepository
+     * @param toCenConversion
+     * @param fromCenConversion
+     * @param invoiceInSourceFormat
+     * @param forceConversion
+     * @param invoiceFileName
+     * @param callbacks
+     */
+    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, ConversionCallback... callbacks) {
+        this(
+                ruleRepository,
+                toCenConversion,
+                fromCenConversion,
+                invoiceInSourceFormat,
+                forceConversion,
+                invoiceFileName,
+                Arrays.asList( callbacks ));
+    }
+
+    /**
+     * @param ruleRepository
+     * @param toCenConversion
+     * @param fromCenConversion
+     * @param invoiceInSourceFormat
+     * @param forceConversion
+     * @param invoiceFileName
+     * @param callbacks
+     */
+    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, List<ConversionCallback> callbacks) {
+        super(checkNotNull(callbacks), ruleRepository);
+        this.toCen = checkNotNull(toCenConversion);
+        this.fromCen = checkNotNull(fromCenConversion);
 
         checkNotNull(invoiceInSourceFormat, "The binary version of the invoice is mandatory.");
         try {

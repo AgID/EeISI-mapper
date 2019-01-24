@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -22,7 +23,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
     private static final Logger log = LoggerFactory.getLogger(AdditionalSupportingDocumentsConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0024AdditionalSupportingDocuments().isEmpty()) {

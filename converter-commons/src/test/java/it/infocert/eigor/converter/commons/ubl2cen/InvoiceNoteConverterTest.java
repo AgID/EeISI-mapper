@@ -22,7 +22,7 @@ public class InvoiceNoteConverterTest {
         Document document = makeDocumentWithInvoiceNote("#TESTSUBJECTCODE#TESTNOTE");
         InvoiceNoteConverter converter = new InvoiceNoteConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
         BT0021InvoiceNoteSubjectCode bt0021 = invoice.getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode(0);
         BT0022InvoiceNote bt0022 = invoice.getBG0001InvoiceNote(0).getBT0022InvoiceNote(0);
 
@@ -35,7 +35,7 @@ public class InvoiceNoteConverterTest {
         Document document = makeDocumentWithInvoiceNote("#TESTSUBJECTCODE#", "TESTNOTE");
         InvoiceNoteConverter converter = new InvoiceNoteConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
         BT0021InvoiceNoteSubjectCode bt0021 = invoice.getBG0001InvoiceNote(0).getBT0021InvoiceNoteSubjectCode(0);
         BT0022InvoiceNote bt0022 = invoice.getBG0001InvoiceNote(0).getBT0022InvoiceNote(0);
 
@@ -48,7 +48,7 @@ public class InvoiceNoteConverterTest {
         Document document = makeDocumentWithInvoiceNote("TESTNOTE");
         InvoiceNoteConverter converter = new InvoiceNoteConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN);
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
         BG0001InvoiceNote bg0001 = invoice.getBG0001InvoiceNote(0);
         BT0022InvoiceNote bt0022 = bg0001.getBT0022InvoiceNote(0);
 

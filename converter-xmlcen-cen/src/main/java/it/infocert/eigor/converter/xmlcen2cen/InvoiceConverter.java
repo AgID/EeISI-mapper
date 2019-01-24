@@ -6,6 +6,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.AttachmentToFileReferenceConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -59,7 +60,7 @@ public class InvoiceConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0024(document, cenInvoice, errors);
     }
 }

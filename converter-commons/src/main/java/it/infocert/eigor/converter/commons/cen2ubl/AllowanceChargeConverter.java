@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.BigDecimalToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -36,7 +37,7 @@ import java.util.List;
 public class AllowanceChargeConverter implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         TypeConverter<BigDecimal, String> bdStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
 
         Iso4217CurrenciesFundsCodes currencyCode = null;

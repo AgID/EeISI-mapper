@@ -49,7 +49,7 @@ class ConsoleOutputConversionCallback extends AbstractConversionCallback {
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
     }
 
-    @Override public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
+    @Override public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToOutputStream(ctx.getRuleReport(), out);
         if (ctx.getRuleReport().hasFailures()) {
             if (ctx.isForceConversion()) {

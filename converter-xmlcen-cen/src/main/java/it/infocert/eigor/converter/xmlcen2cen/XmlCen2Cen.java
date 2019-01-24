@@ -274,7 +274,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
         List<CustomMapping<org.jdom2.Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.XMLCEN_IN);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.XMLCEN_IN, null);
         }
     }
 

@@ -33,7 +33,7 @@ public interface ConversionCallback {
         void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception;
 
         /** Invoked only if the CEN rules failed in verify the CEN invoice. */
-        void onFailedVerifingCenRules(ConversionContext ctx) throws Exception;
+        void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception;
 
         void onStartingFromCenTransformation(ConversionContext ctx) throws Exception;
 

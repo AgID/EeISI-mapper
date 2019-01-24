@@ -48,7 +48,7 @@ public class Ubl2CenConfigurationFileTest {
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-one", "converterdata/converter-ubl-cen/mappings/one_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.many-to-one", "converterdata/converter-ubl-cen/mappings/many_to_one.properties")
                 .addProperty("eigor.converter.ubl-cen.mapping.one-to-many", "converterdata/converter-ubl-cen/mappings/one_to_many.properties")
-                .addProperty("eigor.converter.ubl-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/xsd/UBL-Invoice-2.1.xsd")
+                .addProperty("eigor.converter.ubl-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd")
                 .addProperty("eigor.converter.ubl-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/ubl/schematron-xslt/EN16931-UBL-validation.xslt")
                 .addProperty("eigor.converter.ubl-cen.schematron.auto-update-xslt", "false")
                 .addProperty("eigor.converter.ubl-cen.mapping.custom", "converterdata/converter-ubl-cen/mappings/custom.conf")
@@ -104,7 +104,7 @@ public class Ubl2CenConfigurationFileTest {
 
     private List<IConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
-        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ubl/xsd/UBL-Invoice-2.1.xsd");
+        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd");
         XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBL_IN);
         return xsdValidator.validate(bytes);
     }

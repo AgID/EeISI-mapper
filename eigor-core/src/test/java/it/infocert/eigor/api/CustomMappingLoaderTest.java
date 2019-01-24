@@ -138,7 +138,7 @@ final class TestFromCenConverter extends AbstractFromCenConverter {
 class TestCustomMapper implements CustomMapping<String> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, String s, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, String s, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         System.out.println("Success!");
     }
 }

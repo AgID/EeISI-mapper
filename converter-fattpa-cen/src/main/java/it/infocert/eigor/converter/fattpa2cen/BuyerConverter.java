@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -78,13 +79,17 @@ public class BuyerConverter implements CustomMapping<Document> {
                 Element codiceDestinatario = datiTrasmissione.getChild("CodiceDestinatario");
                 Element pecDestinatario = datiTrasmissione.getChild("PECDestinatario");
                 if (codiceDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(ipa, codiceDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier =
+                            new BT0049BuyerElectronicAddressAndSchemeIdentifier(
+                                new Identifier("9921", codiceDestinatario.getText())
+                            );
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
                     invoice.getBG0007Buyer(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().add(buyerElectronicAddressAndSchemeIdentifier);
                 } else if (pecDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(pec, pecDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(
+                            new Identifier(pec, pecDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
@@ -96,7 +101,7 @@ public class BuyerConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0007(document, cenInvoice, errors);
     }
 }

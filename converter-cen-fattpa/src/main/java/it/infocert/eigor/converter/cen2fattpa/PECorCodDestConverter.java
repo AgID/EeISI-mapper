@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasmissioneType;
@@ -22,7 +23,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
     private static final String ipa = "IT:IPA";
 
     @Override
-    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         if (!cenInvoice.getBG0007Buyer().isEmpty()) {
             BG0007Buyer buyer = cenInvoice.getBG0007Buyer(0);
             if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
@@ -31,12 +32,14 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                     datiTrasmissione = new DatiTrasmissioneType();
                     fatturaElettronicaType.getFatturaElettronicaHeader().setDatiTrasmissione(datiTrasmissione);
                 }
-                BT0049BuyerElectronicAddressAndSchemeIdentifier address = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                if (address.getValue().getIdentificationSchema() != null) {
-                    String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
-                    String identifier = address.getValue().getIdentifier();
+                BT0049BuyerElectronicAddressAndSchemeIdentifier bt49AddressAndScheme = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                if (bt49AddressAndScheme.getValue().getIdentificationSchema() != null) {
+
+                    String identificationSchema = bt49AddressAndScheme.getValue().getIdentificationSchema().toUpperCase();
+                    String identifier = bt49AddressAndScheme.getValue().getIdentifier();
                     mapDestinatario(errors, datiTrasmissione, identificationSchema, identifier);
                     mapFormatoTrasmissione(fatturaElettronicaType, identificationSchema);
+
                 }
             }
         }
@@ -51,7 +54,8 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 break;
             case coddest:
             case ipa:
-                datiTrasmissione.setCodiceDestinatario(identifier);
+                // see https://jira.infocert.it/browse/EISI-119
+                datiTrasmissione.setCodiceDestinatario("9921");
                 break;
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
