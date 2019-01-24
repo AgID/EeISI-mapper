@@ -70,9 +70,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         }
                         Element natura = datiRiepilogo.getChild("Natura");
                         Untdid5305DutyTaxFeeCategories code = null;
+                        BT0121VatExemptionReasonCode bt0121 = null;
                         if (natura != null) {
                             try {
                                 code = dutyTaxFeeCategories.convert(natura.getText());
+                                bt0121 = new BT0121VatExemptionReasonCode(natura.getText());
+                                bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                             } catch (NullPointerException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
