@@ -22,6 +22,16 @@ import static org.junit.Assert.*;
 
 public class IssuesTest extends AbstractIssueTest {
 
+    @Test
+    public void issueEisi135() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-135-xmlcen.xml",
+                "xmlcen",
+                "fatturapa");
+
+    }
+
     @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue281FattpaToCII() throws Exception {

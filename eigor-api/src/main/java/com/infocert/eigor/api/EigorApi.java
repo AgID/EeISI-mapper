@@ -66,9 +66,12 @@ public class EigorApi {
         ToCenConversion toCen = checkNotNull(
                 builder.getConversionRepository().findConversionToCen(sourceFormat),
                 "Source format '%s' not supported. Available formats are %s", sourceFormat, builder.getConversionRepository().supportedToCenFormats());
+        log.debug("Converting input as '{}' to to CEN using converter '{}'.", sourceFormat, toCen.getClass().getName());
+
         FromCenConversion fromCen = checkNotNull(
                 builder.getConversionRepository().findConversionFromCen(targetFormat),
                 "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
+        log.debug("Converting CEN to output as '{}' using converter '{}'.", targetFormat, fromCen.getClass().getName());
 
         ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(
                 new DebugConversionCallback(outputFolderForThisTransformation),

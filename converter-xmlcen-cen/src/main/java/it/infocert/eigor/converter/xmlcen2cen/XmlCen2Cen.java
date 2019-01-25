@@ -178,6 +178,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     }
 
     private void traverseTree(Element root, BTBG bg, List<IConversionIssue> errors) {
+
         final List<Element> children = root.getChildren();
         children.forEach(child -> {
             Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
