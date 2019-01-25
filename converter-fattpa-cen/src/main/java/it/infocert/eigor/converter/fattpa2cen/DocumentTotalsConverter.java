@@ -249,7 +249,8 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                                     BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(importoRitenutaValue);
                                     bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
-
+                                    BT0113PaidAmount bt0113 = new BT0113PaidAmount(importoRitenutaValue);
+                                    invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(bt0113);
                                 } catch (NumberFormatException e) {
                                     EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                             .location(callingLocation)
@@ -357,6 +358,10 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                         errors.add(ConversionIssue.newError(ere));
                                     }
                                 }
+                            }
+                            if(invoice.getBT0020PaymentTerms().isEmpty()){
+                                BT0020PaymentTerms bt0020 = new BT0020PaymentTerms("BT-113 represents Withholding tax amount");
+                                invoice.getBT0020PaymentTerms().add(bt0020);
                             }
 
                         }

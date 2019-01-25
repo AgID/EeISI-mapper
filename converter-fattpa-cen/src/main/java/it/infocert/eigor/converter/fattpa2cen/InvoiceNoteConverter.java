@@ -32,9 +32,16 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
                     bg0001 = new BG0001InvoiceNote();
                     if (datiGeneraliDocumento.getName().equals("DatiGeneraliDocumento")) {
                         List<Element> causaleList = datiGeneraliDocumento.getChildren("Causale");
+                        Element art73 = datiGeneraliDocumento.getChild("Art73");
                         if (causaleList != null) {
+                            String art73Text = "";
+                            if(art73 != null){
+                                art73Text = ":"+art73.getText();
+                            }
                             for (Element causale : causaleList) {
-                                BT0022InvoiceNote invoiceNote = new BT0022InvoiceNote(causale.getText());
+                                String bt0022 = causale.getText();
+                                bt0022 += art73Text;
+                                BT0022InvoiceNote invoiceNote = new BT0022InvoiceNote(bt0022);
                                 bg0001.getBT0022InvoiceNote().add(invoiceNote);
                             }
                         }

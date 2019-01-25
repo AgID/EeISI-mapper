@@ -399,6 +399,21 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     bg0031.getBG0032ItemAttributes().add(bg0032);
                                 }
                             }
+                            Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+                            if(datiGenerali != null){
+                                Element datiTrasporto = datiGenerali.getChild("DatiTrasporto");
+                                if(datiTrasporto != null){
+                                    Element causaleTrasporto = datiTrasporto.getChild("CausaleTrasporto");
+                                    if (causaleTrasporto != null) {
+                                        bg0032 = new BG0032ItemAttributes();
+                                        BT0160ItemAttributeName itemAttributeName = new BT0160ItemAttributeName(causaleTrasporto.getText());
+                                        bg0032.getBT0160ItemAttributeName().add(itemAttributeName);
+                                        BT0161ItemAttributeValue itemAttributeValue = new BT0161ItemAttributeValue(causaleTrasporto.getText());
+                                        bg0032.getBT0161ItemAttributeValue().add(itemAttributeValue);
+                                        bg0031.getBG0032ItemAttributes().add(bg0032);
+                                    }
+                                }
+                            }
 
                             bg0025.getBG0031ItemInformation().add(bg0031);
 

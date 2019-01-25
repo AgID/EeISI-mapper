@@ -18,10 +18,9 @@ import java.util.List;
 public class BuyerConverter implements CustomMapping<Document> {
 
     private static final String pec = "IT:PEC";
-    private static final String ipa = "IT:IPA";
+    private static final String ipa = "9921";
     private static final String cf = "IT:CF";
     private static final String eori = "IT:EORI";
-    private static final String bt49SchemeId = "9921";
 
     public ConversionResult<BG0000Invoice> toBG0007(Document document, BG0000Invoice invoice, List<IConversionIssue> errors) {
 
@@ -80,13 +79,13 @@ public class BuyerConverter implements CustomMapping<Document> {
                 Element codiceDestinatario = datiTrasmissione.getChild("CodiceDestinatario");
                 Element pecDestinatario = datiTrasmissione.getChild("PECDestinatario");
                 if (codiceDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(bt49SchemeId , codiceDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(ipa , codiceDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
                     invoice.getBG0007Buyer(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().add(buyerElectronicAddressAndSchemeIdentifier);
                 } else if (pecDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(bt49SchemeId , pecDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(pec , pecDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }

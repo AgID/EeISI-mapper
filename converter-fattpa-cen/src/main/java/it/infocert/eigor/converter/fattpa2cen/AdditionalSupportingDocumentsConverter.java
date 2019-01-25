@@ -24,8 +24,12 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
 
         BG0024AdditionalSupportingDocuments bg0024;
 
+
+        TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.FATTPA_IN);
+
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
+        Element fatturaElettronicaHeader = rootElement.getChild("FatturaElettronicaHeader");
 
         if (fatturaElettronicaBody != null) {
             List<Element> allegati = fatturaElettronicaBody.getChildren();
@@ -44,7 +48,6 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     }
                     Element attachment = allegato.getChild("Attachment");
                     if (attachment != null) {
-                        TypeConverter<Element, FileReference> strToBinConverter = AttachmentToFileReferenceConverter.newConverter(DefaultEigorConfigurationLoader.configuration(), ErrorCode.Location.FATTPA_IN);
                         try {
                             Element formatoAttachment = allegato.getChild("FormatoAttachment");
                             if (formatoAttachment != null) {
@@ -66,6 +69,171 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                             .addParam(ErrorMessage.OFFENDINGITEM_PARAM, attachment.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+                    }
+                    Element terzoIntermediarioOSoggettoEmittente = fatturaElettronicaHeader.getChild("TerzoIntermediarioOSoggettoEmittente");
+                    if(terzoIntermediarioOSoggettoEmittente != null){
+                        try {
+                            Element datiAnagrafici = terzoIntermediarioOSoggettoEmittente.getChild("DatiAnagrafici");
+                            if (datiAnagrafici != null) {
+                                Element idFiscaleIVA = datiAnagrafici.getChild("IdFiscaleIVA");
+                                if(idFiscaleIVA != null){
+                                    Element idPaese = idFiscaleIVA.getChild("IdPaese");
+                                    if(idPaese != null){
+                                        idPaese.setAttribute("mimeCode", "text/csv");
+                                        idPaese.setAttribute("filename", "IdPaese");
+                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(idPaese));
+                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    }
+                                    Element idCodice = idFiscaleIVA.getChild("IdCodice");
+                                    if(idCodice != null){
+                                        idCodice.setAttribute("mimeCode", "text/csv");
+                                        idCodice.setAttribute("filename", "IdCodice");
+                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(idCodice));
+                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    }
+                                }
+                                Element anagrafica = datiAnagrafici.getChild("Anagrafica");
+                                if(anagrafica != null){
+                                    Element denominazione = anagrafica.getChild("Denominazione");
+                                    if(denominazione != null){
+                                        denominazione.setAttribute("mimeCode", "text/csv");
+                                        denominazione.setAttribute("filename", "Denominazione");
+                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(denominazione));
+                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    }
+                                    Element titolo = anagrafica.getChild("Titolo");
+                                    if(titolo != null){
+                                        titolo.setAttribute("mimeCode", "text/csv");
+                                        titolo.setAttribute("filename", "Titolo");
+                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(titolo));
+                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    }
+                                    Element codEORI = anagrafica.getChild("CodEORI");
+                                    if(codEORI != null){
+                                        codEORI.setAttribute("mimeCode", "text/csv");
+                                        codEORI.setAttribute("filename", "CodEORI");
+                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codEORI));
+                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    }
+                                }
+                                Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
+                                if(codiceFiscale != null){
+                                    codiceFiscale.setAttribute("mimeCode", "text/csv");
+                                    codiceFiscale.setAttribute("filename", "CodiceFiscale");
+                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceFiscale));
+                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                }
+                            }
+                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, terzoIntermediarioOSoggettoEmittente.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+                    }
+                    Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
+                    if(terzoIntermediarioOSoggettoEmittente != null){
+                        try {
+                            soggettoEmittente.setAttribute("mimeCode", "text/csv");
+                            soggettoEmittente.setAttribute("filename", "SoggettoEmittente");
+                            BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                    new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(soggettoEmittente));
+                            bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, soggettoEmittente.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+                    }
+                    Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+                    if(datiGenerali != null) {
+                        Element datiContratto = datiGenerali.getChild("DatiContratto");
+                        if (datiContratto != null) {
+                            try {
+                                Element codiceCUP = datiContratto.getChild("CodiceCUP");
+                                if (codiceCUP != null) {
+                                    codiceCUP.setAttribute("mimeCode", "text/csv");
+                                    codiceCUP.setAttribute("filename", "CodiceCUP");
+                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceCUP));
+                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                }
+                                Element codiceCIG = datiContratto.getChild("CodiceCIG");
+                                if (codiceCIG != null) {
+                                    codiceCIG.setAttribute("mimeCode", "text/csv");
+                                    codiceCIG.setAttribute("filename", "CodiceCIG");
+                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceCIG));
+                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                }
+                            } catch (IllegalArgumentException | ConversionFailedException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(
+                                        e,
+                                        ErrorMessage.builder()
+                                                .message(e.getMessage())
+                                                .location(ErrorCode.Location.FATTPA_IN)
+                                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiContratto.toString())
+                                                .build());
+                                errors.add(ConversionIssue.newError(ere));
+                            }
+                        }
+                    }
+                    Element datiVeicoli = fatturaElettronicaBody.getChild("DatiVeicoli");
+                    if(datiVeicoli != null){
+                        try {
+                            Element data = datiVeicoli.getChild("Data");
+                            if(data != null){
+                                data.setAttribute("mimeCode", "text/csv");
+                                data.setAttribute("filename", "Data");
+                                BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                        new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(data));
+                                bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                            }
+                            Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
+                            if(totalePercorso != null){
+                                totalePercorso.setAttribute("mimeCode", "text/csv");
+                                totalePercorso.setAttribute("filename", "TotalePercorso");
+                                BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
+                                        new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(totalePercorso));
+                                bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                            }
+                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiVeicoli.toString())
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
