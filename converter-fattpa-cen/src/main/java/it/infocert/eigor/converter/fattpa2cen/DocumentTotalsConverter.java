@@ -369,6 +369,20 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 }
             }
 
+            List<BG0021DocumentLevelCharges> bg0021DocumentLevelCharges = invoice.getBG0021DocumentLevelCharges();
+            BigDecimal sumOfBT0021 = new BigDecimal(0);
+            for(int i=0; i<bg0021DocumentLevelCharges.size(); i++){
+                sumOfBT0021 = sumOfBT0021.add(bg0021DocumentLevelCharges.get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
+            }
+            totals.getBT0108SumOfChargesOnDocumentLevel().add(new BT0108SumOfChargesOnDocumentLevel(sumOfBT0021));
+
+            List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
+            BigDecimal sumOfBT0020 = new BigDecimal(0);
+            for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
+                sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
+            }
+            totals.getBT0107SumOfAllowancesOnDocumentLevel().add(new BT0107SumOfAllowancesOnDocumentLevel(sumOfBT0020));
+
             final Element datiPagamento = fatturaElettronicaBody.getChild("DatiPagamento");
             if (datiPagamento != null) {
                 final Element dettaglioPagamento = datiPagamento.getChild("DettaglioPagamento");
@@ -380,7 +394,10 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             String text = importoPagamento.getText();
                             try {
                                 final BigDecimal importoD = new BigDecimal(text);
-                                totals.getBT0113PaidAmount().add(new BT0113PaidAmount(amountWithVat.subtract(importoD)));
+                                if(totals.getBT0113PaidAmount().isEmpty() || totals.getBT0113PaidAmount().get(0).getValue() != amountWithVat.subtract(importoD)) {
+                                    totals.getBT0113PaidAmount().clear();
+                                    totals.getBT0113PaidAmount().add(new BT0113PaidAmount(amountWithVat.subtract(importoD)));
+                                }
                                 totals.getBT0115AmountDueForPayment().add(new BT0115AmountDueForPayment(importoD));
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
