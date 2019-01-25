@@ -13,6 +13,8 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -73,8 +75,12 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
+                    AttachmentUtil attachmentUtil = new AttachmentUtil();
+                    FileReference fileReference = null;
                     Element terzoIntermediarioOSoggettoEmittente = fatturaElettronicaHeader.getChild("TerzoIntermediarioOSoggettoEmittente");
                     if(terzoIntermediarioOSoggettoEmittente != null){
+                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0);
+                        fileReference = bt0125.getValue();
                         try {
                             Element datiAnagrafici = terzoIntermediarioOSoggettoEmittente.getChild("DatiAnagrafici");
                             if (datiAnagrafici != null) {
@@ -82,58 +88,34 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                 if(idFiscaleIVA != null){
                                     Element idPaese = idFiscaleIVA.getChild("IdPaese");
                                     if(idPaese != null){
-                                        idPaese.setAttribute("mimeCode", "text/csv");
-                                        idPaese.setAttribute("filename", "IdPaese");
-                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(idPaese));
-                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), idPaese.getText());
                                     }
                                     Element idCodice = idFiscaleIVA.getChild("IdCodice");
                                     if(idCodice != null){
-                                        idCodice.setAttribute("mimeCode", "text/csv");
-                                        idCodice.setAttribute("filename", "IdCodice");
-                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(idCodice));
-                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), idCodice.getText());
                                     }
                                 }
                                 Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                                 if(anagrafica != null){
                                     Element denominazione = anagrafica.getChild("Denominazione");
                                     if(denominazione != null){
-                                        denominazione.setAttribute("mimeCode", "text/csv");
-                                        denominazione.setAttribute("filename", "Denominazione");
-                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(denominazione));
-                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), denominazione.getText());
                                     }
                                     Element titolo = anagrafica.getChild("Titolo");
                                     if(titolo != null){
-                                        titolo.setAttribute("mimeCode", "text/csv");
-                                        titolo.setAttribute("filename", "Titolo");
-                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(titolo));
-                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), titolo.getText());
                                     }
                                     Element codEORI = anagrafica.getChild("CodEORI");
                                     if(codEORI != null){
-                                        codEORI.setAttribute("mimeCode", "text/csv");
-                                        codEORI.setAttribute("filename", "CodEORI");
-                                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                                new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codEORI));
-                                        bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codEORI.getText());
                                     }
                                 }
                                 Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
                                 if(codiceFiscale != null){
-                                    codiceFiscale.setAttribute("mimeCode", "text/csv");
-                                    codiceFiscale.setAttribute("filename", "CodiceFiscale");
-                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceFiscale));
-                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceFiscale.getText());
                                 }
                             }
-                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                        } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
                                     ErrorMessage.builder()
@@ -148,14 +130,10 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         }
                     }
                     Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
-                    if(terzoIntermediarioOSoggettoEmittente != null){
+                    if(soggettoEmittente != null){
                         try {
-                            soggettoEmittente.setAttribute("mimeCode", "text/csv");
-                            soggettoEmittente.setAttribute("filename", "SoggettoEmittente");
-                            BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                    new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(soggettoEmittente));
-                            bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
-                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                            attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), soggettoEmittente.getText());
+                        } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
                                     ErrorMessage.builder()
@@ -176,21 +154,13 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             try {
                                 Element codiceCUP = datiContratto.getChild("CodiceCUP");
                                 if (codiceCUP != null) {
-                                    codiceCUP.setAttribute("mimeCode", "text/csv");
-                                    codiceCUP.setAttribute("filename", "CodiceCUP");
-                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceCUP));
-                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCUP.getText());
                                 }
                                 Element codiceCIG = datiContratto.getChild("CodiceCIG");
                                 if (codiceCIG != null) {
-                                    codiceCIG.setAttribute("mimeCode", "text/csv");
-                                    codiceCIG.setAttribute("filename", "CodiceCIG");
-                                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                            new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(codiceCIG));
-                                    bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCIG.getText());
                                 }
-                            } catch (IllegalArgumentException | ConversionFailedException e) {
+                            } catch (IllegalArgumentException | IOException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
                                         ErrorMessage.builder()
@@ -210,21 +180,13 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         try {
                             Element data = datiVeicoli.getChild("Data");
                             if(data != null){
-                                data.setAttribute("mimeCode", "text/csv");
-                                data.setAttribute("filename", "Data");
-                                BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                        new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(data));
-                                bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), data.getText());
                             }
                             Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
                             if(totalePercorso != null){
-                                totalePercorso.setAttribute("mimeCode", "text/csv");
-                                totalePercorso.setAttribute("filename", "TotalePercorso");
-                                BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 =
-                                        new BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(strToBinConverter.convert(totalePercorso));
-                                bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().add(bt0125);
+                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), totalePercorso.getText());
                             }
-                        } catch (IllegalArgumentException | ConversionFailedException e) {
+                        } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
                                     ErrorMessage.builder()
