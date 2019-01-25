@@ -94,9 +94,18 @@
                                     <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
                                     <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
                                     <schematronPattern>*.sch</schematronPattern>
-                                    <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
-                                    <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
-                                    <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
+                                </configuration>
+                                <goals>
+                                    <goal>convert</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>cen-xslt-generation</id>
+                                <configuration>
+                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron</schematronDirectory>
+                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron-xslt</xsltDirectory>
+                                    <schematronPattern>*.sch</schematronPattern>
                                 </configuration>
                                 <goals>
                                     <goal>convert</goal>
@@ -166,6 +175,20 @@
                                 <configuration>
                                     <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
                                     <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
+                                    <schematronPattern>*.sch</schematronPattern>
+                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
+                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
+                                </configuration>
+                                <goals>
+                                    <goal>convert</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>cen-xslt-generation</id>
+                                <configuration>
+                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron</schematronDirectory>
+                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron-xslt</xsltDirectory>
                                     <schematronPattern>*.sch</schematronPattern>
                                     <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
                                     <updateOnSchematronChanges>true</updateOnSchematronChanges>
