@@ -1,14 +1,11 @@
 package com.infocert.eigor.api;
 
 
-
-
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
@@ -17,9 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.*;
 
 public class ITGuaranteedInvoiceExamples {
@@ -27,32 +23,37 @@ public class ITGuaranteedInvoiceExamples {
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    private List<File> testInvoices;
-    private EigorApi api;
+    static List<File> testInvoices = new ArrayList<>();
+    EigorApi api;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUpTestInvoices() throws IOException {
 
-        final ClassLoader classLoader = this.getClass().getClassLoader();
+        final ClassLoader classLoader = ITGuaranteedInvoiceExamples.class.getClassLoader();
         final URL resource = classLoader.getResource("working-examples" );
         assert resource != null;
 
         final File examplesDirectory = new File(resource.getFile());
         if (examplesDirectory.isDirectory()) {
             final File[] files = Preconditions.checkNotNull(examplesDirectory.listFiles(), "No files found in resources/working-examples" );
-            this.testInvoices = Arrays.stream(files).filter(file -> file.getName().endsWith(".xml" )).collect(Collectors.toList());
-
+            testInvoices = Arrays.stream(files).filter(file -> file.getName().endsWith(".xml" )).collect(toList());
         }
+
+    }
+
+    @Before
+    public void setUpAPI() throws Exception {
+
+        assumeWorkdirExists();
 
         final File outputFolderFile = tmp.newFolder();
         if (!outputFolderFile.exists()) outputFolderFile.mkdirs();
-
-
         api = new EigorApiBuilder()
                 .enableAutoCopy()
                 .withOutputFolder(outputFolderFile)
                 .enableForce()
                 .build();
+
     }
 
     @Test
@@ -95,12 +96,9 @@ public class ITGuaranteedInvoiceExamples {
     @Test
     public void shouldConvertACSVDumpToCSVCenAndFatturaPA() throws Exception {
 
-        List<File> ublFiles = testInvoices.stream().filter(new Predicate<File>() {
-            @Override
-            public boolean test(File file) {
-                return file.getName().startsWith("ubl");
-            }
-        }).collect(Collectors.toList());
+        List<File> ublFiles = testInvoices.stream()
+                .filter(file -> file.getName().startsWith("ubl"))
+                .collect(toList());
 
 
         for (File invoice : ublFiles) {
@@ -112,7 +110,7 @@ public class ITGuaranteedInvoiceExamples {
 
                 final File invoiceCen = findInvoiceCen(tempFiles, null);
 
-                String message = "Not found in " + Arrays.stream(tempFiles).map(f -> f.getAbsolutePath()).reduce((ass, f) -> ass = ass + f);
+                String message = "Not found in " + tempFiles;
                 assertNotNull(message, invoiceCen);
 
                 final FileInputStream cenIs = new FileInputStream(invoiceCen);
@@ -174,9 +172,9 @@ public class ITGuaranteedInvoiceExamples {
         }
     }
 
-
-    @Test
-    public void shouldConvertACSVDumpToCSVCenAndUbl() throws Exception {
-
+    private static void assumeWorkdirExists() {
+        File workdir = new File(DefaultEigorConfigurationLoader.configuration().getMandatoryString("eigor.workdir"));
+        Assume.assumeTrue(String.format("Workdir at '%s' not available here.", workdir.getAbsolutePath()), workdir.exists() && workdir.isDirectory());
     }
+
 }
