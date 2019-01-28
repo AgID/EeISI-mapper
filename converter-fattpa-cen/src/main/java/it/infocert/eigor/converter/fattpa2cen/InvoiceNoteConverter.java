@@ -29,7 +29,6 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
             if (datiGenerali != null) {
                 List<Element> datiGeneraliDocumenti = datiGenerali.getChildren();
                 for (Element datiGeneraliDocumento : datiGeneraliDocumenti) {
-                    bg0001 = new BG0001InvoiceNote();
                     if (datiGeneraliDocumento.getName().equals("DatiGeneraliDocumento")) {
                         List<Element> causaleList = datiGeneraliDocumento.getChildren("Causale");
                         Element art73 = datiGeneraliDocumento.getChild("Art73");
@@ -39,14 +38,13 @@ public class InvoiceNoteConverter implements CustomMapping<Document> {
                                 art73Text = ":"+art73.getText();
                             }
                             for (Element causale : causaleList) {
+                                bg0001 = new BG0001InvoiceNote();
                                 String bt0022 = causale.getText();
                                 bt0022 += art73Text;
                                 BT0022InvoiceNote invoiceNote = new BT0022InvoiceNote(bt0022);
                                 bg0001.getBT0022InvoiceNote().add(invoiceNote);
+                                invoice.getBG0001InvoiceNote().add(bg0001);
                             }
-                        }
-                        if(bg0001.getBT0022InvoiceNote().size() != 0) {
-                            invoice.getBG0001InvoiceNote().add(bg0001);
                         }
                     }
                 }

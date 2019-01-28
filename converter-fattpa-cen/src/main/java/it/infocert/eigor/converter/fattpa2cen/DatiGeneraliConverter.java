@@ -20,9 +20,9 @@ public class DatiGeneraliConverter implements CustomMapping<Document> {
         if(fatturaElettronicaBody != null) {
             Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
             if (datiGenerali != null) {
-                BG0003PrecedingInvoiceReference bg0003 = new BG0003PrecedingInvoiceReference();
                 Element datiFattureCollegate = datiGenerali.getChild("DatiFattureCollegate");
                 if (datiFattureCollegate != null) {
+                    BG0003PrecedingInvoiceReference bg0003 = new BG0003PrecedingInvoiceReference();
                     Element idDocumento = datiFattureCollegate.getChild("IdDocumento");
                     if(idDocumento != null){
                         BT0025PrecedingInvoiceReference bg0025 = new BT0025PrecedingInvoiceReference(idDocumento.getText());
@@ -33,22 +33,22 @@ public class DatiGeneraliConverter implements CustomMapping<Document> {
                         BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new org.joda.time.LocalDate(data.getText()));
                         bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
                     }
+                    invoice.getBG0003PrecedingInvoiceReference().add(bg0003);
                 }
                 Element fatturaPrincipale = datiGenerali.getChild("FatturaPrincipale");
                 if (fatturaPrincipale != null) {
+                    BG0003PrecedingInvoiceReference bg0003PrecedingInvoiceReference = new BG0003PrecedingInvoiceReference();
                     Element numeroFatturaPrincipale = fatturaPrincipale.getChild("NumeroFatturaPrincipale");
                     if(numeroFatturaPrincipale != null){
                         BT0025PrecedingInvoiceReference bg0025 = new BT0025PrecedingInvoiceReference(numeroFatturaPrincipale.getText());
-                        bg0003.getBT0025PrecedingInvoiceReference().add(bg0025);
+                        bg0003PrecedingInvoiceReference.getBT0025PrecedingInvoiceReference().add(bg0025);
                     }
                     Element dataFatturaPrincipale = fatturaPrincipale.getChild("DataFatturaPrincipale");
                     if(dataFatturaPrincipale != null){
                         BT0026PrecedingInvoiceIssueDate bt0026 = new BT0026PrecedingInvoiceIssueDate(new org.joda.time.LocalDate(dataFatturaPrincipale.getText()));
-                        bg0003.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
+                        bg0003PrecedingInvoiceReference.getBT0026PrecedingInvoiceIssueDate().add(bt0026);
                     }
-                }
-                if(!bg0003.getBT0026PrecedingInvoiceIssueDate().isEmpty() || !bg0003.getBT0025PrecedingInvoiceReference().isEmpty()) {
-                    invoice.getBG0003PrecedingInvoiceReference().add(bg0003);
+                    invoice.getBG0003PrecedingInvoiceReference().add(bg0003PrecedingInvoiceReference);
                 }
             }
         }

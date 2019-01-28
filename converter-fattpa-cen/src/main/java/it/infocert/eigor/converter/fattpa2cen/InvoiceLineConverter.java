@@ -229,34 +229,14 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
                             Element dataInizioPeriodo = dettaglioLinee.getChild("DataInizioPeriodo");
                             if (dataInizioPeriodo != null) {
-                                try {
-                                    BT0134InvoiceLinePeriodStartDate bt0134InvoiceLinePeriodStartDate = new BT0134InvoiceLinePeriodStartDate(new org.joda.time.LocalDate(dataInizioPeriodo.getText()));
-                                    bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134InvoiceLinePeriodStartDate);
-                                } catch (NumberFormatException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
-                                }
+                                BT0134InvoiceLinePeriodStartDate bt0134InvoiceLinePeriodStartDate = new BT0134InvoiceLinePeriodStartDate(new org.joda.time.LocalDate(dataInizioPeriodo.getText()));
+                                bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134InvoiceLinePeriodStartDate);
                             }
 
                             Element riferimentoAmministrazione = dettaglioLinee.getChild("RiferimentoAmministrazione");
                             if(riferimentoAmministrazione != null){
-                                try {
-                                    BT0133InvoiceLineBuyerAccountingReference bt0133InvoiceLineBuyerAccountingReference = new BT0133InvoiceLineBuyerAccountingReference(riferimentoAmministrazione.getText());
-                                    bg0025.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133InvoiceLineBuyerAccountingReference);
-                                } catch (NumberFormatException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
-                                }
+                                BT0133InvoiceLineBuyerAccountingReference bt0133InvoiceLineBuyerAccountingReference = new BT0133InvoiceLineBuyerAccountingReference(riferimentoAmministrazione.getText());
+                                bg0025.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133InvoiceLineBuyerAccountingReference);
                             }
 
                             Element dataFinePeriodo = dettaglioLinee.getChild("DataFinePeriodo");
@@ -281,23 +261,13 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (scontoMaggiorazione != null) {
                                 Element percentuale = scontoMaggiorazione.getChild("Percentuale");
                                 Element importo = scontoMaggiorazione.getChild("Importo");
-                                try {
-                                    if(importo != null) {
-                                        BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
-                                        bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
-                                    }
-                                    if(percentuale != null) {
-                                        BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
-                                        bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
-                                    }
-                                } catch (NumberFormatException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
+                                if(importo != null) {
+                                    BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
+                                    bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                                }
+                                if(percentuale != null) {
+                                    BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
+                                    bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
                                 }
                             }
                             bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
@@ -306,23 +276,13 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (scontoMaggiorazione != null) {
                                 Element percentuale = scontoMaggiorazione.getChild("Percentuale");
                                 Element importo = scontoMaggiorazione.getChild("Importo");
-                                try {
-                                    if(importo != null) {
-                                        BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
-                                        bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
-                                    }
-                                    if(percentuale != null) {
-                                        BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
-                                        bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
-                                    }
-                                } catch (NumberFormatException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
+                                if(importo != null) {
+                                    BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
+                                    bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
+                                }
+                                if(percentuale != null) {
+                                    BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
+                                    bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
                                 }
                             }
                             bg0025.getBG0028InvoiceLineCharges().add(bg0028);

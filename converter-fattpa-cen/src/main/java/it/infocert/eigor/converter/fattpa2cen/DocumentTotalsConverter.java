@@ -298,67 +298,6 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                 bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
                             }
 
-                            final Element datiPagamento = fatturaElettronicaBody.getChild("DatiPagamento");
-                            if(datiPagamento != null){
-                                final Element dettaglioPagamento = datiPagamento.getChild("DettaglioPagamento");
-                                final Element condizioniPagamento = datiPagamento.getChild("CondizioniPagamento");
-                                try {
-                                    invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(condizioniPagamento.getText()));
-                                } catch (NumberFormatException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(
-                                            e,
-                                            ErrorMessage.builder()
-                                                    .message(e.getMessage())
-                                                    .location(callingLocation)
-                                                    .action(ErrorCode.Action.HARDCODED_MAP)
-                                                    .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                    .addParam(ErrorMessage.OFFENDINGITEM_PARAM, condizioniPagamento.getText())
-                                                    .build());
-                                    errors.add(ConversionIssue.newError(ere));
-                                }
-                                if(dettaglioPagamento != null){
-                                    Element dataRiferimentoTerminiPagamento = dettaglioPagamento.getChild("DataRiferimentoTerminiPagamento");
-                                    Element giorniTerminiPagamento = dettaglioPagamento.getChild("GiorniTerminiPagamento");
-                                    Element scontoPagamentoAnticipato = dettaglioPagamento.getChild("scontoPagamentoAnticipato");
-                                    Element dataLimitePagamentoAnticipato = dettaglioPagamento.getChild("DataLimitePagamentoAnticipato");
-                                    Element penalitaPagamentiRitardati = dettaglioPagamento.getChild("PenalitaPagamentiRitardati");
-                                    Element dataDecorrenzaPenale = dettaglioPagamento.getChild("DataDecorrenzaPenale");
-
-                                    try{
-                                        if(dataRiferimentoTerminiPagamento != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(dataRiferimentoTerminiPagamento.getText()));
-                                        }
-                                        if(giorniTerminiPagamento != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(giorniTerminiPagamento.getText()));
-                                        }
-                                        if(scontoPagamentoAnticipato != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(scontoPagamentoAnticipato.getText()));
-                                        }
-                                        if(dataLimitePagamentoAnticipato != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(dataLimitePagamentoAnticipato.getText()));
-                                        }
-                                        if(penalitaPagamentiRitardati != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(penalitaPagamentiRitardati.getText()));
-                                        }
-                                        if(dataDecorrenzaPenale != null) {
-                                            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms(dataDecorrenzaPenale.getText()));
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        EigorRuntimeException ere = new EigorRuntimeException(
-                                                e,
-                                                ErrorMessage.builder()
-                                                        .message(e.getMessage())
-                                                        .location(callingLocation)
-                                                        .action(ErrorCode.Action.HARDCODED_MAP)
-                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, dettaglioPagamento.getText())
-                                                        .build());
-                                        errors.add(ConversionIssue.newError(ere));
-                                    }
-                                }
-                            }
                             if(invoice.getBT0020PaymentTerms().isEmpty()){
                                 BT0020PaymentTerms bt0020 = new BT0020PaymentTerms("BT-113 represents Withholding tax amount");
                                 invoice.getBT0020PaymentTerms().add(bt0020);

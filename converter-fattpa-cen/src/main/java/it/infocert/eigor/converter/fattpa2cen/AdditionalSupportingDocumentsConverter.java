@@ -95,6 +95,10 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                         attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), idCodice.getText());
                                     }
                                 }
+                                Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
+                                if(codiceFiscale != null){
+                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceFiscale.getText());
+                                }
                                 Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                                 if(anagrafica != null){
                                     Element denominazione = anagrafica.getChild("Denominazione");
@@ -109,10 +113,6 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                     if(codEORI != null){
                                         attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codEORI.getText());
                                     }
-                                }
-                                Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
-                                if(codiceFiscale != null){
-                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceFiscale.getText());
                                 }
                             }
                         } catch (IllegalArgumentException | IOException e) {
@@ -196,6 +196,35 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                             .error(ErrorCode.Error.ILLEGAL_VALUE)
                                             .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                             .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiVeicoli.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+                    }
+                    Element datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
+                    if(datiOrdineAcquisto != null){
+                        try {
+                            Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
+                            if(codiceCommessaConvenzione != null){
+                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCommessaConvenzione.getText());
+                            }
+                            Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
+                            if(codiceCUP != null){
+                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCUP.getText());
+                            }
+                            Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
+                            if(codiceCIG != null){
+                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCIG.getText());
+                            }
+                        } catch (IllegalArgumentException | IOException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
                                             .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
