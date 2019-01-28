@@ -93,6 +93,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
                     if (!bg0017.getBT0085PaymentAccountName().isEmpty()) {
 
+
                         String bt0086Value = evalExpression( () -> bg0017.getBT0086PaymentServiceProviderIdentifier(0).getValue() );
                         String bt0085Value = evalExpression( () -> bg0017.getBT0085PaymentAccountName(0).getValue() );
                         String bt0084Value = evalExpression( () -> bg0017.getBT0084PaymentAccountIdentifier(0).getValue() );
@@ -122,8 +123,17 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         String beneficiario = dettaglioPagamento.getBeneficiario();
                         dettaglioPagamento.setBeneficiario(String.format("%s %s", beneficiario, bt0085Value));
 
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_02);
+                        dettaglioPagamento.setDataRiferimentoTerminiPagamento(null);
+                        dettaglioPagamento.setGiorniTerminiPagamento(null);
+                        dettaglioPagamento.setDataScadenzaPagamento(null);
+
+                        BigDecimal importoPagamento = evalExpression(() -> invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue());
+                        dettaglioPagamento.setImportoPagamento(importoPagamento);
+
                         if(bt0086Value!=null) dettaglioPagamento.setBIC(bt0086Value);
                         if(bt0084Value!=null) dettaglioPagamento.setIBAN(bt0084Value);
+
 
 //                        if (datiPagamento.getDettaglioPagamento().isEmpty()) {
 //                            final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody";

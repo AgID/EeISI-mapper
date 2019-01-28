@@ -21,6 +21,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
     private static final String pec = "IT:PEC";
     private static final String coddest = "IT:CODDEST";
     private static final String ipa = "IT:IPA";
+    private static final String _9921 = "9921";
 
     @Override
     public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -55,7 +56,10 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
             case coddest:
             case ipa:
                 // see https://jira.infocert.it/browse/EISI-119
-                datiTrasmissione.setCodiceDestinatario("9921");
+                datiTrasmissione.setCodiceDestinatario(identifier);
+                break;
+            case _9921:
+                datiTrasmissione.setCodiceDestinatario(identifier);
                 break;
             default:
                 errors.add(ConversionIssue.newError(new EigorException(ErrorMessage.builder()
