@@ -75,12 +75,12 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
-                    AttachmentUtil attachmentUtil = new AttachmentUtil();
-                    FileReference fileReference = null;
+                    BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0);
+                    FileReference fileReference = bt0125.getValue();
+                    EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
+                    AttachmentUtil attachmentUtil =  new AttachmentUtil( new File( eigorConfiguration.getMandatoryString("eigor.workdir") ) );
                     Element terzoIntermediarioOSoggettoEmittente = fatturaElettronicaHeader.getChild("TerzoIntermediarioOSoggettoEmittente");
                     if(terzoIntermediarioOSoggettoEmittente != null){
-                        BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0);
-                        fileReference = bt0125.getValue();
                         try {
                             Element datiAnagrafici = terzoIntermediarioOSoggettoEmittente.getChild("DatiAnagrafici");
                             if (datiAnagrafici != null) {
