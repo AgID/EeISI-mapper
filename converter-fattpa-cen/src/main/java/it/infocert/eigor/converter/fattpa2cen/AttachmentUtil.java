@@ -1,9 +1,9 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.FileReference;
@@ -11,8 +11,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0024AdditionalSupportingDocuments;
 import it.infocert.eigor.model.core.model.BT0122SupportingDocumentReference;
 import it.infocert.eigor.model.core.model.BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename;
-import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.Base64;
 import org.slf4j.Logger;
@@ -33,17 +31,14 @@ public class AttachmentUtil {
 
     private final File workdir;
 
-    public AttachmentUtil() {
-        String workdirS = DefaultEigorConfigurationLoader.configuration().getMandatoryString("eigor.workdir");
-        File workdirF = null;
-        try {
-            DefaultResourceLoader drl = new DefaultResourceLoader();
-            Resource resource = drl.getResource(workdirS);
-            workdirF = resource.getFile();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-        this.workdir = workdirF;
+    public AttachmentUtil(final File workdir) {
+        Preconditions.checkNotNull(
+                workdir,
+                "Please provide a not null existing working folder.");
+        Preconditions.checkArgument(
+                workdir.exists() && workdir.isDirectory(),
+                "Path '%s' (resolved to '%s') must be an existing writeable directory, but it's not.", workdir.getPath(), workdir.getAbsolutePath());
+        this.workdir = workdir;
     }
 
     /**

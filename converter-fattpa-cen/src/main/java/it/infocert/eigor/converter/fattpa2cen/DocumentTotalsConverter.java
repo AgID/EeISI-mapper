@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
@@ -17,19 +18,27 @@ import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class DocumentTotalsConverter implements CustomMapping<Document> {
     private final static Logger log = LoggerFactory.getLogger(DocumentTotalsConverter.class);
 
-    private final AttachmentUtil aUtil = new AttachmentUtil();
+    private AttachmentUtil aUtil = null;
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, @NotNull EigorConfiguration eigorConfiguration) {
+
+        if(aUtil == null) {
+            Preconditions.checkArgument( eigorConfiguration!=null, "Please provide a not null configuration." );
+            aUtil = new AttachmentUtil( new File( eigorConfiguration.getMandatoryString("eigor.workdir") ) );
+        }
+
         addInvoiceTotalAmountWithVatDefault(invoice, document, errors, callingLocation);
     }
 

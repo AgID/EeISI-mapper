@@ -22,6 +22,7 @@ import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     private XSDValidator xsdValidator;
 
-    public FattPa2Cen(IReflections reflections, EigorConfiguration configuration) {
+    public FattPa2Cen(IReflections reflections, @NotNull EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_IN);
         this.configuration = checkNotNull(configuration);
     }
@@ -196,7 +197,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN, null);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN, configuration);
         }
     }
 
