@@ -35,12 +35,16 @@ public interface ConversionCallback {
         /** Invoked only if the CEN rules failed in verify the CEN invoice. */
         void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception;
 
+        /** Invoked once when the conversion from the CEN model to the target one is going to start. */
         void onStartingFromCenTransformation(ConversionContext ctx) throws Exception;
 
+        /** Invoked in case the final transformation to the target format completed successfully. */
         void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception;
 
+        /** Invoked in case the final transformation to the target failed. */
         void onFailedFromCenTransformation(ConversionContext ctx) throws Exception;
 
+        /** Invoked in case an unexpected or unmanaged exception occurs during any step of the conversion. */
         void onUnexpectedException(Exception e, ConversionContext ctx) throws Exception;
 
         /** Always invoked, at the end of the transformation.
