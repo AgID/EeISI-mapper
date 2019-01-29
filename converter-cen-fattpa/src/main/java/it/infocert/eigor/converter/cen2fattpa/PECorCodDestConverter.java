@@ -21,6 +21,7 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
     private static final String pec = "IT:PEC";
     private static final String coddest = "IT:CODDEST";
     private static final String ipa = "IT:IPA";
+    private static final String _9921 = "9921";
 
     @Override
     public void map(BG0000Invoice cenInvoice, FatturaElettronicaType fatturaElettronicaType, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -32,12 +33,14 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                     datiTrasmissione = new DatiTrasmissioneType();
                     fatturaElettronicaType.getFatturaElettronicaHeader().setDatiTrasmissione(datiTrasmissione);
                 }
-                BT0049BuyerElectronicAddressAndSchemeIdentifier address = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                if (address.getValue().getIdentificationSchema() != null) {
-                    String identificationSchema = address.getValue().getIdentificationSchema().toUpperCase();
-                    String identifier = address.getValue().getIdentifier();
+                BT0049BuyerElectronicAddressAndSchemeIdentifier bt49AddressAndScheme = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                if (bt49AddressAndScheme.getValue().getIdentificationSchema() != null) {
+
+                    String identificationSchema = bt49AddressAndScheme.getValue().getIdentificationSchema().toUpperCase();
+                    String identifier = bt49AddressAndScheme.getValue().getIdentifier();
                     mapDestinatario(errors, datiTrasmissione, identificationSchema, identifier);
                     mapFormatoTrasmissione(fatturaElettronicaType, identificationSchema);
+
                 }
             }
         }
@@ -52,6 +55,10 @@ public class PECorCodDestConverter implements CustomMapping<FatturaElettronicaTy
                 break;
             case coddest:
             case ipa:
+                // see https://jira.infocert.it/browse/EISI-119
+                datiTrasmissione.setCodiceDestinatario(identifier);
+                break;
+            case _9921:
                 datiTrasmissione.setCodiceDestinatario(identifier);
                 break;
             default:
