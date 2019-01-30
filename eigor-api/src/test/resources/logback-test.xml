@@ -8,7 +8,7 @@
         <immediateFlush>true</immediateFlush>
     </appender>
 
-    <root level="off">
+    <root level="all">
         <appender-ref ref="STDOUT" />
     </root>
 

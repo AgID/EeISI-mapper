@@ -58,7 +58,7 @@
         <site>
             <id>eigor</id>
             <name>eigor</name>
-            <url>https://gitlab.com/tgi-infocert-eigor/eigor</url>
+            <url>http://infocert.it</url>
         </site>
         <repository>
             <id>central</id>
