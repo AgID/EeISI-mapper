@@ -132,14 +132,10 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT, this.getConfiguration());
         }
 
-        // PEPPOL hardcoding
-        final Element root = document.getRootElement();
 
-        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.customization-id")));
-        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.profile-id")));
     }
 
     @Override

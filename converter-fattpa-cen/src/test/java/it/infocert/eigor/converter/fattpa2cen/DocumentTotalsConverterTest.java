@@ -1,6 +1,8 @@
 package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -10,6 +12,7 @@ import org.assertj.core.util.Lists;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -22,6 +25,12 @@ public class DocumentTotalsConverterTest {
     private BG0000Invoice invoice;
     private Document document;
     private DocumentTotalsConverter sut;
+    private static EigorConfiguration configuration;
+
+    @BeforeClass
+    public static void setUpConf() {
+        configuration = DefaultEigorConfigurationLoader.configuration();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +41,7 @@ public class DocumentTotalsConverterTest {
     @Test
     public void testTotals() throws Exception {
         document = createXmlInvoiceWithDatiBollo(new Document());
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN, configuration);
         final BigDecimal value = invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat(0).getValue();
         assertEquals(new BigDecimal(3.0d), value);
     }
@@ -40,7 +49,7 @@ public class DocumentTotalsConverterTest {
     @Test
     public void shouldMapDocumentLevelChargesBT104IfBolloVirtualeIsSI() {
         document = createXmlInvoiceWithDatiBollo(new Document());
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN, configuration);
         assertFalse(invoice.getBG0021DocumentLevelCharges().isEmpty());
         BG0021DocumentLevelCharges bg0021 = invoice.getBG0021DocumentLevelCharges().get(0);
 
@@ -56,7 +65,7 @@ public class DocumentTotalsConverterTest {
     @Test
     public void shouldMapDocumentLevelChargesForDatiRitenuta() {
         document = createXmlInvoiceWithDatiRitenuta(new Document());
-        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN);
+        sut.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_IN, configuration);
         assertFalse(invoice.getBG0021DocumentLevelCharges().isEmpty());
         BG0021DocumentLevelCharges bg0021 = invoice.getBG0021DocumentLevelCharges().get(0);
 

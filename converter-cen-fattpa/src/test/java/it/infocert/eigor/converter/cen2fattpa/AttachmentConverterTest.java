@@ -47,7 +47,7 @@ public class AttachmentConverterTest {
     public void shouldHaveCsvAttachmentIfBT125IsEmpty() {
         AttachmentConverter converter = new AttachmentConverter();
         BG0000Invoice invoice = makeInvoiceWithBT122AndNoBT125();
-        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT);
+        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT, null);
         AllegatiType allegati = fatturaElettronica.getFatturaElettronicaBody().get(0).getAllegati().get(0);
         assertThat(allegati.getNomeAttachment(), is("document-reference"));
         assertThat(allegati.getAttachment(), is("Test Reference".getBytes()));
@@ -59,7 +59,7 @@ public class AttachmentConverterTest {
 
         AttachmentConverter converter = new AttachmentConverter();
         BG0000Invoice invoice = makeInvoiceWithBT122AndBT125();
-        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT);
+        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT, null);
         AllegatiType allegati = fatturaElettronica.getFatturaElettronicaBody().get(0).getAllegati().get(0);
         assertThat(allegati.getNomeAttachment(), is("Test Reference-file.txt"));
         assertThat(allegati.getDescrizioneAttachment(), is("description"));
@@ -71,7 +71,7 @@ public class AttachmentConverterTest {
     public void shouldHaveTwoAllegatiIfBothExternalReferenceAndAttachedDocument() {
         AttachmentConverter converter = new AttachmentConverter();
         BG0000Invoice invoice = makeInvoiceWithBT122AndBT124AndBT125();
-        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT);
+        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT, null);
 
         // one for the external reference and one for the attached document
 
@@ -88,7 +88,7 @@ public class AttachmentConverterTest {
     public void shouldPutInAllegatiBt20AndBt41AndBt56() {
         AttachmentConverter converter = new AttachmentConverter();
         BG0000Invoice invoice = makeInvoiceWithBT20AndBt41AndBt56();
-        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT);
+        converter.map(invoice, fatturaElettronica, new ArrayList<>(), ErrorCode.Location.FATTPA_OUT, null);
 
         // one for the external reference and one for the attached document
 

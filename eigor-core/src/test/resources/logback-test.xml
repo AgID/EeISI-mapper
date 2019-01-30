@@ -12,7 +12,6 @@
     </root>
 
     <!--
-    <logger name="it.infocert.eigor.api.xml.CachedResourceResolver" level="all" />
     <logger name="it.infocert" level="DEBUG" />
     <logger name="it.infocert.eigor.api.conversion" level="error" />
     -->

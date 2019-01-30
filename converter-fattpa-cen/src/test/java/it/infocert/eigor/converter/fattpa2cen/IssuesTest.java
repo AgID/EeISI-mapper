@@ -12,10 +12,7 @@ import it.infocert.eigor.model.core.model.BT0112InvoiceTotalAmountWithVat;
 import it.infocert.eigor.model.core.model.BT0113PaidAmount;
 import it.infocert.eigor.model.core.model.BT0115AmountDueForPayment;
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -30,14 +27,15 @@ public class IssuesTest {
 
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
-    private static Properties properties;
+
+    private static EigorConfiguration configuration;
 
     @BeforeClass
     public static void setUpConf() throws IOException {
         File fattpaCenFolder = tmpFolder.newFolder();
 
 
-        properties = new Properties();
+        Properties properties = new Properties();
 
         //eigor.converter.fatturapa-cen.xsd=classpath:converterdata/converter-commons/fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd
         {
@@ -92,14 +90,14 @@ public class IssuesTest {
             properties.put("eigor.converter.fatturapa-cen.mapping.many-to-one", "file:///" + file.getAbsolutePath());
         }
 
+        properties.put("eigor.workdir", tmpFolder.getRoot().getAbsolutePath());
+
+        configuration = new PropertiesBackedConfiguration(properties);
     }
+
 
     @Test
     public void issue252() throws SyntaxErrorInInvoiceFormatException, ConfigurationException {
-
-        //EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
-
-        EigorConfiguration configuration = new PropertiesBackedConfiguration(properties);
 
 
         InputStream sourceInvoiceStream = invoiceAsStream("/issues/issue-252-fattpa.xml");
@@ -135,7 +133,7 @@ public class IssuesTest {
         {
             BG0000Invoice cen = result.getResult();
             String bt020 = cen.getBT0020PaymentTerms().get(0).getValue();
-            Assert.assertEquals("N/A Payement Terms", bt020);
+            Assert.assertEquals("N/A Payment Terms", bt020);
 
         }
 

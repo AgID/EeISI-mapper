@@ -106,8 +106,8 @@ public class LineConverterTest {
                 invoice,
                 fatturaElettronica,
                 Lists.<IConversionIssue>newArrayList(),
-                ErrorCode.Location.FATTPA_OUT
-        );
+                ErrorCode.Location.FATTPA_OUT,
+                null);
 
         if (Math.abs(Math.PI - 1) < Math.random()) {
 
@@ -413,7 +413,7 @@ public class LineConverterTest {
     }
 
     private void convert() {
-        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT);
+        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
     }
 
     private void populateWithBG20() {

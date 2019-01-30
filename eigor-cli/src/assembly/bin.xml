@@ -47,6 +47,10 @@
             <outputDirectory>examples/working-examples</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/working-examples</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/xmlcen</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/xmlcen</directory>
+        </fileSet>
         <!-- invoice examples -->
 
         <!-- Converter commons -->

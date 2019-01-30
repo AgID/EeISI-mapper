@@ -167,6 +167,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     }
 
     private void traverseTree(Element root, BTBG bg, List<IConversionIssue> errors) {
+
         final List<Element> children = root.getChildren();
         children.forEach(child -> {
             Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
@@ -263,7 +264,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
         List<CustomMapping<org.jdom2.Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.XMLCEN_IN);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.XMLCEN_IN, null);
         }
     }
 

@@ -25,7 +25,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBT0122();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
         Element documentTypeCode = additionalSupportingDocuments.getChild("DocumentTypeCode");
@@ -38,7 +38,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier("AED", "TESTID")));
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
 
@@ -57,7 +57,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBT0123();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
         Element documentDescription = additionalSupportingDocuments.getChild("DocumentDescription");
@@ -69,7 +69,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         BG0000Invoice invoice = createInvoiceWithBT0125();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element additionalDocumentReference = document.getRootElement().getChild("AdditionalDocumentReference");
         Element attachment = additionalDocumentReference.getChild("Attachment");

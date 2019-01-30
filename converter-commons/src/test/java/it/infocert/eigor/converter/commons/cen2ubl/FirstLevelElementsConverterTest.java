@@ -24,7 +24,7 @@ public class FirstLevelElementsConverterTest {
         Document document = new Document(new Element("Invoice"));
 
         NoteConverter converter = new NoteConverter();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
 
         List<Element> notes = document.getRootElement().getChildren("Note");
 
@@ -39,7 +39,7 @@ public class FirstLevelElementsConverterTest {
 
         NoteConverter converter = new NoteConverter();
 
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
+        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
 
         List<Element> notes = document.getRootElement().getChildren("Note");
 

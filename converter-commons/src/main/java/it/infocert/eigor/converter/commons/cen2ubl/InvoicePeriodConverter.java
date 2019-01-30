@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -23,7 +24,7 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(InvoicePeriodConverter.class);
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 

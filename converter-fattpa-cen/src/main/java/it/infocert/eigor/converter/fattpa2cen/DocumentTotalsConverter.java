@@ -2,10 +2,12 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -16,19 +18,27 @@ import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class DocumentTotalsConverter implements CustomMapping<Document> {
     private final static Logger log = LoggerFactory.getLogger(DocumentTotalsConverter.class);
 
-    private final AttachmentUtil aUtil = new AttachmentUtil();
+    private AttachmentUtil aUtil = null;
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, @NotNull EigorConfiguration eigorConfiguration) {
+
+        if(aUtil == null) {
+            Preconditions.checkArgument( eigorConfiguration!=null, "Please provide a not null configuration." );
+            aUtil = new AttachmentUtil( new File( eigorConfiguration.getMandatoryString("eigor.workdir") ) );
+        }
+
         addInvoiceTotalAmountWithVatDefault(invoice, document, errors, callingLocation);
     }
 
@@ -248,7 +258,6 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                                     BT0100DocumentLevelChargeBaseAmount bt0100 = new BT0100DocumentLevelChargeBaseAmount(importoRitenutaValue);
                                     bg0021.getBT0100DocumentLevelChargeBaseAmount().add(bt0100);
-
                                     BT0113PaidAmount bt0113 = new BT0113PaidAmount(importoRitenutaValue);
                                     invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(bt0113);
                                 } catch (NumberFormatException e) {
@@ -298,12 +307,29 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                 bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
                             }
 
-                            BT0020PaymentTerms bt0020 = new BT0020PaymentTerms("BT-113 represents Withholding tax amount");
-                            invoice.getBT0020PaymentTerms().add(bt0020);
+                            if(invoice.getBT0020PaymentTerms().isEmpty()){
+                                BT0020PaymentTerms bt0020 = new BT0020PaymentTerms("BT-113 represents Withholding tax amount");
+                                invoice.getBT0020PaymentTerms().add(bt0020);
+                            }
+
                         }
                     }
                 }
             }
+
+            List<BG0021DocumentLevelCharges> bg0021DocumentLevelCharges = invoice.getBG0021DocumentLevelCharges();
+            BigDecimal sumOfBT0021 = new BigDecimal(0);
+            for(int i=0; i<bg0021DocumentLevelCharges.size(); i++){
+                sumOfBT0021 = sumOfBT0021.add(bg0021DocumentLevelCharges.get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
+            }
+            totals.getBT0108SumOfChargesOnDocumentLevel().add(new BT0108SumOfChargesOnDocumentLevel(sumOfBT0021));
+
+            List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
+            BigDecimal sumOfBT0020 = new BigDecimal(0);
+            for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
+                sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
+            }
+            totals.getBT0107SumOfAllowancesOnDocumentLevel().add(new BT0107SumOfAllowancesOnDocumentLevel(sumOfBT0020));
 
             final Element datiPagamento = fatturaElettronicaBody.getChild("DatiPagamento");
             if (datiPagamento != null) {
@@ -316,7 +342,10 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             String text = importoPagamento.getText();
                             try {
                                 final BigDecimal importoD = new BigDecimal(text);
-                                totals.getBT0113PaidAmount().add(new BT0113PaidAmount(amountWithVat.subtract(importoD)));
+                                if(totals.getBT0113PaidAmount().isEmpty() || totals.getBT0113PaidAmount().get(0).getValue() != amountWithVat.subtract(importoD)) {
+                                    totals.getBT0113PaidAmount().clear();
+                                    totals.getBT0113PaidAmount().add(new BT0113PaidAmount(amountWithVat.subtract(importoD)));
+                                }
                                 totals.getBT0115AmountDueForPayment().add(new BT0115AmountDueForPayment(importoD));
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(

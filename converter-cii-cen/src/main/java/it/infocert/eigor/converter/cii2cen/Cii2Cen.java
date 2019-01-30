@@ -171,7 +171,7 @@ public class Cii2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> mappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> mapping : mappings) {
-            mapping.map(invoice, document, errors, ErrorCode.Location.CII_IN);
+            mapping.map(invoice, document, errors, ErrorCode.Location.CII_IN,  this.configuration);
         }
     }
 

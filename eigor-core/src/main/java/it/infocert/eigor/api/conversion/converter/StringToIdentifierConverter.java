@@ -18,6 +18,9 @@ public class StringToIdentifierConverter implements TypeConverter<String,Identif
         if (splitBlank.length > 1) {
             scheme = splitBlank[0];
             value = splitBlank[1];
+        } else if(!stringCode.contains(":")){
+            scheme = null;
+            value = stringCode;
         } else {
             final String regex = "(\\w*:\\w*):(.*)";
             final Pattern pattern = Pattern.compile(regex);

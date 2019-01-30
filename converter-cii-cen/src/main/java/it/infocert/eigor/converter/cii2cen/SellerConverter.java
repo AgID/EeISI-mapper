@@ -4,6 +4,7 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -78,7 +79,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                         if (idTax != null) {
                             schemeIDTax = idTax.getAttribute("schemeID");
                             if (schemeIDTax != null) {
-                                if (schemeIDTax.getValue().equals("VAT")) {
+                                if (schemeIDTax.getValue().equals("VA")) {
                                     bt0031 = new BT0031SellerVatIdentifier(idTax.getText());
                                     invoice.getBG0004Seller(0).getBT0031SellerVatIdentifier().add(bt0031);
                                 } else if (schemeIDTax.getValue().equals("FC")) {
@@ -95,7 +96,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBT0029_31_32(document, cenInvoice, errors);
     }
 }
