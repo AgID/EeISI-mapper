@@ -1,22 +1,28 @@
 package com.infocert.eigor.api;
 
 import com.google.common.collect.Lists;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
+import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.EigorVersion;
+import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
+import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -168,6 +174,55 @@ public class EigorApi {
      */
     public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
         return setupObservable(sourceFormat, invoice).validate();
+    }
+
+    /**
+     * Validate the provided xml with the provided schematron.
+     * @param schemaFile A {@link File} referring to the schematron to be used for validation.
+     * @param xmlToValidate An {@link InputStream} containing the XML to validate.
+     * @return The result containing the validation issues, if any.
+     * @throws EigorException When an unexpected error occurs.
+     */
+    public ConversionResult<Void> customSchSchematronValidation(@NotNull File schemaFile, @NotNull InputStream xmlToValidate) throws EigorException {
+
+        checkNotNull(schemaFile, "Please provide a not null schematron file.");
+        checkArgument(schemaFile!=null && schemaFile.isFile() && schemaFile.canRead(), "File '%s' must be a readable file, is not.", schemaFile.getAbsolutePath());
+        checkNotNull(xmlToValidate);
+
+        ErrorCode.Location location = ErrorCode.Location.CUSTOM_VALIDATORS;
+        try {
+            SchematronValidator schematronValidator = new SchematronValidator(
+                    schemaFile, false, false, location
+            );
+            List<IConversionIssue> issues = schematronValidator.validate(IOUtils.toByteArray(xmlToValidate));
+            return new ConversionResult<>(issues, null);
+        } catch (IOException e) {
+            throw new EigorException(e.getMessage(), location, ErrorCode.Action.CUSTOM_VALIDATION, ErrorCode.Error.INVALID );
+        }
+    }
+
+    /**
+     * Validate the provided xml with the provided XSD.
+     * @param schemaFile A {@link File} referring to the schematron to be used for validation.
+     * @param xmlToValidate An {@link InputStream} containing the XML to validate.
+     * @return The result containing the validation issues, if any.
+     * @throws EigorException When an unexpected error occurs.
+     */
+    public ConversionResult<Void> customXsdValidation(@NotNull File schemaFile, @NotNull InputStream xmlToValidate) throws EigorException {
+
+        checkNotNull(schemaFile, "Please provide a not null xsd file.");
+        checkArgument(schemaFile!=null && schemaFile.isFile() && schemaFile.canRead(), "File '%s' must be a readable file, is not.", schemaFile.getAbsolutePath());
+        checkNotNull(xmlToValidate);
+
+        ErrorCode.Location customValidators = ErrorCode.Location.CUSTOM_VALIDATORS;
+        try {
+            XSDValidator v = new XSDValidator(schemaFile, customValidators);
+            List<IConversionIssue> validate = v.validate(IOUtils.toByteArray(xmlToValidate));
+            return new ConversionResult<>(validate, null);
+        } catch (SAXException | IOException e) {
+            throw new EigorException(e.getMessage(), customValidators, ErrorCode.Action.CUSTOM_VALIDATION, ErrorCode.Error.INVALID );
+        }
+
     }
 
     private ObservableValidation setupObservable(final String sourceFormat, final InputStream invoice) {

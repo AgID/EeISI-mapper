@@ -51,7 +51,12 @@ public class ConversionResultTest {
 
         List<IConversionIssue> issues = new ArrayList<>();
 
-        IConversionIssue issueWarn = ConversionIssue.newWarning(new EigorException("warn", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.INVALID));
+        IConversionIssue issueWarn = ConversionIssue.newWarning(
+                new EigorException(
+                        "warn",
+                        ErrorCode.Location.FATTPA_OUT,
+                        ErrorCode.Action.CONFIGURED_MAP,
+                        ErrorCode.Error.INVALID));
         issues.add(issueWarn);
 
         ConversionResult<String> sut = new ConversionResult<>(issues, "result");
