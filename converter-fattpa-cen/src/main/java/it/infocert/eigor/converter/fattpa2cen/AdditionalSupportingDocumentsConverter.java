@@ -77,6 +77,8 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     }
                     BT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename bt0125 = bg0024.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0);
                     FileReference fileReference = bt0125.getValue();
+                    String filePath = fileReference.getFilePath().replace("\\null","");
+
                     EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
                     AttachmentUtil attachmentUtil =  new AttachmentUtil( new File( eigorConfiguration.getMandatoryString("eigor.workdir") ) );
                     Element terzoIntermediarioOSoggettoEmittente = fatturaElettronicaHeader.getChild("TerzoIntermediarioOSoggettoEmittente");
@@ -88,30 +90,30 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                 if(idFiscaleIVA != null){
                                     Element idPaese = idFiscaleIVA.getChild("IdPaese");
                                     if(idPaese != null){
-                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), idPaese.getText());
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), idPaese.getText());
                                     }
                                     Element idCodice = idFiscaleIVA.getChild("IdCodice");
                                     if(idCodice != null){
-                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), idCodice.getText());
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), idCodice.getText());
                                     }
                                 }
                                 Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
                                 if(codiceFiscale != null){
-                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceFiscale.getText());
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceFiscale.getText());
                                 }
                                 Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                                 if(anagrafica != null){
                                     Element denominazione = anagrafica.getChild("Denominazione");
                                     if(denominazione != null){
-                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), denominazione.getText());
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), denominazione.getText());
                                     }
                                     Element titolo = anagrafica.getChild("Titolo");
                                     if(titolo != null){
-                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), titolo.getText());
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), titolo.getText());
                                     }
                                     Element codEORI = anagrafica.getChild("CodEORI");
                                     if(codEORI != null){
-                                        attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codEORI.getText());
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), codEORI.getText());
                                     }
                                 }
                             }
@@ -132,7 +134,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
                     if(soggettoEmittente != null){
                         try {
-                            attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), soggettoEmittente.getText());
+                            attachmentUtil.appendToFileInBase64(new File(filePath), soggettoEmittente.getText());
                         } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
                                     e,
@@ -154,11 +156,11 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             try {
                                 Element codiceCUP = datiContratto.getChild("CodiceCUP");
                                 if (codiceCUP != null) {
-                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCUP.getText());
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceCUP.getText());
                                 }
                                 Element codiceCIG = datiContratto.getChild("CodiceCIG");
                                 if (codiceCIG != null) {
-                                    attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCIG.getText());
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceCIG.getText());
                                 }
                             } catch (IllegalArgumentException | IOException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
@@ -180,11 +182,11 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         try {
                             Element data = datiVeicoli.getChild("Data");
                             if(data != null){
-                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), data.getText());
+                                attachmentUtil.appendToFileInBase64(new File(filePath), data.getText());
                             }
                             Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
                             if(totalePercorso != null){
-                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), totalePercorso.getText());
+                                attachmentUtil.appendToFileInBase64(new File(filePath), totalePercorso.getText());
                             }
                         } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
@@ -205,15 +207,15 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                         try {
                             Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
                             if(codiceCommessaConvenzione != null){
-                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCommessaConvenzione.getText());
+                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCommessaConvenzione.getText());
                             }
                             Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
                             if(codiceCUP != null){
-                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCUP.getText());
+                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCUP.getText());
                             }
                             Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
                             if(codiceCIG != null){
-                                attachmentUtil.appendToFileInBase64(new File(fileReference.getFilePath()), codiceCIG.getText());
+                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCIG.getText());
                             }
                         } catch (IllegalArgumentException | IOException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
