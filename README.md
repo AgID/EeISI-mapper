@@ -16,4 +16,4 @@ Just generate it from the code with:
     
 Then point your browser to `target/staging/index.html`.
 
-[/src/site/markdown/getting-started.md](doc)
+[src/site/markdown/getting-started.md](doc)
