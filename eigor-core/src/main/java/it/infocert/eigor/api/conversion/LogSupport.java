@@ -1,7 +1,10 @@
 package it.infocert.eigor.api.conversion;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.OutputStreamAppender;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
@@ -12,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.logging.LogManager;
 
 /**
  * Add an appender to the logger to log an execution linked to an invoice.
@@ -21,7 +27,7 @@ public class LogSupport {
     // inspired by http://stackoverflow.com/questions/19058722/creating-an-outputstreamappender-for-logback#19074027
 
     private final Logger log;
-    private OutputStreamAppender appender;
+    private FileAppender appender;
     private final LoggerContext context;
     private boolean isLogbackSupportActive = false;
 
@@ -44,6 +50,7 @@ public class LogSupport {
         if (factory != null) {
             context = (LoggerContext) factory;
             log = context.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            ((ch.qos.logback.classic.Logger) log).setLevel(Level.ALL);
             isLogbackSupportActive = true;
             log.info("Logback successfully configured. A dedicated conversion logfile will be created for every conversion");
         } else {
@@ -80,11 +87,12 @@ public class LogSupport {
             encoder.start();
 
             // OutputStreamAppender
-            appender = new OutputStreamAppender<>();
-            appender.setName("OutputStream Appender");
+            appender = new FileAppender<>();
+            appender.setName("OutputStreamAppender");
             appender.setContext(context);
             appender.setEncoder(encoder);
             appender.setOutputStream(stream);
+            appender.setFile(outputLog.getAbsolutePath());
             appender.setImmediateFlush(true);
             appender.start();
             final Thread loggingThread = Thread.currentThread();
@@ -94,7 +102,12 @@ public class LogSupport {
                     return Thread.currentThread() == loggingThread ? FilterReply.ACCEPT : FilterReply.DENY;
                 }
             });
-            ((ch.qos.logback.classic.Logger) log).addAppender(appender);
+            List<ch.qos.logback.classic.Logger> logs = context.getLoggerList();
+            for(int i=0; i<logs.size(); i++){
+                ch.qos.logback.classic.Logger logger = context.getLogger(logs.get(i).getName());
+                logger.setLevel(Level.ALL);
+                logger.addAppender(appender);
+            }
         } else {
             log.warn("Logback not found in the system, cannot add a custom appender");
         }
