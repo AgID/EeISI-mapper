@@ -13,19 +13,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-import it.infocert.eigor.api.conversion.converter.CountryNameToIso31661CountryCodeConverter;
-import it.infocert.eigor.api.conversion.converter.StringToBigDecimalConverter;
-import it.infocert.eigor.api.conversion.converter.StringToBigDecimalPercentageConverter;
-import it.infocert.eigor.api.conversion.converter.StringToIdentifierConverter;
-import it.infocert.eigor.api.conversion.converter.StringToIso4217CurrenciesFundsCodesConverter;
-import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
-import it.infocert.eigor.api.conversion.converter.StringToStringConverter;
-import it.infocert.eigor.api.conversion.converter.StringToUnitOfMeasureConverter;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid1001InvoiceTypeCodeConverter;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid2005DateTimePeriodQualifiers;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid4461PaymentMeansCode;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid5189ChargeAllowanceDescriptionCodesConverter;
-import it.infocert.eigor.api.conversion.converter.StringToUntdid5305DutyTaxFeeCategoriesConverter;
+import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
@@ -91,6 +79,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
             StringToIdentifierConverter.newConverter(),
             StringToUntdid2005DateTimePeriodQualifiers.newConverter(),
+            StringToUntdid2475PaymentTimeReference.newConverter(),
             StringToUntdid4461PaymentMeansCode.newConverter(),
             LookUpEnumConversion.newConverter(Untdid7161SpecialServicesCodes.class)
     );

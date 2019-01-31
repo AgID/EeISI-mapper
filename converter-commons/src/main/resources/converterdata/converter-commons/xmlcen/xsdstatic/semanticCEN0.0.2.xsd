@@ -878,6 +878,13 @@
             <xs:enumeration value="432"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="UNTDID2475">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="29"/>
+            <xs:enumeration value="72"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="UNTDID5305">
         <xs:restriction base="xs:string">
             <xs:enumeration value="AE"/>
