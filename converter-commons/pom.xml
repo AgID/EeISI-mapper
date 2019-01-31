@@ -32,181 +32,9 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.helger.maven</groupId>
-                        <artifactId>ph-sch2xslt-maven-plugin</artifactId>
-                        <version>${phschematron.version}</version>
-                        <executions>
-                            <execution>
-                                <id>ubl-xslt-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
-                                    <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
-                                    <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>ubl-cius-xslt-generation</id>
-                                <configuration>
-                                    <!--multipart- -->
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
-                                    <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
-                                    <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cii-xlst-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
-                                    <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
-                                    <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cii-cius-xslt-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cen-xslt-generation</id>
-                                <configuration>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron</schematronDirectory>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron-xslt</xsltDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>releasexslt</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.helger.maven</groupId>
-                        <artifactId>ph-sch2xslt-maven-plugin</artifactId>
-                        <version>${phschematron.version}</version>
-                        <executions>
-                            <execution>
-                                <id>ubl-xslt-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
-                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>ubl-cius-xslt-generation</id>
-                                <configuration>
-                                    <!--multipart- -->
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
-                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cii-xlst-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
-                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cii-cius-xslt-generation</id>
-                                <configuration>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
-                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                            <execution>
-                                <id>cen-xslt-generation</id>
-                                <configuration>
-                                    <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron</schematronDirectory>
-                                    <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron-xslt</xsltDirectory>
-                                    <schematronPattern>*.sch</schematronPattern>
-                                    <overwriteWithoutQuestion>true</overwriteWithoutQuestion>
-                                    <updateOnSchematronChanges>true</updateOnSchematronChanges>
-                                </configuration>
-                                <goals>
-                                    <goal>convert</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -216,37 +44,135 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>converterdata/converter-commons/ubl/schematron-xslt</directory>
-                            <includes>
-                                <include>*.xslt</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                        <fileset>
-                            <directory>converterdata/converter-commons/cii/schematron-xslt</directory>
-                            <includes>
-                                <include>*.xslt</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                        <fileset>
-                            <directory>converterdata/converter-commons/cii/cius/schematron-xslt</directory>
-                            <includes>
-                                <include>*.xslt</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                    </filesets>
-                </configuration>
+                <groupId>com.helger.maven</groupId>
+                <artifactId>ph-sch2xslt-maven-plugin</artifactId>
+                <version>${phschematron.version}</version>
+                <executions>
+
+                    <execution>
+                        <id>cii-cius-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>cii-xlst-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/cii/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/cii/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
+                            <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>ubl-cius-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/cius/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
+                            <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
+                            <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>ubl-xslt-generation</id>
+                        <configuration>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron-xslt</xsltDirectory>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/ubl/schematron</schematronDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                            <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
+                            <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
+                            <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>cen-xslt-generation</id>
+                        <configuration>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron</schematronDirectory>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/schematron-xslt</xsltDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>cen-cius-xslt-generation</id>
+                        <configuration>
+                            <schematronDirectory>src/main/resources/converterdata/converter-commons/xmlcen/cius/schematron</schematronDirectory>
+                            <xsltDirectory>src/main/resources/converterdata/converter-commons/xmlcen/cius/schematron-xslt</xsltDirectory>
+                            <schematronPattern>*.sch</schematronPattern>
+                            <overwriteWithoutQuestion>false</overwriteWithoutQuestion>
+                        </configuration>
+                        <goals>
+                            <goal>convert</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
             </plugin>
+
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>regeneratesch</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+
+                            <filesets>
+                                <fileset>
+                                    <directory>src/main/resources/converterdata/converter-commons</directory>
+                                    <includes>
+                                        <include>**/*.xslt</include>
+                                    </includes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -45,7 +45,7 @@ public class XmlCen2CenTest {
         {
             File xsdFile = new File(xmlcen2CenFolder, "schema.xsd");
             FileUtils.copyInputStreamToFile(
-                    XmlCen2CenTest.class.getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.2.xsd"),
+                    XmlCen2CenTest.class.getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"),
                     xsdFile);
             properties.put("eigor.converter.xmlcen-cen.xsd", "file:///" + xsdFile.getAbsolutePath());
         }

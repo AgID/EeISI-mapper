@@ -354,28 +354,6 @@
                     </executions>
                 </plugin>
 
-                <!-- defaults to force compilation with desired JDK -->
-                <!--
-                <plugin>
-                    <artifactId>maven-toolchains-plugin</artifactId>
-                    <version>1.1</version>
-                    <configuration>
-                        <toolchains>
-                            <jdk>
-                                <version>[1.8,1.9)</version>
-                            </jdk>
-                        </toolchains>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>toolchain</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                -->
-
                 <plugin>
                     <groupId>com.danidemi</groupId>
                     <artifactId>template-generator-maven-plugin</artifactId>
@@ -481,27 +459,9 @@
 
 
         <plugins>
-            <plugin>
-                <artifactId>maven-toolchains-plugin</artifactId>
-            </plugin>
 
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-
-            <!-- Pitest should not be executed in the aggregator pom, so it is bound to "none" -->
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <executions>
-                    <execution>
-                        <id>basic-pitest</id>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -513,27 +473,6 @@
     </build>
     <reporting>
         <plugins>
-
-            <!--
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <configuration>
-                    <skip>false</skip>
-                    <sourceDataFormats>
-                        <sourceDataFormat>HTML</sourceDataFormat>
-                    </sourceDataFormats>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -573,149 +512,5 @@
 
         </plugins>
     </reporting>
-
-    <profiles>
-        <profile>
-            <id>coverage</id>
-
-            <build>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-maven</artifactId>
-                        <configuration>
-                            <targetClasses>
-                                <param>it.infocert.eigor.*</param>
-                            </targetClasses>
-                            <targetTests>
-                                <param>it.infocert.eigor.*</param>
-                            </targetTests>
-                            <threads>5</threads>
-                            <verbose>false</verbose>
-                            <failWhenNoMutations>false</failWhenNoMutations>
-                            <avoidCallsTo>
-                                <avoidCallsTo>java.util.logging</avoidCallsTo>
-                                <avoidCallsTo>org.apache.log4j</avoidCallsTo>
-                                <avoidCallsTo>org.slf4j</avoidCallsTo>
-                                <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
-                                <avoidCallsTo>org.objectweb</avoidCallsTo>
-                                <avoidCallsTo>org.reflections</avoidCallsTo>
-                            </avoidCallsTo>
-                            <timestampedReports>false</timestampedReports>
-                            <mutators>
-
-                                <!-- replaces '+' with '-' -->
-                                <mutator>MATH</mutator>
-
-                                <!-- replaces 'i plus plus' with 'i minus minus' -->
-                                <mutator>INCREMENTS</mutator>
-
-                                <!-- replaces '-i' with 'i' -->
-                                <mutator>INVERT_NEGS</mutator>
-
-                                <!-- replaces 'return a' with 'return null' -->
-                                <mutator>RETURN_VALS</mutator>
-
-                                <!-- replaces '==' with '!=' -->
-                                <mutator>NEGATE_CONDITIONALS</mutator>
-
-                                <!-- replaces 'less than' with 'greater or equals' -->
-                                <mutator>CONDITIONALS_BOUNDARY</mutator>
-
-                                <!-- replaces 'if(condition)' with 'if(true)' -->
-                                <mutator>REMOVE_CONDITIONALS</mutator>
-                                <!--
-                                <mutator>INLINE_CONSTS</mutator>
-                                <mutator>VOID_METHOD_CALLS</mutator>
-                                <mutator>REMOVE_INCREMENTS</mutator>
-                                <mutator>NON_VOID_METHOD_CALLS</mutator>
-                                <mutator>CONSTRUCTOR_CALLS</mutator>
-                                <mutator>REMOVE_CONDITIONALS_EQ_IF</mutator>
-                                <mutator>REMOVE_CONDITIONALS_EQ_ELSE</mutator>
-                                <mutator>REMOVE_CONDITIONALS_ORD_IF</mutator>
-                                <mutator>REMOVE_CONDITIONALS_ORD_ELSE</mutator>
-                                -->
-                            </mutators>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>basic-pitest</id>
-                                <goals>
-                                    <goal>mutationCoverage</goal>
-                                </goals>
-                                <phase>
-                                    verify
-                                </phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>${maven-antrun-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>copy-pitest-to-module</id>
-                                <phase>verify</phase>
-                                <configuration>
-                                    <target>
-                                        <mkdir dir="../target/pit-reports/${project.artifactId}"/>
-                                        <copy todir="../target/pit-reports/${project.artifactId}" failonerror="no"
-                                              quiet="no">
-                                            <fileset dir="${project.basedir}/target/pit-reports"/>
-                                        </copy>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-
-            <reporting>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jxr-plugin</artifactId>
-                        <version>2.5</version>
-                        <!--
-                        <reportSets>
-                            <reportSet>
-                                <id>aggregate</id>
-                                <reports>
-                                    <report>aggregate</report>
-                                    <report>test-aggregate</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                        -->
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <version>3.6</version>
-                        <configuration>
-                            <linkXref>true</linkXref>
-                            <sourceEncoding>utf-8</sourceEncoding>
-                            <minimumTokens>25</minimumTokens>
-                            <targetJdk>1.7</targetJdk>
-                            <skipEmptyReport>false</skipEmptyReport>
-                        </configuration>
-                    </plugin>
-
-                </plugins>
-            </reporting>
-
-        </profile>
-    </profiles>
-
 
 </project>
