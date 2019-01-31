@@ -11,12 +11,14 @@ public class ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter implements Ty
     @Override public Untdid1001InvoiceTypeCode convert(String stringCode) {
         switch (stringCode) {
             case "TD01":
+            case "TD06":
                 return Untdid1001InvoiceTypeCode.Code380;
             case "TD04":
                 return Untdid1001InvoiceTypeCode.Code381;
             case "TD05":
                 return Untdid1001InvoiceTypeCode.Code383;
             case "TD02":
+            case "TD03":
                 return Untdid1001InvoiceTypeCode.Code386;
             default:
                 return null;
