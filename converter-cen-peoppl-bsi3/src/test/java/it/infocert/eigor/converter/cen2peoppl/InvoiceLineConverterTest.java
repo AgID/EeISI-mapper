@@ -23,8 +23,6 @@ public class InvoiceLineConverterTest {
         document = new Document(new Element("Invoice", Namespace.getNamespace("urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")));
     }
 
-
-
     @Test
     public void checkBT0089MandateReferenceIdentifier() {
 
@@ -142,12 +140,23 @@ public class InvoiceLineConverterTest {
         assertTrue(valueAddedTaxPointDate.getText().length() == 10);
         assertTrue(paymentDueDate.getText().length() == 10);
 
-
-
-
-
-
     }
+    
+    @Test
+    public void invoiceWithSellerBT0049ShouldNotBeEmpty(){
+    	BG0000Invoice cenInvoice = makeCENInvoiceWithBG007();
+        InvoiceLineConverter converter = new InvoiceLineConverter();
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.PEPPOL_OUT, null);
+        Element rootElement = document.getRootElement();
+        
+        Element buyer = rootElement.getChild("Buyer");
+        Element buyerElectronicAddressAndSchemeIdentifier = buyer.getChild("BuyerElectronicAddressAndSchemeIdentifier");
+        
+        Element id = buyerElectronicAddressAndSchemeIdentifier.getChild("identifier");
+        Element identificationSchema = buyerElectronicAddressAndSchemeIdentifier.getChild("identificationSchema");
+        assertTrue(identificationSchema.getText().equals("0130"));
+        assertTrue(id.getText().contentEquals("NA"));
+   }
 
     private BG0000Invoice makeCENInvoiceWithDates(){
     	BG0000Invoice invoice = new BG0000Invoice();
@@ -155,11 +164,9 @@ public class InvoiceLineConverterTest {
     	BT0002InvoiceIssueDate bt02 = new BT0002InvoiceIssueDate(lTime);
     	BT0007ValueAddedTaxPointDate bt07 = new BT0007ValueAddedTaxPointDate(lTime);
     	BT0009PaymentDueDate bt09 = new BT0009PaymentDueDate(lTime);
-
     	invoice.getBT0002InvoiceIssueDate().add(bt02);
     	invoice.getBT0007ValueAddedTaxPointDate().add(bt07);
     	invoice.getBT0009PaymentDueDate().add(bt09);
-
 
     	return invoice;
     }
@@ -172,11 +179,11 @@ public class InvoiceLineConverterTest {
 		return invoice;
    }
 
-	private BG0000Invoice makeCENInvoiceWithBT0034(){
+	private BG0000Invoice makeCENInvoiceWithBG007(){
 		BG0000Invoice invoice = new BG0000Invoice();
-		BG0004Seller seller = new BG0004Seller();
+		BG0007Buyer buyer = new BG0007Buyer();
 
-		invoice.getBG0004Seller().add(seller);
+		invoice.getBG0007Buyer().add(buyer);
 		return invoice;
 	}
 

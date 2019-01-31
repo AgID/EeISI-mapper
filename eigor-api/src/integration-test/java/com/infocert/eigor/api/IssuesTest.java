@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 
 
-//@Ignore("To be ignored 'til all mappings have been applied")
+@Ignore("To be ignored 'til all mappings have been applied")
 public class IssuesTest extends AbstractIssueTest {
 
     //@Ignore("To be ignored 'til all mappings have been applied")
@@ -40,7 +40,6 @@ public class IssuesTest extends AbstractIssueTest {
     @Test
     public void issueeisi41() throws IOException, SAXException, TransformerException {
     	
-        // check conversion Ubl -> Peppol is without errors.
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml", "ubl", "fatturapa");
         String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml"), "UTF-8").getBytes() )));
         String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream(conversion.getResult() )));
