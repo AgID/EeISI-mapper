@@ -8,6 +8,7 @@ import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -170,6 +171,16 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 BT0126InvoiceLineIdentifier invoiceLineIdentifier = new BT0126InvoiceLineIdentifier(numeroLinea.getText());
                                 bg0025.getBT0126InvoiceLineIdentifier().add(invoiceLineIdentifier);
                             }
+
+                            Element codiceArticolo = dettaglioLinee.getChild("CodiceArticolo");
+                            if(codiceArticolo != null) {
+                                Element codiceValore = codiceArticolo.getChild("CodiceValore");
+                                Element codiceTipo = codiceArticolo.getChild("CodiceTipo");
+                                BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier =
+                                        new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(codiceTipo.getText(),codiceValore.getText()));
+                                bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier);
+                            }
+
                             Element quantita = dettaglioLinee.getChild("Quantita");
                             if (quantita != null) {
                                 try {
@@ -214,6 +225,67 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(prezzoTotaleValue);
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
                             }
+
+                            BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
+                            Element dataInizioPeriodo = dettaglioLinee.getChild("DataInizioPeriodo");
+                            if (dataInizioPeriodo != null) {
+                                BT0134InvoiceLinePeriodStartDate bt0134InvoiceLinePeriodStartDate = new BT0134InvoiceLinePeriodStartDate(new org.joda.time.LocalDate(dataInizioPeriodo.getText()));
+                                bg0026.getBT0134InvoiceLinePeriodStartDate().add(bt0134InvoiceLinePeriodStartDate);
+                            }
+
+                            Element riferimentoAmministrazione = dettaglioLinee.getChild("RiferimentoAmministrazione");
+                            if(riferimentoAmministrazione != null){
+                                BT0133InvoiceLineBuyerAccountingReference bt0133InvoiceLineBuyerAccountingReference = new BT0133InvoiceLineBuyerAccountingReference(riferimentoAmministrazione.getText());
+                                bg0025.getBT0133InvoiceLineBuyerAccountingReference().add(bt0133InvoiceLineBuyerAccountingReference);
+                            }
+
+                            Element dataFinePeriodo = dettaglioLinee.getChild("DataFinePeriodo");
+                            if (dataFinePeriodo != null) {
+                                try {
+                                    BT0135InvoiceLinePeriodEndDate bt0135InvoiceLinePeriodEndDate = new BT0135InvoiceLinePeriodEndDate(new org.joda.time.LocalDate(dataFinePeriodo.getText()));
+                                    bg0026.getBT0135InvoiceLinePeriodEndDate().add(bt0135InvoiceLinePeriodEndDate);
+                                } catch (NumberFormatException e) {
+                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                            .location(callingLocation)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .build());
+                                    errors.add(ConversionIssue.newError(ere));
+                                }
+                            }
+                            bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+
+                            BG0027InvoiceLineAllowances bg0027 = new BG0027InvoiceLineAllowances();
+                            Element scontoMaggiorazione = dettaglioLinee.getChild("ScontoMaggiorazione");
+                            if (scontoMaggiorazione != null) {
+                                Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                Element importo = scontoMaggiorazione.getChild("Importo");
+                                if(importo != null) {
+                                    BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
+                                    bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                                }
+                                if(percentuale != null) {
+                                    BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
+                                    bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
+                                }
+                            }
+                            bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
+
+                            BG0028InvoiceLineCharges bg0028 = new BG0028InvoiceLineCharges();
+                            if (scontoMaggiorazione != null) {
+                                Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                Element importo = scontoMaggiorazione.getChild("Importo");
+                                if(importo != null) {
+                                    BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
+                                    bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
+                                }
+                                if(percentuale != null) {
+                                    BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
+                                    bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
+                                }
+                            }
+                            bg0025.getBG0028InvoiceLineCharges().add(bg0028);
 
                             BG0029PriceDetails bg0029 = new BG0029PriceDetails();
                             Element prezzoUnitario = dettaglioLinee.getChild("PrezzoUnitario");
@@ -285,6 +357,21 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                         bg0032.getBT0161ItemAttributeValue().add(itemAttributeValue);
                                     }
                                     bg0031.getBG0032ItemAttributes().add(bg0032);
+                                }
+                            }
+                            Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+                            if(datiGenerali != null){
+                                Element datiTrasporto = datiGenerali.getChild("DatiTrasporto");
+                                if(datiTrasporto != null){
+                                    Element causaleTrasporto = datiTrasporto.getChild("CausaleTrasporto");
+                                    if (causaleTrasporto != null) {
+                                        bg0032 = new BG0032ItemAttributes();
+                                        BT0160ItemAttributeName itemAttributeName = new BT0160ItemAttributeName(causaleTrasporto.getText());
+                                        bg0032.getBT0160ItemAttributeName().add(itemAttributeName);
+                                        BT0161ItemAttributeValue itemAttributeValue = new BT0161ItemAttributeValue(causaleTrasporto.getText());
+                                        bg0032.getBT0161ItemAttributeValue().add(itemAttributeValue);
+                                        bg0031.getBG0032ItemAttributes().add(bg0032);
+                                    }
                                 }
                             }
 

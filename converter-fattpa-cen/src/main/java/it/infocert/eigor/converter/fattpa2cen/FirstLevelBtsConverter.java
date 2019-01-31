@@ -30,8 +30,9 @@ public class FirstLevelBtsConverter implements CustomMapping<Document> {
                 for (Element datiDDT : children) {
                     if (datiDDT.getName().equals("DatiDDT")) {
                         Element numero = datiDDT.getChild("NumeroDDT");
-                        if (numero != null) {
-                            bt0016 = new BT0016DespatchAdviceReference(numero.getText());
+                        Element data = datiDDT.getChild("DataDDT");
+                        if (numero != null && data != null) {
+                            bt0016 = new BT0016DespatchAdviceReference(numero.getText() + ":" + data.getText());
                         }
                         if (bt0016 != null) invoice.getBT0016DespatchAdviceReference().add(bt0016);
                     }

@@ -11,11 +11,11 @@ import it.infocert.eigor.model.core.model.structure.BtBgName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -130,16 +130,13 @@ public class InvoiceUtils {
      */
     public Class<? extends BTBG> getBtBgByName(final String name) {
 
+        String prefix = BtBgName.formatPadded(name);
         Set<Class<? extends BTBG>> subTypesOf = reflections.getSubTypesOfBtBg();
 
         Collection<Class<? extends BTBG>> filtered =
                 subTypesOf.stream()
-                .filter(new Predicate<Class<? extends BTBG>>() {
-                    @Override
-                    public boolean test(@Nullable Class<? extends BTBG> input) {
-                        return input.getSimpleName().startsWith(BtBgName.formatPadded(name));
-                    }
-                }).collect(Collectors.toList());
+                .filter(input -> input.getSimpleName().startsWith(prefix))
+                .collect(Collectors.toList());
 
         if (filtered == null || filtered.isEmpty()) return null;
         else return filtered.iterator().next();
@@ -277,6 +274,14 @@ public class InvoiceUtils {
         }
 
         return bts;
+    }
+
+    public static <T> T evalExpression( Supplier<T> expr ) {
+        try{
+            return expr.get();
+        }catch(NullPointerException | IndexOutOfBoundsException e){
+            return null;
+        }
     }
 
 }

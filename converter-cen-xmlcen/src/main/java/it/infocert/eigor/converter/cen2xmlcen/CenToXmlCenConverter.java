@@ -79,7 +79,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public void configure() throws ConfigurationException {
-        Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.2.xsd"));
+        Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"));
         ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_OUT;
 
         try {

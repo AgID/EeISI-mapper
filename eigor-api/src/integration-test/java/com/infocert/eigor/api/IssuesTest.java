@@ -20,11 +20,19 @@ import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.junit.Assert.*;
 
 
-
-@Ignore("To be ignored 'til all mappings have been applied")
 public class IssuesTest extends AbstractIssueTest {
 
-    //@Ignore("To be ignored 'til all mappings have been applied")
+    @Test
+    public void issueEisi135() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-135-xmlcen.xml",
+                "xmlcen",
+                "fatturapa");
+
+    }
+
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue281FattpaToCII() throws Exception {
         //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
@@ -36,19 +44,20 @@ public class IssuesTest extends AbstractIssueTest {
         }
     }
 
-    
+
+    @Ignore("UBL-sch-fails")
     @Test
     public void issueeisi41() throws IOException, SAXException, TransformerException {
-    	
+
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml", "ubl", "fatturapa");
         String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml"), "UTF-8").getBytes() )));
         String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream(conversion.getResult() )));
-        
+
         assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
-        
+
     }
-    
-    @Ignore
+
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue279FromUblToFattPA() throws Exception {
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
@@ -132,11 +141,13 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
+    @Ignore("fails BT11 cardinality")
     @Test
     public void issue278FromUblToFattPA() {
         conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
     }
 
+    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
     @Test
     public void issue261FromFattPAToUbl() {
 
@@ -149,27 +160,35 @@ public class IssuesTest extends AbstractIssueTest {
         );
     }
 
+    @Ignore("Fails UBL INPUT schematron")
     @Test
     public void issue276FromUblToUbl() {
         conversion.assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
     }
 
+    @Ignore("Fails CII schematron")
     @Test
     public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
     }
 
+    @Ignore("Fails CII schematron")
     @Test
-    public void fatturapaToCiiExamples() {
+    public void fatturapaToCiiExamples1() {
         conversion.assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
                 "fatturapa", "cii");
+    }
 
+    @Ignore("fails output CII chematron")
+    @Test
+    public void fatturapaToCiiExamples2() {
         conversion.assertConversionWithoutErrors(
                 "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_PEC _91FAT.xml",
                 "fatturapa", "cii");
     }
 
+    @Ignore("Fails CII schematron")
     @Test
     public void ublToCiiExamples() {
         conversion.assertConversionWithoutErrors(
@@ -194,16 +213,19 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
+    @Ignore("Fails output schematron")
     @Test
     public void issue254FromFattPaToCii() {
         conversion.assertConversionWithoutErrors("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML", "fatturapa", "cii");
     }
 
+    @Ignore("Fails CII schematron")
     @Test
     public void issue254FromUblToCii_scenario2() {
         conversion.assertConversionWithoutErrors("/issues/254/ubl_newB2G-C_01C_CII.XML", "ubl", "cii");
     }
 
+    @Ignore("Fails CII schematron")
     @Test
     public void issue254FromUblToCii_scenario1() {
         conversion.assertConversionWithoutErrors("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML", "ubl", "cii");
@@ -223,6 +245,7 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
+    @Ignore("1 - 1 mapping rule seems wrong")
     @Test
     public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
@@ -256,6 +279,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
     }
 
+    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
     @Test
     public void issue256() throws Exception {
 
@@ -311,6 +335,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "scheme00", bt71_1);
     }
 
+    @Ignore("Wrong assertion")
     @Test
     public void issue208() throws Exception {
 
@@ -385,6 +410,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
     }
 
+    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
     @Test
     public void issue281FattpaToUBL() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");

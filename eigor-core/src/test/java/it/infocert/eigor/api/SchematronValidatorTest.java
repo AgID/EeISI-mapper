@@ -1,12 +1,14 @@
 package it.infocert.eigor.api;
 
 import it.infocert.eigor.api.errors.ErrorCode;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -16,10 +18,18 @@ public class SchematronValidatorTest {
     private SchematronValidator schematronValidator;
     private byte[] sampleXml;
 
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder();
+
     @Before
     public void setUp() throws Exception {
-        schematronValidator = new SchematronValidator(new File("src/test/resources/validator/dogs/dogs.sch"), false, false, ErrorCode.Location.CII_OUT);
-        sampleXml = Files.readAllBytes(Paths.get("src/test/resources/validator/dogs/dogs.xml"));
+
+        String schFileName = "dogs.sch";
+        FileUtils.copyInputStreamToFile( getClass().getResourceAsStream("/dogs/" + schFileName), tmp.newFile(schFileName) );
+        File schematron = new File( tmp.getRoot(), schFileName);
+        schematronValidator = new SchematronValidator(
+                schematron, false, false, ErrorCode.Location.CII_OUT);
+        sampleXml = IOUtils.toByteArray( getClass().getResource("/dogs/dogs.xml") );
     }
 
     @Test

@@ -8,10 +8,11 @@
         <immediateFlush>true</immediateFlush>
     </appender>
 
-    <root level="error">
+    <root level="off">
         <appender-ref ref="STDOUT" />
     </root>
 
+    <!--
     <logger name="it.infocert.eigor.api.xml" level="off" />
     <logger name="it.infocert.eigor.api.xml.XSDValidator" level="off" />
     <logger name="it.infocert.eigor.api.SchematronValidator" level="off" />
@@ -21,11 +22,7 @@
 
     <logger name="com.helger.commons.xml.ls" level="off" />
     <logger name="it.infocert.eigor.LowLevelAPIUsage" level="off" />
-
-    <!-- this one spits out an exception stack trace at ERROR level every time a sch validation fails. -->
     <logger name="com.helger.jaxb.validation.LoggingValidationEventHandler" level="off" />
-
-    <!--
     <logger name="it.infocert" level="error" />
     -->
 

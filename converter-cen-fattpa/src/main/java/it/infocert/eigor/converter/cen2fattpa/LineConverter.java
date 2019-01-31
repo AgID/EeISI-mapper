@@ -62,6 +62,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
+            Untdid2475DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
+            Untdid2475DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
 
@@ -759,12 +761,18 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     String bt158_1 = bt158.getIdentificationSchema();
                     String bt158_2 = bt158.getSchemaVersion();
 
+                    String codiceTipo = null;
                     if (bt158_1 != null && bt158_2 != null) {
-                        codiceArticolo.setCodiceTipo(String.format("%s %s", bt158_1, bt158_2));
+                        codiceTipo = String.format("%s %s", bt158_1, bt158_2);
+                        codiceArticolo.setCodiceTipo(codiceTipo);
                     } else if (bt158_1 != null) {
-                        codiceArticolo.setCodiceTipo(bt158_1);
+                        codiceTipo = bt158_1;
+                        codiceArticolo.setCodiceTipo(codiceTipo);
                     } else if (bt158_2 != null) {
-                        codiceArticolo.setCodiceTipo(bt158_2);
+                        codiceTipo = bt158_2;
+                        codiceArticolo.setCodiceTipo(codiceTipo);
+                    } else {
+                        log.warn("codiceTipo not found.");
                     }
                     dettaglioLinee.getCodiceArticolo().add(codiceArticolo);
 
