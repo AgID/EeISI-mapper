@@ -134,7 +134,6 @@ public class IssuesTest extends AbstractIssueTest {
         conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
     }
 
-    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
     @Test
     public void issue261FromFattPAToUbl() {
 
@@ -397,7 +396,6 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "10.00", evaluate);
     }
 
-    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
     @Test
     public void issue281FattpaToUBL() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");

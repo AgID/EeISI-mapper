@@ -310,7 +310,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
       <DettaglioLinee>
         <NumeroLinea>1</NumeroLinea>
 		<CodiceArticolo>
-			<CodiceTipo>CPV</CodiceTipo>
+			<CodiceTipo>ABN</CodiceTipo>
 			<CodiceValore>klji12</CodiceValore>
 		
 		</CodiceArticolo>
@@ -343,7 +343,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 	  <DettaglioLinee>
         <NumeroLinea>2</NumeroLinea>
 		<CodiceArticolo>
-			<CodiceTipo>TARIC</CodiceTipo>
+			<CodiceTipo>ABN</CodiceTipo>
 			<CodiceValore>klji12</CodiceValore>
 		
 		</CodiceArticolo>
