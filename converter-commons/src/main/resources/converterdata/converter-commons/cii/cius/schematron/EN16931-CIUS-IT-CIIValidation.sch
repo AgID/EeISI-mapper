@@ -3,10 +3,27 @@
             CII syntax binding to the CIUS ITALIA  
             Created by Luigi Fabbro - Sara Facchinetti
             Updated by EeISI - European eInvoicing Standard in Italy Project
-            Timestamp: 2018-Oct-29 11:00:00 +0100
-            Release: 1.0.2 DRAFT
+            Timestamp: 2019-Jan-12 12:00:00
+            Release: 1.0.4 DRAFT
   -->
 
+<!--
+Change Requests 2019-01-14
+
+1. updated the rules BR-IT-190 and BR-IT-200 as there will only be schemeID 9921 corresponding to IT:IPA
+   IT:IPA, IT:PEC, IT:CODDEST will be registered under ISO 6523 as requested by CEF in mid december 2018 (no changes to these rules)
+   Rules impacted BR-IT-190 - BR-IT-200-2
+
+2. Added NEW rules  
+   BR-IT-295 (new context: <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement">
+   BR-IT-435 
+   BR-IT-480 same context of BR-IT-435
+   BR-IT-490 (new context:   <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction">
+
+FIX:
+  BR-IT-150 => wrong reference to customerCountry instead supplierCountry
+
+-->
 <schema xmlns="http://purl.oclc.org/dsdl/schematron"
   xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
   xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:2"
@@ -15,22 +32,21 @@
   xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
   queryBinding="xslt2">
 
- <title>EN16931 model bound to CII</title>
   <ns prefix="rsm" uri="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"/>
   <ns prefix="ccts" uri="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:2"/>
   <ns prefix="udt" uri="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"/>
   <ns prefix="qdt" uri="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"/>
   <ns prefix="ram" uri="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"/>
 
-
+  <title>Italian Rules for EN16931 model in CII Syntax</title>
+  
   <!-- Parameters         
-    NOTE: using upper-case function it=IT uk=UK - We have to pay attention in the mapping to XML-PA to convert in uppercase, too.
+    NOTE: using upper-case function it=IT uk=UK 
+    We have to pay attention in the mapping to XML-PA to convert in uppercase, too.
   --> 
   <let name="supplierCountry" value="if (/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID) then upper-case(normalize-space(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID)) else 'XX'"/>
   <let name="customerCountry" value="if (/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID) then upper-case(normalize-space(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID)) else 'XX'"/>
   
- 
- 
   
     <!-- 
             CIUS ITALIA - Business Rules
@@ -39,7 +55,7 @@
 
 <pattern xmlns="http://purl.oclc.org/dsdl/schematron"  id="CIUS-IT">
 
-  <rule context="//rsm:CrossIndustryInvoice/rsm:ExchangedDocument">
+  <rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument">
     <!--  
     ID: BT-1	
     Cardinality:  1..1	
@@ -69,7 +85,81 @@
       flag="fatal"> [BR-IT-010] BT-1 (Invoice number) - BT maximum length shall be 20 chars with at least a digit. 
     </assert>
   </rule>
+
+  <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction">
+    <!--  
+    ID: BT-161
+    Cardinality:  1..1
+    Level:  4
+    Business Term: 	Item attribute name
+    Description:  The name of the attribute or property of the item.
+    eEISI CIUS Referemce: BR-IT-490
+
+    EeISI Rule 
+     (ITA):  Se in corrispondenza di più istanze BG-25 INVOICE LINE sono presenti blocchi BG-32 ITEM ATTRIBUTES con i valori "IT:RITENUTA:ALIQUOTA", "IT:RITENUTA:TIPO" o "IT:RITENUTA:CAUSALE" 
+             per l'elemento BT-160 Item attribute name, i corrispondenti valori dell'elemento BT-161 Item attribute value devono essere identici
+     (ENG):  if more than one instance of BG-25 has BT-160="IT:RITENUTA:ALIQUOTA" or "IT:RITENUTA:TIPO" or "IT:RITENUTA:CAUSALE", 
+             then BT-161 shall have the same values    
+
+    CEN:
+    /BG-25/BG-31/BG-32/BT-161
+
+    UBL Syntax:
+    BT-161: /Invoice/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Value
+            /CreditNote/cac:CreditNoteLine/cac:Item/cac:AdditionalItemProperty/cbc:Value
+ 
+    CII Syntax:
+    BT-161: /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Value
+
+    --> 
+    <assert test=  " 
+      count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA']/ram:Value))&lt;= 1 
+      and 
+      count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO']/ram:Value))&lt;= 1
+      and
+      count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE']/ram:Value))&lt;= 1
+      "
+      id="BR-IT-490" 
+      flag="fatal"> [BR-IT-490] BT-160 - Item attribute name - if more than one instance of BG-25 has BT-160="IT:RITENUTA:ALIQUOTA" or "IT:RITENUTA:TIPO" or "IT:RITENUTA:CAUSALE", then BT-161 shall have the same values". 
+    </assert>
+    
+  </rule>  
   
+
+  <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement">
+    <!--  
+    ID: BT-104
+    Cardinality:  0..1
+    Level:  2
+    Business Term:  Document level charge reason
+    Description:  The reason for the document level charge, expressed as text.  
+    eEISI CIUS Referemce: BR-IT-295
+
+    EeISI Rule 
+     (ITA):  Può essere presente una sola istanza di BG-21 DOCUMENT LEVEL CHARGE con il valore "IT:BOLLO" per l'elemento BT-104 Document level charge reason  
+     (ENG):  Only one instance of BG-21 can have BT-104="IT:BOLLO"
+
+    BT-104: /cac:AllowanceCharge/cbc:AllowanceChargeReason with cbc:ChargeIndicator = 'true'
+    BT-105: /cac:AllowanceCharge/cbc:AllowanceChargeReasonCode = with cbc:ChargeIndicator = 'true'
+
+        CEN:
+                /BG-21/BT-104
+
+        UBL Syntax:
+        BT-104:  /Invoice/cac:AllowanceCharge/cbc:AllowanceChargeReason          with cbc:ChargeIndicator = 'true' 	
+                 /CreditNote/cac:AllowanceCharge/cbc:AllowanceChargeReason       with cbc:ChargeIndicator = 'true'
+
+        CII Syntax:
+        BT-104:  /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge/ram:Reason 
+                  with ram:ChargeIndicator/udt:Indicator = 'true'
+    Pattern:
+    -->    
+    <assert test="( count(ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator='true'][normalize-space(ram:Reason)='IT:BOLLO']) &lt;= 1 )"
+      id="BR-IT-295" 
+      flag="fatal"> [BR-IT-295] BG-21 (DOCUMENT LEVEL CHARGES) - Only one instance of BG-21 can have BT-104="IT:BOLLO".
+    </assert>
+  </rule>
+
   <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount">
     <!--  
     ID: BT-19	
@@ -109,14 +199,14 @@
     Business Term:  Buyer electronic address	- Buyer electronic address identification scheme identifier
     Description:  Identifies the Buyer's electronic address to which a business document should be delivered - The identification scheme identifier of the Buyer electronic address.
     (Previous Rule) eIGOR CIUS Reference: CIUS-CA-2
-    eEISI CIUS Referemce: BR-IT-190
+    eEISI CIUS Reference: BR-IT-190
  
      EeISI Rule 
      (ITA): L'elemento BT-49 Buyer electronic address deve contenere la PEC del destinatario della fattura, 
             oppure l’indice IPA oppure il codice destinatario. 
-            Di conseguenza per l'elemento BT-49-1 Buyer electronic address identification scheme identifier sono previsti i valori IT:PEC, IT:IPA oppure IT:CODDEST  
+            Di conseguenza per l'elemento BT-49-1 Buyer electronic address identification scheme identifier sono previsti i valori IT:PEC, IT:IPA (9921) oppure IT:CODDEST  
      (ENG): BT-49 shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. 
-            BT-49-1=IT:PEC or IT:IPA or IT:CODDEST
+            BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST
 
       CEN:
       /BG-7/BT-49
@@ -134,11 +224,12 @@
      
    Error Message:
    -->
+    
     <assert test=  "exists(ram:URIID) 
-      and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] )" 
+      and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '9921'] )" 
       id="BR-IT-190" 
-      flag="fatal"> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
-    </assert>      
+      flag="fatal"> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
+    </assert> 
     
     <!--  
     ID: BT-49 - BT-49-1	
@@ -153,13 +244,13 @@
      (ITA): Se il valore dell’elemento BT-55 Buyer country code è ”IT”, 
             se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:PEC", 
                 la lunghezza dell'elemento BT-49 Buyer electronic address deve essere compresa fra 7 e 256 caratteri. 
-            Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:IPA", 
+            Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:IPA" (9921), 
                 la lunghezza dell'elemento BT-49 Buyer electronic address deve essere di 6 caratteri. 
             Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:CODDEST", 
                 la lunghezza dell'elemento BT-49 Buyer electronic address deve essere di 7 caratteri    
      (ENG): If BT-55 = "IT", 
         if BT-49-1= IT:PEC schema then BT-49  minimum length shall be 7 maximum lenght shall be 256 chars
-        else if BT-49-1 = IT:IPA schema then BT-49 lenght shall be 6 chars
+        else if BT-49-1 = IT:IPA (9921) schema then BT-49 lenght shall be 6 chars
         else if BT-49-1 = IT:CODDEST schema then BT-49 lenght shall be 7 chars
 
       CEN:
@@ -177,22 +268,24 @@
       BT-49-1:  /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:URIUniversalCommunication/ram:URIID/@schemeID
   
     Error Message:
-    -->   
+    -->      
+    
     <assert test=  "$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = 'IT:PEC']) 
       or ( (string-length(normalize-space(ram:URIID)) &gt;= 7 and string-length(normalize-space(ram:URIID)) &lt;= 256) and matches(normalize-space(ram:URIID),'^.+@.+[.]+.+$') )" 
       id="BR-IT-200-1" 
       flag="fatal"> [BR-IT-200-1] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49 shall be a PEC (email) address and  length shall be between 7 and 256 character 
     </assert>
     
-    <assert test=  "$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" 
+    <assert test=  "$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '9921'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" 
       id="BR-IT-200-2" 
-      flag="fatal"> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+      flag="fatal"> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema (9921) then BT-49 shall be a IPA code and maximum length shall be 6 chars 
     </assert> 
     
     <assert test=  "$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID)] = 'IT:CODDEST') or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{7}$'))" 
       id="BR-IT-200-3" 
       flag="fatal"> [BR-IT-200-3] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier)=IT:CODDEST schema then BT-49 and maximum length shall be 7 chars. 
     </assert> 
+
   </rule>
 
   <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty">
@@ -704,7 +797,7 @@
     Nota: per controllo puntuale su provincie modificare con:  contains( ' AG AL AN AO AR AP AT AV BA BT BL BN BG BI BO BZ BS BR CA CL CB CI CE CT CZ CH CO CS CR KR CN EN FM FE FI FG FC FR GE GO GR IM IS SP AQ LT LE LC LI LO LU MC MN MS MT VS ME MI MO MB NA NO NU OG OT OR PD PA PR PV PG PU PE PC PI PT PN PZ PO RG RA RC RE RI RN RM RO SA SS SV SI SO SR TA TE TR TP TN TV TS TO UD VA VE VB VC VR VV VI VT ',cbc:CountrySubentity )     
     Error Message:
     --> 
-    <assert test=  "not($customerCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')" 
+    <assert test=  "not($supplierCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')" 
       id="BR-IT-150" 
       flag="fatal"> [BR-IT-150] BT-39 (Seller country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment. 
     </assert>  
@@ -1697,6 +1790,87 @@
   
   <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct">
     <!--  
+    ID: BT-153 BT-160
+    Cardinality:  1..1 1..1
+    Level:  3 4
+    Business Term: 	Item name Item attribute name
+    Description:  A name for an item. The name of the attribute or property of the item.
+    eEISI CIUS Referemce: BR-IT-435
+
+    EeISI Rule 
+     (ITA):  Se BT-153 Item name ha il valore "IT:CASSA", devono esistere due istanze di BG-32 ITEM ATTRIBUTES 
+             con l'elemento BT-160 Item attribute name valorizzato con "IT:CASSA:TIPO" e "IT:CASSA:ALIQUOTA"
+     (ENG):  if BT-153="IT:CASSA", then two instances of BG-32 shall have BT-160="IT:CASSA:TIPO" and BT-160="IT:CASSA:ALIQUOTA"
+
+    BT-160:  /Invoice/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+             /CreditNote/cac:CreditNoteLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+
+    CEN:
+    /BG-25/BG-31/BT-153
+    /BG-25/BG-31/BG-32/BT-160
+
+    UBL Syntax:
+    BT-153: /Invoice/cac:InvoiceLine/cac:Item/cbc:Name
+            /CreditNote/cac:CreditNoteLine/cac:Item/cbc:Name
+    BT-160: /Invoice/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+            /CreditNote/cac:CreditNoteLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+            
+    CII Syntax:
+    BT-153: /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:Name
+    BT-160: /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Description
+
+    -->     
+    <assert test=  "normalize-space(ram:Name) = 'IT:CASSA' and 
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:TIPO'])=1 and 
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:ALIQUOTA'])=1 
+      or
+      not(normalize-space(ram:Name) = 'IT:CASSA')      
+      "
+      id="BR-IT-435" 
+      flag="fatal"> [BR-IT-435] BT-153, BT-160 (Item name - Item attribute name) - if BT-153="IT:CASSA", then two instances of BG-32 shall have BT-160="IT:CASSA:TIPO" and BT-160="IT:CASSA:ALIQUOTA". 
+    </assert>
+
+    <!--  
+    ID: BT-160
+    Cardinality:  1..1
+    Level:  4
+    Business Term: 	Item attribute name
+    Description:  The name of the attribute or property of the item.
+    eEISI CIUS Referemce: BR-IT-480
+
+    EeISI Rule 
+     (ITA):  se è presente almeno una istanza di BG-32 ITEM ATTRIBUTES con BT-160 Item attribute name valorizzato con "IT:RITENUTA:ALIQUOTA", "IT:RITENUTA:TIPO" o "IT:RITENUTA:CAUSALE", 
+             devono esistere tre istanze di BG-32 ITEM ATTRIBUTES, ciascuna con uno dei tre valori "IT:RITENUTA:ALIQUOTA", "IT:RITENUTA:TIPO" o "IT:RITENUTA:CAUSALE"
+
+     (ENG):  if BT-160="IT:RITENUTA:ALIQUOTA" or BT-160="IT:RITENUTA:TIPO" or BT-160="IT:RITENUTA:CAUSALE", 
+             then three instances of BG-32 shall have BT-160="IT:RITENUTA:ALIQUOTA", BT-160="IT:RITENUTA:TIPO" and BT-160="IT:RITENUTA:CAUSALE"
+    
+    CEN:
+    /BG-25/BG-31/BG-32/BT-160
+
+    UBL Syntax:
+    BT-160: /Invoice/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+            /CreditNote/cac:CreditNoteLine/cac:Item/cac:AdditionalItemProperty/cbc:Name
+            
+    CII Syntax:
+    BT-160: /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic/ram:Description
+
+    --> 
+    <assert test=  " 
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=1 and 
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=1 and
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=1
+      or
+      (
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=0 and 
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=0 and
+      count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=0
+      )"
+      id="BR-IT-480" 
+      flag="fatal"> [BR-IT-480] BT-160 - Item attribute name - if BT-160="IT:RITENUTA:ALIQUOTA" or BT-160="IT:RITENUTA:TIPO" or BT-160="IT:RITENUTA:CAUSALE", then three instances of BG-32 shall have BT-160="IT:RITENUTA:ALIQUOTA", BT-160="IT:RITENUTA:TIPO" and BT-160="IT:RITENUTA:CAUSALE". 
+    </assert>
+
+    <!--  
     ID: BT-155
     Cardinality:  0..1
     Level:  3
@@ -1797,6 +1971,9 @@
       id="BR-IT-460" 
       flag="fatal"> [BR-IT-460] BT-157 (Item standard identifier) - BT maximum length shall be 35 chars. 
     </assert>    
+
+
+
   </rule>
 
   <rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:DesignatedProductClassification">
