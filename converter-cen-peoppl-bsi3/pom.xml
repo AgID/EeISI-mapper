@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>eigor-parent</artifactId>
+		<groupId>it.infocert.eigor</groupId>
+		<version>4.0.1-SNAPSHOT</version>
+		<relativePath>../eigor-parent</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>converter-cen-peppol</artifactId>
+
+	<name>Eigor :: Converter :: CEN - PEPPOL (${project.artifactId})</name>
+
+	<dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cen-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>eigor-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>converter-commons</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-spring-core</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>it.infocert.eigor</groupId>
+			<artifactId>eigor-test</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom2</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>jaxb2-maven-plugin</artifactId>-->
+                <!--<version>2.3.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>xjc</id>-->
+                        <!--<goals>-->
+                            <!--<goal>xjc</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>generate-sources</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<packageName>it.infocert.eigor.converter.cen2ubl.models</packageName>-->
+                    <!--<sources>-->
+                        <!--<source>src/main/resources/converterdata/converter-cen-ubl/ubl/xsd</source>-->
+                    <!--</sources>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+             </plugin>
+        </plugins>
+    </build>
+</project>

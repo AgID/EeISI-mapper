@@ -267,8 +267,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         log.debug("BT-98 has empty string");
                     }
                 } else {
-                    log.trace("No BT0098 found");
-                }
+                   log.trace("No BT0098 found");
+                } 
 
                 String des = sb.toString();
                 dettaglioLinee.setDescrizione(des);
