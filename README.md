@@ -1,4 +1,4 @@
-#eEisi
+# EeISI
 
 ## Build
 
@@ -15,3 +15,5 @@ Just generate it from the code with:
     mvn site site:stage
     
 Then point your browser to `target/staging/index.html`.
+
+<src/site/markdown/getting-started.md>
