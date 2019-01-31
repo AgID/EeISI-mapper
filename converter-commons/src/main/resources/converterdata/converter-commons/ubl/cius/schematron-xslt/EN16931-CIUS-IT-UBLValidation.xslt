@@ -153,7 +153,7 @@
 
 <!--SCHEMA SETUP-->
 <xsl:template match="/">
-    <svrl:schematron-output schemaVersion="" title="EN16931 - Eeisi Project - UBL CIUS IT">
+    <svrl:schematron-output schemaVersion="" title="Italian Rules for EN16931 model in UBL Syntax">
       <xsl:comment>
         <xsl:value-of select="$archiveDirParameter" />   
 		 <xsl:value-of select="$archiveNameParameter" />  
@@ -178,7 +178,7 @@
   </xsl:template>
 
 <!--SCHEMATRON PATTERNS-->
-<svrl:text>EN16931 - Eeisi Project - UBL CIUS IT</svrl:text>
+<svrl:text>Italian Rules for EN16931 model in UBL Syntax</svrl:text>
   <xsl:param name="supplierCountry" select="if (/*/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode) then upper-case(normalize-space(/*/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode)) else 'XX'" />
   <xsl:param name="customerCountry" select="if (/*/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode) then upper-case(normalize-space(/*/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode)) else 'XX'" />
   <xsl:param name="deliveryCountry" select="if (/*/cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode) then upper-case(normalize-space(/*/cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode)) else 'XX'" />
@@ -187,8 +187,8 @@
 
 
 	<!--RULE -->
-<xsl:template match="//ubl:Invoice | //cn:CreditNote" mode="M9" priority="1040">
-    <svrl:fired-rule context="//ubl:Invoice | //cn:CreditNote" />
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M9" priority="1041">
+    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -221,11 +221,43 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(count(//cac:AllowanceCharge[cbc:ChargeIndicator='true'][normalize-space(cbc:AllowanceChargeReason)='IT:BOLLO'])) &lt;= 1" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(count(//cac:AllowanceCharge[cbc:ChargeIndicator='true'][normalize-space(cbc:AllowanceChargeReason)='IT:BOLLO'])) &lt;= 1">
+          <xsl:attribute name="id">BR-IT-295</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-295] BG-21 (DOCUMENT LEVEL CHARGES) - Only one instance of BG-21 can have BT-104="IT:BOLLO".
+      </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(         count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA']/cbc:Value))&lt;= 1          and         count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO']/cbc:Value))&lt;= 1          and         count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE']/cbc:Value))&lt;= 1         )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA']/cbc:Value))&lt;= 1 and count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO']/cbc:Value))&lt;= 1 and count(distinct-values(//cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE']/cbc:Value))&lt;= 1 )">
+          <xsl:attribute name="id">BR-IT-490</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-490] BT-160 - Item attribute name - if more than one instance of BG-25 has BT-160="IT:RITENUTA:ALIQUOTA" or "IT:RITENUTA:TIPO" or "IT:RITENUTA:CAUSALE", then BT-161 shall have the same values". 
+      </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:apply-templates mode="M9" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M9" priority="1039">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party" mode="M9" priority="1040">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party" />
 
 		<!--ASSERT -->
@@ -245,15 +277,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or (exists(cbc:EndpointID) and          (cbc:EndpointID[normalize-space(@schemeID) = 'IT:CODDEST']          or cbc:EndpointID[normalize-space(@schemeID) = 'IT:PEC']          or cbc:EndpointID[normalize-space(@schemeID) = 'IT:IPA'] ))" />
+      <xsl:when test="$customerCountry!='IT' or (exists(cbc:EndpointID) and          (cbc:EndpointID[normalize-space(@schemeID) = 'IT:CODDEST']          or cbc:EndpointID[normalize-space(@schemeID) = 'IT:PEC']          or cbc:EndpointID[normalize-space(@schemeID) = '9921'] ))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="$customerCountry!='IT' or (exists(cbc:EndpointID) and (cbc:EndpointID[normalize-space(@schemeID) = 'IT:CODDEST'] or cbc:EndpointID[normalize-space(@schemeID) = 'IT:PEC'] or cbc:EndpointID[normalize-space(@schemeID) = 'IT:IPA'] ))">
+        <svrl:failed-assert test="$customerCountry!='IT' or (exists(cbc:EndpointID) and (cbc:EndpointID[normalize-space(@schemeID) = 'IT:CODDEST'] or cbc:EndpointID[normalize-space(@schemeID) = 'IT:PEC'] or cbc:EndpointID[normalize-space(@schemeID) = '9921'] ))">
           <xsl:attribute name="id">BR-IT-190</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
+          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -277,15 +309,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or  not(cbc:EndpointID[normalize-space(@schemeID) = 'IT:IPA'])          or ( matches(normalize-space(cbc:EndpointID),'^[A-Z0-9]{6}$') )" />
+      <xsl:when test="$customerCountry!='IT' or  not(cbc:EndpointID[normalize-space(@schemeID) = '9921'])          or ( matches(normalize-space(cbc:EndpointID),'^[A-Z0-9]{6}$') )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="$customerCountry!='IT' or not(cbc:EndpointID[normalize-space(@schemeID) = 'IT:IPA']) or ( matches(normalize-space(cbc:EndpointID),'^[A-Z0-9]{6}$') )">
+        <svrl:failed-assert test="$customerCountry!='IT' or not(cbc:EndpointID[normalize-space(@schemeID) = '9921']) or ( matches(normalize-space(cbc:EndpointID),'^[A-Z0-9]{6}$') )">
           <xsl:attribute name="id">BR-IT-200-2</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema (9921) then BT-49 shall be a IPA code and maximum length shall be 6 chars 
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -310,7 +342,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" mode="M9" priority="1038">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" mode="M9" priority="1039">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification" />
 
 		<!--ASSERT -->
@@ -332,7 +364,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity[starts-with(cbc:CompanyID,'IT:EORI:')]" mode="M9" priority="1037">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity[starts-with(cbc:CompanyID,'IT:EORI:')]" mode="M9" priority="1038">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity[starts-with(cbc:CompanyID,'IT:EORI:')]" />
 
 		<!--ASSERT -->
@@ -354,7 +386,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" mode="M9" priority="1036">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" mode="M9" priority="1037">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme" />
 
 		<!--ASSERT -->
@@ -376,7 +408,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress[cac:Country/cbc:IdentificationCode='IT']" mode="M9" priority="1035">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress[cac:Country/cbc:IdentificationCode='IT']" mode="M9" priority="1036">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PostalAddress[cac:Country/cbc:IdentificationCode='IT']" />
 
 		<!--ASSERT -->
@@ -446,7 +478,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M9" priority="1034">
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" mode="M9" priority="1035">
     <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity" />
 
 		<!--ASSERT -->
@@ -468,7 +500,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" mode="M9" priority="1033">
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" mode="M9" priority="1034">
     <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification" />
 
 		<!--ASSERT -->
@@ -506,7 +538,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) != 'VAT']" mode="M9" priority="1032">
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) != 'VAT']" mode="M9" priority="1033">
     <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) != 'VAT']" />
 
 		<!--ASSERT -->
@@ -528,7 +560,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']" mode="M9" priority="1031">
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']" mode="M9" priority="1032">
     <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -550,7 +582,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress[normalize-space(cac:Country/cbc:IdentificationCode)='IT']" mode="M9" priority="1030">
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress[normalize-space(cac:Country/cbc:IdentificationCode)='IT']" mode="M9" priority="1031">
     <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PostalAddress[normalize-space(cac:Country/cbc:IdentificationCode)='IT']" />
 
 		<!--ASSERT -->
@@ -603,9 +635,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(exists(cbc:CountrySubentity)) or matches(normalize-space(cbc:CountrySubentity),'^[A-Z]{2}$')" />
+      <xsl:when test="not($supplierCountry = 'IT') or not(exists(cbc:CountrySubentity)) or matches(normalize-space(cbc:CountrySubentity),'^[A-Z]{2}$')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(exists(cbc:CountrySubentity)) or matches(normalize-space(cbc:CountrySubentity),'^[A-Z]{2}$')">
+        <svrl:failed-assert test="not($supplierCountry = 'IT') or not(exists(cbc:CountrySubentity)) or matches(normalize-space(cbc:CountrySubentity),'^[A-Z]{2}$')">
           <xsl:attribute name="id">BR-IT-150</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -620,7 +652,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AdditionalDocumentReference[normalize-space(cbc:DocumentTypeCode)!='130' or not(exists(cbc:DocumentTypeCode))]" mode="M9" priority="1029">
+<xsl:template match="cac:AdditionalDocumentReference[normalize-space(cbc:DocumentTypeCode)!='130' or not(exists(cbc:DocumentTypeCode))]" mode="M9" priority="1030">
     <svrl:fired-rule context="cac:AdditionalDocumentReference[normalize-space(cbc:DocumentTypeCode)!='130' or not(exists(cbc:DocumentTypeCode))]" />
 
 		<!--ASSERT -->
@@ -642,7 +674,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ubl:Invoice/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:AllowanceCharge/cbc:Amount" mode="M9" priority="1028">
+<xsl:template match="//ubl:Invoice/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:AllowanceCharge/cbc:Amount" mode="M9" priority="1029">
     <svrl:fired-rule context="//ubl:Invoice/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:AllowanceCharge/cbc:Amount" />
 
 		<!--ASSERT -->
@@ -664,7 +696,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ubl:Invoice/cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:CreditNoteLine/cac:AllowanceCharge/cbc:Amount" mode="M9" priority="1027">
+<xsl:template match="//ubl:Invoice/cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:CreditNoteLine/cac:AllowanceCharge/cbc:Amount" mode="M9" priority="1028">
     <svrl:fired-rule context="//ubl:Invoice/cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount | //cn:CreditNote/cac:CreditNoteLine/cac:AllowanceCharge/cbc:Amount" />
 
 		<!--ASSERT -->
@@ -686,7 +718,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:BillingReference/cac:InvoiceDocumentReference" mode="M9" priority="1026">
+<xsl:template match="cac:BillingReference/cac:InvoiceDocumentReference" mode="M9" priority="1027">
     <svrl:fired-rule context="cac:BillingReference/cac:InvoiceDocumentReference" />
 
 		<!--ASSERT -->
@@ -708,7 +740,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:OrderReference" mode="M9" priority="1025">
+<xsl:template match="cac:OrderReference" mode="M9" priority="1026">
     <svrl:fired-rule context="cac:OrderReference" />
 
 		<!--ASSERT -->
@@ -730,7 +762,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address[cac:Country/cbc:IdentificationCode='IT']" mode="M9" priority="1024">
+<xsl:template match="cac:Delivery/cac:DeliveryLocation/cac:Address[cac:Country/cbc:IdentificationCode='IT']" mode="M9" priority="1025">
     <svrl:fired-rule context="cac:Delivery/cac:DeliveryLocation/cac:Address[cac:Country/cbc:IdentificationCode='IT']" />
 
 		<!--ASSERT -->
@@ -800,7 +832,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:ContractDocumentReference" mode="M9" priority="1023">
+<xsl:template match="cac:ContractDocumentReference" mode="M9" priority="1024">
     <svrl:fired-rule context="cac:ContractDocumentReference" />
 
 		<!--ASSERT -->
@@ -822,7 +854,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:DespatchDocumentReference" mode="M9" priority="1022">
+<xsl:template match="cac:DespatchDocumentReference" mode="M9" priority="1023">
     <svrl:fired-rule context="cac:DespatchDocumentReference" />
 
 		<!--ASSERT -->
@@ -844,7 +876,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:DocumentReference" mode="M9" priority="1021">
+<xsl:template match="cac:DocumentReference" mode="M9" priority="1022">
     <svrl:fired-rule context="cac:DocumentReference" />
 
 		<!--ASSERT -->
@@ -866,7 +898,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine | cac:CreditNoteLine " mode="M9" priority="1020">
+<xsl:template match="cac:InvoiceLine | cac:CreditNoteLine " mode="M9" priority="1021">
     <svrl:fired-rule context="cac:InvoiceLine | cac:CreditNoteLine " />
 
 		<!--ASSERT -->
@@ -888,7 +920,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine/cac:Price | cac:CreditNoteLine/cac:Price" mode="M9" priority="1019">
+<xsl:template match="cac:InvoiceLine/cac:Price | cac:CreditNoteLine/cac:Price" mode="M9" priority="1020">
     <svrl:fired-rule context="cac:InvoiceLine/cac:Price | cac:CreditNoteLine/cac:Price" />
 
 		<!--ASSERT -->
@@ -910,7 +942,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine/cbc:InvoicedQuantity | cac:CreditNoteLine/cbc:CreditedQuantity" mode="M9" priority="1018">
+<xsl:template match="cac:InvoiceLine/cbc:InvoicedQuantity | cac:CreditNoteLine/cbc:CreditedQuantity" mode="M9" priority="1019">
     <svrl:fired-rule context="cac:InvoiceLine/cbc:InvoicedQuantity | cac:CreditNoteLine/cbc:CreditedQuantity" />
 
 		<!--ASSERT -->
@@ -932,7 +964,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:InvoiceLine/cbc:LineExtensionAmount | cac:CreditNoteLine/cbc:LineExtensionAmount" mode="M9" priority="1017">
+<xsl:template match="cac:InvoiceLine/cbc:LineExtensionAmount | cac:CreditNoteLine/cbc:LineExtensionAmount" mode="M9" priority="1018">
     <svrl:fired-rule context="cac:InvoiceLine/cbc:LineExtensionAmount | cac:CreditNoteLine/cbc:LineExtensionAmount" />
 
 		<!--ASSERT -->
@@ -946,6 +978,45 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text> [BR-IT-390] BT-131 (Invoice line net amount) - BT maximum length shall be 15, including two fraction digits.
+      </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M9" select="*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:Item" mode="M9" priority="1017">
+    <svrl:fired-rule context="cac:Item" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="normalize-space(cbc:Name)='IT:CASSA' and          count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:CASSA:TIPO'])=1 and          count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:CASSA:ALIQUOTA'])=1          or not(normalize-space(cbc:Name)='IT:CASSA')" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="normalize-space(cbc:Name)='IT:CASSA' and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:CASSA:TIPO'])=1 and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:CASSA:ALIQUOTA'])=1 or not(normalize-space(cbc:Name)='IT:CASSA')">
+          <xsl:attribute name="id">BR-IT-435</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-435] BT-153, BT-160 (Item name - Item attribute name) - if BT-153="IT:CASSA", then two instances of BG-32 shall have BT-160="IT:CASSA:TIPO" and BT-160="IT:CASSA:ALIQUOTA". 
+      </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="          (         count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA'])=1 and          count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO'])=1 and         count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE'])=1         )         or         (         count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA'])=0 and          count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO'])=0 and         count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE'])=0         )         " />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA'])=1 and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO'])=1 and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE'])=1 ) or ( count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:ALIQUOTA'])=0 and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:TIPO'])=0 and count(cac:AdditionalItemProperty[normalize-space(cbc:Name) ='IT:RITENUTA:CAUSALE'])=0 )">
+          <xsl:attribute name="id">BR-IT-480</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-480] BT-160 - Item attribute name - if BT-160="IT:RITENUTA:ALIQUOTA" or BT-160="IT:RITENUTA:TIPO" or BT-160="IT:RITENUTA:CAUSALE", 
+        then three instances of BG-32 shall have BT-160="IT:RITENUTA:ALIQUOTA", BT-160="IT:RITENUTA:TIPO" and BT-160="IT:RITENUTA:CAUSALE". 
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
