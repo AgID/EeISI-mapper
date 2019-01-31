@@ -5,9 +5,6 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.api.utils.RuleReports;
-import it.infocert.eigor.model.core.dump.CsvDumpVisitor;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.Visitor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
@@ -63,13 +60,11 @@ public class DebugConversionCallback extends AbstractConversionCallback {
     @Override
     public void onSuccessfullToCenTranformation(ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
-        writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override
     public void onFailedToCenConversion(ConversionContext ctx) throws Exception {
         writeToCenErrorsToFile(ctx.getToCenResult(), outputFolderFile);
-        writeCenInvoice(ctx.getToCenResult().getResult(), outputFolderFile);
     }
 
     @Override
@@ -78,7 +73,7 @@ public class DebugConversionCallback extends AbstractConversionCallback {
     }
 
     @Override
-    public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
+    public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
         writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
     }
 
@@ -163,12 +158,6 @@ public class DebugConversionCallback extends AbstractConversionCallback {
 
     public String dump(RuleReport ruleReport) {
         return RuleReports.dump(ruleReport);
-    }
-
-    private void writeCenInvoice(BG0000Invoice cenInvoice, File outputFolderFile) throws IOException {
-        Visitor v = new CsvDumpVisitor();
-        cenInvoice.accept(v);
-        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.csv"), v.toString(), StandardCharsets.UTF_8);
     }
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile, String targetInvoiceExtension) throws IOException {

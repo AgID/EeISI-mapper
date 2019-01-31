@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -27,7 +28,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
     private final static Logger logger = LoggerFactory.getLogger(InvoiceLineConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
 
         Element rootElement = document.getRootElement();

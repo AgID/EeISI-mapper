@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -24,7 +25,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         final Element root = document.getRootElement();
         final Element party;

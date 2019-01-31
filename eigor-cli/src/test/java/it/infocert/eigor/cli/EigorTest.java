@@ -76,8 +76,6 @@ public class EigorTest {
     }
 
 
-
-
     @Test public void printHelpWhenLaunchedWithoutArguments() throws IOException {
 
         // when

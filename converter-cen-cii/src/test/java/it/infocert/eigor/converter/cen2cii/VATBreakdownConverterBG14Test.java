@@ -41,7 +41,7 @@ public class VATBreakdownConverterBG14Test {
         Document doc = Cen2Cii.createDocumentWithCiiRootElement();
         ErrorCode.Location location = ErrorCode.Location.CII_OUT;
 
-        new VATBreakdownConverter().map(invoice, doc, new ArrayList<IConversionIssue>(), location);
+        new VATBreakdownConverter().map(invoice, doc, new ArrayList<IConversionIssue>(), location, null);
 
         Assert.assertNotNull(doc);
         Assert.assertNotNull(doc.getRootElement());

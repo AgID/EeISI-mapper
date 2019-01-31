@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -76,7 +77,7 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0003(document, cenInvoice, errors, callingLocation);
     }
 }

@@ -26,7 +26,7 @@ public class LegalMonetaryTotalConverterTest {
     public void shouldAddAttributeToAllChildren() throws Exception {
         LegalMonetaryTotalConverter sut = new LegalMonetaryTotalConverter();
         Document doc = new Document(new Element("Invoice"));
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element amount = doc.getRootElement().getChild("LegalMonetaryTotal");
 

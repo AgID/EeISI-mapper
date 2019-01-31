@@ -15,7 +15,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
+import static org.junit.Assert.assertTrue;
 
+/** A support class that ease the management of conversions. */
 public class ConversionUtil {
 
     private final EigorApi api;
@@ -29,12 +31,16 @@ public class ConversionUtil {
         return assertConversionWithoutErrors(invoice, source, target, predicate);
     }
 
-    ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
-        InputStream invoiceStream = invoiceAsStream(invoice);
+    ConversionResult<byte[]> assertConversionWithoutErrors(String invoiceStreamSource, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
+        InputStream invoiceStream = invoiceAsStream(invoiceStreamSource);
 
+        return assertConversionWithoutErrors(invoiceStream, source, target, errorsToKeep);
+    }
+
+    ConversionResult<byte[]> assertConversionWithoutErrors(InputStream invoiceStream, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
         final BG0000Invoice[] intermediateInvoice = new BG0000Invoice[1];
-        class MyConversionCallback extends AbstractConversionCallback {
 
+        class MyConversionCallback extends AbstractConversionCallback {
             @Override
             public void onTerminatedConversion(ConversionContext ctx) throws Exception {
                 ConversionResult<BG0000Invoice> toCenResult = ctx.getToCenResult();
@@ -52,7 +58,7 @@ public class ConversionUtil {
 
         String messageInCaseOfFailedTest = buildMsgForFailedAssertion(convert, errorsToKeep, intermediateInvoice[0]);
 
-        //Assert.assertTrue(messageInCaseOfFailedTest, issues.isEmpty() );
+        assertTrue(messageInCaseOfFailedTest, issues.isEmpty() );
         return convert;
     }
 

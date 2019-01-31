@@ -6,6 +6,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.Iso31661CountryCodesToStringConverter;
 import it.infocert.eigor.api.conversion.converter.LocalDateToXMLGregorianCalendarConverter;
@@ -13,41 +14,9 @@ import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.converter.cen2fattpa.models.CessionarioCommittenteType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiBeniServiziType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiDDTType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiDocumentiCorrelatiType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliDocumentoType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiGeneraliType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiPagamentoType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiRiepilogoType;
-import it.infocert.eigor.converter.cen2fattpa.models.DatiTrasportoType;
-import it.infocert.eigor.converter.cen2fattpa.models.DettaglioPagamentoType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
-import it.infocert.eigor.converter.cen2fattpa.models.IndirizzoType;
+import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0001InvoiceNote;
-import it.infocert.eigor.model.core.model.BG0003PrecedingInvoiceReference;
-import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
-import it.infocert.eigor.model.core.model.BG0015DeliverToAddress;
-import it.infocert.eigor.model.core.model.BG0016PaymentInstructions;
-import it.infocert.eigor.model.core.model.BG0017CreditTransfer;
-import it.infocert.eigor.model.core.model.BG0023VatBreakdown;
-import it.infocert.eigor.model.core.model.BT0016DespatchAdviceReference;
-import it.infocert.eigor.model.core.model.BT0021InvoiceNoteSubjectCode;
-import it.infocert.eigor.model.core.model.BT0025PrecedingInvoiceReference;
-import it.infocert.eigor.model.core.model.BT0072ActualDeliveryDate;
-import it.infocert.eigor.model.core.model.BT0075DeliverToAddressLine1;
-import it.infocert.eigor.model.core.model.BT0076DeliverToAddressLine2;
-import it.infocert.eigor.model.core.model.BT0077DeliverToCity;
-import it.infocert.eigor.model.core.model.BT0078DeliverToPostCode;
-import it.infocert.eigor.model.core.model.BT0079DeliverToCountrySubdivision;
-import it.infocert.eigor.model.core.model.BT0080DeliverToCountryCode;
-import it.infocert.eigor.model.core.model.BT0082PaymentMeansText;
-import it.infocert.eigor.model.core.model.BT0085PaymentAccountName;
-import it.infocert.eigor.model.core.model.BT0165DeliverToAddressLine3;
+import it.infocert.eigor.model.core.model.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +32,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaType> {
     private static final Logger log = LoggerFactory.getLogger(DatiGeneraliConverter.class);
 
@@ -75,7 +46,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
     }
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
@@ -117,45 +88,107 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             BG0016PaymentInstructions bg0016 = invoice.getBG0016PaymentInstructions(0);
 
             if (!bg0016.getBG0017CreditTransfer().isEmpty()) {
-                BG0017CreditTransfer bg0017 = bg0016.getBG0017CreditTransfer(0);
-                if (!bg0017.getBT0085PaymentAccountName().isEmpty()) {
-                    BT0085PaymentAccountName bt0085 = bg0017.getBT0085PaymentAccountName(0);
-                    String bt0085Value = bt0085.getValue();
 
-                    if (!body.getDatiPagamento().isEmpty()) {
-                        DatiPagamentoType datiPagamento = body.getDatiPagamento().get(0);
-                        if (!datiPagamento.getDettaglioPagamento().isEmpty()) {
-                            DettaglioPagamentoType dettaglioPagamento = datiPagamento.getDettaglioPagamento().get(0);
+                for (BG0017CreditTransfer bg0017 : bg0016.getBG0017CreditTransfer()) {
 
-                            String beneficiario = dettaglioPagamento.getBeneficiario();
-                            if (beneficiario == null || beneficiario.trim().isEmpty()) {
-                                dettaglioPagamento.setBeneficiario(bt0085Value);
-                            } else {
-                                dettaglioPagamento.setBeneficiario(String.format("%s %s", beneficiario, bt0085Value));
-                            }
-                        } else {
-                            final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody";
+                    if (!bg0017.getBT0085PaymentAccountName().isEmpty()) {
+
+
+                        String bt0086Value = evalExpression( () -> bg0017.getBT0086PaymentServiceProviderIdentifier(0).getValue() );
+                        String bt0085Value = evalExpression( () -> bg0017.getBT0085PaymentAccountName(0).getValue() );
+                        String bt0084Value = evalExpression( () -> bg0017.getBT0084PaymentAccountIdentifier(0).getValue() );
+
+                        DatiPagamentoType datiPagamento = null;
+                        if (!body.getDatiPagamento().isEmpty()) {
+                            datiPagamento = body.getDatiPagamento().get(0);
+                        }else {
+                            final String message = "No DatiPagamento was found in current FatturaElettronicaBody";
                             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                     message,
                                     callingLocation,
                                     ErrorCode.Action.HARDCODED_MAP,
                                     ErrorCode.Error.MISSING_VALUE,
                                     Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
-                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DettaglioPagamento")
+                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiPagamento")
                             )));
+                            return;
                         }
-                    } else {
-                        final String message = "No DatiPagamento was found in current FatturaElettronicaBody";
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                message,
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.MISSING_VALUE,
-                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
-                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiPagamento")
-                        )));
+
+//                        DatiPagamentoType datiPagamento = new DatiPagamentoType();
+//                        body.getDatiPagamento().add(datiPagamento);
+
+                        DettaglioPagamentoType dettaglioPagamento = new DettaglioPagamentoType();
+                        datiPagamento.getDettaglioPagamento().add(dettaglioPagamento);
+
+                        String beneficiario = dettaglioPagamento.getBeneficiario();
+                        dettaglioPagamento.setBeneficiario(String.format("%s %s", beneficiario, bt0085Value));
+
+                        dettaglioPagamento.setModalitaPagamento(ModalitaPagamentoType.MP_02);
+                        dettaglioPagamento.setDataRiferimentoTerminiPagamento(null);
+                        dettaglioPagamento.setGiorniTerminiPagamento(null);
+                        dettaglioPagamento.setDataScadenzaPagamento(null);
+
+                        BigDecimal importoPagamento = evalExpression(() -> invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue());
+                        dettaglioPagamento.setImportoPagamento(importoPagamento);
+
+                        if(bt0086Value!=null) dettaglioPagamento.setBIC(bt0086Value);
+                        if(bt0084Value!=null) dettaglioPagamento.setIBAN(bt0084Value);
+
+
+//                        if (datiPagamento.getDettaglioPagamento().isEmpty()) {
+//                            final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody";
+//                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+//                                    message,
+//                                    callingLocation,
+//                                    ErrorCode.Action.HARDCODED_MAP,
+//                                    ErrorCode.Error.MISSING_VALUE,
+//                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+//                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DettaglioPagamento")
+//                            )));
+//                        } else {
+//
+//                        }
+
+//                        if (!body.getDatiPagamento().isEmpty()) {
+//                            DatiPagamentoType datiPagamento = body.getDatiPagamento().get(0);
+//                            if (!datiPagamento.getDettaglioPagamento().isEmpty()) {
+//                                DettaglioPagamentoType dettaglioPagamento = datiPagamento.getDettaglioPagamento().get(0);
+//
+//                                String beneficiario = dettaglioPagamento.getBeneficiario();
+//                                if (beneficiario == null || beneficiario.trim().isEmpty()) {
+//                                    dettaglioPagamento.setBeneficiario(bt0085Value);
+//                                } else {
+//                                    dettaglioPagamento.setBeneficiario(String.format("%s %s", beneficiario, bt0085Value));
+//                                }
+//                            } else {
+//                                final String message = "No DettaglioPagamento was found in current FatturaElettronicaBody";
+//                                errors.add(ConversionIssue.newError(new EigorRuntimeException(
+//                                        message,
+//                                        callingLocation,
+//                                        ErrorCode.Action.HARDCODED_MAP,
+//                                        ErrorCode.Error.MISSING_VALUE,
+//                                        Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+//                                        Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DettaglioPagamento")
+//                                )));
+//                            }
+//                        } else {
+//                            final String message = "No DatiPagamento was found in current FatturaElettronicaBody";
+//                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+//                                    message,
+//                                    callingLocation,
+//                                    ErrorCode.Action.HARDCODED_MAP,
+//                                    ErrorCode.Error.MISSING_VALUE,
+//                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, message),
+//                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, "DatiPagamento")
+//                            )));
+//                        }
                     }
+
                 }
+
+
+
+
             }
         }
     }

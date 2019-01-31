@@ -1,8 +1,10 @@
 package com.infocert.eigor.api;
 
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.EigorException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import static org.junit.Assert.assertThat;
 
 public class HiLevelAPIUsage {
 
@@ -29,6 +33,38 @@ public class HiLevelAPIUsage {
     public void setUp() throws IOException {
         outputFolderFile = tmp.newFolder();
         if (!outputFolderFile.exists()) outputFolderFile.mkdirs();
+    }
+
+    @Test
+    public void schSchematronConversion() throws IOException, EigorException {
+
+        EigorApi api = new EigorApiBuilder()
+                .withOutputFolder(outputFolderFile)
+                .build();
+
+        ConversionResult<Void> failedValidation = api.customSchSchematronValidation(
+                new File(getClass().getResource("/dogs/dogs.sch").getFile()),
+                getClass().getResourceAsStream("/dogs/dogs.xml")
+        );
+
+        assertThat( failedValidation.getIssues(), Matchers.hasSize(4) );
+
+    }
+
+    @Test
+    public void xsdConversion() throws IOException, EigorException {
+
+        EigorApi api = new EigorApiBuilder()
+                .withOutputFolder(outputFolderFile)
+                .build();
+
+        ConversionResult<Void> failedValidation = api.customXsdValidation(
+                new File(getClass().getResource("/dogs/dogs.xsd").getFile()),
+                getClass().getResourceAsStream("/dogs/dogs.xml")
+        );
+
+        assertThat( failedValidation.getIssues().toString(), failedValidation.getIssues(), Matchers.hasSize(4) );
+
     }
 
     @Test

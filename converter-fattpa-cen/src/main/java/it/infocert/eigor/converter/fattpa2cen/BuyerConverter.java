@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -17,7 +18,7 @@ import java.util.List;
 public class BuyerConverter implements CustomMapping<Document> {
 
     private static final String pec = "IT:PEC";
-    private static final String ipa = "IT:IPA";
+    private static final String ipa = "9921";
     private static final String cf = "IT:CF";
     private static final String eori = "IT:EORI";
 
@@ -44,7 +45,7 @@ public class BuyerConverter implements CustomMapping<Document> {
                     if (codiceFiscale != null) {
                         BT0046BuyerIdentifierAndSchemeIdentifier bt0046BuyerIdentifierAndSchemeIdentifier;
                         if (nazioneStr.equals("IT")) {
-                            bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(cf, codiceFiscale.getText()));
+                            bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(cf + ":" + codiceFiscale.getText()));
                         }else {
                             bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
                         }
@@ -60,7 +61,7 @@ public class BuyerConverter implements CustomMapping<Document> {
                         if (codEORI != null && codiceFiscale != null) {
                             BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = null;
                             if (nazioneStr.equals("IT")) {
-                                bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(eori, codiceFiscale.getText()));
+                                bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(eori + ":" + codiceFiscale.getText()));
                             }else {
                                 bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
                             }
@@ -78,13 +79,13 @@ public class BuyerConverter implements CustomMapping<Document> {
                 Element codiceDestinatario = datiTrasmissione.getChild("CodiceDestinatario");
                 Element pecDestinatario = datiTrasmissione.getChild("PECDestinatario");
                 if (codiceDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(ipa, codiceDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(ipa , codiceDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
                     invoice.getBG0007Buyer(0).getBT0049BuyerElectronicAddressAndSchemeIdentifier().add(buyerElectronicAddressAndSchemeIdentifier);
                 } else if (pecDestinatario != null) {
-                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(pec, pecDestinatario.getText()));
+                    BT0049BuyerElectronicAddressAndSchemeIdentifier buyerElectronicAddressAndSchemeIdentifier = new BT0049BuyerElectronicAddressAndSchemeIdentifier(new Identifier(pec , pecDestinatario.getText()));
                     if (invoice.getBG0007Buyer().isEmpty()) {
                         invoice.getBG0007Buyer().add(new BG0007Buyer());
                     }
@@ -96,7 +97,7 @@ public class BuyerConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0007(document, cenInvoice, errors);
     }
 }

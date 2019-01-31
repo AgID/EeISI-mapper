@@ -4,11 +4,12 @@ import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.ToCenConversion;
-import it.infocert.eigor.api.conversion.ConversionCallback;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
+import it.infocert.eigor.api.conversion.DumpIntermediateCenInvoiceAsCsvCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
+import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConversionCommand implements CliCommand {
 
@@ -83,19 +82,18 @@ public class ConversionCommand implements CliCommand {
 
     private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
 
-        List<ConversionCallback> conversionCallbacks = new ArrayList<>();
-        conversionCallbacks.add(new ConsoleOutputConversionCallback(this, out));
-        conversionCallbacks.add(new DebugConversionCallback(outputFolderFile));
-
-        String invoiceFileName = inputInvoice.toFile().getName();
-
         new ObservableConversion(
                 ruleRepository,
                 toCen,
                 fromCen,
                 invoiceInSourceFormat,
-                forceConversion, invoiceFileName, conversionCallbacks)
-                .conversion();
+                forceConversion,
+                inputInvoice.toFile().getName(),
+                new ConsoleOutputConversionCallback(this, out),
+                new DebugConversionCallback(outputFolderFile),
+                new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
+                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderFile)
+        ).conversion();
 
     }
 

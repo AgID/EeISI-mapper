@@ -35,7 +35,7 @@ public class BuyerConverterTest {
 
     @Test
     public void shouldMapBT0044ToRegistrationName() throws Exception {
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element name = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("PartyLegalEntity").getChild("RegistrationName");
 
@@ -47,7 +47,7 @@ public class BuyerConverterTest {
 
         enrichBG0007BuyerwithBG0009(invoice.getBG0007Buyer(0));
 
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element name = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("PartyLegalEntity").getChild("RegistrationName");
 
@@ -59,7 +59,7 @@ public class BuyerConverterTest {
 
         enrichBG0007BuyerwithBT0046(invoice.getBG0007Buyer(0));
 
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT);
+        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
         Element id = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("PartyIdentification").getChild("ID");
 

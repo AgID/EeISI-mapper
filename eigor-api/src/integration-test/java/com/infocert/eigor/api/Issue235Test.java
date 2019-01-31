@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
@@ -16,8 +17,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-//@RunWith(Parameterized.class)
-@Ignore("To be ignored 'til all mappings have been applied")
+@Ignore("several errors")
+@RunWith(Parameterized.class)
 public class Issue235Test {
 
     @Rule
@@ -62,7 +63,7 @@ public class Issue235Test {
         conversion = new ConversionUtil(api);
     }
 
-
+    @Ignore("several errors")
     @Test
     public void test() {
         conversion.assertConversionWithoutErrors( "/issues/235/" + ublInvoice.getName(), "ubl", "fatturapa" );

@@ -7,6 +7,7 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
@@ -19,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +32,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
     }
 
     @Override
-    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         CedentePrestatoreType cedentePrestatore = fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore();
         if (cedentePrestatore != null) {
             List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
@@ -325,27 +325,28 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
                 if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
                     BT0032SellerTaxRegistrationIdentifier identifier = seller.getBT0032SellerTaxRegistrationIdentifier(0);
-                    final String value = identifier.getValue();
+                    final String bt32Value = identifier.getValue();
 
                     if (!seller.getBT0031SellerVatIdentifier().isEmpty() && seller.getBT0031SellerVatIdentifier(0).getValue().startsWith("IT")) {
                         try {
-                            datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(value));
-                            log.debug("Mapped BT0032 to RegimeFiscale with value {}", value);
+                            datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.fromValue(bt32Value));
+                            log.debug("Mapped BT0032 to RegimeFiscale with value {}", bt32Value);
                         } catch (IllegalArgumentException e) {
-                            log.error(e.getMessage());
-                            final String message = String.format("BT-32 value '%s' is not a valid RegimeFiscale code", value);
-                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                    message,
-                                    callingLocation,
-                                    ErrorCode.Action.HARDCODED_MAP,
-                                    ErrorCode.Error.ILLEGAL_VALUE,
-                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value)
-                            )));
+                            datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_01);
+//                            log.error(e.getMessage());
+//                            final String message = String.format("BT-32 value '%s' is not a valid RegimeFiscale code", bt32Value);
+//                            errors.add(ConversionIssue.newError(new EigorRuntimeException(
+//                                    message,
+//                                    callingLocation,
+//                                    ErrorCode.Action.HARDCODED_MAP,
+//                                    ErrorCode.Error.ILLEGAL_VALUE,
+//                                    Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+//                                    Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt32Value)
+//                            )));
                         }
                     } else {
                         datiAnagrafici.setRegimeFiscale(RegimeFiscaleType.RF_01);
-                        attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", value, System.lineSeparator()));
+                        attachmentUtil.addToUnmappedValuesAttachment(body, String.format("BT0032: %s%s", bt32Value, System.lineSeparator()));
                         log.debug("Mapped BT0032 to RegimeFiscale with default value {}", RegimeFiscaleType.RF_01);
                     }
                     addCodiceFiscale(datiAnagrafici, seller);

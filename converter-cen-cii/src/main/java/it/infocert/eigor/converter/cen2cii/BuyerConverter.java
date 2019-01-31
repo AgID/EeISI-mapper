@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -18,7 +19,7 @@ import java.util.List;
 public class BuyerConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
         Namespace rsmNs = rootElement.getNamespace("rsm");
@@ -55,9 +56,9 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
             if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0046 = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs); // maybe GlobalID ?
-                id.setText(bt0046.getIdentifier());
+                id.setText(bt0046.toString());
                 if (bt0046.getIdentificationSchema() != null) {
-                    id.setAttribute("schemeID", bt0046.getIdentificationSchema());
+                    id.setAttribute("schemeID", "");
                 }
                 buyerTradeParty.addContent(id);
             }
@@ -206,7 +207,7 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
                 } else {
                     id.setText(identifier);
                 }
-                id.setAttribute("schemeID", "VAT");
+                id.setAttribute("schemeID", "VA");
 
                 specifiedTaxRegistration.addContent(id);
                 buyerTradeParty.addContent(specifiedTaxRegistration);

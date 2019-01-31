@@ -13,6 +13,7 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2cii.Cen2Cii;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
+import it.infocert.eigor.converter.cen2peoppl.Cen2PEPPOLBSI;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cen2ublcn.Cen2UblCn;
 import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
@@ -35,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Builds instances of the {@link EigorApi} that works according to the configuration specified.
+ */
 public class EigorApiBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(EigorApiBuilder.class);
@@ -63,6 +67,7 @@ public class EigorApiBuilder {
                         .register(new UblCn2Cen(reflections, configuration))
                         .register(new Cen2FattPA(reflections, configuration))
                         .register(new Cen2Ubl(reflections, configuration))
+                        .register(new Cen2PEPPOLBSI(reflections, configuration))
                         .register(new Cen2UblCn(reflections, configuration))
                         .register(new FattPa2Cen(reflections, configuration))
                         .register(new CsvCen2Cen(reflections))
@@ -72,23 +77,19 @@ public class EigorApiBuilder {
 
         outputFolderFile = FileUtils.getTempDirectory();
 
-
-//        try {
-            Properties cardinalityRules = new Properties();
-//            cardinalityRules.load(checkNotNull(getClass().getResourceAsStream("/cardinality.properties")));
-            Properties cardinalityRules2 = new Properties();
-//            cardinalityRules2.load(checkNotNull(getClass().getResourceAsStream("/rules.properties")));
-            ruleRepository = new CompositeRuleRepository(
-                    new CardinalityRulesRepository(cardinalityRules),
-                    new IntegrityRulesRepository(cardinalityRules2)
-            );
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        Properties cardinalityRules = new Properties();
+        Properties cardinalityRules2 = new Properties();
+        ruleRepository = new CompositeRuleRepository(
+                new CardinalityRulesRepository(cardinalityRules),
+                new IntegrityRulesRepository(cardinalityRules2)
+        );
 
     }
 
-
+    /**
+     * Creates and return a new instance of the API configured to work according to the given configuration.
+     * @throws ConfigurationException In case a problem arises during the creation of the API instance.
+     */
     public EigorApi build() throws ConfigurationException {
         log.info(EigorVersion.getAsDetailedString());
 
@@ -148,22 +149,43 @@ public class EigorApiBuilder {
         return ruleRepository;
     }
 
+    /**
+     * Each time Eigor converts an invoice, it also output a set of files that contains worth information
+     * about the conversion.
+     * This is the folder where those files are stored.
+     */
     public EigorApiBuilder withOutputFolder(File tempDirectory) {
         this.outputFolderFile = tempDirectory;
         return this;
     }
 
+    /**
+     * A common set up of {@link EigorApi} requires a bunch of files and directories to be
+     * present in the filesystem of the host running Eigor.
+     *
+     * Those files are mainly XSDs and Schematron of all supported formats plus other configuration files.
+     *
+     * To speed up the set up, Eigor is shipped with an always up-to-date set of these files, that are usually stored
+     * in Eigor packages. Enabling this flag, the builder will take care of create a copy of those files.
+     */
     public EigorApiBuilder enableAutoCopy() {
         this.copy = true;
         return this;
     }
 
+    /**
+     * If invoked, the created API will work in "force mode".
+     * In this case, the API won't stop an invoice conversion if an error is found, as it would normally
+     * do if the "force mode" is not enabled.
+     *
+     * "force mode" is disabled by default.
+     */
     public EigorApiBuilder enableForce() {
         this.forceConversion = true;
         return this;
     }
 
-    public boolean isForceConversion() {
+    boolean isForceConversion() {
         return forceConversion;
     }
 }

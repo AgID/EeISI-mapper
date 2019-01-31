@@ -1,4 +1,5 @@
 <project>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -9,7 +10,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.0.1</version>
     <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -21,7 +22,7 @@
         <site>
             <id>eigor</id>
             <name>eigor</name>
-            <url>https://gitlab.mgmt.infocert.it/linvoice/invoice.eeisi.git</url>
+            <url>http://infocert.it</url>
         </site>
     </distributionManagement>
 
@@ -48,6 +49,7 @@
         <module>converter-cen-ublcn</module>
         <module>converter-xmlcen-cen</module>
         <module>converter-cen-xmlcen</module>
+        <module>converter-cen-peoppl-bsi3</module>
     </modules>
 
     <reporting>
@@ -64,9 +66,9 @@
                             <report>modules</report>
                             <report>index</report>
                             <!--
+                            <report>licens</report>
                             <report>scm</report>
                             <report>issue-tracking</report>
-                            <report>license</report>
                             <report>project-team</report>
                             -->
                         </reports>
@@ -76,69 +78,5 @@
 
         </plugins>
     </reporting>
-
-    <profiles>
-        <profile>
-            <id>coverage</id>
-
-            <build>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>${maven-antrun-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>overwrite-pitest-index</id>
-                                <phase>post-site</phase>
-                                <configuration>
-                                    <target>
-                                        <move
-                                                file="target/site/pit-reports/index_pits.html"
-                                                tofile="target/site/pit-reports/index.html"
-                                                verbose="yes" quiet="false"
-                                        />
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-maven</artifactId>
-                        <version>1.1.11</version>
-                        <configuration>
-                            <skip>false</skip>
-                            <sourceDataFormats>
-                                <sourceDataFormat>HTML</sourceDataFormat>
-                            </sourceDataFormats>
-                        </configuration>
-                        <reportSets>
-                            <reportSet>
-                                <reports>
-                                    <report>report</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-
-
-
-                </plugins>
-            </reporting>
-        </profile>
-    </profiles>
-
-
 
 </project>

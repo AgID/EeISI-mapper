@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.cen2cii;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -27,7 +28,7 @@ import java.util.List;
 public class VATBreakdownConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
         TypeConverter<Untdid2005DateTimePeriodQualifiers, Untdid2475PaymentTimeReference> untdid2005To2475Converter = Untdid2005DateTimePeriodQualifiersToUntdid2475PaymentTimeReferenceConverter.newConverter();
 

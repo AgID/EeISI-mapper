@@ -18,7 +18,7 @@ final class ConverterUtils {
     private static final String SCHEME = "scheme";
     private static final String VERSION = "version";
 
-    private ConverterUtils() {}
+    public ConverterUtils() {}
 
     static BiFunction<String, Element, Optional<BTBG>> getBt = (s, el) -> {
         try {

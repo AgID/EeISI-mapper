@@ -40,7 +40,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0126OrBT0127ThenInvoiceWillHaveAssociatedDocumentLineDocument() {
         BG0000Invoice invoice = createInvoiceWithBT0126AndBT0127();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -63,7 +63,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0128ThenInvoiceWillHaveAdditionalReferencedDocumentWithTypeCode130() {
         BG0000Invoice invoice = createInvoiceWithBT0128();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -89,7 +89,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0149AndBT0150ThenInvoiceWillHaveBasisQuantityWithUnitCodeCommonCode() {
         BG0000Invoice invoice = createInvoiceWithBT0149AndBT150();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);
@@ -113,7 +113,7 @@ public class InvoiceLineConverterTest {
     @Test
     public void ifBT0159ThenInvoiceWillHaveOriginTradeCountryIdAs2LetterCode() {
         BG0000Invoice invoice = createInvoiceWithBT0159();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
         Element supplyChainTradeTransaction = document.getRootElement().getChild("SupplyChainTradeTransaction", rsmNs);
         assertNotNull(supplyChainTradeTransaction);

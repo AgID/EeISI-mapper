@@ -80,3 +80,4 @@ ID,ShortDescription,LongDescription
 95,Free format giro,Ordering customer tells the ordering bank to use the bank service 'Free Format Giro' when transferring the payment. Used in Finnish national banking system.
 96,Requested method for payment was not used,If the requested method for payment was or could not be used this code indicates that.
 97,Clearing between partners,Amounts which two partners owe to each other to be compensated in order to avoid useless payments.
+"ZZZ",Mutually Defined,Cash - Contanti.

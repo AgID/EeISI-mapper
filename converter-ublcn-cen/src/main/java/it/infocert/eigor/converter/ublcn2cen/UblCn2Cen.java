@@ -166,7 +166,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.UBLCN_IN);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBLCN_IN, null);
         }
     }
 

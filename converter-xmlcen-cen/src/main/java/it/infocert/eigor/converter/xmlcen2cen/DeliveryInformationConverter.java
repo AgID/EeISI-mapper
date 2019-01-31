@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.xmlcen2cen;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0013DeliveryInformation;
@@ -27,7 +28,7 @@ public class DeliveryInformationConverter implements CustomMapping<Document> {
                 invoice.getBG0013DeliveryInformation().add(new BG0013DeliveryInformation());
             }
             final BG0013DeliveryInformation deliveryInformation = invoice.getBG0013DeliveryInformation().get(0);
-            
+
             final List<Element> bt71s = rootElement.getChild("BG-13").getChildren("BT-71");
             bt71s.forEach(bt71 -> {
                 final Optional<BTBG> bt = ConverterUtils.getBt.apply("BT0071", bt71);
@@ -41,7 +42,7 @@ public class DeliveryInformationConverter implements CustomMapping<Document> {
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0013(document, cenInvoice, errors);
     }
 }

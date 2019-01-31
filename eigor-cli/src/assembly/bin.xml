@@ -47,12 +47,25 @@
             <outputDirectory>examples/working-examples</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/working-examples</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/xmlcen</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/xmlcen</directory>
+        </fileSet>
         <!-- invoice examples -->
 
         <!-- Converter commons -->
         <fileSet>
             <outputDirectory>converterdata/converter-commons/</outputDirectory>
             <directory>../converter-commons/src/main/resources/converterdata/converter-commons/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- XMLCEN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-xmlcen-cen/</outputDirectory>
+            <directory>../converter-xmlcen-cen/src/main/resources/converterdata/converter-xmlcen-cen/</directory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -98,6 +111,15 @@
         <fileSet>
             <outputDirectory>converterdata/converter-cii-cen</outputDirectory>
             <directory>../converter-cii-cen/src/main/resources/converterdata/converter-cii-cen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/XMLCEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-xmlcen</outputDirectory>
+            <directory>../converter-cen-xmlcen/src/main/resources/converterdata/converter-cen-xmlcen</directory>
             <includes>
                 <include>**/*</include>
             </includes>
