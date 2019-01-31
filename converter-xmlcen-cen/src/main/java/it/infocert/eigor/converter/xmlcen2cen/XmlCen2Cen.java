@@ -2,13 +2,8 @@ package it.infocert.eigor.converter.xmlcen2cen;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
-import it.infocert.eigor.api.AbstractToCenConverter;
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.CustomMappingLoader;
-import it.infocert.eigor.api.EigorRuntimeException;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.ConverterUtils.NamingRules;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
@@ -22,15 +17,10 @@ import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -41,12 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -90,7 +75,10 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.xmlcen-cen.mapping.custom";
     private static final HashSet<String> specialBT = new HashSet<>();
 
+    private static final NamingRules namingRules = new NamingRules("xmlcen-cen");
+
     private XSDValidator xsdValidator;
+    private SchematronValidator schematronValidator;
 
     public XmlCen2Cen(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.XMLCEN_IN);
@@ -108,18 +96,9 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     public void configure() throws ConfigurationException {
         super.configure();
 
-        // load the XSD.
-        {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.xmlcen-cen.xsd");
-            xsdValidator = null;
-            try {
-                Resource xsdFile = drl.getResource(mandatoryString);
+        xsdValidator = namingRules.getXsdValidatorFromConfigOrFail("xsd", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
+        schematronValidator = namingRules.getSchematronFromConfigOrFail("schematron", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.XMLCEN_IN);
-            } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for XMLCEN2CEN from '" + mandatoryString + "'.", e);
-            }
-        }
         configurableSupport.configure();
     }
 
@@ -131,14 +110,25 @@ public class XmlCen2Cen extends AbstractToCenConverter {
         List<IConversionIssue> errors = new ArrayList<>();
         InputStream clonedInputStream = null;
 
+        // xsd validation♠`
         try {
             byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
             clonedInputStream = new ByteArrayInputStream(bytes);
 
-            List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
+            List<IConversionIssue> validationErrors = new ArrayList<>();
+
+            validationErrors.addAll(xsdValidator.validate(bytes));
             if (validationErrors.isEmpty()) {
                 log.info("Xsd validation successful!");
             }
+
+
+            validationErrors.addAll(schematronValidator.validate(bytes));
+            if (validationErrors.isEmpty()) {
+                log.info("Xsd validation successful!");
+            }
+
+
             errors.addAll(validationErrors);
         } catch (IOException | IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.XMLCEN_IN, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));

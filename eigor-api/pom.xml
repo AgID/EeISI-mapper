@@ -112,54 +112,9 @@
     </dependencies>
 
     <profiles>
-        <!-- Attention: Insure that release and releasexslt remain identical to each other -->
+        <!-- Attention: ensure that release and releasexslt remain identical to each other -->
         <profile>
             <id>release</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <executions>
-                            <execution>
-                                <id>make-jar-with-dependencies</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration>
-                                    <finalName>eigor-api-full-${project.version}</finalName>
-                                    <descriptors>
-                                        <descriptor>src/assembly/bin.xml</descriptor>
-                                    </descriptors>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>create-zip</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration>
-                                    <finalName>eigor-api-extras-${project.version}</finalName>
-                                    <descriptors>
-                                        <descriptor>src/assembly/extras.xml</descriptor>
-                                    </descriptors>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>releasexslt</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

@@ -896,6 +896,7 @@
             <xs:enumeration value="K"/>
             <xs:enumeration value="Z"/>
             <xs:enumeration value="O"/>
+			<xs:enumeration value="B"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="MimeCode">
