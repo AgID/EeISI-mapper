@@ -197,13 +197,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                                     bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
                                 } catch (ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid UnitOfMeasureCodes: " + text)
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
                                     bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.C62_ONE));
                                 }
                             } else {
