@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.cen2peoppl;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -53,11 +53,11 @@ public class Cen2PEPPOLBSITest {
     @Ignore
     @Test
     public void shouldApplyCustomMappings() throws Exception {
-        byte[] ublXML = converter.convert(createInvoice()).getResult();
+        byte[] peppolXML = converter.convert(createInvoice()).getResult();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new ByteArrayInputStream(ublXML));
+        Document doc = builder.parse(new ByteArrayInputStream(peppolXML));
 
         String invoiceNumber = getStringByXPath(doc, "/*[local-name()='Invoice']/*[name()='cbc:ID']/text()");
         assertNotNull(invoiceNumber);
@@ -96,16 +96,16 @@ public class Cen2PEPPOLBSITest {
         assertNotNull(itemInformation);
         assertEquals("Name", itemInformation);
     }
-
+    
     
     @Test
-    public void shouldSupportUbl() {
+    public void shouldSupportPEPPOL() {
         assertThat(converter.support("peppolbsi"), is(true));
     }
     
-    @Ignore
+    
     @Test
-    public void shouldSupportedFormatsUbl() {
+    public void shouldSupportedFormatsPEPPOL() {
         assertThat(converter.getSupportedFormats(), contains("peppolbsi"));
     }
 

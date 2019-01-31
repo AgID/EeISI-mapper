@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.cen2peoppl;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
@@ -32,7 +32,7 @@ public class ProjectReferenceTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         ProjectReferenceConverter converter = new ProjectReferenceConverter();
-        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT);
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element projectReference = rootElement.getChild("ProjectReference");

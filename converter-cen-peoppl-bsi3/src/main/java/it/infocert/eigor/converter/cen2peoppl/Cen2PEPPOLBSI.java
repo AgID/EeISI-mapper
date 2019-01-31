@@ -12,6 +12,7 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
+//import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -32,10 +33,10 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
 	private final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSI.class);
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-peppolbsi.mapping.one-to-one";
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-peppolbsi.mapping.many-to-one";
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-peppolbsi.mapping.one-to-many";
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cen-peppolbsi.mapping.custom";
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.custom";
 
     private static final String FORMAT = "peppolbsi";
 
@@ -65,7 +66,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
         super.configure();
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-ubl.xsd");
+            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-peppol.xsd");
             xsdValidator = null;
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
@@ -82,8 +83,8 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 //            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
 //            peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
 //
-            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolbsi.schematron"));
-            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron"));
+            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
             peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -138,14 +139,14 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT, this.configuration);
         }
 
         // PEPPOL hardcoding
         final Element root = document.getRootElement();
 
-        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.customization-id")));
-        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ubl.profile-id")));
+        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppol.customization-id")));
+        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppol.profile-id")));
     }
 
     @Override
@@ -190,7 +191,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
     @Override
     public String getName() {
-        return "converter-cen-peppolbsi";
+        return "converter-cen-peppol";
     }
 
 

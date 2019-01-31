@@ -110,8 +110,8 @@
                                     <xsltDirectory>src/main/resources/converterdata/converter-commons/peppol/schematron-xslt</xsltDirectory>
                                     <schematronPattern>*.sch</schematronPattern>
                                     <!--XSLT files will be compiled only if xsltDirectory files are deleted first-->
-                                    <!--<overwriteWithoutQuestion>true</overwriteWithoutQuestion>-->
-                                    <!--<updateOnSchematronChanges>true</updateOnSchematronChanges>-->
+                                    <!-- <overwriteWithoutQuestion>true</overwriteWithoutQuestion> -->
+                                     <!-- <updateOnSchematronChanges>true</updateOnSchematronChanges> -->
                                 </configuration>
                                 <goals>
                                     <goal>convert</goal>
