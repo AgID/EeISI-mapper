@@ -1,5 +1,8 @@
 # EeISI
 
+Quick
+[Getting started](src/site/markdown/getting-started.md)
+
 ## Build
 
 Java 8, Maven and a working Internet connection are needed.
@@ -16,4 +19,3 @@ Just generate it from the code with:
     
 Then point your browser to `target/staging/index.html`.
 
-[doc](src/site/markdown/getting-started.md)
