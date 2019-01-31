@@ -4,6 +4,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -90,6 +91,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 			 * rule for BT-23 and BT-24
 			 *
 			 */
+			if(!cenInvoice.getBG0002ProcessControl().isEmpty()){
 			List<BG0002ProcessControl> bg0002 = cenInvoice.getBG0002ProcessControl();
 			for(BG0002ProcessControl elembg02: bg0002) {
 				Element ProcessControl = new Element("ProcessControl");
@@ -108,78 +110,16 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
 				root.addContent(ProcessControl);
 			}
-			//
-
-			//
-			//				/**
-			//				 * if base amount or percentage not calculated and charge amount present calculate one from another
-			//				 * if base amount or percentage present and charge amount value differ from their division calculation, replace
-			//				 *
-			//				 */
-			//				List<BG0021DocumentLevelCharges> bg0021 = cenInvoice.getBG0021DocumentLevelCharges();
-			//				if(!bg0021.isEmpty()) {
-			//					for(BG0021DocumentLevelCharges elemBg21: bg0021) {
-			//
-			//						Element levelCharge = new Element("DocumentLevelCharges");
-			//						Element ChargeAmount= new Element("DocumentLevelCharges");
-			//						Element percentage = new Element("DocumentLevelChargePercentage");
-			//						Element baseAmount = new Element("DocumentLevelChargeBaseAmount");
-			//
-			//						if((elemBg21.getBT0100DocumentLevelChargeBaseAmount(0).getValue() == null) &&
-			//								(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue() != null) &&
-			//								(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue() != null)) {
-			//
-			//							percentage.setText(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue().toString());
-			//							ChargeAmount.setText(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue().toString());
-			//							baseAmount.setText(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue().multiply(
-			//									elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue()).toString());
-			//
-			//							levelCharge.addContent(percentage);
-			//							levelCharge.addContent(baseAmount);
-			//							levelCharge.addContent(ChargeAmount);
-			//
-			//						}
-			//						if((elemBg21.getBT0100DocumentLevelChargeBaseAmount(0).getValue() != null) &&
-			//								(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue() == null) &&
-			//								(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue() != null)) {
-			//
-			//							ChargeAmount.setText(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue().toString());
-			//							baseAmount.setText(elemBg21.getBT0100DocumentLevelChargeBaseAmount(0).getValue().toString());
-			//							percentage.setText(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue().multiply(
-			//									elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue()).toString());
-			//
-			//							levelCharge.addContent(percentage);
-			//							levelCharge.addContent(baseAmount);
-			//							levelCharge.addContent(ChargeAmount);
-			//
-			//						}
-			//						if((elemBg21.getBT0100DocumentLevelChargeBaseAmount(0).getValue() != null) &&
-			//								(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue() != null) &&
-			//								(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue() != null)){
-			//
-			//							percentage.setText(elemBg21.getBT0101DocumentLevelChargePercentage(0).getValue().toString());
-			//							baseAmount.setText(elemBg21.getBT0100DocumentLevelChargeBaseAmount(0).getValue().toString());
-			//							ChargeAmount.setText(elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue().divide(
-			//									elemBg21.getBT0099DocumentLevelChargeAmount(0).getValue(), 3, RoundingMode.HALF_UP).toString());
-			//
-			//
-			//
-			//							levelCharge.addContent(percentage);
-			//							levelCharge.addContent(baseAmount);
-			//							levelCharge.addContent(ChargeAmount);
-			//						}
-			//
-			//					}
-			//				}
-			//
+			}
+			
 			/**
 			 * BT-21 concatenate
 			 *
 			 */
+			if(!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
 			List<BG0001InvoiceNote> bg01 = cenInvoice.getBG0001InvoiceNote();
-			if(!bg01.isEmpty()) {
 				Element invoiceNote = new Element("InvoiceNote");
-				String invoiceTag = "";
+				String invoiceTag = "";	
 				for(BG0001InvoiceNote  elemBg01: bg01) {
 
 					if(!elemBg01.getBT0022InvoiceNote(0).getValue().isEmpty()) {
@@ -189,18 +129,16 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 						invoiceTag = invoiceTag +  "-" + elemBg01.getBT0021InvoiceNoteSubjectCode(0).getValue();
 					}
 
-				}
-
 				invoiceNote.setText(invoiceTag);
 				root.addContent(invoiceNote);
 			}
-
+			}
 			/**
 			 * if BT-34 not present ="NA"
 			 *
 			 */
 			if(!cenInvoice.getBG0004Seller().isEmpty()) {
-			List<BG0004Seller> bg04 = cenInvoice.getBG0004Seller();
+				List<BG0004Seller> bg04 = cenInvoice.getBG0004Seller();
 				for(BG0004Seller elemBg04: bg04) {
 					Element seller = new Element("Seller");
 					if(elemBg04.getBT0034SellerElectronicAddressAndSchemeIdentifier().isEmpty()) {
@@ -220,7 +158,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 					root.addContent(seller);
 				}
 			}
-			
+
 			/**
 			 * BT-49 mandatory, not present ="NA"
 			 *
@@ -230,14 +168,14 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 				for(BG0007Buyer elemBg07: bg07) {
 					Element buyer = new Element("Buyer");
 					if(elemBg07.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-						
+
 						Element identificationSchema = new Element("identificationSchema");
 						Element buyerElectronic = new Element("BuyerElectronicAddressAndSchemeIdentifier");
 						Element identifier = new Element("identifier");
-						
+
 						identifier.setText("NA");
 						identificationSchema.setText("0130");
-						
+
 						buyerElectronic.addContent(identifier);
 						buyerElectronic.addContent(identificationSchema);
 						buyer.addContent(buyerElectronic);
@@ -247,51 +185,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 			}
 
 
-			//				/**
-			//				 * BT-98 set value to Code95 if its value is different from specified list
-			//				 *
-			//				 */
-			//				List<BT0098DocumentLevelAllowanceReasonCode> bt0098 = cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0098DocumentLevelAllowanceReasonCode();
-			//				Element DocumentLevelAllowances = new Element("DocumentLevelAllowances");
-			//				if(!bt0098.isEmpty()) {
-			//					for(BT0098DocumentLevelAllowanceReasonCode elemBt98: bt0098) {
-			//						Element documentLevelAllowance = new Element("DocumentLevelAllowanceReasonCode");
-			//						Untdid5189ChargeAllowanceDescriptionCodes unitCode95 = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
-			//						if(!Untdid5189ChargeAllowanceDescriptionCodes.Code41.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code42.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code60.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code62.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code63.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code64.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code65.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code66.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code67.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code68.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code70.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code71.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code88.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code95.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code100.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code102.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code103.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code104.equals(elemBt98.getValue()) ||
-			//								!Untdid5189ChargeAllowanceDescriptionCodes.Code105.equals(elemBt98.getValue()))
-			//						{
-			//							Attribute name = new Attribute("Untdid5189ChargeAllowanceDescriptionCodes", unitCode95.toString());
-			//							documentLevelAllowance.setAttribute(name);
-			//							DocumentLevelAllowances.addContent(documentLevelAllowance);
-			//
-			//
-			//						}
-			//						else {
-			//							Attribute name = new Attribute("Untdid5189ChargeAllowanceDescriptionCodes", elemBt98.getValue().toString());
-			//							documentLevelAllowance.setAttribute(name);
-			//							DocumentLevelAllowances.addContent(elemBt98.getValue().toString());
-			//						}
-			//
-			//					}
-			//				}
-			//
 			/**
 			 * format Date with(YYY-MM-DD)
 			 *
@@ -319,7 +212,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 					}
 				}
 			}
-
+			
+			
+			
 
 			List<BT0009PaymentDueDate> bt09 =  cenInvoice.getBT0009PaymentDueDate();
 			if(!bt09.isEmpty()) {
