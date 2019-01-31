@@ -79,7 +79,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             StringToUntdid5189ChargeAllowanceDescriptionCodesConverter.newConverter(),
             StringToIdentifierConverter.newConverter(),
             StringToUntdid2005DateTimePeriodQualifiers.newConverter(),
-            Untdid2005DateTimePeriodQualifiersToUntdid2475PaymentTimeReferenceConverter.newConverter(),
+            StringToUntdid2475PaymentTimeReference.newConverter(),
             StringToUntdid4461PaymentMeansCode.newConverter(),
             LookUpEnumConversion.newConverter(Untdid7161SpecialServicesCodes.class)
     );
