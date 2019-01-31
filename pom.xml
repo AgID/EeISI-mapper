@@ -22,7 +22,7 @@
         <site>
             <id>eigor</id>
             <name>eigor</name>
-            <url>https://gitlab.mgmt.infocert.it/linvoice/invoice.eeisi.git</url>
+            <url>http://infocert.it</url>
         </site>
     </distributionManagement>
 
