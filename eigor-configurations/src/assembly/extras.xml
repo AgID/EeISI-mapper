@@ -110,5 +110,15 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+
+        <!-- CEN/PEPPOL -->
+        <fileSet>
+            <directory>../converter-cen-peoppl-bsi3/src/main/resources/converterdata/converter-cen-peppol</directory>
+            <outputDirectory>converterdata/converter-cen-peppol</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 </assembly>
