@@ -36,6 +36,7 @@ public class LogSupport {
         if (factory != null) {
             context = (LoggerContext) factory;
             log = context.getLogger(clazz);
+            ((ch.qos.logback.classic.Logger) log).setLevel(Level.ALL);
             isLogbackSupportActive = true;
             log.info("Logback successfully configured. A dedicated conversion logfile will be created for every conversion");
         } else {
@@ -106,7 +107,13 @@ public class LogSupport {
             for(int i=0; i<logs.size(); i++){
                 ch.qos.logback.classic.Logger logger = context.getLogger(logs.get(i).getName());
                 logger.setLevel(Level.ALL);
-                logger.addAppender(appender);
+                if(!logger.getName().contains(".")) {
+                    logger.addAppender(appender);
+                }
+                if(logger.getName().contains("ROOT")) {
+                    logger.detachAppender("FileAppender");
+                    logger.detachAppender("STDOUT");
+                }
             }
         } else {
             log.warn("Logback not found in the system, cannot add a custom appender");
