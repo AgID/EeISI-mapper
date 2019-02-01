@@ -86,9 +86,9 @@ public class LogSupport {
             encoder.setPattern("%d{HH:mm:ss} %-5level %logger{36} - %msg%n");
             encoder.start();
 
-            // OutputStreamAppender
+            // FileAppender
             appender = new FileAppender<>();
-            appender.setName("OutputStreamAppender");
+            appender.setName("FileAppender");
             appender.setContext(context);
             appender.setEncoder(encoder);
             appender.setOutputStream(stream);
