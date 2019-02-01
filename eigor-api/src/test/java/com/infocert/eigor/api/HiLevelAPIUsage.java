@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 public class HiLevelAPIUsage {
@@ -33,6 +35,20 @@ public class HiLevelAPIUsage {
     public void setUp() throws IOException {
         outputFolderFile = tmp.newFolder();
         if (!outputFolderFile.exists()) outputFolderFile.mkdirs();
+    }
+
+    @Test
+    public void shouldGetSupportInfo() throws Exception {
+
+        EigorApi api = new EigorApiBuilder()
+                .withOutputFolder(outputFolderFile)
+                .build();
+
+        assertThat( api.getDetailedVersion(), not( isEmptyOrNullString() ) );
+        assertThat( api.getVersion(), not( isEmptyOrNullString() ) );
+        assertThat( api.supportedSourceFormats(), not(nullValue()) );
+        assertThat( api.supportedTargetFormats(), anyOf(notNullValue(), not(empty())) );
+
     }
 
     @Test
