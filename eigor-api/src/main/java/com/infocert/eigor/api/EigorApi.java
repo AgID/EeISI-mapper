@@ -17,10 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -223,6 +220,42 @@ public class EigorApi {
             throw new EigorException(e.getMessage(), customValidators, ErrorCode.Action.CUSTOM_VALIDATION, ErrorCode.Error.INVALID );
         }
 
+    }
+
+    /**
+     * Return all the supported invoice source formats.
+     * <p>
+     *     If a value is contained in this group, it means it can be
+     *     used as a source format to convert or check the invoice.
+     * </p>
+     */
+    public Set<String> supportedSourceFormats() {
+        return builder.getConversionRepository().supportedToCenFormats();
+    }
+
+    /**
+     * Return all the supported invoice target formats.
+     * <p>
+     *     If a value is contained in this group, it means it can be
+     *     used as a target format in a conversion.
+     * </p>
+     */
+    public Set<String> supportedTargetFormats() {
+        return builder.getConversionRepository().supportedToCenFormats();
+    }
+
+    /**
+     * Return the detailed description of the current version.
+     */
+    public String getDetailedVersion() {
+        return EigorVersion.getAsDetailedString();
+    }
+
+    /**
+     * Return the brief description of the current version.
+     */
+    public String getVersion() {
+        return EigorVersion.getAsString();
     }
 
     private ObservableValidation setupObservable(final String sourceFormat, final InputStream invoice) {

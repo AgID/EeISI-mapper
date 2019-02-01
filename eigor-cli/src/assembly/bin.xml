@@ -152,6 +152,15 @@
             </includes>
         </fileSet>
 
+        <!--CEN/PEPPOL-->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-peppol</outputDirectory>
+            <directory>../converter-cen-peppol/src/main/resources/converterdata/converter-cen-peppol</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
 
         <!-- rules -->
         <fileSet>
