@@ -152,10 +152,10 @@
             </includes>
         </fileSet>
 
-        <!--CEN/UBLCN-->
+        <!--CEN/PEPPOL-->
         <fileSet>
             <outputDirectory>converterdata/converter-cen-peppol</outputDirectory>
-            <directory>../converter-cen-peoppl-bsi3/src/main/resources/converterdata/converter-cen-peppol</directory>
+            <directory>../converter-cen-peppol/src/main/resources/converterdata/converter-cen-peppol</directory>
             <includes>
                 <include>**/*</include>
             </includes>

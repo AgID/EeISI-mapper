@@ -49,7 +49,7 @@
         <module>converter-cen-ublcn</module>
         <module>converter-xmlcen-cen</module>
         <module>converter-cen-xmlcen</module>
-        <module>converter-cen-peoppl-bsi3</module>
+        <module>converter-cen-peppol</module>
     </modules>
 
     <reporting>
