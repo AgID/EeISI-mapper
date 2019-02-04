@@ -211,6 +211,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>converter-cen-peppolcn</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-fattpa-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -73,6 +73,10 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-peppolcn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-ublcn</artifactId>
             <version>${project.version}</version>
         </dependency>
