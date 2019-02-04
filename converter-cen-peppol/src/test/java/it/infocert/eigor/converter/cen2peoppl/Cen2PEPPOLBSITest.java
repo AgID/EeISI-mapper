@@ -100,13 +100,13 @@ public class Cen2PEPPOLBSITest {
     
     @Test
     public void shouldSupportPEPPOL() {
-        assertThat(converter.support("peppolbsi"), is(true));
+        assertThat(converter.support("peppolbis"), is(true));
     }
     
     
     @Test
     public void shouldSupportedFormatsPEPPOL() {
-        assertThat(converter.getSupportedFormats(), contains("peppolbsi"));
+        assertThat(converter.getSupportedFormats(), contains("peppolbis"));
     }
 
     private BG0000Invoice createInvoice() {
