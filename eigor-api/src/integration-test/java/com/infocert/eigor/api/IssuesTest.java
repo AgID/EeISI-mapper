@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 public class IssuesTest extends AbstractIssueTest {
 
-    @Test
+    @Test @Ignore("waitng for valid invoice")
     public void issueEisi135() {
 
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
@@ -238,7 +238,7 @@ public class IssuesTest extends AbstractIssueTest {
     }
 
 
-    @Test
+    @Test @Ignore("waiting for example invoice")
     public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
 
@@ -251,7 +251,7 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
-    @Test
+    @Test @Ignore("waiting for example invoice")
     public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
 

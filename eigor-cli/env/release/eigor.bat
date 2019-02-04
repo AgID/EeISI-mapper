@@ -4,7 +4,6 @@ SET APP_NAME=Infocert - Eigor CLI Client
 SET APP_PATH=- %~dp0
 
 TITLE %APP_NAME%
-COLOR B
 cd /d %~dp0
 SET APPLICATION_HOME=.
 SET MAIN_CLASS=it.infocert.eigor.cli.Eigor

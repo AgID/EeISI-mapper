@@ -10,7 +10,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.2-SNAPSHOT</version>
+    <version>4.1.1-SNAPSHOT</version>
     <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -49,7 +49,7 @@
         <module>converter-cen-ublcn</module>
         <module>converter-xmlcen-cen</module>
         <module>converter-cen-xmlcen</module>
-        <module>converter-cen-peoppl-bsi3</module>
+        <module>converter-cen-peppol</module>
     </modules>
 
     <reporting>

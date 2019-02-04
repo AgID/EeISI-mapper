@@ -70,8 +70,6 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
-            Untdid2475DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
-            Untdid2475DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             IdentifierToStringConverter.newConverter()
     );
     private final ObjectFactory factory = new ObjectFactory();
