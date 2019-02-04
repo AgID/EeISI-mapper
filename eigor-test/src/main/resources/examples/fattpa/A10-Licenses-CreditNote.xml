@@ -63,8 +63,6 @@
                 <Numero>20150483</Numero>
                 <ImportoTotaleDocumento>177.87</ImportoTotaleDocumento>
                 <Causale>Esempio fattura trasformata da CEN a XML-PA</Causale>
-                <Causale>Vriendelijk verzoeken wij u ervoor te zorgen dat het bedrag voor de vervaldatum op onze rekening staat onder vermelding van het factuurnummer.</Causale>
-                <Causale>Het bankrekeningnummer is 37.78.15.500, Rabobank, t.n.v. Bluem te Amersfoort. Reclames gaarne binnen 10 dagen. Gelieve bij navraag en correspondentie uw firma naam en factuurnummer vermelden.</Causale>
             </DatiGeneraliDocumento>
             <DatiContratto>
                 <IdDocumento>iExpress 20110412</IdDocumento>
