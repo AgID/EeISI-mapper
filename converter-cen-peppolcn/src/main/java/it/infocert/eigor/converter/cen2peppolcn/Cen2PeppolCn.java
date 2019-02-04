@@ -68,7 +68,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBLCN_OUT);
+                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.PEPPOLCN_OUT);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for CEN2PEPPOLCN from '" + mandatoryString + "'.", e);
             }
@@ -78,7 +78,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
         try {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron.auto-update-xslt"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBLCN_OUT);
+            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOLCN_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -87,7 +87,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
     }
 
     public Cen2PeppolCn(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration, ErrorCode.Location.UBLCN_OUT);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.PEPPOLCN_OUT);
         this.configuration = checkNotNull(configuration);
     }
 
@@ -121,7 +121,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
             errors.addAll(schematronErrors);
 
         } catch (IllegalArgumentException e) {
-            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.UBLCN_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
+            errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.PEPPOLCN_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
         }
 
         return new BinaryConversionResult(documentByteArray, errors);
@@ -131,7 +131,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.UBLCN_OUT, this.getConfiguration());
+            customMapping.map(invoice, document, errors, ErrorCode.Location.PEPPOLCN_OUT, this.getConfiguration());
         }
 
         // PEPPOL hardcoding
