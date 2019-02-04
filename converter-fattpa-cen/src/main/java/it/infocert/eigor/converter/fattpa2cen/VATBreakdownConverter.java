@@ -69,10 +69,17 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                             }
                         }
                         Element natura = datiRiepilogo.getChild("Natura");
+                        Element aliquotaIVA = datiRiepilogo.getChild("AliquotaIVA");
+
                         Untdid5305DutyTaxFeeCategories code = null;
+                        BT0121VatExemptionReasonCode bt0121 = null;
                         if (natura != null) {
                             try {
                                 code = dutyTaxFeeCategories.convert(natura.getText());
+                                if (!aliquotaIVA.getText().equals("0.00")) {
+                                    bt0121 = new BT0121VatExemptionReasonCode(natura.getText());
+                                    bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
+                                }
                             } catch (NullPointerException | ConversionFailedException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
                                         .location(callingLocation)
@@ -87,7 +94,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         }
                         BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(code);
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
-                        Element aliquotaIVA = datiRiepilogo.getChild("AliquotaIVA");
+
                         try {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(new BigDecimal(aliquotaIVA.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
@@ -99,6 +106,23 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                     .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
                                     .build());
                             errors.add(ConversionIssue.newError(ere));
+                        }
+                        if (!aliquotaIVA.getText().equals("0.00")) {
+                            Element riferimentoNormativo = datiRiepilogo.getChild("RiferimentoNormativo");
+                            try {
+                                if (riferimentoNormativo != null) {
+                                    BT0120VatExemptionReasonText bt0120 = new BT0120VatExemptionReasonText(riferimentoNormativo.getText());
+                                    bg0023.getBT0120VatExemptionReasonText().add(bt0120);
+                                }
+                            } catch (NumberFormatException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
+                                        .location(callingLocation)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .build());
+                                errors.add(ConversionIssue.newError(ere));
+                            }
                         }
                         invoice.getBG0023VatBreakdown().add(bg0023);
                     }

@@ -27,7 +27,7 @@ public class InvoiceLineConverterTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         InvoiceLineConverter converter = new InvoiceLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.PEPPOL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("InvoiceLine");

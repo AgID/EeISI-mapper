@@ -76,7 +76,7 @@ public class ITGuaranteedInvoiceExamples {
 
     }
 
-    @Test
+    @Test @Ignore("waiting for example invoice")
     public void shouldConvertUblExampleWithoutErrors() throws Exception {
         testInvoices.stream().filter(file -> file.getName().startsWith("ubl" )).forEach(new Consumer<File>() {
             @Override

@@ -116,7 +116,7 @@ public class AttachmentUtil {
         }
     }
 
-    private void appendToFileInBase64(File file, String text) throws IOException {
+    public void appendToFileInBase64(File file, String text) throws IOException {
 
         byte[] bytes = text.concat("\n").getBytes();
         byte[] output;

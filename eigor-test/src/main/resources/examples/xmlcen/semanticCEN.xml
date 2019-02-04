@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SEMANTIC-INVOICE
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="urn:cen.eu:en16931:2017 semanticCEN0.0.2.xsd"
+    xsi:schemaLocation="urn:cen.eu:en16931:2017 semanticCEN0.0.3.xsd"
     >
     <BT-1>aa</BT-1>
     <BT-2>2018-01-01</BT-2>

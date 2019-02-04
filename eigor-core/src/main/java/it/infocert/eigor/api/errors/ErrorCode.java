@@ -61,6 +61,8 @@ public class ErrorCode implements Serializable {
     public enum Location {
         UBL_IN,
         UBL_OUT,
+        PEPPOL_OUT,
+        PEPPOL_IN,
         FATTPA_IN,
         FATTPA_OUT,
         CII_IN,

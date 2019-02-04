@@ -7,7 +7,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.1.1-SNAPSHOT</version>
     <name>Eigor :: Parent (${project.artifactId})</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -252,6 +252,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>converter-cen-cii</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>converter-cen-peppol</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

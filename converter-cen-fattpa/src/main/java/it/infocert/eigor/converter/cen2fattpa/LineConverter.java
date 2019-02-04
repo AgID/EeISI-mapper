@@ -62,6 +62,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
+            Untdid2475DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
+            Untdid2475DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
 
@@ -265,8 +267,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         log.debug("BT-98 has empty string");
                     }
                 } else {
-                    log.trace("No BT0098 found");
-                }
+                   log.trace("No BT0098 found");
+                } 
 
                 String des = sb.toString();
                 dettaglioLinee.setDescrizione(des);

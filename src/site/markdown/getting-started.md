@@ -285,7 +285,7 @@ Write the following content in the `eigor.properties` file:
     eigor.converter.xmlcen-cen.mapping.many-to-one=classpath:converterdata/converter-xmlcen-cen/mappings/many_to_one.properties
     eigor.converter.xmlcen-cen.mapping.one-to-many=classpath:converterdata/converter-xmlcen-cen/mappings/one_to_many.properties
     eigor.converter.xmlcen-cen.mapping.custom=classpath:converterdata/converter-xmlcen-cen/mappings/custom.conf
-    eigor.converter.xmlcen-cen.xsd=file://${eigor.validation-home}/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.2.xsd
+    eigor.converter.xmlcen-cen.xsd=file://${eigor.validation-home}/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd
  
 You mainly uses this file to set up some key info.
 
