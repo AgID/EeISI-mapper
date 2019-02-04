@@ -69,6 +69,7 @@ public class ErrorCode implements Serializable {
         CII_OUT,
         UBLCN_IN,
         UBLCN_OUT,
+        PEPPOLCN_OUT,
         CSVCEN_IN,
         XMLCEN_IN,
         XMLCEN_OUT,

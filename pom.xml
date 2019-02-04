@@ -50,6 +50,7 @@
         <module>converter-xmlcen-cen</module>
         <module>converter-cen-xmlcen</module>
         <module>converter-cen-peppol</module>
+        <module>converter-cen-peppolcn</module>
     </modules>
 
     <reporting>
