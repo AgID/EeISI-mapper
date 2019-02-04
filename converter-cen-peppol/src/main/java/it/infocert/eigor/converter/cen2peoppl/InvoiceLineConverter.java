@@ -4,7 +4,6 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -50,6 +49,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 					}
 				}
 			}
+
+			//TODO: Replace with converter
 			/**
 			 * BT 10 and 13
 			 */
@@ -111,7 +112,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 				root.addContent(ProcessControl);
 			}
 			}
-			
+
 			/**
 			 * BT-21 concatenate
 			 *
@@ -119,7 +120,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 			if(!cenInvoice.getBG0001InvoiceNote().isEmpty()) {
 			List<BG0001InvoiceNote> bg01 = cenInvoice.getBG0001InvoiceNote();
 				Element invoiceNote = new Element("InvoiceNote");
-				String invoiceTag = "";	
+				String invoiceTag = "";
 				for(BG0001InvoiceNote  elemBg01: bg01) {
 
 					if(!elemBg01.getBT0022InvoiceNote(0).getValue().isEmpty()) {
@@ -212,9 +213,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 					}
 				}
 			}
-			
-			
-			
+
+
+
 
 			List<BT0009PaymentDueDate> bt09 =  cenInvoice.getBT0009PaymentDueDate();
 			if(!bt09.isEmpty()) {

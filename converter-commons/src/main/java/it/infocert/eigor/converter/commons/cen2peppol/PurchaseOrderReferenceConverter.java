@@ -12,21 +12,31 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class BuyerReferenceConverter implements CustomMapping<Document> {
+public class PurchaseOrderReferenceConverter implements CustomMapping<Document> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+        // /Invoice/cac:OrderReference/cbc:ID
         Element root = document.getRootElement();
 
-        final Element buyerReference = new Element("BuyerReference");
-        if (cenInvoice.getBT0010BuyerReference().isEmpty()) {
-            buyerReference.setText("NA");
-        } else {
-            buyerReference.setText(cenInvoice.getBT0010BuyerReference(0).getValue());
+        final Element idElm = new Element("ID");
+        final Element orderReferenceElm = new Element("OrderReference");
+        orderReferenceElm.addContent(idElm);
+        root.addContent(orderReferenceElm);
+
+
+
+
+        String value;
+        if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty()) {
+            value = "NA";
+        }else{
+            value = cenInvoice.getBT0013PurchaseOrderReference(0).getValue();
         }
-        root.addContent(buyerReference);
+        idElm.setText(value);
+
 
     }
 }
