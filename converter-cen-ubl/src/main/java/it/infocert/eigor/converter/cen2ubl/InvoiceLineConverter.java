@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+    package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -88,7 +88,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         documentTypeCode.setText("130");
                         Element id = new Element("ID");
                         id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema() != null ? bt0128.getValue().getIdentificationSchema() : "");
                         documentReference.addContent(id);
                         documentReference.addContent(documentTypeCode);
                         invoiceLine.addContent(documentReference);
