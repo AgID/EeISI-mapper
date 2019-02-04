@@ -31,6 +31,17 @@ public class IssuesTest extends AbstractIssueTest {
                 "fatturapa");
 
     }
+    
+    @Test 
+    public void issueEisi138() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/examples/fattpa/A10-Licenses.xml",
+                "fatturapa",
+                "peppolbis");
+
+    }
+
 
     @Ignore("To be ignored 'til all mappings have been applied")
     @Test
