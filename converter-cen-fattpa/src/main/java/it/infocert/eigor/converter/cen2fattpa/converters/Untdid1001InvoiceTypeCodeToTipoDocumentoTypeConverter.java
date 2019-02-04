@@ -15,12 +15,15 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
 
             case Code82:
             case Code130:
+            case Code261:
             case Code295:
             case Code325:
             case Code326:
+            case Code380:
             case Code385:
             case Code387:
             case Code388:
+            case Code389:
             case Code390:
             case Code393:
             case Code394:
@@ -28,21 +31,19 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
             case Code575:
             case Code623:
             case Code633:
-            //case Code751: - we don't have it
+            case Code751:
             case Code780:
             case Code935:
-                return TipoDocumentoType.TD_01;
-            case Code389:
                 return TipoDocumentoType.TD_01;
             case Code381:
             case Code396:
             case Code81:
             case Code83:
-            // case Code532:
+            case Code532:
             case Code262:
             case Code296:
             case Code308:
-            // case Code420:
+            case Code420:
             case Code458:
                 return TipoDocumentoType.TD_04;
             case Code383:
@@ -59,7 +60,7 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
             case Code386:
                 return TipoDocumentoType.TD_02;
             default:
-                return null;
+                return TipoDocumentoType.TD_01;
         }
     }
 

@@ -38,10 +38,10 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
     private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.one-to-many";
     private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.custom";
 
-    private static final String FORMAT = "peppolbsi";
+    private static final String FORMAT = "peppolbis";
 
-    private final String CBC_URI = "urn:oasis:names:specification:peppolbsi:schema:xsd:CommonBasicComponents-2";
-    private final String CAC_URI = "urn:oasis:names:specification:peppolbsi:schema:xsd:CommonAggregateComponents-2";
+    private final String CBC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+    private final String CAC_URI = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
     private final EigorConfiguration configuration;
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 

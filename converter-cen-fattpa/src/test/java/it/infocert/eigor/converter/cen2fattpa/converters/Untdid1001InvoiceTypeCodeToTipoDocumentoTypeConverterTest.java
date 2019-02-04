@@ -34,8 +34,8 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverterTest {
                 { Code381, TD_04 },
                 { Code383, TD_05 },
                 { Code389, TD_01 },
-                { Code393, null },
-                { Code6, null }
+                { Code393, TD_01 },
+                { Code6, TD_01 } // default case
         });
     }
 
@@ -49,7 +49,6 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverterTest {
         sut = Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter.newConverter();
     }
 
-    @Ignore("waitng for fix for TDxx")
     @Test
     public void map() throws ConversionFailedException {
         assertThat( sut.convert(input), is(converted) );
