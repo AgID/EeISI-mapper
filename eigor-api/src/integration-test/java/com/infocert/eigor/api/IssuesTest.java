@@ -22,6 +22,16 @@ import static org.junit.Assert.*;
 
 public class IssuesTest extends AbstractIssueTest {
 
+    @Test
+    public void issueEisiFromFattpaToPeppolCn() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/examples/fattpa/A10-Licenses-CreditNote.xml",
+                "fatturapa",
+                "peppolcn");
+
+    }
+
     @Test @Ignore("waitng for valid invoice")
     public void issueEisi135() {
 
