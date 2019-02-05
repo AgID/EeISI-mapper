@@ -26,9 +26,6 @@ public class PurchaseOrderReferenceConverter implements CustomMapping<Document> 
         orderReferenceElm.addContent(idElm);
         root.addContent(orderReferenceElm);
 
-
-
-
         String value;
         if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty()) {
             value = "NA";
@@ -36,7 +33,6 @@ public class PurchaseOrderReferenceConverter implements CustomMapping<Document> 
             value = cenInvoice.getBT0013PurchaseOrderReference(0).getValue();
         }
         idElm.setText(value);
-
 
     }
 }

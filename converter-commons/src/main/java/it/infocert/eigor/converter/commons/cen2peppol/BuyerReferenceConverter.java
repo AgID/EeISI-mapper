@@ -28,7 +28,5 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
         }
         root.addContent(buyerReference);
 
-
-
     }
 }

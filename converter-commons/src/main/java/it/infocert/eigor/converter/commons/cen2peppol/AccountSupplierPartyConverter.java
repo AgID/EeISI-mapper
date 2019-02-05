@@ -19,6 +19,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
     private final String SUPPLIER = "AccountingSupplierParty";
     private final String PARTY = "Party";
+    private final String Endpoint = "EndpointID";
 
 
     @Override
@@ -27,43 +28,47 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         final Element root = document.getRootElement();
         final Element party;
         final Element supplier = root.getChild(SUPPLIER);
+        Element s = new Element(SUPPLIER);
         if (supplier == null) {
-            Element s = new Element(SUPPLIER);
+            
             party = new Element(PARTY);
             s.addContent(party);
-            root.addContent(s);
+            
         } else {
             party = supplier.getChild(PARTY);
+            s.addContent(party);
         }
-
-
-        if (invoice.getBG0004Seller().isEmpty()) {
-            return;
-        }
-
+        
         BG0004Seller seller = invoice.getBG0004Seller(0);
-
-        {
+        
             String identifierText;
             String identificationSchemaStr;
+            
             if (seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-                identifierText = "nana@nana.na";
+                identifierText = "NA";
                 identificationSchemaStr = "0130";
             } else {
                 BT0034SellerElectronicAddressAndSchemeIdentifier bt34 = seller.getBT0034SellerElectronicAddressAndSchemeIdentifier(0);
                 identifierText = bt34.getValue().getIdentifier();
                 identificationSchemaStr = bt34.getValue().getIdentificationSchema();
             }
-            Element sellerElectronic = new Element("SellerElectronicAddressAndSchemeIdentifier");
-            Element identifier = new Element("identifier");
-            identifier.setText(identifierText);
-            Element identificationSchema = new Element("identificationSchema");
-            identificationSchema.setText(identificationSchemaStr);
-            sellerElectronic.addContent(identifier);
-            sellerElectronic.addContent(identificationSchema);
-            party.addContent(sellerElectronic);
-        }
-
+            
+            Element E = new Element(Endpoint);
+            E.setText(identifierText);
+            E.setAttribute("schemeID",identificationSchemaStr);
+            s.addContent(E);
+            root.addContent(s);
+                     
+//            Element sellerElectronic = new Element("SellerElectronicAddressAndSchemeIdentifier");
+//            Element identifier = new Element("identifier");
+//            identifier.setText(identifierText);
+//            Element identificationSchema = new Element("identificationSchema");
+//            identificationSchema.setText(identificationSchemaStr);
+//            sellerElectronic.addContent(identifier);
+//            sellerElectronic.addContent(identificationSchema);
+//            party.addContent(sellerElectronic);
+            
+            
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
             BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress(0);
             Element postalAddress = new Element("PostalAddress");
