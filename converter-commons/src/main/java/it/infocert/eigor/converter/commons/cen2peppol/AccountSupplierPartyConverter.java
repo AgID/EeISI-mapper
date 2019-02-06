@@ -41,11 +41,17 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
         BG0004Seller seller = invoice.getBG0004Seller(0);
 
+            // BT-34  : /Invoice/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID - "NA" by default
+            // BT-34-1: /Invoice/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID - "0130" by default
+            // If not present BT-34="NA", BT-34-1="0130" // 9921
             String identifierText;
             String identificationSchemaStr;
-
             if (seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+<<<<<<< HEAD
                 identifierText = "999999";
+=======
+                identifierText = "NA";
+>>>>>>> 38c4995b11d183be8a6793ae596f83d8c1f1bb1f
                 identificationSchemaStr = "9921";
             } else {
                 BT0034SellerElectronicAddressAndSchemeIdentifier bt34 = seller.getBT0034SellerElectronicAddressAndSchemeIdentifier(0);
