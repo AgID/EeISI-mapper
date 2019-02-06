@@ -92,12 +92,12 @@ public class Cen2PeppolCnTest {
 
     @Test
     public void shouldSupportUblCn() {
-        assertThat(converter.support("ublcn"), is(true));
+        assertThat(converter.support("peppolcn"), is(true));
     }
 
     @Test
     public void shouldSupportedFormatsUblCn() {
-        assertThat(converter.getSupportedFormats(), contains("ublcn"));
+        assertThat(converter.getSupportedFormats(), contains("peppolcn"));
     }
 
     private BG0000Invoice createInvoice() {

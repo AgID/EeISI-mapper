@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
     private final static Logger logger = LoggerFactory.getLogger(AccountSupplierPartyConverter.class);
@@ -39,7 +41,8 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             accountSupplierPartyElm.addContent(partyElm);
         }
 
-        BG0004Seller seller = invoice.getBG0004Seller(0);
+        BG0004Seller seller = evalExpression( ()-> invoice.getBG0004Seller(0) );
+        if(seller==null) return;
 
             // BT-34  : /Invoice/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID - "NA" by default
             // BT-34-1: /Invoice/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID/@schemeID - "0130" by default
