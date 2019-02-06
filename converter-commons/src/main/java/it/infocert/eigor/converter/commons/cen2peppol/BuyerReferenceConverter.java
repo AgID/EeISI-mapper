@@ -5,6 +5,11 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0004Seller;
+import it.infocert.eigor.model.core.model.BG0007Buyer;
+import it.infocert.eigor.model.core.model.BT0034SellerElectronicAddressAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0049BuyerElectronicAddressAndSchemeIdentifier;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -15,18 +20,46 @@ import java.util.List;
 public class BuyerReferenceConverter implements CustomMapping<Document> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+    
+    private final String CUSTOMER = "AccountingCustomerParty";
+    private final String PARTY = "Party";
+    private final String Endpoint = "EndpointID";
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
-        Element root = document.getRootElement();
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
-        final Element buyerReference = new Element("BuyerReference");
-        if (cenInvoice.getBT0010BuyerReference().isEmpty()) {
-            buyerReference.setText("NA");
+        final Element root = document.getRootElement();
+        final Element partyElm;
+        final Element supplier = root.getChild(CUSTOMER);
+        Element accountSupplierPartyElm = new Element(CUSTOMER);
+        if (supplier == null) {
+
+            partyElm = new Element(PARTY);
+            accountSupplierPartyElm.addContent(partyElm);
+
         } else {
-            buyerReference.setText(cenInvoice.getBT0010BuyerReference(0).getValue());
+            partyElm = supplier.getChild(PARTY);
+            accountSupplierPartyElm.addContent(partyElm);
         }
-        root.addContent(buyerReference);
 
+        BG0007Buyer buyer = invoice.getBG0007Buyer(0);
+
+            String identifierText;
+            String identificationSchemaStr;
+
+            if (buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+                identifierText = "NA";
+                identificationSchemaStr = "0130";
+            } else {
+                BT0049BuyerElectronicAddressAndSchemeIdentifier bt49 = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                identifierText = bt49.getValue().getIdentifier();
+                identificationSchemaStr = bt49.getValue().getIdentificationSchema();
+            }
+
+            Element endpointElm = new Element(Endpoint);
+            endpointElm.setText(identifierText);
+            endpointElm.setAttribute("schemeID",identificationSchemaStr);
+            partyElm.addContent(endpointElm);
+            root.addContent(accountSupplierPartyElm);
     }
 }

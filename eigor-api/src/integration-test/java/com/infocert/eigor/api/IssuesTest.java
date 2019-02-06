@@ -52,7 +52,6 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
-
     @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue281FattpaToCII() throws Exception {
