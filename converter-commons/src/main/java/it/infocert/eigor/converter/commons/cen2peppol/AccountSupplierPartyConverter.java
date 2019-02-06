@@ -26,24 +26,24 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         final Element root = document.getRootElement();
-        final Element party;
+        final Element partyElm;
         final Element supplier = root.getChild(SUPPLIER);
-        Element s = new Element(SUPPLIER);
+        Element accountSupplierPartyElm = new Element(SUPPLIER);
         if (supplier == null) {
-            
-            party = new Element(PARTY);
-            s.addContent(party);
-            
+
+            partyElm = new Element(PARTY);
+            accountSupplierPartyElm.addContent(partyElm);
+
         } else {
-            party = supplier.getChild(PARTY);
-            s.addContent(party);
+            partyElm = supplier.getChild(PARTY);
+            accountSupplierPartyElm.addContent(partyElm);
         }
-        
+
         BG0004Seller seller = invoice.getBG0004Seller(0);
-        
+
             String identifierText;
             String identificationSchemaStr;
-            
+
             if (seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().isEmpty()) {
                 identifierText = "NA";
                 identificationSchemaStr = "0130";
@@ -52,13 +52,13 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 identifierText = bt34.getValue().getIdentifier();
                 identificationSchemaStr = bt34.getValue().getIdentificationSchema();
             }
-            
-            Element E = new Element(Endpoint);
-            E.setText(identifierText);
-            E.setAttribute("schemeID",identificationSchemaStr);
-            s.addContent(E);
-            root.addContent(s);
-                     
+
+            Element endpointElm = new Element(Endpoint);
+            endpointElm.setText(identifierText);
+            endpointElm.setAttribute("schemeID",identificationSchemaStr);
+            partyElm.addContent(endpointElm);
+            root.addContent(accountSupplierPartyElm);
+
 //            Element sellerElectronic = new Element("SellerElectronicAddressAndSchemeIdentifier");
 //            Element identifier = new Element("identifier");
 //            identifier.setText(identifierText);
@@ -67,12 +67,12 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 //            sellerElectronic.addContent(identifier);
 //            sellerElectronic.addContent(identificationSchema);
 //            party.addContent(sellerElectronic);
-            
-            
+
+
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
             BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress(0);
             Element postalAddress = new Element("PostalAddress");
-            party.addContent(postalAddress);
+            partyElm.addContent(postalAddress);
             if (!sellerPostalAddress.getBT0035SellerAddressLine1().isEmpty()) {
                 Element streetName = new Element("StreetName");
                 streetName.setText(sellerPostalAddress.getBT0035SellerAddressLine1(0).getValue());
@@ -101,18 +101,18 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
 
         if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
-            mapPartyTaxScheme(party, seller.getBT0031SellerVatIdentifier(0).getValue(), "VAT");
+            mapPartyTaxScheme(partyElm, seller.getBT0031SellerVatIdentifier(0).getValue(), "VAT");
         } else {
             logger.debug("BT-31 is missing");
         }
         if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
-            mapPartyTaxScheme(party, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "NoVAT");
+            mapPartyTaxScheme(partyElm, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "NoVAT");
         } else {
             logger.debug("BT-31 is missing");
         }
 
         Element partyLegalEntity = new Element("PartyLegalEntity");
-        party.addContent(partyLegalEntity);
+        partyElm.addContent(partyLegalEntity);
 
         if (!seller.getBT0027SellerName().isEmpty()) {
             Element registrationName = new Element("RegistrationName");
@@ -157,7 +157,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         if (!seller.getBG0006SellerContact().isEmpty()) {
             BG0006SellerContact sellerContact = seller.getBG0006SellerContact(0);
             Element contact = new Element("Contact");
-            party.addContent(contact);
+            partyElm.addContent(contact);
 
             if (!sellerContact.getBT0042SellerContactTelephoneNumber().isEmpty()) {
                 Element telephone = new Element("Telephone");
