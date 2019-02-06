@@ -1,9 +1,15 @@
 package it.infocert.eigor.converter.cen2peppolcn;
 
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
@@ -11,6 +17,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +25,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 public class CreditNoteLineConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(CreditNoteLineConverter.class);
+    private static final TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -96,10 +106,23 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
-                        List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
-                        for (BG0026InvoiceLinePeriod ignored : bg0026) {
-                            Element invoicePeriod = new Element("InvoicePeriod");
-                            invoiceLine.addContent(invoicePeriod);
+
+                        List<BG0026InvoiceLinePeriod> bg0026s
+                                = elemBg25.getBG0026InvoiceLinePeriod();
+
+
+                        for (BG0026InvoiceLinePeriod bg0026 : bg0026s) {
+
+                            LocalDate startDate = evalExpression(() -> bg0026.getBT0134InvoiceLinePeriodStartDate(0).getValue());
+                            LocalDate endDate = evalExpression(() -> bg0026.getBT0135InvoiceLinePeriodEndDate(0).getValue());
+
+                            if(startDate == null && endDate == null) continue;
+
+                            Element invoicePeriodElm = new Element("InvoicePeriod");
+
+                            setDateChild(errors, callingLocation, invoicePeriodElm, startDate, "StartDate");
+                            setDateChild(errors, callingLocation, invoicePeriodElm, endDate, "EndDate");
+                            invoiceLine.addContent(invoicePeriodElm);
                         }
                     }
 
@@ -201,6 +224,24 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                 }
             }
 
+        }
+    }
+
+    private void setDateChild(List<IConversionIssue> errors, ErrorCode.Location callingLocation, Element parent, LocalDate date, String tagName) {
+        try {
+            if(date != null) {
+                Element startDateElm = new Element(tagName);
+                startDateElm.setText( dateConverter.convert(date) );
+                parent.addContent(startDateElm);
+            }
+        } catch (IllegalArgumentException | ConversionFailedException e) {
+            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                    .message("Invalid date format '" + date.toString() + "'")
+                    .location(callingLocation)
+                    .action(ErrorCode.Action.HARDCODED_MAP)
+                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                    .build());
+            errors.add(ConversionIssue.newError(ere));
         }
     }
 }
