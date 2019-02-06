@@ -51,6 +51,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             String identificationSchemaStr;
             if (seller.getBT0034SellerElectronicAddressAndSchemeIdentifier().isEmpty()) {
                 identifierText = "NA";
+
                 identificationSchemaStr = "9921";
             } else {
                 BT0034SellerElectronicAddressAndSchemeIdentifier bt34 = seller.getBT0034SellerElectronicAddressAndSchemeIdentifier(0);
