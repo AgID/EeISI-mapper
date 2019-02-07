@@ -5,11 +5,8 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BG0007Buyer;
-import it.infocert.eigor.model.core.model.BT0034SellerElectronicAddressAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0049BuyerElectronicAddressAndSchemeIdentifier;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -17,11 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 public class BuyerReferenceConverter implements CustomMapping<Document> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
-    private final String CUSTOMER = "AccountingCustomerParty";
+
+    private final String ACCOUNTING_CUSTOMER_PARTY = "AccountingCustomerParty";
     private final String PARTY = "Party";
     private final String Endpoint = "EndpointID";
 
@@ -30,8 +29,8 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
 
         final Element root = document.getRootElement();
         final Element partyElm;
-        final Element supplier = root.getChild(CUSTOMER);
-        Element accountSupplierPartyElm = new Element(CUSTOMER);
+        final Element supplier = root.getChild(ACCOUNTING_CUSTOMER_PARTY);
+        Element accountSupplierPartyElm = new Element(ACCOUNTING_CUSTOMER_PARTY);
         if (supplier == null) {
 
             partyElm = new Element(PARTY);
@@ -42,7 +41,9 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
             accountSupplierPartyElm.addContent(partyElm);
         }
 
-        BG0007Buyer buyer = invoice.getBG0007Buyer(0);
+        BG0007Buyer buyer = evalExpression( () -> invoice.getBG0007Buyer(0) );
+
+        if(buyer!=null) {
 
             String identifierText;
             String identificationSchemaStr;
@@ -58,8 +59,9 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
 
             Element endpointElm = new Element(Endpoint);
             endpointElm.setText(identifierText);
-            endpointElm.setAttribute("schemeID",identificationSchemaStr);
+            endpointElm.setAttribute("schemeID", identificationSchemaStr);
             partyElm.addContent(endpointElm);
             root.addContent(accountSupplierPartyElm);
+        }
     }
 }
