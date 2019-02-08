@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.1</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -67,6 +67,10 @@
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-peppol</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-cen-peppolcn</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

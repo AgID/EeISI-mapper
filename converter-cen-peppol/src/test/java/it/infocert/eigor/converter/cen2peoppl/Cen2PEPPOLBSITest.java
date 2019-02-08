@@ -1,12 +1,10 @@
 package it.infocert.eigor.converter.cen2peoppl;
 
 import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
-import it.infocert.eigor.converter.cen2peoppl.Cen2PEPPOLBSI;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
@@ -20,9 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -33,21 +29,13 @@ public class Cen2PEPPOLBSITest {
 
     private Cen2PEPPOLBSI converter;
     private XPathFactory xPathFactory;
-   
+
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
         converter = new Cen2PEPPOLBSI(new JavaReflections(), conf);
         converter.configure();
         xPathFactory = XPathFactory.newInstance();
-    }
-    
-    
-    @Test
-    public void convertTest() throws URISyntaxException, FileNotFoundException, SyntaxErrorInInvoiceFormatException {
-        BG0000Invoice invoice = createInvoice();
-		BinaryConversionResult conversionResult = converter.convert(invoice);
-        assertNotNull(conversionResult.getResult());
     }
 
     @Ignore
@@ -96,14 +84,14 @@ public class Cen2PEPPOLBSITest {
         assertNotNull(itemInformation);
         assertEquals("Name", itemInformation);
     }
-    
-    
+
+
     @Test
     public void shouldSupportPEPPOL() {
         assertThat(converter.support("peppolbis"), is(true));
     }
-    
-    
+
+
     @Test
     public void shouldSupportedFormatsPEPPOL() {
         assertThat(converter.getSupportedFormats(), contains("peppolbis"));

@@ -160,6 +160,16 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+        
+        <!-- CEN/PEPPOLCN    -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-peppolcn</outputDirectory>
+            <directory>../converter-cen-peppolcn/src/main/resources/converterdata/converter-cen-peppolcn</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        
 
 
         <!-- rules -->

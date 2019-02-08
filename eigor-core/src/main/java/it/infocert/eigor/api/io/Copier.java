@@ -35,16 +35,20 @@ public class Copier {
     }
 
     public void copyFrom(String resource) {
+        log.trace("Copying from resource '{}'.", resource);
         boolean done = false;
         try{
+            log.trace("Copying from resource '{}' as JAR.", resource);
             copyFromJar(resource);
             done = true;
         }catch(Exception e1){
+            log.trace("JAR copy failed because of exception, fallbacking to copying from resource '{}' as classpath.", resource, e1);
             try{
                 copyFromClasspath(resource);
                 done = true;
             }catch(Exception e2){
-
+                log.trace("Classpath copy of '{}' failed because of exception.", resource, e2);
+                log.trace("Classpath copy of '{}' failed because of exception.", resource, e2);
             }
         }
         if(!done) throw new IllegalArgumentException("Unable to copy from '" + resource + "'.");
