@@ -45,7 +45,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
     private XSDValidator xsdValidator;
     private IXMLValidator ublValidator;
-    private SchematronValidator ciusValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -81,15 +80,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-cii.schematron.auto-update-xslt"));
             ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.CII_OUT);
-        } catch (Exception e) {
-            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
-        }
-
-        // load the CII CIUS schematron validator.
-        try {
-            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-cii.cius"));
-            boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-cii.cius.auto-update-xslt"));
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.CII_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -130,12 +120,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
                 log.info("Schematron validation successful!");
             }
             errors.addAll(schematronErrors);
-
-            List<IConversionIssue> ciusValidationErrors = ciusValidator.validate(documentByteArray);
-            if (ciusValidationErrors.isEmpty()) {
-                log.info("CIUS schematron validation successful!");
-            }
-            errors.addAll(ciusValidationErrors);
 
         } catch (IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.CII_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.ILLEGAL_VALUE, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
