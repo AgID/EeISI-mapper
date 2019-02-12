@@ -35,11 +35,11 @@ public class AccountCustomerParty implements CustomMapping<Document> {
         if (supplier == null) {
 
             partyElm = new Element(PARTY);
-            accountSupplierPartyElm.addContent(partyElm);
+//            accountSupplierPartyElm.addContent(partyElm);
 
         } else {
             partyElm = supplier.getChild(PARTY);
-            accountSupplierPartyElm.addContent(partyElm);
+//            accountSupplierPartyElm.addContent(partyElm);
         }
 
         BG0007Buyer buyer = evalExpression( () -> invoice.getBG0007Buyer(0) );
@@ -62,6 +62,7 @@ public class AccountCustomerParty implements CustomMapping<Document> {
             endpointElm.setText(identifierText);
             endpointElm.setAttribute("schemeID", identificationSchemaStr);
             partyElm.addContent(endpointElm);
+            accountSupplierPartyElm.addContent(partyElm);
             root.addContent(accountSupplierPartyElm);
         }
     }

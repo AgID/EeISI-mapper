@@ -34,11 +34,11 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         if (supplier == null) {
 
             partyElm = new Element(PARTY);
-            accountSupplierPartyElm.addContent(partyElm);
+            //accountSupplierPartyElm.addContent(partyElm);
 
         } else {
             partyElm = supplier.getChild(PARTY);
-            accountSupplierPartyElm.addContent(partyElm);
+            //accountSupplierPartyElm.addContent(partyElm);
         }
 
         BG0004Seller seller = evalExpression( ()-> invoice.getBG0004Seller(0) );
@@ -63,6 +63,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             endpointElm.setText(identifierText);
             endpointElm.setAttribute("schemeID",identificationSchemaStr);
             partyElm.addContent(endpointElm);
+            accountSupplierPartyElm.addContent(partyElm);
             root.addContent(accountSupplierPartyElm);
 
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
