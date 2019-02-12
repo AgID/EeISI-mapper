@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.conversion.converter.Untdid4461PaymentMeansCodeToString;
@@ -22,7 +23,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(PaymentMeansConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         Element root = document.getRootElement();
         if (root != null) {

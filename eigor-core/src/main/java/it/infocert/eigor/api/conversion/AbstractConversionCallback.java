@@ -27,7 +27,7 @@ public abstract class AbstractConversionCallback implements ConversionCallback {
     }
 
     @Override
-    public void onFailedVerifingCenRules(ConversionContext ctx) throws Exception {
+    public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
     }
 
     @Override

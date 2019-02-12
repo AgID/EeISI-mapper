@@ -5,6 +5,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,10 @@ public class Cii2CenTest {
 
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenTest.class);
 
-	private Cii2Cen sut;
-	
-	@Before
-	public void setUp() throws ConfigurationException {
+	static Cii2Cen sut;
+
+	@BeforeClass
+	public static void setUp() throws ConfigurationException {
 		EigorConfiguration conf = new PropertiesBackedConfiguration()
 				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
 				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
@@ -36,22 +37,22 @@ public class Cii2CenTest {
 		sut = new Cii2Cen(new JavaReflections(), conf);
 		sut.configure();
 	}
-	
+
 	@Test
 	public void shouldSupportCii() {
 		assertThat(sut.support("cii"), is(true));
 	}
-	
+
 	@Test
 	public void shouldNotSupportCii() {
 		assertThat(sut.support("fake"), is(false));
 	}
-	
+
 	@Test
 	public void shouldSupportedFormatsCii() {
 		assertThat(sut.getSupportedFormats(), contains("cii"));
 	}
-	
+
 	@Test
 	public void testNullFormat() {
 		assertFalse(sut.support(null));

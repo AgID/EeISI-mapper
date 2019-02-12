@@ -61,15 +61,19 @@ public class ErrorCode implements Serializable {
     public enum Location {
         UBL_IN,
         UBL_OUT,
+        PEPPOL_OUT,
+        PEPPOL_IN,
         FATTPA_IN,
         FATTPA_OUT,
         CII_IN,
         CII_OUT,
         UBLCN_IN,
         UBLCN_OUT,
+        PEPPOLCN_OUT,
         CSVCEN_IN,
         XMLCEN_IN,
-        XMLCEN_OUT
+        XMLCEN_OUT,
+        CUSTOM_VALIDATORS
     }
 
     public enum Action {
@@ -80,7 +84,10 @@ public class ErrorCode implements Serializable {
         CONFIGURED_MAP,
         HARDCODED_MAP,
         XML_PARSING,
-        GENERIC
+        GENERIC,
+
+        /** A validation performed with a custom schematron or XSD. */
+        CUSTOM_VALIDATION
     }
 
     public enum Error {

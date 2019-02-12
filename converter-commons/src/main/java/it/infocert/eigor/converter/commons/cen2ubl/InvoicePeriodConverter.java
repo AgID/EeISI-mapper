@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.commons.cen2ubl;
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
@@ -23,22 +24,22 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(InvoicePeriodConverter.class);
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
-        Element root = document.getRootElement();
-        if (root != null) {
+        Element invoiceElm = document.getRootElement();
+        if (invoiceElm != null) {
             final String INVOICE_PERIOD = "InvoicePeriod";
-            Element invoicePeriod = root.getChild(INVOICE_PERIOD);
+            Element invoicePeriodElm = invoiceElm.getChild(INVOICE_PERIOD);
             if (!invoice.getBG0013DeliveryInformation().isEmpty()) {
                 BG0013DeliveryInformation bg0013 = invoice.getBG0013DeliveryInformation(0);
                 if (!bg0013.getBG0014InvoicingPeriod().isEmpty()) {
                     BG0014InvoicingPeriod bg0014 = bg0013.getBG0014InvoicingPeriod(0);
 
-                    if (invoicePeriod == null) {
-                        invoicePeriod = new Element(INVOICE_PERIOD);
-                        root.addContent(invoicePeriod);
+                    if (invoicePeriodElm == null) {
+                        invoicePeriodElm = new Element(INVOICE_PERIOD);
+                        invoiceElm.addContent(invoicePeriodElm);
                     }
 
                     if (!bg0014.getBT0073InvoicingPeriodStartDate().isEmpty()) {
@@ -47,7 +48,7 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
                         final LocalDate date = bt0073.getValue();
                         try {
                             startDate.setText(dateConverter.convert(date));
-                            invoicePeriod.addContent(startDate);
+                            invoicePeriodElm.addContent(startDate);
                         } catch (ConversionFailedException e) {
                             errors.add(ConversionIssue.newError(
                                     e,
@@ -67,7 +68,7 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
                         final LocalDate date = bt0074.getValue();
                         try {
                             endDate.setText(dateConverter.convert(date));
-                            invoicePeriod.addContent(endDate);
+                            invoicePeriodElm.addContent(endDate);
                         } catch (ConversionFailedException e) {
                             errors.add(ConversionIssue.newError(
                                     e,
@@ -86,7 +87,7 @@ public class InvoicePeriodConverter implements CustomMapping<Document> {
                         Element descriptionCode = new Element("DescriptionCode");
                         Untdid2005DateTimePeriodQualifiers code = bt0008.getValue();
                         descriptionCode.setText(String.valueOf(code.getCode()));
-                        invoicePeriod.addContent(descriptionCode);
+                        invoicePeriodElm.addContent(descriptionCode);
                     }
                 }
             }

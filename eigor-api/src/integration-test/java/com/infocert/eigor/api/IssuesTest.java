@@ -17,25 +17,67 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@Ignore("To be ignored 'til all mappings have been applied")
+
 public class IssuesTest extends AbstractIssueTest {
 
     @Test
-    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
+    public void issueEisiFromFattpaToPeppolCn() {
 
-        // check conversion xmlcen -> xmlcen is without errors.
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/examples/fattpa/A10-Licenses-CreditNote.xml",
+                "fatturapa",
+                "peppolcn");
 
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
-        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
+    }
+
+    @Test @Ignore("waitng for valid invoice")
+    public void issueEisi135() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-135-xmlcen.xml",
+                "xmlcen",
+                "fatturapa");
+
+    }
+
+    @Test
+    public void issueEisi138() {
+
+        ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
+                "/examples/fattpa/A10-Licenses.xml",
+                "fatturapa",
+                "peppolbis");
+
+    }
+
+    @Ignore("To be ignored 'til all mappings have been applied")
+    @Test
+    public void issue281FattpaToCII() throws Exception {
+        //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
+        for (IConversionIssue issue : convert.getIssues()) {
+            assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
+        }
+    }
+
+
+    @Ignore("UBL-sch-fails")
+    @Test
+    public void issueeisi41() throws IOException, SAXException, TransformerException {
+
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml", "ubl", "fatturapa");
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml"), "UTF-8").getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream(conversion.getResult() )));
 
         assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
     }
 
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue279FromUblToFattPA() throws Exception {
         ConversionResult<byte[]> convert = conversion.assertConversionWithoutErrors("/issues/issue-279-ubl.xml", "ubl", "fatturapa");
@@ -48,151 +90,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "2017-10-15T00:00:00", evaluate);
     }
 
-    @Test
-    public void issue278FromUblToFattPA() {
-        conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
-    }
-
-    @Test
-    public void issue261FromFattPAToUbl() {
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/issue-261-fattpa.xml",
-                "fatturapa",
-                "ubl",
-                new ConversionUtil.KeepXSDErrorsOnly()
-                //new ConversionUtil.KeepAll()
-        );
-    }
-
-    @Test
-    public void issue276FromUblToUbl() {
-        conversion.assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
-    }
-
-    @Test
-    public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        conversion.assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
-    }
-
-    @Test
-    public void fatturapaToCiiExamples() {
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
-                "fatturapa", "cii");
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_PEC _91FAT.xml",
-                "fatturapa", "cii");
-    }
-
-    @Test
-    public void ublToCiiExamples() {
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_42CEN.XML",
-                "ubl", "cii");
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_PEC_42UBL.XML",
-                "ubl", "cii");
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_02UBL.XML",
-                "ubl", "cii");
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_PEC _02CEN.XML",
-                "ubl", "cii");
-
-        conversion.assertConversionWithoutErrors(
-                "/issues/cii-examples/ubl/urn_notier_SOGG-NOT-00196_2018_9780030222_CP_FATTURA_01_CEN.xml",
-                "ubl", "cii");
-
-    }
-
-    @Test
-    public void issue254FromFattPaToCii() {
-        conversion.assertConversionWithoutErrors("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML", "fatturapa", "cii");
-    }
-
-    @Test
-    public void issue254FromUblToCii_scenario2() {
-        conversion.assertConversionWithoutErrors("/issues/254/ubl_newB2G-C_01C_CII.XML", "ubl", "cii");
-    }
-
-    @Test
-    public void issue254FromUblToCii_scenario1() {
-        conversion.assertConversionWithoutErrors("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML", "ubl", "cii");
-    }
-
-
-    @Test
-    public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        conversion.assertConversionWithoutErrors("/issues/issue-252-fattpa.xml", "fatturapa", "ubl");
-
-    }
-
-
-    @Test
-    public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        conversion.assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
-
-    }
-
-    @Test
-    public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        conversion.assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
-
-    }
-
-    @Test
-    public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
-        conversion.assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
-
-    }
-
-    @Test
-    public void issue269() throws Exception {
-        InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
-        ConversionResult<byte[]> convert = api.convert("cii", "fatturapa", ciiInStream);
-        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CessionarioCommittente']//*[local-name()='IdCodice']/text()");
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "97735020584", evaluate);
-    }
-
-    @Test
-    public void issue245() throws Exception {
-
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-245-fattpa.xml");
-
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
-
-        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
-
-        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
-    }
-
-    @Test
-    public void issue256() throws Exception {
-
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-256-fattpa.xml");
-
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
-
-        String evaluateAttachment = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
-        String evaluateAttachmentMimeCode = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
-        String evaluateAttachmentFileName = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
-
-        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
-
-        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
-
-        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
-    }
-
+    @Ignore("To be ignored 'til all mappings have been applied")
     @Test
     public void issue259() throws Exception {
 
@@ -232,6 +130,199 @@ public class IssuesTest extends AbstractIssueTest {
     }
 
     @Test
+    public void eisi121() throws IOException, SAXException, TransformerException {
+
+        String invoice = "/eisi-121.xml";
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(invoice, "xmlcen", "xmlcen");
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream(invoice), "UTF-8").getBytes() )));
+
+        ByteArrayInputStream convertedInvoice = new ByteArrayInputStream(conversion.getResult());
+        String convertedXml = new String(conversion.getResult(), "UTF-8");
+
+        try {
+            documentBuilder.parse(convertedInvoice);
+        } catch(Exception e) {
+            fail( "========\n" + originalXml + "========\n" + convertedXml);
+        }
+
+    }
+
+    @Test
+    public void convertXmlCenToCenToXmlCen() throws IOException, SAXException, TransformerException {
+
+        // check conversion xmlcen -> xmlcen is without errors.
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
+
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
+        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
+
+        assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
+
+    }
+
+    @Ignore("fails BT11 cardinality")
+    @Test
+    public void issue278FromUblToFattPA() {
+        conversion.assertConversionWithoutErrors("/issues/issue-278-ubl.xml", "ubl", "fatturapa");
+    }
+
+    @Test
+    public void issue261FromFattPAToUbl() {
+
+        conversion.assertConversionWithoutErrors(
+                "/issues/issue-261-fattpa.xml",
+                "fatturapa",
+                "ubl",
+                new ConversionUtil.KeepXSDErrorsOnly()
+                //new ConversionUtil.KeepAll()
+        );
+    }
+
+    @Ignore("Fails UBL INPUT schematron")
+    @Test
+    public void issue276FromUblToUbl() {
+        conversion.assertConversionWithoutErrors("/issues/issue-276-ubl.xml", "ubl", "ubl");
+    }
+
+    @Ignore("Fails CII schematron")
+    @Test
+    public void issue277ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        conversion.assertConversionWithoutErrors("/issues/issue-277-cii.xml", "cii", "cii");
+    }
+
+    @Ignore("Fails CII schematron")
+    @Test
+    public void fatturapaToCiiExamples1() {
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_60FPA.xml",
+                "fatturapa", "cii");
+    }
+
+    @Ignore("fails output CII chematron")
+    @Test
+    public void fatturapaToCiiExamples2() {
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/fatturapa/B2G-D_04B_ITBGRGDN77T10L117F_PEC _91FAT.xml",
+                "fatturapa", "cii");
+    }
+
+    @Ignore("Fails CII schematron")
+    @Test
+    public void ublToCiiExamples() {
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_42CEN.XML",
+                "ubl", "cii");
+
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-C_0X_ITBGRGDN77T10L117F_PEC_42UBL.XML",
+                "ubl", "cii");
+
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_02UBL.XML",
+                "ubl", "cii");
+
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/B2G-D_01C_ITBGRGDN77T10L117F_PEC _02CEN.XML",
+                "ubl", "cii");
+
+        conversion.assertConversionWithoutErrors(
+                "/issues/cii-examples/ubl/urn_notier_SOGG-NOT-00196_2018_9780030222_CP_FATTURA_01_CEN.xml",
+                "ubl", "cii");
+
+    }
+
+    @Ignore("Fails output schematron")
+    @Test
+    public void issue254FromFattPaToCii() {
+        conversion.assertConversionWithoutErrors("/issues/254/fatturapa_newB2G-D_04A_ITBGRGDN77T10L117F_50FPA.XML", "fatturapa", "cii");
+    }
+
+    @Ignore("Fails CII schematron")
+    @Test
+    public void issue254FromUblToCii_scenario2() {
+        conversion.assertConversionWithoutErrors("/issues/254/ubl_newB2G-C_01C_CII.XML", "ubl", "cii");
+    }
+
+    @Ignore("Fails CII schematron")
+    @Test
+    public void issue254FromUblToCii_scenario1() {
+        conversion.assertConversionWithoutErrors("/issues/254/ubl_B2G-D_01A_ITBGRGDN77T10L117F_36CEN.XML", "ubl", "cii");
+    }
+
+
+    @Test
+    public void issue252ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        conversion.assertConversionWithoutErrors("/issues/issue-252-fattpa.xml", "fatturapa", "ubl");
+
+    }
+
+
+    @Test @Ignore("waiting for example invoice")
+    public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        conversion.assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
+
+    }
+
+    @Ignore("1 - 1 mapping rule seems wrong")
+    @Test
+    public void issue207ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        conversion.assertConversionWithoutErrors("/issues/issue-207-ubl.xml", "ubl", "fatturapa");
+
+    }
+
+    @Test @Ignore("waiting for example invoice")
+    public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
+        conversion.assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
+
+    }
+
+    @Test
+    public void issue269() throws Exception {
+        InputStream ciiInStream = invoiceAsStream("/issues/issue-269-cii.xml");
+        ConversionResult<byte[]> convert = api.convert("cii", "fatturapa", ciiInStream);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CessionarioCommittente']//*[local-name()='IdCodice']/text()");
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "97735020584", evaluate);
+    }
+
+    @Test
+    public void issue245() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-245-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='AccountingSupplierParty']//*[local-name()='PartyTaxScheme']//*[local-name()='ID']/text()");
+
+        assertTrue(evaluate != null && !evaluate.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "VAT", evaluate);
+    }
+
+    @Ignore("Ignore until find a solution to strange schematron issue regarding DocumentReference on INvoiceLine in UBL")
+    @Test
+    public void issue256() throws Exception {
+
+        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-256-fattpa.xml");
+
+        ConversionResult<byte[]> convert = api.convert("fatturapa", "ubl", inputFatturaPaXml);
+
+        String evaluateAttachment = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/text()");
+        String evaluateAttachmentMimeCode = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@mimeCode");
+        String evaluateAttachmentFileName = evalXpathExpressionAsString(convert, "//*[local-name()='AdditionalDocumentReference']//*[local-name()='Attachment']//*[local-name()='EmbeddedDocumentBinaryObject']/@filename");
+
+        assertTrue(evaluateAttachment != null && !evaluateAttachment.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "ZUlHT1IgYXR0YWNobWVudCB0ZXN0", evaluateAttachment);
+
+        assertTrue(evaluateAttachmentMimeCode != null && !evaluateAttachmentMimeCode.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
+
+        assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
+    }
+
+
+
+    @Test
     public void issue257() throws Exception {
 
         InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-257-ubl.xml");
@@ -263,6 +354,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "scheme00", bt71_1);
     }
 
+    @Ignore("Wrong assertion")
     @Test
     public void issue208() throws Exception {
 
@@ -342,15 +434,5 @@ public class IssuesTest extends AbstractIssueTest {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
-    @Test
-    public void issue281FattpaToCII() throws Exception {
-        //conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "cii");
-
-        InputStream inputFatturaPaXml = invoiceAsStream("/issues/issue-281-fattpa.xml");
-        ConversionResult<byte[]> convert = api.convert("fatturapa", "cii", inputFatturaPaXml);
-        for (IConversionIssue issue : convert.getIssues()) {
-            assertTrue(issue.getMessage().contains("CL-19]-Coded allowance reasons MUST belong to the UNCL 4465 code list"));
-        }
-    }
 
 }

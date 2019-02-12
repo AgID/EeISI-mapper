@@ -1,7 +1,8 @@
-package it.infocert.eigor.converter.cen2ubl;
+    package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
@@ -21,7 +22,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(InvoiceLineConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         Element root = document.getRootElement();
         if (root != null) {
@@ -41,19 +42,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         Element id = new Element("ID");
                         id.setText(bt0126.getValue());
                         invoiceLine.addContent(id);
-                    }
-
-                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element documentReference = new Element("DocumentReference");
-                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        documentTypeCode.setText("130");
-                        Element id = new Element("ID");
-                        id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
-                        documentReference.addContent(id);
-                        documentReference.addContent(documentTypeCode);
-                        invoiceLine.addContent(documentReference);
                     }
 
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
@@ -91,6 +79,19 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                         }
                         invoiceLine.addContent(lineExtensionAmount);
+                    }
+
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element documentReference = new Element("DocumentReference");
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("130");
+                        Element id = new Element("ID");
+                        id.setText(bt0128.getValue().getIdentifier());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema() != null ? bt0128.getValue().getIdentificationSchema() : "");
+                        documentReference.addContent(id);
+                        documentReference.addContent(documentTypeCode);
+                        invoiceLine.addContent(documentReference);
                     }
 
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {

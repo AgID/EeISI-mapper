@@ -66,7 +66,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             Untdid1001InvoiceTypeCodeToItalianCodeStringConverter.newConverter(),
             Untdid4461PaymentMeansCodeToItalianCodeString.newConverter(),
             Untdid5189ChargeAllowanceDescriptionCodesToItalianCodeStringConverter.newConverter(),
-            Untdid5305DutyTaxFeeCategoriesToItalianCodeStringConverter.newConverter(),
+            Untdid5305DutyTaxFeeCategoriesToNaturaTypeAsStringConverter.newConverter(),
             Untdid7161SpecialServicesCodesToItalianCodeStringConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeConverter.newConverter(),
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
@@ -188,7 +188,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         List<CustomMapping<FatturaElettronicaType>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<FatturaElettronicaType> customMapping : customMappings) {
-            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT);
+            customMapping.map(invoice, fatturaElettronica, errors, ErrorCode.Location.FATTPA_OUT, this.getConfiguration());
         }
     }
 

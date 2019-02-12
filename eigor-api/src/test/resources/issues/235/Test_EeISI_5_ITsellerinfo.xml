@@ -7,7 +7,7 @@
 	<cbc:ProfileID>BT-23 Business Process Type</cbc:ProfileID>
     <cbc:ID>Test_EeISI_5</cbc:ID>
     <cbc:IssueDate>2017-09-12</cbc:IssueDate>
-	<cbc:DueDate>2017-10-30</cbc:DueDate>
+	<cbc:DueDate>2017-10-30-08:00</cbc:DueDate>
     <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
 	
 	<cbc:Note>#ZZZ#</cbc:Note> 

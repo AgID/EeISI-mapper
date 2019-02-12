@@ -94,10 +94,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
 
-        // mandatory for DocumentContextConverter
-        configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context");
-        configuration.getMandatoryString("eigor.converter.cen-cii.business-context");
-
         configurableSupport.configure();
     }
 
@@ -168,7 +164,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.CII_OUT);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.CII_OUT, this.configuration);
         }
     }
 

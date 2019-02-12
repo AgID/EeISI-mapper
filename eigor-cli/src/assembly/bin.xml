@@ -47,12 +47,25 @@
             <outputDirectory>examples/working-examples</outputDirectory>
             <directory>../eigor-test/src/main/resources/examples/working-examples</directory>
         </fileSet>
+        <fileSet>
+            <outputDirectory>examples/xmlcen</outputDirectory>
+            <directory>../eigor-test/src/main/resources/examples/xmlcen</directory>
+        </fileSet>
         <!-- invoice examples -->
 
         <!-- Converter commons -->
         <fileSet>
             <outputDirectory>converterdata/converter-commons/</outputDirectory>
             <directory>../converter-commons/src/main/resources/converterdata/converter-commons/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- XMLCEN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-xmlcen-cen/</outputDirectory>
+            <directory>../converter-xmlcen-cen/src/main/resources/converterdata/converter-xmlcen-cen/</directory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -103,6 +116,15 @@
             </includes>
         </fileSet>
 
+        <!-- CEN/XMLCEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-xmlcen</outputDirectory>
+            <directory>../converter-cen-xmlcen/src/main/resources/converterdata/converter-cen-xmlcen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- CEN/CII -->
         <fileSet>
             <outputDirectory>converterdata/converter-cen-cii</outputDirectory>
@@ -129,6 +151,25 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+
+        <!--CEN/PEPPOL-->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-peppol</outputDirectory>
+            <directory>../converter-cen-peppol/src/main/resources/converterdata/converter-cen-peppol</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        
+        <!-- CEN/PEPPOLCN    -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-peppolcn</outputDirectory>
+            <directory>../converter-cen-peppolcn/src/main/resources/converterdata/converter-cen-peppolcn</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        
 
 
         <!-- rules -->

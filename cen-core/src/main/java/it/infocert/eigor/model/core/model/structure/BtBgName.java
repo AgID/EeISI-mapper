@@ -88,11 +88,17 @@ public class BtBgName {
      * @return
      */
     public static String formatPadded(String name) {
-        name = name.replace(" ", "");
-        String identifier = name.substring(0, 2).toUpperCase();
-        String body = name.substring(2);
-        String number;
 
+        // " bT 0 00 2  " -> "bT0002"
+        name = name.replace(" ", "");
+
+        // "bT0002" -> "BT"
+        String identifier = name.substring(0, 2).toUpperCase();
+
+        // "bT0002" -> "0002"
+        String body = name.substring(2);
+
+        String number;
         if (body.startsWith("-")) {
             body = body.substring(1);
         }
@@ -102,7 +108,7 @@ public class BtBgName {
             String[] slices = body.split("-");
             number = String.format("%s-%s", formatNum(slices[0]), slices[1]);
         } else {
-            throw new IllegalArgumentException(String.format("Cannot format %s, should starts with either \"BT\" or \"BG\" followed by numbers. " +
+            throw new IllegalArgumentException(String.format("Cannot format '%s', should starts with either \"BT\" or \"BG\" followed by numbers. " +
                     "Example: \"BT0001\", \"BG0\", \"bt-12\" and similars.", name));
         }
         return identifier + number;

@@ -22,6 +22,7 @@ import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     private XSDValidator xsdValidator;
 
-    public FattPa2Cen(IReflections reflections, EigorConfiguration configuration) {
+    public FattPa2Cen(IReflections reflections, @NotNull EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.FATTPA_IN);
         this.configuration = checkNotNull(configuration);
     }
@@ -176,10 +177,16 @@ public class FattPa2Cen extends AbstractToCenConverter {
             }
         }
 
+        // set BG-2 with BG-24 default value urn:cen.eu:en16931:2017
+        BG0002ProcessControl bg0002 = new BG0002ProcessControl();
+        bg0002.getBT0024SpecificationIdentifier().add(new BT0024SpecificationIdentifier("urn:cen.eu:en16931:2017"));
+        invoice.getBG0002ProcessControl().add(bg0002);
+
         // when bt-115 is present, either bt-20 or bt-9
         BT0020PaymentTerms bt20cen = null;
-        if (invoice.getBT0020PaymentTerms().isEmpty()) {
-            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payement Terms"));
+        if (!invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment().isEmpty() &&
+                invoice.getBT0009PaymentDueDate().isEmpty() && invoice.getBT0020PaymentTerms().isEmpty()) {
+            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payment Terms"));
         }
 
 
@@ -190,7 +197,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
         List<CustomMapping<Document>> customMappings = CustomMappingLoader.getSpecificTypeMappings(super.getCustomMapping());
 
         for (CustomMapping<Document> customMapping : customMappings) {
-            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN);
+            customMapping.map(invoice, document, errors, ErrorCode.Location.FATTPA_IN, configuration);
         }
     }
 

@@ -67,9 +67,9 @@ public class CenToXmlCenConverterTest {
     }
 
     @Test
-    public void shouldSupportXmlCenExtension() {
+    public void shouldOutputFilesAsXml() {
 
-        assertThat( sut.extension(), equalTo("xmlcen") );
+        assertThat( sut.extension(), equalTo("xml") );
 
     }
 

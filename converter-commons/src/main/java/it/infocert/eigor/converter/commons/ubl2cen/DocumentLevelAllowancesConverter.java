@@ -1,11 +1,25 @@
 package it.infocert.eigor.converter.commons.ubl2cen;
 
-import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.CustomConverterUtils;
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.EigorRuntimeException;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
+import it.infocert.eigor.model.core.model.BT0092DocumentLevelAllowanceAmount;
+import it.infocert.eigor.model.core.model.BT0093DocumentLevelAllowanceBaseAmount;
+import it.infocert.eigor.model.core.model.BT0094DocumentLevelAllowancePercentage;
+import it.infocert.eigor.model.core.model.BT0095DocumentLevelAllowanceVatCategoryCode;
+import it.infocert.eigor.model.core.model.BT0096DocumentLevelAllowanceVatRate;
+import it.infocert.eigor.model.core.model.BT0097DocumentLevelAllowanceReason;
+import it.infocert.eigor.model.core.model.BT0098DocumentLevelAllowanceReasonCode;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -81,7 +95,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 if (multiplierFactorNumeric != null) {
                     final String text = multiplierFactorNumeric.getText();
                     try {
-                        BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(new BigDecimal(text));
+                        BT0094DocumentLevelAllowancePercentage bt0094 = new BT0094DocumentLevelAllowancePercentage(new BigDecimal(text).multiply(BigDecimal.valueOf(100)));
                         bg0020.getBT0094DocumentLevelAllowancePercentage().add(bt0094);
                     } catch (NumberFormatException e) {
                         EigorRuntimeException ere = new EigorRuntimeException(
@@ -177,7 +191,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
     }
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         toBG0020(document, cenInvoice, errors, callingLocation);
     }
 }

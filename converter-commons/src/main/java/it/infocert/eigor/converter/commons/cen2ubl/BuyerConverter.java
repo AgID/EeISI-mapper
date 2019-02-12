@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
@@ -19,7 +20,7 @@ public class BuyerConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(BuyerConverter.class);
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         final Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0007Buyer().isEmpty()) {
@@ -45,16 +46,25 @@ public class BuyerConverter implements CustomMapping<Document> {
                     });
 
                     if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
-                        BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
-                        Element endpointID = new Element("EndpointID");
-                        Identifier identifier = bt0049.getValue();
-                        if (identifier.getIdentificationSchema() != null) {
-                            endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
+
+                        Element endpointID1 = party.getChild("EndpointID");
+
+                        if(endpointID1==null) {
+
+                            BT0049BuyerElectronicAddressAndSchemeIdentifier bt0049 = buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier(0);
+                            Element endpointID = new Element("EndpointID");
+                            Identifier identifier = bt0049.getValue();
+                            if (identifier.getIdentificationSchema() != null) {
+                                endpointID.setAttribute("schemeID", identifier.getIdentificationSchema());
+                            }
+                            if (identifier.getIdentifier() != null) {
+                                endpointID.addContent(identifier.getIdentifier());
+                            }
+                            party.addContent(endpointID);
+
                         }
-                        if (identifier.getIdentifier() != null) {
-                            endpointID.addContent(identifier.getIdentifier());
-                        }
-                        party.addContent(endpointID);
+
+
                     }
 
 

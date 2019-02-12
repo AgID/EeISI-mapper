@@ -61,7 +61,7 @@ public class UblCn2CenConfigurationFileTest {
 
     @BeforeClass
     public static void setUpValidator() throws SAXException {
-        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsd/UBL-CreditNote-2.1.xsd");
+        File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsdstatic/UBL-CreditNote-2.1.xsd");
         xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.UBLCN_IN);
     }
 

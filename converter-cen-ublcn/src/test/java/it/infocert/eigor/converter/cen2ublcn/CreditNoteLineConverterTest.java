@@ -27,7 +27,7 @@ public class CreditNoteLineConverterTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         CreditNoteLineConverter converter = new CreditNoteLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");
@@ -46,7 +46,7 @@ public class CreditNoteLineConverterTest {
     public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0129AndBT0149();
         CreditNoteLineConverter converter = new CreditNoteLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT);
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");

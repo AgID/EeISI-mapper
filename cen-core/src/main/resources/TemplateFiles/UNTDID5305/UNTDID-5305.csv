@@ -1,14 +1,22 @@
 PlusSign,Code,ShortDesc,LongDesc
 ,A,Mixed tax rate,Self explanatory.
-+,AA,Lower rate,Tax rate is lower than standard rate.
-+,AB,Exempt for resale,A tax category code indicating the item is tax exempt,when the item is bought for future resale.
-+,AC,Value Added Tax (VAT) not now due for payment,A code to indicate that the Value Added Tax (VAT) amount,which is due on the current invoice is to be paid on,receipt of a separate VAT payment request.
-+,AD,Value Added Tax (VAT) due from a previous invoice,A code to indicate that the Value Added Tax (VAT) amount,of a previous invoice is to be paid.
-,B,Transferred (VAT),VAT not to be paid to the issuer of the invoice but,directly to relevant tax authority.
-,C,Duty paid by supplier,Duty associated with shipment of goods is paid by the,supplier; customer receives goods with duty paid.
+,AA,Lower rate,Tax rate is lower than standard rate.
+,AB,Exempt for resale,A tax category code indicating the item is tax exempt when the item is bought for future resale.
+,AC,Value Added Tax (VAT) not now due for payment,A code to indicate that the Value Added Tax (VAT) amount which is due on the current invoice is to be paid on,,receipt of a separate VAT payment request.
+,AD,Value Added Tax (VAT) due from a previous invoice,A code to indicate that the Value Added Tax (VAT) amount of a previous invoice is to be paid.
+,AE,VAT Reverse Charge,Code specifying that the standard VAT rate is levied from the invoicee.
+,B,Transferred (VAT),VAT not to be paid to the issuer of the invoice but directly to relevant tax authority.
+,C,Duty paid by supplier,Duty associated with shipment of goods is paid by the supplier customer receives goods with duty paid.
+,D,Value Added Tax (VAT) margin scheme - travel agents,Indication that the VAT margin scheme for travel agents is applied.
 ,E,Exempt from tax,Self explanatory.
-,G,Free export item,tax not charged,Self explanatory.
+,F,Value Added Tax (VAT) margin scheme - second-hand goods,Indication that the VAT margin scheme for second-hand goods is applied.
+,G,Free export item,tax not charged Self explanatory.
 ,H,Higher rate,Self explanatory.
-,O,Services outside scope of tax,Self explanatory.
-,S,Standard rate,Self explanatory.
-,Z,Zero rated goods,Self explanatory.
+,I,Value Added Tax (VAT) margin scheme - works of art Margin scheme - Works of art,Indication that the VAT margin scheme for works of art is applied.
+,J,Value Added Tax (VAT) margin scheme - collector's items and antiques,Indication that the VAT margin scheme for collector's items and antiques is applied.
++,K,VAT exempt for EEA intra-community supply of goods and services,A tax category code indicating the item is VAT exempt due to an intra-community supply in the European Economic Area.
++,L,Canary Islands general indirect tax,Impuesto General Indirecto Canario (IGIC) is an indirect tax levied on goods and services supplied in the Canary Islands (Spain) by traders and professionals, as well as on import of goods.
++,M,Tax for production, services and importation in Ceuta and Melilla,Impuesto sobre la Producciòn, los Servicios y la Importaciòn (IPSI) is an indirect municipal tax, levied on the production, processing and import of all kinds of movable tangible property, the supply of services and the transfer of immovable property located in the cities of Ceuta and Melilla.
+,O,Services outside scope of tax,Self explanatory.,,
+,S,Standard rate,Self explanatory.,,
+,Z,Zero rated goods,Self explanatory.,,

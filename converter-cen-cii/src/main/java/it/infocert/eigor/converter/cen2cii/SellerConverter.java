@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -18,7 +19,7 @@ import java.util.List;
 public class SellerConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+    public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         if (!invoice.getBG0004Seller().isEmpty()) {
             BG0004Seller bg0004 = invoice.getBG0004Seller(0);
             Element rootElement = document.getRootElement();
@@ -201,7 +202,7 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                     Element specifiedTaxRegistration = new Element("SpecifiedTaxRegistration", ramNs);
                     Element id = new Element("ID", ramNs);
                     id.setText(bt0031.getValue());
-                    id.setAttribute("schemeID", "VAT");
+                    id.setAttribute("schemeID", "VA");
                     specifiedTaxRegistration.addContent(id);
                     sellerTradeParty.addContent(specifiedTaxRegistration);
                 }

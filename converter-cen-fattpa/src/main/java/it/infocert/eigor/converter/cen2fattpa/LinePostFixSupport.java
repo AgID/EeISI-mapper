@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 class LinePostFixSupport {
 
     private Map<CenLine, FattpaLine> cenLinesToCorrespondingFattpaLine = new LinkedHashMap<>();
@@ -28,7 +30,11 @@ class LinePostFixSupport {
         int max = -1;
         for (CenLine bg25InvoiceLine : bg25InvoiceLines) {
             try {
-                int identifierOfLine = Integer.parseInt(bg25InvoiceLine.lineIdentifier());
+
+                String lineIdentifierAsString = bg25InvoiceLine.lineIdentifier();
+                if(lineIdentifierAsString == null) continue;
+
+                int identifierOfLine = Integer.parseInt(lineIdentifierAsString);
                 if(identifierOfLine>=10000) {
                     throw new NumberFormatException();
                 }
@@ -73,7 +79,7 @@ class LinePostFixSupport {
 
         @Override
         public String lineIdentifier() {
-            return bg0025.getBT0126InvoiceLineIdentifier(0).getValue();
+            return evalExpression( ()-> bg0025.getBT0126InvoiceLineIdentifier(0).getValue() );
         }
     }
 

@@ -40,7 +40,6 @@ public class AttachmentUtilTest {
         final AllegatiType allegato = allegati.get(0);
         final String attachment = new String(allegato.getAttachment());
         assertEquals(input, attachment);
-        System.out.println(attachment);
     }
 
     @Test
@@ -50,7 +49,6 @@ public class AttachmentUtilTest {
         final AllegatiType allegato = fatturaElettronicaBody.getAllegati().get(0);
         final String attachment = new String(allegato.getAttachment());
         assertEquals(startingText + System.lineSeparator() + input, attachment);
-        System.out.println(attachment);
     }
 
     @Test

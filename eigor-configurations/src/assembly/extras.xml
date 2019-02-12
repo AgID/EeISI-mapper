@@ -21,6 +21,15 @@
             </includes>
         </fileSet>
 
+        <!-- XMLCEN/CEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-xmlcen-cen/</outputDirectory>
+            <directory>../converter-xmlcen-cen/src/main/resources/converterdata/converter-xmlcen-cen/</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- UBL/CEN -->
         <fileSet>
             <outputDirectory>converterdata/converter-ubl-cen/</outputDirectory>
@@ -92,5 +101,24 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+
+        <!-- CEN/XMLCEN -->
+        <fileSet>
+            <outputDirectory>converterdata/converter-cen-xmlcen</outputDirectory>
+            <directory>../converter-cen-xmlcen/src/main/resources/converterdata/converter-cen-xmlcen</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- CEN/PEPPOL -->
+        <fileSet>
+            <directory>../converter-cen-peppol/src/main/resources/converterdata/converter-cen-peppol</directory>
+            <outputDirectory>converterdata/converter-cen-peppol</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 </assembly>
