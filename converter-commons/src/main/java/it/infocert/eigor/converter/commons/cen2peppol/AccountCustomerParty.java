@@ -16,7 +16,7 @@ import java.util.List;
 
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 
-public class BuyerReferenceConverter implements CustomMapping<Document> {
+public class AccountCustomerParty implements CustomMapping<Document> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -31,6 +31,7 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
         final Element partyElm;
         final Element supplier = root.getChild(ACCOUNTING_CUSTOMER_PARTY);
         Element accountSupplierPartyElm = new Element(ACCOUNTING_CUSTOMER_PARTY);
+        
         if (supplier == null) {
 
             partyElm = new Element(PARTY);
@@ -47,7 +48,7 @@ public class BuyerReferenceConverter implements CustomMapping<Document> {
 
             String identifierText;
             String identificationSchemaStr;
-
+            	
             if (buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
                 identifierText = "NA";
                 identificationSchemaStr = "0130";
