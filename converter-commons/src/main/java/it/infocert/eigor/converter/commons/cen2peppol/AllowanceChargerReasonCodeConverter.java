@@ -13,7 +13,6 @@ import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCo
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
 import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
-import it.infocert.eigor.model.core.model.BT0098DocumentLevelAllowanceReasonCode;
 
 public class AllowanceChargerReasonCodeConverter implements CustomMapping<Document>{
 
@@ -30,7 +29,6 @@ public class AllowanceChargerReasonCodeConverter implements CustomMapping<Docume
 		Untdid5189ChargeAllowanceDescriptionCodes allowanceCode = null;
 		BG0027InvoiceLineAllowances invoiceAllowance2;
 
-		Element invoiceLineAllowances;
 
 
 		if(!cenInvoice.getBG0020DocumentLevelAllowances().isEmpty()) {

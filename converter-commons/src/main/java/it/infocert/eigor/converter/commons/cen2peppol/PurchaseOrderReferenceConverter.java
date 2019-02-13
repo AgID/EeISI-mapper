@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.commons.cen2peppol;
+	package it.infocert.eigor.converter.commons.cen2peppol;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -22,24 +22,17 @@ public class PurchaseOrderReferenceConverter implements CustomMapping<Document> 
         Element root = document.getRootElement();
 
         final Element idElm = new Element("ID");
-        final Element buyerReferenceElm = new Element("BuyerReference");
         final Element orderReferenceElm = new Element("OrderReference");
-        buyerReferenceElm.addContent(idElm);
-//        root.addContent(buyerReferenceElm);
+        orderReferenceElm.addContent(idElm);
+        root.addContent(orderReferenceElm);
 
         String value;
-        if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()) {
-        	buyerReferenceElm.setText("NA");
-            root.addContent(buyerReferenceElm);
+        if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty()) {
+            value = "NA";
+        }else{
+            value = cenInvoice.getBT0013PurchaseOrderReference(0).getValue();
         }
-//        else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()){
-//        	orderReferenceElm.setText(cenInvoice.getBT0013PurchaseOrderReference(0).getValue());
-//        	root.addContent(orderReferenceElm);
-//        }else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()) {
-//        	buyerReferenceElm.setText(cenInvoice.getBT0010BuyerReference(0).getValue());
-//        	root.addContent(buyerReferenceElm);
-//        
-//        }
+        idElm.setText(value);
 
     }
 }
