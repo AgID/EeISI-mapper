@@ -68,27 +68,27 @@ public class AllowanceChargerReasonCodeConverter implements CustomMapping<Docume
 
 		Untdid5189ChargeAllowanceDescriptionCodes codeValue;
 
-		switch(val)
+		switch(val.toString())
 		{
-		case Code41:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code41;
-		case Code42:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code42;
-		case Code60:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code60;
-		case Code62:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code62;
-		case Code63:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code63;
-		case Code64:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code64;
-		case Code65:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code65;
-		case Code66:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code66;
-		case Code67:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code67;
-		case Code68:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code68;
-		case Code70:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code70;
-		case Code71:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code72;
-		case Code88:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code88;
-		case Code95:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
-		case Code100:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code100;
-		case Code102:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code102;
-		case Code103:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code103;
-		case Code104:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code104;
-		case Code105:  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code105;
+		case "41":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code41;
+		case "42":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code42;
+		case "60":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code60;
+		case "62":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code62;
+		case "63":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code63;
+		case "64":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code64;
+		case "65":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code65;
+		case "66":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code66;
+		case "67":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code67;
+		case "68":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code68;
+		case "70":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code70;
+		case "71":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code72;
+		case "88":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code88;
+		case "95":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
+		case "100":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code100;
+		case "102":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code102;
+		case "103":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code103;
+		case "104":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code104;
+		case "105":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code105;
 		default: codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
 		}
 
