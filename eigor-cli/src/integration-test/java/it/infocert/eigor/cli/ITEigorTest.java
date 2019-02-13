@@ -16,6 +16,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,6 +33,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ITEigorTest {
 
     public @Rule TemporaryFolder tmp = new TemporaryFolder();
@@ -40,6 +44,8 @@ public class ITEigorTest {
     private ByteArrayOutputStream err;
     private File plainFattPa;
     private CommandLineInterpreter cli;
+    @Mock
+    EigorConfiguration configuration;
 
     @Before public void setUpCommandLineInterpeter() {
         IReflections reflections = new JavaReflections();
@@ -51,7 +57,7 @@ public class ITEigorTest {
         FromCenConversionRepository genericRepo2 = new FromCenListBakedRepository(new FakeFromCenConversion(reflections, conf));
 
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo1, genericRepo2, integrityRepo
+                genericRepo1, genericRepo2, integrityRepo, configuration
         );
     }
 

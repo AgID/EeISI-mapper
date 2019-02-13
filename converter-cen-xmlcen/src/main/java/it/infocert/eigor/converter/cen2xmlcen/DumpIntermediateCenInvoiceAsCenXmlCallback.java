@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2xmlcen;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.AbstractConversionCallback;
 import it.infocert.eigor.api.conversion.ConversionContext;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Conversion callback that writes out the intermediate CEN invoice in CEN-XML format.
  */
@@ -20,9 +23,20 @@ public class DumpIntermediateCenInvoiceAsCenXmlCallback extends AbstractConversi
     private final File outputFolderFile;
     private CenToXmlCenConverter cenToXmlCenConverter;
 
-    public DumpIntermediateCenInvoiceAsCenXmlCallback(File outputFolderFile) {
+    @Deprecated
+    public DumpIntermediateCenInvoiceAsCenXmlCallback(File outputFolderFile, EigorConfiguration configuration) {
+        cenToXmlCenConverter = new CenToXmlCenConverter(configuration);
         this.outputFolderFile = outputFolderFile;
-        cenToXmlCenConverter = new CenToXmlCenConverter();
+        try {
+            cenToXmlCenConverter.configure();
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public DumpIntermediateCenInvoiceAsCenXmlCallback(File outputFolderFile, CenToXmlCenConverter cenToXmlConverter) {
+        cenToXmlCenConverter = checkNotNull(cenToXmlConverter);
+        this.outputFolderFile = outputFolderFile;
         try {
             cenToXmlCenConverter.configure();
         } catch (ConfigurationException e) {
@@ -47,7 +61,10 @@ public class DumpIntermediateCenInvoiceAsCenXmlCallback extends AbstractConversi
         } catch (SyntaxErrorInInvoiceFormatException e) {
             throw new RuntimeException(e);
         }
-        FileUtils.writeStringToFile(new File(outputFolderFile, "invoice-cen.xml"), new String( result.getResult()) , StandardCharsets.UTF_8);
+        FileUtils.writeStringToFile(
+                new File(outputFolderFile, "invoice-cen.xml"),
+                new String( result.getResult()) ,
+                StandardCharsets.UTF_8);
     }
 
 }

@@ -1,6 +1,8 @@
 package it.infocert.eigor.cli.commands;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.junit.Before;
@@ -37,6 +39,8 @@ public class ConversionCommandTest {
     FromCenConversion fromCen;
     @Mock
     RuleRepository ruleRepository;
+
+    static EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
 
     @Rule
     public TemporaryFolder tmpRule = new TemporaryFolder();
@@ -89,7 +93,7 @@ public class ConversionCommandTest {
                 inputInvoice,
                 outputFolder,
                 invoiceInSourceFormat,
-                false);
+                false, configuration);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -125,7 +129,7 @@ public class ConversionCommandTest {
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
 
 
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration);
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
 
@@ -165,7 +169,7 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false, configuration);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -197,7 +201,7 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
