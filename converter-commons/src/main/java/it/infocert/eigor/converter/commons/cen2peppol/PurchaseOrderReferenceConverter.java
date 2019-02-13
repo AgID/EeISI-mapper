@@ -25,20 +25,21 @@ public class PurchaseOrderReferenceConverter implements CustomMapping<Document> 
         final Element buyerReferenceElm = new Element("BuyerReference");
         final Element orderReferenceElm = new Element("OrderReference");
         buyerReferenceElm.addContent(idElm);
-        root.addContent(buyerReferenceElm);
+//        root.addContent(buyerReferenceElm);
 
         String value;
         if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()) {
         	buyerReferenceElm.setText("NA");
             root.addContent(buyerReferenceElm);
-        }else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()){
-        	orderReferenceElm.setText(cenInvoice.getBT0013PurchaseOrderReference(0).getValue());
-        	root.addContent(orderReferenceElm);
-        }else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()) {
-        	buyerReferenceElm.setText(cenInvoice.getBT0010BuyerReference(0).getValue());
-        	root.addContent(buyerReferenceElm);
-        
         }
+//        else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()){
+//        	orderReferenceElm.setText(cenInvoice.getBT0013PurchaseOrderReference(0).getValue());
+//        	root.addContent(orderReferenceElm);
+//        }else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && cenInvoice.getBT0010BuyerReference().isEmpty()) {
+//        	buyerReferenceElm.setText(cenInvoice.getBT0010BuyerReference(0).getValue());
+//        	root.addContent(buyerReferenceElm);
+//        
+//        }
 
     }
 }

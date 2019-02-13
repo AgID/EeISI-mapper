@@ -25,7 +25,7 @@ public class CustomizationIdConverter implements CustomMapping<Document>{
     
         if (customizationId == null) {
         	customizationId = new Element(customizationID);
-        	customizationId.setText("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
+        	customizationId.setText("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
         	root.addContent(customizationId);
         } else {
         	customizationId.setText("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");

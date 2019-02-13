@@ -42,7 +42,7 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
     
-    @Test 
+    @Test
     public void issueEisi138() {
 
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
