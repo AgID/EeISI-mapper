@@ -35,9 +35,11 @@ public class AccountCustomerPartyTest {
 	@Test
 	public void shouldMapDefaultMapping() {
 		 sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.PEPPOL_OUT, null);
-		 Element name = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("EndpointID");
-		 String schemeId = name.getAttribute("schemeID").getValue();
-		 assertEquals("NA", name.getText());
+		 Element name = doc.getRootElement().getChild("AccountingCustomerParty");
+		 Element party = name.getChild("Party");
+		 Element endPoint = party.getChild("EndpointID");
+		 String schemeId = endPoint.getAttribute("schemeID").getValue();
+		 assertEquals("NA", endPoint.getText());
 		 assertEquals("0130", schemeId);
 		 
 	}

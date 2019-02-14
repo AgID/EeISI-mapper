@@ -23,27 +23,28 @@ public class TaxAndDocumentCurrenceyCodeConverter implements CustomMapping<Docum
 		Element root = document.getRootElement();
 		final Element taxCurrencyCode;
 		final Element documentCurrencyCode;
-		
+
 		if(root!=null) {
 			if(!cenInvoice.getBT0006VatAccountingCurrencyCode().isEmpty() && !cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-				if(cenInvoice.getBT0006VatAccountingCurrencyCode(0).getValue() == 
-						cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue()){
+				if(cenInvoice.getBT0006VatAccountingCurrencyCode(0).getValue().getCode() == 
+						cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue().getCode()){
 					Iso4217CurrenciesFundsCodes currencyCode;
 					currencyCode = cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue();
 					documentCurrencyCode = new Element("DocumentCurrencyCode");
 					documentCurrencyCode.setText(currencyCode.toString());
 					root.addContent(documentCurrencyCode);
 				}
-		}
-		else {
-				taxCurrencyCode = new Element("TaxCurrencyCode");
-				taxCurrencyCode.setText(cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue().toString());
-				documentCurrencyCode = new Element("DocumentCurrencyCode");
-				documentCurrencyCode.setText(cenInvoice.getBT0006VatAccountingCurrencyCode(0).getValue().toString());
-				root.addContent(taxCurrencyCode);
-				root.addContent(documentCurrencyCode);
-		}
-	}
+				else {
+					taxCurrencyCode = new Element("TaxCurrencyCode");
+					taxCurrencyCode.setText(cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue().getCode().toString());
+					documentCurrencyCode = new Element("DocumentCurrencyCode");
+					documentCurrencyCode.setText(cenInvoice.getBT0006VatAccountingCurrencyCode(0).getValue().getCode().toString());
+					root.addContent(taxCurrencyCode);
+					root.addContent(documentCurrencyCode);
+				}
+			}
 
-}
+		}
+
+	}
 }

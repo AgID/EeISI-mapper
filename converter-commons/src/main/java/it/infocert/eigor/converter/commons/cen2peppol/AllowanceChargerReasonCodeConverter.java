@@ -52,7 +52,8 @@ public class AllowanceChargerReasonCodeConverter implements CustomMapping<Docume
 				allowanceCode = setDefaultAllowanceChargerCode(invoiceAllowance2.getBT0140InvoiceLineAllowanceReasonCode(0).getValue());
 				if(root.getChild("InvoiceLine") == null) {
 					invoiceLine = new Element("InvoiceLine");
-					allowanceReasonCode.setText(allowanceCode.toString());
+					String value = String.valueOf(allowanceCode.getCode());
+					allowanceReasonCode.setText(value);
 					allowanceCharge.addContent(allowanceReasonCode);
 					invoiceLine.addContent(allowanceCharge);
 					root.addContent(invoiceLine);

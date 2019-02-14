@@ -52,7 +52,7 @@ public class AccountCustomerParty implements CustomMapping<Document> {
 				
 				
 				BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-				 if (!buyer.getBT0048BuyerVatIdentifier().isEmpty() || !buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
+//				 if (!buyer.getBT0048BuyerVatIdentifier().isEmpty() || !buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
 				if (supplier == null) {
 
 					partyElm = new Element(PARTY);
@@ -211,7 +211,7 @@ public class AccountCustomerParty implements CustomMapping<Document> {
 					
 					
 				}
-			}
+		//	}
 		}
 	}
 }
