@@ -2,6 +2,7 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.FakeFromCenConversion;
@@ -16,9 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,7 +31,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ITEigorTest {
 
     public @Rule TemporaryFolder tmp = new TemporaryFolder();
@@ -44,8 +41,8 @@ public class ITEigorTest {
     private ByteArrayOutputStream err;
     private File plainFattPa;
     private CommandLineInterpreter cli;
-    @Mock
-    EigorConfiguration configuration;
+
+    static EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
 
     @Before public void setUpCommandLineInterpeter() {
         IReflections reflections = new JavaReflections();

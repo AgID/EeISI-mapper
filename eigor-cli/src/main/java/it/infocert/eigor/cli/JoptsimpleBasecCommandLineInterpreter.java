@@ -2,6 +2,7 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.HelpCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
@@ -155,16 +156,17 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             return new ReportFailuereCommand(e.getMessage());
         }
 
-        return new ConversionCommand(
-                ruleRepository,
-                toCen,
-                fromCen,
-                inputInvoice,
-                outputFolder,
-                invoiceInSourceFormat,
-                forceConversion,
-                configuration,intermediateValidation
-        );
+        return new ConversionCommand.ConversionCommandBuilder()
+                .setRuleRepository(ruleRepository)
+                .setToCen(toCen)
+                .setFromCen(fromCen)
+                .setInputInvoice(inputInvoice)
+                .setOutputFolder(outputFolder)
+                .setInvoiceInSourceFormat(invoiceInSourceFormat)
+                .setForceConversion(forceConversion)
+                .setConfiguration(configuration)
+                .setRunIntermediateValidation(intermediateValidation)
+                .build();
     }
 
 }

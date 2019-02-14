@@ -52,7 +52,7 @@ public class ConverterUtils {
                 SchematronValidator validator = new SchematronValidator(schemaFile.getFile(), true, schematronAutoUpdate, xmlcenIn);
                 return validator;
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while configuring " + converterName + " from '" + schFile + "'.", e);
+                throw new ConfigurationException("An error occurred while getting '" + converterName + "' schematron file from resource '" + schFile + "'.", e);
             }
         }
     }

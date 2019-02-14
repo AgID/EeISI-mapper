@@ -86,14 +86,9 @@ public class ConversionCommandTest {
 
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
         InputStream invoiceInSourceFormat = new ByteArrayInputStream( "<invoice>invoice</invoice>".getBytes() );
-        ConversionCommand sut = new ConversionCommand(
-                ruleRepository,
-                toCen,
-                fromCen,
-                inputInvoice,
-                outputFolder,
-                invoiceInSourceFormat,
-                false, configuration, false);
+
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder().setRuleRepository(ruleRepository).setToCen(toCen).setFromCen(fromCen).setInputInvoice(inputInvoice).setOutputFolder(outputFolder).setInvoiceInSourceFormat(invoiceInSourceFormat).setForceConversion(false).setConfiguration(configuration).setRunIntermediateValidation(false).build();
+
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -129,7 +124,7 @@ public class ConversionCommandTest {
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
 
 
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration, false);
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder().setRuleRepository(ruleRepository).setToCen(toCen).setFromCen(fromCen).setInputInvoice(inputInvoice).setOutputFolder(outputFolder).setInvoiceInSourceFormat(invoiceSourceFormat).setForceConversion(true).setConfiguration(configuration).setRunIntermediateValidation(false).build();
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
 
@@ -169,9 +164,7 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(
-                ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false, configuration,
-                false);
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder().setRuleRepository(ruleRepository).setToCen(toCen).setFromCen(fromCen).setInputInvoice(inputInvoice).setOutputFolder(outputFolder).setInvoiceInSourceFormat(invoiceSourceFormat).setForceConversion(false).setConfiguration(configuration).setRunIntermediateValidation(false).build();
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -203,7 +196,7 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration, false);
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder().setRuleRepository(ruleRepository).setToCen(toCen).setFromCen(fromCen).setInputInvoice(inputInvoice).setOutputFolder(outputFolder).setInvoiceInSourceFormat(invoiceSourceFormat).setForceConversion(true).setConfiguration(configuration).setRunIntermediateValidation(false).build();
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
