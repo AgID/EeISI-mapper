@@ -19,9 +19,9 @@ public class ProfileIdConverter implements CustomMapping<Document>{
 		// TODO Auto-generated method stub
 		
 			final Element root = document.getRootElement();
-	        Element profileId = root.getChild("ProfileID");
+	       
 	        String ProfileID = "ProfileID";
-
+	        Element profileId = root.getChild(ProfileID);
 
 	        if (profileId == null) {
 
