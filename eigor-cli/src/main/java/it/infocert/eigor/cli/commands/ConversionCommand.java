@@ -33,6 +33,8 @@ public class ConversionCommand implements CliCommand {
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
     private final Boolean forceConversion;
+    private final boolean intermediateValidation;
+
 
     public ConversionCommand(
             RuleRepository ruleRepository,
@@ -41,7 +43,7 @@ public class ConversionCommand implements CliCommand {
             Path inputInvoice,
             Path outputFolder,
             InputStream invoiceInSourceFormat,
-            boolean forceConversion, EigorConfiguration configuration) {
+            boolean forceConversion, EigorConfiguration configuration, boolean intermediateValidation) {
         this.ruleRepository = ruleRepository;
         this.toCen = toCen;
         this.fromCen = fromCen;
@@ -50,6 +52,7 @@ public class ConversionCommand implements CliCommand {
         this.invoiceInSourceFormat = invoiceInSourceFormat;
         this.forceConversion = forceConversion;
         this.configuration = configuration;
+        this.intermediateValidation = intermediateValidation;
     }
 
     /**

@@ -93,7 +93,7 @@ public class ConversionCommandTest {
                 inputInvoice,
                 outputFolder,
                 invoiceInSourceFormat,
-                false, configuration);
+                false, configuration, false);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -129,7 +129,7 @@ public class ConversionCommandTest {
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
 
 
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration, false);
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
 
@@ -169,7 +169,9 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false, configuration);
+        ConversionCommand sut = new ConversionCommand(
+                ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, false, configuration,
+                false);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 
@@ -201,7 +203,7 @@ public class ConversionCommandTest {
 
         // when converting a mock invoice, issues should occur
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
-        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration);
+        ConversionCommand sut = new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceSourceFormat, true, configuration, false);
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
 

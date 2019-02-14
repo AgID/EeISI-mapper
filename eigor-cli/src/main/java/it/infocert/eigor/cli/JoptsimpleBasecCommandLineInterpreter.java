@@ -163,7 +163,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 outputFolder,
                 invoiceInSourceFormat,
                 forceConversion,
-                configuration
+                configuration,intermediateValidation
         );
     }
 
