@@ -5,8 +5,6 @@ import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.RuleReport;
 import it.infocert.eigor.api.utils.RuleReports;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static it.infocert.eigor.api.utils.ConversionIssueUtils.toCsv;
 
 /**
  * This callback can be used to collect info that can result priceless in investigating conversion problems.
@@ -125,7 +124,7 @@ public class DebugConversionCallback extends AbstractConversionCallback {
 
     private void writeToCenErrorsToFile(ConversionResult<?> conversionResult, File outputFolderFile) throws IOException {
         List<IConversionIssue> errors = conversionResult.getIssues();
-        String data = toCsvFileContent(errors);
+        String data = toCsv(errors);
         File toCenErrors = new File(outputFolderFile, "tocen-errors.csv");
         FileUtils.writeStringToFile(toCenErrors, data, StandardCharsets.UTF_8);
     }
@@ -135,20 +134,7 @@ public class DebugConversionCallback extends AbstractConversionCallback {
         // writes from-cen errors csv
         List<IConversionIssue> errors = conversionResult.getIssues();
         File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
-        FileUtils.writeStringToFile(fromCenErrors, toCsvFileContent(errors), ENCODING);
-    }
-
-    private String toCsvFileContent(List<IConversionIssue> errors) {
-        final StringBuilder toCenErrorsCsv = new StringBuilder();
-        try (CSVPrinter printer = new CSVPrinter(toCenErrorsCsv, CSVFormat.DEFAULT.withHeader("Fatal", "Error", "Reason"));) {
-            for (IConversionIssue e : errors) {
-                printer.printRecord(e.isError(), e.getMessage(), e.getCause());
-            }
-            printer.flush();
-        } catch (Exception e) {
-            toCenErrorsCsv.append(e.getMessage());
-        }
-        return toCenErrorsCsv.toString();
+        FileUtils.writeStringToFile(fromCenErrors, toCsv(errors), ENCODING);
     }
 
     private void writeRuleReportToFile(RuleReport ruleReport, File outputFolderFile) throws IOException {

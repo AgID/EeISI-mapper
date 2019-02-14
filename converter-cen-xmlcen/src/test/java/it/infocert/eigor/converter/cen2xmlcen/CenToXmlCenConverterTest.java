@@ -4,6 +4,8 @@ package it.infocert.eigor.converter.cen2xmlcen;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -17,39 +19,36 @@ import org.jdom2.xpath.XPathFactory;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class CenToXmlCenConverterTest {
 
     private static XPathFactory xFactory;
+    static EigorConfiguration conf;
 
     CenToXmlCenConverter sut;
 
     @BeforeClass
     static public void setUpFactory() {
+        conf = new DefaultEigorConfigurationLoader().loadConfiguration();
         xFactory = XPathFactory.instance();
     }
 
     @Before
     public void setUpSut() throws ConfigurationException {
-        sut = new CenToXmlCenConverter();
+        sut = new CenToXmlCenConverter( conf );
         sut.configure();
+        sut.setSkipSchematronValidation(true);
     }
 
     @Test

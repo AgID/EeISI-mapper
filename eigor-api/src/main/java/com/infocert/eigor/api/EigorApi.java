@@ -106,7 +106,7 @@ public class EigorApi {
 
         ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(
                 new DebugConversionCallback(outputFolderForThisTransformation),
-                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderForThisTransformation),
+                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderForThisTransformation, builder.getConfiguration()),
                 new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderForThisTransformation)
 
         );

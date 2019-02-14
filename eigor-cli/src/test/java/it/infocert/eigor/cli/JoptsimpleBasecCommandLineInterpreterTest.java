@@ -1,6 +1,7 @@
 package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
 import org.junit.Before;
@@ -32,6 +33,9 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     FromCenConversionRepository fromCenRepo;
     @Mock
     RuleRepository ruleRepository;
+
+    @Mock
+    EigorConfiguration conf;
 
     public @Rule
     TemporaryFolder tmp = new TemporaryFolder();
@@ -65,7 +69,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
         given( fromCenRepo.supportedFromCenFormats() ).willReturn( new LinkedHashSet<>(Arrays.asList("frm1", "frm2") ) );
         given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository, conf);
 
         // when
         ReportFailuereCommand cliCommand = (ReportFailuereCommand)(sut.parseCommandLine(new String[]{
@@ -86,7 +90,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
 
         given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository, conf);
 
         // when
         ReportFailuereCommand cliCommand = (ReportFailuereCommand)(sut.parseCommandLine(new String[]{
@@ -107,7 +111,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
         given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
         given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository, conf);
 
         // when
         ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[] { "--input", plainFattPa.getAbsolutePath(), "--source", "aaa", "--target", "ooo", "--output", outputDir.getAbsolutePath(), "--force" });;
@@ -124,7 +128,7 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
         given( toCenRepo.findConversionToCen(anyString()) ).willReturn(mock(ToCenConversion.class));
         given( fromCenRepo.findConversionFromCen(anyString()) ).willReturn(mock(FromCenConversion.class));
 
-        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository);
+        JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter(toCenRepo, fromCenRepo, ruleRepository, conf);
 
         // when
         ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[] { "--input", plainFattPa.getAbsolutePath(), "--source", "aaa", "--target", "ooo", "--output", outputDir.getAbsolutePath() });;
