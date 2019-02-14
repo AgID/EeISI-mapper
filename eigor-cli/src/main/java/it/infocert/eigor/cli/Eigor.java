@@ -120,7 +120,7 @@ public class Eigor {
                 new Cen2Ubl(reflections, configuration),
                 new Cen2UblCn(reflections, configuration),
                 new Cen2Cii(reflections, configuration),
-                new CenToXmlCenConverter(),
+                new CenToXmlCenConverter(configuration),
                 new Cen2PEPPOLBSI(reflections, configuration),
                 new Cen2PeppolCn(reflections, configuration)
         );
@@ -132,8 +132,8 @@ public class Eigor {
     }
 
     @Bean
-    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository compositeRepository) {
-        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, compositeRepository);
+    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository compositeRepository, EigorConfiguration configuration) {
+        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, compositeRepository, configuration);
     }
 
 }

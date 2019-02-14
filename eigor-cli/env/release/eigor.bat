@@ -13,6 +13,18 @@ SET JVM_ARGUMENTS= -Xmx512m  -Dlogback.configurationFile=%APPLICATION_HOME%\conf
 if not exist %APPLICATION_HOME%\reports mkdir %APPLICATION_HOME%\reports
 SET APP_ARGS=%1 %2 %3 %4 %5 %6 %7 %8 %9
 
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+
+SET APP_ARGS2=%1 %2 %3 %4 %5 %6 %7 %8 %9
+
 setlocal ENABLEDELAYEDEXPANSION
 
 cd %APPLICATION_HOME%
@@ -43,7 +55,7 @@ ECHO --------------------------------------------------------------
 ECHO --------------------------------------------------------------
 echo LAUNCHING %APP_NAME% %APP_PATH%
 ECHO --------------------------------------------------------------
-%JAVA_COMMAND% %JVM_ARGUMENTS% %MAIN_CLASS% %APP_ARGS%
+%JAVA_COMMAND% %JVM_ARGUMENTS% %MAIN_CLASS% %APP_ARGS% %APP_ARGS2%
 
 REM pause
 

@@ -1,6 +1,8 @@
 package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.*;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.HelpCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
@@ -31,17 +33,25 @@ import static java.nio.file.StandardOpenOption.READ;
  */
 public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpreter {
 
+    public static final String INPUT = "input";
+    public static final String OUTPUT = "output";
+    public static final String SOURCE = "source";
+    public static final String TARGET = "target";
+    public static final String FORCE = "force";
+    public static final String INTERMEDIATE_VALIDATION = "intermediate-validation";
     private final ToCenConversionRepository toCenConversionRepository;
     private final FromCenConversionRepository fromCenConversionRepository;
     private final RuleRepository ruleRepository;
+    private final EigorConfiguration configuration;
 
     public JoptsimpleBasecCommandLineInterpreter(
             ToCenConversionRepository toCenConversionRepository,
             FromCenConversionRepository fromCenConversionRepository,
-            RuleRepository ruleRepository) {
+            RuleRepository ruleRepository, EigorConfiguration configuration) {
         this.toCenConversionRepository = toCenConversionRepository;
         this.fromCenConversionRepository = fromCenConversionRepository;
         this.ruleRepository = ruleRepository;
+        this.configuration = configuration;
     }
 
     @Override
@@ -50,11 +60,12 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // Parses command line
         // ===================================================
         OptionParser parser = new OptionParser();
-        parser.accepts("input").withRequiredArg();
-        parser.accepts("output").withRequiredArg();
-        parser.accepts("source").withRequiredArg();
-        parser.accepts("target").withRequiredArg();
-        parser.accepts("force");
+        parser.accepts(INPUT).withRequiredArg();
+        parser.accepts(OUTPUT).withRequiredArg();
+        parser.accepts(SOURCE).withRequiredArg();
+        parser.accepts(TARGET).withRequiredArg();
+        parser.accepts(FORCE);
+        parser.accepts(INTERMEDIATE_VALIDATION);
         OptionSet options = parser.parse(args);
 
 
@@ -72,14 +83,15 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         ToCenConversion toCen;
         FromCenConversion fromCen;
         InputStream invoiceInSourceFormat;
+        boolean intermediateValidation;
         boolean forceConversion;
         {
 
-            if (!options.has("input")) {
+            if (!options.has(INPUT)) {
                 return new ReportFailuereCommand("Input file missing, please specify the path of the invoice to trasform with the --input parameter.");
             }
 
-            inputInvoice = FileSystems.getDefault().getPath((String) options.valueOf("input"));
+            inputInvoice = FileSystems.getDefault().getPath((String) options.valueOf(INPUT));
             if (Files.notExists(inputInvoice)) {
                 return new ReportFailuereCommand("Input invoice '%s' does not exist.", inputInvoice);
             }
@@ -88,7 +100,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // output: path to output folder
         {
 
-            if (!options.has("output")) {
+            if (!options.has(OUTPUT)) {
                 return new ReportFailuereCommand("Output folder missing, please specify the output path with the --output parameter.", inputInvoice);
             }
 
@@ -101,7 +113,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // source format: should be supported
         {
 
-            if (!options.has("source")) {
+            if (!options.has(SOURCE)) {
                 return new ReportFailuereCommand("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice);
             }
 
@@ -116,7 +128,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // target format: should be supported
         {
 
-            if (!options.has("target")) {
+            if (!options.has(TARGET)) {
                 return new ReportFailuereCommand("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice);
             }
 
@@ -130,7 +142,12 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
 
         // force flag: force conversion to continue even if there are errors
         {
-            forceConversion = options.has("force");
+            forceConversion = options.has(FORCE);
+        }
+
+        // should validate the core model?
+        {
+            intermediateValidation = options.has(INTERMEDIATE_VALIDATION);
         }
 
         try {
@@ -139,9 +156,17 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             return new ReportFailuereCommand(e.getMessage());
         }
 
-        return new ConversionCommand(
-                ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion
-        );
+        return new ConversionCommand.ConversionCommandBuilder()
+                .setRuleRepository(ruleRepository)
+                .setToCen(toCen)
+                .setFromCen(fromCen)
+                .setInputInvoice(inputInvoice)
+                .setOutputFolder(outputFolder)
+                .setInvoiceInSourceFormat(invoiceInSourceFormat)
+                .setForceConversion(forceConversion)
+                .setConfiguration(configuration)
+                .setRunIntermediateValidation(intermediateValidation)
+                .build();
     }
 
 }
