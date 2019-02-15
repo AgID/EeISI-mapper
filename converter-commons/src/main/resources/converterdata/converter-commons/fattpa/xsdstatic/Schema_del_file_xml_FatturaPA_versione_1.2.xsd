@@ -382,7 +382,6 @@
   </xs:simpleType>
   <xs:simpleType name="TipoDocumentoType">
     <xs:restriction base="xs:string">
-      <xs:length value="15" />
       <xs:enumeration value="TD01">
         <xs:annotation>
           <xs:documentation>Fattura</xs:documentation>
