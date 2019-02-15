@@ -2,8 +2,14 @@ package it.infocert.eigor.converter.cii2cen;
 
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.conversion.converter.Untdid2005DateTimePeriodQualifiersToUntdid2475PaymentTimeReferenceConverter;
+import it.infocert.eigor.api.conversion.converter.Untdid2475PaymentTimeReferenceConverterToUntdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
+import it.infocert.eigor.model.core.enums.Untdid2475PaymentTimeReference;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -21,6 +27,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
     public ConversionResult<BG0000Invoice> toBG0023(Document document, BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         BG0023VatBreakdown bg0023;
+        TypeConverter<Untdid2475PaymentTimeReference, Untdid2005DateTimePeriodQualifiers> untdid2475To2005Converter = Untdid2475PaymentTimeReferenceConverterToUntdid2005DateTimePeriodQualifiers.newConverter();
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
@@ -45,7 +52,27 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                     Element exemptionReasonCode = findNamespaceChild(elem, namespacesInScope, "ExemptionReasonCode");
                     Element rateApplicablePercent = findNamespaceChild(elem, namespacesInScope, "RateApplicablePercent");
                     Element exemptionReason = findNamespaceChild(elem, namespacesInScope, "ExemptionReason");
+                    Element dueDateTypeCode = findNamespaceChild(elem, namespacesInScope, "DueDateTypeCode");
 
+                    if (dueDateTypeCode != null) {
+                        final String text = dueDateTypeCode.getText();
+                        BT0008ValueAddedTaxPointDateCode bt0008 = null;
+                        try {
+                            bt0008 = new BT0008ValueAddedTaxPointDateCode(untdid2475To2005Converter.convert(Untdid2475PaymentTimeReference.valueOf(dueDateTypeCode.getText())));
+                            invoice.getBT0008ValueAddedTaxPointDateCode().add(bt0008);
+                        } catch (ConversionFailedException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
+                                    .message(e.getMessage())
+                                    .location(callingLocation)
+                                    .action(ErrorCode.Action.HARDCODED_MAP)
+                                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                    .addParam("offendingItem", text)
+                                    .build());
+                            errors.add(ConversionIssue.newError(ere));
+                        }
+
+                    }
                     if (basisAmount != null) {
                         final String text = basisAmount.getText();
                         try {
