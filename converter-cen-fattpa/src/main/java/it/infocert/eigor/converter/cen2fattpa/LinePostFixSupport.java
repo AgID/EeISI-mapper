@@ -127,7 +127,7 @@ class LinePostFixSupport {
             if( !String.valueOf(originalLineNumber).equals(cenIdentifier) ) {
                List<AltriDatiGestionaliType> altriDatiGestionali = this.line.getAltriDatiGestionali();
                altriDatiGestionali.add(
-                       LineConverter.newAltriDatiGestionaliType("Renum",
+                       LineConverter.newAltriDatiGestionaliType("Rinum",
                        String.format("Linea '%s' rinumerata '%s'", cenIdentifier, originalLineNumber)) );
             }
 
