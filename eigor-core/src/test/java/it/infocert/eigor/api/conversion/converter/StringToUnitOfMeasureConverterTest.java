@@ -19,11 +19,11 @@ public class StringToUnitOfMeasureConverterTest {
                 is(UnitOfMeasureCodes.C62_ONE));
     }
 
-    @Test public void shouldThrowAnExceptionWhenUnitIsUnknown() {
+    @Test public void shouldConvertToC62WhenUnitIsUnknown() {
 
         try{
-            sut.convert("-DOES-NOT-EXIST-");
-            fail("Exception expected");
+            assertThat(sut.convert("-DOES-NOT-EXIST-"),
+                    is(UnitOfMeasureCodes.C62_ONE));
         }catch(ConversionFailedException cfe){
 
         }catch (Exception e){

@@ -28,7 +28,7 @@ StringToUnitOfMeasureConverter extends FromStringTypeConverter<UnitOfMeasureCode
 
         UnitOfMeasureCodes result = Arrays.stream(UnitOfMeasureCodes.values())
                 .filter(f)
-                .findFirst().orElse(null);
+                .findFirst().orElse(UnitOfMeasureCodes.C62_ONE);
 
         if(result == null) throw new ConversionBetweenTypesFailedException(
                 String.class, UnitOfMeasureCodes.class,

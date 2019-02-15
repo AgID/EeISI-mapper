@@ -57,6 +57,8 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 			 StringToUntdid4461PaymentMeansCode.newConverter(),
 
+            StringToUntdid2475PaymentTimeReference.newConverter(),
+
             // date
              StringToJavaLocalDateConverter.newConverter("yyyyMMdd"),
 

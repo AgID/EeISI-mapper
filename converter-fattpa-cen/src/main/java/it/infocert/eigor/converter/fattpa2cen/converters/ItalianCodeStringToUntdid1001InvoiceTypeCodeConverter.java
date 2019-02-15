@@ -20,6 +20,8 @@ public class ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter implements Ty
             case "TD02":
             case "TD03":
                 return Untdid1001InvoiceTypeCode.Code386;
+            case "TD20autofattura":
+                return Untdid1001InvoiceTypeCode.Code389;
             default:
                 return null;
         }
