@@ -857,15 +857,18 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaSconto = new DettaglioLineeType();
                         lineaSconto.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaSconto.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
+
                         String descrizione = InvoiceUtils.evalExpression( ()-> invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue() );
-                        if (descrizione != null) {
-                            if (invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
-                                lineaSconto.setDescrizione(descrizione);
-                            } else {
+                        if (descrizione != null && !descrizione.trim().isEmpty()) {
+                            if (!invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
                                 Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
-                                lineaSconto.setDescrizione(String.format("%s BT-0140: %d", descrizione, code.getCode()));
+                                descrizione = String.format("%s BT-0140: %d", descrizione, code.getCode());
                             }
+                        }else{
+                            descrizione = "N/A PER SCONTO";
                         }
+                        lineaSconto.setDescrizione(descrizione);
+
                         BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ?
                                 BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         allowanceAmount = allowanceAmount.negate(); //allowanceAmount *= -1.0;
@@ -1128,6 +1131,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
                 } else if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty() && !"".equals(converted)) {
                     dettaglioLinee.setRiferimentoAmministrazione(converted);
+                    dettaglioLinee.setDescrizione("N/A because BT-104 is missing");
                 } else {
                     log.trace("No BT0104 found");
                 }
