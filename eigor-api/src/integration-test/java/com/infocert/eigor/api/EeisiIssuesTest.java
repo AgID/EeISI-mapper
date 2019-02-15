@@ -28,7 +28,6 @@ import static org.junit.Assert.assertThat;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
-    @Ignore
     @Test
     public void issueEeisi193() throws Exception {
 

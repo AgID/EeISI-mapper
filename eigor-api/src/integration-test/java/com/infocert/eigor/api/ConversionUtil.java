@@ -10,6 +10,8 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -109,10 +111,25 @@ public class ConversionUtil {
                     .append("\n")
                     .append("   ►►► ")
                     .append( issue.isError() ? "ERROR" : "WARN" )
-                    .append("\n")
-                    .append("   ►►► ")
-                    .append(issue.getCause()!=null ? issue.getCause().getMessage() : "no details")
-                    .append("\n\n");
+                    .append("\n");
+
+            if(issue.getCause()!=null) {
+                issuesDescription2
+                        .append("   ►►► ")
+                        .append(issue.getCause().getMessage())
+                        .append("\n");
+
+                StringWriter sw = new StringWriter();
+                issue.getCause().printStackTrace( new PrintWriter(sw) );
+                issuesDescription2
+                        .append("   ►►► ")
+                        .append(sw.toString())
+                        .append("\n");
+
+
+
+            }
+            issuesDescription2.append("\n\n");
         }
         return issuesDescription2;
     }

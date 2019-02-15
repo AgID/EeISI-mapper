@@ -430,12 +430,18 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 final IndirizzoType indirizzoResa = Optional.fromNullable(datiTrasporto.getIndirizzoResa()).or(new IndirizzoType());
                 datiTrasporto.setIndirizzoResa(indirizzoResa);
 
+                String bt75 = evalExpression(() -> address.getBT0075DeliverToAddressLine1(0).getValue());
+                String bt76 = evalExpression(() -> address.getBT0076DeliverToAddressLine2(0).getValue());
                 final List<BT0077DeliverToCity> deliverToCities = address.getBT0077DeliverToCity();
                 final List<BT0078DeliverToPostCode> postCodes = address.getBT0078DeliverToPostCode();
                 final List<BT0079DeliverToCountrySubdivision> subdivisions = address.getBT0079DeliverToCountrySubdivision();
                 final List<BT0080DeliverToCountryCode> countryCodes = address.getBT0080DeliverToCountryCode();
 
                 if (!countryCodes.isEmpty()) {
+
+                    if(bt75!=null) indirizzoResa.setIndirizzo( bt75 );
+                    if(bt76!=null) indirizzoResa.setNumeroCivico( bt76 );
+
                     final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
 
                     try {
