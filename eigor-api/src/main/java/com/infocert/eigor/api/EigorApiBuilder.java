@@ -74,7 +74,7 @@ public class EigorApiBuilder {
                         .register(new FattPa2Cen(reflections, configuration))
                         .register(new CsvCen2Cen(reflections))
                         .register(new XmlCen2Cen(reflections, configuration))
-                        .register(new CenToXmlCenConverter())
+                        .register(new CenToXmlCenConverter(configuration))
                         .build();
 
         outputFolderFile = FileUtils.getTempDirectory();
@@ -189,5 +189,9 @@ public class EigorApiBuilder {
 
     boolean isForceConversion() {
         return forceConversion;
+    }
+
+    EigorConfiguration getConfiguration() {
+        return configuration;
     }
 }
