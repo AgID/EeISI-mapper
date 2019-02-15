@@ -97,7 +97,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         documentTypeCode.setText("130");
                         Element id = new Element("ID");
                         id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
+                        id.setAttribute("schemeID", bt0128.getValue().toString());
                         documentReference.addContent(id);
                         documentReference.addContent(documentTypeCode);
                         invoiceLine.addContent(documentReference);

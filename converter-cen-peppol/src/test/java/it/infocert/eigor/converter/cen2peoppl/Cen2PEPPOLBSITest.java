@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
-
+@Ignore
 public class Cen2PEPPOLBSITest {
     private static final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSITest.class);
 

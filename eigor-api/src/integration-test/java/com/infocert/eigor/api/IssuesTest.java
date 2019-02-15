@@ -26,8 +26,8 @@ public class IssuesTest extends AbstractIssueTest {
     public void issueEisiFromFattpaToPeppolCn() {
 
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
-                "/examples/fattpa/A10-Licenses-CreditNote.xml",
-                "fatturapa",
+                "/examples/xmlcen/eisi-28-issue.xml",
+                "xmlcen",
                 "peppolcn");
 
     }
@@ -37,7 +37,7 @@ public class IssuesTest extends AbstractIssueTest {
 
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-135-xmlcen.xml",
-                "xmlcen",
+                "fatturapa",
                 "fatturapa");
 
     }
@@ -48,7 +48,7 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
                 "/examples/fattpa/A10-Licenses.xml",
                 "fatturapa",
-                "peppolbis");
+                "peppolcn");
 
     }
 

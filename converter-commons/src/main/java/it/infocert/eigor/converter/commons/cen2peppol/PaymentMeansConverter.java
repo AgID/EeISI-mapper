@@ -41,39 +41,40 @@ public class PaymentMeansConverter implements CustomMapping<Document>{
                 Element paymentMeans = root.getChild("PaymentMeans");
                 if (paymentMeans == null) {
                     paymentMeans = new Element("PaymentMeans");
-                    root.addContent(paymentMeans);
                 }
                 
-                if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
-                    BT0081PaymentMeansTypeCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0);
-                    Element paymentMeansCode = new Element("PaymentMeansCode");
-                    if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
-                        BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
-                        paymentMeansCode.setAttribute("Name", bt0082.getValue());
-                    }
-                    
-                    final Untdid4461PaymentMeansCode value = bt0081.getValue();
-                    try {
-                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(value));
-                    } catch (ConversionFailedException e) {
-                        errors.add(ConversionIssue.newError(
-                                e,
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.ILLEGAL_VALUE,
-                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-                        ));
-                    }
-                    paymentMeans.addContent(paymentMeansCode);
-                }
+//                if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
+//                    BT0081PaymentMeansTypeCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0);
+//                    Element paymentMeansCode = new Element("PaymentMeansCode");
+//                    if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
+//                        BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
+//                        paymentMeansCode.setAttribute("Name", bt0082.getValue());
+//                    }
+//                    
+//                    final Untdid4461PaymentMeansCode value = bt0081.getValue();
+//                    try {
+//                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(value));
+//                    } catch (ConversionFailedException e) {
+//                        errors.add(ConversionIssue.newError(
+//                                e,
+//                                e.getMessage(),
+//                                callingLocation,
+//                                ErrorCode.Action.HARDCODED_MAP,
+//                                ErrorCode.Error.ILLEGAL_VALUE,
+//                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+//                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
+//                        ));
+//                    }
+//                    paymentMeans.addContent(paymentMeansCode);
+//                    root.addContent(paymentMeans);
+//                }
                 
                 
                 
-                BG0019DirectDebit bg0019 = bg0016.getBG0019DirectDebit(0);
+//                BG0019DirectDebit bg0019 = bg0016.getBG0019DirectDebit(0);
                 
                 if(!bg0016.getBG0019DirectDebit().isEmpty()) {
+                	BG0019DirectDebit bg0019 = bg0016.getBG0019DirectDebit(0);
                     Element paymentMandate = paymentMeans.getChild("PaymentMandate");
                     Element ID = new Element("ID");
                 	if(bg0019.getBT0089MandateReferenceIdentifier().isEmpty()) {
@@ -85,15 +86,17 @@ public class PaymentMeansConverter implements CustomMapping<Document>{
                 	}
                 	paymentMandate.addContent(ID);
                 	paymentMeans.addContent(paymentMandate);
+                    root.addContent(paymentMeans);
+
                 		
                 }
                 
-                if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
-                    BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
-                    Element paymentID = new Element("PaymentID");
-                    paymentID.setText(bt0083.getValue());
-                    paymentMeans.addContent(paymentID);
-                }
+//                if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
+//                    BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
+//                    Element paymentID = new Element("PaymentID");
+//                    paymentID.setText(bt0083.getValue());
+//                    paymentMeans.addContent(paymentID);
+//                }
             }
         }
 	}
