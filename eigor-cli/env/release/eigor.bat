@@ -4,7 +4,6 @@ SET APP_NAME=Infocert - Eigor CLI Client
 SET APP_PATH=- %~dp0
 
 TITLE %APP_NAME%
-COLOR B
 cd /d %~dp0
 SET APPLICATION_HOME=.
 SET MAIN_CLASS=it.infocert.eigor.cli.Eigor
@@ -13,6 +12,18 @@ SET JVM_ARGUMENTS= -Xmx512m  -Dlogback.configurationFile=%APPLICATION_HOME%\conf
 
 if not exist %APPLICATION_HOME%\reports mkdir %APPLICATION_HOME%\reports
 SET APP_ARGS=%1 %2 %3 %4 %5 %6 %7 %8 %9
+
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+
+SET APP_ARGS2=%1 %2 %3 %4 %5 %6 %7 %8 %9
 
 setlocal ENABLEDELAYEDEXPANSION
 
@@ -44,7 +55,7 @@ ECHO --------------------------------------------------------------
 ECHO --------------------------------------------------------------
 echo LAUNCHING %APP_NAME% %APP_PATH%
 ECHO --------------------------------------------------------------
-%JAVA_COMMAND% %JVM_ARGUMENTS% %MAIN_CLASS% %APP_ARGS%
+%JAVA_COMMAND% %JVM_ARGUMENTS% %MAIN_CLASS% %APP_ARGS% %APP_ARGS2%
 
 REM pause
 

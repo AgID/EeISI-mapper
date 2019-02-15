@@ -1,11 +1,9 @@
 package it.infocert.eigor.converter.cen2xmlcen;
 
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.api.xml.XSDValidator;
@@ -14,6 +12,7 @@ import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.model.core.model.structure.BtBgName;
+import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -24,24 +23,40 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.FileInputStream;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 public class CenToXmlCenConverter implements FromCenConversion {
 
     private XSDValidator xsdValidator;
+    private final DefaultResourceLoader drl = new DefaultResourceLoader();
+    private final EigorConfiguration configuration;
+    private static final ConverterUtils.NamingRules namingRules = new ConverterUtils.NamingRules("cen-xmlcen");
+    private SchematronValidator schValidator;
+    private boolean skipSchematron;
+
+    public CenToXmlCenConverter(EigorConfiguration configuration) {
+        this.configuration = checkNotNull( configuration );
+        skipSchematron = false;
+    }
+
+    public void setSkipSchematronValidation(boolean b) {
+        this.skipSchematron = b;
+    }
 
     @Override
     public BinaryConversionResult convert(it.infocert.eigor.model.core.model.BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {
 
         Preconditions.checkState(xsdValidator!=null, "Converter not configured().");
+        List<IConversionIssue> issues = new LinkedList<>();
 
-        MyVisitor v = new MyVisitor();
+        byte[] xmlBytes = toXml(invoice);
 
-        invoice.accept(v);
+        issues.addAll( xsdValidator.validate(xmlBytes) );
 
-        byte[] xmlBytes;
-        xmlBytes = v.getXml().getBytes();
+        if(!skipSchematron)
+            issues.addAll( schValidator.validate(xmlBytes) );
 
-        List<IConversionIssue> issues = xsdValidator.validate(xmlBytes);
 
         if(issues.isEmpty()) {
             return new BinaryConversionResult(xmlBytes);
@@ -50,6 +65,14 @@ public class CenToXmlCenConverter implements FromCenConversion {
         }
 
 
+    }
+
+    public byte[] toXml(BG0000Invoice invoice) {
+        MyVisitor v = new MyVisitor();
+        invoice.accept(v);
+        byte[] xmlBytes;
+        xmlBytes = v.getXml().getBytes();
+        return xmlBytes;
     }
 
     @Override
@@ -79,14 +102,21 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
     @Override
     public void configure() throws ConfigurationException {
-        Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.2.xsd"));
         ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_OUT;
 
         try {
+            Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"));
             xsdValidator = new XSDValidator(schemaSource, callingLocation);
         } catch (SAXException e) {
             throw new ConfigurationException("An error occurred while initializing the XSD validator", e);
         }
+
+        try {
+            schValidator = namingRules.getSchematronFromConfigOrFail("schematron", ErrorCode.Location.XMLCEN_OUT, configuration, drl);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
+        }
+
     }
 
     private static class MyVisitor implements Visitor {

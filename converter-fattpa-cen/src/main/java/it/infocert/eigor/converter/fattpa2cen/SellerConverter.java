@@ -60,15 +60,7 @@ public class SellerConverter implements CustomMapping<Document> {
                     }
                     Element alboProfessionale = datiAnagrafici.getChild("AlboProfessionale");
                     BT0029SellerIdentifierAndSchemeIdentifier sellerIdentifierAndSchemeIdentifier;
-                    if (codiceFiscale != null) {
-                        if (nazioneStr.equals("IT")) {
-                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(cf + ":" + codiceFiscale.getText()));
-                        } else {
-                            sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
-                        }
-
-                        seller.getBT0029SellerIdentifierAndSchemeIdentifier().add(sellerIdentifierAndSchemeIdentifier);
-                    } else if (anagrafica != null && codEORI != null) {
+                    if (anagrafica != null && codEORI != null) {
                         if (nazioneStr.equals("IT")) {
                             sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(eori + ":" + codEORI.getText()));
                         } else {
@@ -76,7 +68,8 @@ public class SellerConverter implements CustomMapping<Document> {
                         }
 
                         seller.getBT0029SellerIdentifierAndSchemeIdentifier().add(sellerIdentifierAndSchemeIdentifier);
-                    } else if (alboProfessionale != null && numeroIscrizioneAlbo != null) {
+                    }
+                    if (alboProfessionale != null && numeroIscrizioneAlbo != null) {
                         if (nazioneStr.equals("IT")) {
                             sellerIdentifierAndSchemeIdentifier = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(albo + ":" + alboProfessionale.getText() + ":" + numeroIscrizioneAlbo.getText()));
                         } else {

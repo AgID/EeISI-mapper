@@ -165,7 +165,7 @@ public class ObservableConversion extends AbstractObservable {
                     issues.addAll(fromCenResult.getIssues());
                 }
             }
-        } catch (SyntaxErrorInInvoiceFormatException e) {
+        } catch (EigorException e) {
             issues.add(ConversionIssue.newError(e));
             fireOnUnexpectedException(e, ctx);
         }

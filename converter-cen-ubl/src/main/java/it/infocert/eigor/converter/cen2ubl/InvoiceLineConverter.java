@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+    package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -44,19 +44,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(id);
                     }
 
-                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element documentReference = new Element("DocumentReference");
-                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        documentTypeCode.setText("130");
-                        Element id = new Element("ID");
-                        id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
-                        documentReference.addContent(id);
-                        documentReference.addContent(documentTypeCode);
-                        invoiceLine.addContent(documentReference);
-                    }
-
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
 
                         BigDecimal quantity;
@@ -92,6 +79,19 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             lineExtensionAmount.setAttribute(new Attribute("currencyID", currencyCode.name()));
                         }
                         invoiceLine.addContent(lineExtensionAmount);
+                    }
+
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element documentReference = new Element("DocumentReference");
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("130");
+                        Element id = new Element("ID");
+                        id.setText(bt0128.getValue().getIdentifier());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema() != null ? bt0128.getValue().getIdentificationSchema() : "");
+                        documentReference.addContent(id);
+                        documentReference.addContent(documentTypeCode);
+                        invoiceLine.addContent(documentReference);
                     }
 
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {

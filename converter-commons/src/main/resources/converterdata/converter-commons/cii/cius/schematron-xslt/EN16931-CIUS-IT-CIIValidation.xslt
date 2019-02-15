@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xsl:stylesheet version="2.0" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:2" xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:saxon="http://saxon.sf.net/" xmlns:schold="http://www.ascc.net/xml/schematron" xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:ccts="urn:un:unece:uncefact:documentation:standard:CoreComponentsTechnicalSpecification:2" xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:saxon="http://saxon.sf.net/" xmlns:schold="http://www.ascc.net/xml/schematron" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 <!--Implementers: please note that overriding process-prolog or process-root is 
     the preferred method for meta-stylesheets to use where possible. -->
+
 <xsl:param name="archiveDirParameter" />
   <xsl:param name="archiveNameParameter" />
   <xsl:param name="fileNameParameter" />
@@ -88,6 +89,7 @@
 <!--MODE: SCHEMATRON-FULL-PATH-3-->
 <!--This mode can be used to generate prefixed XPath for humans 
 	(Top-level element has index)-->
+
 <xsl:template match="node() | @*" mode="schematron-get-full-path-3">
     <xsl:for-each select="ancestor-or-self::*">
       <xsl:text>/</xsl:text>
@@ -151,7 +153,7 @@
 
 <!--SCHEMA SETUP-->
 <xsl:template match="/">
-    <svrl:schematron-output schemaVersion="" title="EN16931 model bound to CII">
+    <svrl:schematron-output schemaVersion="" title="Italian Rules for EN16931 model in CII Syntax">
       <xsl:comment>
         <xsl:value-of select="$archiveDirParameter" />   
 		 <xsl:value-of select="$archiveNameParameter" />  
@@ -176,7 +178,7 @@
   </xsl:template>
 
 <!--SCHEMATRON PATTERNS-->
-<svrl:text>EN16931 model bound to CII</svrl:text>
+<svrl:text>Italian Rules for EN16931 model in CII Syntax</svrl:text>
   <xsl:param name="supplierCountry" select="if (/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID) then upper-case(normalize-space(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID)) else 'XX'" />
   <xsl:param name="customerCountry" select="if (/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID) then upper-case(normalize-space(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:PostalTradeAddress/ram:CountryID)) else 'XX'" />
 
@@ -184,8 +186,8 @@
 
 
 	<!--RULE -->
-<xsl:template match="//rsm:CrossIndustryInvoice/rsm:ExchangedDocument" mode="M8" priority="1036">
-    <svrl:fired-rule context="//rsm:CrossIndustryInvoice/rsm:ExchangedDocument" />
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument" mode="M8" priority="1038">
+    <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -198,6 +200,50 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text> [BR-IT-010] BT-1 (Invoice number) - BT maximum length shall be 20 chars with at least a digit. 
+    </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M8" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction" mode="M8" priority="1037">
+    <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="        count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA']/ram:Value))&lt;= 1        and        count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO']/ram:Value))&lt;= 1       and       count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE']/ram:Value))&lt;= 1       " />
+      <xsl:otherwise>
+        <svrl:failed-assert test="count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA']/ram:Value))&lt;= 1 and count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO']/ram:Value))&lt;= 1 and count(distinct-values(//ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE']/ram:Value))&lt;= 1">
+          <xsl:attribute name="id">BR-IT-490</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-490] BT-160 - Item attribute name - if more than one instance of BG-25 has BT-160="IT:RITENUTA:ALIQUOTA" or "IT:RITENUTA:TIPO" or "IT:RITENUTA:CAUSALE", then BT-161 shall have the same values". 
+    </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M8" select="*|comment()|processing-instruction()" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement" mode="M8" priority="1036">
+    <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="( count(ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator='true'][normalize-space(ram:Reason)='IT:BOLLO']) &lt;= 1 )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( count(ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator='true'][normalize-space(ram:Reason)='IT:BOLLO']) &lt;= 1 )">
+          <xsl:attribute name="id">BR-IT-295</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-295] BG-21 (DOCUMENT LEVEL CHARGES) - Only one instance of BG-21 can have BT-104="IT:BOLLO".
     </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -233,15 +279,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(ram:URIID)        and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] )" />
+      <xsl:when test="exists(ram:URIID)        and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '9921'] )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(ram:URIID) and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] )">
+        <svrl:failed-assert test="exists(ram:URIID) and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '9921'] )">
           <xsl:attribute name="id">BR-IT-190</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA or IT:CODDEST 
+          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
     </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -265,15 +311,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" />
+      <xsl:when test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '9921'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = 'IT:IPA'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))">
+        <svrl:failed-assert test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '9921'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))">
           <xsl:attribute name="id">BR-IT-200-2</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema (9921) then BT-49 shall be a IPA code and maximum length shall be 6 chars 
     </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -601,9 +647,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not($customerCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')" />
+      <xsl:when test="not($supplierCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not($customerCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')">
+        <svrl:failed-assert test="not($supplierCountry = 'IT') or not(ram:CountrySubDivisionName) or matches(normalize-space(ram:CountrySubDivisionName),'^[A-Z]{2}$')">
           <xsl:attribute name="id">BR-IT-150</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1248,6 +1294,38 @@
 	<!--RULE -->
 <xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct" mode="M8" priority="1003">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="normalize-space(ram:Name) = 'IT:CASSA' and        count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:TIPO'])=1 and        count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:ALIQUOTA'])=1        or       not(normalize-space(ram:Name) = 'IT:CASSA')             " />
+      <xsl:otherwise>
+        <svrl:failed-assert test="normalize-space(ram:Name) = 'IT:CASSA' and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:TIPO'])=1 and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:CASSA:ALIQUOTA'])=1 or not(normalize-space(ram:Name) = 'IT:CASSA')">
+          <xsl:attribute name="id">BR-IT-435</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-435] BT-153, BT-160 (Item name - Item attribute name) - if BT-153="IT:CASSA", then two instances of BG-32 shall have BT-160="IT:CASSA:TIPO" and BT-160="IT:CASSA:ALIQUOTA". 
+    </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="        count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=1 and        count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=1 and       count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=1       or       (       count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=0 and        count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=0 and       count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=0       )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=1 and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=1 and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=1 or ( count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:ALIQUOTA'])=0 and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:TIPO'])=0 and count(ram:ApplicableProductCharacteristic[normalize-space(ram:Description) ='IT:RITENUTA:CAUSALE'])=0 )">
+          <xsl:attribute name="id">BR-IT-480</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text> [BR-IT-480] BT-160 - Item attribute name - if BT-160="IT:RITENUTA:ALIQUOTA" or BT-160="IT:RITENUTA:TIPO" or BT-160="IT:RITENUTA:CAUSALE", then three instances of BG-32 shall have BT-160="IT:RITENUTA:ALIQUOTA", BT-160="IT:RITENUTA:TIPO" and BT-160="IT:RITENUTA:CAUSALE". 
+    </svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>

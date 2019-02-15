@@ -8,9 +8,10 @@
         <immediateFlush>true</immediateFlush>
     </appender>
 
-    <root level="all">
+    <root level="off">
         <appender-ref ref="STDOUT" />
     </root>
+
 
     <!--
     <logger name="it.infocert.eigor.api.xml"                                level="info"  />

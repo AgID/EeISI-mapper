@@ -2,24 +2,29 @@ NAME
     eigor[.bat|.sh] - transform an invoice in another format
 
 SYNOPSIS
-    eigor[.bat|.sh] --input <original_invoice> --source <original_invoice_format> --output <output_folder> --target <transformed_invoice_format>
+    eigor[.bat|.sh] --input <original_invoice> --source <original_invoice_format> --output <output_folder> --target <transformed_invoice_format> --intermediate-validation
 
 DESCRIPTION
 
     --input
-        path to the file of the invoice to transform.
+        Mandatory, path to the file of the invoice to transform.
 
     --source
-        format of the invoice specified with '--input', as 'fatturapa', 'ubl', ...
+        Mandatory, format of the invoice specified with '--input', as 'fatturapa', 'ubl', ...
 
     --output
-        path of the folder where the converted invoice will be stored along with other files.
+        Mandatory, path of the folder where the converted invoice will be stored along with other files.
 
     --target
-        format of the transformed invoice, support the same formats of '--source'.
+        Mandatory, format of the transformed invoice, support the same formats of '--source'.
 
     --force
-        continue conversion process even if errors are encountered.
+        Optional, continue conversion process even if errors are encountered.
+        If not specified, the conversion process stops at the first problem detected.
+
+    --intermediate-validation
+        Optional, if specified, the intermediate cen xml is validated against its
+        xsd and schematrons.
 
 EXAMPLES
 
@@ -33,3 +38,9 @@ EXAMPLES
 
     Transform the 'UBL' input file 'UBL-Invoice-2.1-Example.xml' into a 'Fattura PA' invoice and stores the result in 'reports', stopping when the first error occurs.
     This example should work straight out of the box.
+
+
+
+    eigor.bat --source fatturapa --output .\reports --target ubl --force --input examples\fattpa\A10-Licenses.xml
+
+    Another example

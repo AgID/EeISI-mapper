@@ -58,8 +58,6 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
                     issuerAssignedID.setText(bt0017.getValue());
                     additionalReferencedDocument.addContent(issuerAssignedID);
-
-                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
                 }
 
                 if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
@@ -71,8 +69,6 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                         referenceTypeCode.setText(identificationSchema);
                         additionalReferencedDocument.addContent(referenceTypeCode);
                     }
-
-                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
                 }
 
                 if (!bg0024.getBT0124ExternalDocumentLocation().isEmpty()) {
@@ -89,8 +85,6 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element typeCode = new Element("TypeCode", ramNs);
                     typeCode.setText(bt0017.getValue());
                     additionalReferencedDocument.addContent(typeCode);
-
-                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
                 }
 
                 if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
@@ -99,8 +93,6 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element typeCode = new Element("TypeCode", ramNs);
                     typeCode.setText(bt0018.getValue().getIdentifier());
                     additionalReferencedDocument.addContent(typeCode);
-
-                    applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
                 }
 
                 for (BT0123SupportingDocumentDescription bt0123 : bg0024.getBT0123SupportingDocumentDescription()) {

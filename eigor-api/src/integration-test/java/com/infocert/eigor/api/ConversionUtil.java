@@ -74,6 +74,12 @@ public class ConversionUtil {
 
             issuesDescription.append(msgForIssues(conversionIssues));
 
+
+            issuesDescription.append("\n\n====== Converted Invoice: ======\n\n");
+
+            issuesDescription.append(msgConvertedInvoice(convert))
+                    .append("\n\n");
+
             issuesDescription.append("\n\n====== Intermediate CEN Invoice: ======\n\n");
 
             if(intermediateCenInvoice!=null) {
@@ -81,11 +87,6 @@ public class ConversionUtil {
             }else{
                 issuesDescription.append("The conversion failed before producing any intermediate CEN invoice.");
             }
-
-            issuesDescription.append("\n\n====== Converted Invoice: ======\n\n");
-
-            issuesDescription.append(msgConvertedInvoice(convert))
-                    .append("\n\n");
         }
         return issuesDescription.toString();
     }

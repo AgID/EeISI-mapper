@@ -51,7 +51,9 @@ public class SchematronValidator implements IXMLValidator {
                 schematronResource = SchematronResourceSCH.fromFile(schemaFile);
             }
             if (!schematronResource.isValidSchematron())
-                throw new IllegalArgumentException(String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath()));
+                throw new IllegalArgumentException(
+                        String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath())
+                );
         } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaFile.getAbsolutePath(), delta);

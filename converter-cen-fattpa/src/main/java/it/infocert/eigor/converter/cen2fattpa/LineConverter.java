@@ -265,8 +265,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         log.debug("BT-98 has empty string");
                     }
                 } else {
-                    log.trace("No BT0098 found");
-                }
+                   log.trace("No BT0098 found");
+                } 
 
                 String des = sb.toString();
                 dettaglioLinee.setDescrizione(des);
@@ -501,7 +501,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                         BigDecimal discountValue = BigDecimal.ZERO;
                         BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
-                        BigDecimal baseAmount = baseAmountOpt.isPresent() ? new BigDecimal(baseAmountOpt.get().getIdentifier()) : BigDecimal.ZERO;
+                        BigDecimal baseAmount = baseAmountOpt.isPresent() ? new BigDecimal(baseAmountOpt.get().getIdentifier().contains(":") ? baseAmountOpt.get().getIdentifier().split(":")[1] : baseAmountOpt.get().getIdentifier()) : BigDecimal.ZERO;
                         BigDecimal percentage = percentageOpt.isPresent() ? new BigDecimal(percentageOpt.get().getIdentifier()) : BigDecimal.ZERO;
                         String reason = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().isEmpty() ? "Sconto Linea" : invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
 

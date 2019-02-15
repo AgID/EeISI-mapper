@@ -2,6 +2,7 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.api.FromCenConversionRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.impl.FakeFromCenConversion;
@@ -41,6 +42,8 @@ public class ITEigorTest {
     private File plainFattPa;
     private CommandLineInterpreter cli;
 
+    static EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
+
     @Before public void setUpCommandLineInterpeter() {
         IReflections reflections = new JavaReflections();
         Properties properties = new Properties();
@@ -51,7 +54,7 @@ public class ITEigorTest {
         FromCenConversionRepository genericRepo2 = new FromCenListBakedRepository(new FakeFromCenConversion(reflections, conf));
 
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo1, genericRepo2, integrityRepo
+                genericRepo1, genericRepo2, integrityRepo, configuration
         );
     }
 
