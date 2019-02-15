@@ -30,20 +30,22 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi7() throws Exception {
 
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/issues/issue-eeisi7-cen.xml", "xmlcen", "fatturapa");
+        // when
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eeisi7-cen.xml",
+                "xmlcen", "fatturapa");
 
-        // The CSV in base 64 is the 3rd attachment in this case.
         String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
 
         System.out.println( new String( conversion.getResult() ) );
 
+        // then
         assertThat(
-                conversion.getIssues().stream()
-                        .map(issue -> issue +  "\n" )
-                        .collect(joining()), conversion.hasIssues(), is(false) );
+                conversion.getIssues().stream().map(issue -> issue +  "\n" ).collect(joining()),
+                conversion.hasIssues(),
+                is(false) );
 
         NodeList lines = evalXpathExpressionAsNodeList(conversion, "//NumeroLinea");
-
         assertEquals("3", lines.item(0).getTextContent() );
         assertEquals("5", lines.item(1).getTextContent() );
         assertEquals("4", lines.item(2).getTextContent() );

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("Duplicates")
+
 public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     private final static Logger log = LoggerFactory.getLogger(LineConverter.class);
     private final static TypeConverter<Untdid5305DutyTaxFeeCategories, NaturaType> toNaturaType = Untdid5305DutyTaxFeeCategoriesToNaturaType.newConverter();
@@ -96,7 +96,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
 
-            linepostfix.postfix();
+            linepostfix.appliesRenumbering();
+
         }
     }
 
@@ -109,9 +110,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
                     BT0070DeliverToPartyName bt0070 = bg0013.getBT0070DeliverToPartyName(0);
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-70");
-                    altriDatiGestionali.setRiferimentoTesto(bt0070.getValue());
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType("BT-70", bt0070.getValue());
                     for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     }
@@ -119,17 +118,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
                     Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-71");
-                    altriDatiGestionali.setRiferimentoTesto(bt0071.getIdentifier());
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType("BT-71", bt0071.getIdentifier());
                     for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     }
 
                     if (bt0071.getIdentificationSchema() != null) {
-                        AltriDatiGestionaliType datiGestionali = new AltriDatiGestionaliType();
-                        datiGestionali.setTipoDato("BT-71-1");
-                        datiGestionali.setRiferimentoTesto(bt0071.getIdentificationSchema());
+                        AltriDatiGestionaliType datiGestionali = newAltriDatiGestionaliType("BT-71-1", bt0071.getIdentificationSchema());
                         for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                             dettaglioLinee.getAltriDatiGestionali().add(datiGestionali);
                         }
@@ -387,9 +382,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 }
 
                 for (BT0127InvoiceLineNote bt0127 : invoiceLine.getBT0127InvoiceLineNote()) {
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-127");
-                    altriDatiGestionali.setRiferimentoTesto(bt0127.getValue());
+                    String tipoDato = "BT-127";
+                    String riferimentoTesto = bt0127.getValue();
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType(tipoDato, riferimentoTesto);
                     dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
                 }
@@ -703,6 +698,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 mapBG31(invoice, invoiceLine, dettaglioLinee);
             }
         }
+    }
+
+    static AltriDatiGestionaliType newAltriDatiGestionaliType(String tipoDato, String riferimentoTesto) {
+        AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+        altriDatiGestionali.setTipoDato(tipoDato);
+        altriDatiGestionali.setRiferimentoTesto(riferimentoTesto);
+        return altriDatiGestionali;
     }
 
     private void mapBG31(BG0000Invoice invoice, BG0025InvoiceLine invoiceLine, DettaglioLineeType dettaglioLinee) {

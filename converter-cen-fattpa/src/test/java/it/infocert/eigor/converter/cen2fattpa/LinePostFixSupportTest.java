@@ -3,7 +3,6 @@ package it.infocert.eigor.converter.cen2fattpa;
 import it.infocert.eigor.converter.cen2fattpa.LinePostFixSupport.CenLine;
 import it.infocert.eigor.converter.cen2fattpa.LinePostFixSupport.FattpaLine;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 
@@ -23,7 +22,7 @@ public class LinePostFixSupportTest {
         sut.registerForPostFix(masterLine("A-1"), fattpaLine2);
         sut.registerForPostFix(masterLine("004"), fattpaLine3);
 
-        sut.postfix();
+        sut.appliesRenumbering();
 
         verify(fattpaLine1).setNumeroLinea(3);
         verify(fattpaLine2).setNumeroLinea(5);
@@ -42,7 +41,7 @@ public class LinePostFixSupportTest {
         sut.registerForPostFix(masterLine("1"), fattpaLine1);
         sut.registerForPostFix(masterLine("10000"), fattpaLine2);
 
-        sut.postfix();
+        sut.appliesRenumbering();
 
         verify(fattpaLine1).setNumeroLinea(1);
         verify(fattpaLine2).setNumeroLinea(2);
@@ -64,7 +63,7 @@ public class LinePostFixSupportTest {
         sut.registerForPostFix(masterLine("004"), fattpaLine3);
         sut.registerForPostFix(masterLine("10000"), fattpaLine3);
 
-        sut.postfix();
+        sut.appliesRenumbering();
 
         verify(fattpaLine1).setNumeroLinea(3);
         verify(fattpaLine2).setNumeroLinea(5);

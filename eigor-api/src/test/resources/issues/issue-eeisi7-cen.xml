@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SEMANTIC-INVOICE>
     <!--Test_EeISI_310 -->
-    <BT-1>Test_EeISI_310</BT-1>
+    <BT-1>Test_EeISI_310-165</BT-1>
     <BT-2>2018-12-20</BT-2>
     <BT-3>380</BT-3>
     <BT-5>EUR</BT-5>
@@ -14,6 +14,7 @@
         <BT-28>InfoCert SPA</BT-28>
         <BT-29>IT:ALBO:ING:1234</BT-29>
         <BT-31>IT12345678901</BT-31>
+        <BT-32>12345678901</BT-32>
         <!--
         <BT-32>RF01</BT-32>
         -->
@@ -29,7 +30,7 @@
         <BT-44>Buyer</BT-44>
         <BT-46>IT:CF:SDCASFE71E712X</BT-46>
         <BT-48>IT2389039840298</BT-48>
-        <BT-49 scheme="IT:PEC">klfs@ksjd.it</BT-49>
+        <BT-49 scheme="9921">123456</BT-49>
         <BG-8>
             <BT-50>buyer street</BT-50>
             <BT-52>buyer city</BT-52>
@@ -41,7 +42,7 @@
 
     <BG-16>
         <!-- this should be one of the supported 4461 -->
-        <BT-81>30</BT-81>
+        <BT-81>49</BT-81>
         <BG-17>
             <BT-84>IT57035123456789</BT-84>
             <BT-86>BCITITMM</BT-86>
@@ -51,15 +52,15 @@
     <!-- monetary totals -->
     <BG-22>
         <!-- Sum of all Invoice line net amounts in the Invoice. -->
-        <BT-106>1000</BT-106>
+        <BT-106>4000</BT-106>
         <!-- The total amount of the Invoice without VAT. -->
-        <BT-109>1000</BT-109>
+        <BT-109>4000</BT-109>
         <!-- The total VAT amount for the Invoice. -->
         <BT-110>100</BT-110>
         <!-- The total amount of the Invoice with VAT. -->
-        <BT-112>1100</BT-112>
+        <BT-112>4100</BT-112>
         <!-- The outstanding amount that is requested to be paid. -->
-        <BT-115>1100</BT-115>
+        <BT-115>4100</BT-115>
     </BG-22>
 
     <!-- VAT -->
@@ -79,9 +80,10 @@
         <!-- The total VAT amount for a given VAT category. -->
         <BT-117>0</BT-117>
         <!-- VAT Category -->
-        <BT-118>Z</BT-118>
+        <BT-118>E</BT-118>
         <!-- VAT RATE -->
         <BT-119>0</BT-119>
+        <BT-120>exemption reason text</BT-120>
     </BG-23>
 
     <!-- line #1 -->
@@ -115,7 +117,7 @@
         <!-- info about goods -->
         <BG-31>
             <!-- a name for the line -->
-            <BT-153>name</BT-153>
+            <BT-153>line 1 in source invoice, original id: 003</BT-153>
         </BG-31>
     </BG-25>
 
@@ -143,14 +145,14 @@
         <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
         <BG-30>
             <!-- The VAT category code for the invoiced item. -->
-            <BT-151>Z</BT-151>
+            <BT-151>E</BT-151>
             <!-- VAT rate as percentage -->
             <BT-152>0.00</BT-152>
         </BG-30>
         <!-- info about goods -->
         <BG-31>
             <!-- a name for the line -->
-            <BT-153>Toronto</BT-153>
+            <BT-153>line 2 in source invoice, original id: A1</BT-153>
         </BG-31>
     </BG-25>
 
@@ -178,14 +180,14 @@
         <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
         <BG-30>
             <!-- The VAT category code for the invoiced item. -->
-            <BT-151>Z</BT-151>
+            <BT-151>E</BT-151>
             <!-- VAT rate as percentage -->
             <BT-152>0.00</BT-152>
         </BG-30>
         <!-- info about goods -->
         <BG-31>
             <!-- a name for the line -->
-            <BT-153>Brussels</BT-153>
+            <BT-153>line 3 in source invoice, original id: 004</BT-153>
         </BG-31>
     </BG-25>
 
@@ -213,14 +215,14 @@
         <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
         <BG-30>
             <!-- The VAT category code for the invoiced item. -->
-            <BT-151>Z</BT-151>
+            <BT-151>E</BT-151>
             <!-- VAT rate as percentage -->
             <BT-152>0.00</BT-152>
         </BG-30>
         <!-- info about goods -->
         <BG-31>
             <!-- a name for the line -->
-            <BT-153>Copenaghen</BT-153>
+            <BT-153>line 4 in source invoice, original id: 10000</BT-153>
         </BG-31>
     </BG-25>
 </SEMANTIC-INVOICE>

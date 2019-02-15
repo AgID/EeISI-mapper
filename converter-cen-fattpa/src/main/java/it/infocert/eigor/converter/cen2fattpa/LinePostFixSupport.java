@@ -1,71 +1,90 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.base.Preconditions;
+import it.infocert.eigor.converter.cen2fattpa.models.AltriDatiGestionaliType;
 import it.infocert.eigor.converter.cen2fattpa.models.DettaglioLineeType;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+import static java.lang.Math.max;
 
 class LinePostFixSupport {
 
     private Map<CenLine, FattpaLine> cenLinesToCorrespondingFattpaLine = new LinkedHashMap<>();
 
+    /**
+     * Set a pair of corresponding invoice lines.
+     * Meaning they represent the same line in the cen invoice and in the fattpa invoice.
+     */
     public void registerForPostFix(BG0025InvoiceLine cenLine, DettaglioLineeType fattpaLine) {
-        registerForPostFix(new CenLineBG0025InvoiceLine(cenLine), new FattpaLineImpl(fattpaLine));
+        CenLineBG0025InvoiceLine cenLineWrapper = new CenLineBG0025InvoiceLine(cenLine);
+        registerForPostFix(cenLineWrapper, new FattpaLineImpl(fattpaLine, cenLineWrapper));
     }
 
+    /**
+     * Set a pair of corresponding invoice lines.
+     * Meaning they represent the same line in the cen invoice and in the fattpa invoice.
+     */
     public void registerForPostFix(CenLine cenLine, FattpaLine fattpaLine) {
         cenLinesToCorrespondingFattpaLine.put(cenLine, fattpaLine);
     }
 
-    public void postfix() {
+    /**
+     * Renumber the lines of the fattpa invoice according to the defined algorithm.
+     * @return A map containing an entry for each line that has been renumbered. You have the original id of the line as key and the new id as value.
+     */
+    public void appliesRenumbering() {
 
 
-        Set<CenLine> bg25InvoiceLines = cenLinesToCorrespondingFattpaLine.keySet();
-
-        int max = -1;
-        for (CenLine bg25InvoiceLine : bg25InvoiceLines) {
+        int biggestIdentifierUsedInCen = -1;
+        Set<CenLine> cenInvoiceLines = cenLinesToCorrespondingFattpaLine.keySet();
+        for (CenLine cenInvoiceLine : cenInvoiceLines) {
             try {
 
-                String lineIdentifierAsString = bg25InvoiceLine.lineIdentifier();
+                String lineIdentifierAsString = cenInvoiceLine.lineIdentifier();
                 if(lineIdentifierAsString == null) continue;
 
                 int identifierOfLine = Integer.parseInt(lineIdentifierAsString);
                 if(identifierOfLine>=10000) {
-                    throw new NumberFormatException();
+                    throw new NumberFormatException("Invoice line with identifier '" + lineIdentifierAsString + "' uses a number that is too big.");
                 }
-                max = Math.max(max, identifierOfLine);
+                biggestIdentifierUsedInCen = max(biggestIdentifierUsedInCen, identifierOfLine);
             } catch (NumberFormatException e) {
                 // it is not a number after all
             }
         }
 
-        int current = max == -1 ? 1 : max;
+        int currentFattpaLineIdentifier = biggestIdentifierUsedInCen == -1 ? 1 : biggestIdentifierUsedInCen;
         Set<Map.Entry<CenLine, FattpaLine>> cenLinesAndFattpaLines = cenLinesToCorrespondingFattpaLine.entrySet();
+
+        // renumber the lines that needs renumbering to store info about renumbering in the correct XML element
+        Map<String, Integer> cenOriginalsToNewFattpa = new HashMap<>();
         for (Map.Entry<CenLine, FattpaLine> cenLineAndFattpaLine : cenLinesAndFattpaLines) {
 
-            CenLine key = cenLineAndFattpaLine.getKey();
-            FattpaLine dettaglioLinea = cenLineAndFattpaLine.getValue();
+            int newLineNumber;
+            CenLine cenLine = cenLineAndFattpaLine.getKey();
+            String cenLineIdentifier = cenLine.lineIdentifier();
+            FattpaLine fattpaLine = cenLineAndFattpaLine.getValue();
             try {
-                int originalLineNumber = Integer.parseInt(key.lineIdentifier());
-                if(originalLineNumber>=10000) {
+                int cenLineNumber;
+                cenLineNumber = Integer.parseInt(cenLineIdentifier);
+                if(cenLineNumber>=10000) {
                     throw new NumberFormatException();
                 }
-
-                dettaglioLinea.setNumeroLinea( originalLineNumber );
+                newLineNumber = cenLineNumber;
             } catch (NumberFormatException e) {
-                dettaglioLinea.setNumeroLinea( ++current );
+                newLineNumber = ++currentFattpaLineIdentifier;
+                cenOriginalsToNewFattpa.put( cenLineIdentifier, newLineNumber );
             }
+            fattpaLine.setNumeroLinea( newLineNumber );
 
         }
 
     }
 
-    static interface CenLine {
+    interface CenLine {
 
         String lineIdentifier();
     }
@@ -83,21 +102,38 @@ class LinePostFixSupport {
         }
     }
 
-    static interface FattpaLine {
+    interface FattpaLine {
 
         void setNumeroLinea(int originalLineNumber);
     }
 
     static class FattpaLineImpl implements FattpaLine {
         private final DettaglioLineeType line;
+        private final CenLine cenLine;
+        private boolean changePerformed;
 
-        FattpaLineImpl(DettaglioLineeType line) {
+        FattpaLineImpl(DettaglioLineeType line, CenLine cenLine) {
             this.line = Preconditions.checkNotNull( line );
+            this.cenLine = Preconditions.checkNotNull( cenLine );
+            this.changePerformed = false;
         }
 
         @Override
         public void setNumeroLinea(int originalLineNumber) {
+
+            Preconditions.checkState( !changePerformed, "The line has been already changed." );
+
+            String cenIdentifier = cenLine.lineIdentifier();
+            if( !String.valueOf(originalLineNumber).equals(cenIdentifier) ) {
+               List<AltriDatiGestionaliType> altriDatiGestionali = this.line.getAltriDatiGestionali();
+               altriDatiGestionali.add(
+                       LineConverter.newAltriDatiGestionaliType("Renum",
+                       String.format("Linea '%s' rinumerata '%s'", cenIdentifier, originalLineNumber)) );
+            }
+
+            changePerformed = true;
             this.line.setNumeroLinea(originalLineNumber);
+
         }
     }
 }
