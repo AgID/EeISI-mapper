@@ -11,6 +11,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode.Location;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import net.sf.saxon.expr.instruct.ValueOf;
 
 public class InvoiceTypeCodeConverter implements CustomMapping<Document>{
 
@@ -19,42 +20,54 @@ public class InvoiceTypeCodeConverter implements CustomMapping<Document>{
 			EigorConfiguration eigorConfiguration) {
 
 		Element root = document.getRootElement();
-		Element invoiceType = root.getChild("InvoiceTypeCode");
-		Untdid1001InvoiceTypeCode allowanceCode;
-		allowanceCode = setDefaultAllowanceChargerCode(cenInvoice.getBT0003InvoiceTypeCode(0).getValue());
-		invoiceType.addContent(invoiceType);
-		root.addContent(invoiceType);
+		Element invoiceTypeCode = null;
+		
+		if (root != null) {
+			if(root.getChild("InvoiceTypeCode") != null) { 
+
+				invoiceTypeCode = root.getChild("InvoiceTypeCode");
+			}
+			else
+				invoiceTypeCode = new Element("InvoiceTypeCode");
+		}
+		String allowanceCode;
+
+		allowanceCode = setDefaultAllowanceChargerCode(String.valueOf(cenInvoice.getBT0003InvoiceTypeCode(0).getValue().getCode()));
+//        String value = String.valueOf(allowanceCode);
+		invoiceTypeCode.addContent(allowanceCode);
+		root.addContent(invoiceTypeCode);
 	}
 
 
-	public Untdid1001InvoiceTypeCode setDefaultAllowanceChargerCode(Untdid1001InvoiceTypeCode val) {
+	public String setDefaultAllowanceChargerCode(String val) {
 
-		Untdid1001InvoiceTypeCode codeValue = Untdid1001InvoiceTypeCode.Code380;
+		String codeValue = "";
+		String value = val;
 
-		switch(val)
+		switch(value)
 		{
-		case Code130:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code202:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code203:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code204:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code211:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code261:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code295:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code325:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code326:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code384:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code387:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code388:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code389:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code390:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code394:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code395:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code456:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code457:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code633:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code751:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		case Code935:  codeValue = Untdid1001InvoiceTypeCode.Code380;
-		default: codeValue = val;
+		case "130":  codeValue = "380"; break;
+		case "202":  codeValue = "380";
+		case "203":  codeValue = "380";
+		case "204":  codeValue = "380";
+		case "211":  codeValue = "380";
+		case "261":  codeValue = "380";
+		case "295":  codeValue = "380";
+		case "325":  codeValue = "380";
+		case "326":  codeValue = "380";
+		case "384":  codeValue = "380";
+		case "387":  codeValue = "380";
+		case "388":  codeValue = "380";
+		case "389":  codeValue = "380";
+		case "390":  codeValue = "380";
+		case "394":  codeValue = "380";
+		case "395":  codeValue = "380";
+		case "456":  codeValue = "380";
+		case "457":  codeValue = "380";
+		case "633":  codeValue = "380";
+		case "751":  codeValue = "380";
+		case "935":  codeValue = "380";
+		default: codeValue = value;
 		}
 
 		return codeValue;
