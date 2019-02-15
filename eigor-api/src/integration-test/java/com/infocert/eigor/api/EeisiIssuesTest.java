@@ -1,6 +1,7 @@
 package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.KeepAll;
+import com.infocert.eigor.api.ConversionUtil.KeepErrosrNotWarnings;
 import it.infocert.eigor.api.ConversionResult;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -26,6 +27,17 @@ import static org.junit.Assert.assertThat;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Ignore
+    @Test
+    public void issueEeisi193() throws Exception {
+
+        // when
+        this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eeisi193-fattpa.xml",
+                "fatturapa", "fatturapa", new KeepErrosrNotWarnings());
+
+    }
 
     @Test
     public void issueEeisi7() throws Exception {

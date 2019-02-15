@@ -108,6 +108,9 @@ public class ConversionUtil {
                     .append( issue.getMessage() )
                     .append("\n")
                     .append("   ►►► ")
+                    .append( issue.isError() ? "ERROR" : "WARN" )
+                    .append("\n")
+                    .append("   ►►► ")
                     .append(issue.getCause()!=null ? issue.getCause().getMessage() : "no details")
                     .append("\n\n");
         }
@@ -135,6 +138,15 @@ public class ConversionUtil {
         @Override
         public boolean test(@Nullable IConversionIssue input) {
             return true;
+        }
+    }
+
+    static class KeepErrosrNotWarnings implements Predicate<IConversionIssue> {
+
+        @Override
+        public boolean test(@Nullable IConversionIssue issue) {
+
+            return !issue.isWarning();
         }
     }
 

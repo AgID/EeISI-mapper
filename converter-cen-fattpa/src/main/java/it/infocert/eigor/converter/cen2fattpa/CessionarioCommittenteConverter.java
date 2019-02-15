@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -103,54 +104,59 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
 
 
     private void addCodiceEori(BG0000Invoice invoice, FatturaElettronicaBodyType fatturaElettronicaBody, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
-        if (!invoice.getBG0007Buyer().isEmpty()) {
-            BG0007Buyer buyer = invoice.getBG0007Buyer(0);
-            if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
-                BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
-                Identifier identifierI = registrationIdentifier.getValue();
 
-                if (identifierI != null) {
-                    boolean italian = false;
-                    if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
-                        if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
-                            final List<BT0055BuyerCountryCode> countryCodes = buyer.getBG0008BuyerPostalAddress(0).getBT0055BuyerCountryCode();
-                            if (!countryCodes.isEmpty()) {
-                                final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
-                                italian = Iso31661CountryCodes.IT.equals(countryCode);
-                            }
+        BG0007Buyer buyer = InvoiceUtils.evalExpression( ()-> invoice.getBG0007Buyer(0) );
+        if(buyer == null) return;
+
+        if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+            BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier registrationIdentifier = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
+            Identifier identifierI = registrationIdentifier.getValue();
+
+            if (identifierI != null) {
+                boolean italian = false;
+                if (!buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier().isEmpty()) {
+                    if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
+                        final List<BT0055BuyerCountryCode> countryCodes = buyer.getBG0008BuyerPostalAddress(0).getBT0055BuyerCountryCode();
+                        if (!countryCodes.isEmpty()) {
+                            final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
+                            italian = Iso31661CountryCodes.IT.equals(countryCode);
                         }
+                    }
 
 
-                        String identificationSchema = identifierI.getIdentificationSchema();
-                        String identifier = identifierI.getIdentifier();
+                    String identificationSchema = identifierI.getIdentificationSchema();
+                    String identifier = identifierI.getIdentifier();
 
-                        DatiAnagraficiCessionarioType datiAnagrafici = cessionarioCommittente.getDatiAnagrafici();
-                        if (datiAnagrafici == null) {
-                            datiAnagrafici = new DatiAnagraficiCessionarioType();
-                            cessionarioCommittente.setDatiAnagrafici(datiAnagrafici);
-                        }
-                        AnagraficaType anagrafica = datiAnagrafici.getAnagrafica();
-                        if (anagrafica == null) {
-                            anagrafica = new AnagraficaType();
-                            datiAnagrafici.setAnagrafica(anagrafica);
-                        }
+                    DatiAnagraficiCessionarioType datiAnagrafici = cessionarioCommittente.getDatiAnagrafici();
+                    if (datiAnagrafici == null) {
+                        datiAnagrafici = new DatiAnagraficiCessionarioType();
+                        cessionarioCommittente.setDatiAnagrafici(datiAnagrafici);
+                    }
+                    AnagraficaType anagraficaXml = datiAnagrafici.getAnagrafica();
+                    if (anagraficaXml == null) {
+                        anagraficaXml = new AnagraficaType();
+                        datiAnagrafici.setAnagrafica(anagraficaXml);
+                    }
 
 
-                        final String eori = "IT:EORI";
-                        if ((eori.equals(identificationSchema) || identifier.startsWith(eori)) && italian) {
-                            if (identifier.startsWith(eori)) {
-                                final String replaced = identifier.replace(eori + ":", "");
-                                anagrafica.setCodEORI(replaced);
-                            } else {
-                                anagrafica.setCodEORI(identifier);
-                            }
+                    String name = InvoiceUtils.evalExpression(() -> buyer.getBG0009BuyerContact(0).getBT0056BuyerContactPoint(0).getValue());
+                    if(name != null) anagraficaXml.setDenominazione( name );
+
+
+                    final String eori = "IT:EORI";
+                    if ((eori.equals(identificationSchema) || identifier.startsWith(eori)) && italian) {
+                        if (identifier.startsWith(eori)) {
+                            final String replaced = identifier.replace(eori + ":", "");
+                            anagraficaXml.setCodEORI(replaced);
                         } else {
-                            attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronicaBody, String.format("BT0047: %s:%s", identificationSchema != null ? identificationSchema.trim() : "", identifier));
+                            anagraficaXml.setCodEORI(identifier);
                         }
-
+                    } else {
+                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronicaBody, String.format("BT0047: %s:%s", identificationSchema != null ? identificationSchema.trim() : "", identifier));
                     }
 
                 }
+
             }
         }
     }
