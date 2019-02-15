@@ -41,30 +41,37 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                 Element datiAnagrafici = cessionarioCommittente.getChild("DatiAnagrafici");
                 if (datiAnagrafici != null) {
-                    Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
-                    if (codiceFiscale != null) {
-                        BT0046BuyerIdentifierAndSchemeIdentifier bt0046BuyerIdentifierAndSchemeIdentifier;
-                        if (nazioneStr.equals("IT")) {
-                            bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(cf + ":" + codiceFiscale.getText()));
-                        }else {
-                            bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
+
+                    {
+                        Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
+                        if (codiceFiscale != null) {
+                            BT0046BuyerIdentifierAndSchemeIdentifier bt0046BuyerIdentifierAndSchemeIdentifier;
+                            if (nazioneStr.equals("IT")) {
+                                bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(cf + ":" + codiceFiscale.getText()));
+                            } else {
+                                bt0046BuyerIdentifierAndSchemeIdentifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
+                            }
+                            if (invoice.getBG0007Buyer().isEmpty()) {
+                                invoice.getBG0007Buyer().add(new BG0007Buyer());
+                            }
+                            invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046BuyerIdentifierAndSchemeIdentifier);
                         }
-                        if (invoice.getBG0007Buyer().isEmpty()) {
-                            invoice.getBG0007Buyer().add(new BG0007Buyer());
-                        }
-                        invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046BuyerIdentifierAndSchemeIdentifier);
                     }
 
                     Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                     if (anagrafica != null) {
-                        Element codEORI = anagrafica.getChild("CodEORI");
-                        if (codEORI != null && codiceFiscale != null) {
+                        Element codEori = anagrafica.getChild("CodEORI");
+                        if (codEori != null) {
                             BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = null;
+
+                            Identifier attribute;
                             if (nazioneStr.equals("IT")) {
-                                bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(eori + ":" + codiceFiscale.getText()));
+                                attribute = new Identifier(eori + ":" + codEori.getText());
                             }else {
-                                bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(new Identifier(codiceFiscale.getText()));
+                                attribute = new Identifier(codEori.getText());
                             }
+                            bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = new BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(attribute);
+
                             if (invoice.getBG0007Buyer().isEmpty()) {
                                 invoice.getBG0007Buyer().add(new BG0007Buyer());
                             }
