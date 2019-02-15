@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.TipoDocumentoType;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -35,6 +34,7 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverterTest {
                 { Code383, TD_05 },
                 { Code389, TD_01 },
                 { Code393, TD_01 },
+                { Code389, TD_20autofattura},
                 { Code6, TD_01 } // default case
         });
     }
