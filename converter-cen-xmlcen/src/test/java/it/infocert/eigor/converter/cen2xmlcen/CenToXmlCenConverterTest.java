@@ -92,6 +92,8 @@ public class CenToXmlCenConverterTest {
 
         String xmlString = new String(result.getResult(), "UTF-8") + " " + result.getIssues().toString();
 
+        System.out.println(xmlString);
+
         Document cenXml = xmlToDom(
                 result.getResult()
         );

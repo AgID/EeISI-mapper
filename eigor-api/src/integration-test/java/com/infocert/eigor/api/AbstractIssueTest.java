@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,10 +19,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 import java.io.*;
 
 public class AbstractIssueTest {
@@ -59,11 +57,18 @@ public class AbstractIssueTest {
         conversion = new ConversionUtil(api);
     }
 
-    protected String evalXpathExpression(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
+    protected String evalXpathExpressionAsString(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
         StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
         InputSource is = new InputSource(xmlStringReader);
         XPathExpression expr = xPath.compile(expression);
         return expr.evaluate(is);
+    }
+
+    protected NodeList evalXpathExpressionAsNodeList(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
+        StringReader xmlStringReader = new StringReader(new String(convert.getResult()));
+        InputSource is = new InputSource(xmlStringReader);
+        XPathExpression expr = xPath.compile(expression);
+        return (NodeList) expr.evaluate(is, XPathConstants.NODESET);
     }
 
     protected static String printDocument(Document doc) throws IOException, TransformerException {

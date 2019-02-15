@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SEMANTIC-INVOICE>
+    <!--Test_EeISI_310 -->
+    <BT-1>Test_EeISI_310-165</BT-1>
+    <BT-2>2018-12-20</BT-2>
+    <BT-3>380</BT-3>
+    <BT-5>EUR</BT-5>
+    <BT-9>2019-01-20</BT-9>
+    <BG-2>
+        <BT-24>urn:cen.eu:en16931:2017</BT-24>
+    </BG-2>
+    <BG-4>
+        <BT-27>1267731</BT-27>
+        <BT-28>InfoCert SPA</BT-28>
+        <BT-29>IT:ALBO:ING:1234</BT-29>
+        <BT-31>IT12345678901</BT-31>
+        <BT-32>12345678901</BT-32>
+        <!--
+        <BT-32>RF01</BT-32>
+        -->
+        <BG-5>
+            <BT-35>Corso Italia</BT-35>
+            <BT-37>Milano</BT-37>
+            <BT-38>20100</BT-38>
+            <BT-39>MI</BT-39>
+            <BT-40>IT</BT-40>
+        </BG-5>
+    </BG-4>
+    <BG-7>
+        <BT-44>Buyer</BT-44>
+        <BT-46>IT:CF:SDCASFE71E712X</BT-46>
+        <BT-48>IT2389039840298</BT-48>
+        <BT-49 scheme="9921">123456</BT-49>
+        <BG-8>
+            <BT-50>buyer street</BT-50>
+            <BT-52>buyer city</BT-52>
+            <BT-53>90100</BT-53>
+            <BT-54>PA</BT-54>
+            <BT-55>IT</BT-55>
+        </BG-8>
+    </BG-7>
+
+    <BG-16>
+        <!-- this should be one of the supported 4461 -->
+        <BT-81>49</BT-81>
+        <BG-17>
+            <BT-84>IT57035123456789</BT-84>
+            <BT-86>BCITITMM</BT-86>
+        </BG-17>
+    </BG-16>
+
+    <!-- monetary totals -->
+    <BG-22>
+        <!-- Sum of all Invoice line net amounts in the Invoice. -->
+        <BT-106>4000</BT-106>
+        <!-- The total amount of the Invoice without VAT. -->
+        <BT-109>4000</BT-109>
+        <!-- The total VAT amount for the Invoice. -->
+        <BT-110>100</BT-110>
+        <!-- The total amount of the Invoice with VAT. -->
+        <BT-112>4100</BT-112>
+        <!-- The outstanding amount that is requested to be paid. -->
+        <BT-115>4100</BT-115>
+    </BG-22>
+
+    <!-- VAT -->
+    <BG-23>
+        <!-- Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable). -->
+        <BT-116>1000</BT-116>
+        <!-- The total VAT amount for a given VAT category. -->
+        <BT-117>100</BT-117>
+        <!-- VAT Category -->
+        <BT-118>S</BT-118>
+        <!-- VAT RATE -->
+        <BT-119>10</BT-119>
+    </BG-23>
+    <BG-23>
+        <!-- Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the VAT category rate is applicable). -->
+        <BT-116>3000</BT-116>
+        <!-- The total VAT amount for a given VAT category. -->
+        <BT-117>0</BT-117>
+        <!-- VAT Category -->
+        <BT-118>E</BT-118>
+        <!-- VAT RATE -->
+        <BT-119>0</BT-119>
+        <BT-120>exemption reason text</BT-120>
+    </BG-23>
+
+    <!-- line #1 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>003</BT-126>
+
+        <!-- quantity -->
+        <BT-129>2</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>500</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>S</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>10.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>line 1 in source invoice, original id: 003</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #2 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>A1</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>E</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>line 2 in source invoice, original id: A1</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #3 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>004</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>E</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>line 3 in source invoice, original id: 004</BT-153>
+        </BG-31>
+    </BG-25>
+
+    <!-- line #4 -->
+    <BG-25>
+
+        <!-- line id -->
+        <BT-126>10000</BT-126>
+
+        <!-- quantity -->
+        <BT-129>1</BT-129>
+
+        <!-- unit of measure -->
+        <BT-130>EA</BT-130>
+
+        <!-- total amount of invoice line -->
+        <BT-131>1000</BT-131>
+
+        <!-- price details -->
+        <BG-29>
+            <!-- The price of an item, exclusive of VAT, after subtracting item price discount. -->
+            <BT-146>1000</BT-146>
+        </BG-29>
+
+        <!-- information about the VAT applicable for the goods and services invoiced on the Invoice line. -->
+        <BG-30>
+            <!-- The VAT category code for the invoiced item. -->
+            <BT-151>E</BT-151>
+            <!-- VAT rate as percentage -->
+            <BT-152>0.00</BT-152>
+        </BG-30>
+        <!-- info about goods -->
+        <BG-31>
+            <!-- a name for the line -->
+            <BT-153>line 4 in source invoice, original id: 10000</BT-153>
+        </BG-31>
+    </BG-25>
+</SEMANTIC-INVOICE>

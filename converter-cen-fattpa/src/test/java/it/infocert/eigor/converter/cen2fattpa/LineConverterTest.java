@@ -413,7 +413,11 @@ public class LineConverterTest {
     }
 
     private void convert() {
-        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
+        new LineConverter().map(
+                invoice,
+                fatturaElettronica,
+                Lists.<IConversionIssue>newArrayList(),
+                ErrorCode.Location.FATTPA_OUT, null);
     }
 
     private void populateWithBG20() {
@@ -444,7 +448,6 @@ public class LineConverterTest {
         for (int i = 0; i < 5; i++) {
 
             BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-
             populateBG25WithBG27(invoiceLine);
             populateBG25WithBG28(invoiceLine);
             populateBG25WithBG29(invoiceLine);
