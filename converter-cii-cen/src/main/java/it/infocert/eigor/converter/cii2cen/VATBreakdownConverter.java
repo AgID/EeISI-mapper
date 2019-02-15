@@ -58,7 +58,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                         final String text = dueDateTypeCode.getText();
                         BT0008ValueAddedTaxPointDateCode bt0008 = null;
                         try {
-                            bt0008 = new BT0008ValueAddedTaxPointDateCode(untdid2475To2005Converter.convert(Untdid2475PaymentTimeReference.valueOf(dueDateTypeCode.getText())));
+                            bt0008 = new BT0008ValueAddedTaxPointDateCode(untdid2475To2005Converter.convert(Untdid2475PaymentTimeReference.fromCode(dueDateTypeCode.getText())));
                             invoice.getBT0008ValueAddedTaxPointDateCode().add(bt0008);
                         } catch (ConversionFailedException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
