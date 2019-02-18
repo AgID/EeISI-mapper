@@ -18,26 +18,25 @@ public class InvoiceNoteConverter implements CustomMapping<Document>{
 	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, Location callingLocation,
 			EigorConfiguration eigorConfiguration) {
 		
-		// TODO Auto-generated method stub
 		final Element root = document.getRootElement();
-		String concatenatedInvoiceNote= "";
-		Element invoiceNote = new Element("InvoiceNote");
-		Element btConcat = new Element("Note");
+		String concatenatedInvoiceNote= "";		Element btConcat = new Element("Note");
 
 		if(!cenInvoice.getBG0001InvoiceNote().isEmpty())
 		for(BG0001InvoiceNote bg0001: cenInvoice.getBG0001InvoiceNote()) {
 			String bg0022 = "";
+			
+			if(!bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty())
+				concatenatedInvoiceNote = bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue();
+			
+			if(!bg0001.getBT0022InvoiceNote().isEmpty()) {
 			bg0022 = bg0001.getBT0022InvoiceNote(0).getValue();
 			concatenatedInvoiceNote = (concatenatedInvoiceNote == "")? concatenatedInvoiceNote + bg0022:
 				concatenatedInvoiceNote + "-" + bg0022;
-			
-			if(!bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue().isEmpty())
-				concatenatedInvoiceNote = concatenatedInvoiceNote + "-" + bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue();
+			}
 		}
 		
 		btConcat.setText(concatenatedInvoiceNote);
-		invoiceNote.addContent(btConcat);
-		root.addContent(invoiceNote);
+		root.addContent(btConcat);
 		
 	}
 
