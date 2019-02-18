@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
-xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
   <FatturaElettronicaHeader>
   <!--Transmission data -->
@@ -130,19 +130,19 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 	  </StabileOrganizzazione>
 	  <!--Buyer tax representative-->
 	<RappresentanteFiscale><!--not mapped-->
-		
+
 			<IdFiscaleIVA>
 			  <IdPaese>IT</IdPaese><!--not mapped-->
 			  <IdCodice>07945211006</IdCodice><!--not mapped-->
 			</IdFiscaleIVA>
-			
+
 			<!-- In case of legal entity-->
 			  <Denominazione>BETA Rappresentante fiscale</Denominazione><!--not mapped-->
 			  <!--In case of natural person-->
 			  <!--Nome>Paolo</Nome--><!--not mapped-->
 			  <!--Cognome>Verdi</Cognome--><!--not mapped-->
-			
-		
+
+
 	</RappresentanteFiscale>
     </CessionarioCommittente>
 	<TerzoIntermediarioOSoggettoEmittente><!-- to BG-24-->
@@ -183,7 +183,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 			<BolloVirtuale>SI</BolloVirtuale>
 			<ImportoBollo>2.00</ImportoBollo>
 		</DatiBollo>
-		
+
 		<DatiCassaPrevidenziale><!--to be defined, not anymore on BG-21 but on BG-25-->
 			<TipoCassa>TC01</TipoCassa>
 			<AlCassa>4.00</AlCassa>
@@ -193,7 +193,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 			<Ritenuta>SI</Ritenuta>
 			<Natura>N4</Natura>
 			<RiferimentoAmministrazione>FGFJ234</RiferimentoAmministrazione>
-		</DatiCassaPrevidenziale> 
+		</DatiCassaPrevidenziale>
 		<ScontoMaggiorazione><!--to BG-20, vat rate 0%-->
 			<Tipo>SC</Tipo><!--to BG-20 , vat rate 0%-->
 			<Percentuale>10.00</Percentuale><!--to BT-94-->
@@ -204,11 +204,11 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 			<Percentuale>10.00</Percentuale><!--to BT-101-->
 			<Importo>100.00</Importo><!--to BT-99-->
 		</ScontoMaggiorazione>
-		
+
 		<!-- not mandatory in FattPA but needed in CEN or to be calculated-->
 		<ImportoTotaleDocumento>1260.00</ImportoTotaleDocumento><!--to BT-112-->
 		<Arrotondamento>0.00</Arrotondamento><!--to BT-114-->
-		
+
 		<Causale>Causale 1 per la fattura</Causale><!--to BT-22-->
 		<Causale>Causale 2 per la fattura</Causale><!--to BT-22-->
 		<Art73>SI</Art73><!--to BT-22 concatenate-->
@@ -282,7 +282,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 				  <Titolo>Super vett</Titolo><!--not mapped-->
 				  <CodEORI>4123456789012</CodEORI><!--not mapped-->
 				</Anagrafica>
-			
+
 			<NumeroLicenzaGuida>kjiA1234idoj</NumeroLicenzaGuida><!--not mapped-->
 			</DatiAnagraficiVettore>
 			<MezzoTrasporto>Furgone</MezzoTrasporto><!--not mapped-->
@@ -316,7 +316,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<CodiceArticolo>
 			<CodiceTipo>CPV</CodiceTipo><!--to BT-128-1 or BT-157-1 or BT-158-1-->
 			<CodiceValore>klji12</CodiceValore><!--to BT-128 or BT-155 or BT-157 or BT-158-->
-		
+
 		</CodiceArticolo>
         <Descrizione>DESCRIZIONE DELLA LINEA 1</Descrizione><!--to BT-153 or if TipoCessionePrestazione SC/PR/AB then to BT-139 or if TipoCessionePrestazione AC then BT-144-->
 		<Quantita>2.00</Quantita><!--to BT-129-->
@@ -340,16 +340,16 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<RiferimentoAmministrazione>rifamm123</RiferimentoAmministrazione><!--to BT-133-->
 		<AltriDatiGestionali><!--to BG-32-->
 			<TipoDato>colore</TipoDato><!--to BT-160-->
-			<RiferimentoTesto>bianco</RiferimentoTesto><!--to BT-161-->		
+			<RiferimentoTesto>bianco</RiferimentoTesto><!--to BT-161-->
 		</AltriDatiGestionali>
       </DettaglioLinee>
-	  
+
 	  <DettaglioLinee><!--to BG-25-->
         <NumeroLinea>2</NumeroLinea><!--to BT-126-->
 		<CodiceArticolo>
 			<CodiceTipo>TARIC</CodiceTipo><!--to BT-128-1 or BT-157-1 or BT-158-1-->
 			<CodiceValore>klji12</CodiceValore><!--to BT-128 or BT-155 or BT-157 or BT-158-->
-		
+
 		</CodiceArticolo>
         <Descrizione>DESCRIZIONE DELLA LINEA 2</Descrizione><!--to BT-153 or if TipoCessionePrestazione SC/PR/AB then to BT-139 or if TipoCessionePrestazione AC then BT-144-->
 		<Quantita>10.00</Quantita><!--to BT-129-->
@@ -357,7 +357,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<DataInizioPeriodo>2017-01-18</DataInizioPeriodo><!--to BT-134-->
 		<DataFinePeriodo>2017-01-18</DataFinePeriodo><!--to BT-135-->
         <PrezzoUnitario>1.00</PrezzoUnitario><!--to BT-146-->
-		
+
         <PrezzoTotale>10.00</PrezzoTotale><!--to BT-131 or if allowance BT-92 or charge BT-99-->
         <AliquotaIVA>0.00</AliquotaIVA><!--to BT-152 or if allowance BT-96 or charge BT-103-->
 		<Natura>N3</Natura><!--to BT-151 to be redefined according to mapping VAT category code-Natura-RegimeFiscale-->
@@ -375,7 +375,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
         <AliquotaIVA>0.00</AliquotaIVA><!--to BT-96-->
 		<Natura>N3</Natura><!--to BT-151 to be redefined according to mapping VAT category code-Natura-RegimeFiscale-->
 	  </DettaglioLinee>
-	  
+
 	   <DettaglioLinee><!--to BG-25-->
         <NumeroLinea>4</NumeroLinea><!--to BT-126-->
 		<TipoCessionePrestazione>AC</TipoCessionePrestazione><!--to BG-20-->
@@ -383,7 +383,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<PrezzoUnitario>10.00</PrezzoUnitario><!--to BT-146-->
 		<PrezzoTotale>10.00</PrezzoTotale><!--to BT-99-->
         <AliquotaIVA>22.00</AliquotaIVA><!--to BT-103-->
-		
+
 	  </DettaglioLinee>
 	   <DettaglioLinee><!--to BG-25-->
         <NumeroLinea>5</NumeroLinea><!--to BT-126-->
@@ -392,8 +392,8 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<PrezzoUnitario>-10.00</PrezzoUnitario><!--to BT-146-->
 		<PrezzoTotale>-10.00</PrezzoTotale><!--to BT-92-->
         <AliquotaIVA>22.00</AliquotaIVA><!--to BT-96-->
-		
-	  </DettaglioLinee> 
+
+	  </DettaglioLinee>
       <DatiRiepilogo><!--to BG-23-->
         <AliquotaIVA>22.00</AliquotaIVA><!--to BT-119-->
 		<SpeseAccessorie>10.00</SpeseAccessorie><!--not mapped-->
@@ -402,7 +402,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
         <Imposta>220.00</Imposta><!--to BT-117-->
 		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
        </DatiRiepilogo>
-	  
+
 	   <DatiRiepilogo><!--to BG-23-->
         <AliquotaIVA>0.00</AliquotaIVA><!--to BT-119-->
 		<Natura>N3</Natura><!--to BT-118, BT-121-->
@@ -412,7 +412,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
 		<RiferimentoNormativo>art 584T</RiferimentoNormativo><!--to BT-120-->
        </DatiRiepilogo>
-	    
+
 	   <DatiRiepilogo><!--to BG-23-->
         <AliquotaIVA>0.00</AliquotaIVA><!--to BT-119-->
 		<Natura>N4</Natura><!--to BT-118, BT-121-->
@@ -420,7 +420,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 		<ImponibileImporto>40.00</ImponibileImporto><!--to BT-116-->
         <Imposta>0.00</Imposta><!--to BT-117-->
 		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
-		
+
        </DatiRiepilogo>
     </DatiBeniServizi>
 	<DatiVeicoli><!--to BG-24-->
@@ -451,7 +451,7 @@ xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.
 				<PenalitaPagamentiRitardati>10.00</PenalitaPagamentiRitardati><!--to BT-20-->
 				<DataDecorrenzaPenale>2017-03-15</DataDecorrenzaPenale><!--to BT-20-->
 				<CodicePagamento>codpag123</CodicePagamento><!--to BT-83-->
-			
+
 		  </DettaglioPagamento>
     </DatiPagamento>
 	<Allegati><!--to BG-24-->

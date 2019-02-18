@@ -2,7 +2,6 @@ package it.infocert.eigor.converter.cen2peoppl;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.cen2peoppl.ProjectReferenceConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0011ProjectReference;
 import org.jdom2.Document;
@@ -29,7 +28,7 @@ public class ProjectReferenceTest {
     }
 
     @Test
-    public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
+    public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode()  {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         ProjectReferenceConverter converter = new ProjectReferenceConverter();
         converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
