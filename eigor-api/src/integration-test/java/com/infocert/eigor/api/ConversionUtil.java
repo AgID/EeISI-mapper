@@ -134,6 +134,10 @@ public class ConversionUtil {
         return issuesDescription2;
     }
 
+    public static Predicate<IConversionIssue> keepErrorsNotWarnings() {
+        return new KeepErrorsNotWarnings();
+    }
+
 
     static class KeepByErrorCode implements Predicate<IConversionIssue> {
         private final String errorCode;
@@ -158,7 +162,7 @@ public class ConversionUtil {
         }
     }
 
-    static class KeepErrosrNotWarnings implements Predicate<IConversionIssue> {
+    private static class KeepErrorsNotWarnings implements Predicate<IConversionIssue> {
 
         @Override
         public boolean test(@Nullable IConversionIssue issue) {
