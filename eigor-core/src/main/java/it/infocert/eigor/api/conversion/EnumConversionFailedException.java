@@ -6,4 +6,8 @@ public class EnumConversionFailedException extends ConversionFailedException {
     public EnumConversionFailedException(String s) {
         super(s);
     }
+
+    public EnumConversionFailedException(Exception e) {
+        super(e);
+    }
 }

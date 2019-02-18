@@ -29,6 +29,14 @@ import static org.junit.Assert.assertThat;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEeisi192() {
+        this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi192-fattpa.xml",
+                "fatturapa", "ubl", keepErrorsNotWarnings());
+
+    }
+
+    @Test
     public void issueEeisi193a() {
 
         this.conversion.assertConversionWithoutErrors(
