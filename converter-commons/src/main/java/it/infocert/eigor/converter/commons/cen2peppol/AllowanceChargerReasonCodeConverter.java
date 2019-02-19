@@ -30,7 +30,6 @@ public class AllowanceChargerReasonCodeConverter implements CustomMapping<Docume
 		BG0027InvoiceLineAllowances invoiceAllowance2;
 
 
-
 		if(!cenInvoice.getBG0020DocumentLevelAllowances().isEmpty()) {
 			invoiceAllowance1 = cenInvoice.getBG0020DocumentLevelAllowances(0);
 			if(!invoiceAllowance1.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {	
@@ -62,6 +61,8 @@ public class AllowanceChargerReasonCodeConverter implements CustomMapping<Docume
 
 			}
 			else return;
+		
+			
 
 	}
 
