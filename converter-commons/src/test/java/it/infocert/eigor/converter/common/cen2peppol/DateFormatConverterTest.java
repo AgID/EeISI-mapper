@@ -47,11 +47,10 @@ public class DateFormatConverterTest {
 		 sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.PEPPOL_OUT, null);
 		 String issueDate = doc.getRootElement().getChild("IssueDate").getValue();
 		 String taxDate = doc.getRootElement().getChild("TaxPointDate").getValue();
-		 String dueDate = doc.getRootElement().getChild("DueDate").getValue();
+//		 String dueDate = doc.getRootElement().getChild("DueDate").getValue();
 		 
 		 assertEquals("2004-12-25", issueDate);
 		 assertEquals("2004-12-25", taxDate);
-		 assertEquals("2004-12-25", dueDate);
 
 
 		

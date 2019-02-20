@@ -8,12 +8,14 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class ProjectReferenceTest {
     private Document document;
 
