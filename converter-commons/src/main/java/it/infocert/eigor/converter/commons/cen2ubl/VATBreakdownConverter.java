@@ -4,7 +4,6 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
@@ -18,6 +17,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 public class VATBreakdownConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(VATBreakdownConverter.class);
 
@@ -28,12 +29,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
         if(root == null) return;
 
 
-        Iso4217CurrenciesFundsCodes invoiceCur = InvoiceUtils.evalExpression(() -> invoice.getBT0005InvoiceCurrencyCode(0).getValue());
-        Iso4217CurrenciesFundsCodes vatCur = InvoiceUtils.evalExpression(() -> invoice.getBT0006VatAccountingCurrencyCode(0).getValue());
+        Iso4217CurrenciesFundsCodes invoiceCur = evalExpression(() -> invoice.getBT0005InvoiceCurrencyCode(0).getValue());
+        Iso4217CurrenciesFundsCodes vatCur = evalExpression(() -> invoice.getBT0006VatAccountingCurrencyCode(0).getValue());
         Iso4217CurrenciesFundsCodes currencyForBt111 = invoiceCur.equals( vatCur ) && vatCur!=null ? invoiceCur : vatCur;
 
 
-        BG0022DocumentTotals documentTotals = InvoiceUtils.evalExpression( () -> invoice.getBG0022DocumentTotals(0) );
+        BG0022DocumentTotals documentTotals = evalExpression( () -> invoice.getBG0022DocumentTotals(0) );
 
         Element taxTotal = null;
         if (documentTotals!=null) {
@@ -42,7 +43,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
             String currencyId = null;
             BigDecimal value = null;
 
-
+            // if the invoice has an accounting currency (BT-06) we should add a TaxTotal element with just the total expressed with that currency.
             if (invoice.hasBT0006VatAccountingCurrencyCode() && documentTotals.hasBT0111InvoiceTotalVatAmountInAccountingCurrency()) {
 
                 taxTotal = new Element("TaxTotal");
@@ -57,7 +58,8 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
 
             }
 
-            if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty() && !documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+            // this should be the usual vat
+            if (invoice.hasBT0005InvoiceCurrencyCode() && documentTotals.hasBT0110InvoiceTotalVatAmount() ) {
 
                 taxTotal = new Element("TaxTotal");
                 root.addContent( taxTotal );
@@ -78,29 +80,10 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
         List<BG0023VatBreakdown> bg0023 = invoice.getBG0023VatBreakdown();
         for (BG0023VatBreakdown elemBg23 : bg0023) {
 
-            BT0116VatCategoryTaxableAmount bt0116 = null;
-            if (!elemBg23.getBT0116VatCategoryTaxableAmount().isEmpty()) {
-                bt0116 = elemBg23.getBT0116VatCategoryTaxableAmount(0);
-            }
-            BT0117VatCategoryTaxAmount bt0117 = null;
-            if (!elemBg23.getBT0117VatCategoryTaxAmount().isEmpty()) {
-                bt0117 = elemBg23.getBT0117VatCategoryTaxAmount(0);
-            }
-            BT0118VatCategoryCode bt0118 = null;
-            if (!elemBg23.getBT0118VatCategoryCode().isEmpty()) {
-                bt0118 = elemBg23.getBT0118VatCategoryCode(0);
-            }
-            BT0119VatCategoryRate bt0119 = null;
-            if (!elemBg23.getBT0119VatCategoryRate().isEmpty()) {
-                bt0119 = elemBg23.getBT0119VatCategoryRate(0);
-            }
-
-
-//            Element taxTotal = root.getChild("TaxTotal");
-//            if (taxTotal == null) {
-//                taxTotal = new Element("TaxTotal");
-//                root.addContent(taxTotal);
-//            }
+            BT0116VatCategoryTaxableAmount bt0116 = evalExpression( ()->elemBg23.getBT0116VatCategoryTaxableAmount(0) );
+            BT0117VatCategoryTaxAmount bt0117 = evalExpression( ()->elemBg23.getBT0117VatCategoryTaxAmount(0) );
+            BT0118VatCategoryCode bt0118 = evalExpression( ()->elemBg23.getBT0118VatCategoryCode(0) );
+            BT0119VatCategoryRate bt0119 = evalExpression( ()-> elemBg23.getBT0119VatCategoryRate(0) );
 
             Element taxSubtotal = new Element("TaxSubtotal");
             taxTotal.addContent(taxSubtotal);
