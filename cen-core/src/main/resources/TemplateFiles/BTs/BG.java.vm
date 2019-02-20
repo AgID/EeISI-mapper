@@ -43,6 +43,14 @@ public class ${clzName} extends AbstractBTBG {
     #end
     #end
 
+    #foreach( $row in $rows )
+    #if( !$clzName.equals( $row.data.BTBGClassName ) )
+    public boolean has${row.data.BTBGClassName}() {
+            return ${row.data.BTBGClassName}!=null && !${row.data.BTBGClassName}.isEmpty();
+    }
+    #end
+    #end
+
     @Override
     public int order() {
         return ${row0.data.OrderInCEN};
