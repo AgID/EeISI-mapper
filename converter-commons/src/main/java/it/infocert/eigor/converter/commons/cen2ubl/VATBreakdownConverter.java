@@ -4,6 +4,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
@@ -24,151 +25,179 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
         Element root = document.getRootElement();
-        if (root != null) {
+        if(root == null) return;
 
-            if (!invoice.getBG0022DocumentTotals().isEmpty()) {
-                BG0022DocumentTotals documentTotals = invoice.getBG0022DocumentTotals(0);
-                String amount = null;
-                String currencyId = null;
 
-                BigDecimal value = null;
-                if (!invoice.getBT0006VatAccountingCurrencyCode().isEmpty() && !documentTotals.getBT0111InvoiceTotalVatAmountInAccountingCurrency().isEmpty()) {
-                    value = documentTotals.getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue();
-                    amount = value.setScale(2, RoundingMode.HALF_UP).toString();
-                    currencyId = invoice.getBT0006VatAccountingCurrencyCode(0).getValue().name();
-                } else if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty() && !documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
-                    value = documentTotals.getBT0110InvoiceTotalVatAmount(0).getValue();
-                    amount = value.setScale(2, RoundingMode.HALF_UP).toString();
-                    currencyId = invoice.getBT0005InvoiceCurrencyCode(0).getValue().name();
-                }
+        Iso4217CurrenciesFundsCodes invoiceCur = InvoiceUtils.evalExpression(() -> invoice.getBT0005InvoiceCurrencyCode(0).getValue());
+        Iso4217CurrenciesFundsCodes vatCur = InvoiceUtils.evalExpression(() -> invoice.getBT0006VatAccountingCurrencyCode(0).getValue());
+        Iso4217CurrenciesFundsCodes currencyForBt111 = invoiceCur.equals( vatCur ) && vatCur!=null ? invoiceCur : vatCur;
 
+
+        BG0022DocumentTotals documentTotals = InvoiceUtils.evalExpression( () -> invoice.getBG0022DocumentTotals(0) );
+
+        Element taxTotal = null;
+        if (documentTotals!=null) {
+
+            String amount = null;
+            String currencyId = null;
+            BigDecimal value = null;
+
+
+            if (invoice.hasBT0006VatAccountingCurrencyCode() && documentTotals.hasBT0111InvoiceTotalVatAmountInAccountingCurrency()) {
+
+                taxTotal = new Element("TaxTotal");
+                root.addContent( taxTotal );
+
+                value = documentTotals.getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue();
+                amount = value.setScale(2, RoundingMode.HALF_UP).toString();
+                currencyId = invoice.getBT0006VatAccountingCurrencyCode(0).getValue().name();
                 if (amount != null) {
-                    Element taxTotal = root.getChild("TaxTotal");
-                    if (taxTotal == null) {
-                        taxTotal = new Element("TaxTotal");
-                        root.addContent(taxTotal);
-                    }
-                    Element taxAmount = new Element("TaxAmount");
-                    taxAmount.setText(amount);
-                    taxAmount.setAttribute("currencyID", currencyId);
-                    taxTotal.addContent(taxAmount);
+                    taxTotal.addContent( newTaxAmountElement(root, amount, currencyId) );
                 }
+
             }
 
-            List<BG0023VatBreakdown> bg0023 = invoice.getBG0023VatBreakdown();
-            for (BG0023VatBreakdown elemBg23 : bg0023) {
-                BT0116VatCategoryTaxableAmount bt0116 = null;
-                if (!elemBg23.getBT0116VatCategoryTaxableAmount().isEmpty()) {
-                    bt0116 = elemBg23.getBT0116VatCategoryTaxableAmount(0);
-                }
-                BT0117VatCategoryTaxAmount bt0117 = null;
-                if (!elemBg23.getBT0117VatCategoryTaxAmount().isEmpty()) {
-                    bt0117 = elemBg23.getBT0117VatCategoryTaxAmount(0);
-                }
-                BT0118VatCategoryCode bt0118 = null;
-                if (!elemBg23.getBT0118VatCategoryCode().isEmpty()) {
-                    bt0118 = elemBg23.getBT0118VatCategoryCode(0);
-                }
-                BT0119VatCategoryRate bt0119 = null;
-                if (!elemBg23.getBT0119VatCategoryRate().isEmpty()) {
-                    bt0119 = elemBg23.getBT0119VatCategoryRate(0);
+            if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty() && !documentTotals.getBT0110InvoiceTotalVatAmount().isEmpty()) {
+
+                taxTotal = new Element("TaxTotal");
+                root.addContent( taxTotal );
+
+                value = documentTotals.getBT0110InvoiceTotalVatAmount(0).getValue();
+                amount = value.setScale(2, RoundingMode.HALF_UP).toString();
+                currencyId = invoice.getBT0005InvoiceCurrencyCode(0).getValue().name();
+                if (amount != null) {
+                    taxTotal.addContent( newTaxAmountElement(root, amount, currencyId) );
                 }
 
+            }
 
-                Element taxTotal = root.getChild("TaxTotal");
-                if (taxTotal == null) {
-                    taxTotal = new Element("TaxTotal");
-                    root.addContent(taxTotal);
-                }
+        }
 
-                Element taxSubtotal = new Element("TaxSubtotal");
-                taxTotal.addContent(taxSubtotal);
+        if(taxTotal == null) return;
 
-                if (bt0116 != null) {
-                    Element taxableAmount = new Element("TaxableAmount");
-                    final BigDecimal value = bt0116.getValue();
-                    taxableAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    taxSubtotal.addContent(taxableAmount);
-                }
-                if (bt0117 != null) {
-                    Element taxAmount = new Element("TaxAmount");
-                    final BigDecimal value = bt0117.getValue();
-                    taxAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    taxSubtotal.addContent(taxAmount);
-                }
+        List<BG0023VatBreakdown> bg0023 = invoice.getBG0023VatBreakdown();
+        for (BG0023VatBreakdown elemBg23 : bg0023) {
 
-                Element taxCategory = new Element("TaxCategory");
-                taxSubtotal.addContent(taxCategory);
+            BT0116VatCategoryTaxableAmount bt0116 = null;
+            if (!elemBg23.getBT0116VatCategoryTaxableAmount().isEmpty()) {
+                bt0116 = elemBg23.getBT0116VatCategoryTaxableAmount(0);
+            }
+            BT0117VatCategoryTaxAmount bt0117 = null;
+            if (!elemBg23.getBT0117VatCategoryTaxAmount().isEmpty()) {
+                bt0117 = elemBg23.getBT0117VatCategoryTaxAmount(0);
+            }
+            BT0118VatCategoryCode bt0118 = null;
+            if (!elemBg23.getBT0118VatCategoryCode().isEmpty()) {
+                bt0118 = elemBg23.getBT0118VatCategoryCode(0);
+            }
+            BT0119VatCategoryRate bt0119 = null;
+            if (!elemBg23.getBT0119VatCategoryRate().isEmpty()) {
+                bt0119 = elemBg23.getBT0119VatCategoryRate(0);
+            }
 
-                // <xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1">
-                if (bt0118 != null) {
-                    Element id = new Element("ID");
-                    Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0118.getValue();
-                    id.setText(dutyTaxFeeCategories.name());
-                    taxCategory.addContent(id);
-                }
 
-                // <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
-                // not used
+//            Element taxTotal = root.getChild("TaxTotal");
+//            if (taxTotal == null) {
+//                taxTotal = new Element("TaxTotal");
+//                root.addContent(taxTotal);
+//            }
 
-                // <xsd:element ref="cbc:Percent" minOccurs="0" maxOccurs="1">
-                if (bt0119 != null) {
-                    Element percent = new Element("Percent");
-                    final BigDecimal value = bt0119.getValue();
-                    percent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
-                    taxCategory.addContent(percent);
-                }
+            Element taxSubtotal = new Element("TaxSubtotal");
+            taxTotal.addContent(taxSubtotal);
 
-                // <xsd:element ref="cbc:BaseUnitMeasure" minOccurs="0" maxOccurs="1">
-                // not used
+            if (bt0116 != null) {
+                Element taxableAmount = new Element("TaxableAmount");
+                final BigDecimal value = bt0116.getValue();
+                taxableAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                taxSubtotal.addContent(taxableAmount);
+            }
+            if (bt0117 != null) {
+                Element taxAmount = new Element("TaxAmount");
+                final BigDecimal value = bt0117.getValue();
+                taxAmount.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                taxSubtotal.addContent(taxAmount);
+            }
 
-                // <xsd:element ref="cbc:PerUnitAmount" minOccurs="0" maxOccurs="1">
-                // not used
+            Element taxCategory = new Element("TaxCategory");
+            taxSubtotal.addContent(taxCategory);
 
-                if (!elemBg23.getBT0121VatExemptionReasonCode().isEmpty()) {
-                    BT0121VatExemptionReasonCode bt0121 = elemBg23.getBT0121VatExemptionReasonCode(0);
-                    Element taxExemptionReasonCode = new Element("TaxExemptionReasonCode");
-                    taxExemptionReasonCode.setText(bt0121.getValue());
-                    taxCategory.addContent(taxExemptionReasonCode);
-                }
+            // <xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1">
+            if (bt0118 != null) {
+                Element id = new Element("ID");
+                Untdid5305DutyTaxFeeCategories dutyTaxFeeCategories = bt0118.getValue();
+                id.setText(dutyTaxFeeCategories.name());
+                taxCategory.addContent(id);
+            }
 
-                Element taxExemptionReason = new Element("TaxExemptionReason");
-                if (!elemBg23.getBT0120VatExemptionReasonText().isEmpty()) {
-                    BT0120VatExemptionReasonText bt0120 = elemBg23.getBT0120VatExemptionReasonText(0);
-                    taxExemptionReason.setText(bt0120.getValue());
-                    taxCategory.addContent(taxExemptionReason);
-                } else if (bt0118 != null && Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue())) {
-                    taxExemptionReason.setText(bt0118.getValue().getShortDescritpion());
-                    taxCategory.addContent(taxExemptionReason);
-                }
+            // <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
+            // not used
 
-                // <xsd:element ref="cbc:TierRange" minOccurs="0" maxOccurs="1">
-                // not used
+            // <xsd:element ref="cbc:Percent" minOccurs="0" maxOccurs="1">
+            if (bt0119 != null) {
+                Element percent = new Element("Percent");
+                final BigDecimal value = bt0119.getValue();
+                percent.setText(value.setScale(2, RoundingMode.HALF_UP).toString());
+                taxCategory.addContent(percent);
+            }
 
-                // <xsd:element ref="cbc:TierRatePercent" minOccurs="0" maxOccurs="1">
-                // not used
+            // <xsd:element ref="cbc:BaseUnitMeasure" minOccurs="0" maxOccurs="1">
+            // not used
 
-                // <xsd:element ref="cac:TaxScheme" minOccurs="1" maxOccurs="1">
-                {
-                    Element taxSchemeId = new Element("ID");
-                    taxSchemeId.setText("VAT");
-                    Element taxScheme = new Element("TaxScheme");
-                    taxScheme.addContent(taxSchemeId);
-                    taxCategory.addContent(taxScheme);
-                }
+            // <xsd:element ref="cbc:PerUnitAmount" minOccurs="0" maxOccurs="1">
+            // not used
 
-                if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                    BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
-                    Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
+            if (!elemBg23.getBT0121VatExemptionReasonCode().isEmpty()) {
+                BT0121VatExemptionReasonCode bt0121 = elemBg23.getBT0121VatExemptionReasonCode(0);
+                Element taxExemptionReasonCode = new Element("TaxExemptionReasonCode");
+                taxExemptionReasonCode.setText(bt0121.getValue());
+                taxCategory.addContent(taxExemptionReasonCode);
+            }
 
-                    String currencyName = currencyCode.name();
-                    for (Element element : taxSubtotal.getChildren()) {
-                        if (element.getName().equals("TaxableAmount") || element.getName().equals("TaxAmount")) {
+            Element taxExemptionReason = new Element("TaxExemptionReason");
+            if (!elemBg23.getBT0120VatExemptionReasonText().isEmpty()) {
+                BT0120VatExemptionReasonText bt0120 = elemBg23.getBT0120VatExemptionReasonText(0);
+                taxExemptionReason.setText(bt0120.getValue());
+                taxCategory.addContent(taxExemptionReason);
+            } else if (bt0118 != null && Untdid5305DutyTaxFeeCategories.E.equals(bt0118.getValue())) {
+                taxExemptionReason.setText(bt0118.getValue().getShortDescritpion());
+                taxCategory.addContent(taxExemptionReason);
+            }
+
+            // <xsd:element ref="cbc:TierRange" minOccurs="0" maxOccurs="1">
+            // not used
+
+            // <xsd:element ref="cbc:TierRatePercent" minOccurs="0" maxOccurs="1">
+            // not used
+
+            // <xsd:element ref="cac:TaxScheme" minOccurs="1" maxOccurs="1">
+            {
+                Element taxSchemeId = new Element("ID");
+                taxSchemeId.setText("VAT");
+                Element taxScheme = new Element("TaxScheme");
+                taxScheme.addContent(taxSchemeId);
+                taxCategory.addContent(taxScheme);
+            }
+
+            if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+                BT0005InvoiceCurrencyCode bt0005 = invoice.getBT0005InvoiceCurrencyCode(0);
+                Iso4217CurrenciesFundsCodes currencyCode = bt0005.getValue();
+
+                String currencyName = currencyCode.name();
+                for (Element element : taxSubtotal.getChildren()) {
+                    if (element.getName().equals("TaxableAmount") || element.getName().equals("TaxAmount")) {
                             element.setAttribute(new Attribute("currencyID", currencyName));
                         }
                     }
                 }
             }
         }
+
+    private Element newTaxAmountElement(Element root, String amount, String currencyId) {
+
+        Element taxAmount = new Element("TaxAmount");
+        taxAmount.setText(amount);
+        taxAmount.setAttribute("currencyID", currencyId);
+        return taxAmount;
     }
 }
+
