@@ -37,6 +37,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     }
 
     @Test
+    public void issueEeisi188() {
+        this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-188-xmlcen.xml",
+                "xmlcen", "ubl", keepErrorsNotWarnings());
+
+    }
+
+    @Test
     public void issueEeisi192() {
         this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi192-fattpa.xml",
