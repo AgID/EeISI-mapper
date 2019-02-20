@@ -22,14 +22,14 @@ public class InvoiceTypeCodeConverter implements CustomMapping<Document>{
 		Element root = document.getRootElement();
 		Element invoiceTypeCode = null;
 		
-		if (root != null) {
+//		if (root != null) {
 			if(root.getChild("InvoiceTypeCode") != null) { 
 
 				invoiceTypeCode = root.getChild("InvoiceTypeCode");
 			}
 			else
 				invoiceTypeCode = new Element("InvoiceTypeCode");
-		}
+		
 		String allowanceCode;
 
 		allowanceCode = setDefaultAllowanceChargerCode(String.valueOf(cenInvoice.getBT0003InvoiceTypeCode(0).getValue().getCode()));
