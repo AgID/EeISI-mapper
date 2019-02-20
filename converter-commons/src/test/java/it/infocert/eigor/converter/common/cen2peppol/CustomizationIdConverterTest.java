@@ -1,18 +1,16 @@
 package it.infocert.eigor.converter.common.cen2peppol;
 
-import static org.junit.Assert.assertEquals;
-
+import com.google.common.collect.Lists;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.converter.commons.cen2peppol.CustomizationIdConverter;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
-
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.commons.cen2peppol.CustomizationIdConverter;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
+import static org.junit.Assert.assertEquals;
 
 public class CustomizationIdConverterTest {
 
@@ -32,8 +30,8 @@ public class CustomizationIdConverterTest {
 	public void shouldMapCstomizationID() {
 		 cusId.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.PEPPOL_OUT, null);
 		 String name = doc.getRootElement().getChild("CustomizationID").getValue();
-		 assertEquals(name, "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
-		 
+		 assertEquals("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0", name);
+
 
 	}
 }
