@@ -312,19 +312,28 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedLineTradeSettlement.addContent(specifiedTradeAllowanceCharge);
             }
 
+            // SpecifiedTradeAllowanceCharge
+            // TAG Sequence
+            // <ram:ChargeIndicator><udt:Indicator>false</udt:Indicator></ram:ChargeIndicator>
+            // <ram:CalculationPercent>10.00</ram:CalculationPercent>
+            // <ram:BasisAmount>147.00</ram:BasisAmount>
+            // <ram:ActualAmount>14.7</ram:ActualAmount>
+            // <ram:ReasonCode>66</ram:ReasonCode>
+            // <ram:Reason>Sales discount</ram:Reason>
             for (BG0028InvoiceLineCharges bg0028 : bg0025.getBG0028InvoiceLineCharges()) {
                 Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
+
                 Element chargeIndicator = new Element("ChargeIndicator", ramNs);
                 Element indicator = new Element("Indicator", udtNs);
                 indicator.setText("true");
                 chargeIndicator.addContent(indicator);
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
-                if (!bg0028.getBT0141InvoiceLineChargeAmount().isEmpty()) {
-                    BigDecimal bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
-                    Element actualAmount = new Element("ActualAmount", ramNs);
-                    actualAmount.setText(bt0141.setScale(2, RoundingMode.HALF_UP).toString());
-                    specifiedTradeAllowanceCharge.addContent(actualAmount);
+                if (!bg0028.getBT0143InvoiceLineChargePercentage().isEmpty()) {
+                    BigDecimal bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
+                    Element calculationPercent = new Element("CalculationPercent", ramNs);
+                    calculationPercent.setText(bt0143.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
                 }
 
                 if (!bg0028.getBT0142InvoiceLineChargeBaseAmount().isEmpty()) {
@@ -334,11 +343,18 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeAllowanceCharge.addContent(basisAmount);
                 }
 
-                if (!bg0028.getBT0143InvoiceLineChargePercentage().isEmpty()) {
-                    BigDecimal bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
-                    Element calculationPercent = new Element("CalculationPercent", ramNs);
-                    calculationPercent.setText(bt0143.setScale(2, RoundingMode.HALF_UP).toString());
-                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
+                if (!bg0028.getBT0141InvoiceLineChargeAmount().isEmpty()) {
+                    BigDecimal bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
+                    Element actualAmount = new Element("ActualAmount", ramNs);
+                    actualAmount.setText(bt0141.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(actualAmount);
+                }
+
+                if (!bg0028.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
+                    Untdid7161SpecialServicesCodes bt0145 = bg0028.getBT0145InvoiceLineChargeReasonCode(0).getValue();
+                    Element reasonCode = new Element("ReasonCode", ramNs);
+                    reasonCode.setText(bt0145.name());
+                    specifiedTradeAllowanceCharge.addContent(reasonCode);
                 }
 
                 if (!bg0028.getBT0144InvoiceLineChargeReason().isEmpty()) {
@@ -348,12 +364,6 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeAllowanceCharge.addContent(reason);
                 }
 
-                if (!bg0028.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
-                    Untdid7161SpecialServicesCodes bt0145 = bg0028.getBT0145InvoiceLineChargeReasonCode(0).getValue();
-                    Element reasonCode = new Element("ReasonCode", ramNs);
-                    reasonCode.setText(bt0145.name());
-                    specifiedTradeAllowanceCharge.addContent(reasonCode);
-                }
 
                 specifiedLineTradeSettlement.addContent(specifiedTradeAllowanceCharge);
             }
