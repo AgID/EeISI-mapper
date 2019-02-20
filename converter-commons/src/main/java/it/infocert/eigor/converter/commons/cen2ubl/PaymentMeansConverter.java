@@ -43,7 +43,7 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                     Element paymentMeansCode = new Element("PaymentMeansCode");
                     if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
                         BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
-                        paymentMeansCode.setAttribute("Name", bt0082.getValue());
+                        paymentMeansCode.setAttribute("name", bt0082.getValue());
                     }
                     final Untdid4461PaymentMeansCode value = bt0081.getValue();
                     try {
