@@ -27,10 +27,11 @@ public class CustomizationIdConverter implements CustomMapping<Document>{
         	customizationId = new Element(customizationID);
         	customizationId.setText("urn:fdc:cen.eu:en16931-1:2017");
         	root.addContent(customizationId);
-        } else {
-        	customizationId.setText("urn:fdc:cen.eu:en16931-1:2017");
-        	root.addContent(customizationId);
-        }
+        } 
+//        else {
+//        	customizationId.setText("urn:fdc:cen.eu:en16931-1:2017");
+//        	root.addContent(customizationId);
+//        }
 
 		
 	}

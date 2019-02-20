@@ -25,7 +25,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, Location callingLocation,
 			EigorConfiguration eigorConfiguration) {
 		// TODO Auto-generated method stub
-		
+
 		TypeConverter<BigDecimal, String> bdStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
 		Element root = document.getRootElement();
 		Element allowanceCharge = root.getChild("AllowanceCharge");
@@ -33,17 +33,17 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 		Element baseAmountElem = new Element("BaseAmount");
 		Element percentageElem = new Element("MultiplierFactorNumeric");
 		BigDecimal base = null, amount = null, percentage = null;
-		
-		
+
+
 		if(allowanceCharge == null) {
 			allowanceCharge = new Element("AllowanceCharge");
 			root.addContent(allowanceCharge);
 
 		}
-		
+
 		if(!cenInvoice.getBG0021DocumentLevelCharges().isEmpty()) { 
-			if(cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount().isEmpty() &&
-					!cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+			if(!cenInvoice.getBG0021DocumentLevelCharges(0).getBT0100DocumentLevelChargeBaseAmount().isEmpty() &&
+					cenInvoice.getBG0021DocumentLevelCharges(0).getBT0101DocumentLevelChargePercentage().isEmpty()) {
 
 				base = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0100DocumentLevelChargeBaseAmount(0).getValue();
 				amount = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0099DocumentLevelChargeAmount(0).getValue();
@@ -51,8 +51,8 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 
 			}
 
-			else if(cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount().isEmpty() &&
-					!cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+			else if(!cenInvoice.getBG0021DocumentLevelCharges(0).getBT0101DocumentLevelChargePercentage().isEmpty() &&
+					cenInvoice.getBG0021DocumentLevelCharges(0).getBT0100DocumentLevelChargeBaseAmount().isEmpty()) {
 
 				percentage = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0101DocumentLevelChargePercentage(0).getValue();
 				amount = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0099DocumentLevelChargeAmount(0).getValue();
@@ -62,9 +62,14 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 
 			else {
 
+				percentage = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0101DocumentLevelChargePercentage(0).getValue();
+				amount = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0099DocumentLevelChargeAmount(0).getValue();
+				base = cenInvoice.getBG0021DocumentLevelCharges(0).getBT0100DocumentLevelChargeBaseAmount(0).getValue();
+
+
 
 			} 
-			
+
 			try {
 				amountElem.setText(bdStrConverter.convert(amount.divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
 				baseAmountElem.setText(bdStrConverter.convert(base.divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
@@ -81,10 +86,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 						Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, amount.toString())
 						));
 			}
-			
-			allowanceCharge.addContent(amountElem);
-			allowanceCharge.addContent(baseAmountElem);
-			allowanceCharge.addContent(percentageElem);
+
 		}
 		else
 			return;
