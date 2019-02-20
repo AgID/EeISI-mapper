@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.commons.cen2ubl;
 
-import com.google.common.collect.Lists;
+ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
