@@ -28,12 +28,6 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
         Element root = document.getRootElement();
         if(root == null) return;
 
-
-        Iso4217CurrenciesFundsCodes invoiceCur = evalExpression(() -> invoice.getBT0005InvoiceCurrencyCode(0).getValue());
-        Iso4217CurrenciesFundsCodes vatCur = evalExpression(() -> invoice.getBT0006VatAccountingCurrencyCode(0).getValue());
-        Iso4217CurrenciesFundsCodes currencyForBt111 = invoiceCur.equals( vatCur ) && vatCur!=null ? invoiceCur : vatCur;
-
-
         BG0022DocumentTotals documentTotals = evalExpression( () -> invoice.getBG0022DocumentTotals(0) );
 
         Element taxTotal = null;
