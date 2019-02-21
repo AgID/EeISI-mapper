@@ -37,9 +37,7 @@ public class InvoiceTypeCodeConverter extends FirstLevelElementsConverter{
         if (ErrorCode.Location.PEPPOL_OUT.equals(callingLocation)) {
             convert("InvoiceTypeCode", converted);
         }
-        if (ErrorCode.Location.PEPPOL_OUT.equals(callingLocation)) {
-            convert("CreditNoteTypeCode", converted);
-        }
+        
 	}
 
 
