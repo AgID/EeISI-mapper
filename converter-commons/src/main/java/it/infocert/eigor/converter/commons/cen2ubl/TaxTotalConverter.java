@@ -19,8 +19,8 @@ import java.util.List;
 
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 
-public class VATBreakdownConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(VATBreakdownConverter.class);
+public class TaxTotalConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(TaxTotalConverter.class);
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {

@@ -17,7 +17,15 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.errors.ErrorCode.Location;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
+import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
+import it.infocert.eigor.model.core.model.BT0092DocumentLevelAllowanceAmount;
+import it.infocert.eigor.model.core.model.BT0093DocumentLevelAllowanceBaseAmount;
+import it.infocert.eigor.model.core.model.BT0094DocumentLevelAllowancePercentage;
+import it.infocert.eigor.model.core.model.BT0097DocumentLevelAllowanceReason;
+import it.infocert.eigor.model.core.model.BT0098DocumentLevelAllowanceReasonCode;
 
 public class AllowanceDocumentConverter implements CustomMapping<Document>{
 
@@ -27,66 +35,141 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 		// TODO Auto-generated method stub
 
 		TypeConverter<BigDecimal, String> bdStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
+
+		Iso4217CurrenciesFundsCodes currencyCode = null;
+		if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
+			BT0005InvoiceCurrencyCode bt0005 = cenInvoice.getBT0005InvoiceCurrencyCode(0);
+			currencyCode = bt0005.getValue();
+		}
+
 		Element root = document.getRootElement();
-		Element allowanceCharge = root.getChild("AllowanceCharge");
-		Element amountElem = new Element("Amount");
-		Element baseAmountElem = new Element("BaseAmount");
-		Element percentageElem = new Element("MultiplierFactorNumeric");
-		BigDecimal base = null, amount = null, percentage = null;
-
-		if(allowanceCharge == null) {
-			allowanceCharge = new Element("AllowanceCharge");
-			root.addContent(allowanceCharge);
-
-		}
-
-		if(!cenInvoice.getBG0020DocumentLevelAllowances().isEmpty()) { 
-			if(cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount().isEmpty() &&
-					!cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-
-				base = cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount(0).getValue();
-				amount = cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0092DocumentLevelAllowanceAmount(0).getValue();
-				percentage = calculateAllowancePercentage(base, amount);
-
-			}
-
-			else if(cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount().isEmpty() &&
-					!cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
-
-				percentage = cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0093DocumentLevelAllowanceBaseAmount(0).getValue();
-				amount = cenInvoice.getBG0020DocumentLevelAllowances(0).getBT0092DocumentLevelAllowanceAmount(0).getValue();
-				base = calculateAllowanceBase(percentage, amount);
-
-			}
-
-			else {
-
-
-			} 
+		if (root != null) {
+			for (BG0020DocumentLevelAllowances bg0020 : cenInvoice.getBG0020DocumentLevelAllowances()) {
+				
 			
-			try {
-				amountElem.setText(bdStrConverter.convert(amount.divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
-				baseAmountElem.setText(bdStrConverter.convert(base.divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
-				percentageElem.setText(bdStrConverter.convert(percentage.divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
+				BigDecimal percent = null, base = null, actualamount = null;
+				Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+				Element baseAmount = new Element("BaseAmount");
+				Element amount = new Element("Amount");
 
-			} catch (ConversionFailedException e) {
-				errors.add(ConversionIssue.newError(
-						e,
-						e.getMessage(),
-						callingLocation,
-						ErrorCode.Action.HARDCODED_MAP,
-						ErrorCode.Error.ILLEGAL_VALUE,
-						Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-						Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, amount.toString())
-						));
+
+
+				Element allowanceCharge = new Element("AllowanceCharge");
+				allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
+
+//				if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+//					BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
+//					Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+//					String value = String.valueOf(bt0098.getValue().getCode());
+//					allowanceChargeReasonCode.setText(value);
+//					allowanceCharge.addContent(allowanceChargeReasonCode);
+//				}
+
+				Element allowanceChargeReason = new Element("AllowanceChargeReason");
+				if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
+					BT0097DocumentLevelAllowanceReason bt0097 = bg0020.getBT0097DocumentLevelAllowanceReason(0);
+					allowanceChargeReason.setText(bt0097.getValue());
+				} else {
+					allowanceChargeReason.setText("Sconto documento");
+				}
+				allowanceCharge.addContent(allowanceChargeReason);
+
+
+				if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
+					BT0094DocumentLevelAllowancePercentage bt0094 = bg0020.getBT0094DocumentLevelAllowancePercentage(0);
+					try {
+						percent = bt0094.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP);
+						multiplierFactorNumeric.setText(bdStrConverter.convert(percent));
+
+					} catch (ConversionFailedException e) {
+						errors.add(ConversionIssue.newError(
+								e,
+								e.getMessage(),
+								callingLocation,
+								ErrorCode.Action.HARDCODED_MAP,
+								ErrorCode.Error.ILLEGAL_VALUE,
+								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0094.toString())
+								));
+					}
+				}
+
+
+				if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
+					BT0092DocumentLevelAllowanceAmount bt0092 = bg0020.getBT0092DocumentLevelAllowanceAmount(0);
+					try {
+						actualamount = bt0092.getValue();
+						amount.setText(bdStrConverter.convert(actualamount));
+						if (currencyCode != null) {
+							amount.setAttribute("currencyID", currencyCode.getCode());
+						}
+					} catch (ConversionFailedException e) {
+						errors.add(ConversionIssue.newError(
+								e,
+								e.getMessage(),
+								callingLocation,
+								ErrorCode.Action.HARDCODED_MAP,
+								ErrorCode.Error.ILLEGAL_VALUE,
+								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0092.toString())
+								));
+					}
+				}
+
+				if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+					BT0093DocumentLevelAllowanceBaseAmount bt0093 = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0);
+					try {
+						base = bt0093.getValue();
+						baseAmount.setText(bdStrConverter.convert(bt0093.getValue()));
+						if (currencyCode != null) {
+
+							baseAmount.setAttribute("currencyID", currencyCode.getCode());
+						}
+					} catch (ConversionFailedException e) {
+						errors.add(ConversionIssue.newError(
+								e,
+								e.getMessage(),
+								callingLocation,
+								ErrorCode.Action.HARDCODED_MAP,
+								ErrorCode.Error.ILLEGAL_VALUE,
+								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0093.toString())
+								));
+					}
+				}
+
+
+
+				if(percent == null && base!=null) {
+					
+					percent = calculateAllowancePercentage(base, actualamount);
+					
+					allowanceCharge.addContent(amount);
+					allowanceCharge.addContent(baseAmount);
+					allowanceCharge.addContent(multiplierFactorNumeric);
+				
+				}
+				else if(percent != null && base==null) {	
+					base = calculateAllowanceBase(percent, actualamount);
+					
+					allowanceCharge.addContent(amount);
+					allowanceCharge.addContent(baseAmount);
+					allowanceCharge.addContent(multiplierFactorNumeric);
+					
+				}
+				
+				else {  
+					
+				
+					allowanceCharge.addContent(amount);
+					allowanceCharge.addContent(baseAmount);
+					allowanceCharge.addContent(multiplierFactorNumeric);
+				 				
+				}
+
+				root.addContent(allowanceCharge);
 			}
-			
-			allowanceCharge.addContent(amountElem);
-			allowanceCharge.addContent(baseAmountElem);
-			allowanceCharge.addContent(percentageElem);
 		}
-		else
-			return;
 
 	}
 
