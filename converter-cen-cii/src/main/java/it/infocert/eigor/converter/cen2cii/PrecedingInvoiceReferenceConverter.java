@@ -49,7 +49,6 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
 
                 if (!bg0003.getBT0026PrecedingInvoiceIssueDate().isEmpty()) {
                     Element formattedIssueDateTime = new Element("FormattedIssueDateTime", ramNs);
-                    formattedIssueDateTime.setAttribute("format", "102");
                     try {
                         formattedIssueDateTime.setText(JavaLocalDateToStringConverter.newConverter("yyyyMMdd").convert(bg0003.getBT0026PrecedingInvoiceIssueDate(0).getValue()));
                         invoiceReferencedDocument.addContent(formattedIssueDateTime);
