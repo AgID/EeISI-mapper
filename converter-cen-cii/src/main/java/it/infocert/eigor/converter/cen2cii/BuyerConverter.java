@@ -6,7 +6,6 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0010BuyerReference;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -42,12 +41,12 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
         // not generated
 
         // <xsd:element name="BuyerReference" type="udt:TextType" minOccurs="0"/>
-        if (!invoice.getBT0010BuyerReference().isEmpty()) {
-            BT0010BuyerReference bt0010 = invoice.getBT0010BuyerReference(0);
-            Element buyerReference = new Element("BuyerReference", ramNs);
-            buyerReference.setText(bt0010.getValue());
-            applicableHeaderTradeAgreement.addContent(buyerReference);
-        }
+//        if (!invoice.getBT0010BuyerReference().isEmpty()) {
+//            BT0010BuyerReference bt0010 = invoice.getBT0010BuyerReference(0);
+//            Element buyerReference = new Element("BuyerReference", ramNs);
+//            buyerReference.setText(bt0010.getValue());
+//            applicableHeaderTradeAgreement.addContent(buyerReference);
+//        }
 
         // <xsd:element name="SellerTradeParty" type="ram:TradePartyType" minOccurs="0"/>
         // <xsd:element name="BuyerTradeParty" type="ram:TradePartyType" minOccurs="0"/>

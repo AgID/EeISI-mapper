@@ -39,10 +39,11 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                 rootElement.addContent(supplyChainTradeTransaction);
             }
 
-            Element applicableHeaderTradeAgreement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeAgreement");
-            if (applicableHeaderTradeAgreement == null) {
-                applicableHeaderTradeAgreement = new Element("ApplicableHeaderTradeAgreement", ramNs);
-                supplyChainTradeTransaction.addContent(applicableHeaderTradeAgreement);
+
+            Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
+            if (applicableHeaderTradeSettlement == null) {
+                applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
+                supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             }
 
             for (BG0019DirectDebit bg0019 : bg0016.getBG0019DirectDebit()) {
@@ -50,14 +51,8 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
                     BT0090BankAssignedCreditorIdentifier bt0090 = bg0019.getBT0090BankAssignedCreditorIdentifier(0);
                     Element creditorReferenceID = new Element("CreditorReferenceID", ramNs);
                     creditorReferenceID.setText(bt0090.getValue().getIdentifier());
-                    applicableHeaderTradeAgreement.addContent(creditorReferenceID);
+                    applicableHeaderTradeSettlement.addContent(creditorReferenceID);
                 }
-            }
-
-            Element applicableHeaderTradeSettlement = findNamespaceChild(supplyChainTradeTransaction, namespacesInScope, "ApplicableHeaderTradeSettlement");
-            if (applicableHeaderTradeSettlement == null) {
-                applicableHeaderTradeSettlement = new Element("ApplicableHeaderTradeSettlement", ramNs);
-                supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             }
 
             Element paymentReference = paymentReferenceOrNull(bg0016, ramNs);

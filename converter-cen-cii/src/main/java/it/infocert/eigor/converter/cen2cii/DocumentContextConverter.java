@@ -3,7 +3,6 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.CustomConverterUtils;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -13,32 +12,35 @@ import org.jdom2.Namespace;
 
 import java.util.List;
 
-//import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
-//import it.infocert.eigor.api.conversion.converter.TypeConverter;
-//import org.joda.time.LocalDate;
-
 /**
  * The Document Context Converter
  */
 public class DocumentContextConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
-    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
-
-        EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
-
-//        TypeConverter<LocalDate, String> dateStrConverter = JavaLocalDateToStringConverter.newConverter("yyyyMMdd");
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration configuration) {
 
         Element rootElement = document.getRootElement();
         List<Namespace> namespacesInScope = rootElement.getNamespacesIntroduced();
         Namespace rsmNs = rootElement.getNamespace("rsm");
         Namespace ramNs = rootElement.getNamespace("ram");
 
+        // <xsd:complexType name="ExchangedDocumentContextType">
         Element exchangedDocumentContext = findNamespaceChild(rootElement, namespacesInScope, "ExchangedDocumentContext");
         if (exchangedDocumentContext == null) {
             exchangedDocumentContext = new Element("ExchangedDocumentContext", rsmNs);
             rootElement.addContent(exchangedDocumentContext);
         }
+
+        // <xsd:sequence>
+        // <xsd:element name="SpecifiedTransactionID" type="udt:IDType" minOccurs="0"/>
+        // <xsd:element name="TestIndicator" type="udt:IndicatorType" minOccurs="0"/>
+        // <xsd:element name="BusinessProcessSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
+        // <xsd:element name="BIMSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
+        // <xsd:element name="ScenarioSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
+        // <xsd:element name="ApplicationSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
+
+        // <xsd:element name="GuidelineSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
         final Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
 
         String guidId = bt24OrNull(cenInvoice);
@@ -56,35 +58,12 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
         guidelineSpecifiedDocumentContextParameter.addContent(gId);
         exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
 
-       /* if (!cenInvoice.getBG0002ProcessControl().isEmpty()) {
-            BG0002ProcessControl bg0002 = cenInvoice.getBG0002ProcessControl(0);
-            {
-                Element businessProcessSpecifiedDocumentContextParameter = new Element("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
-                Element id = new Element("ID", ramNs);
-                if (!bg0002.getBT0023BusinessProcessType().isEmpty()) {
-                    BT0023BusinessProcessType bt0023 = bg0002.getBT0023BusinessProcessType(0);
-                    id.setText(bt0023.getValue());
-                } else {
-                    id.setText("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
-                }
-                businessProcessSpecifiedDocumentContextParameter.addContent(id);
-                exchangedDocumentContext.addContent(businessProcessSpecifiedDocumentContextParameter);
-            }
-            {
-                final Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
-                final Element id = new Element("ID", ramNs);
-                if (!bg0002.getBT0024SpecificationIdentifier().isEmpty()) {
-                    BT0024SpecificationIdentifier bt0024 = bg0002.getBT0024SpecificationIdentifier(0);
-                    id.setText(bt0024.getValue());
-                } else {
-//                    id.setText("urn:cen.eu:en16931:2017");
-//                    PEPPOL hardcoding
-                    id.setText("urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0");
-                }
-                guidelineSpecifiedDocumentContextParameter.addContent(id);
-                exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
-            }
-        }*/
+
+        // <xsd:element name="SubsetSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0" maxOccurs="unbounded"/>
+        // <xsd:element name="MessageStandardSpecifiedDocumentContextParameter" type="ram:DocumentContextParameterType" minOccurs="0"/>
+        // </xsd:sequence>
+
+
     }
 
     private String bt23OrNull(BG0000Invoice cenInvoice) {
