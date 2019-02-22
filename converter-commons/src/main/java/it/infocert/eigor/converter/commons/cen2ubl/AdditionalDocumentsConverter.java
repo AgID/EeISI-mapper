@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.commons.cen2ubl;
 
-import it.infocert.eigor.api.ConversionIssue;
+ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
@@ -19,8 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class AdditionalSupportingDocumentsConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(AdditionalSupportingDocumentsConverter.class);
+public class AdditionalDocumentsConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(AdditionalDocumentsConverter.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {

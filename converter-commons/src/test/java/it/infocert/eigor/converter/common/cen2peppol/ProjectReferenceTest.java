@@ -1,7 +1,7 @@
-package it.infocert.eigor.converter.cen2ublcn;
+package it.infocert.eigor.converter.common.cen2peppol;
 
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.cen2peppolcn.ProjectReferenceConverter;
+import it.infocert.eigor.converter.commons.cen2peppol.ProjectReferenceConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0011ProjectReference;
 import org.jdom2.Document;
@@ -31,13 +31,12 @@ public class ProjectReferenceTest {
         converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
-        Element additionalDocumentReference = rootElement.getChild("AdditionalDocumentReference");
+        Element additionalDocumentReference = rootElement.getChild("ProjectReference");
 
         Element id = additionalDocumentReference.getChild("ID");
         assertTrue("bt11".equals(id.getText()));
 
-        final Element docTypeCode = additionalDocumentReference.getChild("DocumentTypeCode");
-        assertTrue("50".equals(docTypeCode.getValue()));
+       
     }
 
 
