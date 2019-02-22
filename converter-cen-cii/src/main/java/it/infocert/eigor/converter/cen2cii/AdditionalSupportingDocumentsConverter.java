@@ -133,9 +133,13 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
 
                 if (!invoice.getBT0011ProjectReference().isEmpty()) {
                     Element specifiedProcuringProject = new Element("SpecifiedProcuringProject", ramNs);
-                    Element id = new Element("ID", ramNs);
-                    id.setText(invoice.getBT0011ProjectReference(0).getValue());
-                    specifiedProcuringProject.addContent(id);
+
+                    specifiedProcuringProject
+                            .addContent(new Element("ID", ramNs)
+                                    .setText( invoice.getBT0011ProjectReference(0).getValue() ))
+                            .addContent(new Element("Name", ramNs)
+                                    .setText( "Name of " + invoice.getBT0011ProjectReference(0).getValue() ));
+
                     applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
                 }
 
