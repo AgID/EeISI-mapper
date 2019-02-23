@@ -9,10 +9,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
-import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -191,9 +188,13 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             Element codiceArticolo = dettaglioLinee.getChild("CodiceArticolo");
                             if(codiceArticolo != null) {
                                 Element codiceValore = codiceArticolo.getChild("CodiceValore");
-                                Element codiceTipo = codiceArticolo.getChild("CodiceTipo");
+                                String codiceTipo = codiceArticolo.getChild("CodiceTipo").getText();
+                                // TODO add Untdid7143 and ISO6523 code lists
+                                if (Untdid1153ReferenceQualifierCode.valueOf(codiceTipo) == null) {
+                                    codiceTipo = "ZZZ";
+                                }
                                 BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier =
-                                        new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(codiceTipo.getText(),codiceValore.getText()));
+                                        new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(codiceTipo,codiceValore.getText()));
                                 bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier);
                             }
 
@@ -263,7 +264,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
-                            bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+                            if (dataInizioPeriodo != null || dataFinePeriodo != null) {
+                                bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+                            }
 
                             Element scontoMaggiorazione = dettaglioLinee.getChild("ScontoMaggiorazione");
                             if (scontoMaggiorazione != null) {
