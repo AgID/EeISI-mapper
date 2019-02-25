@@ -6,6 +6,7 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -119,6 +120,8 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             final BigDecimal bt0113PrepaidAmount = bg0022.getBT0113PaidAmount().isEmpty() ? BigDecimal.ZERO : bg0022.getBT0113PaidAmount(0).getValue();
             final BigDecimal bt0114RoundingAmount = bg0022.getBT0114RoundingAmount().isEmpty() ? BigDecimal.ZERO : bg0022.getBT0114RoundingAmount(0).getValue();
             final BigDecimal bt0115PayableAmount = bt112TaxInclusiveAmount.subtract(bt0113PrepaidAmount).add(bt0114RoundingAmount);
+            final BigDecimal bt111OrNull = getBT111OrNull(invoice);
+            final String bt0005OrNull = InvoiceUtils.evalExpression( ()-> invoice.getBT0005InvoiceCurrencyCode(0).getValue().getCode() );
 
 
 //          <xsd:element name="LineTotalAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
@@ -152,6 +155,14 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 taxTotalAmount.setAttribute("currencyID", currencyId);
             }
             specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+
+            if(bt111OrNull!=null && bt0005OrNull!=null) {
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(
+                        new Element("TaxTotalAmount", ramNs)
+                                .setText(bt111OrNull.setScale(2, RoundingMode.HALF_UP).toString())
+                                .setAttribute("currencyId", bt0005OrNull)
+                );
+            }
 
 //			<xsd:element name="RoundingAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             Element roundingAmount = new Element("RoundingAmount", ramNs);
@@ -230,6 +241,10 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             }
         }
         return sum;
+    }
+
+    private BigDecimal getBT111OrNull(BG0000Invoice cenInvoice) {
+        return InvoiceUtils.evalExpression(() -> cenInvoice.getBG0022DocumentTotals(0).getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue());
     }
 }
 
