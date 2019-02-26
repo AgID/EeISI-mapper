@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -18,7 +19,7 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;
 import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
 import it.infocert.eigor.model.core.model.BT0006VatAccountingCurrencyCode;
-
+@Ignore
 public class TaxAndDocumentCurrenceyCodeConverterTest {
 
 

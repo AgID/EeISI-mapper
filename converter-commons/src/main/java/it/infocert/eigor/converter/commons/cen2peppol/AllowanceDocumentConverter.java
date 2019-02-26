@@ -1,6 +1,7 @@
 package it.infocert.eigor.converter.commons.cen2peppol;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import org.jdom2.Document;
@@ -18,6 +19,7 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.errors.ErrorCode.Location;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
 import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
@@ -57,13 +59,15 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 				Element allowanceCharge = new Element("AllowanceCharge");
 				allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
 
-//				if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
-//					BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
-//					Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
-//					String value = String.valueOf(bt0098.getValue().getCode());
-//					allowanceChargeReasonCode.setText(value);
-//					allowanceCharge.addContent(allowanceChargeReasonCode);
-//				}
+				if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
+					Untdid5189ChargeAllowanceDescriptionCodes allowanceCode = null;
+					BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
+					allowanceCode = setDefaultAllowanceChargerCode(bt0098.getValue());
+					Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+					String value = String.valueOf(allowanceCode.getCode());
+					allowanceChargeReasonCode.setText(value);
+					allowanceCharge.addContent(allowanceChargeReasonCode);
+				}
 
 				Element allowanceChargeReason = new Element("AllowanceChargeReason");
 				if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
@@ -77,8 +81,39 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 
 				if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
 					BT0094DocumentLevelAllowancePercentage bt0094 = bg0020.getBT0094DocumentLevelAllowancePercentage(0);
+						percent = bt0094.getValue();
+
+					
+				}
+
+
+				if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
+					BT0092DocumentLevelAllowanceAmount bt0092 = bg0020.getBT0092DocumentLevelAllowanceAmount(0);
+						actualamount = bt0092.getValue();
+										
+				}
+
+				if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
+					BT0093DocumentLevelAllowanceBaseAmount bt0093 = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0);
+					base = bt0093.getValue();
+					
+					} 
+				
+
+
+
+				if(percent == null && base!=null) {
+					
+					percent = calculateAllowancePercentage(actualamount, base);
+
 					try {
-						percent = bt0094.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP);
+						if (currencyCode != null) {
+							amount.setAttribute("currencyID", currencyCode.getCode());
+							baseAmount.setAttribute("currencyID", currencyCode.getCode());
+						}
+						
+						amount.setText(bdStrConverter.convert(actualamount));
+						baseAmount.setText(bdStrConverter.convert(base));
 						multiplierFactorNumeric.setText(bdStrConverter.convert(percent));
 
 					} catch (ConversionFailedException e) {
@@ -89,19 +124,56 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 								ErrorCode.Action.HARDCODED_MAP,
 								ErrorCode.Error.ILLEGAL_VALUE,
 								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0094.toString())
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, baseAmount.toString())
 								));
 					}
+
+
+					allowanceCharge.addContent(multiplierFactorNumeric);
+					allowanceCharge.addContent(amount);
+					allowanceCharge.addContent(baseAmount);
+					root.addContent(allowanceCharge);
+				
 				}
+				
+				else if(percent != null && base==null) {	
+					base = calculateAllowanceBase(actualamount , percent);
+					if (currencyCode != null) {
+						amount.setAttribute("currencyID", currencyCode.getCode());
+						baseAmount.setAttribute("currencyID", currencyCode.getCode());
 
-
-				if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
-					BT0092DocumentLevelAllowanceAmount bt0092 = bg0020.getBT0092DocumentLevelAllowanceAmount(0);
+					}
 					try {
-						actualamount = bt0092.getValue();
+						amount.setText(bdStrConverter.convert(actualamount));
+						baseAmount.setText(bdStrConverter.convert(base));
+						multiplierFactorNumeric.setText(bdStrConverter.convert(percent));
+
+					} catch (ConversionFailedException e) {
+						errors.add(ConversionIssue.newError(
+								e,
+								e.getMessage(),
+								callingLocation,
+								ErrorCode.Action.HARDCODED_MAP,
+								ErrorCode.Error.ILLEGAL_VALUE,
+								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, baseAmount.toString())
+								));
+					}
+
+					allowanceCharge.addContent(multiplierFactorNumeric);
+					allowanceCharge.addContent(amount);
+					allowanceCharge.addContent(baseAmount);
+					root.addContent(allowanceCharge);
+
+				}
+				
+				else if(percent == null && base==null) {	
+					
+					try {
 						amount.setText(bdStrConverter.convert(actualamount));
 						if (currencyCode != null) {
 							amount.setAttribute("currencyID", currencyCode.getCode());
+
 						}
 					} catch (ConversionFailedException e) {
 						errors.add(ConversionIssue.newError(
@@ -111,20 +183,22 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 								ErrorCode.Action.HARDCODED_MAP,
 								ErrorCode.Error.ILLEGAL_VALUE,
 								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0092.toString())
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, baseAmount.toString())
 								));
 					}
-				}
+					allowanceCharge.addContent(amount);
+					root.addContent(allowanceCharge);
 
-				if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
-					BT0093DocumentLevelAllowanceBaseAmount bt0093 = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0);
+					
+				}
+				else {
+					
+				
 					try {
-						base = bt0093.getValue();
-						baseAmount.setText(bdStrConverter.convert(bt0093.getValue()));
-						if (currencyCode != null) {
-
-							baseAmount.setAttribute("currencyID", currencyCode.getCode());
-						}
+						amount.setText(bdStrConverter.convert(actualamount));
+						baseAmount.setText(bdStrConverter.convert(base));
+						multiplierFactorNumeric.setText(bdStrConverter.convert(percent));
+						
 					} catch (ConversionFailedException e) {
 						errors.add(ConversionIssue.newError(
 								e,
@@ -133,54 +207,80 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 								ErrorCode.Action.HARDCODED_MAP,
 								ErrorCode.Error.ILLEGAL_VALUE,
 								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, bt0093.toString())
+								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, baseAmount.toString())
 								));
 					}
-				}
+					
+					BigDecimal calculation = base.multiply(percent);
+					int result = actualamount.compareTo(calculation);
+					if (currencyCode != null) {
+						amount.setAttribute("currencyID", currencyCode.getCode());
+						baseAmount.setAttribute("currencyID", currencyCode.getCode());
 
+					}
+					if(result == 0) {
 
+						allowanceCharge.addContent(multiplierFactorNumeric);
+						allowanceCharge.addContent(amount);
+						allowanceCharge.addContent(baseAmount);
+						root.addContent(allowanceCharge);
 
-				if(percent == null && base!=null) {
-					
-					percent = calculateAllowancePercentage(base, actualamount);
-					
-					allowanceCharge.addContent(amount);
-					allowanceCharge.addContent(baseAmount);
-					allowanceCharge.addContent(multiplierFactorNumeric);
-				
-				}
-				else if(percent != null && base==null) {	
-					base = calculateAllowanceBase(percent, actualamount);
-					
-					allowanceCharge.addContent(amount);
-					allowanceCharge.addContent(baseAmount);
-					allowanceCharge.addContent(multiplierFactorNumeric);
-					
-				}
-				
-				else {  
-					
-				
-					allowanceCharge.addContent(amount);
-					allowanceCharge.addContent(baseAmount);
-					allowanceCharge.addContent(multiplierFactorNumeric);
+					}else {
+						allowanceCharge.addContent(amount);
+						root.addContent(allowanceCharge);
+
+					}
 				 				
 				}
 
-				root.addContent(allowanceCharge);
 			}
 		}
 
 	}
 
-	public BigDecimal calculateAllowancePercentage(BigDecimal base, BigDecimal amount) { 
+	public BigDecimal calculateAllowancePercentage(BigDecimal amount, BigDecimal base) { 
+		MathContext mc = new MathContext(2);
+		BigDecimal calculation = amount.divide(base, mc);
 
-		return base;
+		return calculation;
 	}
 
-	public BigDecimal calculateAllowanceBase(BigDecimal base, BigDecimal percentage) { 
+	public BigDecimal calculateAllowanceBase(BigDecimal amount, BigDecimal percentage) { 
+		MathContext mc = new MathContext(4);
+		BigDecimal calculation = amount.divide(percentage, mc);
 
-		return null;
+		return calculation;
+	}
+	
+	public Untdid5189ChargeAllowanceDescriptionCodes setDefaultAllowanceChargerCode(Untdid5189ChargeAllowanceDescriptionCodes val) {
+
+		Untdid5189ChargeAllowanceDescriptionCodes codeValue;
+
+		switch(val.toString())
+		{
+		case "41":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code41;
+		case "42":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code42;
+		case "60":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code60;
+		case "62":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code62;
+		case "63":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code63;
+		case "64":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code64;
+		case "65":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code65;
+		case "66":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code66;
+		case "67":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code67;
+		case "68":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code68;
+		case "70":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code70;
+		case "71":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code72;
+		case "88":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code88;
+		case "95":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
+		case "100":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code100;
+		case "102":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code102;
+		case "103":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code103;
+		case "104":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code104;
+		case "105":  codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code105;
+		default: codeValue = Untdid5189ChargeAllowanceDescriptionCodes.Code95;
+		}
+
+		return codeValue;
 	}
 
 }

@@ -29,7 +29,6 @@ import com.google.common.base.Supplier;
 
 import java.util.List;
 
-import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 
 public class AccountCustomerParty implements CustomMapping<Document> {
 
