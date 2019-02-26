@@ -38,7 +38,7 @@ public class DocumentContextConverterTest {
     @Test
     public void ifNoBT0024ThenInvoiceWillHaveDefaultValueForGuidelineSpecifiedDocumentContextParameterIdFromConfiguration() {
         BG0000Invoice invoice = createInvoiceWithBG0002();
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
+        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, configuration);
 
         Element exchangedDocumentContext = document.getRootElement().getChild("ExchangedDocumentContext", rsmNs);
         assertNotNull(exchangedDocumentContext);

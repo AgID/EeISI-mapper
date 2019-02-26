@@ -44,9 +44,10 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
         final Element guidelineSpecifiedDocumentContextParameter = new Element("GuidelineSpecifiedDocumentContextParameter", ramNs);
 
         String guidId = bt24OrNull(cenInvoice);
-        if(guidId == null || guidId.trim().isEmpty()) guidId = configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context");
+        if(guidId == null || guidId.trim().isEmpty()) {
+            guidId = configuration.getMandatoryString("eigor.converter.cen-cii.guideline-context");
+        }
 
-        final Element gId = new Element("ID", ramNs).setText(guidId);
         final Element businessProcessSpecifiedDocumentContextParameter = new Element("BusinessProcessSpecifiedDocumentContextParameter", ramNs);
 
         String bizProcId = bt23OrNull(cenInvoice);
@@ -55,7 +56,7 @@ public class DocumentContextConverter extends CustomConverterUtils implements Cu
 
         businessProcessSpecifiedDocumentContextParameter.addContent(bId);
         exchangedDocumentContext.addContent(businessProcessSpecifiedDocumentContextParameter);
-        guidelineSpecifiedDocumentContextParameter.addContent(gId);
+        guidelineSpecifiedDocumentContextParameter.addContent(new Element("ID", ramNs).setText(guidId));
         exchangedDocumentContext.addContent(guidelineSpecifiedDocumentContextParameter);
 
 
