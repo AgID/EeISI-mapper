@@ -160,7 +160,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 specifiedTradeSettlementHeaderMonetarySummation.addContent(
                         new Element("TaxTotalAmount", ramNs)
                                 .setText(bt111OrNull.setScale(2, RoundingMode.HALF_UP).toString())
-                                .setAttribute("currencyId", bt0005OrNull)
+                                .setAttribute("currencyID", bt0005OrNull)
                 );
             }
 
