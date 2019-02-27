@@ -31,8 +31,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi195() {
         this.conversion.assertConversionWithoutErrors(
-                "/issues/issue-eisi195-cen.xml",
-                "xmlcen", "peppolbis", keepErrorsNotWarnings());
+                "/issues/issue-eisi195-fattpa.xml",
+                "fatturapa", "peppolcn", keepErrorsNotWarnings());
 
     }
 

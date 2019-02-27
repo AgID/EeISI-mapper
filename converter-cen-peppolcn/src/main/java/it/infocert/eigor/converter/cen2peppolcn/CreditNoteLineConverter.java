@@ -47,6 +47,9 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                 List<BG0025InvoiceLine> bg0025 = cenInvoice.getBG0025InvoiceLine();
                 for (BG0025InvoiceLine elemBg25 : bg0025) {
                     Element invoiceLine = new Element("CreditNoteLine");
+
+
+                    // <xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1">
                     if (!elemBg25.getBT0126InvoiceLineIdentifier().isEmpty()) {
                         BT0126InvoiceLineIdentifier bt0126 = elemBg25.getBT0126InvoiceLineIdentifier(0);
                         Element id = new Element("ID");
@@ -54,19 +57,11 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(id);
                     }
 
-                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element documentReference = new Element("DocumentReference");
-                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        documentTypeCode.setText("130");
-                        Element id = new Element("ID");
-                        id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
-                        documentReference.addContent(id);
-                        documentReference.addContent(documentTypeCode);
-                        invoiceLine.addContent(documentReference);
-                    }
 
+                    // <xsd:element ref="cbc:UUID" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:Note" minOccurs="0" maxOccurs="unbounded">
+
+                    // <xsd:element ref="cbc:CreditedQuantity" minOccurs="0" maxOccurs="1">
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
 
                         BigDecimal quantity;
@@ -94,6 +89,7 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(invoicedQuantity);
                     }
 
+                    // <xsd:element ref="cbc:LineExtensionAmount" minOccurs="0" maxOccurs="1">
                     if (!elemBg25.getBT0131InvoiceLineNetAmount().isEmpty()) {
                         BT0131InvoiceLineNetAmount bt0131 = elemBg25.getBT0131InvoiceLineNetAmount(0);
                         Element lineExtensionAmount = new Element("LineExtensionAmount");
@@ -105,6 +101,13 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(lineExtensionAmount);
                     }
 
+                    // <xsd:element ref="cbc:TaxPointDate" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:AccountingCostCode" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:AccountingCost" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:PaymentPurposeCode" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:FreeOfChargeIndicator" minOccurs="0" maxOccurs="1">
+
+                    // <xsd:element ref="cac:InvoicePeriod" minOccurs="0" maxOccurs="unbounded">
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
 
                         List<BG0026InvoiceLinePeriod> bg0026s
@@ -126,6 +129,34 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         }
                     }
 
+                    // <xsd:element ref="cac:OrderLineReference" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:DiscrepancyResponse" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:DespatchLineReference" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:ReceiptLineReference" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:BillingReference" minOccurs="0" maxOccurs="unbounded">
+
+                    // <xsd:element ref="cac:DocumentReference" minOccurs="0" maxOccurs="unbounded">
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element documentReference = new Element("DocumentReference");
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("130");
+                        Element id = new Element("ID");
+                        id.setText(bt0128.getValue().getIdentifier());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
+                        documentReference.addContent(id);
+                        documentReference.addContent(documentTypeCode);
+                        invoiceLine.addContent(documentReference);
+                    }
+
+                    // <xsd:element ref="cac:PricingReference" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cac:OriginatorParty" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cac:Delivery" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:PaymentTerms" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:TaxTotal" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:AllowanceCharge" minOccurs="0" maxOccurs="unbounded">
+
+                    // <xsd:element ref="cac:Item" minOccurs="0" maxOccurs="1">
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
                         for (BG0031ItemInformation elemBg31 : bg0031) {
@@ -188,6 +219,7 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         }
                     }
 
+                    // <xsd:element ref="cac:Price" minOccurs="0" maxOccurs="1">
                     if (!elemBg25.getBG0029PriceDetails().isEmpty()) {
                         List<BG0029PriceDetails> bg0029 = elemBg25.getBG0029PriceDetails();
                         for (BG0029PriceDetails elemBg29 : bg0029) {
@@ -219,6 +251,23 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                             invoiceLine.addContent(price);
                         }
                     }
+
+                    // <xsd:element ref="cac:DeliveryTerms" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:SubCreditNoteLine" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:ItemPriceExtension" minOccurs="0" maxOccurs="1">
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     root.addContent(invoiceLine);
                 }
