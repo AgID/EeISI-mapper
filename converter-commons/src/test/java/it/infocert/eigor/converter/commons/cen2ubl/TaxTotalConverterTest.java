@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 
 import static org.junit.Assert.assertTrue;
 
-public class VATBreakdownConverterTest {
-    private VATBreakdownConverter converter;
+public class TaxTotalConverterTest {
+    private TaxTotalConverter converter;
     private Document document;
 
     @Before
     public void setUp() throws Exception {
-        converter = new VATBreakdownConverter();
+        converter = new TaxTotalConverter();
         document = new Document(new Element("Invoice"));
     }
 

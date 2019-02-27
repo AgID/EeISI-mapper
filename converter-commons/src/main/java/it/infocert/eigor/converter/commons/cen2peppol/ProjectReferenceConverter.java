@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2peppolcn;
+package it.infocert.eigor.converter.commons.cen2peppol;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -24,16 +24,13 @@ public class ProjectReferenceConverter implements CustomMapping<Document> {
 
                 List<BT0011ProjectReference> bt0011 = cenInvoice.getBT0011ProjectReference();
                 for (BT0011ProjectReference elemBt11 : bt0011) {
-                    Element additionalDocument = new Element("AdditionalDocumentReference");
-                    root.addContent(additionalDocument);
+                    Element projectReference = new Element("ProjectReference");
 
                     Element id = new Element("ID");
                     id.setText(elemBt11.getValue());
-                    Element documentTypeCode = new Element("DocumentTypeCode");
-                    documentTypeCode.setText("50");
+                    projectReference.addContent(id);
+                    root.addContent(projectReference);
 
-                    additionalDocument.addContent(id);
-                    additionalDocument.addContent(documentTypeCode);
                 }
             }
         }

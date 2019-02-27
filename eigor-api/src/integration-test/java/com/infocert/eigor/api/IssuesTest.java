@@ -48,7 +48,7 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
                 "/examples/fattpa/A10-Licenses.xml",
                 "fatturapa",
-                "peppolbis");
+                "peppolcn");
 
     }
 

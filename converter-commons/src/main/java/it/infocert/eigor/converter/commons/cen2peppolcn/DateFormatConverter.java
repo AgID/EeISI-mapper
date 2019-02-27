@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.commons.cen2peppol;
+package it.infocert.eigor.converter.commons.cen2peppolcn;
 
 import java.util.List;
 
@@ -48,17 +48,17 @@ public class DateFormatConverter implements CustomMapping<Document>{
 				}
 			}
 			
-			List<BT0009PaymentDueDate> bt09 =  cenInvoice.getBT0009PaymentDueDate();
-			if(!bt09.isEmpty()) {
-				for(BT0009PaymentDueDate elembt09: bt09) {
-					if(elembt09.getValue() != null) {
-						String formattedDate = elembt09.getValue().toString("yyyy-MM-dd");
-						dueDate.setText(formattedDate);
-						root.addContent(dueDate);
-					}
-				}
-			}
-			
+//			List<BT0009PaymentDueDate> bt09 =  cenInvoice.getBT0009PaymentDueDate();
+//			if(!bt09.isEmpty()) {
+//				for(BT0009PaymentDueDate elembt09: bt09) {
+//					if(elembt09.getValue() != null) {
+//						String formattedDate = elembt09.getValue().toString("yyyy-MM-dd");
+//						dueDate.setText(formattedDate);
+//						root.addContent(dueDate);
+//					}
+//				}
+//			}
+//			
 			
 	
 			

@@ -137,8 +137,8 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
         // PEPPOL hardcoding
         final Element root = document.getRootElement();
 
-        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.customization-id")));
-        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.profile-id")));
+//        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.customization-id")));
+//        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.profile-id")));
     }
 
     @Override
