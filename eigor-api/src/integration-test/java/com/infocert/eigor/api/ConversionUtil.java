@@ -79,7 +79,7 @@ public class ConversionUtil {
 
             issuesDescription.append("\n\n====== Converted Invoice: ======\n\n");
 
-            issuesDescription.append(msgConvertedInvoice(convert))
+            issuesDescription.append(describeConvertedInvoice(convert))
                     .append("\n\n");
 
             issuesDescription.append("\n\n====== Intermediate CEN Invoice: ======\n\n");
@@ -99,7 +99,7 @@ public class ConversionUtil {
         return v.toString();
     }
 
-    private String msgConvertedInvoice(ConversionResult<byte[]> convert) {
+    public static String describeConvertedInvoice(ConversionResult<byte[]> convert) {
         return new String(convert.getResult());
     }
 
