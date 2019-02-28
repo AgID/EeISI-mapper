@@ -20,12 +20,14 @@ import it.infocert.eigor.api.errors.ErrorCode.Location;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0020DocumentLevelAllowances;
 import it.infocert.eigor.model.core.model.BT0005InvoiceCurrencyCode;
 import it.infocert.eigor.model.core.model.BT0092DocumentLevelAllowanceAmount;
 import it.infocert.eigor.model.core.model.BT0093DocumentLevelAllowanceBaseAmount;
 import it.infocert.eigor.model.core.model.BT0094DocumentLevelAllowancePercentage;
+import it.infocert.eigor.model.core.model.BT0095DocumentLevelAllowanceVatCategoryCode;
 import it.infocert.eigor.model.core.model.BT0097DocumentLevelAllowanceReason;
 import it.infocert.eigor.model.core.model.BT0098DocumentLevelAllowanceReasonCode;
 
@@ -58,7 +60,7 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 
 				Element allowanceCharge = new Element("AllowanceCharge");
 				allowanceCharge.addContent(new Element("ChargeIndicator").setText("false"));
-
+				
 				if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
 					Untdid5189ChargeAllowanceDescriptionCodes allowanceCode = null;
 					BT0098DocumentLevelAllowanceReasonCode bt0098 = bg0020.getBT0098DocumentLevelAllowanceReasonCode(0);
@@ -68,17 +70,16 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 					allowanceChargeReasonCode.setText(value);
 					allowanceCharge.addContent(allowanceChargeReasonCode);
 				}
-
+				
 				Element allowanceChargeReason = new Element("AllowanceChargeReason");
 				if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
 					BT0097DocumentLevelAllowanceReason bt0097 = bg0020.getBT0097DocumentLevelAllowanceReason(0);
 					allowanceChargeReason.setText(bt0097.getValue());
-				} else {
-					allowanceChargeReason.setText("Sconto documento");
-				}
-				allowanceCharge.addContent(allowanceChargeReason);
+					allowanceCharge.addContent(allowanceChargeReason);
 
-
+				} 
+				
+				
 				if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
 					BT0094DocumentLevelAllowancePercentage bt0094 = bg0020.getBT0094DocumentLevelAllowancePercentage(0);
 						percent = bt0094.getValue();
@@ -132,7 +133,7 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 					allowanceCharge.addContent(multiplierFactorNumeric);
 					allowanceCharge.addContent(amount);
 					allowanceCharge.addContent(baseAmount);
-					root.addContent(allowanceCharge);
+					//root.addContent(allowanceCharge);
 				
 				}
 				
@@ -163,7 +164,7 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 					allowanceCharge.addContent(multiplierFactorNumeric);
 					allowanceCharge.addContent(amount);
 					allowanceCharge.addContent(baseAmount);
-					root.addContent(allowanceCharge);
+					//root.addContent(allowanceCharge);
 
 				}
 				
@@ -187,7 +188,7 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 								));
 					}
 					allowanceCharge.addContent(amount);
-					root.addContent(allowanceCharge);
+					//root.addContent(allowanceCharge);
 
 					
 				}
@@ -223,16 +224,63 @@ public class AllowanceDocumentConverter implements CustomMapping<Document>{
 						allowanceCharge.addContent(multiplierFactorNumeric);
 						allowanceCharge.addContent(amount);
 						allowanceCharge.addContent(baseAmount);
-						root.addContent(allowanceCharge);
+						//root.addContent(allowanceCharge);
 
 					}else {
 						allowanceCharge.addContent(amount);
-						root.addContent(allowanceCharge);
 
 					}
 				 				
 				}
 
+                Element taxCategory = new Element("TaxCategory");
+
+                if (!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
+                    BigDecimal percentValue = bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue();
+
+                    Element id = new Element("ID");
+                    if (!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
+                        BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode(0);
+                        id.setText(bt0095.getValue().name());
+                    } else if (BigDecimal.ZERO.compareTo(percentValue) == 0) {
+                        id.setText(Untdid5305DutyTaxFeeCategories.Z.name());
+                    } else {
+                        id.setText(Untdid5305DutyTaxFeeCategories.S.name());
+                    }
+                    taxCategory.addContent(id);
+
+                    Element percentTax = new Element("Percent");
+                    try {
+                    	percentTax.setText(bdStrConverter.convert(percentValue));
+                        taxCategory.addContent(percentTax);
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, percentValue.toString())
+                        ));
+                    }
+                } else if (!bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().isEmpty()) {
+                    BT0095DocumentLevelAllowanceVatCategoryCode bt0095 = bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode(0);
+                    Element id = new Element("ID");
+                    taxCategory.addContent(id);
+                    id.setText(bt0095.getValue().name());
+
+                    if (Untdid5305DutyTaxFeeCategories.E.equals(bt0095.getValue())) {
+                        Element percentTax = new Element("Percent");
+                        percentTax.setText("0.00");
+                        taxCategory.addContent(percentTax);
+                    }
+                }
+                Element taxScheme = new Element("TaxScheme").addContent(new Element("ID").setText("VAT"));
+                taxCategory.addContent(taxScheme);
+                allowanceCharge.addContent(taxCategory);	
+				root.addContent(allowanceCharge);
+	
 			}
 		}
 

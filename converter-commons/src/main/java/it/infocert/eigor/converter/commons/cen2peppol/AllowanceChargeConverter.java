@@ -60,6 +60,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 				allowanceCharge.addContent(new Element("ChargeIndicator").setText("true"));
 
 
+				
 				if (!bg0021.getBT0105DocumentLevelChargeReasonCode().isEmpty()) {
 					BT0105DocumentLevelChargeReasonCode bt0105 = bg0021.getBT0105DocumentLevelChargeReasonCode(0);
 					Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
@@ -67,15 +68,13 @@ public class AllowanceChargeConverter implements CustomMapping<Document>{
 					allowanceCharge.addContent(allowanceChargeReasonCode);
 				}
 
-				Element allowanceChargeReason = new Element("AllowanceChargeReason");
 				if (!bg0021.getBT0104DocumentLevelChargeReason().isEmpty()) {
+					Element allowanceChargeReason = new Element("AllowanceChargeReason");
+
 					BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
 					allowanceChargeReason.setText(bt0104.getValue());
-				} else {
-					allowanceChargeReason.setText("Maggiorazione documento");
-				}
-				allowanceCharge.addContent(allowanceChargeReason);
-
+					allowanceCharge.addContent(allowanceChargeReason);
+				} 
 
 
 				if (!bg0021.getBT0101DocumentLevelChargePercentage().isEmpty()) {
