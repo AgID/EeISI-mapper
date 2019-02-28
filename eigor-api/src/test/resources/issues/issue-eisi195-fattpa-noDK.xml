@@ -13,7 +13,7 @@
         <CedentePrestatore>
             <DatiAnagrafici>
                 <IdFiscaleIVA>
-                    <IdPaese>DK</IdPaese>
+                    <IdPaese>ES</IdPaese>
                     <IdCodice>12345</IdCodice>
                 </IdFiscaleIVA>
                 <Anagrafica>
@@ -25,11 +25,11 @@
                 <Indirizzo>Main street Suite 123</Indirizzo>
                 <CAP>54321</CAP>
                 <Comune>Big city</Comune>
-                <Nazione>DK</Nazione>
+                <Nazione>ES</Nazione>
             </Sede>
             <Contatti>
                 <Telefono>4621230</Telefono>
-                <Email>antonio@salescompany.DK</Email>
+                <Email>antonio@salescompany.dk</Email>
             </Contatti>
         </CedentePrestatore>
         <CessionarioCommittente>

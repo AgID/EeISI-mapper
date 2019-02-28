@@ -16,9 +16,9 @@ import java.io.StringReader;
 import java.util.Base64;
 import java.util.List;
 
-import static com.infocert.eigor.api.ConversionUtil.keepErrorsNotWarnings;
+import static com.infocert.eigor.api.ConversionUtil.*;
 import static java.util.stream.Collectors.joining;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -30,8 +30,21 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
     public void issueEeisi195() {
-        this.conversion.assertConversionWithoutErrors(
+
+        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi195-fattpa.xml",
+                "fatturapa", "peppolcn", discardAll());
+
+        assertThat( describeConversionIssues(conversionResult.getIssues()), conversionResult.getIssues(), hasSize(2) );
+
+        assertThat( conversionResult.getIssues().get(0).getMessage(), startsWith("PEPPOLCN_OUT.SCH_VALIDATION.INVALID - Schematron failed assert 'For Danish suppliers when the Accounting code is known, it should be referred on the Invoice.'") );
+        assertThat( conversionResult.getIssues().get(1).getMessage(), startsWith("PEPPOLCN_OUT.SCH_VALIDATION.INVALID - Schematron failed assert 'Danish suppliers MUST provide legal entity (CVR-number).'") );
+    }
+
+    @Test
+    public void issueEeisi195NoDk() {
+        this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi195-fattpa-noDK.xml",
                 "fatturapa", "peppolcn", keepErrorsNotWarnings());
 
     }
