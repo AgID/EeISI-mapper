@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The Buyer Custom Converter
  */
-public class BuyerConverter extends CustomConverterUtils implements CustomMapping<Document> {
+public class BuyerTradePartyConverter extends CustomConverterUtils implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -41,13 +41,6 @@ public class BuyerConverter extends CustomConverterUtils implements CustomMappin
         // not generated
 
         // <xsd:element name="BuyerReference" type="udt:TextType" minOccurs="0"/>
-//        if (!invoice.getBT0010BuyerReference().isEmpty()) {
-//            BT0010BuyerReference bt0010 = invoice.getBT0010BuyerReference(0);
-//            Element buyerReference = new Element("BuyerReference", ramNs);
-//            buyerReference.setText(bt0010.getValue());
-//            applicableHeaderTradeAgreement.addContent(buyerReference);
-//        }
-
         // <xsd:element name="SellerTradeParty" type="ram:TradePartyType" minOccurs="0"/>
         // <xsd:element name="BuyerTradeParty" type="ram:TradePartyType" minOccurs="0"/>
         // <xsd:element name="SalesAgentTradeParty" type="ram:TradePartyType" minOccurs="0"/>

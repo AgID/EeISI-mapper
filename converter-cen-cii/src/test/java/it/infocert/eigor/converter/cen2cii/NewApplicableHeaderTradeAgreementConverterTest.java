@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class AdditionalSupportingDocumentsConverterTest {
+public class NewApplicableHeaderTradeAgreementConverterTest {
     private final Namespace rsmNs = Namespace.getNamespace("rsm", "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100");
     private final Namespace ramNs = Namespace.getNamespace("ram", "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100");
     private final Namespace qdtNs = Namespace.getNamespace("qdt", "urn:un:unece:uncefact:data:standard:QualifiedDataType:100");
@@ -30,7 +30,7 @@ public class AdditionalSupportingDocumentsConverterTest {
 
     @Test
     public void test() {
-        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        NewApplicableHeaderTradeAgreementConverter converter = new NewApplicableHeaderTradeAgreementConverter();
         BG0000Invoice invoice = createInvoiceWithBG0024();
         Document document = createInvoiceWithRootNode();
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
@@ -66,7 +66,6 @@ public class AdditionalSupportingDocumentsConverterTest {
         assertNotNull(filename);
         assertThat(filename.getValue(), is("test.pdf"));
     }
-
 
     private BG0000Invoice createInvoiceWithBG0024() {
         BG0000Invoice invoice = new BG0000Invoice();
