@@ -10,6 +10,8 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -64,13 +66,13 @@ public class ConversionUtil {
 
     String buildMsgForFailedAssertion(ConversionResult<byte[]> convert, Predicate<IConversionIssue> predicate, BG0000Invoice intermediateCenInvoice){
 
-        Iterable<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
+        List<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
 
         StringBuilder issuesDescription = new StringBuilder();
-        boolean areThereIssues = conversionIssues.iterator().hasNext();
+        boolean areThereIssues = !conversionIssues.isEmpty();
         if(areThereIssues){
 
-            issuesDescription.append("\n\n====== Issues: ======\n\n");
+            issuesDescription.append("\n\n====== " + conversionIssues.size() + " Issues: ======\n\n");
 
             issuesDescription.append(msgForIssues(conversionIssues));
 
@@ -108,10 +110,32 @@ public class ConversionUtil {
                     .append( issue.getMessage() )
                     .append("\n")
                     .append("   ►►► ")
-                    .append(issue.getCause()!=null ? issue.getCause().getMessage() : "no details")
-                    .append("\n\n");
+                    .append( issue.isError() ? "ERROR" : "WARN" )
+                    .append("\n");
+
+            if(issue.getCause()!=null) {
+                issuesDescription2
+                        .append("   ►►► ")
+                        .append(issue.getCause().getMessage())
+                        .append("\n");
+
+                StringWriter sw = new StringWriter();
+                issue.getCause().printStackTrace( new PrintWriter(sw) );
+                issuesDescription2
+                        .append("   ►►► ")
+                        .append(sw.toString())
+                        .append("\n");
+
+
+
+            }
+            issuesDescription2.append("\n\n");
         }
         return issuesDescription2;
+    }
+
+    public static Predicate<IConversionIssue> keepErrorsNotWarnings() {
+        return new KeepErrorsNotWarnings();
     }
 
 
@@ -135,6 +159,15 @@ public class ConversionUtil {
         @Override
         public boolean test(@Nullable IConversionIssue input) {
             return true;
+        }
+    }
+
+    private static class KeepErrorsNotWarnings implements Predicate<IConversionIssue> {
+
+        @Override
+        public boolean test(@Nullable IConversionIssue issue) {
+
+            return !issue.isWarning();
         }
     }
 

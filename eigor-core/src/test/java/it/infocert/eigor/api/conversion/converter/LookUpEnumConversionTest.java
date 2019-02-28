@@ -1,5 +1,6 @@
 package it.infocert.eigor.api.conversion.converter;
 
+import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.VatExemptionReasonsCodes;
@@ -12,7 +13,7 @@ public class LookUpEnumConversionTest {
 
     LookUpEnumConversion sut = (LookUpEnumConversion) LookUpEnumConversion.newConverter(Iso31661CountryCodes.class);
 
-    @Test public void convertStringToVat() {
+    @Test public void convertStringToVat() throws ConversionFailedException {
 
         // given
         LookUpEnumConversion<VatExemptionReasonsCodes> sut = (LookUpEnumConversion<VatExemptionReasonsCodes>) LookUpEnumConversion.newConverter(VatExemptionReasonsCodes.class);
@@ -25,7 +26,7 @@ public class LookUpEnumConversionTest {
 
     }
 
-    @Test public void convertStringToIso() {
+    @Test public void convertStringToIso() throws ConversionFailedException {
 
         // when
         Iso31661CountryCodes it = (Iso31661CountryCodes) sut.convert("IT");
@@ -36,7 +37,7 @@ public class LookUpEnumConversionTest {
 
     }
 
-    @Test public void convertStringHRToIso() {
+    @Test public void convertStringHRToIso() throws ConversionFailedException {
 
         // when
         Iso31661CountryCodes it = (Iso31661CountryCodes) sut.convert("HR");

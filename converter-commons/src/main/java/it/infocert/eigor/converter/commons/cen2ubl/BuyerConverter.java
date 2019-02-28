@@ -131,10 +131,13 @@ public class BuyerConverter implements CustomMapping<Document> {
                                 country = new Element("Country");
                                 postalAddress.addContent(country);
                             }
-                            Element identificationCode = new Element("IdentificationCode");
-                            Iso31661CountryCodes code = bt0055.getValue();
-                            identificationCode.setText(code.name());
-                            country.addContent(identificationCode);
+
+                            if(country.getChild("IdentificationCode")==null) {
+                                Element identificationCode = new Element("IdentificationCode");
+                                Iso31661CountryCodes code = bt0055.getValue();
+                                identificationCode.setText(code.name());
+                                country.addContent(identificationCode);
+                            }
                         }
                     }
 

@@ -1,25 +1,27 @@
     package it.infocert.eigor.converter.cen2ubl;
 
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
-import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.model.*;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+    import it.infocert.eigor.api.CustomMapping;
+    import it.infocert.eigor.api.IConversionIssue;
+    import it.infocert.eigor.api.configuration.EigorConfiguration;
+    import it.infocert.eigor.api.conversion.LookUpEnumConversion;
+    import it.infocert.eigor.api.conversion.converter.TypeConverter;
+    import it.infocert.eigor.api.errors.ErrorCode;
+    import it.infocert.eigor.model.core.enums.*;
+    import it.infocert.eigor.model.core.model.*;
+    import org.jdom2.Attribute;
+    import org.jdom2.Document;
+    import org.jdom2.Element;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
+    import java.math.BigDecimal;
+    import java.math.RoundingMode;
+    import java.util.List;
 
 public class InvoiceLineConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(InvoiceLineConverter.class);
+
+    private static TypeConverter<String, Untdid1153ReferenceQualifierCode> untdid1153Converter = LookUpEnumConversion.newConverter(Untdid1153ReferenceQualifierCode.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -82,27 +84,42 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element documentReference = new Element("DocumentReference");
+
                         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        documentTypeCode.setText("130");
-                        Element id = new Element("ID");
-                        id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema() != null ? bt0128.getValue().getIdentificationSchema() : "");
-                        documentReference.addContent(id);
-                        documentReference.addContent(documentTypeCode);
-                        invoiceLine.addContent(documentReference);
+
+                        String idValue = bt0128.getValue().getIdentifier();
+
+                        String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
+                                ? bt0128.getValue().getIdentificationSchema()
+                                : "";
+                        idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
+
+
+                        String typeCode = "130";
+
+                        Element ublDocumentReferenceXml = new Element("DocumentReference");
+
+                        Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
+                        ublDocumentTypeCodeXml.setText(typeCode);
+
+                        Element ublIdXml = new Element("ID");
+                        ublIdXml.setText(idValue);
+                        ublIdXml.setAttribute("schemeID", idValueScheme);
+
+                        ublDocumentReferenceXml.addContent(ublIdXml);
+                        ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
+                        invoiceLine.addContent(ublDocumentReferenceXml);
                     }
 
-                    if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
-                        List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
-                        for (BG0026InvoiceLinePeriod ignored : bg0026) {
-                            Element invoicePeriod = new Element("InvoicePeriod");
-                            if(invoicePeriod!=null && !invoicePeriod.getChildren().isEmpty()) {
-                                invoiceLine.addContent(invoicePeriod);
-                            }
-                        }
-                    }
+//                    if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
+//                        List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
+//                        for (BG0026InvoiceLinePeriod ignored : bg0026) {
+//                            Element invoicePeriod = new Element("InvoicePeriod");
+//                            if(invoicePeriod!=null && !invoicePeriod.getChildren().isEmpty()) {
+//                                invoiceLine.addContent(invoicePeriod);
+//                            }
+//                        }
+//                    }
 
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();

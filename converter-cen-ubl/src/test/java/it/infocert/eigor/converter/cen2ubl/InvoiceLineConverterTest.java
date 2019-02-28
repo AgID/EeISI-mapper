@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class InvoiceLineConverterTest {
@@ -24,23 +25,54 @@ public class InvoiceLineConverterTest {
     }
 
     @Test
-    public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
-        BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
+    public void invoiceLineWithBT0128shouldHaveDocumentReferenceWithDefaultSchemeIdAndTypeCode() throws Exception {
+
+        // given
+        BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128("321", "001");
         InvoiceLineConverter converter = new InvoiceLineConverter();
+
+        // when
         converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.PEPPOL_OUT, null);
 
+        // then
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("InvoiceLine");
 
         Element documentReference = invoiceLine.getChild("DocumentReference");
 
         Element id = documentReference.getChild("ID");
-        assertTrue("001".equals(id.getText()));
-        assertTrue("321".equals(id.getAttribute("schemeID").getValue()));
+        assertEquals("001", id.getText());
+        assertEquals("ZZZ", id.getAttribute("schemeID").getValue() );
 
         Element documentTypeCode = documentReference.getChild("DocumentTypeCode");
-        assertTrue("130".equals(documentTypeCode.getText()));
+        assertEquals("130", documentTypeCode.getText());
     }
+
+    @Test
+    public void invoiceLineWithBT0128shouldHaveDocumentReferenceWithProperSchemeIdAndTypeCode() throws Exception {
+
+        // given
+        BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128("AGN", "001");
+        InvoiceLineConverter converter = new InvoiceLineConverter();
+
+        // when
+        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.PEPPOL_OUT, null);
+
+        // then
+        Element rootElement = document.getRootElement();
+        Element invoiceLine = rootElement.getChild("InvoiceLine");
+
+        Element documentReference = invoiceLine.getChild("DocumentReference");
+
+        Element id = documentReference.getChild("ID");
+        assertEquals("001", id.getText());
+        assertEquals("AGN", id.getAttribute("schemeID").getValue() );
+
+        Element documentTypeCode = documentReference.getChild("DocumentTypeCode");
+        assertEquals("130", documentTypeCode.getText());
+    }
+
+
 
     @Test
     public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
@@ -57,11 +89,11 @@ public class InvoiceLineConverterTest {
     }
 
 
-    private BG0000Invoice makeCenInvoiceWithBT0128() {
+    private BG0000Invoice makeCenInvoiceWithBT0128(String identificationSchema, String identifier) {
         BG0000Invoice invoice = new BG0000Invoice();
 
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier("321", "001"));
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(identificationSchema, identifier));
         invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
 
         invoice.getBG0025InvoiceLine().add(invoiceLine);

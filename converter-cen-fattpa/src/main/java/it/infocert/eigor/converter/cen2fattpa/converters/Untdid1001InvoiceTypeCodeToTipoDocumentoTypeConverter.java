@@ -23,7 +23,6 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
             case Code385:
             case Code387:
             case Code388:
-            case Code389:
             case Code390:
             case Code393:
             case Code394:
@@ -59,6 +58,8 @@ public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements Ty
             case Code211:
             case Code386:
                 return TipoDocumentoType.TD_02;
+            case Code389:
+                return TipoDocumentoType.TD_20_AUTOFATTURA;
             default:
                 return TipoDocumentoType.TD_01;
         }

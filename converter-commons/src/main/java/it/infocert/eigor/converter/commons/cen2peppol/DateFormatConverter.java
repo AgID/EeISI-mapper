@@ -31,35 +31,36 @@ public class DateFormatConverter implements CustomMapping<Document>{
 				for(BT0002InvoiceIssueDate elembt02: bt02) {
 					if(elembt02.getValue() != null) {
 						String formattedDate = elembt02.getValue().toString("yyyy-MM-dd");
-						issueDate.addContent(formattedDate);
+						issueDate.setText(formattedDate);
 						root.addContent(issueDate);
 					}
 				}
 			}
 
-
+			List<BT0007ValueAddedTaxPointDate> bt07 =  cenInvoice.getBT0007ValueAddedTaxPointDate();
+			if(!bt07.isEmpty()){
+				for(BT0007ValueAddedTaxPointDate elembt07: bt07) {
+					if(elembt07.getValue() != null) {
+						String formattedDate = elembt07.getValue().toString("yyyy-MM-dd");
+						invoiceTypeCode.setText(formattedDate);
+						root.addContent(invoiceTypeCode);
+					}
+				}
+			}
+			
 			List<BT0009PaymentDueDate> bt09 =  cenInvoice.getBT0009PaymentDueDate();
 			if(!bt09.isEmpty()) {
 				for(BT0009PaymentDueDate elembt09: bt09) {
 					if(elembt09.getValue() != null) {
 						String formattedDate = elembt09.getValue().toString("yyyy-MM-dd");
-						dueDate.addContent(formattedDate);
+						dueDate.setText(formattedDate);
 						root.addContent(dueDate);
 					}
 				}
 			}
 			
 			
-			List<BT0007ValueAddedTaxPointDate> bt07 =  cenInvoice.getBT0007ValueAddedTaxPointDate();
-			if(!bt07.isEmpty()){
-				for(BT0007ValueAddedTaxPointDate elembt07: bt07) {
-					if(elembt07.getValue() != null) {
-						String formattedDate = elembt07.getValue().toString("yyyy-MM-dd");
-						invoiceTypeCode.addContent(formattedDate);
-						root.addContent(invoiceTypeCode);
-					}
-				}
-			}
+	
 			
 		 
 		 

@@ -40,13 +40,15 @@ public class LookUpEnumConversion<Target> extends FromStringTypeConverter<Target
         this.theEnum = theEnum;
     }
 
-    public Target convert(final String value) {
+    public Target convert(final String value) throws ConversionFailedException {
         try {
             Method theMethod = theEnum.getMethod("valueOf", String.class);
             Target invoke = (Target) theMethod.invoke(theEnum, new String[] { value });
             log.trace("Value '{}' converted to '{}'.", value, invoke);
             return invoke;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InvocationTargetException ite){
+            throw new EnumConversionFailedException(ite);
+        } catch (IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
 

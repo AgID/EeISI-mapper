@@ -234,7 +234,7 @@
 		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason> 
 		<cbc:MultiplierFactorNumeric>0.0756</cbc:MultiplierFactorNumeric>
 		<cbc:Amount currencyID="EUR">116.67</cbc:Amount>
-		<cbc:BaseAmount currencyID="EUR">1543.29</cbc:BaseAmount>
+		<cbc:BaseAmount currencyID="EUR">EUR:1543.29</cbc:BaseAmount>
 		
 		<cac:TaxCategory> 
 			<cbc:ID>S</cbc:ID> 
@@ -359,7 +359,7 @@
 			<cbc:AllowanceChargeReason>Sales discount</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.105645</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">10.61</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">100.43</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:100.43</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
@@ -417,7 +417,7 @@
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
 				<cbc:Amount currencyID="EUR">5</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">3205</cbc:BaseAmount>
+				<cbc:BaseAmount currencyID="EUR">EUR:3205</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>
@@ -453,7 +453,7 @@
 			<cbc:AllowanceChargeReason>Service discount exempt</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.10</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">10</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">100</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:100</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
@@ -504,7 +504,7 @@
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
 				<cbc:Amount currencyID="EUR">5</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">1005</cbc:BaseAmount>
+				<cbc:BaseAmount currencyID="EUR">EUR:1005</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			 
         </cac:Price>

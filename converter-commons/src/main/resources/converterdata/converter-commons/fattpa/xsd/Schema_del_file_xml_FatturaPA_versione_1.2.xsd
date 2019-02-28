@@ -382,7 +382,6 @@
   </xs:simpleType>
   <xs:simpleType name="TipoDocumentoType">
     <xs:restriction base="xs:string">
-      <xs:length value="4" />
       <xs:enumeration value="TD01">
         <xs:annotation>
           <xs:documentation>Fattura</xs:documentation>
@@ -411,6 +410,11 @@
       <xs:enumeration value="TD06">
         <xs:annotation>
           <xs:documentation>Parcella</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TD20autofattura">
+        <xs:annotation>
+          <xs:documentation>Autofattura</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>

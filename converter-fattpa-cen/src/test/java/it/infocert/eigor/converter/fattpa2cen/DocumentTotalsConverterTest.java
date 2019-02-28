@@ -56,7 +56,7 @@ public class DocumentTotalsConverterTest {
         assertEquals(BigDecimal.ZERO, bg0021.getBT0099DocumentLevelChargeAmount().get(0).getValue());
         assertEquals(new BigDecimal("2.00"), bg0021.getBT0100DocumentLevelChargeBaseAmount().get(0).getValue());
         assertEquals(BigDecimal.ZERO, bg0021.getBT0101DocumentLevelChargePercentage().get(0).getValue());
-        assertTrue(bg0021.getBT0103DocumentLevelChargeVatRate().isEmpty());
+        assertEquals(BigDecimal.ZERO, bg0021.getBT0103DocumentLevelChargeVatRate(0).getValue());
 
         BT0104DocumentLevelChargeReason bt0104 = bg0021.getBT0104DocumentLevelChargeReason(0);
         assertThat(bt0104.getValue(), is("SI"));

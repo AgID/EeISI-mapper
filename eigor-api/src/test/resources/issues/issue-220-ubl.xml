@@ -237,7 +237,7 @@
 		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason> 
 		<cbc:MultiplierFactorNumeric>0.05</cbc:MultiplierFactorNumeric>
 		<cbc:Amount currencyID="EUR">78.39</cbc:Amount>
-		<cbc:BaseAmount currencyID="EUR">1567.89</cbc:BaseAmount>
+		<cbc:BaseAmount currencyID="EUR">EUR:1567.89</cbc:BaseAmount>
 		
 		<cac:TaxCategory> 
 			<cbc:ID>S</cbc:ID> 
@@ -253,7 +253,7 @@
 		<cbc:AllowanceChargeReason>Freight</cbc:AllowanceChargeReason> 
 		<cbc:MultiplierFactorNumeric>0.07</cbc:MultiplierFactorNumeric>
 		<cbc:Amount currencyID="EUR">43.64</cbc:Amount>
-		<cbc:BaseAmount currencyID="EUR">623.45</cbc:BaseAmount> 
+		<cbc:BaseAmount currencyID="EUR">EUR:623.45</cbc:BaseAmount>
 		<cac:TaxCategory> 
 			<cbc:ID>S</cbc:ID> 
 			<cbc:Percent>10</cbc:Percent> 
@@ -322,7 +322,7 @@
 			<cbc:AllowanceChargeReason>Sales discount</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.06</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">103844444.96</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">1730740749.28</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:1730740749.28</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
@@ -330,7 +330,7 @@
 			<cbc:AllowanceChargeReason>Packing cost</cbc:AllowanceChargeReason>
 			<cbc:MultiplierFactorNumeric>0.02</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">34614814.99</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">1730740749.28</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:1730740749.28</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		
 		
@@ -352,7 +352,7 @@
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
 				<cbc:Amount currencyID="EUR">2.3445676787889600</cbc:Amount>
-				<cbc:BaseAmount currencyID="EUR">54.26678997768990</cbc:BaseAmount>
+				<cbc:BaseAmount currencyID="EUR">EUR:54.26678997768990</cbc:BaseAmount>
 			</cac:AllowanceCharge>
 			
 			 
@@ -374,7 +374,7 @@
 			<cbc:AllowanceChargeReason>Sales discount</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.10</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">2.98</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">29.80</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:29.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge>
@@ -382,7 +382,7 @@
 			<cbc:AllowanceChargeReason>Packing cost</cbc:AllowanceChargeReason>
 			<cbc:MultiplierFactorNumeric>0.02</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">0.6</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">29.80</cbc:BaseAmount>
+			<cbc:BaseAmount currencyID="EUR">EUR:29.80</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 		
 		

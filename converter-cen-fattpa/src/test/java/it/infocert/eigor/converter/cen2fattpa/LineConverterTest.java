@@ -413,7 +413,11 @@ public class LineConverterTest {
     }
 
     private void convert() {
-        new LineConverter().map(invoice, fatturaElettronica, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.FATTPA_OUT, null);
+        new LineConverter().map(
+                invoice,
+                fatturaElettronica,
+                Lists.<IConversionIssue>newArrayList(),
+                ErrorCode.Location.FATTPA_OUT, null);
     }
 
     private void populateWithBG20() {
@@ -444,7 +448,6 @@ public class LineConverterTest {
         for (int i = 0; i < 5; i++) {
 
             BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-
             populateBG25WithBG27(invoiceLine);
             populateBG25WithBG28(invoiceLine);
             populateBG25WithBG29(invoiceLine);
@@ -473,7 +476,7 @@ public class LineConverterTest {
     private void populateBG25WithBG27(BG0025InvoiceLine invoiceLine) {
         BG0027InvoiceLineAllowances invoiceLineAllowances = new BG0027InvoiceLineAllowances();
         invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().add(new BT0136InvoiceLineAllowanceAmount(new BigDecimal(20.0)));
-        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(new Identifier("EUR", "21.0")));
+        invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().add(new BT0137InvoiceLineAllowanceBaseAmount(new Identifier("EUR", "EUR:21.0")));
         invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().add(new BT0138InvoiceLineAllowancePercentage(new Identifier("EUR", "22.0")));
         invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().add(new BT0139InvoiceLineAllowanceReason("Reason"));
         invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code42));

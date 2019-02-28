@@ -18,12 +18,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class AdditionalSupportingDocumentsConverterTest {
+public class AdditionalDocumentsConverterTest {
 
     @Test
     public void additionalDocumentReferenceDocumentTypeCodeShouldBe916IfBG0024hasBT0122ForCII() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0122();
-        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        AdditionalDocumentsConverter converter = new AdditionalDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.CII_OUT, null);
 
@@ -36,7 +36,7 @@ public class AdditionalSupportingDocumentsConverterTest {
     public void additionalDocumentReferenceDocumentTypeCodeShouldBe130IfBT0018() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0122();
         invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier("AED", "TESTID")));
-        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        AdditionalDocumentsConverter converter = new AdditionalDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
@@ -55,7 +55,7 @@ public class AdditionalSupportingDocumentsConverterTest {
     @Test
     public void documentDescriptionMustExistIfBG0024hasBT0123() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0123();
-        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        AdditionalDocumentsConverter converter = new AdditionalDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 
@@ -67,7 +67,7 @@ public class AdditionalSupportingDocumentsConverterTest {
     @Test
     public void shouldMapBT0125() throws Exception {
         BG0000Invoice invoice = createInvoiceWithBT0125();
-        AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
+        AdditionalDocumentsConverter converter = new AdditionalDocumentsConverter();
         Document document = new Document(new Element("Invoice"));
         converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
 

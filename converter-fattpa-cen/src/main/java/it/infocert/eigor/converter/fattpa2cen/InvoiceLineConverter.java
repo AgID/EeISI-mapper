@@ -99,17 +99,33 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
 
                         String descrizioneValue = null;
-                        {
-                            Element descrizioneElement = dettaglioLinee.getChild("Descrizione");
-                            if (descrizioneElement != null) {
-                                descrizioneValue = descrizioneElement.getValue();
+                        Element descrizioneElement = dettaglioLinee.getChild("Descrizione");
+                        if (descrizioneElement != null) {
+                            descrizioneValue = descrizioneElement.getValue();
+                        }
+                        Element tipoCessionePrestazione = dettaglioLinee.getChild("TipoCessionePrestazione");
+
+                        BG0027InvoiceLineAllowances bg0027 = new BG0027InvoiceLineAllowances();
+                        BG0031ItemInformation bg0031 = new BG0031ItemInformation();
+                        BG0028InvoiceLineCharges bg0028 = new BG0028InvoiceLineCharges();
+
+                        if (tipoCessionePrestazione != null && Arrays.asList("SC", "PR", "AB").contains(tipoCessionePrestazione.getText())) {
+                            BT0139InvoiceLineAllowanceReason item = new BT0139InvoiceLineAllowanceReason(descrizioneValue);
+                            bg0027.getBT0139InvoiceLineAllowanceReason().add(item);
+
+                        } else if (tipoCessionePrestazione != null && Arrays.asList("AC").contains(tipoCessionePrestazione.getText())) {
+                            BT0144InvoiceLineChargeReason item = new BT0144InvoiceLineChargeReason(descrizioneValue);
+                            bg0028.getBT0144InvoiceLineChargeReason().add(item);
+
+                        } else {
+                            if (descrizioneValue != null) {
+                                BT0153ItemName itemName = new BT0153ItemName(descrizioneValue);
+                                bg0031.getBT0153ItemName().add(itemName);
                             }
                         }
 
-                        Element tipoCessionePrestazione = dettaglioLinee.getChild("TipoCessionePrestazione");
-
-                        if (tipoCessionePrestazione != null && prezzoTotaleValue != null) {
-                            if (prezzoTotaleValue.signum() < 0 &&
+                        if (tipoCessionePrestazione != null) {
+                            if (prezzoTotaleValue != null && prezzoTotaleValue.signum() < 0 &&
                                     Arrays.asList("SC", "PR", "AB").contains(tipoCessionePrestazione.getText())) {
 
                                 BG0020DocumentLevelAllowances bg0020 = new BG0020DocumentLevelAllowances();
@@ -136,7 +152,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 }
 
                                 invoice.getBG0020DocumentLevelAllowances().add(bg0020);
-                            } else if (prezzoTotaleValue.signum() > 0 &&
+                            } else if (prezzoTotaleValue != null && prezzoTotaleValue.signum() > 0 &&
                                     Arrays.asList("SC", "PR", "AB", "AC").contains(tipoCessionePrestazione.getText())) {
 
                                 BG0021DocumentLevelCharges bg0021 = new BG0021DocumentLevelCharges();
@@ -208,13 +224,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     BT0130InvoicedQuantityUnitOfMeasureCode bt0130 = new BT0130InvoicedQuantityUnitOfMeasureCode(unitCode);
                                     bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(bt0130);
                                 } catch (ConversionFailedException e) {
-                                    EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message("Invalid UnitOfMeasureCodes: " + text)
-                                            .location(callingLocation)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .build());
-                                    errors.add(ConversionIssue.newError(ere));
                                     bg0025.getBT0130InvoicedQuantityUnitOfMeasureCode().add(new BT0130InvoicedQuantityUnitOfMeasureCode(UnitOfMeasureCodes.C62_ONE));
                                 }
                             } else {
@@ -256,36 +265,39 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             }
                             bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
 
-                            BG0027InvoiceLineAllowances bg0027 = new BG0027InvoiceLineAllowances();
                             Element scontoMaggiorazione = dettaglioLinee.getChild("ScontoMaggiorazione");
                             if (scontoMaggiorazione != null) {
-                                Element percentuale = scontoMaggiorazione.getChild("Percentuale");
-                                Element importo = scontoMaggiorazione.getChild("Importo");
-                                if(importo != null) {
-                                    BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
-                                    bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                                Element tipo = scontoMaggiorazione.getChild("Tipo");
+                                if ("SC".equals(tipo.getText())) {
+                                    Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                    Element importo = scontoMaggiorazione.getChild("Importo");
+                                    if (importo != null) {
+                                        BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
+                                        bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                                    }
+                                    if (percentuale != null) {
+                                        BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
+                                        bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
+                                    }
+                                    bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code95));
+                                    bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
                                 }
-                                if(percentuale != null) {
-                                    BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
-                                    bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
-                                }
-                            }
-                            bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
 
-                            BG0028InvoiceLineCharges bg0028 = new BG0028InvoiceLineCharges();
-                            if (scontoMaggiorazione != null) {
-                                Element percentuale = scontoMaggiorazione.getChild("Percentuale");
-                                Element importo = scontoMaggiorazione.getChild("Importo");
-                                if(importo != null) {
-                                    BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
-                                    bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
-                                }
-                                if(percentuale != null) {
-                                    BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
-                                    bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
+                                if ("MG".equals(tipo.getText())) {
+                                    Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                    Element importo = scontoMaggiorazione.getChild("Importo");
+                                    if (importo != null) {
+                                        BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
+                                        bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
+                                    }
+                                    if (percentuale != null) {
+                                        BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
+                                        bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
+                                    }
+                                    bg0028.getBT0145InvoiceLineChargeReasonCode().add(new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.ABK));
+                                    bg0025.getBG0028InvoiceLineCharges().add(bg0028);
                                 }
                             }
-                            bg0025.getBG0028InvoiceLineCharges().add(bg0028);
 
                             BG0029PriceDetails bg0029 = new BG0029PriceDetails();
                             Element prezzoUnitario = dettaglioLinee.getChild("PrezzoUnitario");
@@ -334,12 +346,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0030.getBT0152InvoicedItemVatRate().add(invoicedItemVatRate);
                             }
                             bg0025.getBG0030LineVatInformation().add(bg0030);
-
-                            BG0031ItemInformation bg0031 = new BG0031ItemInformation();
-                            if (descrizioneValue != null) {
-                                BT0153ItemName itemName = new BT0153ItemName(descrizioneValue);
-                                bg0031.getBT0153ItemName().add(itemName);
-                            }
 
                             BG0032ItemAttributes bg0032;
                             List<Element> altriDatiGestionaliList = dettaglioLinee.getChildren();

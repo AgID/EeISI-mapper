@@ -49,7 +49,7 @@ public class EigorTest {
         FromCenConversionRepository genericRepo2 = new FromCenListBakedRepository(new FakeFromCenConversion(reflections, conf));
 
         cli = new JoptsimpleBasecCommandLineInterpreter(
-                genericRepo1, genericRepo2, integrityRepo
+                genericRepo1, genericRepo2, integrityRepo, conf
         );
 
     }

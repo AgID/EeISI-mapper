@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.commons.cen2ubl;
 
-import it.infocert.eigor.api.ConversionIssue;
+ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
@@ -19,8 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class AdditionalSupportingDocumentsConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(AdditionalSupportingDocumentsConverter.class);
+public class AdditionalDocumentsConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(AdditionalDocumentsConverter.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -63,25 +63,13 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                     }
 
                     Element attachment = null;
-                    if (!elemBg24.getBT0124ExternalDocumentLocation().isEmpty()) {
-                        BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
-                        Element uri = new Element("URI");
-                        uri.setText(bt0124.getValue());
-                        attachment = new Element("Attachment");
-                        additionalDocumentReference.addContent(attachment);
-                        Element externalReference = new Element("ExternalReference");
-                        attachment.addContent(externalReference);
-                        externalReference.addContent(uri);
-                    }
                     if (!elemBg24.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty()) {
                         FileReference bt0125 =
                                 elemBg24.getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename(0).getValue();
 
-                        if (attachment == null) {
-                            attachment = new Element("Attachment");
-                            additionalDocumentReference.addContent(attachment);
-                        }
 
+                        attachment = new Element("Attachment");
+                        additionalDocumentReference.addContent(attachment);
                         Element embeddedDocumentBinaryObject = new Element("EmbeddedDocumentBinaryObject");
                         embeddedDocumentBinaryObject.setAttribute("mimeCode", bt0125.getMimeType().toString());
                         embeddedDocumentBinaryObject.setAttribute("filename", bt0125.getFileName());
@@ -98,6 +86,18 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                     e
                             )));
                         }
+                    }
+                    if (!elemBg24.getBT0124ExternalDocumentLocation().isEmpty()) {
+                        BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
+                        Element uri = new Element("URI");
+                        uri.setText(bt0124.getValue());
+                        if(attachment == null) {
+                            attachment = new Element("Attachment");
+                            additionalDocumentReference.addContent(attachment);
+                        }
+                        Element externalReference = new Element("ExternalReference");
+                        attachment.addContent(externalReference);
+                        externalReference.addContent(uri);
                     }
                 }
             }

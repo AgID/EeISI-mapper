@@ -18,6 +18,7 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("Duplicates")
+
 public class LineConverter implements CustomMapping<FatturaElettronicaType> {
     private final static Logger log = LoggerFactory.getLogger(LineConverter.class);
     private final static TypeConverter<Untdid5305DutyTaxFeeCategories, NaturaType> toNaturaType = Untdid5305DutyTaxFeeCategoriesToNaturaType.newConverter();
@@ -64,7 +65,11 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
+    private final LinePostFixSupport linepostfix;
 
+    public LineConverter() {
+        linepostfix = new LinePostFixSupport();
+    }
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -91,6 +96,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             mapDocumentChargesAllowances(invoice, fatturaElettronicaBody, errors, callingLocation);
 
             mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
+
+            linepostfix.appliesRenumbering();
+
         }
     }
 
@@ -103,9 +111,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
                     BT0070DeliverToPartyName bt0070 = bg0013.getBT0070DeliverToPartyName(0);
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-70");
-                    altriDatiGestionali.setRiferimentoTesto(bt0070.getValue());
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType("BT-70", bt0070.getValue());
                     for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     }
@@ -113,17 +119,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                 if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
                     Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-71");
-                    altriDatiGestionali.setRiferimentoTesto(bt0071.getIdentifier());
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType("BT-71", bt0071.getIdentifier());
                     for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     }
 
                     if (bt0071.getIdentificationSchema() != null) {
-                        AltriDatiGestionaliType datiGestionali = new AltriDatiGestionaliType();
-                        datiGestionali.setTipoDato("BT-71-1");
-                        datiGestionali.setRiferimentoTesto(bt0071.getIdentificationSchema());
+                        AltriDatiGestionaliType datiGestionali = newAltriDatiGestionaliType("BT-71-1", bt0071.getIdentificationSchema());
                         for (DettaglioLineeType dettaglioLinee : dettaglioLineeList) {
                             dettaglioLinee.getAltriDatiGestionali().add(datiGestionali);
                         }
@@ -266,7 +268,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     }
                 } else {
                    log.trace("No BT0098 found");
-                } 
+                }
 
                 String des = sb.toString();
                 dettaglioLinee.setDescrizione(des);
@@ -367,8 +369,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 createMissingLines(dettaglioLineeList, n);
             }
             for (int i = 0; i < invoice.getBG0025InvoiceLine().size(); i++) {
+
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
+
+                linepostfix.registerForPostFix(invoiceLine, dettaglioLinee);
+
                 final Optional<String> lineIdentifier;
                 if (!invoiceLine.getBT0126InvoiceLineIdentifier().isEmpty()) {
                     lineIdentifier = Optional.of(invoiceLine.getBT0126InvoiceLineIdentifier(0).getValue());
@@ -377,9 +383,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 }
 
                 for (BT0127InvoiceLineNote bt0127 : invoiceLine.getBT0127InvoiceLineNote()) {
-                    AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
-                    altriDatiGestionali.setTipoDato("BT-127");
-                    altriDatiGestionali.setRiferimentoTesto(bt0127.getValue());
+                    String tipoDato = "BT-127";
+                    String riferimentoTesto = bt0127.getValue();
+                    AltriDatiGestionaliType altriDatiGestionali = newAltriDatiGestionaliType(tipoDato, riferimentoTesto);
                     dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionali);
                     log.trace("Set BT127 as RiferimentoTesto with value {}", bt0127.getValue());
                 }
@@ -501,7 +507,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                         BigDecimal discountValue = BigDecimal.ZERO;
                         BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
-                        BigDecimal baseAmount = baseAmountOpt.isPresent() ? new BigDecimal(baseAmountOpt.get().getIdentifier()) : BigDecimal.ZERO;
+                        BigDecimal baseAmount = baseAmountOpt.isPresent() ? new BigDecimal(baseAmountOpt.get().getIdentifier().contains(":") ? baseAmountOpt.get().getIdentifier().split(":")[1] : baseAmountOpt.get().getIdentifier()) : BigDecimal.ZERO;
                         BigDecimal percentage = percentageOpt.isPresent() ? new BigDecimal(percentageOpt.get().getIdentifier()) : BigDecimal.ZERO;
                         String reason = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().isEmpty() ? "Sconto Linea" : invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
 
@@ -695,6 +701,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
         }
     }
 
+    static AltriDatiGestionaliType newAltriDatiGestionaliType(String tipoDato, String riferimentoTesto) {
+        AltriDatiGestionaliType altriDatiGestionali = new AltriDatiGestionaliType();
+        altriDatiGestionali.setTipoDato(tipoDato);
+        altriDatiGestionali.setRiferimentoTesto(riferimentoTesto);
+        return altriDatiGestionali;
+    }
+
     private void mapBG31(BG0000Invoice invoice, BG0025InvoiceLine invoiceLine, DettaglioLineeType dettaglioLinee) {
         if (!invoiceLine.getBG0031ItemInformation().isEmpty()) {
             BG0031ItemInformation itemInformation = invoiceLine.getBG0031ItemInformation(0);
@@ -844,15 +857,18 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         DettaglioLineeType lineaSconto = new DettaglioLineeType();
                         lineaSconto.setNumeroLinea(dettaglioLinee.getNumeroLinea());
                         lineaSconto.setTipoCessionePrestazione(TipoCessionePrestazioneType.SC);
-                        String descrizione = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
-                        if (descrizione != null) {
-                            if (invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
-                                lineaSconto.setDescrizione(descrizione);
-                            } else {
+
+                        String descrizione = InvoiceUtils.evalExpression( ()-> invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue() );
+                        if (descrizione != null && !descrizione.trim().isEmpty()) {
+                            if (!invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
                                 Untdid5189ChargeAllowanceDescriptionCodes code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
-                                lineaSconto.setDescrizione(String.format("%s BT-0140: %d", descrizione, code.getCode()));
+                                descrizione = String.format("%s BT-0140: %d", descrizione, code.getCode());
                             }
+                        }else{
+                            descrizione = "N/A PER SCONTO";
                         }
+                        lineaSconto.setDescrizione(descrizione);
+
                         BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ?
                                 BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
                         allowanceAmount = allowanceAmount.negate(); //allowanceAmount *= -1.0;
@@ -1115,6 +1131,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     dettaglioLinee.setDescrizione(reason + " - Base Amount: " + baseAmount + " Percentage " + percentage + "%");
                 } else if (!charges.getBT0105DocumentLevelChargeReasonCode().isEmpty() && !"".equals(converted)) {
                     dettaglioLinee.setRiferimentoAmministrazione(converted);
+                    dettaglioLinee.setDescrizione("N/A because BT-104 is missing");
                 } else {
                     log.trace("No BT0104 found");
                 }

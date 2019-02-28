@@ -4,6 +4,8 @@ package it.infocert.eigor.api.conversion.converter;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.ConversionRegistry;
 
+import java.util.Optional;
+
 /**
  * Generic service that converts a value in another format.
  * I.e. it can convert a {@link java.util.Date} in a {@link String}, a {@link String} in a {@link Number} and so on.
@@ -26,5 +28,15 @@ public interface TypeConverter<Source, Target> {
     Class<Target> getTargetClass();
 
     Class<Source> getSourceClass();
+
+    default Optional<Target> safeConvert(Source source) {
+        Target convert = null;
+        try {
+            convert = convert(source);
+        } catch (ConversionFailedException e) {
+            // ignored
+        }
+        return Optional.ofNullable(convert);
+    }
 
 }

@@ -117,3 +117,6 @@ local.properties
 
 
 eigor-cli/consoleOutputDump
+
+# JRebel config files
+rebel.xml

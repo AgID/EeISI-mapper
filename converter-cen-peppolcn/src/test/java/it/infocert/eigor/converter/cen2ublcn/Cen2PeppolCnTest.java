@@ -10,6 +10,7 @@ import it.infocert.eigor.converter.cen2peppolcn.Cen2PeppolCn;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
+@Ignore
 public class Cen2PeppolCnTest {
     private static final Logger log = LoggerFactory.getLogger(Cen2PeppolCnTest.class);
 
