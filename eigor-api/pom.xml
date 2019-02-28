@@ -114,10 +114,6 @@
             <groupId>it.infocert.eigor</groupId>
             <artifactId>converter-cen-xmlcen</artifactId>
         </dependency>
-        <dependency>
-            <groupId>it.infocert.eigor</groupId>
-            <artifactId>converter-cen-xmlcen</artifactId>
-        </dependency>
     </dependencies>
 
     <profiles>
