@@ -1,3 +1,4 @@
+
 package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.KeepAll;
@@ -36,6 +37,15 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
+    @Test
+    public void issueEeisi190() {
+        this.conversion.assertConversionWithoutErrors(
+        		"/examples/fattpa/A10-Licenses.xml",
+                "fatturapa", "peppolbis", keepErrorsNotWarnings());
+
+    }
+    
+    
     @Test
     public void issueEeisi188() {
         this.conversion.assertConversionWithoutErrors(
