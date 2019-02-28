@@ -147,7 +147,9 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
                             e
                     )));
                 }
-            }else if (!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
+            }
+
+            if (!invoice.getBT0008ValueAddedTaxPointDateCode().isEmpty()) {
                 Untdid2005DateTimePeriodQualifiers bt0008 = invoice.getBT0008ValueAddedTaxPointDateCode(0).getValue();
                 try {
                     String value = String.valueOf(untdid2005To2475Converter.convert(bt0008).getCode());

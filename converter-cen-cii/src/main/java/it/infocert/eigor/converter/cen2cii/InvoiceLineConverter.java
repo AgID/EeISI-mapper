@@ -236,39 +236,20 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
-
             // SpecifiedTradeAllowanceCharge
-            // TAG Sequence
-            // <ram:ChargeIndicator><udt:Indicator>false</udt:Indicator></ram:ChargeIndicator>
-            // <ram:CalculationPercent>10.00</ram:CalculationPercent><!--BT-138-->
-            // <ram:BasisAmount>147.00</ram:BasisAmount><!--BT-137-->
-            // <ram:ActualAmount>14.7</ram:ActualAmount><!--BT-136-->
-            // <ram:ReasonCode>66</ram:ReasonCode><!--BT-140-->
-            // <ram:Reason>Sales discount</ram:Reason><!--BT-139-->
             for (BG0027InvoiceLineAllowances bg0027 : bg0025.getBG0027InvoiceLineAllowances()) {
                 Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
-
                 Element chargeIndicator = new Element("ChargeIndicator", ramNs);
                 Element indicator = new Element("Indicator", udtNs);
                 indicator.setText("false");
                 chargeIndicator.addContent(indicator);
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
-                if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                    BigDecimal bt0138 = new BigDecimal(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
-                    Element calculationPercent = new Element("CalculationPercent", ramNs);
-                    try {
-                        calculationPercent.setText(bt0138.setScale(2, RoundingMode.HALF_UP).toString());
-                        specifiedTradeAllowanceCharge.addContent(calculationPercent);
-                    } catch (NumberFormatException e) {
-                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
-                                e.getMessage(),
-                                callingLocation,
-                                ErrorCode.Action.HARDCODED_MAP,
-                                ErrorCode.Error.INVALID,
-                                e
-                        )));
-                    }
+                if (!bg0027.getBT0136InvoiceLineAllowanceAmount().isEmpty()) {
+                    BigDecimal bt0136 = bg0027.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+                    Element actualAmount = new Element("ActualAmount", ramNs);
+                    actualAmount.setText(bt0136.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(actualAmount);
                 }
 
                 if (!bg0027.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
@@ -288,18 +269,21 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     }
                 }
 
-                if (!bg0027.getBT0136InvoiceLineAllowanceAmount().isEmpty()) {
-                    BigDecimal bt0136 = bg0027.getBT0136InvoiceLineAllowanceAmount(0).getValue();
-                    Element actualAmount = new Element("ActualAmount", ramNs);
-                    actualAmount.setText(bt0136.setScale(2, RoundingMode.HALF_UP).toString());
-                    specifiedTradeAllowanceCharge.addContent(actualAmount);
-                }
-
-                if (!bg0027.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
-                    Untdid5189ChargeAllowanceDescriptionCodes bt0140 = bg0027.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
-                    Element reasonCode = new Element("ReasonCode", ramNs);
-                    reasonCode.setText(String.valueOf(bt0140.getCode()));
-                    specifiedTradeAllowanceCharge.addContent(reasonCode);
+                if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
+                    BigDecimal bt0138 = new BigDecimal(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
+                    Element calculationPercent = new Element("CalculationPercent", ramNs);
+                    try {
+                        calculationPercent.setText(bt0138.setScale(2, RoundingMode.HALF_UP).toString());
+                        specifiedTradeAllowanceCharge.addContent(calculationPercent);
+                    } catch (NumberFormatException e) {
+                        errors.add(ConversionIssue.newError(new EigorRuntimeException(
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.INVALID,
+                                e
+                        )));
+                    }
                 }
 
                 if (!bg0027.getBT0139InvoiceLineAllowanceReason().isEmpty()) {
@@ -309,31 +293,29 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeAllowanceCharge.addContent(reason);
                 }
 
+                if (!bg0027.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
+                    Untdid5189ChargeAllowanceDescriptionCodes bt0140 = bg0027.getBT0140InvoiceLineAllowanceReasonCode(0).getValue();
+                    Element reasonCode = new Element("ReasonCode", ramNs);
+                    reasonCode.setText(String.valueOf(bt0140.getCode()));
+                    specifiedTradeAllowanceCharge.addContent(reasonCode);
+                }
+
                 specifiedLineTradeSettlement.addContent(specifiedTradeAllowanceCharge);
             }
 
-            // SpecifiedTradeAllowanceCharge
-            // TAG Sequence
-            // <ram:ChargeIndicator><udt:Indicator>false</udt:Indicator></ram:ChargeIndicator>
-            // <ram:CalculationPercent>10.00</ram:CalculationPercent>
-            // <ram:BasisAmount>147.00</ram:BasisAmount>
-            // <ram:ActualAmount>14.7</ram:ActualAmount>
-            // <ram:ReasonCode>66</ram:ReasonCode>
-            // <ram:Reason>Sales discount</ram:Reason>
             for (BG0028InvoiceLineCharges bg0028 : bg0025.getBG0028InvoiceLineCharges()) {
                 Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
-
                 Element chargeIndicator = new Element("ChargeIndicator", ramNs);
                 Element indicator = new Element("Indicator", udtNs);
                 indicator.setText("true");
                 chargeIndicator.addContent(indicator);
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
-                if (!bg0028.getBT0143InvoiceLineChargePercentage().isEmpty()) {
-                    BigDecimal bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
-                    Element calculationPercent = new Element("CalculationPercent", ramNs);
-                    calculationPercent.setText(bt0143.setScale(2, RoundingMode.HALF_UP).toString());
-                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
+                if (!bg0028.getBT0141InvoiceLineChargeAmount().isEmpty()) {
+                    BigDecimal bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
+                    Element actualAmount = new Element("ActualAmount", ramNs);
+                    actualAmount.setText(bt0141.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(actualAmount);
                 }
 
                 if (!bg0028.getBT0142InvoiceLineChargeBaseAmount().isEmpty()) {
@@ -343,18 +325,11 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeAllowanceCharge.addContent(basisAmount);
                 }
 
-                if (!bg0028.getBT0141InvoiceLineChargeAmount().isEmpty()) {
-                    BigDecimal bt0141 = bg0028.getBT0141InvoiceLineChargeAmount(0).getValue();
-                    Element actualAmount = new Element("ActualAmount", ramNs);
-                    actualAmount.setText(bt0141.setScale(2, RoundingMode.HALF_UP).toString());
-                    specifiedTradeAllowanceCharge.addContent(actualAmount);
-                }
-
-                if (!bg0028.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
-                    Untdid7161SpecialServicesCodes bt0145 = bg0028.getBT0145InvoiceLineChargeReasonCode(0).getValue();
-                    Element reasonCode = new Element("ReasonCode", ramNs);
-                    reasonCode.setText(bt0145.name());
-                    specifiedTradeAllowanceCharge.addContent(reasonCode);
+                if (!bg0028.getBT0143InvoiceLineChargePercentage().isEmpty()) {
+                    BigDecimal bt0143 = bg0028.getBT0143InvoiceLineChargePercentage(0).getValue();
+                    Element calculationPercent = new Element("CalculationPercent", ramNs);
+                    calculationPercent.setText(bt0143.setScale(2, RoundingMode.HALF_UP).toString());
+                    specifiedTradeAllowanceCharge.addContent(calculationPercent);
                 }
 
                 if (!bg0028.getBT0144InvoiceLineChargeReason().isEmpty()) {
@@ -364,6 +339,12 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     specifiedTradeAllowanceCharge.addContent(reason);
                 }
 
+                if (!bg0028.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
+                    Untdid7161SpecialServicesCodes bt0145 = bg0028.getBT0145InvoiceLineChargeReasonCode(0).getValue();
+                    Element reasonCode = new Element("ReasonCode", ramNs);
+                    reasonCode.setText(bt0145.name());
+                    specifiedTradeAllowanceCharge.addContent(reasonCode);
+                }
 
                 specifiedLineTradeSettlement.addContent(specifiedTradeAllowanceCharge);
             }

@@ -29,26 +29,10 @@ import static org.junit.Assert.assertThat;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
-    public void issueEeisi191() {
-        this.conversion.assertConversionWithoutErrors(
-                "/issues/issue-eisi191-cii.xml",
-                "cii", "cii", keepErrorsNotWarnings());
-
-    }
-
-    @Test
     public void issueEeisi188() {
         this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-188-xmlcen.xml",
                 "xmlcen", "ubl", keepErrorsNotWarnings());
-
-    }
-
-    @Test
-    public void issueEeisi192() {
-        this.conversion.assertConversionWithoutErrors(
-                "/issues/issue-eisi192-fattpa.xml",
-                "fatturapa", "ubl", keepErrorsNotWarnings());
 
     }
 

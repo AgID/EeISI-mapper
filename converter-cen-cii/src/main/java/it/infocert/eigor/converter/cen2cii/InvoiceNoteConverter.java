@@ -78,18 +78,17 @@ public class InvoiceNoteConverter extends CustomConverterUtils implements Custom
             for (BG0001InvoiceNote bg0001 : bg0001InvoiceNote) {
                 Element includedNote = new Element("IncludedNote", ramNs);
 
-                if (!bg0001.getBT0022InvoiceNote().isEmpty()) {
-                    Element content = new Element("Content", ramNs);
-                    content.setText(bg0001.getBT0022InvoiceNote(0).getValue());
-                    includedNote.addContent(content);
-                }
-
                 if (!bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
                     Element subjectCode = new Element("SubjectCode", ramNs);
                     subjectCode.setText(bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue());
                     includedNote.addContent(subjectCode);
                 }
 
+                if (!bg0001.getBT0022InvoiceNote().isEmpty()) {
+                    Element content = new Element("Content", ramNs);
+                    content.setText(bg0001.getBT0022InvoiceNote(0).getValue());
+                    includedNote.addContent(content);
+                }
                 exchangedDocument.addContent(includedNote);
             }
         }

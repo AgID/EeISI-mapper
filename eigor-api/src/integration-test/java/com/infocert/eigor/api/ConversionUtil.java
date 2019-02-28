@@ -66,13 +66,13 @@ public class ConversionUtil {
 
     String buildMsgForFailedAssertion(ConversionResult<byte[]> convert, Predicate<IConversionIssue> predicate, BG0000Invoice intermediateCenInvoice){
 
-        List<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
+        Iterable<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
 
         StringBuilder issuesDescription = new StringBuilder();
-        boolean areThereIssues = !conversionIssues.isEmpty();
+        boolean areThereIssues = conversionIssues.iterator().hasNext();
         if(areThereIssues){
 
-            issuesDescription.append("\n\n====== " + conversionIssues.size() + " Issues: ======\n\n");
+            issuesDescription.append("\n\n====== Issues: ======\n\n");
 
             issuesDescription.append(msgForIssues(conversionIssues));
 

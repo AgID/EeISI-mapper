@@ -47,13 +47,6 @@ public class DocumentLevelChargesConverter extends CustomConverterUtils implemen
             }
         }
 
-        // TAG Sequence
-        // <ram:ChargeIndicator><udt:Indicator>false</udt:Indicator></ram:ChargeIndicator>
-        // <ram:CalculationPercent>10.00</ram:CalculationPercent><!--BT-138-->
-        // <ram:BasisAmount>147.00</ram:BasisAmount><!--BT-137-->
-        // <ram:ActualAmount>14.7</ram:ActualAmount><!--BT-136-->
-        // <ram:ReasonCode>66</ram:ReasonCode><!--BT-140-->
-        // <ram:Reason>Sales discount</ram:Reason><!--BT-139-->
         for (BG0021DocumentLevelCharges bg0021 : cenInvoice.getBG0021DocumentLevelCharges()) {
             Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
 
