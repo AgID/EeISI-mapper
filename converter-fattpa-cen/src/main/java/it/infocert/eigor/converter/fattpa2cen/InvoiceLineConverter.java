@@ -38,6 +38,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
             Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
             if (datiBeniServizi != null) {
                 List<Element> dettagliLinee = datiBeniServizi.getChildren();
+                BigDecimal invoiceLineNetAmountTotal = new BigDecimal(0);
                 for (Element dettaglioLinee : dettagliLinee) {
                     if (dettaglioLinee.getName().equals("DettaglioLinee")) {
 
@@ -189,8 +190,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if(codiceArticolo != null) {
                                 Element codiceValore = codiceArticolo.getChild("CodiceValore");
                                 String codiceTipo = codiceArticolo.getChild("CodiceTipo").getText();
-                                // TODO add Untdid7143 and ISO6523 code lists
-                                if (Untdid1153ReferenceQualifierCode.valueOf(codiceTipo) == null) {
+                                try {
+                                    // TODO add Untdid7143 and ISO6523 code lists
+                                    Untdid1153ReferenceQualifierCode.valueOf(codiceTipo);
+                                } catch (IllegalArgumentException e) {
                                     codiceTipo = "ZZZ";
                                 }
                                 BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier =
@@ -234,6 +237,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (prezzoTotaleValue != null) {
                                 BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(prezzoTotaleValue);
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
+                                invoiceLineNetAmountTotal = invoiceLineNetAmountTotal.add(prezzoTotaleValue);
                             }
 
                             BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
@@ -390,6 +394,21 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                     }
                 }
+                if (invoice.getBG0022DocumentTotals() == null || invoice.getBG0022DocumentTotals().size() == 0) {
+                    invoice.getBG0022DocumentTotals().add(new BG0022DocumentTotals());
+                }
+                invoice.getBG0022DocumentTotals(0).getBT0106SumOfInvoiceLineNetAmount().add(new BT0106SumOfInvoiceLineNetAmount(invoiceLineNetAmountTotal));
+
+                BigDecimal sumOfBT0021 = new BigDecimal(0);
+                for(int i=0; i<invoice.getBG0021DocumentLevelCharges().size(); i++){
+                    sumOfBT0021 = sumOfBT0021.add(invoice.getBG0021DocumentLevelCharges().get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
+                }
+                List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
+                BigDecimal sumOfBT0020 = new BigDecimal(0);
+                for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
+                    sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
+                }
+                invoice.getBG0022DocumentTotals(0).getBT0109InvoiceTotalAmountWithoutVat().add(new BT0109InvoiceTotalAmountWithoutVat((invoiceLineNetAmountTotal.subtract(sumOfBT0020)).add(sumOfBT0021)));
             }
         }
 

@@ -13,6 +13,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -94,6 +95,13 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         }
                         BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(code);
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
+
+                        // BR-E-10
+                        if (Untdid5305DutyTaxFeeCategories.E.equals(code) ||
+                                Untdid5305DutyTaxFeeCategories.G.equals(code)){
+                            bt0121 = new BT0121VatExemptionReasonCode(code.name());
+                            bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
+                        }
 
                         try {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(new BigDecimal(aliquotaIVA.getText()));
