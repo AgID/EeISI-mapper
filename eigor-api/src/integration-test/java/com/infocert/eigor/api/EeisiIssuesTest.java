@@ -45,9 +45,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
 
         // then
+
+        // check PartyIdentification (BT-46) is properly mapped
         XPathExpression idXpath = ublXpath().compile("//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID");
         assertEquals("ID should be the same on both invoices. Converted invoice is: " + describeConvertedInvoice(conversionResult), idXpath.evaluate(originalInvoice), idXpath.evaluate(convertedInvoice));
 
+        // assert CompanyID (BT-47) is properly mapped.
+        XPathExpression companyIdXpath = ublXpath().compile("//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID");
+        assertEquals("CompanyID should be the same on both invoices. Converted invoice is: " + describeConvertedInvoice(conversionResult), companyIdXpath.evaluate(originalInvoice), companyIdXpath.evaluate(convertedInvoice));
 
     }
 

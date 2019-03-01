@@ -45,6 +45,12 @@ public class BuyerConverter implements CustomMapping<Document> {
                         }
                     });
 
+                    // <xsd:element ref="cbc:MarkCareIndicator" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:MarkAttentionIndicator" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:WebsiteURI" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cbc:LogoReferenceID" minOccurs="0" maxOccurs="1">
+
+                    // <xsd:element ref="cbc:EndpointID" minOccurs="0" maxOccurs="1">
                     if (!buyer.getBT0049BuyerElectronicAddressAndSchemeIdentifier().isEmpty()) {
 
                         Element endpointID1 = party.getChild("EndpointID");
@@ -67,7 +73,9 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                     }
 
+                    // <xsd:element ref="cbc:IndustryClassificationCode" minOccurs="0" maxOccurs="1">
 
+                    // <xsd:element ref="cac:PartyIdentification" minOccurs="0" maxOccurs="unbounded">
                     if (!buyer.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                         final Identifier identifier = buyer.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
                         final Element partyIdentification = Optional.fromNullable(party.getChild("PartyIdentification")).or(new Supplier<Element>() {
@@ -94,6 +102,10 @@ public class BuyerConverter implements CustomMapping<Document> {
                         id.setText(schema != null && !schema.trim().isEmpty() ? String.format("%s:%s", schema, ide) : ide);
                     }
 
+                    // <xsd:element ref="cac:PartyName" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:Language" minOccurs="0" maxOccurs="1">
+
+                    // <xsd:element ref="cac:PostalAddress" minOccurs="0" maxOccurs="1">
                     if (!buyer.getBG0008BuyerPostalAddress().isEmpty()) {
                         final BG0008BuyerPostalAddress bg0008 = buyer.getBG0008BuyerPostalAddress(0);
 
@@ -140,7 +152,8 @@ public class BuyerConverter implements CustomMapping<Document> {
                             }
                         }
                     }
-
+                    // <xsd:element ref="cac:PhysicalLocation" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cac:PartyTaxScheme" minOccurs="0" maxOccurs="unbounded">
                     if (!buyer.getBT0048BuyerVatIdentifier().isEmpty()) {
                         BT0048BuyerVatIdentifier buyerVatIdentifier = buyer.getBT0048BuyerVatIdentifier(0);
                         Element companyID = new Element("CompanyID");
@@ -173,28 +186,68 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                     }
 
-                    Element partyLegalEntity = party.getChild("PartyLegalEntity");
-                    if (partyLegalEntity == null) {
-                        partyLegalEntity = new Element("PartyLegalEntity");
-                        party.addContent(partyLegalEntity);
-                    }
+                    // <xsd:element ref="cac:PartyLegalEntity" minOccurs="0" maxOccurs="unbounded">
+                    addPartyLegalEntity(cenInvoice, buyer, party);
 
-                    Element registrationName = new Element("RegistrationName");
-                    if (!buyer.getBG0009BuyerContact().isEmpty()) {
-                        BG0009BuyerContact bg0009 = buyer.getBG0009BuyerContact(0);
-                        if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
-                            BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
-                            registrationName.setText(bt0056.getValue());
-                            partyLegalEntity.addContent(registrationName);
-                        }
-                    } else if (!buyer.getBT0044BuyerName().isEmpty()) {
-                        BT0044BuyerName bt0044 = buyer.getBT0044BuyerName(0);
-                        registrationName.setText(bt0044.getValue());
-                        partyLegalEntity.addContent(registrationName);
-                    }
+                    // <xsd:element ref="cac:Contact" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cac:Person" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:AgentParty" minOccurs="0" maxOccurs="1">
+                    // <xsd:element ref="cac:ServiceProviderParty" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:PowerOfAttorney" minOccurs="0" maxOccurs="unbounded">
+                    // <xsd:element ref="cac:FinancialAccount" minOccurs="0" maxOccurs="1">
+
+
 
                 }
             }
         }
+    }
+
+    private void addPartyLegalEntity(BG0000Invoice cenInvoice, BG0007Buyer buyer, Element party) {
+        Element partyLegalEntity = party.getChild("PartyLegalEntity");
+        if (partyLegalEntity == null) {
+            partyLegalEntity = new Element("PartyLegalEntity");
+            party.addContent(partyLegalEntity);
+        }
+
+        // <xsd:element ref="cbc:RegistrationName" minOccurs="0" maxOccurs="1">
+        Element registrationName = new Element("RegistrationName");
+        if (!buyer.getBG0009BuyerContact().isEmpty()) {
+            BG0009BuyerContact bg0009 = buyer.getBG0009BuyerContact(0);
+            if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
+                BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
+                registrationName.setText(bt0056.getValue());
+                partyLegalEntity.addContent(registrationName);
+            }
+        } else if (!buyer.getBT0044BuyerName().isEmpty()) {
+            BT0044BuyerName bt0044 = buyer.getBT0044BuyerName(0);
+            registrationName.setText(bt0044.getValue());
+            partyLegalEntity.addContent(registrationName);
+        }
+
+        // <xsd:element ref="cbc:CompanyID" minOccurs="0" maxOccurs="1">
+        if(buyer.hasBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier()) {
+            BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier bt47 = buyer.getBT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier(0);
+            partyLegalEntity.addContent(
+                new Element("CompanyID")
+                        .setText( bt47.getValue().getIdentifier() )
+            );
+        }
+        // <xsd:element ref="cbc:RegistrationDate" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:RegistrationExpirationDate" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:CompanyLegalFormCode" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:CompanyLegalForm" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:SoleProprietorshipIndicator" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:CompanyLiquidationStatusCode" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:CorporateStockAmount" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cbc:FullyPaidSharesIndicator" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cac:RegistrationAddress" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cac:CorporateRegistrationScheme" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cac:HeadOfficeParty" minOccurs="0" maxOccurs="1">
+        // <xsd:element ref="cac:ShareholderParty" minOccurs="0" maxOccurs="unbounded">
+
+
+
+
     }
 }
