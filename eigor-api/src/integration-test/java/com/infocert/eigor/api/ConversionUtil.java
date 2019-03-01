@@ -66,20 +66,20 @@ public class ConversionUtil {
 
     String buildMsgForFailedAssertion(ConversionResult<byte[]> convert, Predicate<IConversionIssue> predicate, BG0000Invoice intermediateCenInvoice){
 
-        Iterable<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
+        List<IConversionIssue> conversionIssues = convert.getIssues().stream().filter( predicate ).collect(Collectors.toList());
 
         StringBuilder issuesDescription = new StringBuilder();
-        boolean areThereIssues = conversionIssues.iterator().hasNext();
+        boolean areThereIssues = !conversionIssues.isEmpty();
         if(areThereIssues){
 
-            issuesDescription.append("\n\n====== Issues: ======\n\n");
+            issuesDescription.append("\n\n====== " + conversionIssues.size() + " Issues: ======\n\n");
 
-            issuesDescription.append(msgForIssues(conversionIssues));
+            issuesDescription.append(describeConversionIssues(conversionIssues));
 
 
             issuesDescription.append("\n\n====== Converted Invoice: ======\n\n");
 
-            issuesDescription.append(msgConvertedInvoice(convert))
+            issuesDescription.append(describeConvertedInvoice(convert))
                     .append("\n\n");
 
             issuesDescription.append("\n\n====== Intermediate CEN Invoice: ======\n\n");
@@ -99,14 +99,14 @@ public class ConversionUtil {
         return v.toString();
     }
 
-    private String msgConvertedInvoice(ConversionResult<byte[]> convert) {
+    public static String describeConvertedInvoice(ConversionResult<byte[]> convert) {
         return new String(convert.getResult());
     }
 
-    private StringBuilder msgForIssues(Iterable<IConversionIssue> conversionIssues) {
-        StringBuilder issuesDescription2 = new StringBuilder();
+    public static String describeConversionIssues(Iterable<IConversionIssue> conversionIssues) {
+        StringBuilder issuesDescriptionBuilder = new StringBuilder();
         for (IConversionIssue issue : conversionIssues) {
-            issuesDescription2
+            issuesDescriptionBuilder
                     .append( issue.getMessage() )
                     .append("\n")
                     .append("   ►►► ")
@@ -114,14 +114,14 @@ public class ConversionUtil {
                     .append("\n");
 
             if(issue.getCause()!=null) {
-                issuesDescription2
+                issuesDescriptionBuilder
                         .append("   ►►► ")
                         .append(issue.getCause().getMessage())
                         .append("\n");
 
                 StringWriter sw = new StringWriter();
                 issue.getCause().printStackTrace( new PrintWriter(sw) );
-                issuesDescription2
+                issuesDescriptionBuilder
                         .append("   ►►► ")
                         .append(sw.toString())
                         .append("\n");
@@ -129,15 +129,25 @@ public class ConversionUtil {
 
 
             }
-            issuesDescription2.append("\n\n");
+            issuesDescriptionBuilder.append("\n\n");
         }
-        return issuesDescription2;
+        return issuesDescriptionBuilder.toString();
     }
 
     public static Predicate<IConversionIssue> keepErrorsNotWarnings() {
         return new KeepErrorsNotWarnings();
     }
 
+    public static Predicate<IConversionIssue> discardAll() {
+        return new DiscardAll();
+    }
+
+    static class DiscardAll implements  Predicate<IConversionIssue> {
+        @Override
+        public boolean test(IConversionIssue iConversionIssue) {
+            return false;
+        }
+    }
 
     static class KeepByErrorCode implements Predicate<IConversionIssue> {
         private final String errorCode;

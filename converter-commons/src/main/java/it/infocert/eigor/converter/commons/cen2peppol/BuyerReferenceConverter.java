@@ -14,30 +14,22 @@ import java.util.List;
 
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 
-public class PurchaseOrderReferenceConverter implements CustomMapping<Document> {
+public class BuyerReferenceConverter implements CustomMapping<Document> {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 		Element root = document.getRootElement();
-
 		String bt13 = evalExpression(() -> cenInvoice.getBT0013PurchaseOrderReference(0).getValue());
 		String bt10 = evalExpression(() -> cenInvoice.getBT0010BuyerReference(0).getValue());
 
-		// OrderReference
-		if( bt13 != null ) {
+		// BuyerReference
+		if( bt10 != null ) {
 			root
-					.addContent( new Element("OrderReference").addContent( new Element("ID").setText(bt13) ) );
-		}else{
-			if(bt10 == null) {
-				root
-						.addContent( new Element("OrderReference").addContent( new Element("ID").setText("N/A") ) );
-
-			}else{
-				root
-						.addContent( new Element("OrderReference").addContent( new Element("ID").setText(bt10) ) );
-			}
+					.addContent(
+							new Element("BuyerReference").setText( bt10 )
+					);
 		}
 
 	}
