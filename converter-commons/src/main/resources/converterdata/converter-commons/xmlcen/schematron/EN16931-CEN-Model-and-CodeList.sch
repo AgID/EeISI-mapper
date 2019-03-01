@@ -2,8 +2,8 @@
 <!-- 
             Core semantic model Schematron - CEN Semantic  
             Created by EeISI - European eInvoicing Standard in Italy Project
-            Latest update: 2019-12-01 
-            Release: 1.0.2 DRAFT
+            Latest update: 2019-FEB-25 
+            Release: 1.0.4 DRAFT
   -->
 <!--
 Modifiche 2019-01-12:
@@ -12,6 +12,12 @@ BR-S-07: fix su BT errato
 BR-S-08: rivista completamente in quanto non considerava il vate rate
 BR-CO-04 => spostata su diverso context
 BR-VATCODE-05 => spostate TUTTE in un diverso contesto
+
+Modifiche 2019-01-25
+BR-S-01 to BR-S-10 update to include B Vat Category Code
+Modifica 2019-02-25
+BR-61 changed BT-84 in BG-17/BT-84 
+
 
 
 -->
@@ -513,28 +519,62 @@ To Be implemented
         id="BR-O-14">[BR-O-14]-An Invoice that contains a VATBReakdown group (BG-23) with a VAT category code (BT-118) "Not subject to VAT" shall not contain Document level charges (BG-21) where Document level charge VAT category code (BT-102) is not "Not subject to VAT".
       </assert>
       
-      <!-- Standard rated (S) -->     
-      <assert test="(((BG-25/BG-30/BT-151[normalize-space(.) = 'S']) or (BG-20/BT-95[normalize-space(.) = 'S']) or (BG-21/BT-102[normalize-space(.) = 'S'])) and count(BG-23/BT-118[normalize-space(.) = 'S'])&gt; 0)
+      <!-- Standard rated (S) -->
+      
+    <!--      
+        <assert test="(((BG-25/BG-30/BT-151[normalize-space(.) = 'S']) or (BG-20/BT-95[normalize-space(.) = 'S']) or (BG-21/BT-102[normalize-space(.) = 'S'])) and count(BG-23/BT-118[normalize-space(.) = 'S'])&gt; 0)
         or count(BG-23/BT-118[normalize-space(.) = 'S'])=0" 
         flag="fatal" 
         id="BR-S-01">[BR-S-01]-An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VATBReakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".
       </assert>
-      
+      -->
+
+      <assert test="
+        every $vatcode in (BG-25/BG-30/BT-151[normalize-space(.) = ('S','B')] | BG-20/BT-95[normalize-space(.) = ('S','B')] | BG-21/BT-102[normalize-space(.) = ('S','B')])
+        satisfies (count(BG-23/BT-118[normalize-space(.)=$vatcode]) &gt; 0) ">
+        ">
+        flag="fatal"
+        id="BR-S-01">
+        [BR-S-01]-An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VATBReakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".
+      </assert> 
+      <!--
       <assert test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) )
         or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S'])" 
         flag="fatal" 
         id="BR-S-02">[BR-S-02]-An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
       </assert>
+      -->
+      <assert test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) )
+        or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'])" 
+        flag="fatal" 
+        id="BR-S-02">[BR-S-02]-An Invoice that contains an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
+      </assert>
+      <!--
       <assert test="(BG-20/BT-95[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))
         or not (BG-20/BT-95[normalize-space(.) = 'S'])" 
         flag="fatal" 
         id="BR-S-03">[BR-S-03]-An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
       </assert>
+      -->
+      
+      <assert test="(BG-20/BT-95[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))
+        or not (BG-20/BT-95[normalize-space(.) = 'S' or 'B'])" 
+        flag="fatal" 
+        id="BR-S-03">[BR-S-03]-An Invoice that contains a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
+      </assert>
+      <!--    
       <assert test="(BG-21/BT-102[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))
         or not (BG-21/BT-102[normalize-space(.) = 'S'])"
         flag="fatal" 
         id="BR-S-04">[BR-S-04]-An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
       </assert>
+      -->
+      <assert test="(BG-21/BT-102[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))
+        or not (BG-21/BT-102[normalize-space(.) = 'S' or 'B'])"
+        flag="fatal" 
+        id="BR-S-04">[BR-S-04]-An Invoice that contains a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is “Standard rated” shall contain the Seller VAT Identifier (BT-31), the Seller tax registration identifier (BT-32) and/or the Seller tax representative VAT identifier (BT-63).
+      </assert>
+      
       <!-- Zero rated ()Z -->
       <assert test="(((BG-25/BG-30/BT-151[normalize-space(.) = 'Z']) or (BG-20/BT-95[normalize-space(.) = 'Z']) or (BG-21/BT-102[normalize-space(.) = 'Z'])) and count(BG-23/BT-118[normalize-space(.) = 'Z'])=1)
         or count(BG-23/BT-118[normalize-space(.) = 'Z'])=0" 
@@ -651,16 +691,18 @@ To Be implemented
         id="BR-57">[BR-57]-Each Deliver to address (BG-15) shall contain a Deliver to country code (BT-80).
       </assert>
     </rule>
+
     <rule context="BG-16">
       <!--      
         <param name="BR-61" value="(exists(cac:PayeeFinancialAccount/cbc:ID) and ((normalize-space(cbc:PaymentMeansCode) = '30') or (normalize-space(cbc:PaymentMeansCode) = '58') )) or ((normalize-space(cbc:PaymentMeansCode) != '30') and (normalize-space(cbc:PaymentMeansCode) != '58'))"/>
       -->     
-      <assert test="(BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58')) 
+      <assert test="(BG-17/BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58')) 
         or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')  " 
         flag="fatal" 
         id="BR-61">[BR-61]-If the Payment means type code (BT-81) means SEPA credit transfer, Local credit transfer or Non-SEPA international credit transfer, the Payment account identifier (BT-84) shall be present.
       </assert>
-    </rule>
+    </rule>    
+    
     <rule context="BG-18">
       <assert test="string-length(BT-87)&gt;=4 and string-length(BT-87)&lt;=6" 
         flag="fatal" 
@@ -728,10 +770,16 @@ To Be implemented
         id="BR-O-06">[BR-O-06]-A Document level allowance (BG-20) where VAT category code (BT-95) is "Not subject to VAT" shall not contain a Document level allowance VAT rate (BT-96).
       </assert>
       <!--Standard rated (S) -->      
-      <assert test=".[normalize-space(BT-95) = 'S']/BT-96 &gt; 0 or not(.[normalize-space(BT-95) = 'S'])" 
+      <!--<assert test=".[normalize-space(BT-95) = 'S']/BT-96 &gt; 0 or not(.[normalize-space(BT-95) = 'S'])" 
         flag="fatal" 
         id="BR-S-06">[BR-S-06]-In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is "Standard rated" the Document level allowance VAT rate (BT-96) shall be greater than zero.
       </assert>
+      -->
+      <assert test=".[normalize-space(BT-95) = ('S','B')]/BT-96 &gt; 0 or not(.[normalize-space(BT-95) = ('S','B')])" 
+        flag="fatal" 
+        id="BR-S-06">[BR-S-06]-In a Document level allowance (BG-20) where the Document level allowance VAT category code (BT-95) is "Standard rated" the Document level allowance VAT rate (BT-96) shall be greater than zero.
+      </assert>
+      
       <!--Zero rated (Z) -->
       <assert test=".[normalize-space(BT-95) = 'Z']/BT-96=0 or not(.[normalize-space(BT-95) = 'Z'])" 
         flag="fatal" 
@@ -799,10 +847,16 @@ To Be implemented
         id="BR-O-07">[BR-O-07]-A Document level charge (BG-21) where the VAT category code (BT-102) is "Not subject to VAT" shall not contain a Document level charge VAT rate (BT-103).
       </assert>
       <!--Standard rated (S) -->
-      <assert test=".[normalize-space(BT-102) = 'S']/BT-103 &gt; 0 or not(.[normalize-space(BT-102) = 'S'])"
+      <!--<assert test=".[normalize-space(BT-102) = 'S']/BT-103 &gt; 0 or not(.[normalize-space(BT-102) = 'S'])"
         flag="fatal" 
         id="BR-S-07">[BR-S-07]-In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is "Standard rated" the Document level charge VAT rate (BT-103) shall be greater than zero.
       </assert>
+      -->
+      <assert test=".[normalize-space(BT-102) = ('S' , 'B')]/BT-103 &gt; 0 or not(.[normalize-space(BT-102) = ('S' , 'B')])"
+        flag="fatal" 
+        id="BR-S-07">[BR-S-07]-In a Document level charge (BG-21) where the Document level charge VAT category code (BT-102) is "Standard rated" the Document level charge VAT rate (BT-103) shall be greater than zero.
+      </assert>
+      
       <!--Zero rated (Z) -->
       <assert test=".[normalize-space(BT-102) = 'Z']/BT-103 = 0 or not(.[normalize-space(BT-95) = 'Z'])"
         flag="fatal" 
@@ -1079,7 +1133,8 @@ To Be implemented
         id="BR-S-08">[BR-S-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "Standard rated", the VAT category taxable amount (BT-116) in a VATBReakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “Standard rated” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).
       </assert>-->
       
-      <assert test="
+      <!--      
+        <assert test="
         every $rate in BT-119[normalize-space(../BT-118)='S'] satisfies 
         (
         .[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)=
@@ -1091,15 +1146,41 @@ To Be implemented
         flag="fatal" 
         id="BR-S-08">[BR-S-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "Standard rated", the VAT category taxable amount (BT-116) in a VATBReakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “Standard rated” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).
       </assert>
-
-      <assert test=".[normalize-space(BT-118) = 'S']/xs:decimal(BT-117) = 
+      -->
+      <assert test="
+        every $rate in BT-119[normalize-space(../BT-118)=('S','B')], 
+        $vatcode in BT-118[normalize-space(.)=('S','B')] satisfies 
+        (
+        .[normalize-space(BT-118) = $vatcode]/xs:decimal(BT-116)=
+        sum(../BG-25/xs:decimal(BT-131[normalize-space(../BG-30/BT-151) = $vatcode][../BG-30/BT-152=xs:decimal($rate)]))
+        - sum(../BG-20/xs:decimal(BT-92[normalize-space(../BT-95) = $vatcode][../BT-96=xs:decimal($rate)])) 
+        + sum(../BG-21/xs:decimal(BT-99[normalize-space(../BT-102) = $vatcode][../BT-103=xs:decimal($rate)]))
+        or normalize-space(BT-118) != $vatcode
+        )"        
+        flag="fatal" 
+        id="BR-S-08">[BR-S-08]-For each different value of VAT category rate (BT-119) where the VAT category code (BT-118) is "Standard rated", the VAT category taxable amount (BT-116) in a VATBReakdown (BG-23) shall equal the sum of Invoice line net amounts (BT-131) plus the sum of document level charge amounts (BT-99) minus the sum of document level allowance amounts (BT-92) where the VAT category code (BT-151, BT-102, BT-95) is “Standard rated” and the VAT rate (BT-152, BT-103, BT-96) equals the VAT category rate (BT-119).
+      </assert>
+      
+      <!--<assert test=".[normalize-space(BT-118) = 'S']/xs:decimal(BT-117) = 
         round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10  ) div 100
         or normalize-space(BT-118) != 'S'" 
         flag="fatal" 
         id="BR-S-09">[BR-S-09]-The VAT category tax amount (BT-117) in a VATBReakdown (BG-23) where VAT category code (BT-118) is "Standard rated" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).
       </assert>
-      
+      -->
+      <assert test=".[normalize-space(BT-118) = ('S', 'B')]/xs:decimal(BT-117) = 
+        round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10  ) div 100
+        or normalize-space(BT-118) != ('S', 'B')" 
+        flag="fatal" 
+        id="BR-S-09">[BR-S-09]-The VAT category tax amount (BT-117) in a VATBReakdown (BG-23) where VAT category code (BT-118) is "Standard rated" shall equal the VAT category taxable amount (BT-116) multiplied by the VAT category rate (BT-119).
+      </assert>
+      <!--
       <assert test="(not(.[normalize-space(BT-118) = 'S']/BT-120) and not( .[normalize-space(BT-118) = 'S']/BT-121)) or normalize-space(BT-118) != 'S'" 
+        flag="fatal" 
+        id="BR-S-10">[BR-S-10]-A VATBReakdown (BG-23) with VAT Category code (BT-118) "Standard rate" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).
+      </assert>
+      -->
+      <assert test="(not(.[normalize-space(BT-118) = ('S','B')]/BT-120) and not( .[normalize-space(BT-118) = ('S' , 'B')]/BT-121)) or not(normalize-space(BT-118) = ('S' , 'B'))" 
         flag="fatal" 
         id="BR-S-10">[BR-S-10]-A VATBReakdown (BG-23) with VAT Category code (BT-118) "Standard rate" shall not have a VAT exemption reason code (BT-121) or VAT exemption reason text (BT-120).
       </assert>
@@ -1188,7 +1269,12 @@ To Be implemented
         id="BR-O-05">[BR-O-05]-An Invoice line (BG-25) where the VAT category code (BT-151) is "Not subject to VAT" shall not contain an Invoiced item VAT rate (BT-152).
       </assert>
       <!--Standard rated (S) -->      
-      <assert test=".[normalize-space(BT-151) = 'S']/BT-152 &gt; 0  or normalize-space(BT-151) != 'S'" 
+      <!--<assert test=".[normalize-space(BT-151) = 'S']/BT-152 &gt; 0  or normalize-space(BT-151) != 'S'" 
+        flag="fatal" 
+        id="BR-S-05">[BR-S-05]-In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is "Standard rated" the Invoiced item VAT rate (BT-152) shall be greater than zero.
+      </assert>
+      -->
+      <assert test=".[normalize-space(BT-151) = ('S' , 'B')]/BT-152 &gt; 0  or not(normalize-space(BT-151) = ('S' , 'B'))" 
         flag="fatal" 
         id="BR-S-05">[BR-S-05]-In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is "Standard rated" the Invoiced item VAT rate (BT-152) shall be greater than zero.
       </assert>
