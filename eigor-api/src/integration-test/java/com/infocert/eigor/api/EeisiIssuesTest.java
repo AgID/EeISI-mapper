@@ -5,7 +5,6 @@ import it.infocert.eigor.api.ConversionResult;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.text.IsEmptyString;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -35,25 +34,19 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi216() throws Exception {
 
-        Document original = documentBuilder.parse(getClass().getResourceAsStream("/issues/issue-eisi216-ubl.xml"));
+        // given
+        Document originalInvoice = documentBuilder.parse(getClass().getResourceAsStream("/issues/issue-eisi216-ubl.xml"));
+        Document convertedInvoice = null;
 
+        // when
         ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi216-ubl.xml",
                 "ubl", "ubl", keepErrorsNotWarnings());
+        convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
 
-        System.out.println( describeConvertedInvoice(conversionResult) );
-
-        Document converted = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
-
-        XPathExpression compile = xPath.compile("//cac:PartyIdentification/cbc:ID");
-
-        String originalV = compile.evaluate(original);
-
-        assertThat( originalV, not( IsEmptyString.isEmptyOrNullString() ));
-
-        String convertedV = compile.evaluate(converted)  + "kk0";
-
-        assertEquals(originalV, convertedV);
+        // then
+        XPathExpression idXpath = ublXpath().compile("//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID");
+        assertEquals("ID should be the same on both invoices. Converted invoice is: " + describeConvertedInvoice(conversionResult), idXpath.evaluate(originalInvoice), idXpath.evaluate(convertedInvoice));
 
 
     }
