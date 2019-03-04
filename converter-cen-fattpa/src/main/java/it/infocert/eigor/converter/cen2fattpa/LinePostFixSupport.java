@@ -121,7 +121,7 @@ class LinePostFixSupport {
         @Override
         public void setNumeroLinea(int originalLineNumber) {
 
-            Preconditions.checkState( !changePerformed, "The line %d has been already changed.", originalLineNumber );
+            Preconditions.checkState( !changePerformed, "The line %s has been already changed.", originalLineNumber );
 
             String cenIdentifier = cenLine.lineIdentifier();
             if( !String.valueOf(originalLineNumber).equals(cenIdentifier) ) {

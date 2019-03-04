@@ -65,14 +65,17 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
             Untdid2005DateTimePeriodQualifiersToItalianCodeStringConverter.newConverter(),
             LocalDateToXMLGregorianCalendarConverter.newConverter()
     );
-    private final LinePostFixSupport linepostfix;
+    private final ThreadLocal<LinePostFixSupport> linepostfix;
 
     public LineConverter() {
-        linepostfix = new LinePostFixSupport();
+        linepostfix = new ThreadLocal<>();
     }
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+
+        linepostfix.set( new LinePostFixSupport() );
+
         List<FatturaElettronicaBodyType> bodies = fatturaElettronica.getFatturaElettronicaBody();
         int size = bodies.size();
         if (size > 1) {
@@ -97,7 +100,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
             mapBt73and74(invoice, fatturaElettronicaBody, errors, callingLocation);
 
-            linepostfix.appliesRenumbering();
+            linepostfix.get().appliesRenumbering();
 
         }
     }
@@ -373,7 +376,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 DettaglioLineeType dettaglioLinee = dettaglioLineeList.get(i);
                 BG0025InvoiceLine invoiceLine = invoice.getBG0025InvoiceLine(i);
 
-                linepostfix.registerForPostFix(invoiceLine, dettaglioLinee);
+                linepostfix.get().registerForPostFix(invoiceLine, dettaglioLinee);
 
                 final Optional<String> lineIdentifier;
                 if (!invoiceLine.getBT0126InvoiceLineIdentifier().isEmpty()) {
