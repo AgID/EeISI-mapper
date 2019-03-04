@@ -93,8 +93,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 "fatturapa", "peppolbis", keepErrorsNotWarnings());
 
     }
-    
-    
+
+
     @Test
     public void issueEeisi188() {
         this.conversion.assertConversionWithoutErrors(
@@ -155,27 +155,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
-    @Ignore("Invalid schema")
     @Test
     public void issueEeisi28() throws XPathExpressionException, IOException {
 
         String invoiceTemplate = IOUtils.toString(new InputStreamReader( getClass().getResourceAsStream("/examples/xmlcen/eisi-28-issue.xml") ));
-        String s = "E";
-        invoiceTemplate = invoiceTemplate.replace("@@BT-95@@", s);
-        invoiceTemplate = invoiceTemplate.replace("@@BT-102@@", s);
-        invoiceTemplate = invoiceTemplate.replace("@@BT-118@@", s);
-        invoiceTemplate = invoiceTemplate.replace("@@BT-151@@", s);
-
-
 
         // a conversion UBL - fatturaPA withouth errors.
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
                 IOUtils.toInputStream(invoiceTemplate, "UTF-8"), "xmlcen", "fatturapa",  new KeepAll());
-
-        // The CSV in base 64 is the 3rd attachment in this case.
-        String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
-
-        System.out.println( new String( conversion.getResult() ) );
 
     }
 
