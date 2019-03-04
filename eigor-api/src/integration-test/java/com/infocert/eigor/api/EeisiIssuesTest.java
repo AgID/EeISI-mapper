@@ -32,6 +32,16 @@ import static org.junit.Assert.assertThat;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
+
+    @Test
+    public void issueEeisi205() {
+
+        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eeisi193-fattpa.xml",
+                "fatturapa", "xmlcen", keepErrorsNotWarnings());
+
+    }
+
     @Test
     public void issueEeisi216() throws Exception {
 
