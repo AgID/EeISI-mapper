@@ -1,16 +1,19 @@
 
 package com.infocert.eigor.api;
 
-import com.infocert.eigor.api.ConversionUtil.KeepAll;
+import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -28,6 +31,31 @@ import static org.junit.Assert.assertThat;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEeisi216() throws Exception {
+
+        // given
+        Document originalInvoice = documentBuilder.parse(getClass().getResourceAsStream("/issues/issue-eisi216-ubl.xml"));
+        Document convertedInvoice = null;
+
+        // when
+        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi216-ubl.xml",
+                "ubl", "ubl", keepErrorsNotWarnings());
+        convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
+
+        // then
+
+        // check PartyIdentification (BT-46) is properly mapped
+        XPathExpression idXpath = ublXpath().compile("//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID");
+        assertEquals("ID should be the same on both invoices. Converted invoice is: " + describeConvertedInvoice(conversionResult), idXpath.evaluate(originalInvoice), idXpath.evaluate(convertedInvoice));
+
+        // assert CompanyID (BT-47) is properly mapped.
+        XPathExpression companyIdXpath = ublXpath().compile("//cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID");
+        assertEquals("CompanyID should be the same on both invoices. Converted invoice is: " + describeConvertedInvoice(conversionResult), companyIdXpath.evaluate(originalInvoice), companyIdXpath.evaluate(convertedInvoice));
+
+    }
 
     @Test
     public void issueEeisi195() {
