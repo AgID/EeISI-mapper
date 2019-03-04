@@ -2,18 +2,17 @@ package com.infocert.eigor.api;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.configuration.ConfigurationException;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,10 +20,9 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Parameterized.class)
 public class Issue235Test {
 
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
-    private ConversionUtil conversion;
-    private EigorApi api;
+    public static File tmp = null;
+    private static ConversionUtil conversion;
+    private static EigorApi api = null;
     private File ublInvoice;
 
     @Parameterized.Parameters(name= "{index}: {1}")
@@ -33,7 +31,8 @@ public class Issue235Test {
         assertTrue( folderWithExamples.exists() );
         assertTrue( folderWithExamples.isDirectory() );
 
-        File[] ublInvoices = folderWithExamples.listFiles();
+        File[] ublInvoices = Arrays.stream(folderWithExamples.listFiles()).filter( f -> f.isFile() ).sorted().toArray(File[]::new);
+
         assertTrue( ublInvoices.length >= 1 );
 
         ArrayList<Object[]> list = new ArrayList<>();
@@ -52,18 +51,30 @@ public class Issue235Test {
         this.ublInvoice = ublInvoice;
     }
 
-    @Before
-    public void initApi() throws IOException, ConfigurationException {
+    @BeforeClass
+    public static void initApi() throws IOException, ConfigurationException {
+
+        tmp = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
+
         api = new EigorApiBuilder()
                 .enableAutoCopy()
-                .withOutputFolder(tmp.newFolder())
+                .withOutputFolder(tmp)
                 .enableForce()
                 .build();
 
         conversion = new ConversionUtil(api);
     }
 
-    @Ignore("several errors")
+    @AfterClass
+    public static void removeFolder() {
+        try {
+            FileUtils.forceDelete(tmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Test
     public void test() {
         conversion.assertConversionWithoutErrors( "/issues/235/" + ublInvoice.getName(), "ubl", "fatturapa" );
