@@ -199,6 +199,13 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
+    @Test
+    public void issueEeisi20() throws XPathExpressionException, IOException {
+
+        this.conversion.assertConversionWithoutErrors("/issues/issue-eisi-20-cii.xml", "cii", "fatturapa");
+
+    }
+
 
 
 }

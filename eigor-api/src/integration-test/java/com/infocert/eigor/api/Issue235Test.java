@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
-@Ignore("several errors")
 @RunWith(Parameterized.class)
 public class Issue235Test {
 
