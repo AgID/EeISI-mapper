@@ -2,8 +2,10 @@ package com.infocert.eigor.api;
 
 import com.google.common.base.Preconditions;
 import it.infocert.eigor.api.configuration.ConfigurationException;
-import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -12,14 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class Issue235Test {
 
-    public static File tmp = null;
+    @ClassRule
+    public static TemporaryFolder tmp = new TemporaryFolder();
     private static ConversionUtil conversion;
     private static EigorApi api = null;
     private File ublInvoice;
@@ -53,26 +55,14 @@ public class Issue235Test {
     @BeforeClass
     public static void initApi() throws IOException, ConfigurationException {
 
-        tmp = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
-
         api = new EigorApiBuilder()
                 .enableAutoCopy()
-                .withOutputFolder(tmp)
+                .withOutputFolder(tmp.newFolder())
                 .enableForce()
                 .build();
 
         conversion = new ConversionUtil(api);
     }
-
-    @AfterClass
-    public static void removeFolder() {
-        try {
-            FileUtils.forceDelete(tmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     public void test() {
