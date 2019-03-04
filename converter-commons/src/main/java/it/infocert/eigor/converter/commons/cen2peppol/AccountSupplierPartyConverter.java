@@ -105,7 +105,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 			logger.debug("BT-31 is missing");
 		}
 		if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
-			mapPartyTaxScheme(partyElm, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "FC");
+			mapPartyTaxScheme(partyElm, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "NOVAT");
 		} else {
 			logger.debug("BT-31 is missing");
 		}
