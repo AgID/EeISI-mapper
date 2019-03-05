@@ -9,8 +9,11 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
@@ -32,11 +35,34 @@ import static org.junit.Assert.assertThat;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
+    @Test
+    public void issueEeisi205() throws Exception {
+
+        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eeisi205-fattpa.xml",
+                "fatturapa", "xmlcen", keepErrorsNotWarnings());
+
+        Document convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
+
+        XPathExpression idXpath = ublXpath().compile("//BT-46");
+        Node node = (Node) idXpath.evaluate(convertedInvoice, XPathConstants.NODE);
+
+        String msg = "";
+        NamedNodeMap attributes = node.getAttributes();
+        if(attributes.getLength()>=1) {
+            for(int i=0; i<attributes.getLength(); i++) {
+                msg += "'" + attributes.item(i).getNodeName() + "' ";
+            }
+        }
+
+        assertEquals("Unexpected attributes " + msg + "\n" + new String(conversionResult.getResult()), 0, node.getAttributes().getLength());
+
+    }
 
     @Test
-    public void issueEeisi205() {
+    public void issueEeisi205BankTransfer() throws Exception {
 
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eeisi193-fattpa.xml",
                 "fatturapa", "xmlcen", keepErrorsNotWarnings());
 
