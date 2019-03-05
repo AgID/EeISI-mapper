@@ -149,6 +149,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     bg0020.getBT0097DocumentLevelAllowanceReason().add(bt0097);
                                 }
 
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
+                                }
+
                                 invoice.getBG0020DocumentLevelAllowances().add(bg0020);
                             } else if (prezzoTotaleValue != null && prezzoTotaleValue.signum() > 0 &&
                                     Arrays.asList("SC", "PR", "AB", "AC").contains(tipoCessionePrestazione.getText())) {
@@ -174,6 +178,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 if (descrizioneValue != null) {
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason(descrizioneValue);
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
+                                }
+
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
                                 }
 
                                 invoice.getBG0021DocumentLevelCharges().add(bg0021);
