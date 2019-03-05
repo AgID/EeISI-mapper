@@ -229,6 +229,8 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
             }
             totals.getBT0107SumOfAllowancesOnDocumentLevel().add(new BT0107SumOfAllowancesOnDocumentLevel(sumOfBT0020));
 
+            totals.getBT0109InvoiceTotalAmountWithoutVat().add(new BT0109InvoiceTotalAmountWithoutVat((totals.getBT0106SumOfInvoiceLineNetAmount().get(0).getValue().subtract(sumOfBT0020)).add(sumOfBT0021)));
+
             final Element datiPagamento = fatturaElettronicaBody.getChild("DatiPagamento");
             if (datiPagamento != null) {
                 final Element dettaglioPagamento = datiPagamento.getChild("DettaglioPagamento");

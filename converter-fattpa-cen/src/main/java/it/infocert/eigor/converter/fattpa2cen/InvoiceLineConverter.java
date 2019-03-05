@@ -398,17 +398,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     invoice.getBG0022DocumentTotals().add(new BG0022DocumentTotals());
                 }
                 invoice.getBG0022DocumentTotals(0).getBT0106SumOfInvoiceLineNetAmount().add(new BT0106SumOfInvoiceLineNetAmount(invoiceLineNetAmountTotal));
-
-                BigDecimal sumOfBT0021 = new BigDecimal(0);
-                for(int i=0; i<invoice.getBG0021DocumentLevelCharges().size(); i++){
-                    sumOfBT0021 = sumOfBT0021.add(invoice.getBG0021DocumentLevelCharges().get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
-                }
-                List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
-                BigDecimal sumOfBT0020 = new BigDecimal(0);
-                for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
-                    sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
-                }
-                invoice.getBG0022DocumentTotals(0).getBT0109InvoiceTotalAmountWithoutVat().add(new BT0109InvoiceTotalAmountWithoutVat((invoiceLineNetAmountTotal.subtract(sumOfBT0020)).add(sumOfBT0021)));
             }
         }
 
