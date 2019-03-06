@@ -64,15 +64,6 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     }
 
     @Test
-    public void issueEeisi205BankTransfer() throws Exception {
-
-        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
-                "/issues/issue-eeisi193-fattpa.xml",
-                "fatturapa", "xmlcen", keepErrorsNotWarnings());
-
-    }
-
-    @Test
     public void issueEeisi216() throws Exception {
 
         // given

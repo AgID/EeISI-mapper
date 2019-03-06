@@ -801,15 +801,17 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(((BG-25/BG-30/BT-151[normalize-space(.) = 'S']) or (BG-20/BT-95[normalize-space(.) = 'S']) or (BG-21/BT-102[normalize-space(.) = 'S'])) and count(BG-23/BT-118[normalize-space(.) = 'S'])> 0)         or count(BG-23/BT-118[normalize-space(.) = 'S'])=0" />
+      <xsl:when test="         every $vatcode in (BG-25/BG-30/BT-151[normalize-space(.) = ('S','B')] | BG-20/BT-95[normalize-space(.) = ('S','B')] | BG-21/BT-102[normalize-space(.) = ('S','B')])         satisfies (count(BG-23/BT-118[normalize-space(.)=$vatcode]) > 0) " />
       <xsl:otherwise>
-        <svrl:failed-assert test="(((BG-25/BG-30/BT-151[normalize-space(.) = 'S']) or (BG-20/BT-95[normalize-space(.) = 'S']) or (BG-21/BT-102[normalize-space(.) = 'S'])) and count(BG-23/BT-118[normalize-space(.) = 'S'])> 0) or count(BG-23/BT-118[normalize-space(.) = 'S'])=0">
-          <xsl:attribute name="id">BR-S-01</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
+        <svrl:failed-assert test="every $vatcode in (BG-25/BG-30/BT-151[normalize-space(.) = ('S','B')] | BG-20/BT-95[normalize-space(.) = ('S','B')] | BG-21/BT-102[normalize-space(.) = ('S','B')]) satisfies (count(BG-23/BT-118[normalize-space(.)=$vatcode]) > 0)">
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-S-01]-An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VATBReakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".
+          <svrl:text>
+        "&gt;
+        flag="fatal"
+        id="BR-S-01"&gt;
+        [BR-S-01]-An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VATBReakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -817,9 +819,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) )         or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S'])" />
+      <xsl:when test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) )         or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'])" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) ) or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S'])">
+        <svrl:failed-assert test="(BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 or BG-11/BT-63 ) ) or not (BG-25/BG-30/BT-151[normalize-space(.) = 'S' or 'B'])">
           <xsl:attribute name="id">BR-S-02</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -833,9 +835,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(BG-20/BT-95[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))         or not (BG-20/BT-95[normalize-space(.) = 'S'])" />
+      <xsl:when test="(BG-20/BT-95[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))         or not (BG-20/BT-95[normalize-space(.) = 'S' or 'B'])" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(BG-20/BT-95[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63)) or not (BG-20/BT-95[normalize-space(.) = 'S'])">
+        <svrl:failed-assert test="(BG-20/BT-95[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63)) or not (BG-20/BT-95[normalize-space(.) = 'S' or 'B'])">
           <xsl:attribute name="id">BR-S-03</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -849,9 +851,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(BG-21/BT-102[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))         or not (BG-21/BT-102[normalize-space(.) = 'S'])" />
+      <xsl:when test="(BG-21/BT-102[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63))         or not (BG-21/BT-102[normalize-space(.) = 'S' or 'B'])" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(BG-21/BT-102[normalize-space(.) = 'S'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63)) or not (BG-21/BT-102[normalize-space(.) = 'S'])">
+        <svrl:failed-assert test="(BG-21/BT-102[normalize-space(.) = 'S' or 'B'] and (BG-4/BT-31 or BG-4/BT-32 and BG-11/BT-63)) or not (BG-21/BT-102[normalize-space(.) = 'S' or 'B'])">
           <xsl:attribute name="id">BR-S-04</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1098,9 +1100,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58'))          or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')  " />
+      <xsl:when test="(BG-17/BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58'))          or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')  " />
       <xsl:otherwise>
-        <svrl:failed-assert test="(BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58')) or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')">
+        <svrl:failed-assert test="(BG-17/BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58')) or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')">
           <xsl:attribute name="id">BR-61</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1334,9 +1336,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test=".[normalize-space(BT-95) = 'S']/BT-96 > 0 or not(.[normalize-space(BT-95) = 'S'])" />
+      <xsl:when test=".[normalize-space(BT-95) = ('S','B')]/BT-96 > 0 or not(.[normalize-space(BT-95) = ('S','B')])" />
       <xsl:otherwise>
-        <svrl:failed-assert test=".[normalize-space(BT-95) = 'S']/BT-96 > 0 or not(.[normalize-space(BT-95) = 'S'])">
+        <svrl:failed-assert test=".[normalize-space(BT-95) = ('S','B')]/BT-96 > 0 or not(.[normalize-space(BT-95) = ('S','B')])">
           <xsl:attribute name="id">BR-S-06</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -1564,9 +1566,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test=".[normalize-space(BT-102) = 'S']/BT-103 > 0 or not(.[normalize-space(BT-102) = 'S'])" />
+      <xsl:when test=".[normalize-space(BT-102) = ('S' , 'B')]/BT-103 > 0 or not(.[normalize-space(BT-102) = ('S' , 'B')])" />
       <xsl:otherwise>
-        <svrl:failed-assert test=".[normalize-space(BT-102) = 'S']/BT-103 > 0 or not(.[normalize-space(BT-102) = 'S'])">
+        <svrl:failed-assert test=".[normalize-space(BT-102) = ('S' , 'B')]/BT-103 > 0 or not(.[normalize-space(BT-102) = ('S' , 'B')])">
           <xsl:attribute name="id">BR-S-07</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -2136,9 +2138,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="         every $rate in BT-119[normalize-space(../BT-118)='S'] satisfies          (         .[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)=         sum(../BG-25/xs:decimal(BT-131[normalize-space(../BG-30/BT-151) = 'S'][../BG-30/BT-152=xs:decimal($rate)]))         - sum(../BG-20/xs:decimal(BT-92[normalize-space(../BT-95) = 'S'][../BT-96=xs:decimal($rate)]))          + sum(../BG-21/xs:decimal(BT-99[normalize-space(../BT-102) = 'S'][../BT-103=xs:decimal($rate)]))         or normalize-space(BT-118) != 'S'         )" />
+      <xsl:when test="         every $rate in BT-119[normalize-space(../BT-118)=('S','B')],          $vatcode in BT-118[normalize-space(.)=('S','B')] satisfies          (         .[normalize-space(BT-118) = $vatcode]/xs:decimal(BT-116)=         sum(../BG-25/xs:decimal(BT-131[normalize-space(../BG-30/BT-151) = $vatcode][../BG-30/BT-152=xs:decimal($rate)]))         - sum(../BG-20/xs:decimal(BT-92[normalize-space(../BT-95) = $vatcode][../BT-96=xs:decimal($rate)]))          + sum(../BG-21/xs:decimal(BT-99[normalize-space(../BT-102) = $vatcode][../BT-103=xs:decimal($rate)]))         or normalize-space(BT-118) != $vatcode         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="every $rate in BT-119[normalize-space(../BT-118)='S'] satisfies ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)= sum(../BG-25/xs:decimal(BT-131[normalize-space(../BG-30/BT-151) = 'S'][../BG-30/BT-152=xs:decimal($rate)])) - sum(../BG-20/xs:decimal(BT-92[normalize-space(../BT-95) = 'S'][../BT-96=xs:decimal($rate)])) + sum(../BG-21/xs:decimal(BT-99[normalize-space(../BT-102) = 'S'][../BT-103=xs:decimal($rate)])) or normalize-space(BT-118) != 'S' )">
+        <svrl:failed-assert test="every $rate in BT-119[normalize-space(../BT-118)=('S','B')], $vatcode in BT-118[normalize-space(.)=('S','B')] satisfies ( .[normalize-space(BT-118) = $vatcode]/xs:decimal(BT-116)= sum(../BG-25/xs:decimal(BT-131[normalize-space(../BG-30/BT-151) = $vatcode][../BG-30/BT-152=xs:decimal($rate)])) - sum(../BG-20/xs:decimal(BT-92[normalize-space(../BT-95) = $vatcode][../BT-96=xs:decimal($rate)])) + sum(../BG-21/xs:decimal(BT-99[normalize-space(../BT-102) = $vatcode][../BT-103=xs:decimal($rate)])) or normalize-space(BT-118) != $vatcode )">
           <xsl:attribute name="id">BR-S-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -2152,9 +2154,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test=".[normalize-space(BT-118) = 'S']/xs:decimal(BT-117) =          round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10  ) div 100         or normalize-space(BT-118) != 'S'" />
+      <xsl:when test=".[normalize-space(BT-118) = ('S', 'B')]/xs:decimal(BT-117) =          round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10  ) div 100         or normalize-space(BT-118) != ('S', 'B')" />
       <xsl:otherwise>
-        <svrl:failed-assert test=".[normalize-space(BT-118) = 'S']/xs:decimal(BT-117) = round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10 ) div 100 or normalize-space(BT-118) != 'S'">
+        <svrl:failed-assert test=".[normalize-space(BT-118) = ('S', 'B')]/xs:decimal(BT-117) = round( (.[normalize-space(BT-118) = 'S']/xs:decimal(BT-116)) * ( .[normalize-space(BT-118) = 'S']/xs:decimal(BT-119)div 100) * 10 * 10 ) div 100 or normalize-space(BT-118) != ('S', 'B')">
           <xsl:attribute name="id">BR-S-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -2168,9 +2170,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(not(.[normalize-space(BT-118) = 'S']/BT-120) and not( .[normalize-space(BT-118) = 'S']/BT-121)) or normalize-space(BT-118) != 'S'" />
+      <xsl:when test="(not(.[normalize-space(BT-118) = ('S','B')]/BT-120) and not( .[normalize-space(BT-118) = ('S' , 'B')]/BT-121)) or not(normalize-space(BT-118) = ('S' , 'B'))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(not(.[normalize-space(BT-118) = 'S']/BT-120) and not( .[normalize-space(BT-118) = 'S']/BT-121)) or normalize-space(BT-118) != 'S'">
+        <svrl:failed-assert test="(not(.[normalize-space(BT-118) = ('S','B')]/BT-120) and not( .[normalize-space(BT-118) = ('S' , 'B')]/BT-121)) or not(normalize-space(BT-118) = ('S' , 'B'))">
           <xsl:attribute name="id">BR-S-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
@@ -2425,9 +2427,9 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test=".[normalize-space(BT-151) = 'S']/BT-152 > 0  or normalize-space(BT-151) != 'S'" />
+      <xsl:when test=".[normalize-space(BT-151) = ('S' , 'B')]/BT-152 > 0  or not(normalize-space(BT-151) = ('S' , 'B'))" />
       <xsl:otherwise>
-        <svrl:failed-assert test=".[normalize-space(BT-151) = 'S']/BT-152 > 0 or normalize-space(BT-151) != 'S'">
+        <svrl:failed-assert test=".[normalize-space(BT-151) = ('S' , 'B')]/BT-152 > 0 or not(normalize-space(BT-151) = ('S' , 'B'))">
           <xsl:attribute name="id">BR-S-05</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
