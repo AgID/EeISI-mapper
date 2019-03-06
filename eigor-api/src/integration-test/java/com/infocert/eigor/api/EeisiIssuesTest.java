@@ -9,8 +9,11 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
@@ -31,6 +34,34 @@ import static org.junit.Assert.assertThat;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEeisi205() throws Exception {
+
+        // given
+        XPathExpression xPathBt46 = ublXpath().compile("//BT-46");
+
+        // when
+        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eeisi205-fattpa.xml",
+                "fatturapa", "xmlcen", keepErrorsNotWarnings());
+
+        Document convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
+
+        Node bt46Element = (Node) xPathBt46.evaluate(convertedInvoice, XPathConstants.NODE);
+
+        // Prepare a meaningful error message in case the following assertion will fail
+        NamedNodeMap attributes = bt46Element.getAttributes();
+        String errMessage = "";
+        if(attributes.getLength()>=1) {
+            for(int i=0; i<attributes.getLength(); i++) {
+                errMessage += "'" + attributes.item(i).getNodeName() + "' ";
+            }
+        }
+
+        assertEquals("Unexpected attributes " + errMessage + "\n" + new String(conversionResult.getResult()), 0, bt46Element.getAttributes().getLength());
+
+    }
 
     @Test
     public void issueEeisi216() throws Exception {

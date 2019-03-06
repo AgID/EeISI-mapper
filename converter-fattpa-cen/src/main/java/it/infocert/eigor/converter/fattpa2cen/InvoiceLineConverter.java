@@ -75,6 +75,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                             .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
+                            } else {
+                                naturaValue = Untdid5305DutyTaxFeeCategories.S;
                             }
                         }
 

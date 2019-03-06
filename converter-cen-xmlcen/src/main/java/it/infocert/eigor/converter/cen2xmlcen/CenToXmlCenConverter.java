@@ -183,21 +183,26 @@ public class CenToXmlCenConverter implements FromCenConversion {
                 if(!done) {
                     done = true;
                     if (btValue instanceof Identifier) {
-                        Identifier id = ((Identifier) btValue);
 
+                        Identifier id = ((Identifier) btValue);
                         String identificationSchema = id.getIdentificationSchema();
                         if (identificationSchema != null) {
                             newElement.setAttribute("scheme", identificationSchema);
                         } else {
-                            newElement.setAttribute("scheme", "");
-                        }
 
+                            if (!(btbg instanceof BT0046BuyerIdentifierAndSchemeIdentifier)) {
+                                // Please check https://jira.infocert.it/browse/EISI-205 for details
+                                // about why BT-46 "scheme" needs a special treatment
+                                newElement.setAttribute("scheme", "");
+                            }
+
+                        }
                         String schemaVersion = id.getSchemaVersion();
                         if( schemaVersion!=null && !schemaVersion.isEmpty() ) {
                             newElement.setAttribute("version", schemaVersion);
                         }
-
                         newElement.setText(id.getIdentifier());
+
                     } else if (btValue instanceof Untdid5305DutyTaxFeeCategories) {
                         Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
                         newElement.setText(value.name());
@@ -215,7 +220,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
                         newElement.setText(String.valueOf(value.getCode()));
                     } else if(btValue instanceof Untdid7161SpecialServicesCodes) {
                         Untdid7161SpecialServicesCodes value = (Untdid7161SpecialServicesCodes) btValue;
-                        newElement.setText(String.valueOf(value.name()));
+                        newElement.setText(value.name());
                     } else if(btValue instanceof Untdid5189ChargeAllowanceDescriptionCodes) {
                         Untdid5189ChargeAllowanceDescriptionCodes value = (Untdid5189ChargeAllowanceDescriptionCodes) btValue;
                         newElement.setText(String.valueOf(value.getCode()));
