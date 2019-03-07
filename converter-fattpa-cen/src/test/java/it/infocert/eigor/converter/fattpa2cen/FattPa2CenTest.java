@@ -52,7 +52,7 @@ public class FattPa2CenTest {
         BG0000Invoice result = convert.getResult();
         BT0020PaymentTerms bt20 = result.getBT0020PaymentTerms(0);
 
-        assertEquals( "DettaglioPagamento=TP02, GiorniTerminiPagamento=99, ScontoPagamentoAnticipato=10.00, DataLimitePagamentoAnticipato=100", bt20.getValue() );
+        assertEquals( "Condizioni di Pagamento=TP02, Data Decorrenza Penale=2017-03-15, Data Limite Pagamento Anticipato=2017-02-01, Giorni Termini Pagamento=99, Penalita Pagamenti Ritardati=10.00, Sconto Pagamento Anticipato=10.00", bt20.getValue() );
 
     }
 
