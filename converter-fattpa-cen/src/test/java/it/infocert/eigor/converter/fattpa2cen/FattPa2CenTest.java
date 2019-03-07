@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.fattpa2cen;
 
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0020PaymentTerms;
@@ -12,8 +12,12 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,9 +32,21 @@ public class FattPa2CenTest {
     private String xml;
     private final String num = "00001";
 
+    @ClassRule
+    public static TemporaryFolder tmpFolder = new TemporaryFolder();
+
+    private static EigorConfiguration configuration;
+
+    @BeforeClass
+    public static void setUpConf() throws IOException {
+        File fattpaCenFolder = tmpFolder.newFolder();
+        configuration = Utils.setUpProperties(fattpaCenFolder, tmpFolder.getRoot());
+        assertNotNull( configuration.getMandatoryString("eigor.workdir") );
+    }
+
     @Before
     public void setUp() throws Exception {
-        sut = new FattPa2Cen(new JavaReflections(), DefaultEigorConfigurationLoader.configuration());
+        sut = new FattPa2Cen(new JavaReflections(), configuration);
         doc = setUpDocument();
         xml = convertXml();
     }
@@ -39,6 +55,7 @@ public class FattPa2CenTest {
     public void shouldMapInBT20AddingAReferenceOfTheSourceTag() throws Exception {
 
         // given
+        assertNotNull( configuration.getMandatoryString("eigor.workdir") );
         InputStream sourceInvoiceStream = getResourceAsStream("issues/issue-eeisi214-fattpa.xml");
         assertNotNull( sourceInvoiceStream );
 
