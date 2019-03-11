@@ -54,6 +54,10 @@ public class ToBt20Converter implements CustomMapping<Document> {
             }
         }
 
+        if(sb.length() == 0) {
+            sb.append("N/A Payment Terms");
+        }
+
         BT0020PaymentTerms newBt20 = new BT0020PaymentTerms(sb.toString());
         if(cenInvoice.hasBT0020PaymentTerms()){
             cenInvoice
