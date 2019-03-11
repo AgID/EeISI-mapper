@@ -236,7 +236,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
     }
 
     private BigDecimal getBT111OrNull(BG0000Invoice cenInvoice) {
-        return InvoiceUtils.evalExpression(() -> cenInvoice.getBG0022DocumentTotals(0).getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue());
+        return InvoiceUtils.evalExpression(() -> cenInvoice.getBG0022DocumentTotals(0).getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 }
 
