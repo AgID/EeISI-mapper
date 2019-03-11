@@ -36,7 +36,7 @@ public class CreditNoteLineConverterTest {
 
         Element id = documentReference.getChild("ID");
         assertTrue("001".equals(id.getText()));
-        assertTrue("321".equals(id.getAttribute("schemeID").getValue()));
+        assertTrue("AAA".equals(id.getAttribute("schemeID").getValue()));
 
         Element documentTypeCode = documentReference.getChild("DocumentTypeCode");
         assertTrue("130".equals(documentTypeCode.getText()));
@@ -61,7 +61,7 @@ public class CreditNoteLineConverterTest {
         BG0000Invoice invoice = new BG0000Invoice();
 
         BG0025InvoiceLine invoiceLine = new BG0025InvoiceLine();
-        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier("321", "001"));
+        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier("AAA", "001"));
         invoiceLine.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128);
 
         invoice.getBG0025InvoiceLine().add(invoiceLine);
