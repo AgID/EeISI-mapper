@@ -117,6 +117,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
+    @Test
+    public void issueEeisi190() {
+        this.conversion.assertConversionWithoutErrors(
+        		"/examples/fattpa/A10-Licenses.xml",
+                "fatturapa", "peppolbis", keepErrorsNotWarnings());
+
+    }
+
 
     @Test
     public void issueEeisi188() {
