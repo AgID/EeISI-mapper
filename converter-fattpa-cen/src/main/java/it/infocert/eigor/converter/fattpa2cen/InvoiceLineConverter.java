@@ -151,6 +151,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     bg0020.getBT0097DocumentLevelAllowanceReason().add(bt0097);
                                 }
 
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
+                                }
+
                                 invoice.getBG0020DocumentLevelAllowances().add(bg0020);
                             } else if (prezzoTotaleValue != null && prezzoTotaleValue.signum() > 0 &&
                                     Arrays.asList("SC", "PR", "AB", "AC").contains(tipoCessionePrestazione.getText())) {
@@ -176,6 +180,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 if (descrizioneValue != null) {
                                     BT0104DocumentLevelChargeReason bt0104 = new BT0104DocumentLevelChargeReason(descrizioneValue);
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
+                                }
+
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
                                 }
 
                                 invoice.getBG0021DocumentLevelCharges().add(bg0021);
@@ -400,17 +408,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     invoice.getBG0022DocumentTotals().add(new BG0022DocumentTotals());
                 }
                 invoice.getBG0022DocumentTotals(0).getBT0106SumOfInvoiceLineNetAmount().add(new BT0106SumOfInvoiceLineNetAmount(invoiceLineNetAmountTotal));
-
-                BigDecimal sumOfBT0021 = new BigDecimal(0);
-                for(int i=0; i<invoice.getBG0021DocumentLevelCharges().size(); i++){
-                    sumOfBT0021 = sumOfBT0021.add(invoice.getBG0021DocumentLevelCharges().get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
-                }
-                List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
-                BigDecimal sumOfBT0020 = new BigDecimal(0);
-                for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
-                    sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
-                }
-                invoice.getBG0022DocumentTotals(0).getBT0109InvoiceTotalAmountWithoutVat().add(new BT0109InvoiceTotalAmountWithoutVat((invoiceLineNetAmountTotal.subtract(sumOfBT0020)).add(sumOfBT0021)));
             }
         }
 

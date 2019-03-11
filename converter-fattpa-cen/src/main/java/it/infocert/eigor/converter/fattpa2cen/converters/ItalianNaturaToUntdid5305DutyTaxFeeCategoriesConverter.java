@@ -17,11 +17,11 @@ public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends From
         if (natura1 != null) {
             switch (natura1) {
                 case N_3:
-                    return Untdid5305DutyTaxFeeCategories.Z;
+                    return Untdid5305DutyTaxFeeCategories.G;
                 case N_4:
                     return Untdid5305DutyTaxFeeCategories.E;
-                case N_2:
-                    return Untdid5305DutyTaxFeeCategories.G;
+                case N_6:
+                    return Untdid5305DutyTaxFeeCategories.AE;
                 default:
                     return Untdid5305DutyTaxFeeCategories.S;
             }

@@ -136,7 +136,7 @@ public class HiLevelAPIUsage {
         ConversionResult<byte[]> outcome = api
                 .convert(
                         "ubl",
-                        "peppol",
+                        "peppolbis",
                         invoiceAsStream);
 
         // 4. You have now multiple ways to query the outcome object.
