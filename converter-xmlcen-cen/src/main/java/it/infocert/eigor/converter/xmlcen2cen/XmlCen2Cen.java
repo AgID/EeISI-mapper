@@ -21,7 +21,6 @@ import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -171,9 +170,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                         .findFirst();
                 if (!cons.isPresent()) {
                     try {
-                        BTBG btbg = buildBT(btBgByName, child, errors);
-                        if (btbg != null)
-                            utils.addChild(bg, btbg);
+                        utils.addChild(bg, buildBT(btBgByName, child, errors));
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error(e.getMessage(), e);
                         errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
@@ -183,10 +180,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                     if (specialBT.contains(child.getName())) {
                         BTBG bt;
                         try {
-                            Attribute scheme = child.getAttribute("scheme");
-                            bt = (BTBG) cons.get().newInstance((scheme != null) ?
-                                    (new Identifier(scheme.getValue(), child.getValue())) :
-                                    (new Identifier(child.getValue())));
+                            bt = (BTBG) cons.get().newInstance(new Identifier(child.getValue()));
                             utils.addChild(bg, bt);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
@@ -307,7 +301,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             }
         };
         Stream.of(constructors).forEach(k);
-        return (bt.size() > 0) ? bt.get(0) : null;
+        return bt.get(0);
     }
 
 }

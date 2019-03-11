@@ -120,14 +120,5 @@
             </includes>
         </fileSet>
 
-        <!-- CEN/PEPPOLCN -->
-        <fileSet>
-            <directory>../converter-cen-peppolcn/src/main/resources/converterdata/converter-cen-peppolcn</directory>
-            <outputDirectory>converterdata/converter-cen-peppolcn</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-
     </fileSets>
 </assembly>
