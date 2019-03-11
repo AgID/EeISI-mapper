@@ -84,19 +84,28 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+
                         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+
                         String idValue = bt0128.getValue().getIdentifier();
+
                         String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
                                 ? bt0128.getValue().getIdentificationSchema()
                                 : "";
                         idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
+
+
                         String typeCode = "130";
+
                         Element ublDocumentReferenceXml = new Element("DocumentReference");
+
                         Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
                         ublDocumentTypeCodeXml.setText(typeCode);
+
                         Element ublIdXml = new Element("ID");
                         ublIdXml.setText(idValue);
                         ublIdXml.setAttribute("schemeID", idValueScheme);
+
                         ublDocumentReferenceXml.addContent(ublIdXml);
                         ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
                         invoiceLine.addContent(ublDocumentReferenceXml);

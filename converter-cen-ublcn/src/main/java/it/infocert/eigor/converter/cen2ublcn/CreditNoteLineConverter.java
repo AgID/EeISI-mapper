@@ -3,12 +3,9 @@ package it.infocert.eigor.converter.cen2ublcn;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
-import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
@@ -23,8 +20,6 @@ import java.util.List;
 
 public class CreditNoteLineConverter implements CustomMapping<Document> {
     private static final Logger log = LoggerFactory.getLogger(CreditNoteLineConverter.class);
-
-    private static TypeConverter<String, Untdid1153ReferenceQualifierCode> untdid1153Converter = LookUpEnumConversion.newConverter(Untdid1153ReferenceQualifierCode.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -50,22 +45,16 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        Element documentReference = new Element("DocumentReference");
                         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        String idValue = bt0128.getValue().getIdentifier();
-                        String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
-                                ? bt0128.getValue().getIdentificationSchema()
-                                : "";
-                        idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
-                        String typeCode = "130";
-                        Element ublDocumentReferenceXml = new Element("DocumentReference");
-                        Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
-                        ublDocumentTypeCodeXml.setText(typeCode);
-                        Element ublIdXml = new Element("ID");
-                        ublIdXml.setText(idValue);
-                        ublIdXml.setAttribute("schemeID", idValueScheme);
-                        ublDocumentReferenceXml.addContent(ublIdXml);
-                        ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
-                        invoiceLine.addContent(ublDocumentReferenceXml);
+                        Element documentTypeCode = new Element("DocumentTypeCode");
+                        documentTypeCode.setText("130");
+                        Element id = new Element("ID");
+                        id.setText(bt0128.getValue().getIdentifier());
+                        id.setAttribute("schemeID", bt0128.getValue().getIdentificationSchema());
+                        documentReference.addContent(id);
+                        documentReference.addContent(documentTypeCode);
+                        invoiceLine.addContent(documentReference);
                     }
 
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
