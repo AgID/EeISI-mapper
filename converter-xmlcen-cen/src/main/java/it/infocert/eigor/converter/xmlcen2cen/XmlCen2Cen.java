@@ -170,7 +170,9 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                         .findFirst();
                 if (!cons.isPresent()) {
                     try {
-                        utils.addChild(bg, buildBT(btBgByName, child, errors));
+                        BTBG btbg = buildBT(btBgByName, child, errors);
+                        if (btbg != null)
+                            utils.addChild(bg, btbg);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error(e.getMessage(), e);
                         errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
@@ -301,7 +303,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             }
         };
         Stream.of(constructors).forEach(k);
-        return bt.get(0);
+        return (bt.size() > 0) ? bt.get(0) : null;
     }
 
 }
