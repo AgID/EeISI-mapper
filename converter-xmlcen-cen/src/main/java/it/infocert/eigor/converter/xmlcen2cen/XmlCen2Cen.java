@@ -21,6 +21,7 @@ import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -182,7 +183,10 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                     if (specialBT.contains(child.getName())) {
                         BTBG bt;
                         try {
-                            bt = (BTBG) cons.get().newInstance(new Identifier(child.getValue()));
+                            Attribute scheme = child.getAttribute("scheme");
+                            bt = (BTBG) cons.get().newInstance((scheme != null) ?
+                                    (new Identifier(scheme.getValue(), child.getValue())) :
+                                    (new Identifier(child.getValue())));
                             utils.addChild(bg, bt);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
