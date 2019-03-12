@@ -38,7 +38,10 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             }
 
-            for (BG0003PrecedingInvoiceReference bg0003 : cenInvoice.getBG0003PrecedingInvoiceReference()) {
+            // Map only first BG, the rest go to attachement
+            // See https://jira.infocert.it/browse/EISI-189
+            if (cenInvoice.getBG0003PrecedingInvoiceReference().size() > 0) {
+                BG0003PrecedingInvoiceReference bg0003 = cenInvoice.getBG0003PrecedingInvoiceReference().get(0);
                 Element invoiceReferencedDocument = new Element("InvoiceReferencedDocument", ramNs);
 
                 if (!bg0003.getBT0025PrecedingInvoiceReference().isEmpty()) {
