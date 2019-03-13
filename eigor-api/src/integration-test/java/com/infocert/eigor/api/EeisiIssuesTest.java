@@ -109,13 +109,11 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
-
-    @Ignore("CII xsd errors, until finish EISI-189")
     @Test
     public void issueEeisi191() {
         this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi191-cii.xml",
-                "cii", "cii", keepErrorsNotWarnings());
+                "cii", "xmlcen", keepErrorsNotWarnings());
 
     }
 

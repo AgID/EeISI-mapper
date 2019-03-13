@@ -16,6 +16,7 @@ import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
+import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.model.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -571,6 +572,29 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         if (arrotondamento.setScale(8, RoundingMode.HALF_UP).signum() != 0) {
                             datiRiepilogo.setArrotondamento(arrotondamento.negate());
                         }
+                    }
+
+                    if (invoice.getBT0008ValueAddedTaxPointDateCode().size() == 0 &&
+                        invoice.getBT0007ValueAddedTaxPointDate().size() == 0) {
+                        datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);
+                    }
+                    if (invoice.getBT0007ValueAddedTaxPointDate().size() > 0 &&
+                        invoice.getBT0002InvoiceIssueDate().size() > 0) {
+
+                        if (invoice.getBT0007ValueAddedTaxPointDate().get(0).getValue().compareTo(invoice.getBT0002InvoiceIssueDate().get(0).getValue()) != 0) {
+                            datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.D);
+                        } else {
+                            datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);
+                        }
+                    }
+                    if (invoice.getBT0008ValueAddedTaxPointDateCode().size() > 0 &&
+                        (invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code3) ||
+                            invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code35))) {
+                        datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);
+                    }
+                    if (invoice.getBT0008ValueAddedTaxPointDateCode().size() > 0 &&
+                        invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code432)) {
+                        datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.D);
                     }
                 }
             }
