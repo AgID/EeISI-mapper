@@ -46,7 +46,8 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
     private XSDValidator xsdValidator;
-    private IXMLValidator peppolValidator;
+    private IXMLValidator peppolCenValidator;
+    private IXMLValidator peppolUblValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -83,8 +84,8 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron1"));
             Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
-            peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
-            peppolValidator = new SchematronValidator(cenSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolCenValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolUblValidator = new SchematronValidator(cenSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
 
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -122,11 +123,16 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
                 log.info("Xsd validation succesful!");
             }
             errors.addAll(validationErrors);
-            List<IConversionIssue> schematronErrors = peppolValidator.validate(documentByteArray);
-            if (schematronErrors.isEmpty()) {
+            List<IConversionIssue> schematronCenErrors = peppolCenValidator.validate(documentByteArray);
+            if (schematronCenErrors.isEmpty()) {
                 log.info("Schematron validation successful!");
             }
-            errors.addAll(schematronErrors);
+            errors.addAll(schematronCenErrors);
+            List<IConversionIssue> schematronUblErrors = peppolUblValidator.validate(documentByteArray);
+            if (schematronUblErrors.isEmpty()) {
+                log.info("Schematron validation successful!");
+            }
+            errors.addAll(schematronUblErrors);
 
         } catch (IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.PEPPOL_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
