@@ -7,28 +7,66 @@ import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 import static java.lang.Math.max;
 
 class LinePostFixSupport {
 
-    private Map<CenLine, FattpaLine> cenLinesToCorrespondingFattpaLine = new LinkedHashMap<>();
+    private final Map<CenLine, FattpaLine> cenLinesToCorrespondingFattpaLine;
+    private final List<FattpaLine> artifactedFattpaLines;
+    private boolean renumberingPerformed;
+    private final int maxExcluded;
+
+    /** Initialize the LinePostFix support with a proper default. */
+    public LinePostFixSupport() {
+        this(10000);
+    }
+
+    public LinePostFixSupport(int maxExcluded) {
+        checkArgument( maxExcluded > 0 );
+        this.maxExcluded = maxExcluded;
+        renumberingPerformed = false;
+        artifactedFattpaLines = new LinkedList<FattpaLine>();
+        cenLinesToCorrespondingFattpaLine = new LinkedHashMap<>();
+    }
 
     /**
-     * Set a pair of corresponding invoice lines.
-     * Meaning they represent the same line in the cen invoice and in the fattpa invoice.
+     * Register a pair of corresponding invoice lines for later renumbering.
+     * "Corresponding lines" means they represent the same line in the cen invoice and in the fattpa invoice.
      */
     public void registerForPostFix(BG0025InvoiceLine cenLine, DettaglioLineeType fattpaLine) {
+
+        checkRenumberingHasNotOccurredYet();
+
         CenLineBG0025InvoiceLine cenLineWrapper = new CenLineBG0025InvoiceLine(cenLine);
         registerForPostFix(cenLineWrapper, new FattpaLineImpl(fattpaLine, cenLineWrapper));
     }
 
     /**
-     * Set a pair of corresponding invoice lines.
-     * Meaning they represent the same line in the cen invoice and in the fattpa invoice.
+     * Set a pair of corresponding invoice lines for later renumbering.
+     * "Corresponding lines" means they represent the same line in the cen invoice and in the fattpa invoice.
      */
     public void registerForPostFix(CenLine cenLine, FattpaLine fattpaLine) {
+
+        checkRenumberingHasNotOccurredYet();
+
         cenLinesToCorrespondingFattpaLine.put(cenLine, fattpaLine);
+    }
+
+    public void registerForPostFix(FattpaLine line) {
+
+        checkRenumberingHasNotOccurredYet();
+
+        artifactedFattpaLines.add(line);
+    }
+
+    public void registerForPostFix(DettaglioLineeType line) {
+
+        checkRenumberingHasNotOccurredYet();
+
+        artifactedFattpaLines.add(new SingleFattpaLineImpl(line));
     }
 
     /**
@@ -37,6 +75,7 @@ class LinePostFixSupport {
      */
     public void appliesRenumbering() {
 
+        checkRenumberingHasNotOccurredYet();
 
         int biggestIdentifierUsedInCen = -1;
         Set<CenLine> cenInvoiceLines = cenLinesToCorrespondingFattpaLine.keySet();
@@ -47,12 +86,12 @@ class LinePostFixSupport {
                 if(lineIdentifierAsString == null) continue;
 
                 int identifierOfLine = Integer.parseInt(lineIdentifierAsString);
-                if(identifierOfLine>=10000) {
-                    throw new NumberFormatException("Invoice line with identifier '" + lineIdentifierAsString + "' uses a number that is too big.");
+                if(identifierOfLine>= maxExcluded) {
+                    throw new NumberFormatException("Invoice line with identifier '" + lineIdentifierAsString + "' uses a number that is bigger than the max allowd: " + (maxExcluded-1));
                 }
                 biggestIdentifierUsedInCen = max(biggestIdentifierUsedInCen, identifierOfLine);
             } catch (NumberFormatException e) {
-                // it is not a number after all
+                // it is not a number after all, or it is too big.
             }
         }
 
@@ -60,6 +99,7 @@ class LinePostFixSupport {
         Set<Map.Entry<CenLine, FattpaLine>> cenLinesAndFattpaLines = cenLinesToCorrespondingFattpaLine.entrySet();
 
         // renumber the lines that needs renumbering to store info about renumbering in the correct XML element
+        HashSet<Integer> takenNumbers = new HashSet<>( cenLinesAndFattpaLines.size() );
         Map<String, Integer> cenOriginalsToNewFattpa = new HashMap<>();
         for (Map.Entry<CenLine, FattpaLine> cenLineAndFattpaLine : cenLinesAndFattpaLines) {
 
@@ -70,7 +110,7 @@ class LinePostFixSupport {
             try {
                 int cenLineNumber;
                 cenLineNumber = Integer.parseInt(cenLineIdentifier);
-                if(cenLineNumber>=10000) {
+                if(cenLineNumber>= maxExcluded) {
                     throw new NumberFormatException();
                 }
                 newLineNumber = cenLineNumber;
@@ -78,11 +118,39 @@ class LinePostFixSupport {
                 newLineNumber = ++currentFattpaLineIdentifier;
                 cenOriginalsToNewFattpa.put( cenLineIdentifier, newLineNumber );
             }
+
+
+            if(newLineNumber>=maxExcluded) {
+                throw new IllegalStateException("It was impossible to find an available id for line " + cenLine);
+            }
+
             fattpaLine.setNumeroLinea( newLineNumber );
+            takenNumbers.add( newLineNumber );
 
         }
 
+        int max = maxExcluded - 1;
+        for (FattpaLine artifactedFattpaLine : artifactedFattpaLines) {
+            int proposedNewNumber;
+            do {
+                proposedNewNumber = max--;
+            }while( takenNumbers.contains(proposedNewNumber) );
+
+            if(proposedNewNumber<=0) {
+                throw new IllegalStateException("It was impossible to find an available id for line " + artifactedFattpaLine);
+            }
+
+            artifactedFattpaLine.setNumeroLinea(proposedNewNumber);
+        }
+
+        renumberingPerformed = true;
+
     }
+
+    private void checkRenumberingHasNotOccurredYet() {
+        checkState( !renumberingPerformed );
+    }
+
 
     interface CenLine {
 
@@ -121,7 +189,7 @@ class LinePostFixSupport {
         @Override
         public void setNumeroLinea(int originalLineNumber) {
 
-            Preconditions.checkState( !changePerformed, "The line %s has been already changed.", originalLineNumber );
+            checkState( !changePerformed, "The line %s has been already changed.", originalLineNumber );
 
             String cenIdentifier = cenLine.lineIdentifier();
             if( !String.valueOf(originalLineNumber).equals(cenIdentifier) ) {
@@ -136,4 +204,24 @@ class LinePostFixSupport {
 
         }
     }
+
+    static class SingleFattpaLineImpl implements FattpaLine {
+        private final DettaglioLineeType line;
+        private boolean changePerformed;
+
+        SingleFattpaLineImpl(DettaglioLineeType line) {
+            this.line = Preconditions.checkNotNull( line );
+            this.changePerformed = false;
+        }
+
+        @Override
+        public void setNumeroLinea(int newLineNumber) {
+
+            checkState( !changePerformed, "The line %s has been already changed.", newLineNumber );
+            changePerformed = true;
+            this.line.setNumeroLinea(newLineNumber);
+
+        }
+    }
+
 }

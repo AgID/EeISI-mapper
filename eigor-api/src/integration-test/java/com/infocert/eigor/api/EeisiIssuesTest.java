@@ -159,10 +159,6 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 "/issues/issue-eeisi7-cen.xml",
                 "xmlcen", "fatturapa");
 
-        String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
-
-        System.out.println( new String( conversion.getResult() ) );
-
         // then
         assertThat(
                 conversion.getIssues().stream().map(issue -> issue +  "\n" ).collect(joining()),

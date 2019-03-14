@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.converter.cen2ubl.ConverterUnitTest;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
@@ -83,7 +84,7 @@ public class Cen2FattPATest extends ConverterUnitTest {
         getStringByXPath(doc, "/*[local-name()='FatturaElettronica']/FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici[1]");
 
         assertNotNull(lineNumber);
-        assertEquals("1", lineNumber);
+        assertEquals(DomUtils.toPrettyXml(doc), "1", lineNumber);
     }
 
     @Test
