@@ -67,17 +67,23 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     legalMonetaryTotal.addContent(chargeTotalAmount);
                 }
 
-                Element prepaidAmount = new Element("PrepaidAmount");
-                prepaidAmount.setText(bt0113PrepaidAmount.setScale(2, RoundingMode.HALF_UP).toString());
-                legalMonetaryTotal.addContent(prepaidAmount);
+                if (BigDecimal.ZERO.compareTo(bt0113PrepaidAmount) != 0) {
+                    Element prepaidAmount = new Element("PrepaidAmount");
+                    prepaidAmount.setText(bt0113PrepaidAmount.setScale(2, RoundingMode.HALF_UP).toString());
+                    legalMonetaryTotal.addContent(prepaidAmount);
+                }
 
-                Element payableRoundingAmount = new Element("PayableRoundingAmount");
-                payableRoundingAmount.setText(bt0114RoundingAmount.setScale(2, RoundingMode.HALF_UP).toString());
-                legalMonetaryTotal.addContent(payableRoundingAmount);
+                if (BigDecimal.ZERO.compareTo(bt0114RoundingAmount) != 0) {
+                    Element payableRoundingAmount = new Element("PayableRoundingAmount");
+                    payableRoundingAmount.setText(bt0114RoundingAmount.setScale(2, RoundingMode.HALF_UP).toString());
+                    legalMonetaryTotal.addContent(payableRoundingAmount);
+                }
 
-                Element payableAmount = new Element("PayableAmount");
-                payableAmount.setText(bt0115PayableAmount.setScale(2, RoundingMode.HALF_UP).toString());
-                legalMonetaryTotal.addContent(payableAmount);
+                if (BigDecimal.ZERO.compareTo(bt108SumOfCharges) != 0) {
+                    Element payableAmount = new Element("PayableAmount");
+                    payableAmount.setText(bt0115PayableAmount.setScale(2, RoundingMode.HALF_UP).toString());
+                    legalMonetaryTotal.addContent(payableAmount);
+                }
 
                 // <xsd:element ref="cbc:PayableAlternativeAmount" minOccurs="0" maxOccurs="1">
                 // not used
