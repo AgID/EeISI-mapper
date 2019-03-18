@@ -24,16 +24,13 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
     private static Logger log = LoggerFactory.getLogger(ResourceBasedClasspathLSResolver.class);
 
     ResourceBasedClasspathLSResolver(String xsdClasspathPath) {
-
         URL resource = getClass().getResource(xsdClasspathPath);
         checkNotNull( resource, "xsd at '%s' not found.", xsdClasspathPath );
-
         this.basePath = xsdClasspathPath.subSequence( 0, xsdClasspathPath.lastIndexOf("/") ).toString();
     }
 
     private String mergeClasspaths(String systemId) {
         LinkedList<String> resourceArr = new LinkedList<>( Arrays.asList( basePath.split("/") ) );
-
         LinkedList<String> systemIdArr = new LinkedList<>( Arrays.asList( systemId.split("/") ) );
 
         while(systemIdArr.get(0).equals("..")) {
@@ -41,8 +38,12 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
             resourceArr.removeLast();
         }
 
-        return resourceArr.stream().collect(Collectors.joining("/")) + "/" +
+        String resultingResourcePath = resourceArr.stream().collect(Collectors.joining("/")) + "/" +
                 systemIdArr.stream().collect(Collectors.joining("/"));
+
+        log.trace("Base XSD at resource path '{}, imported XSD with system ID = '{}', resulting resource path '{}'.", basePath, systemId, resultingResourcePath);
+
+        return resultingResourcePath;
     }
 
     @Override

@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.ublcn2cen;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class StaticXsdTest {
 
     @BeforeClass
     public static void setUp() throws SAXException {
-        sut = new FilesystemXSDValidator(
+        sut = new PlainXSDValidator(
                 getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ublcn/xsdstatic/UBL-CreditNote-2.1.xsd"),
                 ErrorCode.Location.UBLCN_IN);
     }

@@ -5,7 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.conversion.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.EigorVersion;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.apache.commons.io.IOUtils;
@@ -214,7 +214,7 @@ public class EigorApi {
 
         ErrorCode.Location customValidators = ErrorCode.Location.CUSTOM_VALIDATORS;
         try {
-            XSDValidator v = new FilesystemXSDValidator(schemaFile, customValidators);
+            XSDValidator v = new PlainXSDValidator(schemaFile, customValidators);
             List<IConversionIssue> validate = v.validate(IOUtils.toByteArray(xmlToValidate));
             return new ConversionResult<>(validate, null);
         } catch (SAXException | IOException e) {

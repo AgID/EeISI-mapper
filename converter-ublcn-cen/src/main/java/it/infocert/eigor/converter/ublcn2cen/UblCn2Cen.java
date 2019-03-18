@@ -10,7 +10,7 @@ import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -63,7 +63,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new FilesystemXSDValidator(xsdFile.getFile(), ErrorCode.Location.UBLCN_IN);
+                xsdValidator = new PlainXSDValidator(xsdFile.getFile(), ErrorCode.Location.UBLCN_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBLCN2CEN from '" + mandatoryString + "'.", e);
             }

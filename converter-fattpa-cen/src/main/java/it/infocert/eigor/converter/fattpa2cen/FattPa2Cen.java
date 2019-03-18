@@ -12,7 +12,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
@@ -83,7 +83,7 @@ public class FattPa2Cen extends AbstractToCenConverter {
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new FilesystemXSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
+                xsdValidator = new PlainXSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
             }

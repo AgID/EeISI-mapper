@@ -11,7 +11,7 @@ import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.ubl2cen.InvoiceNoteConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -106,7 +106,7 @@ public class Ubl2CenConfigurationFileTest {
     private List<IConversionIssue> validate(InputStream sourceInvoiceStream) throws IOException, SAXException {
         byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
         File xsdFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd");
-        XSDValidator xsdValidator = new FilesystemXSDValidator(xsdFile, ErrorCode.Location.UBL_IN);
+        XSDValidator xsdValidator = new PlainXSDValidator(xsdFile, ErrorCode.Location.UBL_IN);
         return xsdValidator.validate(bytes);
     }
 

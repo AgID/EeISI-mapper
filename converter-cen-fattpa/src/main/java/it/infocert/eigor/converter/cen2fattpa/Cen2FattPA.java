@@ -10,7 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.api.xml.FilesystemXSDValidator;
+import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
 import it.infocert.eigor.converter.cen2fattpa.models.*;
@@ -98,7 +98,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
         try {
-            validator = new FilesystemXSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
+            validator = new PlainXSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
         } catch (IOException | SAXException e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }

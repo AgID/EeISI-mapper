@@ -6,6 +6,9 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+/**
+ * An {@link it.infocert.eigor.api.IXMLValidator} that is able to load XSDs from JARs that uses &lt;import&gt;.
+ */
 public class ClasspathXSDValidator extends XSDValidator {
 
     public ClasspathXSDValidator(String classpathResource, ErrorCode.Location callingLocation) {
