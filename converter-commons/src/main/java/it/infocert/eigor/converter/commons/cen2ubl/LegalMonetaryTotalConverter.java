@@ -79,7 +79,7 @@ public class LegalMonetaryTotalConverter implements CustomMapping<Document> {
                     legalMonetaryTotal.addContent(payableRoundingAmount);
                 }
 
-                if (BigDecimal.ZERO.compareTo(bt108SumOfCharges) != 0) {
+                if (BigDecimal.ZERO.compareTo(bt0115PayableAmount) != 0) {
                     Element payableAmount = new Element("PayableAmount");
                     payableAmount.setText(bt0115PayableAmount.setScale(2, RoundingMode.HALF_UP).toString());
                     legalMonetaryTotal.addContent(payableAmount);
