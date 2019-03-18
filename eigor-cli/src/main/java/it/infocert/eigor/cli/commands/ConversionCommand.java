@@ -1,5 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
+import com.infocert.eigor.api.EigorApi;
+import com.infocert.eigor.api.EigorApiBuilder;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -10,6 +12,7 @@ import it.infocert.eigor.api.conversion.DumpIntermediateCenInvoiceAsCsvCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
+import it.infocert.eigor.cli.EigorCli;
 import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.slf4j.Logger;
@@ -27,10 +30,11 @@ public class ConversionCommand implements CliCommand {
 
     private final EigorConfiguration configuration;
     private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static EigorApi api = null;
 
     private final RuleRepository ruleRepository;
-    private final ToCenConversion toCen;
-    private final FromCenConversion fromCen;
+    private final String sourceFormat;
+    private final String targetFormat;
     private final Path inputInvoice;
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
@@ -39,8 +43,8 @@ public class ConversionCommand implements CliCommand {
 
     public static class ConversionCommandBuilder {
         private RuleRepository ruleRepository;
-        private ToCenConversion toCen;
-        private FromCenConversion fromCen;
+        private String sourceFormat;
+        private String targetFormat;
         private Path inputInvoice;
         private Path outputFolder;
         private InputStream invoiceInSourceFormat;
@@ -53,35 +57,19 @@ public class ConversionCommand implements CliCommand {
             forceConversion = false;
         }
 
-        public ConversionCommandBuilder(
-                RuleRepository ruleRepository,
-                ToCenConversion toCen,
-                FromCenConversion fromCen,
-                Path inputInvoice,
-                Path outputFolder,
-                InputStream invoiceInSourceFormat,
-                EigorConfiguration configuration) {
-            this.ruleRepository = checkNotNull( ruleRepository );
-            this.toCen = checkNotNull( toCen );
-            this.fromCen = checkNotNull( fromCen );
-            this.inputInvoice = checkNotNull( inputInvoice );
-            this.outputFolder = checkNotNull( outputFolder );
-            this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
-            this.configuration = checkNotNull( configuration );
-        }
-
         public ConversionCommandBuilder setRuleRepository(RuleRepository ruleRepository) {
             this.ruleRepository = ruleRepository;
             return this;
         }
 
-        public ConversionCommandBuilder setToCen(ToCenConversion toCen) {
-            this.toCen = toCen;
+        public ConversionCommandBuilder setSourceFormat(String sourceFormat) {
+            this.sourceFormat = sourceFormat;
             return this;
+
         }
 
-        public ConversionCommandBuilder setFromCen(FromCenConversion fromCen) {
-            this.fromCen = fromCen;
+        public ConversionCommandBuilder setTargetFormat(String targetFormat) {
+            this.targetFormat = targetFormat;
             return this;
         }
 
@@ -116,27 +104,27 @@ public class ConversionCommand implements CliCommand {
         }
 
         public ConversionCommand build() {
-            return new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
+            return new ConversionCommand(ruleRepository, sourceFormat, targetFormat, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
         }
 
     }
 
     private ConversionCommand(
             RuleRepository ruleRepository,
-            ToCenConversion toCen,
-            FromCenConversion fromCen,
+            String sourceFormat,
+            String targetFormat,
             Path inputInvoice,
             Path outputFolder,
             InputStream invoiceInSourceFormat,
             boolean forceConversion, EigorConfiguration configuration, boolean runIntermediateValidation) {
-        this.ruleRepository = checkNotNull( ruleRepository );
-        this.toCen = checkNotNull( toCen );
-        this.fromCen = checkNotNull( fromCen );
-        this.inputInvoice = checkNotNull( inputInvoice );
-        this.outputFolder = checkNotNull( outputFolder );
-        this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
+        this.ruleRepository = checkNotNull(ruleRepository);
+        this.sourceFormat = checkNotNull(sourceFormat);
+        this.targetFormat = checkNotNull(targetFormat);
+        this.inputInvoice = checkNotNull(inputInvoice);
+        this.outputFolder = checkNotNull(outputFolder);
+        this.invoiceInSourceFormat = checkNotNull(invoiceInSourceFormat);
         this.forceConversion = forceConversion;
-        this.configuration = checkNotNull( configuration );
+        this.configuration = checkNotNull(configuration);
         this.runIntermediateValidation = runIntermediateValidation;
     }
 
@@ -157,13 +145,12 @@ public class ConversionCommand implements CliCommand {
      */
     @Override
     public int execute(PrintStream out, PrintStream err) {
-        InMemoryRuleReport ruleReport = new InMemoryRuleReport();
         File outputFolderFile = outputFolder.toFile();
 
         // Execute the conversion
         try {
-            conversion(outputFolderFile, ruleReport, out);
-        } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
+            conversion(outputFolderFile, out);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 1;
         } finally {
@@ -172,28 +159,35 @@ public class ConversionCommand implements CliCommand {
         return 0;
     }
 
-    private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
+    private void conversion(File outputFolderFile, PrintStream out) throws Exception {
 
-        new ObservableConversion(
-                ruleRepository,
-                toCen,
-                fromCen,
-                invoiceInSourceFormat,
-                forceConversion,
-                inputInvoice.toFile().getName(),
-
+        api = forceConversion ? new EigorApiBuilder().enableForce().build() : new EigorApiBuilder().build();
+        api.convert(sourceFormat, targetFormat, invoiceInSourceFormat,
                 new ConsoleOutputConversionCallback(this, out),
                 new DebugConversionCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCenXmlCallback(
                         outputFolderFile,
-                        new CenToXmlCenConverter(configuration),runIntermediateValidation)
-        ).conversion();
+                        new CenToXmlCenConverter(configuration), runIntermediateValidation));
 
+//        new ObservableConversion(
+//                ruleRepository,
+//                toCen,
+//                fromCen,
+//                invoiceInSourceFormat,
+//                forceConversion,
+//                inputInvoice.toFile().getName(),
+//
+//                new ConsoleOutputConversionCallback(this, out),
+//                new DebugConversionCallback(outputFolderFile),
+//                new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
+//                new DumpIntermediateCenInvoiceAsCenXmlCallback(
+//                        outputFolderFile,
+//                        new CenToXmlCenConverter(configuration), runIntermediateValidation)
+//        ).conversion();
     }
 
     public boolean isForceConversion() {
         return forceConversion;
     }
-
 }

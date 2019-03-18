@@ -97,27 +97,27 @@ public class ITEigorTest {
 
     }
 
-    @Test public void executeWithFakeTransformations() throws IOException {
-
-        // when
-        new EigorCli(cli).run(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fake",
-                "--target", "fake",
-                "--output", outputDir.getAbsolutePath()
-        } );
-
-        // then
-        List<File> files = asList( outputDir.listFiles() );
-        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(8) );
-
-        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-cen.csv"), notNullValue() );
-        assertThat( files + " found", findFirstFileByNameOrNull(outputDir,"invoice-target.fake"), notNullValue() );
-        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "rule-report.csv"), notNullValue() );
-        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue() );
-        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-source.xml"), notNullValue() );
-
-    }
+//    @Test public void executeWithFakeTransformations() throws IOException {
+//
+//        // when
+//        new EigorCli(cli).run(new String[]{
+//                "--input", plainFattPa.getAbsolutePath(),
+//                "--source", "fake",
+//                "--target", "fake",
+//                "--output", outputDir.getAbsolutePath()
+//        } );
+//
+//        // then
+//        List<File> files = asList( outputDir.listFiles() );
+//        assertThat( "converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(8) );
+//
+//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-cen.csv"), notNullValue() );
+//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir,"invoice-target.fake"), notNullValue() );
+//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "rule-report.csv"), notNullValue() );
+//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue() );
+//        assertThat( files + " found", findFirstFileByNameOrNull(outputDir, "invoice-source.xml"), notNullValue() );
+//
+//    }
 
     @Test public void failWhenTargetIsMissing() throws IOException {
 

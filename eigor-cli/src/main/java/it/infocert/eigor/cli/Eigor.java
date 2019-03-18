@@ -47,7 +47,12 @@ public class Eigor {
         System.out.println(EigorVersion.getAsString());
         log.info(EigorVersion.getAsString());
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
-        ctx.getBean(EigorCli.class).run(args);
+        ctx.getBean(EigorCli.class).run(new String[]{
+                "--input", "C:\\Users\\Sorint\\Documents\\Progetti\\eeisi\\invoice.eeisi\\eigor-cli\\target\\eigor-4.1.3-SNAPSHOT\\eigor-cli\\012.xml",
+                "--source", "ubl",
+                "--target", "xmlcen",
+                "--output", "C:\\Users\\Sorint\\Documents\\Progetti\\eeisi\\invoice.eeisi\\eigor-cli\\target\\eigor-4.1.3-SNAPSHOT\\eigor-cli\\transformed",
+                "--force"});
     }
 
     @Bean
@@ -64,7 +69,8 @@ public class Eigor {
     @Bean
     RuleRepository ruleRepository(IReflections reflections) {
         return new RuleRepository() {
-            @Override public List<Rule> rules() {
+            @Override
+            public List<Rule> rules() {
                 throw new IllegalArgumentException("Not implemented yet.");
             }
         };
