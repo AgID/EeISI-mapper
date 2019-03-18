@@ -8,6 +8,7 @@ import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.api.xml.FilesystemXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
@@ -83,7 +84,7 @@ public class Cii2CenConfigurationFileTest {
 		List<IConversionIssue> errors = validateXmlWithCiiSchematron(sourceInvoiceStream);
 	   	assertTrue(errors.stream().map(error -> error.getErrorMessage().toString() +"\n").reduce("", (acc, str) -> acc = acc+str ), errors.isEmpty());
 	}
-	
+
 	@Ignore("Waiting for updated CII examples that complies with the validations.")
 	@Test
 	public void shouldRefuseACiiInvoiceThatDoesNotSatisfyTheCiiSchematron() throws Exception {
@@ -299,7 +300,7 @@ public class Cii2CenConfigurationFileTest {
 	   	byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 	   	String filePath = "../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd";
 	   	File xsdFile = new File(filePath);
-	   	XSDValidator xsdValidator = new XSDValidator(xsdFile, ErrorCode.Location.CII_IN);
+	   	XSDValidator xsdValidator = new FilesystemXSDValidator(xsdFile, ErrorCode.Location.CII_IN);
 	   	return xsdValidator.validate(bytes);
 	}
 

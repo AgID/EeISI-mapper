@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.xml.DomUtils;
+import it.infocert.eigor.api.xml.FilesystemXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -106,7 +107,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
 
         try {
             Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"));
-            xsdValidator = new XSDValidator(schemaSource, callingLocation);
+            xsdValidator = new FilesystemXSDValidator(schemaSource, callingLocation);
         } catch (SAXException e) {
             throw new ConfigurationException("An error occurred while initializing the XSD validator", e);
         }

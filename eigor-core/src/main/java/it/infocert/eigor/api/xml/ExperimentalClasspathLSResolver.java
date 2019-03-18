@@ -1,139 +1,142 @@
-package it.infocert.eigor;
+package it.infocert.eigor.api.xml;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.helger.xml.ls.SimpleLSResourceResolver;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
-public class LoadFromXlasspathTest {
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
-    //SimpleLSResourceResolver
+class ExperimentalClasspathLSResolver implements LSResourceResolver {
 
-    @Test
-    public void shouldLoadFromClasspath() throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Source source = new StreamSource(getClass().getResourceAsStream("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd"));
-        schemaFactory.newSchema( source );
+    private static final Map<String, LSInputFactory> map;
+
+    static {
+        map = ImmutableMap.<String, LSInputFactory>builder()
+            .put(
+                "http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:QualifiedDataType:100||CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd|",
+                new ClasspathLSInput(
+                        "/converterdata/converter-commons/cii/xsd/coupled/data/standard/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd",
+                        "UTF-16",
+                        null,
+                        "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+                        null
+                        )
+            )
+            .put(
+                "http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:codelist:standard:EDIFICAS-EU:AccountingAccountType:D11A||../../codelist/standard/EDIFICAS-EU_AccountingAccountType_D11A.xsd|urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+                    new ClasspathLSInput(
+                            "/converterdata/converter-commons/cii/xsd/coupled/codelist/standard/EDIFICAS-EU_AccountingAccountType_D11A.xsd",
+                            "UTF-16",
+                            null,
+                            "urn:un:unece:uncefact:codelist:standard:EDIFICAS-EU:AccountingAccountType:D11A",
+                            null
+                    )
+            )
+//                .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:QualifiedDataType:100||CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd|",
+//                        new ClasspathLSInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd"))
+//                .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100||CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd|",
+//                        new ClasspathLSInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd"))
+//                .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100||CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd|",
+//                        new ClasspathLSInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd"))
+                .build();
     }
 
-    @Test
-    public void shouldLoadFromClasspathWithResolver() throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemaFactory.setResourceResolver( new MyLSResolver() );
-        Source source = new StreamSource(getClass().getResourceAsStream("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd"));
-        schemaFactory.newSchema( source );
-    }
+    @Override
+    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
 
-    @Test
-    public void shouldLoadFromClasspathWithSimpleLSResourceResolver() throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemaFactory.setResourceResolver( new SimpleLSResourceResolver() );
-        Source source = new StreamSource(getClass().getResourceAsStream("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd"));
-        schemaFactory.newSchema( source );
-    }
+        String s = new StringJoiner("|")
+                .add(type != null ? type : "")
+                .add(namespaceURI != null ? namespaceURI : "")
+                .add(publicId != null ? publicId : "")
+                .add(systemId != null ? systemId : "")
+                .add(baseURI != null ? baseURI : "")
+                .toString();
 
-    @Test
-    public void shouldLoadFromDom() throws SAXException, IOException, ParserConfigurationException {
+        System.out.println("resolving: " + s);
 
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        InputSource is = new InputSource("systemid");
+        LSInputFactory ls = map.get(s);
 
-        Document doc = dBuilder.parse(is);
-
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Source source = new DOMSource(doc);
-        schemaFactory.newSchema( source );
-    }
-
-    @Test
-    public void shouldLoadFromFile() throws SAXException {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemaFactory.newSchema( new File("C:\\Users\\esche\\workspace\\repo\\infocert\\eeisi\\eigor-test-schemas\\src\\main\\resources\\test-converterdata\\test-converter-cii-cen\\cii\\xsd\\uncoupled\\data\\standard\\CrossIndustryInvoice_100pD16B.xsd") );
-    }
-
-    public class MyResolver implements EntityResolver {
-        public InputSource resolveEntity (String publicId, String systemId)
-        {
-            if (systemId.equals("http://www.myhost.com/today")) {
-                // return a special input source
-                Reader reader = null; //new MyReader();
-                return new InputSource(reader);
-            } else {
-                // use the default behaviour
-                return null;
-            }
+        if(ls != null) {
+            return ls.build(type, namespaceURI, publicId, systemId, baseURI);
+            //throw new RuntimeException("Unable to get an LSInput for '" + s + "'");
         }
+
+        return new SmartLSInputFactory("/converterdata/converter-commons/cii/xsd/coupled/data/standard/").build(type, namespaceURI, publicId, systemId, baseURI);
+
     }
 
-    class MyLSResolver implements LSResourceResolver {
+    private interface LSInputFactory {
+        LSInput build( String type, String namespaceURI, String publicId, String systemId, String baseURI );
+    }
+
+    private static class SmartLSInputFactory implements LSInputFactory {
+
+        private final String basePath;
+
+        private SmartLSInputFactory(String basePath) {
+            this.basePath = checkNotNull( basePath );
+        }
 
         @Override
-        public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-            // LSResourceResolver provides a way for applications to redirect references to external resources.
-            // Applications needing to implement custom handling for external resources can implement this interface and register
-            // their implementation by setting the "resource-resolver" parameter of DOMConfiguration objects attached to LSParser and LSSerializer.
-            //
-            // It can also be register on DOMConfiguration objects attached to Document if the "LS" feature is supported.
-            // The LSParser will then allow the application to intercept any external entities,
-            // including the external DTD subset and external parameter entities, before including them.
-            // The top-level document entity is never passed to the resolveResource method.
-            // Many DOM applications will not need to implement this interface, but it will be especially useful for applications that build XML documents from databases or other specialized input sources, or for applications that use URNs.
+        public LSInput build(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
 
-            String s = new StringJoiner("|")
-                    .add(type != null ? type : "")
-                    .add(namespaceURI != null ? namespaceURI : "")
-                    .add(publicId != null ? publicId : "")
-                    .add(systemId != null ? systemId : "")
-                    .add(baseURI != null ? baseURI : "")
-                    .toString();
+            LinkedList<String> resourceArr = new LinkedList<>( Arrays.asList( basePath.split("/") ) );
 
-            System.out.println(s + "\n");
+            LinkedList<String> systemIdArr = new LinkedList<>( Arrays.asList( systemId.split("/") ) );
 
-            ImmutableMap<String, LSInput> map = ImmutableMap.<String, LSInput>builder()
-                    .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:QualifiedDataType:100||CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd|",
-                            new MyLsInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd"))
-                    .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100||CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd|",
-                            new MyLsInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd"))
-                    .put("http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100||CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd|",
-                            new MyLsInput("/test-converterdata/test-converter-cii-cen/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd"))
-                    .build();
+            while(systemIdArr.get(0).equals("..")) {
+                systemIdArr.remove(0);
+                resourceArr.removeLast();
+            }
 
-            LSInput ls = map.get(s);
+            String resource =
+                    resourceArr.stream().collect(Collectors.joining("/")) + "/" +
+                            systemIdArr.stream().collect(Collectors.joining("/"));
 
-            return ls;
+            return new ClasspathLSInput(
+                    resource,
+                    "UTF-16",
+                    publicId,
+                    systemId,
+                    baseURI
+            );
         }
     }
 
-    class MyLsInput implements LSInput {
+    private static class ClasspathLSInput implements LSInput, LSInputFactory {
 
-        private String resource;
-        private String systemId;
-        private String encoding;
-        private String baseURI;
-        private String publicId;
+        private final String resource;
+        private final String systemId;
+        private final String encoding;
+        private final String baseURI;
+        private final String publicId;
 
-        public MyLsInput(String resource) {
+        public ClasspathLSInput(String resource) {
             this.resource = resource;
+            systemId = null;
+            encoding = null;
+            baseURI = null;
+            publicId = null;
+        }
+
+        public ClasspathLSInput(String resource, String encoding, String publicId, String systemId, String baseURI) {
+            this.resource = resource;
+            this.systemId = systemId;
+            this.encoding = encoding;
+            this.baseURI = baseURI;
+            this.publicId = publicId;
         }
 
         /**
@@ -145,9 +148,14 @@ public class LoadFromXlasspathTest {
          */
         @Override
         public Reader getCharacterStream() {
-            InputStream resourceAsStream = Preconditions.checkNotNull( getClass().getResourceAsStream(resource), "unable to find %s", resource );
+
+            logResource();
+
+            InputStream resourceAsStream = checkNotNull( getClass().getResourceAsStream(resource), "unable to find %s", resource );
             return new InputStreamReader(resourceAsStream);
         }
+
+
 
         /**
          * An attribute of a language and binding dependent type that represents
@@ -173,6 +181,7 @@ public class LoadFromXlasspathTest {
          */
         @Override
         public InputStream getByteStream() {
+            logResource();
             return getClass().getResourceAsStream( resource );
         }
 
@@ -372,6 +381,16 @@ public class LoadFromXlasspathTest {
         public void setCertifiedText(boolean certifiedText) {
             throw new UnsupportedOperationException();
         }
-    }
 
+        private void logResource() {
+            System.out.println("Loading resource: " + resource);
+        }
+
+        @Override
+        public LSInput build(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+            return this;
+        }
+    }
 }
+
+

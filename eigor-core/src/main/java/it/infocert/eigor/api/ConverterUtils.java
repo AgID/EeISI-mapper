@@ -3,6 +3,7 @@ package it.infocert.eigor.api;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.xml.FilesystemXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import it.infocert.eigor.org.springframework.core.io.Resource;
@@ -37,7 +38,7 @@ public class ConverterUtils {
             String mandatoryString = configuration.getMandatoryString(namingRuleConfigProperty(configKey));
             try {
                 Resource xsdFile = drl.getResource(mandatoryString);
-                return new XSDValidator(xsdFile.getFile(), xmlcenIn);
+                return new FilesystemXSDValidator(xsdFile.getFile(), xmlcenIn);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for '" + converterName + "' from '" + mandatoryString + "'.", e);
             }

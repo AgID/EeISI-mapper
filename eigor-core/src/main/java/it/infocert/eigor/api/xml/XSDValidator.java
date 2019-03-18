@@ -20,88 +20,34 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class XSDValidator implements IXMLValidator {
+
+public abstract class XSDValidator implements IXMLValidator {
 
     private final ErrorCode.Location callingLocation;
-    private Schema schema;
+    private final SchemaFactory overriddenSchemaFactory;
+    private final Schema schema;
     private static final SchemaFactory DEFAULT_SCHEMA_FACTORY;
     private static final Logger log = LoggerFactory.getLogger(XSDValidator.class);
-    private final SchemaFactory overriddenSchemaFactory;
 
     static {
         DEFAULT_SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         DEFAULT_SCHEMA_FACTORY.setResourceResolver(new LoggingResourceResolver());
     }
 
-    @Deprecated
-    public XSDValidator(File schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
-        this(new StreamSource(schemaFile), schemaFactory, callingLocation);
-    }
-
-    @Deprecated
-    public XSDValidator(InputStream schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
-        this(new StreamSource(schemaFile), schemaFactory, callingLocation);
-    }
-
-    @Deprecated
-    public XSDValidator(Source schemaSource, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
-        this.callingLocation = callingLocation;
-        overriddenSchemaFactory = null;
+    protected XSDValidator(ErrorCode.Location callingLocation, SchemaFactory overriddenSchemaFactory, Source schemaSource) {
+        this.callingLocation = checkNotNull( callingLocation );
+        this.overriddenSchemaFactory = overriddenSchemaFactory;
         long delta = System.currentTimeMillis();
         try {
             schema = schemaFactoryToUse().newSchema(schemaSource);
-        } finally {
-            delta = System.currentTimeMillis() - delta;
-            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);
-        }
-    }
-
-    @Deprecated
-    public XSDValidator(File schemaFile, ErrorCode.Location callingLocation) throws SAXException {
-        this(new StreamSource(schemaFile), callingLocation);
-    }
-
-    public XSDValidator(String classpathResource, ErrorCode.Location callingLocation) throws SAXException {
-        this.callingLocation = callingLocation;
-
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemaFactory.setResourceResolver( new ClasspathLSResolver() );
-
-        overriddenSchemaFactory = schemaFactory;
-
-        long delta = System.currentTimeMillis();
-        try {
-
-            Source source = new StreamSource(getClass().getResourceAsStream(classpathResource));
-            schema = schemaFactoryToUse().newSchema( source );
-        } finally {
-            delta = System.currentTimeMillis() - delta;
-            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", classpathResource , delta);
-        }
-    }
-
-    /**
-     * Loads an XSD from an {@link InputStream}.
-     * Please, keep in mind that you cannot load XSDs that import other XSD as an inputstream because the parser would not be
-     * able to resolve the imports, since the inputstream does not carry any info about the location it has been loaded from.
-     */
-    public XSDValidator(InputStream schemaFile, ErrorCode.Location callingLocation) throws SAXException {
-        this(new StreamSource(schemaFile), callingLocation);
-    }
-
-    public XSDValidator(Source schemaSource, ErrorCode.Location callingLocation) throws SAXException {
-        this.callingLocation = callingLocation;
-        overriddenSchemaFactory = null;
-        long delta = System.currentTimeMillis();
-        try {
-            schema = schemaFactoryToUse().newSchema(schemaSource);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
         } finally {
             delta = System.currentTimeMillis() - delta;
             log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaSource.getSystemId() != null ? schemaSource.getSystemId() : schemaSource, delta);

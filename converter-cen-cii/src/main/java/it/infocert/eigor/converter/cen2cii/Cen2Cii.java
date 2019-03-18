@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -78,7 +79,7 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
         {
             try {
-                xsdValidator = new XSDValidator("/converterdata/converter-commons/cii/xsd/coupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/cii/xsd/coupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
             }
