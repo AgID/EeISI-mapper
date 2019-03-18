@@ -159,10 +159,8 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         }
 
         return new ConversionCommand.ConversionCommandBuilder()
-                .setRuleRepository(ruleRepository)
                 .setSourceFormat(source)
                 .setTargetFormat(target)
-                .setInputInvoice(inputInvoice)
                 .setOutputFolder(outputFolder)
                 .setInvoiceInSourceFormat(invoiceInSourceFormat)
                 .setForceConversion(forceConversion)

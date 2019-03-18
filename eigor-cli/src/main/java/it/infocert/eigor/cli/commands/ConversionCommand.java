@@ -32,20 +32,16 @@ public class ConversionCommand implements CliCommand {
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private static EigorApi api = null;
 
-    private final RuleRepository ruleRepository;
     private final String sourceFormat;
     private final String targetFormat;
-    private final Path inputInvoice;
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
     private final Boolean forceConversion;
     private final boolean runIntermediateValidation;
 
     public static class ConversionCommandBuilder {
-        private RuleRepository ruleRepository;
         private String sourceFormat;
         private String targetFormat;
-        private Path inputInvoice;
         private Path outputFolder;
         private InputStream invoiceInSourceFormat;
         private Boolean forceConversion;
@@ -57,11 +53,6 @@ public class ConversionCommand implements CliCommand {
             forceConversion = false;
         }
 
-        public ConversionCommandBuilder setRuleRepository(RuleRepository ruleRepository) {
-            this.ruleRepository = ruleRepository;
-            return this;
-        }
-
         public ConversionCommandBuilder setSourceFormat(String sourceFormat) {
             this.sourceFormat = sourceFormat;
             return this;
@@ -70,11 +61,6 @@ public class ConversionCommand implements CliCommand {
 
         public ConversionCommandBuilder setTargetFormat(String targetFormat) {
             this.targetFormat = targetFormat;
-            return this;
-        }
-
-        public ConversionCommandBuilder setInputInvoice(Path inputInvoice) {
-            this.inputInvoice = inputInvoice;
             return this;
         }
 
@@ -104,23 +90,21 @@ public class ConversionCommand implements CliCommand {
         }
 
         public ConversionCommand build() {
-            return new ConversionCommand(ruleRepository, sourceFormat, targetFormat, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
+            return new ConversionCommand(sourceFormat, targetFormat, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
         }
 
     }
 
     private ConversionCommand(
-            RuleRepository ruleRepository,
             String sourceFormat,
             String targetFormat,
-            Path inputInvoice,
             Path outputFolder,
             InputStream invoiceInSourceFormat,
-            boolean forceConversion, EigorConfiguration configuration, boolean runIntermediateValidation) {
-        this.ruleRepository = checkNotNull(ruleRepository);
+            boolean forceConversion,
+            EigorConfiguration configuration,
+            boolean runIntermediateValidation) {
         this.sourceFormat = checkNotNull(sourceFormat);
         this.targetFormat = checkNotNull(targetFormat);
-        this.inputInvoice = checkNotNull(inputInvoice);
         this.outputFolder = checkNotNull(outputFolder);
         this.invoiceInSourceFormat = checkNotNull(invoiceInSourceFormat);
         this.forceConversion = forceConversion;
