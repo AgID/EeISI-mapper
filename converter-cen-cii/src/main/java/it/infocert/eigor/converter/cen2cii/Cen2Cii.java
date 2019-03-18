@@ -60,22 +60,17 @@ public class Cen2Cii extends AbstractFromCenConverter {
             Untdid4461PaymentMeansCodeToString.newConverter()
     );
 
+
+    public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
+        this.configuration = checkNotNull(configuration);
+    }
+
     @Override
     public void configure() throws ConfigurationException {
         super.configure();
 
         // load the XSD.
-//        {
-//            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-cii.xsd");
-//            xsdValidator = null;
-//            try {
-//                Resource xsdFile = drl.getResource(mandatoryString);
-//
-//                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
-//            } catch (Exception e) {
-//                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
-//            }
-//        }
 
         {
             try {
@@ -98,12 +93,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
         configurableSupport.configure();
     }
-
-    public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
-        this.configuration = checkNotNull(configuration);
-    }
-
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {

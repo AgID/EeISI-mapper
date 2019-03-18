@@ -41,7 +41,10 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
         String resultingResourcePath = resourceArr.stream().collect(Collectors.joining("/")) + "/" +
                 systemIdArr.stream().collect(Collectors.joining("/"));
 
-        log.trace("Base XSD at resource path '{}, imported XSD with system ID = '{}', resulting resource path '{}'.", basePath, systemId, resultingResourcePath);
+        if(log.isTraceEnabled()) {
+            log.trace("Base XSD at resource path '{}, imported XSD with system ID = '{}', resulting resource path '{}'.", basePath, systemId, resultingResourcePath);
+        }
+
 
         return resultingResourcePath;
     }
@@ -327,7 +330,9 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
         }
 
         private void logResource() {
-            System.out.println("Loading resource: " + resource);
+            if(log.isTraceEnabled()){
+                log.trace("Loading resource: '{}'.", resource);
+            }
         }
 
     }
