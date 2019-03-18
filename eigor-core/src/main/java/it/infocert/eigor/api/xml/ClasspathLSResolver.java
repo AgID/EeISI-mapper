@@ -9,18 +9,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
 class ClasspathLSResolver implements LSResourceResolver {
 
-    private static final Map<String, LSInput> map;
+    private static final Map<String, LSInputFactory> map;
 
     static {
-        map = ImmutableMap.<String, LSInput>builder()
+        map = ImmutableMap.<String, LSInputFactory>builder()
             .put(
                 "http://www.w3.org/2001/XMLSchema|urn:un:unece:uncefact:data:standard:QualifiedDataType:100||CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd|",
                 new ClasspathLSInput(
@@ -63,34 +66,56 @@ class ClasspathLSResolver implements LSResourceResolver {
 
         System.out.println("resolving: " + s);
 
-        LSInput ls = map.get(s);
+        LSInputFactory ls = map.get(s);
 
-        if(ls == null) {
-            throw new RuntimeException("Unable to get an LSInput for '" + s + "'");
+        if(ls != null) {
+            return ls.build(type, namespaceURI, publicId, systemId, baseURI);
+            //throw new RuntimeException("Unable to get an LSInput for '" + s + "'");
         }
 
-        return ls;
+        return new SmartLSInputFactory("/converterdata/converter-commons/cii/xsd/coupled/data/standard/").build(type, namespaceURI, publicId, systemId, baseURI);
+
     }
 
     private interface LSInputFactory {
         LSInput build( String type, String namespaceURI, String publicId, String systemId, String baseURI );
     }
 
-    private static class PlainClasspathLSInput implements LSInputFactory {
+    private static class SmartLSInputFactory implements LSInputFactory {
 
-        private final LSInput lsInput;
+        private final String basePath;
 
-        private PlainClasspathLSInput(LSInput lsInput) {
-            this.lsInput = checkNotNull( lsInput );
+        private SmartLSInputFactory(String basePath) {
+            this.basePath = checkNotNull( basePath );
         }
 
         @Override
         public LSInput build(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-            return lsInput;
+
+            LinkedList<String> resourceArr = new LinkedList<>( Arrays.asList( basePath.split("/") ) );
+
+            LinkedList<String> systemIdArr = new LinkedList<>( Arrays.asList( systemId.split("/") ) );
+
+            while(systemIdArr.get(0).equals("..")) {
+                systemIdArr.remove(0);
+                resourceArr.removeLast();
+            }
+
+            String resource =
+                    resourceArr.stream().collect(Collectors.joining("/")) + "/" +
+                            systemIdArr.stream().collect(Collectors.joining("/"));
+
+            return new ClasspathLSInput(
+                    resource,
+                    "UTF-16",
+                    publicId,
+                    systemId,
+                    baseURI
+            );
         }
     }
 
-    private static class ClasspathLSInput implements LSInput {
+    private static class ClasspathLSInput implements LSInput, LSInputFactory {
 
         private final String resource;
         private final String systemId;
@@ -359,6 +384,11 @@ class ClasspathLSResolver implements LSResourceResolver {
 
         private void logResource() {
             System.out.println("Loading resource: " + resource);
+        }
+
+        @Override
+        public LSInput build(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+            return this;
         }
     }
 }
