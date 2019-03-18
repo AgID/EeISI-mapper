@@ -40,14 +40,17 @@ public class XSDValidator implements IXMLValidator {
         DEFAULT_SCHEMA_FACTORY.setResourceResolver(new LoggingResourceResolver());
     }
 
+    @Deprecated
     public XSDValidator(File schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
         this(new StreamSource(schemaFile), schemaFactory, callingLocation);
     }
 
+    @Deprecated
     public XSDValidator(InputStream schemaFile, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
         this(new StreamSource(schemaFile), schemaFactory, callingLocation);
     }
 
+    @Deprecated
     public XSDValidator(Source schemaSource, SchemaFactory schemaFactory, ErrorCode.Location callingLocation) throws SAXException {
         this.callingLocation = callingLocation;
         overriddenSchemaFactory = null;
@@ -60,8 +63,28 @@ public class XSDValidator implements IXMLValidator {
         }
     }
 
+    @Deprecated
     public XSDValidator(File schemaFile, ErrorCode.Location callingLocation) throws SAXException {
         this(new StreamSource(schemaFile), callingLocation);
+    }
+
+    public XSDValidator(String classpathResource, ErrorCode.Location callingLocation) throws SAXException {
+        this.callingLocation = callingLocation;
+
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        schemaFactory.setResourceResolver( new ClasspathLSResolver() );
+
+        overriddenSchemaFactory = schemaFactory;
+
+        long delta = System.currentTimeMillis();
+        try {
+
+            Source source = new StreamSource(getClass().getResourceAsStream(classpathResource));
+            schema = schemaFactoryToUse().newSchema( source );
+        } finally {
+            delta = System.currentTimeMillis() - delta;
+            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", classpathResource , delta);
+        }
     }
 
     /**

@@ -62,18 +62,29 @@ public class Cen2Cii extends AbstractFromCenConverter {
     @Override
     public void configure() throws ConfigurationException {
         super.configure();
-        // load the XSD.
-        {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-cii.xsd");
-            xsdValidator = null;
-            try {
-                Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
+        // load the XSD.
+//        {
+//            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-cii.xsd");
+//            xsdValidator = null;
+//            try {
+//                Resource xsdFile = drl.getResource(mandatoryString);
+//
+//                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
+//            } catch (Exception e) {
+//                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
+//            }
+//        }
+
+        {
+            try {
+                xsdValidator = new XSDValidator("/converterdata/converter-commons/cii/xsd/coupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
             }
         }
+
+
 
         // load the CII schematron validator.
         try {
