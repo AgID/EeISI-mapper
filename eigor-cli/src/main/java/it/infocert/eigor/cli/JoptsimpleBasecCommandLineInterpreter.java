@@ -68,6 +68,8 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         parser.accepts(INTERMEDIATE_VALIDATION);
         OptionSet options = parser.parse(args);
 
+        String source;
+        String target;
 
         // Validates all params
         // ===================================================
@@ -117,7 +119,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 return new ReportFailuereCommand("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice);
             }
 
-            String source = (String) options.valueOf("source");
+            source = (String) options.valueOf("source");
             toCen = this.toCenConversionRepository.findConversionToCen(source);
             if (toCen == null) {
                 Set<String> supportedFormats = toCenConversionRepository.supportedToCenFormats();
@@ -132,7 +134,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 return new ReportFailuereCommand("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice);
             }
 
-            String target = (String) options.valueOf("target");
+            target = (String) options.valueOf("target");
             fromCen = fromCenConversionRepository.findConversionFromCen(target);
             if (fromCen == null) {
                 Set<String> supportedFormats = fromCenConversionRepository.supportedFromCenFormats();
@@ -157,10 +159,8 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         }
 
         return new ConversionCommand.ConversionCommandBuilder()
-                .setRuleRepository(ruleRepository)
-                .setToCen(toCen)
-                .setFromCen(fromCen)
-                .setInputInvoice(inputInvoice)
+                .setSourceFormat(source)
+                .setTargetFormat(target)
                 .setOutputFolder(outputFolder)
                 .setInvoiceInSourceFormat(invoiceInSourceFormat)
                 .setForceConversion(forceConversion)

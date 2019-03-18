@@ -217,7 +217,7 @@
 					<ram:CountrySubDivisionName>Seller country subdivision</ram:CountrySubDivisionName><!--BT-39-->
                 </ram:PostalTradeAddress>
 				<ram:URIUniversalCommunication>
-				<ram:URIID schemeID="SMTP">Seller electronic address</ram:URIID><!--BT-34, 34-1-->
+				<ram:URIID schemeID="9921">AAA123</ram:URIID><!--BT-34, 34-1-->
 				</ram:URIUniversalCommunication>
 				<ram:SpecifiedTaxRegistration>
                     <ram:ID schemeID="VA">GB123456789</ram:ID><!--BT-31--><!--issue related to VA or VAT-->
@@ -232,7 +232,7 @@
 				<ram:GlobalID schemeID="0039">Buyer identifier 2</ram:GlobalID><!--BT-46-->
                 <ram:Name>Buyer name</ram:Name><!--BT-44-->
 				<ram:SpecifiedLegalOrganization>
-					<ram:ID schemeID="">IT:EORI:1111111111111</ram:ID><!--BT-47, 47-1-->
+					<ram:ID>IT:EORI:1111111111111</ram:ID><!--BT-47, 47-1-->
 					<ram:TradingBusinessName>The buyer trading name</ram:TradingBusinessName><!--BT-45-->
 				</ram:SpecifiedLegalOrganization>
 				<ram:DefinedTradeContact><!--BG-9-->
