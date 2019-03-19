@@ -24,7 +24,6 @@ import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
 import it.infocert.eigor.converter.xmlcen2cen.XmlCen2Cen;
-import it.infocert.eigor.model.core.rules.Rule;
 import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
 import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
 import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
@@ -36,7 +35,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Properties;
 
 public class Eigor {
@@ -52,8 +50,7 @@ public class Eigor {
 
     @Bean
     EigorConfiguration configuration() {
-        EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
-        return eigorConfiguration;
+        return new DefaultEigorConfigurationLoader().loadConfiguration();
     }
 
     @Bean
@@ -63,10 +60,8 @@ public class Eigor {
 
     @Bean
     RuleRepository ruleRepository(IReflections reflections) {
-        return new RuleRepository() {
-            @Override public List<Rule> rules() {
-                throw new IllegalArgumentException("Not implemented yet.");
-            }
+        return () -> {
+            throw new IllegalArgumentException("Not implemented yet.");
         };
     }
 
@@ -132,8 +127,7 @@ public class Eigor {
     }
 
     @Bean
-    CommandLineInterpreter commandLineInterpreter(ToCenConversionRepository toCenConversionRepository, FromCenConversionRepository fromCenConversionRepository, RuleRepository compositeRepository, EigorConfiguration configuration) {
-        return new JoptsimpleBasecCommandLineInterpreter(toCenConversionRepository, fromCenConversionRepository, compositeRepository, configuration);
+    CommandLineInterpreter commandLineInterpreter() {
+        return new JoptsimpleBasecCommandLineInterpreter();
     }
-
 }
