@@ -13,6 +13,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.FileReference;
@@ -97,7 +98,12 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     public void configure() throws ConfigurationException {
         super.configure();
 
-        xsdValidator = namingRules.getXsdValidatorFromConfigOrFail("xsd", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
+        try {
+            xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd", ErrorCode.Location.XMLCEN_IN);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading XSD.", e);
+        }
+
         schematronValidator = namingRules.getSchematronFromConfigOrFail("schematron", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
 
         configurableSupport.configure();
