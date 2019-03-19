@@ -163,9 +163,7 @@
 		<cac:PartyIdentification>
 		  <cbc:ID schemeID="0180" >Payee identifier </cbc:ID><!--BT-60, BT-60-1-->
 		</cac:PartyIdentification>
-		<cac:PartyIdentification>
-		 <cbc:ID schemeID="SEPA" >Bank account identifier referring to the seller </cbc:ID><!--BT-90--> <!--2 warnings -->
-	    </cac:PartyIdentification>
+	
 		<cac:PartyName>
 		  <cbc:Name>Payee name</cbc:Name><!--BT-59-->
 		</cac:PartyName>
