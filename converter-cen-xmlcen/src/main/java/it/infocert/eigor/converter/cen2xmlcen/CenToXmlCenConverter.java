@@ -5,8 +5,8 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.DomUtils;
-import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
@@ -17,10 +17,7 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import java.io.FileInputStream;
 import java.util.*;
 
@@ -106,10 +103,9 @@ public class CenToXmlCenConverter implements FromCenConversion {
         ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_OUT;
 
         try {
-            Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"));
-            xsdValidator = new PlainXSDValidator(schemaSource, callingLocation);
-        } catch (SAXException e) {
-            throw new ConfigurationException("An error occurred while initializing the XSD validator", e);
+            xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd", ErrorCode.Location.XMLCEN_OUT);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading XSD.", e);
         }
 
         try {
