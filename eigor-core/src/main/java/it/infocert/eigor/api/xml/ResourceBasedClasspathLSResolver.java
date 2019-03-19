@@ -13,9 +13,11 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.valueOf;
 
 
 class ResourceBasedClasspathLSResolver implements LSResourceResolver {
@@ -27,6 +29,66 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
         URL resource = getClass().getResource(xsdClasspathPath);
         checkNotNull( resource, "xsd at '%s' not found.", xsdClasspathPath );
         this.basePath = xsdClasspathPath.subSequence( 0, xsdClasspathPath.lastIndexOf("/") ).toString();
+    }
+
+    @Override
+    public LSInput resolveResource(final String type, final String namespaceURI, final String publicId, final String systemId, final String baseURI) {
+
+        if(log.isTraceEnabled()) {
+            log.trace("Resolving LSInput for type='{}', namespaceURI='{}', publicId='{}', systemId='{}', baseURI='{}'.",
+                    type, namespaceURI, publicId, systemId, baseURI);
+        }
+
+        ClasspathLSInput lsInput = null;
+        if(baseURI==null) {
+
+            lsInput = new ClasspathLSInput(
+                    mergeClasspaths(systemId),
+                    "UTF-16",
+                    publicId,
+                    systemId,
+                    baseURI
+            );
+
+        }else{
+
+            LinkedList<String> baseUriTokensToTry = new LinkedList<String>( Arrays.asList( baseURI.split("/") ) );
+            baseUriTokensToTry.removeLast();
+            baseUriTokensToTry.add(systemId);
+
+            LinkedList<String> baseUriToken = new LinkedList<String>();
+
+            String res = null;
+            while(!baseUriTokensToTry.isEmpty()) {
+                baseUriToken.add(0, baseUriTokensToTry.removeLast());
+
+                String resToTry = basePath + "/" + baseUriToken.stream().collect(Collectors.joining("/"));
+                if(getClass().getResourceAsStream(resToTry) != null) {
+                    res = resToTry;
+                    break;
+                }
+            }
+
+            if(res!=null) {
+                lsInput = new ClasspathLSInput(
+                        res,
+                        "UTF-16",
+                        publicId,
+                        systemId,
+                        baseURI
+                );
+            }
+
+        }
+
+        if(log.isTraceEnabled()) {
+            log.trace("Resolved LSInput for type='{}', namespaceURI='{}', publicId='{}', systemId='{}', baseURI='{}', result is '{}'.",
+                    type, namespaceURI, publicId, systemId, baseURI, valueOf(lsInput));
+        }
+
+
+        return lsInput;
+
     }
 
     private String mergeClasspaths(String systemId) {
@@ -42,24 +104,11 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
                 systemIdArr.stream().collect(Collectors.joining("/"));
 
         if(log.isTraceEnabled()) {
-            log.trace("Base XSD at resource path '{}, imported XSD with system ID = '{}', resulting resource path '{}'.", basePath, systemId, resultingResourcePath);
+            log.trace("Base XSD at resource path '{}', imported XSD with system ID '{}', resulting resource path is '{}'.", basePath, systemId, resultingResourcePath);
         }
 
 
         return resultingResourcePath;
-    }
-
-    @Override
-    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-
-        return new ClasspathLSInput(
-                mergeClasspaths(systemId),
-                "UTF-16",
-                publicId,
-                systemId,
-                baseURI
-        );
-
     }
 
     private static class ClasspathLSInput implements LSInput {
@@ -70,20 +119,23 @@ class ResourceBasedClasspathLSResolver implements LSResourceResolver {
         private final String baseURI;
         private final String publicId;
 
-        public ClasspathLSInput(String resource) {
-            this.resource = resource;
-            systemId = null;
-            encoding = null;
-            baseURI = null;
-            publicId = null;
-        }
-
         public ClasspathLSInput(String resource, String encoding, String publicId, String systemId, String baseURI) {
             this.resource = resource;
             this.systemId = systemId;
             this.encoding = encoding;
             this.baseURI = baseURI;
             this.publicId = publicId;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", ClasspathLSInput.class.getSimpleName() + "[", "]")
+                    .add("resource='" + resource + "'")
+                    .add("systemId='" + systemId + "'")
+                    .add("encoding='" + encoding + "'")
+                    .add("baseURI='" + baseURI + "'")
+                    .add("publicId='" + publicId + "'")
+                    .toString();
         }
 
         /**
