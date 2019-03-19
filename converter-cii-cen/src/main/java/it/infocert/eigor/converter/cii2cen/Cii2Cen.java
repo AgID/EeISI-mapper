@@ -11,6 +11,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -89,14 +90,11 @@ public class Cii2Cen extends AbstractToCenConverter {
 
 		// load the XSD.
 		{
-			String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cii-cen.xsd");
-            xsdValidator = null;
-            try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_IN);
-            } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for CII2CEN from '" + mandatoryString + "'.", e);
-            }
+			try {
+				xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
+			} catch (Exception e) {
+				throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
+			}
 		}
 
 		// load the CII schematron validator.
