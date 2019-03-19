@@ -10,7 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
-import it.infocert.eigor.api.xml.PlainXSDValidator;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -64,15 +64,12 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
         super.configure();
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.xsd");
-            xsdValidator = null;
             try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-
-                xsdValidator = new PlainXSDValidator(xsdFile.getFile(), ErrorCode.Location.PEPPOLCN_OUT);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/peppolcn/xsdstatic/UBL-CreditNote-2.1.xsd", ErrorCode.Location.PEPPOLCN_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for CEN2PEPPOLCN from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD.", e);
             }
+
         }
 
         // load the UBL schematron validator.
