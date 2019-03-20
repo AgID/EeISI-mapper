@@ -89,19 +89,6 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     }
 
     @Test
-    public void issueEeisi195() {
-
-        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
-                "/issues/issue-eisi195-fattpa.xml",
-                "fatturapa", "peppolcn", discardAll());
-
-        assertThat( describeConversionIssues(conversionResult.getIssues()), conversionResult.getIssues(), hasSize(2) );
-
-        assertThat( conversionResult.getIssues().get(0).getMessage(), startsWith("PEPPOLCN_OUT.SCH_VALIDATION.INVALID - Schematron failed assert 'For Danish suppliers when the Accounting code is known, it should be referred on the Invoice.'") );
-        assertThat( conversionResult.getIssues().get(1).getMessage(), startsWith("PEPPOLCN_OUT.SCH_VALIDATION.INVALID - Schematron failed assert 'Danish suppliers MUST provide legal entity (CVR-number).'") );
-    }
-
-    @Test
     public void issueEeisi195NoDk() {
         this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi195-fattpa-noDK.xml",
