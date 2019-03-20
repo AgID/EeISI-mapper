@@ -1,6 +1,6 @@
 package it.infocert.eigor.converter.commons.cen2ubl;
 
- import it.infocert.eigor.api.ConversionIssue;
+import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
@@ -38,7 +38,9 @@ public class AdditionalDocumentsConverter implements CustomMapping<Document> {
                         Element documentTypeCode = new Element("DocumentTypeCode");
                         Identifier bt0018 = cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
                         id.setText(bt0018.getIdentifier());
-                        id.setAttribute("schemeID", bt0018.getIdentificationSchema());
+                        if (bt0018.getIdentificationSchema() != null) {
+                            id.setAttribute("schemeID", bt0018.getIdentificationSchema());
+                        }
                         documentTypeCode.setText("130");
                         additionalDocumentReference.addContent(id);
                         additionalDocumentReference.addContent(documentTypeCode);
@@ -91,7 +93,7 @@ public class AdditionalDocumentsConverter implements CustomMapping<Document> {
                         BT0124ExternalDocumentLocation bt0124 = elemBg24.getBT0124ExternalDocumentLocation(0);
                         Element uri = new Element("URI");
                         uri.setText(bt0124.getValue());
-                        if(attachment == null) {
+                        if (attachment == null) {
                             attachment = new Element("Attachment");
                             additionalDocumentReference.addContent(attachment);
                         }
