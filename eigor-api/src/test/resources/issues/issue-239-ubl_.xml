@@ -231,7 +231,7 @@
 	<cac:AllowanceCharge> 
 		<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
 		<cbc:AllowanceChargeReasonCode>75</cbc:AllowanceChargeReasonCode> 
-		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason> K
+		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason>
 		<cbc:MultiplierFactorNumeric>0.0756</cbc:MultiplierFactorNumeric>
 		<cbc:Amount currencyID="EUR">116.67</cbc:Amount>
 		<cbc:BaseAmount currencyID="EUR">EUR:1543.29</cbc:BaseAmount>
