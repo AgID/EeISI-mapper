@@ -12,7 +12,14 @@ The limited permissions granted above are perpetual and will not be revoked by U
 
 This document and the information contained herein is provided on an "AS IS" basis and UN/CEFACT DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 -->
-<xsd:schema xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" targetNamespace="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" elementFormDefault="qualified" version="100.D16B">
+<xsd:schema
+		xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+		xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+		xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+		targetNamespace="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+		elementFormDefault="qualified" version="100.D16B">
 	<xsd:import namespace="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" schemaLocation="CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd"/>
 	<xsd:import namespace="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" schemaLocation="CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd"/>
 	<xsd:import namespace="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" schemaLocation="CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd"/>

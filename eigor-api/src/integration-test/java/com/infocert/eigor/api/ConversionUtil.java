@@ -54,7 +54,7 @@ public class ConversionUtil {
 
         MyConversionCallback mcc = new MyConversionCallback();
 
-        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream, mcc);
+        ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream, "invoice", mcc);
 
         List<IConversionIssue> issues = convert.getIssues().stream().filter( errorsToKeep ).collect(Collectors.toList());
 

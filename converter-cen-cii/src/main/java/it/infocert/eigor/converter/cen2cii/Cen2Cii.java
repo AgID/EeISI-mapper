@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -59,21 +60,27 @@ public class Cen2Cii extends AbstractFromCenConverter {
             Untdid4461PaymentMeansCodeToString.newConverter()
     );
 
+
+    public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
+        this.configuration = checkNotNull(configuration);
+    }
+
     @Override
     public void configure() throws ConfigurationException {
         super.configure();
-        // load the XSD.
-        {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-cii.xsd");
-            xsdValidator = null;
-            try {
-                Resource xsdFile = drl.getResource(mandatoryString);
 
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.CII_OUT);
+        // load the XSD.
+
+        {
+            try {
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
             }
         }
+
+
 
         // load the CII schematron validator.
         try {
@@ -86,12 +93,6 @@ public class Cen2Cii extends AbstractFromCenConverter {
 
         configurableSupport.configure();
     }
-
-    public Cen2Cii(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry, configuration, ErrorCode.Location.CII_OUT);
-        this.configuration = checkNotNull(configuration);
-    }
-
 
     @Override
     public BinaryConversionResult convert(BG0000Invoice invoice) throws SyntaxErrorInInvoiceFormatException {

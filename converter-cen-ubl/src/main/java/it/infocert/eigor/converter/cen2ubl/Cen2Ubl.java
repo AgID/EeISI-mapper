@@ -10,6 +10,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
@@ -63,15 +64,12 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         super.configure();
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-ubl.xsd");
-            xsdValidator = null;
             try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBL_OUT);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd", ErrorCode.Location.UBL_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for CEN2UBL from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
             }
+
         }
 
         // load the UBL schematron validator.

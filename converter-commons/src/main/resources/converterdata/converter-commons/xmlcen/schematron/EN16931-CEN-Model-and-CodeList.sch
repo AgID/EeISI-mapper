@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+This schematron uses business terms defined the CEN/EN16931-1 and is reproduced with permission from CEN.
+CEN bears no liability from the use of the content and implementation of this schematron and gives no warranties expressed or implied for any purpose.
+ -->
+<!--
             Core semantic model Schematron - CEN Semantic
             Created by EeISI - European eInvoicing Standard in Italy Project
             Latest update: 2019-FEB-25
-            Release: 1.0.4 DRAFT
+            Release: 1.0.5 DRAFT
   -->
 <!--
 Modifiche 2019-01-12:
@@ -14,11 +18,12 @@ BR-CO-04 => spostata su diverso context
 BR-VATCODE-05 => spostate TUTTE in un diverso contesto
 
 Modifiche 2019-01-25
-BR-S-01 to BR-S-10 update to include B Vat Category Code[BR-61]
+BR-S-01 to BR-S-10 update to include B Vat Category Code
 Modifica 2019-02-25
 BR-61 changed BT-84 in BG-17/BT-84
 
-
+ Change Log 2019-03-13
+  1. Added license comment
 
 -->
 
@@ -694,36 +699,10 @@ To Be implemented
 
     <rule context="BG-16">
       <!--
-        <param name="BR-61" value="
-
-(
-    exists(cac:PayeeFinancialAccount/cbc:ID) and
-    (
-        (normalize-space(cbc:PaymentMeansCode) = '30') or
-        (normalize-space(cbc:PaymentMeansCode) = '58')
-    )
-)
-or
-(
-    (normalize-space(cbc:PaymentMeansCode) != '30') and
-    (normalize-space(cbc:PaymentMeansCode) != '58')
-)"/>
+        <param name="BR-61" value="(exists(cac:PayeeFinancialAccount/cbc:ID) and ((normalize-space(cbc:PaymentMeansCode) = '30') or (normalize-space(cbc:PaymentMeansCode) = '58') )) or ((normalize-space(cbc:PaymentMeansCode) != '30') and (normalize-space(cbc:PaymentMeansCode) != '58'))"/>
       -->
-      <assert test="
-
-
-(
-    BG-17/BT-84 and
-    (
-        normalize-space(BT-81)='30' or
-        normalize-space(BT-81)='58'
-    )
-)
-or
-(
-    normalize-space(BT-81)!='30' and
-    normalize-space(BT-81)!='58'
-)"
+      <assert test="(BG-17/BT-84 and (normalize-space(BT-81)='30' or normalize-space(BT-81)='58'))
+        or (normalize-space(BT-81)!='30' and normalize-space(BT-81)!='58')  "
         flag="fatal"
         id="BR-61">[BR-61]-If the Payment means type code (BT-81) means SEPA credit transfer, Local credit transfer or Non-SEPA international credit transfer, the Payment account identifier (BT-84) shall be present.
       </assert>
