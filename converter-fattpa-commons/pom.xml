@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>eigor-fattpa-commons</artifactId>
+    <artifactId>converter-fattpa-commons</artifactId>
     <name>Eigor :: FattPA Commons (${project.artifactId})</name>
     <description>The Eigor FattPA commons contains the commons jaxb bean for tattpa2cen and cen2fattpa.</description>
     <dependencies>

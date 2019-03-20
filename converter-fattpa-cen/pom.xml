@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
-            <artifactId>eigor-fattpa-commons</artifactId>
+            <artifactId>converter-fattpa-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
