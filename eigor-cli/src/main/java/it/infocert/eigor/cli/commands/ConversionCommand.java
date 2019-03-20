@@ -12,6 +12,7 @@ import it.infocert.eigor.api.conversion.DumpIntermediateCenInvoiceAsCsvCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
+import it.infocert.eigor.cli.Eigor;
 import it.infocert.eigor.cli.EigorCli;
 import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
@@ -30,13 +31,14 @@ public class ConversionCommand implements CliCommand {
 
     private final EigorConfiguration configuration;
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    private static EigorApi api = null;
+    private EigorApi api;
 
     private final String sourceFormat;
     private final String targetFormat;
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
     private final Boolean forceConversion;
+    private final String invoiceInName;
     private final boolean runIntermediateValidation;
 
     public static class ConversionCommandBuilder {
@@ -45,8 +47,10 @@ public class ConversionCommand implements CliCommand {
         private Path outputFolder;
         private InputStream invoiceInSourceFormat;
         private Boolean forceConversion;
-        private EigorConfiguration configuration;
         private Boolean runIntermediateValidation;
+        private EigorConfiguration configuration;
+        private String invoiceInName;
+        private EigorApi api;
 
         public ConversionCommandBuilder() {
             runIntermediateValidation = false;
@@ -89,8 +93,18 @@ public class ConversionCommand implements CliCommand {
             return this;
         }
 
+        public ConversionCommandBuilder setApi(EigorApi api) {
+            this.api = api;
+            return this;
+        }
+
+        public ConversionCommandBuilder setInvoiceInName(String invoiceInName) {
+            this.invoiceInName = invoiceInName;
+            return this;
+        }
+
         public ConversionCommand build() {
-            return new ConversionCommand(sourceFormat, targetFormat, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
+            return new ConversionCommand(sourceFormat, targetFormat, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation, api, invoiceInName);
         }
 
     }
@@ -102,7 +116,9 @@ public class ConversionCommand implements CliCommand {
             InputStream invoiceInSourceFormat,
             boolean forceConversion,
             EigorConfiguration configuration,
-            boolean runIntermediateValidation) {
+            boolean runIntermediateValidation,
+            EigorApi api,
+            String invoiceName) {
         this.sourceFormat = checkNotNull(sourceFormat);
         this.targetFormat = checkNotNull(targetFormat);
         this.outputFolder = checkNotNull(outputFolder);
@@ -110,6 +126,8 @@ public class ConversionCommand implements CliCommand {
         this.forceConversion = forceConversion;
         this.configuration = checkNotNull(configuration);
         this.runIntermediateValidation = runIntermediateValidation;
+        this.api = api;
+        this.invoiceInName = invoiceName;
     }
 
     /**
@@ -143,32 +161,15 @@ public class ConversionCommand implements CliCommand {
         return 0;
     }
 
-    private void conversion(File outputFolderFile, PrintStream out) throws Exception {
+    private void conversion(File outputFolderFile, PrintStream out) {
 
-        api = forceConversion ? new EigorApiBuilder().enableForce().build() : new EigorApiBuilder().build();
-        api.convert(sourceFormat, targetFormat, invoiceInSourceFormat,
+        api.convert(sourceFormat, targetFormat, invoiceInSourceFormat, invoiceInName,
                 new ConsoleOutputConversionCallback(this, out),
                 new DebugConversionCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCenXmlCallback(
                         outputFolderFile,
                         new CenToXmlCenConverter(configuration), runIntermediateValidation));
-
-//        new ObservableConversion(
-//                ruleRepository,
-//                toCen,
-//                fromCen,
-//                invoiceInSourceFormat,
-//                forceConversion,
-//                inputInvoice.toFile().getName(),
-//
-//                new ConsoleOutputConversionCallback(this, out),
-//                new DebugConversionCallback(outputFolderFile),
-//                new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
-//                new DumpIntermediateCenInvoiceAsCenXmlCallback(
-//                        outputFolderFile,
-//                        new CenToXmlCenConverter(configuration), runIntermediateValidation)
-//        ).conversion();
     }
 
     public boolean isForceConversion() {
