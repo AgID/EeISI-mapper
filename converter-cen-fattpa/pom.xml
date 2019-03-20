@@ -9,11 +9,8 @@
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>converter-cen-fattpa</artifactId>
-
     <name>Eigor :: Converter :: CEN - FattPA (${project.artifactId})</name>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -26,13 +23,16 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-fattpa-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-core</artifactId>
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-test</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
@@ -52,32 +52,8 @@
             <artifactId>jdom2</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>it.infocert.eigor.converter.cen2fattpa.models</packageName>
-                    <sources>
-                        <source>
-                            ../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic
-                        </source>
-                    </sources>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -89,5 +65,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -7,7 +7,7 @@ import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.cen2fattpa.converters.Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.fattpa.commons.models.*;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0003InvoiceTypeCode;

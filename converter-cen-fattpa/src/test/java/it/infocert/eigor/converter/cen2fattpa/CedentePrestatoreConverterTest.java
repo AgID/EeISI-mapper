@@ -2,10 +2,10 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.cen2fattpa.models.CedentePrestatoreType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaHeaderType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaType;
+import it.infocert.eigor.fattpa.commons.models.CedentePrestatoreType;
+import it.infocert.eigor.fattpa.commons.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.fattpa.commons.models.FatturaElettronicaHeaderType;
+import it.infocert.eigor.fattpa.commons.models.FatturaElettronicaType;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;

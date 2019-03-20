@@ -13,7 +13,7 @@ import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.fattpa.commons.models.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.Resource;
@@ -124,7 +124,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         FatturaElettronicaType jaxbFattura = null;
         JAXBContext jaxbContext = null;
         try {
-            jaxbContext = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
+            jaxbContext = JAXBContext.newInstance("it.infocert.eigor.fattpa.commons.models");
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {

@@ -9,14 +9,9 @@
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>converter-fattpa-cen</artifactId>
-
     <name>Eigor :: Converter :: FattPA - CEN (${project.artifactId})</name>
-
     <dependencies>
-
-
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -36,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>converter-fattpa-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-test</artifactId>
         </dependency>
 
@@ -49,7 +48,6 @@
             <artifactId>powermock-module-junit4</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -70,32 +68,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>it.infocert.eigor.converter.fattpa2cen.models</packageName>
-                    <sources>
-                        <source>
-                            ../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic
-                        </source>
-                    </sources>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
-
-
 </project>

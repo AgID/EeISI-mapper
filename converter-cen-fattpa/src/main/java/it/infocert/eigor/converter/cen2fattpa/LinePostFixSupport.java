@@ -1,8 +1,8 @@
 package it.infocert.eigor.converter.cen2fattpa;
 
 import com.google.common.base.Preconditions;
-import it.infocert.eigor.converter.cen2fattpa.models.AltriDatiGestionaliType;
-import it.infocert.eigor.converter.cen2fattpa.models.DettaglioLineeType;
+import it.infocert.eigor.fattpa.commons.models.AltriDatiGestionaliType;
+import it.infocert.eigor.fattpa.commons.models.DettaglioLineeType;
 import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
 
 import java.util.*;
