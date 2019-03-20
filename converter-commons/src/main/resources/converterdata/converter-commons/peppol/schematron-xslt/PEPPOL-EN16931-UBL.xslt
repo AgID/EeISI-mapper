@@ -22,18 +22,18 @@
 
 <!--KEYS AND FUNCTIONS-->
 <xsl:function as="xs:boolean" name="u:slack">
-    <xsl:param as="xs:decimal" name="exp" />
-    <xsl:param as="xs:decimal" name="val" />
-    <xsl:param as="xs:decimal" name="slack" />
-    <xsl:value-of select="xs:decimal($exp + $slack) >= $val and xs:decimal($exp - $slack) &lt;= $val" />
-  </xsl:function>
+		<xsl:param as="xs:decimal" name="exp" />
+		<xsl:param as="xs:decimal" name="val" />
+		<xsl:param as="xs:decimal" name="slack" />
+		<xsl:value-of select="xs:decimal($exp + $slack) >= $val and xs:decimal($exp - $slack) &lt;= $val" />
+	</xsl:function>
   <xsl:function as="xs:boolean" name="u:mod11">
-    <xsl:param name="val" />
-    <xsl:variable name="length" select="string-length($val) - 1" />
-    <xsl:variable name="digits" select="reverse(for $i in string-to-codepoints(substring($val, 0, $length + 1)) return $i - 48)" />
-    <xsl:variable name="weightedSum" select="sum(for $i in (0 to $length - 1) return $digits[$i + 1] * (($i mod 6) + 2))" />
-    <xsl:value-of select="number($val) > 0 and (11 - ($weightedSum mod 11)) mod 11 = number(substring($val, $length + 1, 1))" />
-  </xsl:function>
+		<xsl:param name="val" />
+		<xsl:variable name="length" select="string-length($val) - 1" />
+		<xsl:variable name="digits" select="reverse(for $i in string-to-codepoints(substring($val, 0, $length + 1)) return $i - 48)" />
+		<xsl:variable name="weightedSum" select="sum(for $i in (0 to $length - 1) return $digits[$i + 1] * (($i mod 6) + 2))" />
+		<xsl:value-of select="number($val) > 0 and (11 - ($weightedSum mod 11)) mod 11 = number(substring($val, $length + 1, 1))" />
+	</xsl:function>
 
 <!--DEFAULT RULES-->
 
@@ -253,8 +253,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Document MUST not contain empty
-        elements.</svrl:text>
+          <svrl:text>Document MUST not contain empty elements.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -275,8 +274,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Document MUST not contain
-        empty elements.</svrl:text>
+          <svrl:text>Document MUST not contain empty elements.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -304,8 +302,22 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Business process MUST be
-        provided.</svrl:text>
+          <svrl:text>Business process MUST be provided.</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="$profile != 'Unknown'" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="$profile != 'Unknown'">
+          <xsl:attribute name="id">PEPPOL-EN16931-R007</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>Business process MUST be in the format 'urn:fdc:peppol.eu:2017:poacc:billing:NN:1.0' where NN indicates the process number.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -320,8 +332,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>No more than one
-        note is allowed on document level.</svrl:text>
+          <svrl:text>No more than one note is allowed on document level.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -351,8 +362,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Specification identifier MUST have the value
-        'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'.</svrl:text>
+          <svrl:text>Specification identifier MUST have the value 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -382,8 +392,22 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Only one tax total without tax subtotals MUST be provided when tax currency
-        code is provided.</svrl:text>
+          <svrl:text>Only one tax total without tax subtotals MUST be provided when tax currency code is provided.</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(cbc:TaxCurrencyCode) or (cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:TaxCurrencyCode)] &lt;= 0 and cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:DocumentCurrencyCode)] &lt;= 0) or (cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:TaxCurrencyCode)] >= 0 and cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:DocumentCurrencyCode)] >= 0) " />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(cbc:TaxCurrencyCode) or (cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:TaxCurrencyCode)] &lt;= 0 and cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:DocumentCurrencyCode)] &lt;= 0) or (cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:TaxCurrencyCode)] >= 0 and cac:TaxTotal/cbc:TaxAmount[@currencyID=normalize-space(../../cbc:DocumentCurrencyCode)] >= 0)">
+          <xsl:attribute name="id">PEPPOL-EN16931-R055</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>Invoice total VAT amount and Invoice total VAT amount in accounting currency MUST have the same operational sign</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -434,8 +458,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>VAT accounting currency code MUST be different from invoice currency code when
-        provided.</svrl:text>
+          <svrl:text>VAT accounting currency code MUST be different from invoice currency code when provided.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -456,8 +479,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Buyer electronic address
-        MUST be provided</svrl:text>
+          <svrl:text>Buyer electronic address MUST be provided</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -478,8 +500,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Seller electronic address
-        MUST be provided</svrl:text>
+          <svrl:text>Seller electronic address MUST be provided</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -500,8 +521,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Allowance/charge base amount MUST
-        be provided when allowance/charge percentage is provided.</svrl:text>
+          <svrl:text>Allowance/charge base amount MUST be provided when allowance/charge percentage is provided.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -522,8 +542,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Allowance/charge percentage MUST
-        be provided when allowance/charge base amount is provided.</svrl:text>
+          <svrl:text>Allowance/charge percentage MUST be provided when allowance/charge base amount is provided.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -544,8 +563,22 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Allowance/charge amount must equal base amount * percentage/100 if base amount
-        and percentage exists</svrl:text>
+          <svrl:text>Allowance/charge amount must equal base amount * percentage/100 if base amount and percentage exists</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="normalize-space(cbc:ChargeIndicator/text()) = 'true' or normalize-space(cbc:ChargeIndicator/text()) = 'false'" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="normalize-space(cbc:ChargeIndicator/text()) = 'true' or normalize-space(cbc:ChargeIndicator/text()) = 'false'">
+          <xsl:attribute name="id">PEPPOL-EN16931-R043</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>Allowance/charge ChargeIndicator value MUST equal 'true' or 'false'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -566,8 +599,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Mandate
-        reference MUST be provided for direct debit.</svrl:text>
+          <svrl:text>Mandate reference MUST be provided for direct debit.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -588,9 +620,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>All
-        currencyID attributes must have the same value as the invoice currency code (BT-5), except
-        for the invoice total VAT amount in accounting currency (BT-111) </svrl:text>
+          <svrl:text>All currencyID attributes must have the same value as the invoice currency code (BT-5), except for the invoice total VAT amount in accounting currency (BT-111).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -646,8 +676,8 @@
     <xsl:variable name="quantity" select="           if (/ubl-invoice:Invoice) then             (if (cbc:InvoicedQuantity) then               xs:decimal(cbc:InvoicedQuantity)             else               1)           else             (if (cbc:CreditedQuantity) then               xs:decimal(cbc:CreditedQuantity)             else               1)" />
     <xsl:variable name="priceAmount" select="           if (cac:Price/cbc:PriceAmount) then             xs:decimal(cac:Price/cbc:PriceAmount)           else             0" />
     <xsl:variable name="baseQuantity" select="           if (cac:Price/cbc:BaseQuantity and xs:decimal(cac:Price/cbc:BaseQuantity) != 0) then             xs:decimal(cac:Price/cbc:BaseQuantity)           else             1" />
-    <xsl:variable name="allowancesTotal" select="           if (cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'false']) then             xs:decimal(sum(cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'false']/cbc:Amount))           else             0" />
-    <xsl:variable name="chargesTotal" select="           if (cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'true']) then             xs:decimal(sum(cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'true']/cbc:Amount))           else             0" />
+    <xsl:variable name="allowancesTotal" select="           if (cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'false']) then             xs:decimal(round(sum(cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'false']/cbc:Amount) * 10 * 10) div 100)           else             0" />
+    <xsl:variable name="chargesTotal" select="           if (cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'true']) then             xs:decimal(round(sum(cac:AllowanceCharge[normalize-space(cbc:ChargeIndicator) = 'true']/cbc:Amount) * 10 * 10) div 100)           else             0" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -659,8 +689,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Invoice line net amount MUST equal (Invoiced quantity * (Item net price/item
-        price base quantity) + Sum of invoice line charge amount - sum of invoice line allowance amount</svrl:text>
+          <svrl:text>Invoice line net amount MUST equal (Invoiced quantity * (Item net price/item price base quantity) + Sum of invoice line charge amount - sum of invoice line allowance amount</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -741,8 +770,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Item net price MUST equal (Gross price - Allowance amount) when gross price is
-        provided.</svrl:text>
+          <svrl:text>Item net price MUST equal (Gross price - Allowance amount) when gross price is provided.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -803,7 +831,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$')            and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')" />
+      <xsl:when test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$')           and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')" />
       <xsl:otherwise>
         <svrl:failed-assert test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$') and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')">
           <xsl:attribute name="id">NO-R-001</xsl:attribute>
@@ -826,115 +854,95 @@
 
 
 	<!--RULE -->
-<xsl:template match="ubl-creditnote:CreditNote | ubl-invoice:Invoice" mode="M15" priority="1003">
-    <svrl:fired-rule context="ubl-creditnote:CreditNote | ubl-invoice:Invoice" />
+<xsl:template match="ubl-creditnote:CreditNote[$supplierCountry = 'DK'] | ubl-invoice:Invoice[$supplierCountry = 'DK']" mode="M15" priority="1003">
+    <svrl:fired-rule context="ubl-creditnote:CreditNote[$supplierCountry = 'DK'] | ubl-invoice:Invoice[$supplierCountry = 'DK']" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (normalize-space(cbc:AccountingCost/text()) = '')           )" />
+      <xsl:when test="not(normalize-space(cbc:AccountingCost/text()) = '')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (normalize-space(cbc:AccountingCost/text()) = '') )">
+        <svrl:failed-assert test="not(normalize-space(cbc:AccountingCost/text()) = '')">
           <xsl:attribute name="id">DK-R-001</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish suppliers when the Accounting code is known, it should be referred
-        on the Invoice.</svrl:text>
+          <svrl:text>For Danish suppliers when the Accounting code is known, it should be referred on the Invoice</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and not(normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/text()) != '')           )" />
+      <xsl:when test="(normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/text()) != '')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and not(normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/text()) != '') )">
+        <svrl:failed-assert test="(normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/text()) != '')">
           <xsl:attribute name="id">DK-R-002</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>Danish suppliers MUST provide legal entity (CVR-number).</svrl:text>
+          <svrl:text>Danish suppliers MUST provide legal entity (CVR-number)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID))           and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))           or           ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID))           and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))           )           )" />
+      <xsl:when test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                             or                              ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                          )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) or ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) ) )">
+        <svrl:failed-assert test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) or ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) )">
           <xsl:attribute name="id">DK-R-013</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers it is mandatory to use schemeID when
-        PartyIdentification/ID is used for AccountingCustomerParty or
-        AccountingSupplierParty</svrl:text>
+          <svrl:text>For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID))           and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) = ''))           or           ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID))           and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) = ''))           )           )" />
+      <xsl:when test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID))                                and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) != '0184'))                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)) and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) = '')) or ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)) and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) = '')) ) )">
+        <svrl:failed-assert test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)) and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) != '0184')) )">
           <xsl:attribute name="id">DK-R-014</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers it is mandatory to use schemeID when
-        PartyLegalEntity/CompanyID is used for AccountingCustomerParty or
-        AccountingSupplierParty</svrl:text>
+          <svrl:text>For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when PartyLegalEntity/CompanyID is used for AccountingSupplierParty</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M15" select="*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="ubl-creditnote:CreditNote/cac:CreditNoteLine | ubl-invoice:Invoice/cac:InvoiceLine" mode="M15" priority="1002">
-    <svrl:fired-rule context="ubl-creditnote:CreditNote/cac:CreditNoteLine | ubl-invoice:Invoice/cac:InvoiceLine" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listID = 'MP')           and not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.05.01')           or (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.0501')           )           )" />
+      <xsl:when test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT')                         and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10)          and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK')          and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN'))                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listID = 'MP') and not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.05.01') or (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.0501') ) )">
-          <xsl:attribute name="id">DK-R-003</xsl:attribute>
-          <xsl:attribute name="flag">warning</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>If ItemClassification is provided from Danish suppliers, UNSPSC version
-        19.0501 should be used.</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="cac:AllowanceCharge" mode="M15" priority="1001">
-    <svrl:fired-rule context="cac:AllowanceCharge" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:AllowanceChargeReasonCode = 'ZZZ')           and not((string-length(normalize-space(cbc:AllowanceChargeReason/text())) = 4)           and (number(cbc:AllowanceChargeReason) >= 0)           and (number(cbc:AllowanceChargeReason) &lt;= 9999))           )" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:AllowanceChargeReasonCode = 'ZZZ') and not((string-length(normalize-space(cbc:AllowanceChargeReason/text())) = 4) and (number(cbc:AllowanceChargeReason) >= 0) and (number(cbc:AllowanceChargeReason) &lt;= 9999)) )">
-          <xsl:attribute name="id">DK-R-004</xsl:attribute>
+        <svrl:failed-assert test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT') and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10) and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK') and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN')) )">
+          <xsl:attribute name="id">DK-R-015</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>When specifying non-VAT Taxes, Danish suppliers MUST use the
-        AllowanceChargeReasonCode="ZZZ" and the 4-digit Tax category MUST be specified in
-        'AllowanceChargeReason'.</svrl:text>
+          <svrl:text>For Danish Suppliers, if specified, AccountingSupplierParty/PartyTaxScheme/CompanyID (DK VAT number) must start with DK followed by 8 digits</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not((boolean(/ubl-creditnote:CreditNote))                         and (number(cac:LegalMonetaryTotal/cbc:PayableAmount/text()) &lt; 0)                         )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not((boolean(/ubl-creditnote:CreditNote)) and (number(cac:LegalMonetaryTotal/cbc:PayableAmount/text()) &lt; 0) )">
+          <xsl:attribute name="id">DK-R-016</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>For Danish Suppliers, a Credit note cannot have a negative total (PayableAmount)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -942,137 +950,152 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ubl-invoice:Invoice/cac:PaymentMeans" mode="M15" priority="1000">
-    <svrl:fired-rule context="ubl-invoice:Invoice/cac:PaymentMeans" />
+<xsl:template match="ubl-invoice:Invoice[$supplierCountry = 'DK']/cac:PaymentMeans" mode="M15" priority="1002">
+    <svrl:fired-rule context="ubl-invoice:Invoice[$supplierCountry = 'DK']/cac:PaymentMeans" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and not(contains(' 1 10 31 42 48 49 50 58 59 93 97 ', concat(' ', cbc:PaymentMeansCode, ' ')))           )" />
+      <xsl:when test="contains(' 1 10 31 42 48 49 50 58 59 93 97 ', concat(' ', cbc:PaymentMeansCode, ' '))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and not(contains(' 1 10 31 42 48 49 50 58 59 93 97 ', concat(' ', cbc:PaymentMeansCode, ' '))) )">
+        <svrl:failed-assert test="contains(' 1 10 31 42 48 49 50 58 59 93 97 ', concat(' ', cbc:PaymentMeansCode, ' '))">
           <xsl:attribute name="id">DK-R-005</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish suppliers the following Payment means codes are allowed: 1, 10, 31,
-        42, 48, 49, 50, 58, 59, 93 and 97</svrl:text>
+          <svrl:text>For Danish suppliers the following Payment means codes are allowed: 1, 10, 31, 42, 48, 49, 50, 58, 59, 93 and 97</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and ((cbc:PaymentMeansCode = '31') or (cbc:PaymentMeansCode = '42'))           and not((normalize-space(cac:PayeeFinancialAccount/cbc:ID/text()) != '') and (normalize-space(cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID/text()) != ''))           )" />
+      <xsl:when test="not(((cbc:PaymentMeansCode = '31') or (cbc:PaymentMeansCode = '42'))                         and not((normalize-space(cac:PayeeFinancialAccount/cbc:ID/text()) != '') and (normalize-space(cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID/text()) != ''))                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and ((cbc:PaymentMeansCode = '31') or (cbc:PaymentMeansCode = '42')) and not((normalize-space(cac:PayeeFinancialAccount/cbc:ID/text()) != '') and (normalize-space(cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID/text()) != '')) )">
+        <svrl:failed-assert test="not(((cbc:PaymentMeansCode = '31') or (cbc:PaymentMeansCode = '42')) and not((normalize-space(cac:PayeeFinancialAccount/cbc:ID/text()) != '') and (normalize-space(cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID/text()) != '')) )">
           <xsl:attribute name="id">DK-R-006</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish suppliers bank account and registration account is mandatory if
-        payment means is 31 or 42</svrl:text>
+          <svrl:text>For Danish suppliers bank account and registration account is mandatory if payment means is 31 or 42</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '49')           and not((normalize-space(cac:PaymentMandate/cbc:ID/text()) != '')           and (normalize-space(cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID/text()) != ''))           )" />
+      <xsl:when test="not((cbc:PaymentMeansCode = '49')                         and not((normalize-space(cac:PaymentMandate/cbc:ID/text()) != '')                                and (normalize-space(cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID/text()) != ''))                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '49') and not((normalize-space(cac:PaymentMandate/cbc:ID/text()) != '') and (normalize-space(cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID/text()) != '')) )">
+        <svrl:failed-assert test="not((cbc:PaymentMeansCode = '49') and not((normalize-space(cac:PaymentMandate/cbc:ID/text()) != '') and (normalize-space(cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID/text()) != '')) )">
           <xsl:attribute name="id">DK-R-007</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish suppliers PaymentMandate/ID and PayerFinancialAccount/ID are
-        mandatory when payment means is 49</svrl:text>
+          <svrl:text>For Danish suppliers PaymentMandate/ID and PayerFinancialAccount/ID are mandatory when payment means is 49</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '50')           and not(((substring(cbc:PaymentID, 0, 4) = '01#')           or (substring(cbc:PaymentID, 0, 4) = '04#')           or (substring(cbc:PaymentID, 0, 4) = '15#'))           and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 7)           )           )" />
+      <xsl:when test="not((cbc:PaymentMeansCode = '50')                         and not(((substring(cbc:PaymentID, 1, 3) = '01#')                                   or (substring(cbc:PaymentID, 1, 3) = '04#')                                   or (substring(cbc:PaymentID, 1, 3) = '15#'))                                 and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 7)                                 )                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '50') and not(((substring(cbc:PaymentID, 0, 4) = '01#') or (substring(cbc:PaymentID, 0, 4) = '04#') or (substring(cbc:PaymentID, 0, 4) = '15#')) and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 7) ) )">
+        <svrl:failed-assert test="not((cbc:PaymentMeansCode = '50') and not(((substring(cbc:PaymentID, 1, 3) = '01#') or (substring(cbc:PaymentID, 1, 3) = '04#') or (substring(cbc:PaymentID, 1, 3) = '15#')) and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 7) ) )">
           <xsl:attribute name="id">DK-R-008</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers PaymentID is mandatory and MUST start with 01#, 04# or 15#
-        (kortartkode), and PayeeFinancialAccount/ID (Giro kontonummer) is mandatory and must be 7
-        characters long, when payment means equals 50 (Giro)</svrl:text>
+          <svrl:text>For Danish Suppliers PaymentID is mandatory and MUST start with 01#, 04# or 15# (kortartkode), and PayeeFinancialAccount/ID (Giro kontonummer) is mandatory and must be 7 characters long, when payment means equals 50 (Giro)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '50')           and ((substring(cbc:PaymentID, 0, 4) = '04#')           or (substring(cbc:PaymentID, 0, 4) = '15#'))           and not(string-length(cbc:PaymentID) = 19)           )" />
+      <xsl:when test="not((cbc:PaymentMeansCode = '50')                         and ((substring(cbc:PaymentID, 1, 3) = '04#')                               or (substring(cbc:PaymentID, 1, 3)  = '15#'))                         and not(string-length(cbc:PaymentID) = 19)                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '50') and ((substring(cbc:PaymentID, 0, 4) = '04#') or (substring(cbc:PaymentID, 0, 4) = '15#')) and not(string-length(cbc:PaymentID) = 19) )">
+        <svrl:failed-assert test="not((cbc:PaymentMeansCode = '50') and ((substring(cbc:PaymentID, 1, 3) = '04#') or (substring(cbc:PaymentID, 1, 3) = '15#')) and not(string-length(cbc:PaymentID) = 19) )">
           <xsl:attribute name="id">DK-R-009</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers if the PaymentID is prefixed with 04# or 15# the 16 digits
-        instruction Id must be added to the PaymentID eg. "04#1234567890123456" when Payment means
-        equals 50 (Giro)</svrl:text>
+          <svrl:text>For Danish Suppliers if the PaymentID is prefixed with 04# or 15# the 16 digits instruction Id must be added to the PaymentID eg. "04#1234567890123456" when Payment means equals 50 (Giro)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '93')           and not(((substring(cbc:PaymentID, 0, 4) = '71#')           or (substring(cbc:PaymentID, 0, 4) = '73#')           or (substring(cbc:PaymentID, 0, 4) = '75#'))           and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 8)           )           )" />
+      <xsl:when test="not((cbc:PaymentMeansCode = '93')                         and not(((substring(cbc:PaymentID, 1, 3) = '71#')                                   or (substring(cbc:PaymentID, 1, 3) = '73#')                                   or (substring(cbc:PaymentID, 1, 3) = '75#'))                                 and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 8)                                 )                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '93') and not(((substring(cbc:PaymentID, 0, 4) = '71#') or (substring(cbc:PaymentID, 0, 4) = '73#') or (substring(cbc:PaymentID, 0, 4) = '75#')) and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 8) ) )">
+        <svrl:failed-assert test="not((cbc:PaymentMeansCode = '93') and not(((substring(cbc:PaymentID, 1, 3) = '71#') or (substring(cbc:PaymentID, 1, 3) = '73#') or (substring(cbc:PaymentID, 1, 3) = '75#')) and (string-length(cac:PayeeFinancialAccount/cbc:ID/text()) = 8) ) )">
           <xsl:attribute name="id">DK-R-010</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers the PaymentID is mandatory and MUST start with 71#, 73# or
-        75# (kortartkode) and PayeeFinancialAccount/ID (Kreditornummer) is mandatory and must be
-        exactly 8 characters long, when Payment means equals 93 (FIK)</svrl:text>
+          <svrl:text>For Danish Suppliers the PaymentID is mandatory and MUST start with 71#, 73# or 75# (kortartkode) and PayeeFinancialAccount/ID (Kreditornummer) is mandatory and must be exactly 8 characters long, when Payment means equals 93 (FIK)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '93')           and ((substring(cbc:PaymentID, 0, 4) = '71#')           or (substring(cbc:PaymentID, 0, 4) = '75#'))           and not((string-length(cbc:PaymentID) = 18)           or (string-length(cbc:PaymentID) = 19))           )" />
+      <xsl:when test="not((cbc:PaymentMeansCode = '93')                         and ((substring(cbc:PaymentID, 1, 3) = '71#')                               or (substring(cbc:PaymentID, 1, 3)  = '75#'))                         and not((string-length(cbc:PaymentID) = 18)                               or (string-length(cbc:PaymentID) = 19))                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '93') and ((substring(cbc:PaymentID, 0, 4) = '71#') or (substring(cbc:PaymentID, 0, 4) = '75#')) and not((string-length(cbc:PaymentID) = 18) or (string-length(cbc:PaymentID) = 19)) )">
+        <svrl:failed-assert test="not((cbc:PaymentMeansCode = '93') and ((substring(cbc:PaymentID, 1, 3) = '71#') or (substring(cbc:PaymentID, 1, 3) = '75#')) and not((string-length(cbc:PaymentID) = 18) or (string-length(cbc:PaymentID) = 19)) )">
           <xsl:attribute name="id">DK-R-011</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish Suppliers if the PaymentID is prefixed with 71# or 75# the 15-16
-        digits instruction Id must be added to the PaymentID eg. "71#1234567890123456" when payment
-        Method equals 93 (FIK)</svrl:text>
+          <svrl:text>For Danish Suppliers if the PaymentID is prefixed with 71# or 75# the 15-16 digits instruction Id must be added to the PaymentID eg. "71#1234567890123456" when payment Method equals 93 (FIK)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates mode="M15" select="*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="ubl-creditnote:CreditNote[$supplierCountry = 'DK']/cac:CreditNoteLine | ubl-invoice:Invoice[$supplierCountry = 'DK']/cac:InvoiceLine" mode="M15" priority="1001">
+    <svrl:fired-rule context="ubl-creditnote:CreditNote[$supplierCountry = 'DK']/cac:CreditNoteLine | ubl-invoice:Invoice[$supplierCountry = 'DK']/cac:InvoiceLine" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="           not(($supplierCountry = 'DK')           and (cbc:PaymentMeansCode = '97')           )" />
+      <xsl:when test="not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listID = 'MP')                         and not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.05.01')                                or (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.0501')                                )                         )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(($supplierCountry = 'DK') and (cbc:PaymentMeansCode = '97') )">
-          <xsl:attribute name="id">DK-R-012</xsl:attribute>
+        <svrl:failed-assert test="not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listID = 'MP') and not((cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.05.01') or (cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listVersionID = '19.0501') ) )">
+          <xsl:attribute name="id">DK-R-003</xsl:attribute>
           <xsl:attribute name="flag">warning</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>For Danish suppliers when Payment means equals 97 the payment is made to
-        "NemKonto"</svrl:text>
+          <svrl:text>If ItemClassification is provided from Danish suppliers, UNSPSC version 19.0501 should be used.</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AllowanceCharge[$supplierCountry = 'DK']" mode="M15" priority="1000">
+    <svrl:fired-rule context="cac:AllowanceCharge[$supplierCountry = 'DK']" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not((cbc:AllowanceChargeReasonCode = 'ZZZ')                         and not((string-length(normalize-space(cbc:AllowanceChargeReason/text())) = 4)                                 and (number(cbc:AllowanceChargeReason) >= 0)                                 and (number(cbc:AllowanceChargeReason) &lt;= 9999))                         )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not((cbc:AllowanceChargeReasonCode = 'ZZZ') and not((string-length(normalize-space(cbc:AllowanceChargeReason/text())) = 4) and (number(cbc:AllowanceChargeReason) >= 0) and (number(cbc:AllowanceChargeReason) &lt;= 9999)) )">
+          <xsl:attribute name="id">DK-R-004</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>When specifying non-VAT Taxes, Danish suppliers MUST use the AllowanceChargeReasonCode="ZZZ" and the 4-digit Tax category MUST be specified in 'AllowanceChargeReason'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -1087,23 +1110,29 @@
 
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']" mode="M16" priority="1000">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) != 'VAT']" mode="M16" priority="1001">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']/cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) != 'VAT']" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="matches(cac:PartyTaxScheme[cac:TaxScheme/cbc:ID != 'VAT']/cbc:CompanyID,'^[A-Z0-9]{11,16}$')" />
+      <xsl:when test="matches(normalize-space(cbc:CompanyID),'^[A-Z0-9]{11,16}$')" />
       <xsl:otherwise>
-        <svrl:failed-assert test="matches(cac:PartyTaxScheme[cac:TaxScheme/cbc:ID != 'VAT']/cbc:CompanyID,'^[A-Z0-9]{11,16}$')">
+        <svrl:failed-assert test="matches(normalize-space(cbc:CompanyID),'^[A-Z0-9]{11,16}$')">
           <xsl:attribute name="id">IT-R-001</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [IT-R-001] BT-32 (Seller tax registration identifier) - For Italian suppliers BT-32 minimum lenght 11 and maximum lenght shall be 16.  Per i fornitori italiani il BT-32 deve avere una lunghezza tra 11 e 16 caratteri</svrl:text>
+          <svrl:text> [IT-R-001] BT-32 (Seller tax registration identifier) - For Italian suppliers BT-32 minimum length 11 and maximum length shall be 16.  Per i fornitori italiani il BT-32 deve avere una lunghezza tra 11 e 16 caratteri</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates mode="M16" select="*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']" mode="M16" priority="1000">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party[$supplierCountry = 'IT']" />
 
 		<!--ASSERT -->
 <xsl:choose>
