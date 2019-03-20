@@ -440,4 +440,18 @@ public class IssuesTest extends AbstractIssueTest {
         InputStream inputFatturaUblXml = invoiceAsStream("/issues/issue-239-ubl_.xml");
         api.convert("ubl", "ubl", inputFatturaUblXml);
     }
+
+    @Test
+    public void issue236UblToUBL() throws Exception {
+        InputStream inputFatturaUblXml = invoiceAsStream("/issues/issue-236-ubl_.xml");
+        ConversionResult<byte[]> convert = api.convert("ubl", "ubl", inputFatturaUblXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='LineExtensionAmount']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='PrepaidAmount']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='PayableRoundingAmount']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
 }
