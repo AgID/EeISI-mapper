@@ -179,7 +179,7 @@
 
 
 	<!--RULE -->
-<xsl:template match="SEMANTIC-INVOICE" mode="M3" priority="1047">
+<xsl:template match="SEMANTIC-INVOICE" mode="M3" priority="1046">
     <svrl:fired-rule context="SEMANTIC-INVOICE" />
 
 		<!--ASSERT -->
@@ -192,39 +192,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-260] BG-16 Payment instructions - BT-81 (Payment means type code) -  BG-16 shall be mandatory 
-      </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="count(BG-21[normalize-space(BT-104)='IT:BOLLO']) &lt;= 1" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="count(BG-21[normalize-space(BT-104)='IT:BOLLO']) &lt;= 1">
-          <xsl:attribute name="id">BR-IT-295</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text> [BR-IT-295] BG-21 (DOCUMENT LEVEL CHARGES) - Only one instance of BG-21 can have BT-104="IT:BOLLO".
-      </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="(         count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA']/BT-161))&lt;= 1          and         count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO']/BT-161))&lt;= 1          and         count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE']/BT-161))&lt;= 1         )" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="( count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA']/BT-161))&lt;= 1 and count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO']/BT-161))&lt;= 1 and count(distinct-values(//BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE']/BT-161))&lt;= 1 )">
-          <xsl:attribute name="id">BR-IT-490</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text> [BR-IT-490] BT-160 - Item attribute name - if more than one instance of BG-25 has BT-160="IT:RITENUTA:ALIQUOTA" or "IT:RITENUTA:TIPO" or "IT:RITENUTA:CAUSALE", then BT-161 shall have the same values". 
+          <svrl:text> [BR-IT-260] BG-16 Payment instructions - BT-81 (Payment means type code) -  BG-16 shall be mandatory
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -233,7 +201,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-1" mode="M3" priority="1046">
+<xsl:template match="BT-1" mode="M3" priority="1045">
     <svrl:fired-rule context="BT-1" />
 
 		<!--ASSERT -->
@@ -246,7 +214,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-010] BT-1 (Invoice number) - BT maximum length shall be 20 chars with at least a digit. 
+          <svrl:text> [BR-IT-010] BT-1 (Invoice number) - BT maximum length shall be 20 chars with at least a digit.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -255,7 +223,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-11" mode="M3" priority="1045">
+<xsl:template match="BT-11" mode="M3" priority="1044">
     <svrl:fired-rule context="BT-11" />
 
 		<!--ASSERT -->
@@ -268,7 +236,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-020] BT-11 (Project reference) - BT maximum length shall be 15 chars. 
+          <svrl:text> [BR-IT-020] BT-11 (Project reference) - BT maximum length shall be 15 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -277,7 +245,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-12" mode="M3" priority="1044">
+<xsl:template match="BT-12" mode="M3" priority="1043">
     <svrl:fired-rule context="BT-12" />
 
 		<!--ASSERT -->
@@ -290,7 +258,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-030] BT-12 (Contract reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-030] BT-12 (Contract reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -299,7 +267,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-13" mode="M3" priority="1043">
+<xsl:template match="BT-13" mode="M3" priority="1042">
     <svrl:fired-rule context="BT-13" />
 
 		<!--ASSERT -->
@@ -312,7 +280,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-040] BT-13 (Purchase order reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-040] BT-13 (Purchase order reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -321,7 +289,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-15" mode="M3" priority="1042">
+<xsl:template match="BT-15" mode="M3" priority="1041">
     <svrl:fired-rule context="BT-15" />
 
 		<!--ASSERT -->
@@ -334,7 +302,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-050] BT-15 (Receiving advice reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-050] BT-15 (Receiving advice reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -343,7 +311,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-16" mode="M3" priority="1041">
+<xsl:template match="BT-16" mode="M3" priority="1040">
     <svrl:fired-rule context="BT-16" />
 
 		<!--ASSERT -->
@@ -356,7 +324,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-060] BT-16 (Despatch advice reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-060] BT-16 (Despatch advice reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -365,7 +333,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-17" mode="M3" priority="1040">
+<xsl:template match="BT-17" mode="M3" priority="1039">
     <svrl:fired-rule context="BT-17" />
 
 		<!--ASSERT -->
@@ -378,7 +346,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-070] BT-17 (Tender or lot reference) - BT maximum length shall be 15 chars. 
+          <svrl:text> [BR-IT-070] BT-17 (Tender or lot reference) - BT maximum length shall be 15 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -387,7 +355,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-19" mode="M3" priority="1039">
+<xsl:template match="BT-19" mode="M3" priority="1038">
     <svrl:fired-rule context="BT-19" />
 
 		<!--ASSERT -->
@@ -400,7 +368,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-080] BT-19 (Buyer accounting reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-080] BT-19 (Buyer accounting reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -409,7 +377,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-25" mode="M3" priority="1038">
+<xsl:template match="BT-25" mode="M3" priority="1037">
     <svrl:fired-rule context="BT-25" />
 
 		<!--ASSERT -->
@@ -422,7 +390,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-090] BT-25 (Preceding Invoice number)-BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-090] BT-25 (Preceding Invoice number)-BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -431,7 +399,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-4" mode="M3" priority="1037">
+<xsl:template match="BG-4" mode="M3" priority="1036">
     <svrl:fired-rule context="BG-4" />
 
 		<!--ASSERT -->
@@ -444,7 +412,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-100-1] BT-29 (Seller identifier) - BT-29 minimum lenght 21 and maximum lenght shall be 25 starting with "IT:EORI ". 
+          <svrl:text> [BR-IT-100-1] BT-29 (Seller identifier) - BT-29 minimum lenght 21 and maximum lenght shall be 25 starting with "IT:EORI ".
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -460,7 +428,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-100-2] BT-29 (Seller identifier) - BT-29 starting with "IT:ALBO has the format IT:ALBO:AlboProfessionale(1-60chars):NumeroIscrizioneAlbo(1-60chars) - (:) colon is permitted only as separator". 
+          <svrl:text> [BR-IT-100-2] BT-29 (Seller identifier) - BT-29 starting with "IT:ALBO has the format IT:ALBO:AlboProfessionale(1-60chars):NumeroIscrizioneAlbo(1-60chars) - (:) colon is permitted only as separator".
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -469,7 +437,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-30" mode="M3" priority="1036">
+<xsl:template match="BT-30" mode="M3" priority="1035">
     <svrl:fired-rule context="BT-30" />
 
 		<!--ASSERT -->
@@ -482,7 +450,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-110] BT-30 (Seller legal registration identifier) - BT-30 minimum lenght 10 and maximum lenght shall be 30 starting with "IT:REA:" and  shall be represented as "IT:REA:Ufficio:NumeroREA". 
+          <svrl:text> [BR-IT-110] BT-30 (Seller legal registration identifier) - BT-30 minimum lenght 10 and maximum lenght shall be 30 starting with "IT:REA:" and  shall be represented as "IT:REA:Ufficio:NumeroREA".
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -491,7 +459,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-31" mode="M3" priority="1035">
+<xsl:template match="BT-31" mode="M3" priority="1034">
     <svrl:fired-rule context="BT-31" />
 
 		<!--ASSERT -->
@@ -504,7 +472,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-1x0] BT-31 (Seller VAT identifier) - BT maximum length shall be 30 chars. 
+          <svrl:text> [BR-IT-1x0] BT-31 (Seller VAT identifier) - BT maximum length shall be 30 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -513,7 +481,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-32" mode="M3" priority="1034">
+<xsl:template match="BT-32" mode="M3" priority="1033">
     <svrl:fired-rule context="BT-32" />
 
 		<!--ASSERT -->
@@ -526,7 +494,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-130] BT-32 (Seller tax registration identifier) - then BT-32 minimum lenght shall be 11 and maximum lenght shall be 16. 
+          <svrl:text> [BR-IT-130] BT-32 (Seller tax registration identifier) - then BT-32 minimum lenght shall be 11 and maximum lenght shall be 16.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -535,7 +503,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-5" mode="M3" priority="1033">
+<xsl:template match="BG-5" mode="M3" priority="1032">
     <svrl:fired-rule context="BG-5" />
 
 		<!--ASSERT -->
@@ -564,7 +532,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-140-2] BT-37 (Seller city) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-140-2] BT-37 (Seller city) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -589,7 +557,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-39" mode="M3" priority="1032">
+<xsl:template match="BT-39" mode="M3" priority="1031">
     <svrl:fired-rule context="BT-39" />
 
 		<!--ASSERT -->
@@ -602,7 +570,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-150] BT-39 (Seller country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment. 
+          <svrl:text> [BR-IT-150] BT-39 (Seller country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -611,7 +579,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-7" mode="M3" priority="1031">
+<xsl:template match="BG-7" mode="M3" priority="1030">
     <svrl:fired-rule context="BG-7" />
 
 		<!--ASSERT -->
@@ -624,7 +592,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-160] BT-48 BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier) - If BT-48 is empty then BT-46 shall be the FiscalCode. BT-46, if existing, shall starts with "IT:CF". 
+          <svrl:text> [BR-IT-160] BT-48 BT-46, BT-46-1 (Buyer VAT identifier - Buyer identifier - Buyer identifier identification scheme identifier) - If BT-48 is empty then BT-46 shall be the FiscalCode. BT-46, if existing, shall starts with "IT:CF".
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -649,7 +617,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-47[starts-with(normalize-space(.),'IT:EORI:')]" mode="M3" priority="1030">
+<xsl:template match="BT-47[starts-with(normalize-space(.),'IT:EORI:')]" mode="M3" priority="1029">
     <svrl:fired-rule context="BT-47[starts-with(normalize-space(.),'IT:EORI:')]" />
 
 		<!--ASSERT -->
@@ -662,7 +630,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-170] BT-47 Buyer legal registration identifier. If BT-55 = "IT", if BT-47 starts with "IT:EORI:" then BT-47 minimum lenght shall be 21 and maximum lenght shall be 25 
+          <svrl:text> [BR-IT-170] BT-47 Buyer legal registration identifier. If BT-55 = "IT", if BT-47 starts with "IT:EORI:" then BT-47 minimum lenght shall be 21 and maximum lenght shall be 25
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -671,7 +639,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-48" mode="M3" priority="1029">
+<xsl:template match="BT-48" mode="M3" priority="1028">
     <svrl:fired-rule context="BT-48" />
 
 		<!--ASSERT -->
@@ -684,7 +652,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-180] BT-48 (Buyer VAT identifier) - BT maximum length shall be 30 chars. 
+          <svrl:text> [BR-IT-180] BT-48 (Buyer VAT identifier) - BT maximum length shall be 30 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -693,12 +661,12 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-49" mode="M3" priority="1028">
+<xsl:template match="BT-49" mode="M3" priority="1027">
     <svrl:fired-rule context="BT-49" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or (          (.[normalize-space(@scheme) = 'IT:CODDEST']          or .[normalize-space(@scheme) = 'IT:PEC']          or .[normalize-space(@scheme) = '9921'] ))" />
+      <xsl:when test="$customerCountry!='IT' or (         (.[normalize-space(@scheme) = 'IT:CODDEST']         or .[normalize-space(@scheme) = 'IT:PEC']         or .[normalize-space(@scheme) = '9921'] ))" />
       <xsl:otherwise>
         <svrl:failed-assert test="$customerCountry!='IT' or ( (.[normalize-space(@scheme) = 'IT:CODDEST'] or .[normalize-space(@scheme) = 'IT:PEC'] or .[normalize-space(@scheme) = '9921'] ))">
           <xsl:attribute name="id">BR-IT-190</xsl:attribute>
@@ -706,7 +674,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
+          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -714,7 +682,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = 'IT:PEC'])          or ( (string-length(normalize-space(.)) >= 7 and string-length(normalize-space(.)) &lt;= 256) and matches(normalize-space(.),'^.+@.+[.]+.+$') )" />
+      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = 'IT:PEC'])         or ( (string-length(normalize-space(.)) >= 7 and string-length(normalize-space(.)) &lt;= 256) and matches(normalize-space(.),'^.+@.+[.]+.+$') )" />
       <xsl:otherwise>
         <svrl:failed-assert test="$customerCountry!='IT' or not(.[normalize-space(@scheme) = 'IT:PEC']) or ( (string-length(normalize-space(.)) >= 7 and string-length(normalize-space(.)) &lt;= 256) and matches(normalize-space(.),'^.+@.+[.]+.+$') )">
           <xsl:attribute name="id">BR-IT-200-1</xsl:attribute>
@@ -722,7 +690,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-1] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49 shall be a PEC (email) address and  length shall be between 7 and 256 character 
+          <svrl:text> [BR-IT-200-1] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49 shall be a PEC (email) address and  length shall be between 7 and 256 character
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -730,7 +698,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = '9921'])          or ( matches(normalize-space(.),'^[A-Z0-9]{6}$') )" />
+      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = '9921'])         or ( matches(normalize-space(.),'^[A-Z0-9]{6}$') )" />
       <xsl:otherwise>
         <svrl:failed-assert test="$customerCountry!='IT' or not(.[normalize-space(@scheme) = '9921']) or ( matches(normalize-space(.),'^[A-Z0-9]{6}$') )">
           <xsl:attribute name="id">BR-IT-200-2</xsl:attribute>
@@ -738,7 +706,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema 9921 then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema 9921 then BT-49 shall be a IPA code and maximum length shall be 6 chars
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -746,7 +714,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = 'IT:CODDEST'])          or ( matches(normalize-space(.),'^[A-Z0-9]{7}$') )" />
+      <xsl:when test="$customerCountry!='IT' or  not(.[normalize-space(@scheme) = 'IT:CODDEST'])         or ( matches(normalize-space(.),'^[A-Z0-9]{7}$') )" />
       <xsl:otherwise>
         <svrl:failed-assert test="$customerCountry!='IT' or not(.[normalize-space(@scheme) = 'IT:CODDEST']) or ( matches(normalize-space(.),'^[A-Z0-9]{7}$') )">
           <xsl:attribute name="id">BR-IT-200-3</xsl:attribute>
@@ -754,7 +722,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-3] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier)=IT:CODDEST schema then BT-49 and maximum length shall be 7 chars. 
+          <svrl:text> [BR-IT-200-3] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier)=IT:CODDEST schema then BT-49 and maximum length shall be 7 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -763,7 +731,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-8" mode="M3" priority="1027">
+<xsl:template match="BG-8" mode="M3" priority="1026">
     <svrl:fired-rule context="BG-8" />
 
 		<!--ASSERT -->
@@ -776,7 +744,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-210-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-210-1] BT-50 (Buyer address line 1) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -792,7 +760,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-210-2] BT-52 (Buyer city) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-210-2] BT-52 (Buyer city) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -808,7 +776,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-210-3] BT-53 (Buyer post code) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-210-3] BT-53 (Buyer post code) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -817,7 +785,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-54" mode="M3" priority="1026">
+<xsl:template match="BT-54" mode="M3" priority="1025">
     <svrl:fired-rule context="BT-54" />
 
 		<!--ASSERT -->
@@ -830,7 +798,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-220] BT-54 (Buyer country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment. . 
+          <svrl:text> [BR-IT-220] BT-54 (Buyer country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment. .
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -839,7 +807,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-63" mode="M3" priority="1025">
+<xsl:template match="BT-63" mode="M3" priority="1024">
     <svrl:fired-rule context="BT-63" />
 
 		<!--ASSERT -->
@@ -852,7 +820,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-230] BT-63 (Seller Tax Representative VAT identifier) - BT maximum length shall be 30 chars. 
+          <svrl:text> [BR-IT-230] BT-63 (Seller Tax Representative VAT identifier) - BT maximum length shall be 30 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -861,7 +829,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-15" mode="M3" priority="1024">
+<xsl:template match="BG-15" mode="M3" priority="1023">
     <svrl:fired-rule context="BG-15" />
 
 		<!--ASSERT -->
@@ -874,7 +842,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-240-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-240-1] BT-75 (Deliver to address line 1) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -890,7 +858,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-240-2] BT-77 (Deliver to city) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-240-2] BT-77 (Deliver to city) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -906,7 +874,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-240-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy. 
+          <svrl:text> [BR-IT-240-3] BT-78 (Deliver to post code) - Fields are mandatory in Italy.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -915,7 +883,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-79" mode="M3" priority="1023">
+<xsl:template match="BT-79" mode="M3" priority="1022">
     <svrl:fired-rule context="BT-79" />
 
 		<!--ASSERT -->
@@ -928,7 +896,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-250] BT-79 (Deliver to country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment.  
+          <svrl:text> [BR-IT-250] BT-79 (Deliver to country subdivision) - BT maximum length shall be 2 chars and shall be coded according to Italian province list else save in attachment.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -937,7 +905,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-84" mode="M3" priority="1022">
+<xsl:template match="BT-84" mode="M3" priority="1021">
     <svrl:fired-rule context="BT-84" />
 
 		<!--ASSERT -->
@@ -950,7 +918,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-270] BT-84 (Payment account identifier) shall be an IBAN code according the pattern [a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30}) . 
+          <svrl:text> [BR-IT-270] BT-84 (Payment account identifier) shall be an IBAN code according the pattern [a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,30}) .
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -959,7 +927,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-86" mode="M3" priority="1021">
+<xsl:template match="BT-86" mode="M3" priority="1020">
     <svrl:fired-rule context="BT-86" />
 
 		<!--ASSERT -->
@@ -972,7 +940,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-280] BT-86 (Payment service provider identifier) - BT shall contain a SWIFT/BIC (bank identifier code) according to structure defined in ISO 9362 (minimum length shall be 8- maximum length shall be 11 chars). 
+          <svrl:text> [BR-IT-280] BT-86 (Payment service provider identifier) - BT shall contain a SWIFT/BIC (bank identifier code) according to structure defined in ISO 9362 (minimum length shall be 8- maximum length shall be 11 chars).
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -981,7 +949,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-92" mode="M3" priority="1020">
+<xsl:template match="BT-92" mode="M3" priority="1019">
     <svrl:fired-rule context="BT-92" />
 
 		<!--ASSERT -->
@@ -994,7 +962,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>  [BR-IT-290] BT-92  (Document level allowance amount ) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text>  [BR-IT-290] BT-92  (Document level allowance amount ) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1003,7 +971,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-99" mode="M3" priority="1019">
+<xsl:template match="BT-99" mode="M3" priority="1018">
     <svrl:fired-rule context="BT-99" />
 
 		<!--ASSERT -->
@@ -1016,7 +984,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>  [BR-IT-290-1]  BT-99 (Document level allowance amount - Document level charge amount) - BT maximum lenght shall be 21. 
+          <svrl:text>  [BR-IT-290-1]  BT-99 (Document level allowance amount - Document level charge amount) - BT maximum lenght shall be 21.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1025,7 +993,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-112" mode="M3" priority="1018">
+<xsl:template match="BT-112" mode="M3" priority="1017">
     <svrl:fired-rule context="BT-112" />
 
 		<!--ASSERT -->
@@ -1038,7 +1006,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-300] BT-112 (Invoice total amount with VAT) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text> [BR-IT-300] BT-112 (Invoice total amount with VAT) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1047,7 +1015,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-114" mode="M3" priority="1017">
+<xsl:template match="BT-114" mode="M3" priority="1016">
     <svrl:fired-rule context="BT-114" />
 
 		<!--ASSERT -->
@@ -1060,7 +1028,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-310] BT-114 (Rounding amount) - BT maximum length shall be 15, including 2 fraction digit. 
+          <svrl:text> [BR-IT-310] BT-114 (Rounding amount) - BT maximum length shall be 15, including 2 fraction digit.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1069,7 +1037,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-115" mode="M3" priority="1016">
+<xsl:template match="BT-115" mode="M3" priority="1015">
     <svrl:fired-rule context="BT-115" />
 
 		<!--ASSERT -->
@@ -1082,7 +1050,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-320] BT-115 (Amount due for payment) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text> [BR-IT-320] BT-115 (Amount due for payment) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1091,7 +1059,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-116" mode="M3" priority="1015">
+<xsl:template match="BT-116" mode="M3" priority="1014">
     <svrl:fired-rule context="BT-116" />
 
 		<!--ASSERT -->
@@ -1104,7 +1072,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-330] BT-116 (VAT category taxable amount) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text> [BR-IT-330] BT-116 (VAT category taxable amount) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1113,7 +1081,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-117" mode="M3" priority="1014">
+<xsl:template match="BT-117" mode="M3" priority="1013">
     <svrl:fired-rule context="BT-117" />
 
 		<!--ASSERT -->
@@ -1126,7 +1094,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-340] BT-117 (VAT category tax amount) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text> [BR-IT-340] BT-117 (VAT category tax amount) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1135,20 +1103,20 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-95 | BT-102 | BT-118 | BT-151" mode="M3" priority="1013">
+<xsl:template match="BT-95 | BT-102 | BT-118 | BT-151" mode="M3" priority="1012">
     <svrl:fired-rule context="BT-95 | BT-102 | BT-118 | BT-151" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE L M E S B G K ',concat(' ',normalize-space(.),' ') ) ) )" />
+      <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE E S B G K ',concat(' ',normalize-space(.),' ') ) ) )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE L M E S B G K ',concat(' ',normalize-space(.),' ') ) ) )">
+        <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE E S B G K ',concat(' ',normalize-space(.),' ') ) ) )">
           <xsl:attribute name="id">BR-IT-350-1</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-350] VAT category codes - only values E (Exempt from VAT), K	(Intra-community supply), AE (Reverse charge), G (Export outside the EU) ,S (Standard rated), L (IGIC), M (IPSI), B (Split payment) shall be allowed . 
+          <svrl:text> [BR-IT-350] VAT category codes - only values E (Exempt from VAT), K	(Intra-community supply), AE (Reverse charge), G (Export outside the EU) ,S (Standard rated), B (Split payment) shall be allowed .
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1157,7 +1125,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BG-24" mode="M3" priority="1012">
+<xsl:template match="BG-24" mode="M3" priority="1011">
     <svrl:fired-rule context="BG-24" />
 
 		<!--ASSERT -->
@@ -1170,7 +1138,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-360] BT-124 (External document location) BT-125 (Attached document) - If BT-122 (Supporting document reference) not empty then BT-124 or BT-125 shall be mandatory. 
+          <svrl:text> [BR-IT-360] BT-124 (External document location) BT-125 (Attached document) - If BT-122 (Supporting document reference) not empty then BT-124 or BT-125 shall be mandatory.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1179,7 +1147,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-128" mode="M3" priority="1011">
+<xsl:template match="BT-128" mode="M3" priority="1010">
     <svrl:fired-rule context="BT-128" />
 
 		<!--ASSERT -->
@@ -1192,7 +1160,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-370] BT-128 (Invoice line object identifier) - BT maximum length shall be 35 chars. 
+          <svrl:text> [BR-IT-370] BT-128 (Invoice line object identifier) - BT maximum length shall be 35 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1201,7 +1169,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-129" mode="M3" priority="1010">
+<xsl:template match="BT-129" mode="M3" priority="1009">
     <svrl:fired-rule context="BT-129" />
 
 		<!--ASSERT -->
@@ -1223,7 +1191,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-131" mode="M3" priority="1009">
+<xsl:template match="BT-131" mode="M3" priority="1008">
     <svrl:fired-rule context="BT-131" />
 
 		<!--ASSERT -->
@@ -1245,7 +1213,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-132" mode="M3" priority="1008">
+<xsl:template match="BT-132" mode="M3" priority="1007">
     <svrl:fired-rule context="BT-132" />
 
 		<!--ASSERT -->
@@ -1258,7 +1226,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-400] BT-132 (Referenced purchase order line reference) - BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-400] BT-132 (Referenced purchase order line reference) - BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1267,7 +1235,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-133" mode="M3" priority="1007">
+<xsl:template match="BT-133" mode="M3" priority="1006">
     <svrl:fired-rule context="BT-133" />
 
 		<!--ASSERT -->
@@ -1280,7 +1248,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-410] BT-133 (Invoice line Buyer accounting reference)- BT maximum length shall be 20 chars. 
+          <svrl:text> [BR-IT-410] BT-133 (Invoice line Buyer accounting reference)- BT maximum length shall be 20 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1289,7 +1257,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-136" mode="M3" priority="1006">
+<xsl:template match="BT-136" mode="M3" priority="1005">
     <svrl:fired-rule context="BT-136" />
 
 		<!--ASSERT -->
@@ -1302,7 +1270,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>  [BR-IT-420] BT-136(Invoice line allowance amount - Invoice line charge amount) - BT maximum length shall be 15, including two fraction digits. 
+          <svrl:text>  [BR-IT-420] BT-136(Invoice line allowance amount - Invoice line charge amount) - BT maximum length shall be 15, including two fraction digits.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1311,7 +1279,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-146" mode="M3" priority="1005">
+<xsl:template match="BT-146" mode="M3" priority="1004">
     <svrl:fired-rule context="BT-146" />
 
 		<!--ASSERT -->
@@ -1324,7 +1292,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-430] BT-146 (Item net price) - BT  maximum lenght shall be 21. BT allowed fraction digits shall be 8 
+          <svrl:text> [BR-IT-430] BT-146 (Item net price) - BT  maximum lenght shall be 21. BT allowed fraction digits shall be 8
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1333,7 +1301,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-155" mode="M3" priority="1004">
+<xsl:template match="BT-155" mode="M3" priority="1003">
     <svrl:fired-rule context="BT-155" />
 
 		<!--ASSERT -->
@@ -1346,7 +1314,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-440] BT-155 (Item Seller's identifier) - BT maximum length shall be 35 chars. 
+          <svrl:text> [BR-IT-440] BT-155 (Item Seller's identifier) - BT maximum length shall be 35 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1355,7 +1323,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-156" mode="M3" priority="1003">
+<xsl:template match="BT-156" mode="M3" priority="1002">
     <svrl:fired-rule context="BT-156" />
 
 		<!--ASSERT -->
@@ -1368,7 +1336,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-450] BT-156 (Item Buyer's identifier) - BT maximum length shall be 35 chars. 
+          <svrl:text> [BR-IT-450] BT-156 (Item Buyer's identifier) - BT maximum length shall be 35 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1377,7 +1345,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-157" mode="M3" priority="1002">
+<xsl:template match="BT-157" mode="M3" priority="1001">
     <svrl:fired-rule context="BT-157" />
 
 		<!--ASSERT -->
@@ -1390,7 +1358,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-460] BT-157 (Item standard identifier) - BT maximum length shall be 35 chars. 
+          <svrl:text> [BR-IT-460] BT-157 (Item standard identifier) - BT maximum length shall be 35 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -1399,7 +1367,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="BT-158" mode="M3" priority="1001">
+<xsl:template match="BT-158" mode="M3" priority="1000">
     <svrl:fired-rule context="BT-158" />
 
 		<!--ASSERT -->
@@ -1412,46 +1380,7 @@
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-470] BT-158 (Item classification identifier) - BT maximum length shall be 35 chars. 
-      </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M3" select="*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/BG-25/BG-31" mode="M3" priority="1000">
-    <svrl:fired-rule context="/BG-25/BG-31" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="normalize-space(BT-153)='IT:CASSA' and          count(BG-32[normalize-space(BT-160) ='IT:CASSA:TIPO'])=1 and          count(BG-32[normalize-space(BT-160) ='IT:CASSA:ALIQUOTA'])=1          or not(normalize-space(BT-153)='IT:CASSA')" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="normalize-space(BT-153)='IT:CASSA' and count(BG-32[normalize-space(BT-160) ='IT:CASSA:TIPO'])=1 and count(BG-32[normalize-space(BT-160) ='IT:CASSA:ALIQUOTA'])=1 or not(normalize-space(BT-153)='IT:CASSA')">
-          <xsl:attribute name="id">BR-IT-435</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text> [BR-IT-435] BT-153, BT-160 (Item name - Item attribute name) - if BT-153="IT:CASSA", then two instances of BG-32 shall have BT-160="IT:CASSA:TIPO" and BT-160="IT:CASSA:ALIQUOTA". 
-      </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="          (         count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA'])=1 and          count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO'])=1 and         count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE'])=1         )         or         (         count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA'])=0 and          count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO'])=0 and         count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE'])=0         )         " />
-      <xsl:otherwise>
-        <svrl:failed-assert test="( count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA'])=1 and count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO'])=1 and count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE'])=1 ) or ( count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:ALIQUOTA'])=0 and count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:TIPO'])=0 and count(BG-32[normalize-space(BT-160) ='IT:RITENUTA:CAUSALE'])=0 )">
-          <xsl:attribute name="id">BR-IT-480</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text> [BR-IT-480] BT-160 - Item attribute name - if BT-160="IT:RITENUTA:ALIQUOTA" or BT-160="IT:RITENUTA:TIPO" or BT-160="IT:RITENUTA:CAUSALE", 
-        then three instances of BG-32 shall have BT-160="IT:RITENUTA:ALIQUOTA", BT-160="IT:RITENUTA:TIPO" and BT-160="IT:RITENUTA:CAUSALE". 
+          <svrl:text> [BR-IT-470] BT-158 (Item classification identifier) - BT maximum length shall be 35 chars.
       </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>

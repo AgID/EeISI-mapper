@@ -12,6 +12,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid1001InvoiceTypeCodeConverter;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianCodeStringToUntdid2005DateTimePeriodQualifiersConverter;
@@ -20,7 +21,6 @@ import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
-import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -77,15 +77,12 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.fatturapa-cen.xsd");
-            xsdValidator = null;
             try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_IN);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd", ErrorCode.Location.FATTPA_IN);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for FattPA2CEN from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD.", e);
             }
+
         }
         configurableSupport.configure();
     }

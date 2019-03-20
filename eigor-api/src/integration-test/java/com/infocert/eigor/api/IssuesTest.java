@@ -32,7 +32,7 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
-    @Test @Ignore("waitng for valid invoice")
+    @Test
     public void issueEisi135() {
 
         ConversionResult<byte[]> result = conversion.assertConversionWithoutErrors(
