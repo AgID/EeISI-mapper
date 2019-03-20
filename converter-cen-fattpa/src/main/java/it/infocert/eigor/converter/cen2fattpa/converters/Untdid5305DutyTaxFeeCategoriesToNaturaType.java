@@ -1,10 +1,10 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.NaturaType;
+import it.infocert.eigor.fattpa.commons.models.NaturaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 
-import static it.infocert.eigor.converter.cen2fattpa.models.NaturaType.*;
+import static it.infocert.eigor.fattpa.commons.models.NaturaType.*;
 
 /**
  * Instantiate it with Untdid5305DutyTaxFeeCategoriesToNaturaType{@link #newConverter()}

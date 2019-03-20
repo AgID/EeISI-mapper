@@ -69,7 +69,7 @@
         <BT-46 scheme="0190">Buyer identifier</BT-46>
         <BT-47 scheme="0089">Buyer legal registration identifier</BT-47>
         <BT-48>IE394838894</BT-48>
-        <BT-49 scheme="DE:SMTP">Buyer electronic address</BT-49>
+        <BT-49 scheme="9921">123456</BT-49>
         <BG-8>
             <BT-50>Buyer address line 1</BT-50>
             <BT-51>Buyer address line 2</BT-51>
@@ -149,7 +149,7 @@
         <BT-92>10.00</BT-92>
         <BT-93>1000.00</BT-93>
         <BT-94>1.00</BT-94>
-        <BT-95>@@BT-95@@</BT-95>
+        <BT-95>S</BT-95>
         <BT-96>5.00</BT-96>
         <BT-97>Doc allowance reason text</BT-97>
         <BT-98>55</BT-98>
@@ -158,7 +158,7 @@
         <BT-99>10.00</BT-99>
         <BT-100>1000.00</BT-100>
         <BT-101>1.00</BT-101>
-        <BT-102>@@BT-102@@</BT-102>
+        <BT-102>S</BT-102>
         <BT-103>5.00</BT-103>
         <BT-104>Doc charge reason text</BT-104>
         <BT-105>AAA</BT-105>
@@ -178,7 +178,7 @@
     <BG-23>
         <BT-116>1000</BT-116>
         <BT-117>50</BT-117>
-        <BT-118>@@BT-118@@</BT-118>
+        <BT-118>S</BT-118>
         <BT-119>5.00</BT-119>
     </BG-23>
     <BG-23>
@@ -230,7 +230,7 @@
             <BT-150>EA</BT-150>
         </BG-29>
         <BG-30>
-            <BT-151>@@BT-151@@</BT-151>
+            <BT-151>S</BT-151>
             <BT-152>5</BT-152>
         </BG-30>
         <BG-31>
@@ -238,7 +238,7 @@
             <BT-154>Item description</BT-154>
             <BT-155>Item seller's identifier</BT-155>
             <BT-156>Item buyer's identifier</BT-156>
-            <BT-157 scheme="">Item standar identifier</BT-157>
+            <BT-157 scheme="0088">Item standard identifier</BT-157>
             <BT-158 scheme="ZZZ" version="version0">Item classification identifier0</BT-158>
             <BT-159>IT</BT-159>
             <BG-32>

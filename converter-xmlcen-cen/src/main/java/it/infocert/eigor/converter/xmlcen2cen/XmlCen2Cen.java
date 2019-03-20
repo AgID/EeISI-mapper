@@ -13,6 +13,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.FileReference;
@@ -21,6 +22,7 @@ import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BTBG;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -96,7 +98,12 @@ public class XmlCen2Cen extends AbstractToCenConverter {
     public void configure() throws ConfigurationException {
         super.configure();
 
-        xsdValidator = namingRules.getXsdValidatorFromConfigOrFail("xsd", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
+        try {
+            xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd", ErrorCode.Location.XMLCEN_IN);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading XSD.", e);
+        }
+
         schematronValidator = namingRules.getSchematronFromConfigOrFail("schematron", ErrorCode.Location.XMLCEN_IN, this.configuration, this.drl);
 
         configurableSupport.configure();
@@ -170,7 +177,9 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                         .findFirst();
                 if (!cons.isPresent()) {
                     try {
-                        utils.addChild(bg, buildBT(btBgByName, child, errors));
+                        BTBG btbg = buildBT(btBgByName, child, errors);
+                        if (btbg != null)
+                            utils.addChild(bg, btbg);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error(e.getMessage(), e);
                         errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
@@ -180,7 +189,10 @@ public class XmlCen2Cen extends AbstractToCenConverter {
                     if (specialBT.contains(child.getName())) {
                         BTBG bt;
                         try {
-                            bt = (BTBG) cons.get().newInstance(new Identifier(child.getValue()));
+                            Attribute scheme = child.getAttribute("scheme");
+                            bt = (BTBG) cons.get().newInstance((scheme != null) ?
+                                    (new Identifier(scheme.getValue(), child.getValue())) :
+                                    (new Identifier(child.getValue())));
                             utils.addChild(bg, bt);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
@@ -301,7 +313,7 @@ public class XmlCen2Cen extends AbstractToCenConverter {
             }
         };
         Stream.of(constructors).forEach(k);
-        return bt.get(0);
+        return (bt.size() > 0) ? bt.get(0) : null;
     }
 
 }

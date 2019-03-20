@@ -419,7 +419,7 @@
                 <Arrotondamento>0.00</Arrotondamento><!--to BT-25-->
                 <ImponibileImporto>40.00</ImponibileImporto><!--to BT-116-->
                 <Imposta>0.00</Imposta><!--to BT-117-->
-                <EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
+                <EsigibilitaIVA>D</EsigibilitaIVA><!--to BT-8-->
 
             </DatiRiepilogo>
         </DatiBeniServizi>

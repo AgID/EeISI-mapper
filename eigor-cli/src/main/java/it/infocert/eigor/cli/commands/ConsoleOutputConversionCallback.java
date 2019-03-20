@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A {@link ConversionCallback conversion callback}
+ * A {@link ConsoleOutputConversionCallback conversion callback}
  * that prints out useful information about the ongoing conversion.
  */
 class ConsoleOutputConversionCallback extends AbstractConversionCallback {

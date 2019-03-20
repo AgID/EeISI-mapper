@@ -10,9 +10,10 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.fattpa.commons.models.*;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.Resource;
@@ -21,11 +22,9 @@ import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.*;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -93,13 +92,11 @@ public class Cen2FattPA extends AbstractFromCenConverter {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }
 
-        String pathOfXsd = getConfiguration().getMandatoryString("eigor.converter.cen-fatturapa.xsd");
-        Resource xsdFile = getResourceLoader().getResource(pathOfXsd);
 
         try {
-            validator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.FATTPA_OUT);
-        } catch (IOException | SAXException e) {
-            throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
+            validator = new ClasspathXSDValidator("/converterdata/converter-commons/fattpa/xsdstatic/Schema_del_file_xml_FatturaPA_versione_1.2.xsd", ErrorCode.Location.FATTPA_OUT);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading XSD.", e);
         }
 
         configurableSupport.configure();
@@ -127,7 +124,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         FatturaElettronicaType jaxbFattura = null;
         JAXBContext jaxbContext = null;
         try {
-            jaxbContext = JAXBContext.newInstance("it.infocert.eigor.converter.cen2fattpa.models");
+            jaxbContext = JAXBContext.newInstance("it.infocert.eigor.fattpa.commons.models");
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             jaxbFattura = ((JAXBElement<FatturaElettronicaType>) unmarshaller.unmarshal(new ByteArrayInputStream(xml))).getValue();
         } catch (JAXBException e) {

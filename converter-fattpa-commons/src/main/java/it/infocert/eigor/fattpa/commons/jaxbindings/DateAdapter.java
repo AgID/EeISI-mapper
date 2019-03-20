@@ -1,14 +1,14 @@
-package it.infocert.eigor.converter.cen2fattpa.jaxbindings;
+package it.infocert.eigor.fattpa.commons.jaxbindings;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.SimpleDateFormat;
 
-public class DateTimeAdapter {
+public class DateAdapter {
 
     public static String marshal(XMLGregorianCalendar v) {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(v.toGregorianCalendar().getTime());
     }
 

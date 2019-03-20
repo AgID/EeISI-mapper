@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>eigor-parent</artifactId>
+        <groupId>it.infocert.eigor</groupId>
+        <version>4.2.0</version>
+        <relativePath>../eigor-parent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>converter-fattpa-commons</artifactId>
+    <name>Eigor :: FattPA Commons (${project.artifactId})</name>
+    <description>The Eigor FattPA commons contains the commons jaxb bean for tattpa2cen and cen2fattpa.</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>it.infocert.eigor.fattpa.commons.models</packageName>
+                    <sources>
+                        <source>
+                            ../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic
+                        </source>
+                    </sources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

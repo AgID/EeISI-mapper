@@ -7,12 +7,14 @@ import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
+import it.infocert.eigor.model.core.enums.Untdid2005DateTimePeriodQualifiers;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,6 +35,9 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
             Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
             if (datiBeniServizi != null) {
                 List<Element> datiRiepiloghi = datiBeniServizi.getChildren();
+                invoice.getBT0008ValueAddedTaxPointDateCode().add(new BT0008ValueAddedTaxPointDateCode(
+                    Untdid2005DateTimePeriodQualifiers.Code3));
+
                 for (Element datiRiepilogo : datiRiepiloghi) {
                     if (datiRiepilogo.getName().equals("DatiRiepilogo")) {
                         bg0023 = new BG0023VatBreakdown();
@@ -95,6 +100,13 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         BT0118VatCategoryCode bt0118 = new BT0118VatCategoryCode(code);
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
 
+                        // BR-E-10
+                        if (Untdid5305DutyTaxFeeCategories.E.equals(code) ||
+                                Untdid5305DutyTaxFeeCategories.G.equals(code)){
+                            bt0121 = new BT0121VatExemptionReasonCode(code.name());
+                            bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
+                        }
+
                         try {
                             BT0119VatCategoryRate bt0119 = new BT0119VatCategoryRate(new BigDecimal(aliquotaIVA.getText()));
                             bg0023.getBT0119VatCategoryRate().add(bt0119);
@@ -124,6 +136,23 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
+
+                        Element esigibilitaIVA = datiRiepilogo.getChild("EsigibilitaIVA");
+                        if (esigibilitaIVA != null){
+
+                            switch (esigibilitaIVA.getValue()) {
+                                case "I":
+                                    invoice.getBT0008ValueAddedTaxPointDateCode().set(0, new BT0008ValueAddedTaxPointDateCode(
+                                        Untdid2005DateTimePeriodQualifiers.Code3));
+                                    break;
+                                case "D":
+                                case "S":
+                                    invoice.getBT0008ValueAddedTaxPointDateCode().set(0, new BT0008ValueAddedTaxPointDateCode(
+                                        Untdid2005DateTimePeriodQualifiers.Code14));
+                                    break;
+                            }
+                        }
+
                         invoice.getBG0023VatBreakdown().add(bg0023);
                     }
                 }

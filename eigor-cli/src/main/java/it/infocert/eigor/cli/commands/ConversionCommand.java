@@ -1,5 +1,7 @@
 package it.infocert.eigor.cli.commands;
 
+import com.infocert.eigor.api.EigorApi;
+import com.infocert.eigor.api.EigorApiBuilder;
 import it.infocert.eigor.api.FromCenConversion;
 import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
@@ -10,6 +12,8 @@ import it.infocert.eigor.api.conversion.DumpIntermediateCenInvoiceAsCsvCallback;
 import it.infocert.eigor.api.conversion.ObservableConversion;
 import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
+import it.infocert.eigor.cli.Eigor;
+import it.infocert.eigor.cli.EigorCli;
 import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.slf4j.Logger;
@@ -27,66 +31,40 @@ public class ConversionCommand implements CliCommand {
 
     private final EigorConfiguration configuration;
     private Logger log = LoggerFactory.getLogger(this.getClass());
+    private EigorApi api;
 
-    private final RuleRepository ruleRepository;
-    private final ToCenConversion toCen;
-    private final FromCenConversion fromCen;
-    private final Path inputInvoice;
+    private final String sourceFormat;
+    private final String targetFormat;
     private final Path outputFolder;
     private final InputStream invoiceInSourceFormat;
     private final Boolean forceConversion;
+    private final String invoiceInName;
     private final boolean runIntermediateValidation;
 
     public static class ConversionCommandBuilder {
-        private RuleRepository ruleRepository;
-        private ToCenConversion toCen;
-        private FromCenConversion fromCen;
-        private Path inputInvoice;
+        private String sourceFormat;
+        private String targetFormat;
         private Path outputFolder;
         private InputStream invoiceInSourceFormat;
         private Boolean forceConversion;
-        private EigorConfiguration configuration;
         private Boolean runIntermediateValidation;
+        private EigorConfiguration configuration;
+        private String invoiceInName;
+        private EigorApi api;
 
         public ConversionCommandBuilder() {
             runIntermediateValidation = false;
             forceConversion = false;
         }
 
-        public ConversionCommandBuilder(
-                RuleRepository ruleRepository,
-                ToCenConversion toCen,
-                FromCenConversion fromCen,
-                Path inputInvoice,
-                Path outputFolder,
-                InputStream invoiceInSourceFormat,
-                EigorConfiguration configuration) {
-            this.ruleRepository = checkNotNull( ruleRepository );
-            this.toCen = checkNotNull( toCen );
-            this.fromCen = checkNotNull( fromCen );
-            this.inputInvoice = checkNotNull( inputInvoice );
-            this.outputFolder = checkNotNull( outputFolder );
-            this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
-            this.configuration = checkNotNull( configuration );
-        }
-
-        public ConversionCommandBuilder setRuleRepository(RuleRepository ruleRepository) {
-            this.ruleRepository = ruleRepository;
+        public ConversionCommandBuilder setSourceFormat(String sourceFormat) {
+            this.sourceFormat = sourceFormat;
             return this;
+
         }
 
-        public ConversionCommandBuilder setToCen(ToCenConversion toCen) {
-            this.toCen = toCen;
-            return this;
-        }
-
-        public ConversionCommandBuilder setFromCen(FromCenConversion fromCen) {
-            this.fromCen = fromCen;
-            return this;
-        }
-
-        public ConversionCommandBuilder setInputInvoice(Path inputInvoice) {
-            this.inputInvoice = inputInvoice;
+        public ConversionCommandBuilder setTargetFormat(String targetFormat) {
+            this.targetFormat = targetFormat;
             return this;
         }
 
@@ -115,29 +93,41 @@ public class ConversionCommand implements CliCommand {
             return this;
         }
 
+        public ConversionCommandBuilder setApi(EigorApi api) {
+            this.api = api;
+            return this;
+        }
+
+        public ConversionCommandBuilder setInvoiceInName(String invoiceInName) {
+            this.invoiceInName = invoiceInName;
+            return this;
+        }
+
         public ConversionCommand build() {
-            return new ConversionCommand(ruleRepository, toCen, fromCen, inputInvoice, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation);
+            return new ConversionCommand(sourceFormat, targetFormat, outputFolder, invoiceInSourceFormat, forceConversion, configuration, runIntermediateValidation, api, invoiceInName);
         }
 
     }
 
     private ConversionCommand(
-            RuleRepository ruleRepository,
-            ToCenConversion toCen,
-            FromCenConversion fromCen,
-            Path inputInvoice,
+            String sourceFormat,
+            String targetFormat,
             Path outputFolder,
             InputStream invoiceInSourceFormat,
-            boolean forceConversion, EigorConfiguration configuration, boolean runIntermediateValidation) {
-        this.ruleRepository = checkNotNull( ruleRepository );
-        this.toCen = checkNotNull( toCen );
-        this.fromCen = checkNotNull( fromCen );
-        this.inputInvoice = checkNotNull( inputInvoice );
-        this.outputFolder = checkNotNull( outputFolder );
-        this.invoiceInSourceFormat = checkNotNull( invoiceInSourceFormat );
+            boolean forceConversion,
+            EigorConfiguration configuration,
+            boolean runIntermediateValidation,
+            EigorApi api,
+            String invoiceName) {
+        this.sourceFormat = checkNotNull(sourceFormat);
+        this.targetFormat = checkNotNull(targetFormat);
+        this.outputFolder = checkNotNull(outputFolder);
+        this.invoiceInSourceFormat = checkNotNull(invoiceInSourceFormat);
         this.forceConversion = forceConversion;
-        this.configuration = checkNotNull( configuration );
+        this.configuration = checkNotNull(configuration);
         this.runIntermediateValidation = runIntermediateValidation;
+        this.api = api;
+        this.invoiceInName = invoiceName;
     }
 
     /**
@@ -157,13 +147,12 @@ public class ConversionCommand implements CliCommand {
      */
     @Override
     public int execute(PrintStream out, PrintStream err) {
-        InMemoryRuleReport ruleReport = new InMemoryRuleReport();
         File outputFolderFile = outputFolder.toFile();
 
         // Execute the conversion
         try {
-            conversion(outputFolderFile, ruleReport, out);
-        } catch (IOException | SyntaxErrorInInvoiceFormatException e) {
+            conversion(outputFolderFile, out);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return 1;
         } finally {
@@ -172,28 +161,18 @@ public class ConversionCommand implements CliCommand {
         return 0;
     }
 
-    private void conversion(File outputFolderFile, InMemoryRuleReport ruleReport, PrintStream out) throws SyntaxErrorInInvoiceFormatException, IOException {
+    private void conversion(File outputFolderFile, PrintStream out) {
 
-        new ObservableConversion(
-                ruleRepository,
-                toCen,
-                fromCen,
-                invoiceInSourceFormat,
-                forceConversion,
-                inputInvoice.toFile().getName(),
-
+        api.convert(sourceFormat, targetFormat, invoiceInSourceFormat, invoiceInName,
                 new ConsoleOutputConversionCallback(this, out),
                 new DebugConversionCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCenXmlCallback(
                         outputFolderFile,
-                        new CenToXmlCenConverter(configuration),runIntermediateValidation)
-        ).conversion();
-
+                        new CenToXmlCenConverter(configuration), runIntermediateValidation));
     }
 
     public boolean isForceConversion() {
         return forceConversion;
     }
-
 }

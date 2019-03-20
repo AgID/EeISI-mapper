@@ -9,10 +9,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.converter.fattpa2cen.converters.ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
-import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
+import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -41,6 +38,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
             Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
             if (datiBeniServizi != null) {
                 List<Element> dettagliLinee = datiBeniServizi.getChildren();
+                BigDecimal invoiceLineNetAmountTotal = new BigDecimal(0);
                 for (Element dettaglioLinee : dettagliLinee) {
                     if (dettaglioLinee.getName().equals("DettaglioLinee")) {
 
@@ -77,6 +75,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                             .build());
                                     errors.add(ConversionIssue.newError(ere));
                                 }
+                            } else {
+                                naturaValue = Untdid5305DutyTaxFeeCategories.S;
                             }
                         }
 
@@ -151,6 +151,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     bg0020.getBT0097DocumentLevelAllowanceReason().add(bt0097);
                                 }
 
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0020.getBT0095DocumentLevelAllowanceVatCategoryCode().add(new BT0095DocumentLevelAllowanceVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
+                                }
+
                                 invoice.getBG0020DocumentLevelAllowances().add(bg0020);
                             } else if (prezzoTotaleValue != null && prezzoTotaleValue.signum() > 0 &&
                                     Arrays.asList("SC", "PR", "AB", "AC").contains(tipoCessionePrestazione.getText())) {
@@ -178,6 +182,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     bg0021.getBT0104DocumentLevelChargeReason().add(bt0104);
                                 }
 
+                                if (!aliquotaIVAValue.equals("0.00") && naturaValue == null){
+                                    bg0021.getBT0102DocumentLevelChargeVatCategoryCode().add(new BT0102DocumentLevelChargeVatCategoryCode(Untdid5305DutyTaxFeeCategories.S));
+                                }
+
                                 invoice.getBG0021DocumentLevelCharges().add(bg0021);
                             }
                         } else {
@@ -191,9 +199,15 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             Element codiceArticolo = dettaglioLinee.getChild("CodiceArticolo");
                             if(codiceArticolo != null) {
                                 Element codiceValore = codiceArticolo.getChild("CodiceValore");
-                                Element codiceTipo = codiceArticolo.getChild("CodiceTipo");
+                                String codiceTipo = codiceArticolo.getChild("CodiceTipo").getText();
+                                try {
+                                    // TODO add Untdid7143 and ISO6523 code lists
+                                    Untdid1153ReferenceQualifierCode.valueOf(codiceTipo);
+                                } catch (IllegalArgumentException e) {
+                                    codiceTipo = "ZZZ";
+                                }
                                 BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier =
-                                        new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(codiceTipo.getText(),codiceValore.getText()));
+                                        new BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(new Identifier(codiceTipo,codiceValore.getText()));
                                 bg0025.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().add(bt0128InvoiceLineObjectIdentifierAndSchemeIdentifier);
                             }
 
@@ -233,6 +247,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             if (prezzoTotaleValue != null) {
                                 BT0131InvoiceLineNetAmount invoiceLineNetAmount = new BT0131InvoiceLineNetAmount(prezzoTotaleValue);
                                 bg0025.getBT0131InvoiceLineNetAmount().add(invoiceLineNetAmount);
+                                invoiceLineNetAmountTotal = invoiceLineNetAmountTotal.add(prezzoTotaleValue);
                             }
 
                             BG0026InvoiceLinePeriod bg0026 = new BG0026InvoiceLinePeriod();
@@ -263,7 +278,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                     errors.add(ConversionIssue.newError(ere));
                                 }
                             }
-                            bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+                            if (dataInizioPeriodo != null || dataFinePeriodo != null) {
+                                bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
+                            }
 
                             Element scontoMaggiorazione = dettaglioLinee.getChild("ScontoMaggiorazione");
                             if (scontoMaggiorazione != null) {
@@ -387,6 +404,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
                     }
                 }
+                if (invoice.getBG0022DocumentTotals() == null || invoice.getBG0022DocumentTotals().size() == 0) {
+                    invoice.getBG0022DocumentTotals().add(new BG0022DocumentTotals());
+                }
+                invoice.getBG0022DocumentTotals(0).getBT0106SumOfInvoiceLineNetAmount().add(new BT0106SumOfInvoiceLineNetAmount(invoiceLineNetAmountTotal));
             }
         }
 

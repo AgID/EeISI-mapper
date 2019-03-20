@@ -10,9 +10,9 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.Pair;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
-//import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+//import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 
 public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
@@ -46,7 +48,8 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
     private XSDValidator xsdValidator;
-    private IXMLValidator peppolValidator;
+    private IXMLValidator peppolCenValidator;
+    private IXMLValidator peppolUblValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
             StringToStringConverter.newConverter(),
@@ -66,26 +69,22 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
         super.configure();
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.cen-peppol.xsd");
-            xsdValidator = null;
             try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.PEPPOL_OUT);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd", ErrorCode.Location.PEPPOL_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for CEN2PEPPOLBSI from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
             }
         }
 
         //load the UBL schematron validator.
         try {
-//            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron"));
-//            boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-ubl.schematron.auto-update-xslt"));
-//            peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBL_OUT);
-//
-            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron"));
+
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron1"));
+            Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
-            peppolValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolCenValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolUblValidator = new SchematronValidator(cenSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -122,11 +121,16 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
                 log.info("Xsd validation succesful!");
             }
             errors.addAll(validationErrors);
-            List<IConversionIssue> schematronErrors = peppolValidator.validate(documentByteArray);
-            if (schematronErrors.isEmpty()) {
+            List<IConversionIssue> schematronCenErrors = peppolCenValidator.validate(documentByteArray);
+            if (schematronCenErrors.isEmpty()) {
                 log.info("Schematron validation successful!");
             }
-            errors.addAll(schematronErrors);
+            errors.addAll(schematronCenErrors);
+            List<IConversionIssue> schematronUblErrors = peppolUblValidator.validate(documentByteArray);
+            if (schematronUblErrors.isEmpty()) {
+                log.info("Schematron validation successful!");
+            }
+            errors.addAll(schematronUblErrors);
 
         } catch (IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.PEPPOL_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));

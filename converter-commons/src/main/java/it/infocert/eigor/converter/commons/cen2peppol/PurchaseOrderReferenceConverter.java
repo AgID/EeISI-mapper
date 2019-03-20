@@ -1,8 +1,9 @@
 package it.infocert.eigor.converter.commons.cen2peppol;
 
+import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.commons.cen2ubl.FirstLevelElementsConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -11,39 +12,33 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class PurchaseOrderReferenceConverter extends FirstLevelElementsConverter {
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
+public class PurchaseOrderReferenceConverter implements CustomMapping<Document> {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Override
-    public void customMap(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+		Element root = document.getRootElement();
 
+		String bt13 = evalExpression(() -> cenInvoice.getBT0013PurchaseOrderReference(0).getValue());
+		String bt10 = evalExpression(() -> cenInvoice.getBT0010BuyerReference(0).getValue());
 
-		if (cenInvoice.getBT0013PurchaseOrderReference().isEmpty() && 
-				cenInvoice.getBT0010BuyerReference().isEmpty()) {
-			    
-				final Element orderReference = new Element("OrderReference");
-	            final Element id = new Element("ID").setText("NA");
-	            root.addContent(orderReference.setContent(id));
+		// OrderReference
+		if( bt13 != null ) {
+			root
+					.addContent( new Element("OrderReference").addContent( new Element("ID").setText(bt13) ) );
+		}else{
+			if(bt10 == null) {
+				root
+						.addContent( new Element("OrderReference").addContent( new Element("ID").setText("N/A") ) );
 
-			
+			}else{
+				root
+						.addContent( new Element("OrderReference").addContent( new Element("ID").setText(bt10) ) );
+			}
 		}
-		else if (!cenInvoice.getBT0013PurchaseOrderReference().isEmpty()) {
-            
-			final String value = cenInvoice.getBT0013PurchaseOrderReference(0).getValue();
-            final Element orderReference = new Element("OrderReference");
-            final Element id = new Element("ID").setText(value);
-            root.addContent(orderReference.setContent(id));
-        
-		}
-		else if(!cenInvoice.getBT0010BuyerReference().isEmpty()) {
-            
-			final String value = cenInvoice.getBT0010BuyerReference(0).getValue();
-            final Element buyerReference = new Element("BuyerReference");
-            final Element id = new Element("ID").setText(value);
-            root.addContent(buyerReference.setContent(id));
-        
-		}
-		
+
 	}
 }

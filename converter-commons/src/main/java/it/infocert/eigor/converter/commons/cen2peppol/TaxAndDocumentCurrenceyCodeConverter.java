@@ -33,7 +33,7 @@ public class TaxAndDocumentCurrenceyCodeConverter extends FirstLevelElementsConv
 			else {
 				  String converted = conversionRegistry.convert(Iso4217CurrenciesFundsCodes.class, String.class, cenInvoice.getBT0005InvoiceCurrencyCode(0).getValue());
 		          convert("DocumentCurrencyCode", converted);
-				  
+			
 			}
 
 		

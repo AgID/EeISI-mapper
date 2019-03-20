@@ -100,12 +100,12 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
 
 		if (!seller.getBT0031SellerVatIdentifier().isEmpty()) {
-			mapPartyTaxScheme(partyElm, seller.getBT0031SellerVatIdentifier(0).getValue(), "NoVAT");
+			mapPartyTaxScheme(partyElm, seller.getBT0031SellerVatIdentifier(0).getValue(), "VAT");
 		} else {
 			logger.debug("BT-31 is missing");
 		}
 		if (!seller.getBT0032SellerTaxRegistrationIdentifier().isEmpty()) {
-			mapPartyTaxScheme(partyElm, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "VAT");
+			mapPartyTaxScheme(partyElm, seller.getBT0032SellerTaxRegistrationIdentifier(0).getValue(), "NOVAT");
 		} else {
 			logger.debug("BT-31 is missing");
 		}

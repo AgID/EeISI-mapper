@@ -11,7 +11,7 @@ public class TestUtils {
     public static File copyResourceToFolder(String resourcePath, File destinationFolder) throws IOException {
         URL resource = Object.class.getResource(resourcePath);
         String path = resource.getPath();
-        path = path.substring( path.lastIndexOf('/')+1 );
+        path = path.substring(path.lastIndexOf('/') + 1);
         File file = new File(destinationFolder, path);
         Path p = file.toPath();
         Files.copy(
@@ -20,5 +20,4 @@ public class TestUtils {
         );
         return file;
     }
-
 }

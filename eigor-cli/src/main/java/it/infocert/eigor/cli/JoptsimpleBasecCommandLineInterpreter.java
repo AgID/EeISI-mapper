@@ -1,6 +1,9 @@
 package it.infocert.eigor.cli;
 
-import it.infocert.eigor.api.*;
+import com.google.common.collect.Sets;
+import com.infocert.eigor.api.EigorApi;
+import com.infocert.eigor.api.EigorApiBuilder;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 
 import it.infocert.eigor.cli.commands.ConversionCommand;
@@ -39,19 +42,11 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
     public static final String TARGET = "target";
     public static final String FORCE = "force";
     public static final String INTERMEDIATE_VALIDATION = "intermediate-validation";
-    private final ToCenConversionRepository toCenConversionRepository;
-    private final FromCenConversionRepository fromCenConversionRepository;
-    private final RuleRepository ruleRepository;
     private final EigorConfiguration configuration;
+    private EigorApi api;
 
-    public JoptsimpleBasecCommandLineInterpreter(
-            ToCenConversionRepository toCenConversionRepository,
-            FromCenConversionRepository fromCenConversionRepository,
-            RuleRepository ruleRepository, EigorConfiguration configuration) {
-        this.toCenConversionRepository = toCenConversionRepository;
-        this.fromCenConversionRepository = fromCenConversionRepository;
-        this.ruleRepository = ruleRepository;
-        this.configuration = configuration;
+    public JoptsimpleBasecCommandLineInterpreter() {
+        this.configuration = DefaultEigorConfigurationLoader.configuration();
     }
 
     @Override
@@ -68,6 +63,8 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         parser.accepts(INTERMEDIATE_VALIDATION);
         OptionSet options = parser.parse(args);
 
+        String source;
+        String target;
 
         // Validates all params
         // ===================================================
@@ -80,8 +77,6 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         // input: path to input invoice
         Path inputInvoice;
         Path outputFolder;
-        ToCenConversion toCen;
-        FromCenConversion fromCen;
         InputStream invoiceInSourceFormat;
         boolean intermediateValidation;
         boolean forceConversion;
@@ -110,6 +105,17 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             }
         }
 
+        // force flag: force conversion to continue even if there are errors
+        {
+            forceConversion = options.has(FORCE);
+        }
+
+        try {
+            api = forceConversion ? new EigorApiBuilder().enableForce().build() : new EigorApiBuilder().build();
+        } catch (Exception e) {
+            return new ReportFailuereCommand("Error initializing API");
+        }
+
         // source format: should be supported
         {
 
@@ -117,11 +123,10 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 return new ReportFailuereCommand("Source format missing, please specify the format of the original invoice with the --source parameter.", inputInvoice);
             }
 
-            String source = (String) options.valueOf("source");
-            toCen = this.toCenConversionRepository.findConversionToCen(source);
-            if (toCen == null) {
-                Set<String> supportedFormats = toCenConversionRepository.supportedToCenFormats();
-                return new ReportFailuereCommand("Source format '%s' is not supported. Please choose one among: %s.", source, supportedFormats);
+            source = (String) options.valueOf("source");
+            Set<String> supportedSourceFormats = api.supportedSourceFormats();
+            if (!supportedSourceFormats.contains(source)) {
+                return new ReportFailuereCommand("Source format '%s' is not supported. Please choose one among: %s.", source, supportedSourceFormats);
             }
         }
 
@@ -132,17 +137,11 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 return new ReportFailuereCommand("Target format missing, please specify the format of the target invoice with the --target parameter.", inputInvoice);
             }
 
-            String target = (String) options.valueOf("target");
-            fromCen = fromCenConversionRepository.findConversionFromCen(target);
-            if (fromCen == null) {
-                Set<String> supportedFormats = fromCenConversionRepository.supportedFromCenFormats();
-                return new ReportFailuereCommand("Target format '%s' is not supported. Please choose one among: %s.", target, supportedFormats);
+            target = (String) options.valueOf("target");
+            Set<String> supportedTargetFormats = api.supportedTargetFormats();
+            if (!supportedTargetFormats.contains(target)) {
+                return new ReportFailuereCommand("Target format '%s' is not supported. Please choose one among: %s.", target, supportedTargetFormats);
             }
-        }
-
-        // force flag: force conversion to continue even if there are errors
-        {
-            forceConversion = options.has(FORCE);
         }
 
         // should validate the core model?
@@ -157,16 +156,37 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         }
 
         return new ConversionCommand.ConversionCommandBuilder()
-                .setRuleRepository(ruleRepository)
-                .setToCen(toCen)
-                .setFromCen(fromCen)
-                .setInputInvoice(inputInvoice)
+                .setSourceFormat(source)
+                .setTargetFormat(target)
                 .setOutputFolder(outputFolder)
                 .setInvoiceInSourceFormat(invoiceInSourceFormat)
                 .setForceConversion(forceConversion)
                 .setConfiguration(configuration)
                 .setRunIntermediateValidation(intermediateValidation)
+                .setApi(api)
+                .setInvoiceInName(inputInvoice.toFile().getName())
                 .build();
     }
 
+    public Set<String> getSupportedSourceFormats() {
+        if (api == null) {
+            try {
+                api = new EigorApiBuilder().build();
+            } catch (Exception e) {
+                return Sets.newHashSet();
+            }
+        }
+        return api.supportedSourceFormats();
+    }
+
+    public Set<String> getSupportedTargetFormats() {
+        if (api == null) {
+            try {
+                api = new EigorApiBuilder().build();
+            } catch (Exception e) {
+                return Sets.newHashSet();
+            }
+        }
+        return api.supportedTargetFormats();
+    }
 }
