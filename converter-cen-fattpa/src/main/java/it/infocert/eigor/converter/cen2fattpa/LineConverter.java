@@ -17,7 +17,7 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.Pair;
 import it.infocert.eigor.converter.cen2fattpa.converters.*;
-import it.infocert.eigor.converter.cen2fattpa.models.*;
+import it.infocert.eigor.fattpa.commons.models.*;
 import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.*;

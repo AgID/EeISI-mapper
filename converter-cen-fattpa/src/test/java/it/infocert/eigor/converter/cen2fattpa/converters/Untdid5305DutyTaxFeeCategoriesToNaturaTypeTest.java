@@ -1,16 +1,15 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
-import it.infocert.eigor.converter.cen2fattpa.models.NaturaType;
+import it.infocert.eigor.fattpa.commons.models.NaturaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import static it.infocert.eigor.converter.cen2fattpa.models.NaturaType.*;
+import static it.infocert.eigor.fattpa.commons.models.NaturaType.*;
 import static it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories.*;
 import static org.junit.Assert.*;
 

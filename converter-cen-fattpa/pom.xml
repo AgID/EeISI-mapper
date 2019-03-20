@@ -26,6 +26,10 @@
         </dependency>
         <dependency>
             <groupId>it.infocert.eigor</groupId>
+            <artifactId>eigor-fattpa-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.infocert.eigor</groupId>
             <artifactId>eigor-core</artifactId>
         </dependency>
         <dependency>
@@ -55,29 +59,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>it.infocert.eigor.converter.cen2fattpa.models</packageName>
-                    <sources>
-                        <source>
-                            ../converter-commons/src/main/resources/converterdata/converter-commons/fattpa/xsdstatic
-                        </source>
-                    </sources>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

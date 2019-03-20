@@ -206,6 +206,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>eigor-fattpa-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>converter-csvcen-cen</artifactId>
                 <version>${project.version}</version>
             </dependency>

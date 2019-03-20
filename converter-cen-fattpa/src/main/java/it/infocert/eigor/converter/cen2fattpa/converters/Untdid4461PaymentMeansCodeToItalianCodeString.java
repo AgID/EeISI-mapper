@@ -3,7 +3,7 @@ package it.infocert.eigor.converter.cen2fattpa.converters;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.ToStringTypeConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.ModalitaPagamentoType;
+import it.infocert.eigor.fattpa.commons.models.ModalitaPagamentoType;
 import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 
 public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeConverter<Untdid4461PaymentMeansCode>{
@@ -23,7 +23,7 @@ public class Untdid4461PaymentMeansCodeToItalianCodeString extends ToStringTypeC
         switch (paymentMeansCode) {
         
         	case Code2:
-        		return ModalitaPagamentoType.MP_19.value();        
+        		return ModalitaPagamentoType.MP_19.value();
         	case Code3:
         		return ModalitaPagamentoType.MP_19.value();
             case Code4:
