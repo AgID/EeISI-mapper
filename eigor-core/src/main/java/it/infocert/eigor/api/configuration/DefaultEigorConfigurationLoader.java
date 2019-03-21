@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static java.lang.String.format;
-
 public class DefaultEigorConfigurationLoader {
 
     /**
@@ -109,7 +107,8 @@ public class DefaultEigorConfigurationLoader {
         }
 
         if (eigorConfiguration == null) {
-            throw new RuntimeException(format("Unable to find an eigor configuration file in any of those locations: %s.", tentatives));
+            log.info("Unable to find an eigor configuration file in any of those locations: {}, using default.", tentatives);
+            eigorConfiguration = new PropertiesBackedConfiguration(DEFAULTS);
         }
 
         return eigorConfiguration;
