@@ -179,7 +179,6 @@ public class EeisiIssuesTest extends AbstractIssueTest {
      * This is too long to be stored in XML PA, hence, the not truncated value should be stored in an attached file, in CSV format.
      * This CSV should have several columns, one for the untruncated value, the other for the truncated value.
      */
-    @Ignore("UBL input schematron fails")
     @Test
     public void issueEeisi22() throws XPathExpressionException, IOException {
 
@@ -196,11 +195,9 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 .DEFAULT
                 .withFirstRecordAsHeader()
                 .parse( new StringReader(csvSource) ).getRecords();
-        assertThat( records.size(), is(2) );
-        assertThat( records.get(0).get("Original value"), is("IngegneriElettroniciInformaticiIngegneriElettroniciInformatici") );
-        assertThat( records.get(0).get("Trimmed value"), is("IngegneriElettroniciInformaticiIngegneriElettroniciInformati") );
-        assertThat( records.get(1).get("Original value"), is("123456789012345678901234567890123456789012345678901234567890111") );
-        assertThat( records.get(1).get("Trimmed value"), is("123456789012345678901234567890123456789012345678901234567890") );
+        assertThat( records.size(), is(1) );
+        assertThat( records.get(0).get("Original value"), is("Street seller Additional street seller xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Line seller") );
+        assertThat( records.get(0).get("Trimmed value"), is("Street seller Additional street seller xxxxxxxxxxxxxxxxxxxxx") );
 
     }
 
