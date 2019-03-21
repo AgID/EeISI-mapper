@@ -2,7 +2,7 @@ package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.TipoDocumentoType;
+import it.infocert.eigor.fattpa.commons.models.TipoDocumentoType;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -13,7 +13,7 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static it.infocert.eigor.converter.cen2fattpa.models.TipoDocumentoType.*;
+import static it.infocert.eigor.fattpa.commons.models.TipoDocumentoType.*;
 import static it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                      xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+    <FatturaElettronicaHeader>
+        <!--Transmission data -->
+        <DatiTrasmissione>
+            <IdTrasmittente>
+                <IdPaese>IT</IdPaese><!-- to BG-24-->
+                <IdCodice>11111111111</IdCodice><!-- to BG-24-->
+            </IdTrasmittente>
+            <ProgressivoInvio>00001</ProgressivoInvio><!-- to BG-24-->
+            <FormatoTrasmissione>FPA12</FormatoTrasmissione><!-- to BG-24-->
+            <CodiceDestinatario>99YJBO</CodiceDestinatario><!-- to BT-49-->
+            <ContattiTrasmittente>
+                <Telefono>02122495030</Telefono><!--not mapped-->
+                <Email>trasmittente@gmail.com</Email><!--not mapped-->
+            </ContattiTrasmittente>
+            <!--Only for B2B, please not that in this case CodiceDestinatario shall be 0000000-->
+            <!--PECDestinatario>destinatario@pec.it</PECDestinatario--><!-- to BT-49-->
+        </DatiTrasmissione>
+        <!--Seller -->
+        <CedentePrestatore><!--to BG-4-->
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese><!--to BT-31-->
+                    <IdCodice>22222222222</IdCodice><!--to BT-31-->
+                </IdFiscaleIVA>
+                <CodiceFiscale>XXXXXX11X11X111X</CodiceFiscale><!--to BT-32-->
+                <Anagrafica>
+                    <!-- In case of legal entity-->
+                    <Denominazione>ALPHA SRL</Denominazione><!--to BT-27, BT-41-->
+                    <!--In case of natural person-->
+                    <!--Nome>Mario</Nome--><!--to BT-27, BT-41-->
+                    <!--Cognome>Rossi</Cognome--><!--to BT-27, BT-41-->
+                    <Titolo>Super</Titolo><!--not mapped-->
+                    <CodEORI>7777777777777</CodEORI><!--to BT-29 as IT:EORI:xxxx-->
+                </Anagrafica>
+                <AlboProfessionale>Ordine Commercialisti</AlboProfessionale><!--to BT-29 as IT:ALBO:AlboProfessionalexxx:NumeroIscrizioneAlboxxxx-->
+                <ProvinciaAlbo>MI</ProvinciaAlbo><!--not mapped-->
+                <NumeroIscrizioneAlbo>43DDD</NumeroIscrizioneAlbo><!--to BT-29 as IT:ALBO:AlboProfessionalexxx:NumeroIscrizioneAlboxxx-->
+                <DataIscrizioneAlbo>1991-06-18</DataIscrizioneAlbo><!--not mapped-->
+                <RegimeFiscale>RF01</RegimeFiscale><!--not mapped directly but through the mapping table VAT category code-natura-regimefiscale -->
+            </DatiAnagrafici>
+            <!--Seller address -->
+            <Sede><!--BG-5-->
+                <Indirizzo>VIALE ROMA</Indirizzo><!--to BT-35-->
+                <NumeroCivico>543</NumeroCivico><!--to BT-36-->
+                <CAP>07100</CAP><!--to BT-38-->
+                <Comune>SASSARI</Comune><!--to BT-37-->
+                <Provincia>SS</Provincia><!--to BT-39-->
+                <Nazione>IT</Nazione><!--to BT-40-->
+            </Sede>
+            <StabileOrganizzazione><!--not mapped-->
+                <Indirizzo>VIA MILANO</Indirizzo><!--not mapped-->
+                <NumeroCivico>22</NumeroCivico><!--not mapped-->
+                <CAP>24100</CAP><!--not mapped-->
+                <Comune>Seriate</Comune><!--not mapped-->
+                <Provincia>BG</Provincia><!--not mapped-->
+                <Nazione>IT</Nazione><!--not mapped-->
+            </StabileOrganizzazione>
+            <IscrizioneREA><!--to BT-30-->
+                <Ufficio>BG</Ufficio><!--to BT-30 as IT:REA:Ufficio:NumeroREA:xxxx-->
+                <NumeroREA>2344tf566</NumeroREA><!--to BT-30 as IT:REA:Ufficioxx:NumeroREA:xxxx-->
+                <CapitaleSociale>150000.00</CapitaleSociale><!--to BT-33 as "CapitaleSociale"&value-->
+                <SocioUnico>SM</SocioUnico><!--to BT-33 as "SocioUnico"&value-->
+                <StatoLiquidazione>LN</StatoLiquidazione><!--to BT-33 as "StatoLiquidazione"&value-->
+            </IscrizioneREA>
+            <Contatti><!--to BG-6-->
+                <Telefono>035204938</Telefono><!--to BT-42-->
+                <Fax>0354859485</Fax><!--not mapped-->
+                <Email>cedente@gmail.com</Email><!--to BT-43-->
+            </Contatti>
+            <RiferimentoAmministrazione>ABCF45667</RiferimentoAmministrazione><!--to BT-19-->
+        </CedentePrestatore>
+        <!--Seller tax representative-->
+        <RappresentanteFiscale><!--to BG-11-->
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese><!--to BT-63-->
+                    <IdCodice>33333333333</IdCodice><!--to BT-63-->
+                </IdFiscaleIVA>
+                <CodiceFiscale>PPPPPP22P22P222P</CodiceFiscale><!--not mapped-->
+                <Anagrafica>
+                    <!-- In case of legal entity-->
+                    <Denominazione>ALPHA Rappresentante fiscale</Denominazione><!--to BT-62-->
+                    <!--In case of natural person-->
+                    <!--Nome>Paolo</Nome--><!--to BT-62-->
+                    <!--Cognome>Rossi</Cognome--><!--to BT-62-->
+                    <Titolo>Super rap</Titolo><!--not mapped-->
+                    <CodEORI>6666666666666</CodEORI><!--not mapped-->
+                </Anagrafica>
+            </DatiAnagrafici>
+        </RappresentanteFiscale>
+        <!--Buyer -->
+        <CessionarioCommittente><!--to BG-7-->
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese><!--to BT-48-->
+                    <IdCodice>44444444444</IdCodice><!--to BT-48-->
+                </IdFiscaleIVA>
+                <CodiceFiscale>YYYYYY11Y11Y111Y</CodiceFiscale><!--to BT-46-->
+                <Anagrafica>
+                    <!-- In case of legal entity-->
+                    <!--Denominazione>AMMINISTRAZIONE BETA</Denominazione--><!--to BT-44, BT-56-->
+                    <!--In case of natural person-->
+                    <Nome>Mario</Nome><!--to BT-44, BT-56-->
+                    <Cognome>Verdi</Cognome><!--to BT-44, BT-56-->
+                    <Titolo>Super com</Titolo><!--not mapped-->
+                    <CodEORI>55555555555555</CodEORI><!--to BT-47 as IT:EORI:xxxx-->
+                </Anagrafica>
+            </DatiAnagrafici>
+            <!--Buyer address -->
+            <Sede><!--to BG-8-->
+                <Indirizzo>VIA TORINO</Indirizzo><!--to BT-50-->
+                <NumeroCivico>38 B</NumeroCivico><!--to BT-51-->
+                <CAP>00145</CAP><!--to BT-53-->
+                <Comune>ROMA</Comune><!--to BT-52-->
+                <Provincia>RM</Provincia><!--to BT-54-->
+                <Nazione>IT</Nazione><!--to BT-55-->
+            </Sede>
+            <StabileOrganizzazione><!--not mapped-->
+                <Indirizzo>VIA Bergamo</Indirizzo><!--not mapped-->
+                <NumeroCivico>22</NumeroCivico><!--not mapped-->
+                <CAP>24100</CAP><!--not mapped-->
+                <Comune>Milano</Comune><!--not mapped-->
+                <Provincia>MI</Provincia><!--not mapped-->
+                <Nazione>IT</Nazione><!--not mapped-->
+            </StabileOrganizzazione>
+            <!--Buyer tax representative-->
+            <RappresentanteFiscale><!--not mapped-->
+
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese><!--not mapped-->
+                    <IdCodice>44444444444</IdCodice><!--not mapped-->
+                </IdFiscaleIVA>
+
+                <!-- In case of legal entity-->
+                <Denominazione>BETA Rappresentante fiscale</Denominazione><!--not mapped-->
+                <!--In case of natural person-->
+                <!--Nome>Paolo</Nome--><!--not mapped-->
+                <!--Cognome>Verdi</Cognome--><!--not mapped-->
+
+
+            </RappresentanteFiscale>
+        </CessionarioCommittente>
+        <TerzoIntermediarioOSoggettoEmittente><!-- to BG-24-->
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese><!-- to BG-24-->
+                    <IdCodice>55555555555</IdCodice><!-- to BG-24-->
+                </IdFiscaleIVA>
+                <CodiceFiscale>BGRGDN77T10L117F</CodiceFiscale><!-- to BG-24-->
+                <Anagrafica>
+                    <!-- In case of legal entity-->
+                    <Denominazione>GAMMA intermediario</Denominazione><!-- to BG-24-->
+                    <!--In case of natural person-->
+                    <!--Nome>Mario</Nome--><!-- to BG-24-->
+                    <!--Cognome>Bianchi</Cognome--><!-- to BG-24-->
+                    <Titolo>Super</Titolo><!-- to BG-24-->
+                    <CodEORI>9999999999999</CodEORI><!-- to BG-24-->
+                </Anagrafica>
+            </DatiAnagrafici>
+        </TerzoIntermediarioOSoggettoEmittente>
+        <SoggettoEmittente>TZ</SoggettoEmittente><!-- to BG-24-->
+    </FatturaElettronicaHeader>
+    <FatturaElettronicaBody>
+        <DatiGenerali>
+            <DatiGeneraliDocumento>
+                <TipoDocumento>TD04</TipoDocumento>
+                <Divisa>EUR</Divisa>
+                <Data>2009-12-15</Data>
+                <Numero>TOSL108</Numero>
+                <ImportoTotaleDocumento>1527.60</ImportoTotaleDocumento>
+                <Causale>Returns</Causale>
+            </DatiGeneraliDocumento>
+            <DatiOrdineAcquisto>
+                <IdDocumento>123</IdDocumento>
+            </DatiOrdineAcquisto>
+            <DatiContratto>
+                <IdDocumento>Contract321</IdDocumento>
+                <CodiceCUP>Doc1</CodiceCUP>
+            </DatiContratto>
+        </DatiGenerali>
+        <DatiBeniServizi>
+            <DettaglioLinee>
+                <NumeroLinea>1</NumeroLinea>
+                <CodiceArticolo>
+                    <CodiceTipo>Seller</CodiceTipo>
+                    <CodiceValore>JB007</CodiceValore>
+                </CodiceArticolo>
+                <Descrizione>Laptop computer</Descrizione>
+                <Quantita>1.00000000</Quantita>
+                <UnitaMisura>C62</UnitaMisura>
+                <PrezzoUnitario>1273.00</PrezzoUnitario>
+                <PrezzoTotale>1273.00</PrezzoTotale>
+                <AliquotaIVA>20.00</AliquotaIVA>
+                <AltriDatiGestionali>
+                    <TipoDato>Color</TipoDato>
+                    <RiferimentoTesto>black</RiferimentoTesto>
+                </AltriDatiGestionali>
+            </DettaglioLinee>
+            <DatiRiepilogo>
+                <AliquotaIVA>20.00</AliquotaIVA>
+                <ImponibileImporto>1273.00</ImponibileImporto>
+                <Imposta>254.60</Imposta>
+            </DatiRiepilogo>
+        </DatiBeniServizi>
+        <DatiPagamento>
+            <CondizioniPagamento>TP02</CondizioniPagamento>
+            <DettaglioPagamento>
+                <Beneficiario>Customer</Beneficiario>
+                <ModalitaPagamento>MP21</ModalitaPagamento>
+                <ImportoPagamento>-1273.00</ImportoPagamento>
+            </DettaglioPagamento>
+        </DatiPagamento>
+    </FatturaElettronicaBody>
+</p:FatturaElettronica>

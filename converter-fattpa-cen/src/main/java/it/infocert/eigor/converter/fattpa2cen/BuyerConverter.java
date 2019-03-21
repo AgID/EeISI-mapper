@@ -5,6 +5,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -60,6 +61,27 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                     Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                     if (anagrafica != null) {
+
+                        BT0044BuyerName bt44 = InvoiceUtils.evalExpression(() -> invoice.getBG0007Buyer(0).getBT0044BuyerName(0));
+                        if(bt44 == null) {
+
+                            String nome;
+                            String cognome;
+
+                            Element nomeXml = anagrafica.getChild("Nome");
+                            nome = nomeXml==null ? "" : nomeXml.getText();
+
+                            Element cognomeXml = anagrafica.getChild("Cognome");
+                            cognome = cognomeXml==null ? "" : cognomeXml.getText();
+
+                            String bt44value = String.join(" ", nome, cognome).trim();
+                            if(bt44value.isEmpty()) bt44value = "N/A";
+
+
+                            invoice.getBG0007Buyer(0).getBT0044BuyerName().add( new BT0044BuyerName(bt44value) );
+
+                        }
+
                         Element codEori = anagrafica.getChild("CodEORI");
                         if (codEori != null) {
                             BT0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier bt0047BuyerLegalRegistrationIdentifierAndSchemeIdentifier = null;

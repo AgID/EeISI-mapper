@@ -106,7 +106,10 @@ public class AccountCustomerParty implements CustomMapping<Document> {
 
 	                        final String ide = identifier.getIdentifier();
 	                        final String schema = identifier.getIdentificationSchema();
-	                        id.setText(String.format("%s:%s", schema, ide));
+//	                        id.setText(String.format("%s:%s", schema, ide));
+	                        
+	                        id.setText(schema != null && !schema.trim().isEmpty() ? String.format("%s:%s", schema, ide) : ide);
+
 //	                        if (schema != null) id.setAttribute("schemeID", schema);
 	                    }
 

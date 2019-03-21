@@ -255,7 +255,7 @@ Write the following content in the `eigor.properties` file:
     eigor.converter.cen-fatturapa.mapping.many-to-one=classpath:converterdata/converter-cen-fattpa/mappings/many_to_one.properties
     eigor.converter.cen-fatturapa.mapping.one-to-many=classpath:converterdata/converter-cen-fattpa/mappings/one_to_many.properties
     eigor.converter.cen-fatturapa.mapping.custom=classpath:converterdata/converter-cen-fattpa/mappings/custom.conf
-    eigor.converter.cen-fatturapa.xsd=file://${eigor.validation-home}/converter-commons/fattpa/xsd/Schema_del_file_xml_FatturaPA_versione_1.2.xsd
+    
     eigor.converter.cen-fatturapa.field-lengths=file://${eigor.validation-home}/converter-cen-fattpa/mappings/field_lengths.properties
             
     eigor.converter.fatturapa-cen.mapping.one-to-one=classpath:converterdata/converter-fattpa-cen/mappings/one_to_one.properties

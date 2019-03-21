@@ -10,6 +10,7 @@ import it.infocert.eigor.api.conversion.converter.*;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.api.utils.IReflections;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.enums.*;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
@@ -57,14 +58,10 @@ public class UblCn2Cen extends AbstractToCenConverter {
 
         // load the XSD.
         {
-            String mandatoryString = this.configuration.getMandatoryString("eigor.converter.ublcn-cen.xsd");
-            xsdValidator = null;
             try {
-                Resource xsdFile = drl.getResource(mandatoryString);
-
-                xsdValidator = new XSDValidator(xsdFile.getFile(), ErrorCode.Location.UBLCN_IN);
+                xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/ublcn/xsdstatic/UBL-CreditNote-2.1.xsd", ErrorCode.Location.UBLCN_IN);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBLCN2CEN from '" + mandatoryString + "'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD.", e);
             }
         }
 
@@ -94,7 +91,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
      * 2. maps each path into BTBG obj
      *
      * @param sourceInvoiceStream The stream containing the representation of the invoice to be converted.
-     * @return ConversionResult<BG0000Invoice>
+     * @return ConversionResult&lt;BG0000Invoice&gt;
      * @throws SyntaxErrorInInvoiceFormatException
      */
     @Override
@@ -257,9 +254,9 @@ public class UblCn2Cen extends AbstractToCenConverter {
                 Base64StringToBinaryConverter.newConverter(),
 
                 // string
-                StringToStringConverter.newConverter()
+                StringToStringConverter.newConverter(),
 
-
+                StringToIdentifierConverter.newConverter()
         );
     }
 }

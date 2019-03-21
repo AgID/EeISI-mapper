@@ -2,8 +2,8 @@ package it.infocert.eigor.converter.cen2fattpa;
 
 
 
-import it.infocert.eigor.converter.cen2fattpa.models.AllegatiType;
-import it.infocert.eigor.converter.cen2fattpa.models.FatturaElettronicaBodyType;
+import it.infocert.eigor.fattpa.commons.models.AllegatiType;
+import it.infocert.eigor.fattpa.commons.models.FatturaElettronicaBodyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

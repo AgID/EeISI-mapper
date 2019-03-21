@@ -12,8 +12,10 @@ import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.commons.cen2peppol.AccountCustomerParty;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0007Buyer;
+import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
 
 
 public class AccountCustomerPartyTest {
@@ -32,6 +34,18 @@ public class AccountCustomerPartyTest {
 		this.sut =  new AccountCustomerParty();
 	}
 	
+	 @Test
+	    public void shouldMapBT0046ConcatenatingSchemeIdAndIdentifier() {
+
+	        enrichBG0007BuyerwithBT0046(invoice.getBG0007Buyer(0));
+
+	        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
+
+	        Element id = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("PartyIdentification").getChild("ID");
+
+	        assertEquals("Test:Schema:Identifier", id.getText());
+	    }
+	
 	@Test
 	public void shouldMapDefaultMapping() {
 		 sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.PEPPOL_OUT, null);
@@ -43,5 +57,12 @@ public class AccountCustomerPartyTest {
 		 assertEquals("0130", schemeId);
 		 
 	}
+	
+	 private void enrichBG0007BuyerwithBT0046(BG0007Buyer bg0007) {
+	        BT0046BuyerIdentifierAndSchemeIdentifier identifier = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier("Test:Schema", "Identifier"));
+	        bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().add(identifier);
+
+	    }
+
 
 }

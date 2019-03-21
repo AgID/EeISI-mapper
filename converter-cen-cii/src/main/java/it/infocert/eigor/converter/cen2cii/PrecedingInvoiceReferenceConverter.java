@@ -38,7 +38,10 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                 supplyChainTradeTransaction.addContent(applicableHeaderTradeSettlement);
             }
 
-            for (BG0003PrecedingInvoiceReference bg0003 : cenInvoice.getBG0003PrecedingInvoiceReference()) {
+            // Map only first BG, the rest go to attachement
+            // See https://jira.infocert.it/browse/EISI-189
+            if (cenInvoice.getBG0003PrecedingInvoiceReference().size() > 0) {
+                BG0003PrecedingInvoiceReference bg0003 = cenInvoice.getBG0003PrecedingInvoiceReference().get(0);
                 Element invoiceReferencedDocument = new Element("InvoiceReferencedDocument", ramNs);
 
                 if (!bg0003.getBT0025PrecedingInvoiceReference().isEmpty()) {
@@ -50,7 +53,12 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                 if (!bg0003.getBT0026PrecedingInvoiceIssueDate().isEmpty()) {
                     Element formattedIssueDateTime = new Element("FormattedIssueDateTime", ramNs);
                     try {
-                        formattedIssueDateTime.setText(JavaLocalDateToStringConverter.newConverter("yyyyMMdd").convert(bg0003.getBT0026PrecedingInvoiceIssueDate(0).getValue()));
+                        Namespace qdtNs = rootElement.getNamespace("qdt");
+                        Element dateTimeString = new Element("DateTimeString", qdtNs);
+                        dateTimeString.setAttribute("format","102");
+                        dateTimeString.setText(JavaLocalDateToStringConverter.newConverter("yyyyMMdd").convert(bg0003.getBT0026PrecedingInvoiceIssueDate(0).getValue()));
+                        formattedIssueDateTime.addContent(dateTimeString);
+
                         invoiceReferencedDocument.addContent(formattedIssueDateTime);
                     } catch (IllegalArgumentException | ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(new EigorRuntimeException(

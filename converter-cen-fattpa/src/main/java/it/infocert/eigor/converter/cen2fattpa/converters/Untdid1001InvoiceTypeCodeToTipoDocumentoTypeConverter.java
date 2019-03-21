@@ -1,7 +1,7 @@
 package it.infocert.eigor.converter.cen2fattpa.converters;
 
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
-import it.infocert.eigor.converter.cen2fattpa.models.TipoDocumentoType;
+import it.infocert.eigor.fattpa.commons.models.TipoDocumentoType;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 
 public class Untdid1001InvoiceTypeCodeToTipoDocumentoTypeConverter implements TypeConverter<Untdid1001InvoiceTypeCode, TipoDocumentoType> {

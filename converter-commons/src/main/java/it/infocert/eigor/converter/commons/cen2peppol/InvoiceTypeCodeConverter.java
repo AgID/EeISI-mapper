@@ -20,8 +20,8 @@ public class InvoiceTypeCodeConverter extends FirstLevelElementsConverter{
 	@Override
 	protected void customMap(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, Location callingLocation) {
 
-		Element root = document.getRootElement();
-		Element invoiceTypeCode = null;
+		final Element root = document.getRootElement();
+		final Element invoiceTypeCode;
 		
 		if(root.getChild("InvoiceTypeCode") != null) { 
 

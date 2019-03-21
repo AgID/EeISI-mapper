@@ -11,8 +11,6 @@ import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -31,8 +29,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 
 public class Cen2UblTest extends ConverterUnitTest {
-    private static final Logger log = LoggerFactory.getLogger(Cen2UblTest.class);
-
+    
     private Cen2Ubl converter;
 
     @Before

@@ -34,9 +34,9 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
     @Override
     public void map(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, @NotNull EigorConfiguration eigorConfiguration) {
 
-        if(aUtil == null) {
-            Preconditions.checkArgument( eigorConfiguration!=null, "Please provide a not null configuration." );
-            aUtil = new AttachmentUtil( new File( eigorConfiguration.getMandatoryString("eigor.workdir") ) );
+        if (aUtil == null) {
+            Preconditions.checkArgument(eigorConfiguration != null, "Please provide a not null configuration.");
+            aUtil = new AttachmentUtil(new File(eigorConfiguration.getMandatoryString("eigor.workdir")));
         }
 
         addInvoiceTotalAmountWithVatDefault(invoice, document, errors, callingLocation);
@@ -217,17 +217,20 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
             List<BG0021DocumentLevelCharges> bg0021DocumentLevelCharges = invoice.getBG0021DocumentLevelCharges();
             BigDecimal sumOfBT0021 = new BigDecimal(0);
-            for(int i=0; i<bg0021DocumentLevelCharges.size(); i++){
+            for (int i = 0; i < bg0021DocumentLevelCharges.size(); i++) {
                 sumOfBT0021 = sumOfBT0021.add(bg0021DocumentLevelCharges.get(i).getBT0099DocumentLevelChargeAmount().get(0).getValue());
             }
             totals.getBT0108SumOfChargesOnDocumentLevel().add(new BT0108SumOfChargesOnDocumentLevel(sumOfBT0021));
 
             List<BG0020DocumentLevelAllowances> bg0020DocumentLevelAllowances = invoice.getBG0020DocumentLevelAllowances();
             BigDecimal sumOfBT0020 = new BigDecimal(0);
-            for(int i=0; i<bg0020DocumentLevelAllowances.size(); i++){
+            for (int i = 0; i < bg0020DocumentLevelAllowances.size(); i++) {
                 sumOfBT0020 = sumOfBT0020.add(bg0020DocumentLevelAllowances.get(i).getBT0092DocumentLevelAllowanceAmount().get(0).getValue());
             }
             totals.getBT0107SumOfAllowancesOnDocumentLevel().add(new BT0107SumOfAllowancesOnDocumentLevel(sumOfBT0020));
+
+            BigDecimal invoiceNetTotal = totals.getBT0106SumOfInvoiceLineNetAmount().size() > 0 ? totals.getBT0106SumOfInvoiceLineNetAmount().get(0).getValue() : new BigDecimal(0);
+            totals.getBT0109InvoiceTotalAmountWithoutVat().add(new BT0109InvoiceTotalAmountWithoutVat((invoiceNetTotal.subtract(sumOfBT0020)).add(sumOfBT0021)));
 
             final Element datiPagamento = fatturaElettronicaBody.getChild("DatiPagamento");
             if (datiPagamento != null) {
@@ -240,7 +243,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             String text = importoPagamento.getText();
                             try {
                                 final BigDecimal importoD = new BigDecimal(text);
-                                if(totals.getBT0113PaidAmount().isEmpty() || totals.getBT0113PaidAmount().get(0).getValue() != amountWithVat.subtract(importoD)) {
+                                if (totals.getBT0113PaidAmount().isEmpty() || totals.getBT0113PaidAmount().get(0).getValue() != amountWithVat.subtract(importoD)) {
                                     totals.getBT0113PaidAmount().clear();
                                     totals.getBT0113PaidAmount().add(new BT0113PaidAmount(amountWithVat.subtract(importoD)));
                                 }
@@ -398,9 +401,13 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
             }
         }
 
-        if(invoice.getBT0020PaymentTerms().isEmpty()){
+        if (invoice.getBT0020PaymentTerms().isEmpty()) {
             BT0020PaymentTerms bt0020 = new BT0020PaymentTerms("BT-113 represents Withholding tax amount");
             invoice.getBT0020PaymentTerms().add(bt0020);
+        } else {
+            BT0020PaymentTerms bt0020 =
+                    new BT0020PaymentTerms(invoice.getBT0020PaymentTerms().get(0).getValue() + ", BT-113 represents Withholding tax amount");
+            invoice.getBT0020PaymentTerms().set(0, bt0020);
         }
         return bg0021;
     }

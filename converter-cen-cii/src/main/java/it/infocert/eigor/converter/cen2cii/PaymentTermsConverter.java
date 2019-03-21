@@ -156,14 +156,6 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             }
             specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
 
-            if(bt111OrNull!=null && bt0005OrNull!=null) {
-                specifiedTradeSettlementHeaderMonetarySummation.addContent(
-                        new Element("TaxTotalAmount", ramNs)
-                                .setText(bt111OrNull.setScale(2, RoundingMode.HALF_UP).toString())
-                                .setAttribute("currencyID", bt0005OrNull)
-                );
-            }
-
 //			<xsd:element name="RoundingAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             Element roundingAmount = new Element("RoundingAmount", ramNs);
             roundingAmount.setText(bt0114RoundingAmount.setScale(2, RoundingMode.HALF_UP).toString());
@@ -244,7 +236,7 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
     }
 
     private BigDecimal getBT111OrNull(BG0000Invoice cenInvoice) {
-        return InvoiceUtils.evalExpression(() -> cenInvoice.getBG0022DocumentTotals(0).getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue());
+        return InvoiceUtils.evalExpression(() -> cenInvoice.getBG0022DocumentTotals(0).getBT0111InvoiceTotalVatAmountInAccountingCurrency(0).getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 }
 

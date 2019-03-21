@@ -623,7 +623,6 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:complexType name="ReferencedDocumentType">
 
             // <xsd:element name="IssuerAssignedID" type="udt:IDType" minOccurs="0"/>
-            // TODO: double check IssuerAssignedID
             if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
                 BT0122SupportingDocumentReference bt0122 = bg0024.getBT0122SupportingDocumentReference(0);
                 Element issuerAssignedID = new Element("IssuerAssignedID", rootElement.getNamespace("ram"));
@@ -651,19 +650,18 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:element name="LineID" type="udt:IDType" minOccurs="0"/>
 
             // <xsd:element name="TypeCode" type="qdt:DocumentCodeType" minOccurs="0"/>
-            // TODO: double check TypeCode CII
             Element typeCode = null;
-            if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
+            if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
+                typeCode = new Element("TypeCode", ramNs);
+                typeCode.setText("916");
+            } else if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
                 final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
                 typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText(bt0017.getValue());
+                typeCode.setText("50");
             } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
                 final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
                 typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText(bt0018.getValue().getIdentifier());
-            } else if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
-                typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("916");
+                typeCode.setText("130");
             }
             if(typeCode!=null) additionalReferencedDocument.addContent(typeCode);
 

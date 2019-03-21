@@ -12,24 +12,27 @@ import org.jdom2.Element;
 import java.util.List;
 
 public class NoteConverter extends FirstLevelElementsConverter {
-    
+
     @Override
     protected void customMap(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
-        Preconditions.checkArgument(root!=null, "This method is only for internal use.");
+        Preconditions.checkArgument(root != null, "This method is only for internal use.");
 
         if (!invoice.getBG0001InvoiceNote().isEmpty()) {
             for (BG0001InvoiceNote bg0001 : invoice.getBG0001InvoiceNote()) {
                 for (BT0022InvoiceNote bt0022 : bg0001.getBT0022InvoiceNote()) {
                     Element note = new Element("Note");
-
+                    String resultNote = "";
                     if (bg0001.getBT0021InvoiceNoteSubjectCode().isEmpty()) {
-                        note.setText(bt0022.getValue());
+                        resultNote = bt0022.getValue();
                     } else {
                         String bt0021 = bg0001.getBT0021InvoiceNoteSubjectCode(0).getValue();
-                        note.setText("#" + bt0021 + "#" + bt0022.getValue());
+                        resultNote = "#" + bt0021 + "#" + bt0022.getValue();
                     }
-                    root.addContent(note);
+                    if (!resultNote.isEmpty()) {
+                        note.setText(resultNote);
+                        root.addContent(note);
+                    }
                 }
             }
         }

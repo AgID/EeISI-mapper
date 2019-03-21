@@ -5,6 +5,7 @@ import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.api.xml.ClasspathXSDValidator;
 import it.infocert.eigor.api.xml.DomUtils;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.datatypes.FileReference;
@@ -16,10 +17,7 @@ import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import java.io.FileInputStream;
 import java.util.*;
 
@@ -105,10 +103,9 @@ public class CenToXmlCenConverter implements FromCenConversion {
         ErrorCode.Location callingLocation = ErrorCode.Location.XMLCEN_OUT;
 
         try {
-            Source schemaSource = new StreamSource(getClass().getResourceAsStream("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd"));
-            xsdValidator = new XSDValidator(schemaSource, callingLocation);
-        } catch (SAXException e) {
-            throw new ConfigurationException("An error occurred while initializing the XSD validator", e);
+            xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/xmlcen/xsdstatic/semanticCEN0.0.3.xsd", ErrorCode.Location.XMLCEN_OUT);
+        } catch (Exception e) {
+            throw new ConfigurationException("An error occurred while loading XSD.", e);
         }
 
         try {
@@ -183,21 +180,26 @@ public class CenToXmlCenConverter implements FromCenConversion {
                 if(!done) {
                     done = true;
                     if (btValue instanceof Identifier) {
-                        Identifier id = ((Identifier) btValue);
 
+                        Identifier id = ((Identifier) btValue);
                         String identificationSchema = id.getIdentificationSchema();
                         if (identificationSchema != null) {
                             newElement.setAttribute("scheme", identificationSchema);
                         } else {
-                            newElement.setAttribute("scheme", "");
-                        }
 
+                            if (!(btbg instanceof BT0046BuyerIdentifierAndSchemeIdentifier)) {
+                                // Please check https://jira.infocert.it/browse/EISI-205 for details
+                                // about why BT-46 "scheme" needs a special treatment
+                                newElement.setAttribute("scheme", "");
+                            }
+
+                        }
                         String schemaVersion = id.getSchemaVersion();
                         if( schemaVersion!=null && !schemaVersion.isEmpty() ) {
                             newElement.setAttribute("version", schemaVersion);
                         }
-
                         newElement.setText(id.getIdentifier());
+
                     } else if (btValue instanceof Untdid5305DutyTaxFeeCategories) {
                         Untdid5305DutyTaxFeeCategories value = (Untdid5305DutyTaxFeeCategories) btValue;
                         newElement.setText(value.name());
@@ -215,7 +217,7 @@ public class CenToXmlCenConverter implements FromCenConversion {
                         newElement.setText(String.valueOf(value.getCode()));
                     } else if(btValue instanceof Untdid7161SpecialServicesCodes) {
                         Untdid7161SpecialServicesCodes value = (Untdid7161SpecialServicesCodes) btValue;
-                        newElement.setText(String.valueOf(value.name()));
+                        newElement.setText(value.name());
                     } else if(btValue instanceof Untdid5189ChargeAllowanceDescriptionCodes) {
                         Untdid5189ChargeAllowanceDescriptionCodes value = (Untdid5189ChargeAllowanceDescriptionCodes) btValue;
                         newElement.setText(String.valueOf(value.getCode()));

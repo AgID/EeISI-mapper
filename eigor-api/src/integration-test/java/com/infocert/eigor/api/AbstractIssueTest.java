@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,6 +22,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.*;
+import java.util.Iterator;
 
 public class AbstractIssueTest {
 
@@ -38,7 +40,8 @@ public class AbstractIssueTest {
     public static void setUpXmlInfrastructure() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        documentBuilder = factory.newDocumentBuilder();
+        documentBuilder = factory
+                .newDocumentBuilder();
 
         XPathFactory xPathFactory = XPathFactory.newInstance();
         xPath = xPathFactory.newXPath();
@@ -55,6 +58,42 @@ public class AbstractIssueTest {
                 .build();
 
         conversion = new ConversionUtil(api);
+    }
+
+    protected XPath ublXpath() {
+
+        XPathFactory xPathFactory = XPathFactory.newInstance();
+        XPath ublXPath = xPathFactory.newXPath();
+        ublXPath.setNamespaceContext(new NamespaceContext() {
+
+            public String getNamespaceURI(String prefix) {
+                switch (prefix) {
+                    case "cbc":
+                        return "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2";
+                    case "cac":
+                        return "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2";
+                    case "ccts":
+                        return "urn:un:unece:uncefact:documentation:2";
+                    case "qdt":
+                        return "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDataTypes-2";
+                    case "udt":
+                        return "urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2";
+                }
+                throw new UnsupportedOperationException("Unknown prefix " + prefix);
+            }
+
+            @Override
+            public String getPrefix(String namespaceURI) {
+                return null;
+            }
+
+            @Override
+            public Iterator getPrefixes(String namespaceURI) {
+                return null;
+            }
+        });
+
+        return ublXPath;
     }
 
     protected String evalXpathExpressionAsString(ConversionResult<byte[]> convert, String expression) throws XPathExpressionException {
