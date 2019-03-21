@@ -254,9 +254,9 @@ public class UblCn2Cen extends AbstractToCenConverter {
                 Base64StringToBinaryConverter.newConverter(),
 
                 // string
-                StringToStringConverter.newConverter()
+                StringToStringConverter.newConverter(),
 
-
+                StringToIdentifierConverter.newConverter()
         );
     }
 }

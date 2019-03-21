@@ -70,8 +70,8 @@ public class IssuesTest extends AbstractIssueTest {
     public void issueeisi41() throws IOException, SAXException, TransformerException {
 
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml", "ubl", "fatturapa");
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml"), "UTF-8").getBytes() )));
-        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream(conversion.getResult() )));
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream(IOUtils.toString(getClass().getResourceAsStream("/examples/ubl/ubl-tc434-example1-CIUS-ITA.xml"), "UTF-8").getBytes())));
+        String convertedXml = printDocument(documentBuilder.parse(new ByteArrayInputStream(conversion.getResult())));
 
         assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
@@ -135,15 +135,15 @@ public class IssuesTest extends AbstractIssueTest {
         String invoice = "/eisi-121.xml";
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(invoice, "xmlcen", "xmlcen");
 
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream(invoice), "UTF-8").getBytes() )));
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream(IOUtils.toString(getClass().getResourceAsStream(invoice), "UTF-8").getBytes())));
 
         ByteArrayInputStream convertedInvoice = new ByteArrayInputStream(conversion.getResult());
         String convertedXml = new String(conversion.getResult(), "UTF-8");
 
         try {
             documentBuilder.parse(convertedInvoice);
-        } catch(Exception e) {
-            fail( "========\n" + originalXml + "========\n" + convertedXml);
+        } catch (Exception e) {
+            fail("========\n" + originalXml + "========\n" + convertedXml);
         }
 
     }
@@ -154,8 +154,8 @@ public class IssuesTest extends AbstractIssueTest {
         // check conversion xmlcen -> xmlcen is without errors.
         ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "xmlcen");
 
-        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream( IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes() )));
-        String convertedXml = printDocument(documentBuilder.parse( new ByteArrayInputStream( conversion.getResult() )));
+        String originalXml = printDocument(documentBuilder.parse(new ByteArrayInputStream(IOUtils.toString(getClass().getResourceAsStream("/examples/xmlcen/Test_EeISI_300_CENfullmodel.xml"), "UTF-8").getBytes())));
+        String convertedXml = printDocument(documentBuilder.parse(new ByteArrayInputStream(conversion.getResult())));
 
         assertThat("========\n" + originalXml + "========\n" + convertedXml, convertedXml, CompareMatcher.isSimilarTo(originalXml).ignoreComments().ignoreWhitespace());
 
@@ -258,7 +258,8 @@ public class IssuesTest extends AbstractIssueTest {
     }
 
 
-    @Test @Ignore("waiting for example invoice")
+    @Test
+    @Ignore("waiting for example invoice")
     public void issue238ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-238-ubl.xml", "ubl", "fatturapa");
 
@@ -271,7 +272,8 @@ public class IssuesTest extends AbstractIssueTest {
 
     }
 
-    @Test @Ignore("waiting for example invoice")
+    @Test
+    @Ignore("waiting for example invoice")
     public void issue208ThisConversionShouldCompleteWithoutErrors() throws Exception {
         conversion.assertConversionWithoutErrors("/issues/issue-208-ubl.xml", "ubl", "fatturapa");
 
@@ -319,7 +321,6 @@ public class IssuesTest extends AbstractIssueTest {
         assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "Allegato", evaluateAttachmentFileName);
     }
-
 
 
     @Test
@@ -434,5 +435,43 @@ public class IssuesTest extends AbstractIssueTest {
         conversion.assertConversionWithoutErrors("/issues/issue-281-fattpa.xml", "fatturapa", "ubl");
     }
 
+    @Test
+    public void issue239UblToUBL() throws Exception {
+        InputStream inputFatturaUblXml = invoiceAsStream("/issues/issue-239-ubl_.xml");
+        api.convert("ubl", "ubl", inputFatturaUblXml);
+    }
 
+    @Test
+    public void issue236UblToUBL() throws Exception {
+        InputStream inputFatturaUblXml = invoiceAsStream("/issues/issue-236-ubl_.xml");
+        ConversionResult<byte[]> convert = api.convert("ubl", "ubl", inputFatturaUblXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='LineExtensionAmount']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='PrepaidAmount']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='LegalMonetaryTotal']//*[local-name()='PayableRoundingAmount']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
+
+    @Test
+    public void issue231CenToPeppolcn() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-231-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
+
+    @Test
+    public void issue231CenToUblcn() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-231-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']/text()");
+        assertNotNull(evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
 }
