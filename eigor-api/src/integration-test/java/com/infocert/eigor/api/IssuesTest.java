@@ -474,4 +474,68 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
     }
+
+    @Test
+    public void issue237CenToPeppolbisWithoutNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-without-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolbis", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Note']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
+
+    @Test
+    public void issue237CenToPeppolcnWithoutNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-without-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Note']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
+
+    @Test
+    public void issue237CenToUblWithoutNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-without-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ubl", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Note']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
+
+    @Test
+    public void issue237CenToUblcnWithoutNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-without-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ublcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Note']/text()");
+        assertTrue(evaluate == null || "".equals(evaluate));
+    }
+
+    @Test
+    public void issue237CenToPeppolbisWithNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-with-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolbis", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Note']/text()");
+        assertEquals("test1-test2", evaluate);
+    }
+
+    @Test
+    public void issue237CenToPeppolcnWithNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-with-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Note']/text()");
+        assertEquals("test1-test2", evaluate);
+    }
+
+    @Test
+    public void issue237CenToUblWithNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-with-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ubl", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Note']/text()");
+        assertEquals("#test1#test2", evaluate);
+    }
+
+    @Test
+    public void issue237CenToUblcnWithNote() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-237-xmlcen-with-note.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ublcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Note']/text()");
+        assertEquals("#test1#test2", evaluate);
+    }
 }
