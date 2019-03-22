@@ -1,26 +1,20 @@
-package it.infocert.eigor.converter.cen2xmlcen;
+package com.infocert.eigor.api;
 
 import it.infocert.eigor.api.BinaryConversionResult;
-import it.infocert.eigor.api.configuration.ConfigurationException;
-import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.AbstractConversionCallback;
 import it.infocert.eigor.api.conversion.ConversionContext;
+import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 /**
  * Conversion callback that verifies the intermediate {@link BG0000Invoice}.
  */
-public class ValidateIntermediateCenModelCallback extends AbstractConversionCallback {
+class ValidateIntermediateCenModelCallback extends AbstractConversionCallback {
 
     private CenToXmlCenConverter cenToXmlCenConverter;
 
-    public ValidateIntermediateCenModelCallback(EigorConfiguration configuration) {
-        cenToXmlCenConverter = new CenToXmlCenConverter(configuration);
-        try {
-            cenToXmlCenConverter.configure();
-        } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
-        }
+    ValidateIntermediateCenModelCallback(CenToXmlCenConverter cen2XmlCen) {
+        cenToXmlCenConverter = cen2XmlCen;
     }
 
     @Override
