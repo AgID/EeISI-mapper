@@ -24,7 +24,7 @@ class ValidateIntermediateCenModelCallback extends AbstractConversionCallback {
 
         BinaryConversionResult intermediateResult = cenToXmlCenConverter.convert(originalCenInvoice);
 
-        ctx.getToCenResult().getIssues().addAll( intermediateResult.getIssues() );
+        ctx.getToCenResult().addIssues( intermediateResult.getIssues() );
     }
 
 }

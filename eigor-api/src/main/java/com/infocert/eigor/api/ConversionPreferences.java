@@ -2,8 +2,8 @@ package com.infocert.eigor.api;
 
 public final class ConversionPreferences {
 
-    private final Boolean forceConversion;
-    private final boolean intermediateValidation;
+    private Boolean forceConversion;
+    private boolean intermediateValidation;
 
     public ConversionPreferences() {
         forceConversion = null;
@@ -21,7 +21,8 @@ public final class ConversionPreferences {
      * If invoked, this override the preference set in the {@link EigorApiBuilder#enableForce()}.
      */
     public ConversionPreferences withForceConversion() {
-        return new ConversionPreferences(true, this.validateIntermediateCen());
+        forceConversion = true;
+        return this;
     }
 
     /**
@@ -29,7 +30,8 @@ public final class ConversionPreferences {
      * If invoked, this override the preference set in the {@link EigorApiBuilder#enableForce()}.
      */
     public ConversionPreferences withoutForceConversion() {
-        return new ConversionPreferences(false, this.validateIntermediateCen());
+        forceConversion = false;
+        return this;
     }
 
     /**
@@ -37,10 +39,11 @@ public final class ConversionPreferences {
      * xxx-CEN converter to be a valid CEN.
      */
     public ConversionPreferences withIntermediateValidation() {
-        return new ConversionPreferences(this.forceConversion(), true);
+        intermediateValidation = true;
+        return this;
     }
 
-    public boolean forceConversion() {
+    public Boolean forceConversion() {
         return forceConversion;
     }
 

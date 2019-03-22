@@ -97,7 +97,7 @@ public class EigorApiImpl implements EigorApi {
                 toCen,
                 fromCen,
                 invoice,
-                builder.isForceConversion(),
+                preferences.forceConversion()!=null ? preferences.forceConversion() : builder.isForceConversion(),
                 invoiceName,
                 fullListOfCallbacks);
 
