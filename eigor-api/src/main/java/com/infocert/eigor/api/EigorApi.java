@@ -247,7 +247,7 @@ public class EigorApi {
      * </p>
      */
     public Set<String> supportedTargetFormats() {
-        return builder.getConversionRepository().supportedToCenFormats();
+        return builder.getConversionRepository().supportedFromCenFormats();
     }
 
     /**

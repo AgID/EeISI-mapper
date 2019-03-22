@@ -91,7 +91,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
      * 2. maps each path into BTBG obj
      *
      * @param sourceInvoiceStream The stream containing the representation of the invoice to be converted.
-     * @return ConversionResult<BG0000Invoice>
+     * @return ConversionResult&lt;BG0000Invoice&gt;
      * @throws SyntaxErrorInInvoiceFormatException
      */
     @Override
