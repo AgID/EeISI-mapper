@@ -13,5 +13,6 @@
     </root>
 
     <logger name="it.infocert" level="off" />
+    <logger name="com.infocert" level="off" />
 
 </configuration>

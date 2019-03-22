@@ -60,6 +60,31 @@ public class ConversionCommandTest {
     }
 
     @Test
+    public void shouldValidateIntermediateCenModel() throws IOException {
+
+        Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder()
+                .setTargetFormat(targetFormat)
+                .setSourceFormat(sourceFormat)
+                .setOutputFolder(outputFolder)
+                .setInvoiceInSourceFormat(invoiceInputStream)
+                .setForceConversion(true)
+                .setConfiguration(configuration)
+                .setRunIntermediateValidation(false)
+                .setApi(api)
+                .setInvoiceInName(plainFattPa.getName())
+                .setRunIntermediateValidation(true)
+                .build();
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        // when
+        sut.execute(out, err);
+        // then
+
+    }
+
+    @Test
     public void shouldUseTheExtensionSpecifiedFromTheFromCenConverterAsOutputExtension() throws IOException {
         // From fatturapa have xml extension
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());

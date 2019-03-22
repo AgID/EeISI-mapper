@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.*;
@@ -50,6 +51,7 @@ public class ConversionResultTest {
     public void conversionResultIssuesAreNotActuallyImmutableButHasIssuesMustStillWorkAsAdvertised() {
 
         List<IConversionIssue> issues = new ArrayList<>();
+        // issues is now empty
 
         IConversionIssue issueWarn = ConversionIssue.newWarning(
                 new EigorException(
@@ -58,6 +60,7 @@ public class ConversionResultTest {
                         ErrorCode.Action.CONFIGURED_MAP,
                         ErrorCode.Error.INVALID));
         issues.add(issueWarn);
+        // issues has now 1 warn
 
         ConversionResult<String> sut = new ConversionResult<>(issues, "result");
 
@@ -66,7 +69,8 @@ public class ConversionResultTest {
 
 
         IConversionIssue issueError = ConversionIssue.newError(new EigorException("error", ErrorCode.Location.FATTPA_OUT, ErrorCode.Action.CONFIGURED_MAP, ErrorCode.Error.INVALID));
-        issues.add(issueError);
+        sut.addIssues(asList(issueError));
+
 
         assertThat(sut.hasIssues(), is(true));
     }
