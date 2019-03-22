@@ -372,9 +372,11 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         indirizzoType.setIndirizzo(addressIt);
                     }
 
-                    String city = deliverToCity.get(0).getValue();
-                    city = (!deliverToCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
-                    indirizzoType.setComune(city);
+                    if (!deliverToCity.isEmpty()) {
+                        String city = deliverToCity.get(0).getValue();
+                        city = (!deliverToCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        indirizzoType.setComune(city);
+                    }
                 } else {
                     log.debug("Italian address, keeping normal mapping");
                 }

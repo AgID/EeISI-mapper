@@ -170,9 +170,11 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         sede.setIndirizzo(addressIt);
                     }
 
+                    if (!buyerCity.isEmpty()) {
                         String city = buyerCity.get(0).getValue();
                         city = (!buyerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
                         sede.setComune(city);
+                    }
 
                     if (subdivision.isPresent())
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0054: " + subdivision.get());

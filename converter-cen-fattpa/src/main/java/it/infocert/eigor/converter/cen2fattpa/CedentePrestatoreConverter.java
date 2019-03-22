@@ -288,9 +288,11 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         sede.setIndirizzo(addressIt);
                     }
 
-                    String city = sellerCity.get(0).getValue();
-                    city = (!sellerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
-                    sede.setComune(city);
+                    if (!sellerCity.isEmpty()) {
+                        String city = sellerCity.get(0).getValue();
+                        city = (!sellerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        sede.setComune(city);
+                    }
 
                     if (subdivision.isPresent())
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
