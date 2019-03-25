@@ -2,9 +2,8 @@ package com.infocert.eigor.api;
 
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.configuration.ConfigurationException;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -26,15 +25,15 @@ import java.util.Iterator;
 
 public class AbstractIssueTest {
 
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
+    @ClassRule
+    public static TemporaryFolder tmp = new TemporaryFolder();
 
-    EigorApi api;
-    ConversionUtil conversion;
+    static EigorApi api;
+    static ConversionUtil conversion;
 
     static DocumentBuilder documentBuilder;
     static XPath xPath;
-    File apiFolder;
+    static File apiFolder;
 
     @BeforeClass
     public static void setUpXmlInfrastructure() throws ParserConfigurationException {
@@ -47,8 +46,8 @@ public class AbstractIssueTest {
         xPath = xPathFactory.newXPath();
     }
 
-    @Before
-    public void initApi() throws IOException, ConfigurationException {
+    @BeforeClass
+    public static void initApi() throws IOException, ConfigurationException {
 
         apiFolder = tmp.newFolder();
         api = new EigorApiBuilder()
