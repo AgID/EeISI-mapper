@@ -16,13 +16,17 @@
 
         <menu name="eEisi">
             <item name="Getting started" href="getting-started.html" />
-            <item name="Configuration" href="configuration/configuration.html"/>
+            <item name="EeISI customization">
+                <item name="Enable Customization" href="enable-customizations.md"/>
+                <item name="Configuration" href="configuration/configuration.html"/>
+            </item>
             <item name="Schematron update" href="configuration/schematron.html"/>
             <item name="Supported Formats">
                 <item name="UBL" href="https://en.wikipedia.org/wiki/Universal_Business_Language"/>
                 <item name="CII" href="http://tfig.unece.org/contents/cross-industry-invoice-cii.htm"/>
                 <item name="CEN" href="http://tfig.unece.org/contents/cen-e-invocie.htm"/>
                 <item name="Fattua PA" href="http://www.fatturapa.gov.it/export/fatturazione/it/index.htm"/>
+                <item name="XMLCEN" href="formats/xmlcen.html"/>
             </item>
         </menu>
 
