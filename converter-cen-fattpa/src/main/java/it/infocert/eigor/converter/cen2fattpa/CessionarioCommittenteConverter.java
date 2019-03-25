@@ -154,21 +154,8 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         sb.append(s).append(IConstants.WHITESPACE);
                     }
                     String addressIt = sb.toString().trim();
-                    final FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
-                    if (addressIt.length() > 60) {
-                        final String first = addressIt.substring(0, 59);
-                        sede.setIndirizzo(first);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0050: " + addressLine1Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0051: " + addressLine2Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0163: " + addressLine3Value);
-//                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("BuyerAddress was not compliant with FatturaPA specification. " +
-//                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("BuyerAddress was not compliant with FatturaPA specification. " +
-                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values");
-                    } else {
                         addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
                         sede.setIndirizzo(addressIt);
-                    }
 
                     if (!buyerCity.isEmpty()) {
                         String city = buyerCity.get(0).getValue();

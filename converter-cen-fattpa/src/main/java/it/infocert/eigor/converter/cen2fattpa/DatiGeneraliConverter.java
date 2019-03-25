@@ -357,20 +357,8 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         sb.append(s).append(IConstants.WHITESPACE);
                     }
                     String addressIt = sb.toString().trim();
-                    if (addressIt.length() > 60) {
-                        final String first = addressIt.substring(0, 59);
-                        indirizzoType.setIndirizzo(first);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0075: " + addressLine1Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0076: " + addressLine2Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0165: " + addressLine3Value);
-//                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("SellerAddress was not compliant with FatturaPA specification. " +
-//                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("DeliveryAddress was not compliant with FatturaPA specification. " +
-                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values");
-                    } else {
-                        addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
-                        indirizzoType.setIndirizzo(addressIt);
-                    }
+                    addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
+                    indirizzoType.setIndirizzo(addressIt);
 
                     if (!deliverToCity.isEmpty()) {
                         String city = deliverToCity.get(0).getValue();
