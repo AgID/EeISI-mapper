@@ -290,7 +290,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
                     if (!sellerCity.isEmpty()) {
                         String city = sellerCity.get(0).getValue();
-                        city = (!sellerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        city = city.isEmpty() ? "undefined" : city;
                         sede.setComune(city);
                     }
 
