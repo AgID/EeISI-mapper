@@ -111,8 +111,8 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
             if (!addresses.isEmpty()) {
                 final BG0008BuyerPostalAddress address = addresses.get(0);
                 Optional<String> subdivision = Optional.absent();
-                if (!address.getBT0050BuyerAddressLine1().isEmpty()) {
-                    subdivision = Optional.fromNullable(address.getBT0050BuyerAddressLine1(0).getValue());
+                if (!address.getBT0054BuyerCountrySubdivision().isEmpty()) {
+                    subdivision = Optional.fromNullable(address.getBT0054BuyerCountrySubdivision(0).getValue());
                 }
 
                 final List<BT0055BuyerCountryCode> countryCodes = address.getBT0055BuyerCountryCode();
@@ -172,7 +172,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
 
                     if (!buyerCity.isEmpty()) {
                         String city = buyerCity.get(0).getValue();
-                        city = (!buyerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        city = (city.isEmpty()) ? "undefined" : city;
                         sede.setComune(city);
                     }
 
@@ -180,8 +180,8 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0054: " + subdivision.get());
                 } else {
                     log.debug("Italian address");
-//                    final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
-//                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
+                    final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
+                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
                 }
 
             } else {

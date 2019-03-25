@@ -290,7 +290,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
 
                     if (!sellerCity.isEmpty()) {
                         String city = sellerCity.get(0).getValue();
-                        city = (!sellerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        city = city.isEmpty() ? "undefined" : city;
                         sede.setComune(city);
                     }
 
@@ -298,8 +298,8 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
                 } else {
                     log.debug("Italian address");
-//                    final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
-//                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
+                    final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
+                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
                 }
 
             } else {

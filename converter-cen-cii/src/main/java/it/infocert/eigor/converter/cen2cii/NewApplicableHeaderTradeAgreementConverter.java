@@ -252,8 +252,10 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0046 = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs); // maybe GlobalID ?
-                id.setText(bt0046.toString());
+                id.setText(bt0046.getIdentifier());
                 if (bt0046.getIdentificationSchema() != null) {
+                    id.setAttribute("schemeID", bt0046.getIdentificationSchema());
+                } else {
                     id.setAttribute("schemeID", "");
                 }
                 buyerTradeParty.addContent(id);
