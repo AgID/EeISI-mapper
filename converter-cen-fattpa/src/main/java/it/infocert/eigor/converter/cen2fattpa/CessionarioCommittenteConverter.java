@@ -172,7 +172,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
 
                     if (!buyerCity.isEmpty()) {
                         String city = buyerCity.get(0).getValue();
-                        city = (!buyerCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        city = (city.isEmpty()) ? "undefined" : city;
                         sede.setComune(city);
                     }
 
