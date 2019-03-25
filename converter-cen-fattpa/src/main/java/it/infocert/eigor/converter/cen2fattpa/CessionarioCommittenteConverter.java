@@ -37,8 +37,8 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
             FatturaElettronicaBodyType fatturaElettronicaBody = fatturaElettronica.getFatturaElettronicaBody().get(0);
             addCodiceFiscale(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
             addCodiceEori(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
-            addProvincia(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
             addIndirizzo(invoice, fatturaElettronica, cessionarioCommittente, errors);
+            addProvincia(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
             addCAP(invoice, fatturaElettronicaBody, cessionarioCommittente, errors);
 
             // fix for https://gitlab.com/tgi-infocert-eigor/eigor/issues/269
@@ -180,8 +180,8 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0054: " + subdivision.get());
                 } else {
                     log.debug("Italian address");
-                    final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
-                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
+//                    final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
+//                    if (subdivision.isPresent()) sede.setProvincia(subdivision.get());
                 }
 
             } else {
@@ -252,6 +252,7 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
 
     private void addProvincia(BG0000Invoice invoice, FatturaElettronicaBodyType body, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
         final List<BG0007Buyer> buyers = invoice.getBG0007Buyer();
+        final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
         if (!buyers.isEmpty()) {
             final BG0007Buyer buyer = buyers.get(0);
             final List<BG0008BuyerPostalAddress> addresses = buyer.getBG0008BuyerPostalAddress();
@@ -262,17 +263,18 @@ public class CessionarioCommittenteConverter implements CustomMapping<FatturaEle
                 if (!subdivisions.isEmpty() && !countryCodes.isEmpty()) {
                     final String subdivision = subdivisions.get(0).getValue();
                     final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
-                    final IndirizzoType sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
                     cessionarioCommittente.setSede(sede);
                     if (Iso31661CountryCodes.IT.equals(countryCode)) {
                         sede.setProvincia(subdivision);
                     } else {
                         attachmentUtil.addToUnmappedValuesAttachment(body, "BT0054: " + subdivision);
                     }
-
                 }
             }
         }
+//        if (sede.getProvincia() == null || !sede.getProvincia().isEmpty()) {
+//            sede.setProvincia("XX");
+//        }
     }
 
     private void addCAP(BG0000Invoice invoice, FatturaElettronicaBodyType body, CessionarioCommittenteType cessionarioCommittente, List<IConversionIssue> errors) {
