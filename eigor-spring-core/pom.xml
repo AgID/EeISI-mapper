@@ -44,6 +44,10 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

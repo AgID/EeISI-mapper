@@ -27,6 +27,10 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
     </dependencies>
 
 

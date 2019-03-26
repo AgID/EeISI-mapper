@@ -19,6 +19,10 @@
             <artifactId>reflections</artifactId>
             <version>${reflections.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>eigor-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

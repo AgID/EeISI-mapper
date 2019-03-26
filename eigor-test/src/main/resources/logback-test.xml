@@ -3,15 +3,12 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>CACCA %d{mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="off">
+    <root level="OFF">
         <appender-ref ref="STDOUT" />
     </root>
-
-    <logger name="it.infocert" level="off" />
-    <logger name="it.infocert.eigor.api.xml" level="all" />
 
 </configuration>
