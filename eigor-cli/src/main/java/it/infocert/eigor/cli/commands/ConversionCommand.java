@@ -1,29 +1,23 @@
 package it.infocert.eigor.cli.commands;
 
+import com.infocert.eigor.api.ConversionPreferences;
 import com.infocert.eigor.api.EigorApi;
-import com.infocert.eigor.api.EigorApiBuilder;
-import it.infocert.eigor.api.FromCenConversion;
-import it.infocert.eigor.api.RuleRepository;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.DebugConversionCallback;
 import it.infocert.eigor.api.conversion.DumpIntermediateCenInvoiceAsCsvCallback;
-import it.infocert.eigor.api.conversion.ObservableConversion;
-import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.cli.CliCommand;
-import it.infocert.eigor.cli.Eigor;
-import it.infocert.eigor.cli.EigorCli;
 import it.infocert.eigor.converter.cen2xmlcen.CenToXmlCenConverter;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -163,13 +157,36 @@ public class ConversionCommand implements CliCommand {
 
     private void conversion(File outputFolderFile, PrintStream out) {
 
-        api.convert(sourceFormat, targetFormat, invoiceInSourceFormat, invoiceInName,
+        ConversionPreferences conversionPreferences = new ConversionPreferences();
+        if(runIntermediateValidation) {
+            conversionPreferences.withIntermediateValidation();
+        }
+        if(forceConversion) {
+            conversionPreferences.withForceConversion();
+        }
+
+        ConversionResult<byte[]> conversionResult = api.convert(
+                sourceFormat,
+                targetFormat,
+                invoiceInSourceFormat,
+                invoiceInName,
+                conversionPreferences,
                 new ConsoleOutputConversionCallback(this, out),
                 new DebugConversionCallback(outputFolderFile),
                 new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderFile),
-                new DumpIntermediateCenInvoiceAsCenXmlCallback(
-                        outputFolderFile,
-                        new CenToXmlCenConverter(configuration), runIntermediateValidation));
+                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderFile, new CenToXmlCenConverter(configuration), false));
+
+        if (conversionResult.isSuccessful()) {
+            out.println("Conversion completed successfully!");
+        } else {
+            out.println(String.format("Conversion finished, but %d issues have occured.", conversionResult.getIssues().size()));
+            List<IConversionIssue> errors = conversionResult.getIssues();
+            for (IConversionIssue e : errors) {
+                String label = e.isError() ? "ERROR: " : "WARN: ";
+                out.println(label + e.getMessage());
+            }
+        }
+
     }
 
     public boolean isForceConversion() {

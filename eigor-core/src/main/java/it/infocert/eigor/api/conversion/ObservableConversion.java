@@ -134,7 +134,16 @@ public class ObservableConversion extends AbstractObservable {
 
             // 2nd step CEN verification
             if (keepOnGoing) {
+
+                boolean errorsHappended = false;
+
+                toCenResult.clearIssues();
                 fireOnStartingVerifyingCenRules(ctx);
+                if(!toCenResult.getIssues().isEmpty()){
+                    issues.addAll(toCenResult.getIssues());
+                    errorsHappended = true;
+                }
+
                 cenInvoice = toCenResult.getResult();
                 ruleReport = new InMemoryRuleReport();
                 applyRulesToCenObject(cenInvoice, ruleReport);
@@ -146,11 +155,13 @@ public class ObservableConversion extends AbstractObservable {
                     for (Map.Entry<RuleOutcome, Rule> errorsAndFailure : ruleReport.getErrorsAndFailures()) {
                         issues.add(new RuleOutcomeAsConversionIssueAdapter(errorsAndFailure.getKey()));
                     }
-
+                    errorsHappended = true;
                     fireOnFailedVerifyingCenRules(ctx);
-                    if (!forceConversion)
-                        keepOnGoing = false;
+
                 }
+
+                if (!forceConversion && errorsHappended)
+                    keepOnGoing = false;
             }
 
             // 3rd step CEN -> XML

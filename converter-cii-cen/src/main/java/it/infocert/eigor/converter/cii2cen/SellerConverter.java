@@ -11,12 +11,12 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0031SellerVatIdentifier;
 import it.infocert.eigor.model.core.model.BT0032SellerTaxRegistrationIdentifier;
+import it.infocert.eigor.model.core.model.BT0063SellerTaxRepresentativeVatIdentifier;
+import java.util.List;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
-import java.util.List;
 
 /**
  * The Seller Custom Converter
@@ -88,6 +88,16 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                                 }
                             }
                         }
+                    }
+                }
+
+                Element sellerTaxRepresentativeTradeParty = findNamespaceChild(child1, namespacesInScope, "SellerTaxRepresentativeTradeParty");
+                if (sellerTaxRepresentativeTradeParty != null){
+                    Element specifiedTaxRegistration = findNamespaceChild(sellerTaxRepresentativeTradeParty, namespacesInScope, "SpecifiedTaxRegistration");
+                    Element idTax = findNamespaceChild(specifiedTaxRegistration, namespacesInScope, "ID");
+                    if (idTax != null) {
+                        BT0063SellerTaxRepresentativeVatIdentifier bt0063 = new BT0063SellerTaxRepresentativeVatIdentifier(new Identifier(idTax.getText()));
+                        invoice.getBG0011SellerTaxRepresentativeParty(0).getBT0063SellerTaxRepresentativeVatIdentifier().add(bt0063);
                     }
                 }
             }

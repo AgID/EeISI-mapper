@@ -1,8 +1,6 @@
 package it.infocert.eigor.cli;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 
@@ -20,17 +18,18 @@ import static org.junit.Assert.assertThat;
 
 public class ITEigorTest {
 
-    public @Rule
-    TemporaryFolder tmp = new TemporaryFolder();
+    public @ClassRule
+    static TemporaryFolder tmp = new TemporaryFolder();
+
     public @Rule
     TestName test = new TestName();
     private File outputDir;
     private ByteArrayOutputStream err;
-    private File plainFattPa;
-    private CommandLineInterpreter cli;
+    private static File plainFattPa;
+    private static CommandLineInterpreter cli;
 
-    @Before
-    public void setUpCommandLineInterpeter() {
+    @BeforeClass
+    public static void setUpCommandLineInterpeter() {
         cli = new JoptsimpleBasecCommandLineInterpreter();
     }
 
@@ -43,13 +42,19 @@ public class ITEigorTest {
     }
 
     @Before
-    public void setUpFolders() throws IOException {
+    public void setUpInputFolder() throws IOException {
         //...an "input" folder where input file can be stored.
         File inputDir = tmp.newFolder(test.getMethodName(), "input");
-        //...an "output" folder where output files can be stored
-        outputDir = tmp.newFolder(test.getMethodName(), "output");
         //...let's copy an input invoice in the input folder
         plainFattPa = TestUtils.copyResourceToFolder("/examples/fattpa/fatt-pa-plain-vanilla.xml", inputDir);
+    }
+
+    @Before
+    public void setUpOutputFolder() throws IOException {
+        //...an "output" folder where output files can be stored
+        outputDir = tmp.newFolder(test.getMethodName(), "output");
+
+
     }
 
     @Test

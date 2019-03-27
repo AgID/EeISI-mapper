@@ -2,6 +2,7 @@ package it.infocert.eigor.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
 public class ConversionResult<R> {
 
     protected final R result;
-    protected List<IConversionIssue> issues;
+    protected final List<IConversionIssue> issues;
 
     /**
      * Immutable object constructed with data result and not null but possible empty array of issues
@@ -21,7 +22,7 @@ public class ConversionResult<R> {
      * @param issues
      */
     public ConversionResult(List<IConversionIssue> issues, R result) {
-        this.issues = Collections.unmodifiableList(issues);
+        this.issues = new LinkedList<>( issues );
         this.result = result;
     }
 
@@ -29,8 +30,8 @@ public class ConversionResult<R> {
      * A conversion without issues.
      */
     public ConversionResult(R result) {
+        this.issues = new LinkedList<>();
         this.result = result;
-        this.issues = Collections.unmodifiableList(new ArrayList<IConversionIssue>());
     }
 
     /**
@@ -56,7 +57,11 @@ public class ConversionResult<R> {
      * @return A never null list of issues caught during conversion.
      */
     public List<IConversionIssue> getIssues() {
-        return issues != null ? issues : new ArrayList<IConversionIssue>();
+        return Collections.unmodifiableList( issues != null ? issues : new ArrayList<>() );
+    }
+
+    public boolean addIssues(List<IConversionIssue> issues) {
+        return this.issues.addAll( issues );
     }
 
     /**
@@ -71,5 +76,9 @@ public class ConversionResult<R> {
      */
     public R getResult() {
         return result;
+    }
+
+    public void clearIssues() {
+        this.issues.clear();
     }
 }

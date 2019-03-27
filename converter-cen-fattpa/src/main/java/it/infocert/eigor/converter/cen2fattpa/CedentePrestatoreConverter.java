@@ -42,6 +42,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 mapBt29(invoice, body, cedentePrestatore, errors);
                 mapBt30(invoice, body, cedentePrestatore, errors);
                 addIndirizzo(invoice, fatturaElettronica, errors);
+                addCAP(invoice, body, cedentePrestatore, errors);
             }
         } else {
             final IllegalArgumentException e = new IllegalArgumentException("No CedentePrestatore was found in current FatturaElettronicaHeader");
@@ -240,6 +241,7 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     final List<BT0035SellerAddressLine1> addressLines1 = address.getBT0035SellerAddressLine1();
                     final List<BT0036SellerAddressLine2> addressLines2 = address.getBT0036SellerAddressLine2();
                     final List<BT0162SellerAddressLine3> addressLines3 = address.getBT0162SellerAddressLine3();
+                    final List<BT0037SellerCity> sellerCity = address.getBT0037SellerCity();
                     final StringBuilder sb = new StringBuilder();
                     String addressLine1Value = "";
                     String addressLine2Value = "";
@@ -269,37 +271,16 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                     for (String s : Lists.newArrayList(addressLine1Value, addressLine2Value, addressLine3Value)) {
                         sb.append(s).append(IConstants.WHITESPACE);
                     }
-                    final String addressIt = sb.toString().trim();
-                    final FatturaElettronicaBodyType body = fatturaElettronica.getFatturaElettronicaBody().get(0);
-                    if (addressIt.length() > 60) {
-                        final String first = addressIt.substring(0, 59);
-                        sede.setIndirizzo(first);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0035: " + addressLine1Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0036: " + addressLine2Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0162: " + addressLine3Value);
-//                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("SellerAddress was not compliant with FatturaPA specification. " +
-//                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("SellerAddress was not compliant with FatturaPA specification. " +
-                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values");
-                    } else {
+                    String addressIt = sb.toString().trim();
+                        addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
                         sede.setIndirizzo(addressIt);
+
+                    if (!sellerCity.isEmpty()) {
+                        String city = sellerCity.get(0).getValue();
+                        city = city.isEmpty() ? "undefined" : city;
+                        sede.setComune(city);
                     }
 
-                    if (!postCodes.isEmpty()) {
-                        final String postCode = postCodes.get(0).getValue();
-                        if (postCode.length() > 5) {
-                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
-                            sede.setCAP("99999");
-//                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("SellerPostalCode was not compliant with FatturaPA specification. " +
-//                                "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values"))));
-                            log.warn("SellerPostalCode was not compliant with FatturaPA specification. " +
-                                    "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
-                        } else {
-                            sede.setCAP(postCode);
-                        }
-                    } else {
-                        log.warn("No [BT-38] SellerPostCode was found in current [BG-5] SellerPostalAddress");
-                    }
                     if (subdivision.isPresent())
                         attachmentUtil.addToUnmappedValuesAttachment(fatturaElettronica.getFatturaElettronicaBody().get(0), "BT0039: " + subdivision.get());
                 } else {
@@ -390,4 +371,34 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
         }
     }
 
+    private void addCAP(BG0000Invoice invoice, FatturaElettronicaBodyType body, CedentePrestatoreType cedentePrestatore, List<IConversionIssue> errors) {
+        final List<BG0004Seller> sellers = invoice.getBG0004Seller();
+        if (!sellers.isEmpty()) {
+            final BG0004Seller buyer = sellers.get(0);
+            final List<BG0005SellerPostalAddress> addresses = buyer.getBG0005SellerPostalAddress();
+            if (!addresses.isEmpty()) {
+                final BG0005SellerPostalAddress address = buyer.getBG0005SellerPostalAddress(0);
+                final List<BT0038SellerPostCode> postCodes = address.getBT0038SellerPostCode();
+                final List<BT0040SellerCountryCode> countryCodes = address.getBT0040SellerCountryCode();
+                if (!postCodes.isEmpty() && !countryCodes.isEmpty()) {
+                    final String postCode = postCodes.get(0).getValue();
+                    final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
+                    final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
+                    cedentePrestatore.setSede(sede);
+                    if (Iso31661CountryCodes.IT.equals(countryCode)) {
+                        sede.setCAP(postCode);
+                    } else {
+                        if (postCode.length() > 5) {
+                            sede.setCAP("99999");
+                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
+                        } else {
+                            sede.setCAP(postCode);
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
 }

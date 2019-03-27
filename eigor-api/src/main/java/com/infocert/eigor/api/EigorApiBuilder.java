@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Builds instances of the {@link EigorApi} that works according to the configuration specified.
+ * Builds instances of the {@link EigorApiImpl} that works according to the configuration specified.
  */
 public class EigorApiBuilder {
 
@@ -50,6 +50,7 @@ public class EigorApiBuilder {
     private RuleRepository ruleRepository;
     private boolean copy = false;
     private boolean forceConversion = false;
+    private final CenToXmlCenConverter cen2XmlCen;
 
     public EigorApiBuilder() throws IOException {
 
@@ -60,6 +61,8 @@ public class EigorApiBuilder {
         configuration = DefaultEigorConfigurationLoader.configuration();
 
         // prepare the set of conversions to be supported by the api
+
+        cen2XmlCen = new CenToXmlCenConverter(configuration);
         conversionRepository =
                 new ConversionRepository.Builder()
                         .register(new Cii2Cen(reflections, configuration))
@@ -74,7 +77,7 @@ public class EigorApiBuilder {
                         .register(new FattPa2Cen(reflections, configuration))
                         .register(new CsvCen2Cen(reflections))
                         .register(new XmlCen2Cen(reflections, configuration))
-                        .register(new CenToXmlCenConverter(configuration))
+                        .register(cen2XmlCen)
                         .build();
 
         outputFolderFile = FileUtils.getTempDirectory();
@@ -135,7 +138,7 @@ public class EigorApiBuilder {
         // configure the repo
         conversionRepository.configure();
 
-        return new EigorApi(this);
+        return new EigorApiImpl(this);
 
     }
 
@@ -162,7 +165,7 @@ public class EigorApiBuilder {
     }
 
     /**
-     * A common set up of {@link EigorApi} requires a bunch of files and directories to be
+     * A common set up of {@link EigorApiImpl} requires a bunch of files and directories to be
      * present in the filesystem of the host running Eigor.
      *
      * Those files are mainly XSDs and Schematron of all supported formats plus other configuration files.
@@ -193,5 +196,9 @@ public class EigorApiBuilder {
 
     EigorConfiguration getConfiguration() {
         return configuration;
+    }
+
+    CenToXmlCenConverter getCen2XmlCen() {
+        return cen2XmlCen;
     }
 }

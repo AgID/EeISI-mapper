@@ -5,9 +5,7 @@ import com.infocert.eigor.api.EigorApiBuilder;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.cli.TestUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 
@@ -32,31 +30,60 @@ public class ConversionCommandTest {
 
     private static EigorConfiguration configuration = DefaultEigorConfigurationLoader.configuration();
 
-    @Rule
-    public TemporaryFolder tmpRule = new TemporaryFolder();
+    private static int folderCount = 0;
+
+    @ClassRule
+    public static TemporaryFolder tmpRule = new TemporaryFolder();
+
     public @Rule
     TestName test = new TestName();
 
     private File outputFolderFile;
-    private File plainFattPa;
+    private static File plainFattPa;
     private InputStream invoiceInputStream;
+
 
     @Before
     public void setUpOutputFolder() throws IOException {
         //...an "input" folder where input file can be stored.
         File inputDir = tmpRule.newFolder(test.getMethodName(), "input");
         //...an "output" folder where output files can be stored
-        outputFolderFile = tmpRule.newFolder("output");
+        outputFolderFile = tmpRule.newFolder("output", "tmp" + folderCount++ );
         //...let's copy an input invoice in the input folder
         plainFattPa = TestUtils.copyResourceToFolder("/examples/fattpa/fatt-pa-plain-vanilla.xml", inputDir);
         invoiceInputStream = Files.newInputStream(plainFattPa.toPath(), READ);
     }
 
-    private EigorApi api;
+    private static EigorApi api;
 
-    @Before
-    public void setUpApi() throws Exception {
+    @BeforeClass
+    public static void setUpApi() throws Exception {
         api = new EigorApiBuilder().build();
+    }
+
+    @Test
+    public void shouldValidateIntermediateCenModel() throws IOException {
+
+        Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+
+        ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder()
+                .setTargetFormat(targetFormat)
+                .setSourceFormat(sourceFormat)
+                .setOutputFolder(outputFolder)
+                .setInvoiceInSourceFormat(invoiceInputStream)
+                .setForceConversion(true)
+                .setConfiguration(configuration)
+                .setRunIntermediateValidation(false)
+                .setApi(api)
+                .setInvoiceInName(plainFattPa.getName())
+                .setRunIntermediateValidation(true)
+                .build();
+        PrintStream err = new PrintStream(new ByteArrayOutputStream());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        // when
+        sut.execute(out, err);
+        // then
+
     }
 
     @Test

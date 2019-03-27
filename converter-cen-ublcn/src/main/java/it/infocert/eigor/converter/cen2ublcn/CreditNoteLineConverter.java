@@ -49,30 +49,11 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(id);
                     }
 
-                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        String idValue = bt0128.getValue().getIdentifier();
-                        String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
-                                ? bt0128.getValue().getIdentificationSchema()
-                                : "";
-                        idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
-                        String typeCode = "130";
-                        Element ublDocumentReferenceXml = new Element("DocumentReference");
-                        Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
-                        ublDocumentTypeCodeXml.setText(typeCode);
-                        Element ublIdXml = new Element("ID");
-                        ublIdXml.setText(idValue);
-                        ublIdXml.setAttribute("schemeID", idValueScheme);
-                        ublDocumentReferenceXml.addContent(ublIdXml);
-                        ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
-                        invoiceLine.addContent(ublDocumentReferenceXml);
-                    }
-
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
 
                         BigDecimal quantity;
                         BigDecimal bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ?
-                                BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
+                            BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
 
                         if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
                             BigDecimal bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
@@ -106,12 +87,44 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(lineExtensionAmount);
                     }
 
+                    if (!elemBg25.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
+                        BT0133InvoiceLineBuyerAccountingReference bt0133 = elemBg25.getBT0133InvoiceLineBuyerAccountingReference(0);
+                        Element id = new Element("AccountingCost");
+                        id.setText(bt0133.getValue());
+                        invoiceLine.addContent(id);
+                    }
+
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
                         List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
                         for (BG0026InvoiceLinePeriod ignored : bg0026) {
                             Element invoicePeriod = new Element("InvoicePeriod");
+                            Element start = new Element("StartDate");
+                            start.setText(bg0026.get(0).getBT0134InvoiceLinePeriodStartDate(0).getValue().toString());
+                            Element end = new Element("EndDate");
+                            end.setText(bg0026.get(0).getBT0135InvoiceLinePeriodEndDate(0).getValue().toString());
+                            invoicePeriod.addContent(start);
+                            invoicePeriod.addContent(end);
                             invoiceLine.addContent(invoicePeriod);
                         }
+                    }
+
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        String idValue = bt0128.getValue().getIdentifier();
+                        String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
+                                ? bt0128.getValue().getIdentificationSchema()
+                                : "";
+                        idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
+                        String typeCode = "130";
+                        Element ublDocumentReferenceXml = new Element("DocumentReference");
+                        Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
+                        ublDocumentTypeCodeXml.setText(typeCode);
+                        Element ublIdXml = new Element("ID");
+                        ublIdXml.setText(idValue);
+                        ublIdXml.setAttribute("schemeID", idValueScheme);
+                        ublDocumentReferenceXml.addContent(ublIdXml);
+                        ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
+                        invoiceLine.addContent(ublDocumentReferenceXml);
                     }
 
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {

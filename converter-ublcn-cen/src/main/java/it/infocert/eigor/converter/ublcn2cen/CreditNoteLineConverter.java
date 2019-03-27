@@ -622,9 +622,10 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                 if (standardItemIdentification != null) {
                     Element idStandard = findNamespaceChild(standardItemIdentification, namespacesInScope, "ID");
                     if (idStandard != null) {
-                        Attribute schemeID = id.getAttribute("schemeID");
+                        Attribute schemeID = idStandard.getAttribute("schemeID");
+
                         if (schemeID != null) {
-                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), idStandard.getText()));
+                            bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(schemeID.getValue(), idStandard.getText()));
                         } else {
                             bt0157 = new BT0157ItemStandardIdentifierAndSchemeIdentifier(new Identifier(idStandard.getText()));
                         }
@@ -636,8 +637,8 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                 for (Element elemComm : commodityClassifications) {
                     Element itemClassificationCode = findNamespaceChild(elemComm, namespacesInScope, "ItemClassificationCode");
                     if (itemClassificationCode != null) {
-                        Attribute listID = id.getAttribute("listID");
-                        Attribute listAgencyID = id.getAttribute("listVersionID");
+                        Attribute listID = itemClassificationCode.getAttribute("listID");
+                        Attribute listAgencyID = itemClassificationCode.getAttribute("listVersionID");
                         if (listID != null) {
                             if (listAgencyID != null) {
                                 bt0158 = new BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier(new Identifier(listID.getValue(), listAgencyID.getValue(), itemClassificationCode.getText()));

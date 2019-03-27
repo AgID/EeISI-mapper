@@ -9,12 +9,12 @@ import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
+import java.util.List;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
-import java.util.List;
 
 /**
  * The Buyer Identifier Custom Converter
@@ -52,6 +52,13 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
                     else if (id != null){
                         bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
+                    }
+
+                    Element specifiedTaxRegistration = findNamespaceChild(buyerTradeParty, namespacesInScope, "SpecifiedTaxRegistration");
+                    Element idTax = findNamespaceChild(specifiedTaxRegistration, namespacesInScope, "ID");
+                    if (idTax != null) {
+                        BT0048BuyerVatIdentifier bt0048 = new BT0048BuyerVatIdentifier(new Identifier(idTax.getText()));
+                        invoice.getBG0007Buyer(0).getBT0048BuyerVatIdentifier().add(bt0048);
                     }
                 }
             }

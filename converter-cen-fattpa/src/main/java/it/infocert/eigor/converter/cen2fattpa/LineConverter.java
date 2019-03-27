@@ -398,7 +398,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 BigDecimal quantity = invoiceLine.getBT0129InvoicedQuantity().isEmpty() ?
                         BigDecimal.ZERO : invoiceLine.getBT0129InvoicedQuantity(0).getValue();
 
-                dettaglioLinee.setQuantita(quantity.setScale(8, RoundingMode.HALF_UP));
+                dettaglioLinee.setQuantita(quantity.abs().setScale(8, RoundingMode.HALF_UP));
                 log.trace("Set BT129 as Quantita with value {}", quantity);
 
                 if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
@@ -517,7 +517,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             String desc = String.format("%s%s", reason, code);
                             dettaglioLinee.setDescrizione(desc);
                             log.trace("Set Descrizione with value {}", desc);
-                            BigDecimal quantityBd = quantity.setScale(8, RoundingMode.HALF_UP);
+                            BigDecimal quantityBd = quantity.abs().setScale(8, RoundingMode.HALF_UP);
                             dettaglioLinee.setQuantita(quantityBd);
                             log.trace("Set Quantita with value {}", quantityBd);
                             BigDecimal unit = discountValue.setScale(2, RoundingMode.HALF_UP);
@@ -570,9 +570,9 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         } else {
                             dettaglioLinee.setDescrizione(bt0144);
                         }
-                        dettaglioLinee.setQuantita(quantity.setScale(8, RoundingMode.HALF_UP));
+                        dettaglioLinee.setQuantita(quantity.abs().setScale(8, RoundingMode.HALF_UP));
                         dettaglioLinee.setPrezzoUnitario(surchargeValue.setScale(2, RoundingMode.HALF_UP));
-                        dettaglioLinee.setPrezzoTotale(chargeAmount.multiply(quantity));
+                        dettaglioLinee.setPrezzoTotale(chargeAmount.multiply(quantity.abs()));
                         if (!invoiceLine.getBG0030LineVatInformation().isEmpty()) {
                             BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
                             if (!lineVatInformation.getBT0152InvoicedItemVatRate().isEmpty()) {
@@ -602,9 +602,10 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             BigDecimal.ONE.setScale(2, RoundingMode.HALF_UP) :
                             priceDetails.getBT0149ItemPriceBaseQuantity(0).getValue().setScale(2, RoundingMode.HALF_UP);
                     String baseQuantityUnitOfMeasureCode = priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty() ? null : priceDetails.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue().getCommonCode();
+                    itemNetPrice = (quantity.signum() < 0 || baseQuantity.signum() < 0) ? itemNetPrice.negate() : itemNetPrice;
 
                     try {
-                        dettaglioLinee.setQuantita(quantity.divide(baseQuantity, RoundingMode.HALF_UP).setScale(8, RoundingMode.HALF_UP));
+                        dettaglioLinee.setQuantita(quantity.abs().divide(baseQuantity.abs(), RoundingMode.HALF_UP).setScale(8, RoundingMode.HALF_UP));
                     } catch (NumberFormatException | ArithmeticException e) {
                         ArrayList<String> zeroes = Lists.newArrayList();
                         if (quantity.compareTo(BigDecimal.ZERO) == 0) {
@@ -629,14 +630,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 
                     // FIXME PrezzoTotale is defined as (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
 
-//                    final BigDecimal prezzoTotale = itemNetPrice.multiply(
-//                            quantity.divide(baseQuantity, RoundingMode.HALF_UP))
-//                            .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
+                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.abs().divide(baseQuantity.abs(), RoundingMode.HALF_UP));
+
+                    //.subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
 
                     // FIXME  but only matches provided excel calculation like so
 
-                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.divide(baseQuantity, RoundingMode.HALF_UP));
-
+//                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.divide(baseQuantity, RoundingMode.HALF_UP));
+//
                     dettaglioLinee.setPrezzoTotale(prezzoTotale.setScale(8, RoundingMode.HALF_UP));
 
 
@@ -675,7 +676,7 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                     if (baseQuantity.compareTo(BigDecimal.ONE) > 0) {
                         AltriDatiGestionaliType altriDatiGestionaliQty = new AltriDatiGestionaliType();
                         altriDatiGestionaliQty.setTipoDato(IConstants.ITEM_BASE_QTY);
-                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity);
+                        altriDatiGestionaliQty.setRiferimentoNumero(baseQuantity.abs());
                         dettaglioLinee.getAltriDatiGestionali().add(altriDatiGestionaliQty);
 
 

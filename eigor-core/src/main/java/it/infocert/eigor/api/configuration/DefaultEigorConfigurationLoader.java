@@ -10,17 +10,35 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static java.lang.String.format;
-
 public class DefaultEigorConfigurationLoader {
 
+    /**
+     * Name of the system property that should refer to the external configuration file to be loaded.
+     * Please note that the value of this property follows the semantic supported by
+     * <a href="https://docs.spring.io/spring/docs/3.0.0.M4/reference/html/ch04s04.html">Spring's Resource Loader</a>.
+     */
+    public static final String EIGOR_CONFIGURATION_FILE_SYSTEM_PROPERTY = "eigor.configurationFile";
     private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Properties DEFAULTS;
+    private static EigorConfiguration CONFIG = null;
+
+    static {
+        DEFAULTS = new Properties();
+        try {
+            DEFAULTS.load(  DefaultEigorConfigurationLoader.class.getResourceAsStream( DefaultEigorConfigurationLoader.class.getSimpleName() + ".properties" ) );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Shorthand method to get the Eigor configuration.
      */
     public static EigorConfiguration configuration() {
-        return new DefaultEigorConfigurationLoader().loadConfiguration();
+        if(CONFIG == null) {
+            CONFIG = new DefaultEigorConfigurationLoader().loadConfiguration();
+        }
+        return CONFIG;
     }
 
     /**
@@ -39,7 +57,7 @@ public class DefaultEigorConfigurationLoader {
         EigorConfiguration eigorConfiguration = null;
 
         // if the system property is defined, try to load from it.
-        String location = System.getProperty("eigor.configurationFile");
+        String location = System.getProperty(EIGOR_CONFIGURATION_FILE_SYSTEM_PROPERTY);
         if (location != null) {
             tentatives.add(location);
             Resource resource = new DefaultResourceLoader().getResource(location);
@@ -89,7 +107,8 @@ public class DefaultEigorConfigurationLoader {
         }
 
         if (eigorConfiguration == null) {
-            throw new RuntimeException(format("Unable to find an eigor configuration file in any of those locations: %s.", tentatives));
+            log.info("Unable to find an eigor configuration file in any of those locations: {}, using default.", tentatives);
+            eigorConfiguration = new PropertiesBackedConfiguration(DEFAULTS);
         }
 
         return eigorConfiguration;
@@ -103,7 +122,7 @@ public class DefaultEigorConfigurationLoader {
     }
 
     private EigorConfiguration fromInputstream(InputStream conf) throws IOException {
-        Properties properties = new Properties();
+        Properties properties = new Properties(DEFAULTS);
         properties.load(conf);
         return new PropertiesBackedConfiguration(properties);
     }

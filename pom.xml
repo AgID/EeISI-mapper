@@ -10,7 +10,7 @@
     <groupId>it.infocert.eigor</groupId>
     <artifactId>eigor</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.1</version>
+    <version>4.2.2</version>
     <name>Eigor :: Aggregator</name>
     <description>Electronic Invoice GO Regional</description>
     <organization>
@@ -34,7 +34,6 @@
         <module>eigor-api</module>
         <module>eigor-spring-core</module>
         <module>eigor-test-schemas</module>
-        <module>eigor-commons</module>
         <module>converter-fattpa-commons</module>
         <module>eigor-configurations</module>
         <module>cen-core</module>

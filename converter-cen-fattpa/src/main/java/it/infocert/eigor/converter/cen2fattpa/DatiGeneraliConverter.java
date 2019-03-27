@@ -76,7 +76,7 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
             addDDT(invoice, datiGenerali, errors, callingLocation);
             addCausale(invoice, datiGenerali, errors, callingLocation);
             addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
-            addIndirizzo(invoice, fatturaElettronica, errors);
+            addIndirizzo(invoice, fatturaElettronica, datiGenerali, errors);
             addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
             addRiferimentoNormativo(invoice, body, errors, callingLocation);
             addArrotondamento(invoice, body, errors, callingLocation);
@@ -95,14 +95,14 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     if (!bg0017.getBT0085PaymentAccountName().isEmpty()) {
 
 
-                        String bt0086Value = evalExpression( () -> bg0017.getBT0086PaymentServiceProviderIdentifier(0).getValue() );
-                        String bt0085Value = evalExpression( () -> bg0017.getBT0085PaymentAccountName(0).getValue() );
-                        String bt0084Value = evalExpression( () -> bg0017.getBT0084PaymentAccountIdentifier(0).getValue() );
+                        String bt0086Value = evalExpression(() -> bg0017.getBT0086PaymentServiceProviderIdentifier(0).getValue());
+                        String bt0085Value = evalExpression(() -> bg0017.getBT0085PaymentAccountName(0).getValue());
+                        String bt0084Value = evalExpression(() -> bg0017.getBT0084PaymentAccountIdentifier(0).getValue());
 
                         DatiPagamentoType datiPagamento = null;
                         if (!body.getDatiPagamento().isEmpty()) {
                             datiPagamento = body.getDatiPagamento().get(0);
-                        }else {
+                        } else {
                             final String message = "No DatiPagamento was found in current FatturaElettronicaBody";
                             errors.add(ConversionIssue.newError(new EigorRuntimeException(
                                     message,
@@ -132,8 +132,8 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         BigDecimal importoPagamento = evalExpression(() -> invoice.getBG0022DocumentTotals().get(0).getBT0115AmountDueForPayment().get(0).getValue());
                         dettaglioPagamento.setImportoPagamento(importoPagamento);
 
-                        if(bt0086Value!=null) dettaglioPagamento.setBIC(bt0086Value);
-                        if(bt0084Value!=null) dettaglioPagamento.setIBAN(bt0084Value);
+                        if (bt0086Value != null) dettaglioPagamento.setBIC(bt0086Value);
+                        if (bt0084Value != null) dettaglioPagamento.setIBAN(bt0084Value);
 
 
 //                        if (datiPagamento.getDettaglioPagamento().isEmpty()) {
@@ -186,8 +186,6 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
 
                 }
-
-
 
 
             }
@@ -310,8 +308,9 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
     }
 
-    private void addIndirizzo(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors) {
-        final CessionarioCommittenteType cessionarioCommittente = fatturaElettronica.getFatturaElettronicaHeader().getCessionarioCommittente();
+    private void addIndirizzo(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, DatiGeneraliType datiGenerali, List<IConversionIssue> errors) {
+        DatiTrasportoType datiTrasportoType = Optional.fromNullable(datiGenerali.getDatiTrasporto()).or(new DatiTrasportoType());
+        IndirizzoType indirizzoType = Optional.fromNullable(datiTrasportoType.getIndirizzoResa()).or(new IndirizzoType());
         final List<BG0013DeliveryInformation> deliveryInformations = invoice.getBG0013DeliveryInformation();
         if (!deliveryInformations.isEmpty()) {
             final List<BG0015DeliverToAddress> addresses = deliveryInformations.get(0).getBG0015DeliverToAddress();
@@ -321,11 +320,11 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 final List<BT0080DeliverToCountryCode> countryCodes = address.getBT0080DeliverToCountryCode();
                 if (!countryCodes.isEmpty() && !Iso31661CountryCodes.IT.equals(countryCodes.get(0).getValue())) {
                     log.debug("Non-italian address, applying custom mapping");
-                    final List<BT0078DeliverToPostCode> postCodes = address.getBT0078DeliverToPostCode();
 
                     final List<BT0075DeliverToAddressLine1> addressLines1 = address.getBT0075DeliverToAddressLine1();
                     final List<BT0076DeliverToAddressLine2> addressLines2 = address.getBT0076DeliverToAddressLine2();
                     final List<BT0165DeliverToAddressLine3> addressLines3 = address.getBT0165DeliverToAddressLine3();
+                    final List<BT0077DeliverToCity> deliverToCity = address.getBT0077DeliverToCity();
                     final StringBuilder sb = new StringBuilder();
                     String addressLine1Value = "";
                     String addressLine2Value = "";
@@ -352,38 +351,19 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
 
 
-                    final IndirizzoType sede;
+                    final DatiTrasportoType sede;
                     final FatturaElettronicaBodyType body;
                     for (String s : Lists.newArrayList(addressLine1Value, addressLine2Value, addressLine3Value)) {
                         sb.append(s).append(IConstants.WHITESPACE);
                     }
-                    final String addressIt = sb.toString().trim();
-                    sede = Optional.fromNullable(cessionarioCommittente.getSede()).or(new IndirizzoType());
-                    body = fatturaElettronica.getFatturaElettronicaBody().get(0);
-                    if (addressIt.length() > 60) {
-                        final String first = addressIt.substring(0, 59);
-                        sede.setIndirizzo(first);
-                        attachmentUtil.addToUnmappedValuesAttachment(body, "BT0075: " + addressLine1Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(body, "BT0076: " + addressLine2Value);
-                        attachmentUtil.addToUnmappedValuesAttachment(body, "BT0165: " + addressLine3Value);
-                        //                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("DeliverToAddress was not compliant with FatturaPA specification. " +
-                        //                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("DeliverToAddress was not compliant with FatturaPA specification. " +
-                                "Address has been truncated to the first 60 characters. See not-mapped-values.txt in attachment for the original values");
-                    } else {
-                        sede.setIndirizzo(addressIt);
-                    }
+                    String addressIt = sb.toString().trim();
+                    addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
+                    indirizzoType.setIndirizzo(addressIt);
 
-                    if (!postCodes.isEmpty()) {
-                        final String postCode = postCodes.get(0).getValue();
-                        attachmentUtil.addToUnmappedValuesAttachment(body, "BT0078: " + postCode);
-                        sede.setCAP("99999");
-//                        errors.add(ConversionIssue.newWarning(new EigorException(new ErrorMessage("DeliverToPostalCode was not compliant with FatturaPA specification. " +
-//                                "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values"))));
-                        log.warn("DeliverToPostalCode was not compliant with FatturaPA specification. " +
-                                "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
-                    } else {
-                        log.warn("No [BT-78] DeliverToPostCode was found in current [BG-15] DeliverToAddress");
+                    if (!deliverToCity.isEmpty()) {
+                        String city = deliverToCity.get(0).getValue();
+                        city = (!deliverToCity.isEmpty() || city.isEmpty()) ? "undefined" : city;
+                        indirizzoType.setComune(city);
                     }
                 } else {
                     log.debug("Italian address, keeping normal mapping");
@@ -431,8 +411,8 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                 final IndirizzoType indirizzoResa = Optional.fromNullable(datiTrasporto.getIndirizzoResa()).or(new IndirizzoType());
                 datiTrasporto.setIndirizzoResa(indirizzoResa);
 
-                String bt75 = evalExpression(() -> address.getBT0075DeliverToAddressLine1(0).getValue());
-                String bt76 = evalExpression(() -> address.getBT0076DeliverToAddressLine2(0).getValue());
+//                String bt75 = evalExpression(() -> address.getBT0075DeliverToAddressLine1(0).getValue());
+//                String bt76 = evalExpression(() -> address.getBT0076DeliverToAddressLine2(0).getValue());
                 final List<BT0077DeliverToCity> deliverToCities = address.getBT0077DeliverToCity();
                 final List<BT0078DeliverToPostCode> postCodes = address.getBT0078DeliverToPostCode();
                 final List<BT0079DeliverToCountrySubdivision> subdivisions = address.getBT0079DeliverToCountrySubdivision();
@@ -440,8 +420,8 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
                 if (!countryCodes.isEmpty()) {
 
-                    if(bt75!=null) indirizzoResa.setIndirizzo( bt75 );
-                    if(bt76!=null) indirizzoResa.setNumeroCivico( bt76 );
+//                    if(bt75!=null) indirizzoResa.setIndirizzo( bt75 );
+//                    if(bt76!=null) indirizzoResa.setNumeroCivico( bt76 );
 
                     final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
 
@@ -575,11 +555,11 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                     }
 
                     if (invoice.getBT0008ValueAddedTaxPointDateCode().size() == 0 &&
-                        invoice.getBT0007ValueAddedTaxPointDate().size() == 0) {
+                            invoice.getBT0007ValueAddedTaxPointDate().size() == 0) {
                         datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);
                     }
                     if (invoice.getBT0007ValueAddedTaxPointDate().size() > 0 &&
-                        invoice.getBT0002InvoiceIssueDate().size() > 0) {
+                            invoice.getBT0002InvoiceIssueDate().size() > 0) {
 
                         if (invoice.getBT0007ValueAddedTaxPointDate().get(0).getValue().compareTo(invoice.getBT0002InvoiceIssueDate().get(0).getValue()) != 0) {
                             datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.D);
@@ -588,12 +568,12 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
                         }
                     }
                     if (invoice.getBT0008ValueAddedTaxPointDateCode().size() > 0 &&
-                        (invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code3) ||
-                            invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code35))) {
+                            (invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code3) ||
+                                    invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code35))) {
                         datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);
                     }
                     if (invoice.getBT0008ValueAddedTaxPointDateCode().size() > 0 &&
-                        invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code432)) {
+                            invoice.getBT0008ValueAddedTaxPointDateCode().get(0).getValue().equals(Untdid2005DateTimePeriodQualifiers.Code432)) {
                         datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.D);
                     }
                 }

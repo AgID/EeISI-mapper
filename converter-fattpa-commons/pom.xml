@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eigor-parent</artifactId>
         <groupId>it.infocert.eigor</groupId>
-        <version>4.2.1</version>
+        <version>4.2.2</version>
         <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,6 +18,10 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>${reflections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>eigor-test</artifactId>
         </dependency>
     </dependencies>
 
