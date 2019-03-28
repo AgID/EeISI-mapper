@@ -151,9 +151,11 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             taxTotalAmount.setAttribute("currencyID", bt0005OrNull);
             specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
 
-            taxTotalAmount.setText(bt111OrNull.toString());
-            taxTotalAmount.setAttribute("currencyID", bt0006OrNull);
-            specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+            if (bt0006OrNull != null) {
+                taxTotalAmount.setText(bt111OrNull.toString());
+                taxTotalAmount.setAttribute("currencyID", bt0006OrNull);
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+            }
 
 //			<xsd:element name="RoundingAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             Element roundingAmount = new Element("RoundingAmount", ramNs);
