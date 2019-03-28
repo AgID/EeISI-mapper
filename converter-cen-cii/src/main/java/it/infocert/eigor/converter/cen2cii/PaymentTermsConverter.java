@@ -106,11 +106,6 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
                 applicableHeaderTradeSettlement.addContent(specifiedTradeSettlementHeaderMonetarySummation);
             }
 
-            String currencyId = null;
-            if (!invoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
-                currencyId = invoice.getBT0005InvoiceCurrencyCode(0).getValue().name();
-            }
-
             final BigDecimal bt106SumOfInvoiceLineNetAmounts = getBT106SumOfInvoiceLineNetAmounts(invoice);
             final BigDecimal bt107SumOfAllowances = getBT107SumOfAllowances(invoice);
             final BigDecimal bt108SumOfCharges = getBT108SumOfCharges(invoice);
@@ -122,6 +117,8 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             final BigDecimal bt0115PayableAmount = bt112TaxInclusiveAmount.subtract(bt0113PrepaidAmount).add(bt0114RoundingAmount);
             final BigDecimal bt111OrNull = getBT111OrNull(invoice);
             final String bt0005OrNull = InvoiceUtils.evalExpression( ()-> invoice.getBT0005InvoiceCurrencyCode(0).getValue().getCode() );
+            final String bt0006OrNull = InvoiceUtils.evalExpression( ()-> invoice.getBT0006VatAccountingCurrencyCode(0).getValue().getCode() );
+
 
 
 //          <xsd:element name="LineTotalAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
@@ -151,9 +148,11 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
 //			<xsd:element name="TaxTotalAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             Element taxTotalAmount = new Element("TaxTotalAmount", ramNs);
             taxTotalAmount.setText(bt110TotalTaxAmount.setScale(2, RoundingMode.HALF_UP).toString());
-            if(currencyId != null){
-                taxTotalAmount.setAttribute("currencyID", currencyId);
-            }
+            taxTotalAmount.setAttribute("currencyID", bt0005OrNull);
+            specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+
+            taxTotalAmount.setText(bt111OrNull.toString());
+            taxTotalAmount.setAttribute("currencyID", bt0006OrNull);
             specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
 
 //			<xsd:element name="RoundingAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
