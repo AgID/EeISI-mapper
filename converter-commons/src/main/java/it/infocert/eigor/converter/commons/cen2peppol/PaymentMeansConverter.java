@@ -25,76 +25,78 @@ import it.infocert.eigor.model.core.model.BT0082PaymentMeansText;
 import it.infocert.eigor.model.core.model.BT0083RemittanceInformation;
 import it.infocert.eigor.model.core.model.BT0089MandateReferenceIdentifier;
 
-public class PaymentMeansConverter implements CustomMapping<Document>{
+public class PaymentMeansConverter implements CustomMapping<Document> {
 
-	private static final Logger log = LoggerFactory.getLogger(PaymentMeansConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(PaymentMeansConverter.class);
 
-	@Override
-	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
 
-		Element root = document.getRootElement();
-		if (root != null) {
-			if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {
-				BG0016PaymentInstructions bg0016 = cenInvoice.getBG0016PaymentInstructions(0);
+        Element root = document.getRootElement();
+        if (root != null) {
+            if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {
+                BG0016PaymentInstructions bg0016 = cenInvoice.getBG0016PaymentInstructions(0);
 
-				TypeConverter<Untdid4461PaymentMeansCode, String> paymentMeansCodeToStr = Untdid4461PaymentMeansCodeToString.newConverter();
+                TypeConverter<Untdid4461PaymentMeansCode, String> paymentMeansCodeToStr = Untdid4461PaymentMeansCodeToString.newConverter();
 
-				Element paymentMeans = root.getChild("PaymentMeans");
-				if (paymentMeans == null) {
-					paymentMeans = new Element("PaymentMeans");
-					root.addContent(paymentMeans);
-				}
+                Element paymentMeans = root.getChild("PaymentMeans");
+                if (paymentMeans == null) {
+                    paymentMeans = new Element("PaymentMeans");
+                    root.addContent(paymentMeans);
+                }
 
-				if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
-					BT0081PaymentMeansTypeCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0);
-					Element paymentMeansCode = new Element("PaymentMeansCode");
-					if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
-						BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
-						paymentMeansCode.setAttribute("Name", bt0082.getValue());
-					}
-					final Untdid4461PaymentMeansCode value = bt0081.getValue();
-					try {
-						paymentMeansCode.setText(paymentMeansCodeToStr.convert(value));
-					} catch (ConversionFailedException e) {
-						errors.add(ConversionIssue.newError(
-								e,
-								e.getMessage(),
-								callingLocation,
-								ErrorCode.Action.HARDCODED_MAP,
-								ErrorCode.Error.ILLEGAL_VALUE,
-								Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
-								Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
-								));
-					}
-					paymentMeans.addContent(paymentMeansCode);
-				}
+                if (!bg0016.getBT0081PaymentMeansTypeCode().isEmpty()) {
+                    BT0081PaymentMeansTypeCode bt0081 = bg0016.getBT0081PaymentMeansTypeCode(0);
+                    Element paymentMeansCode = new Element("PaymentMeansCode");
+                    if (!bg0016.getBT0082PaymentMeansText().isEmpty()) {
+                        BT0082PaymentMeansText bt0082 = bg0016.getBT0082PaymentMeansText(0);
+                        paymentMeansCode.setAttribute("Name", bt0082.getValue());
+                    }
+                    final Untdid4461PaymentMeansCode value = bt0081.getValue();
+                    try {
+                        paymentMeansCode.setText(paymentMeansCodeToStr.convert(value));
+                    } catch (ConversionFailedException e) {
+                        errors.add(ConversionIssue.newError(
+                                e,
+                                e.getMessage(),
+                                callingLocation,
+                                ErrorCode.Action.HARDCODED_MAP,
+                                ErrorCode.Error.ILLEGAL_VALUE,
+                                Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage()),
+                                Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, value.toString())
+                        ));
+                    }
+                    paymentMeans.addContent(paymentMeansCode);
+                }
 
-				if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
-					BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
-					Element paymentID = new Element("PaymentID");
-					paymentID.setText(bt0083.getValue());
-					paymentMeans.addContent(paymentID);
-				}
+                if (!bg0016.getBT0083RemittanceInformation().isEmpty()) {
+                    BT0083RemittanceInformation bt0083 = bg0016.getBT0083RemittanceInformation(0);
+                    Element paymentID = new Element("PaymentID");
+                    paymentID.setText(bt0083.getValue());
+                    paymentMeans.addContent(paymentID);
+                }
 
 
-				Element paymentMandate = paymentMeans.getChild("PaymentMandate");
-						if (paymentMandate == null) {
-							paymentMandate = new Element("PaymentMandate");
-						}
-				if(!bg0016.getBG0019DirectDebit().isEmpty()) {						
-					if(bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier().isEmpty()) { 
-						paymentMandate.setAttribute("ID", "NA");
+                Element paymentMandate = paymentMeans.getChild("PaymentMandate");
+                if (paymentMandate == null) {
+                    paymentMandate = new Element("PaymentMandate");
+                }
 
-					} 
-					else { 
-						BT0089MandateReferenceIdentifier bt89 = bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier(0);
-						paymentMandate.setAttribute("ID",bt89.getValue());
-
-					}
-					paymentMeans.addContent(paymentMandate);	
-				}
-			}
-		}
-	}
+                if (!bg0016.getBG0019DirectDebit().isEmpty()) {
+                    Element id = new Element("ID");
+                    if (bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier().isEmpty()) {
+//                        paymentMandate.setAttribute("ID", "NA"); --> it shall not be an attribute:
+                        id.setText("NA");
+                    } else {
+                        BT0089MandateReferenceIdentifier bt89 = bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier(0);
+//						  paymentMandate.setAttribute("ID",bt89.getValue()); --> it shall not be an attribute:
+                        id.setText(bt89.getValue());
+                    }
+                    paymentMandate.addContent(id);
+                    paymentMeans.addContent(paymentMandate);
+                }
+            }
+        }
+    }
 
 }
