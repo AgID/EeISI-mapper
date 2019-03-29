@@ -71,4 +71,5 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
             }
         }
     }
+
 }

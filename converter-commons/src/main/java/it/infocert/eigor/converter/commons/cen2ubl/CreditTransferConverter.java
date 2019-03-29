@@ -4,10 +4,7 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0017CreditTransfer;
-import it.infocert.eigor.model.core.model.BT0084PaymentAccountIdentifier;
-import it.infocert.eigor.model.core.model.BT0086PaymentServiceProviderIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -23,14 +20,15 @@ public class CreditTransferConverter implements CustomMapping<Document> {
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0016PaymentInstructions().isEmpty()) {
+                BG0016PaymentInstructions bg0016 = cenInvoice.getBG0016PaymentInstructions(0);
                 List<BG0017CreditTransfer> bg0017 = cenInvoice.getBG0016PaymentInstructions(0).getBG0017CreditTransfer();
+                Element paymentMeans = root.getChild("PaymentMeans");
                 for (BG0017CreditTransfer elemBg17 : bg0017) {
                     if (!elemBg17.getBT0084PaymentAccountIdentifier().isEmpty()) {
                         BT0084PaymentAccountIdentifier bt0084 = elemBg17.getBT0084PaymentAccountIdentifier(0);
                         Element id = new Element("ID");
                         id.setText(bt0084.getValue());
 
-                        Element paymentMeans = root.getChild("PaymentMeans");
                         if (paymentMeans == null) {
                             paymentMeans = new Element("PaymentMeans");
                             root.addContent(paymentMeans);
@@ -51,6 +49,23 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                             financialInstitutionBranch.addContent(branchID);
                         }
                     }
+                }
+
+                Element paymentMandate = paymentMeans.getChild("PaymentMandate");
+                if (paymentMandate == null) {
+                    paymentMandate = new Element("PaymentMandate");
+                }
+
+                if (!bg0016.getBG0019DirectDebit().isEmpty()) {
+                    Element idbg16Id = new Element("ID");
+                    if (bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier().isEmpty()) {
+                        idbg16Id.setText("NA");
+                    } else {
+                        BT0089MandateReferenceIdentifier bt89 = bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier(0);
+                        idbg16Id.setText(bt89.getValue());
+                    }
+                    paymentMandate.addContent(idbg16Id);
+                    paymentMeans.addContent(paymentMandate);
                 }
             }
         }

@@ -51,7 +51,7 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
                 if (partyTaxScheme != null) {
                     Element companyID = findNamespaceChild(partyTaxScheme, namespacesInScope, "CompanyID");
                     if (companyID != null) {
-                        bt0048 = new BT0048BuyerVatIdentifier(new Identifier(companyID.getAttributeValue("schemeID"), companyID.getText()));
+                        bt0048 = new BT0048BuyerVatIdentifier(new Identifier(null, companyID.getText()));
                         invoice.getBG0007Buyer(0).getBT0048BuyerVatIdentifier().add(bt0048);
                     }
                 }
