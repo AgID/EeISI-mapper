@@ -38,6 +38,13 @@ public class CreditTransferConverter implements CustomMapping<Document> {
 
                         payeeFinancialAccount.addContent(id);
 
+                        if (!elemBg17.getBT0085PaymentAccountName().isEmpty()) {
+                            BT0085PaymentAccountName bt0085 = elemBg17.getBT0085PaymentAccountName(0);
+                            Element name = new Element("Name");
+                            name.setText(bt0085.getValue());
+                            payeeFinancialAccount.addContent(name);
+                        }
+
                         if (!elemBg17.getBT0086PaymentServiceProviderIdentifier().isEmpty()) {
                             BT0086PaymentServiceProviderIdentifier bt0086 = elemBg17.getBT0086PaymentServiceProviderIdentifier(0);
                             Element branchID = new Element("ID");
@@ -57,14 +64,14 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                 }
 
                 if (!bg0016.getBG0019DirectDebit().isEmpty()) {
-                    Element idbg16Id = new Element("ID");
+                    Element bg16Id = new Element("ID");
                     if (bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier().isEmpty()) {
-                        idbg16Id.setText("NA");
+                        bg16Id.setText("NA");
                     } else {
                         BT0089MandateReferenceIdentifier bt89 = bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier(0);
-                        idbg16Id.setText(bt89.getValue());
+                        bg16Id.setText(bt89.getValue());
                     }
-                    paymentMandate.addContent(idbg16Id);
+                    paymentMandate.addContent(bg16Id);
                     paymentMeans.addContent(paymentMandate);
                 }
             }
