@@ -29,7 +29,13 @@ public class CompleteAndPartialConversionTest extends AbstractIssueTest  {
                 { "/minimum_and_full_examples/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "cii", true }, // wait check from Sara
                 { "/minimum_and_full_examples/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "ubl", false },
                 { "/minimum_and_full_examples/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "peppolbis", true }, // wait check from Sara
-                { "/minimum_and_full_examples/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "fatturapa", false }
+                { "/minimum_and_full_examples/Test_EeISI_300_CENfullmodel.xml", "xmlcen", "fatturapa", false },
+
+                { "/minimum_and_full_examples/Test_EeISI_320_CENITfullmodel.xml", "xmlcen", "xmlcen", false },
+                { "/minimum_and_full_examples/Test_EeISI_320_CENITfullmodel.xml", "xmlcen", "cii", true }, // wait check from Sara
+                { "/minimum_and_full_examples/Test_EeISI_320_CENITfullmodel.xml", "xmlcen", "ubl", false },
+                { "/minimum_and_full_examples/Test_EeISI_320_CENITfullmodel.xml", "xmlcen", "peppolbis", true }, // wait check from Sara
+                { "/minimum_and_full_examples/Test_EeISI_320_CENITfullmodel.xml", "xmlcen", "fatturapa", false }
         });
     }
 
