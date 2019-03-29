@@ -6,7 +6,6 @@ import it.infocert.eigor.api.ConversionResult;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -109,7 +108,13 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         this.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-188-xmlcen.xml",
                 "xmlcen", "ubl", keepErrorsNotWarnings());
+    }
 
+    @Test
+    public void issueEeisi248() {
+        this.conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-248-xmlcen_.xml",
+                "xmlcen", "ubl", keepErrorsNotWarnings());
     }
 
     @Test
