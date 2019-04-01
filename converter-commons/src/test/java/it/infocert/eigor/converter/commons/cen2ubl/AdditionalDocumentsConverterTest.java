@@ -32,25 +32,8 @@ public class AdditionalDocumentsConverterTest {
         assertTrue("916".equals(documentTypeCode.getText()));
     }
 
-    @Test
-    public void additionalDocumentReferenceDocumentTypeCodeShouldBe130IfBT0018() throws Exception {
-        BG0000Invoice invoice = createInvoiceWithBT0122();
-        invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().add(new BT0018InvoicedObjectIdentifierAndSchemeIdentifier(new Identifier("AED", "TESTID")));
-        AdditionalDocumentsConverter converter = new AdditionalDocumentsConverter();
-        Document document = new Document(new Element("Invoice"));
-        converter.map(invoice, document, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
-
-        Element additionalSupportingDocuments = document.getRootElement().getChild("AdditionalDocumentReference");
-
-        Element documentTypeCode = additionalSupportingDocuments.getChild("DocumentTypeCode");
-        assertTrue("130".equals(documentTypeCode.getValue()));
-
-        Element id = additionalSupportingDocuments.getChild("ID");
-        assertTrue("TESTID".equals(id.getValue()));
-
-        String schemeID = id.getAttributeValue("schemeID");
-        assertTrue("AED".equals(schemeID));
-    }
+    // Test removed because the part of the algoritm tested now is in another module
+    // public void additionalDocumentReferenceDocumentTypeCodeShouldBe130IfBT0018()
 
     @Test
     public void documentDescriptionMustExistIfBG0024hasBT0123() throws Exception {
