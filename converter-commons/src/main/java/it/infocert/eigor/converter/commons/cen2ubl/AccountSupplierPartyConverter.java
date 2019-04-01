@@ -51,8 +51,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                     Element partyIdentificationId = new Element("ID");
                     if (bt90.getValue() != null && bt90.getValue().getIdentifier() != null)
                         partyIdentificationId.setText(bt90.getValue().getIdentifier());
-                    if (bt90.getValue() != null && bt90.getValue().getIdentificationSchema() != null)
-                        partyIdentificationId.setAttribute("schemeID", bt90.getValue().getIdentificationSchema());
+                    partyIdentificationId.setAttribute("schemeID", "SEPA");
                     partyIdentification.addContent(partyIdentificationId);
                 }
             }
