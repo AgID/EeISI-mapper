@@ -8,6 +8,7 @@ import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -57,6 +58,36 @@ public class AbstractIssueTest {
                 .build();
 
         conversion = new ConversionUtil(api);
+    }
+
+    protected XPath ciiXpath() {
+
+        XPathFactory xPathFactory = XPathFactory.newInstance();
+        XPath ublXPath = xPathFactory.newXPath();
+        ublXPath.setNamespaceContext(new NamespaceContext() {
+
+            public String getNamespaceURI(String prefix) {
+                switch (prefix) {
+                    case "rsm":
+                        return "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
+                    case "ram":
+                        return "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+                }
+                throw new UnsupportedOperationException("Unknown prefix " + prefix);
+            }
+
+            @Override
+            public String getPrefix(String namespaceURI) {
+                return null;
+            }
+
+            @Override
+            public Iterator getPrefixes(String namespaceURI) {
+                return null;
+            }
+        });
+
+        return ublXPath;
     }
 
     protected XPath ublXpath() {
@@ -124,6 +155,10 @@ public class AbstractIssueTest {
         transformer.transform(new DOMSource(doc),
                 new StreamResult(writer));
         return new String(out.toByteArray());
+    }
+
+    protected Document parseAsDom(ConversionResult<byte[]> conversionResult1) throws SAXException, IOException {
+        return documentBuilder.parse(new ByteArrayInputStream(conversionResult1.getResult()));
     }
 
 }
