@@ -23,7 +23,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndDocumentDescription();
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
+        converter.map(invoice, document, new ArrayList<>(), ErrorCode.Location.UBL_IN, null);
         BT0123SupportingDocumentDescription bt0123 = invoice.getBG0024AdditionalSupportingDocuments(0).getBT0123SupportingDocumentDescription(0);
         assertTrue("TEST".equals(bt0123.getValue()));
     }
@@ -33,7 +33,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("916");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
+        converter.map(invoice, document, new ArrayList<>(), ErrorCode.Location.UBL_IN, null);
         BT0122SupportingDocumentReference bt0122 = invoice.getBG0024AdditionalSupportingDocuments(0).getBT0122SupportingDocumentReference(0);
         assertTrue("TESTID".equals(bt0122.getValue()));
     }
@@ -43,7 +43,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("666");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
+        converter.map(invoice, document, new ArrayList<>(), ErrorCode.Location.UBL_IN, null);
         assertTrue(invoice.getBG0024AdditionalSupportingDocuments(0).getBT0122SupportingDocumentReference().size() == 0);
     }
 
@@ -53,7 +53,7 @@ public class AdditionalSupportingDocumentsConverterTest {
         Document document = makeDocumentWithAdditionalDocumentReferenceAndIDAndDocumentTypeCode("130");
         AdditionalSupportingDocumentsConverter converter = new AdditionalSupportingDocumentsConverter();
         BG0000Invoice invoice = new BG0000Invoice();
-        converter.map(invoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_IN, null);
+        converter.map(invoice, document, new ArrayList<>(), ErrorCode.Location.UBL_IN, null);
 
         Identifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().get(0).getValue();
 
@@ -107,6 +107,9 @@ public class AdditionalSupportingDocumentsConverterTest {
 
         additionalDocumentReference.addContent(id);
         additionalDocumentReference.addContent(documentTypeCode);
+        Element documentDescription = new Element("DocumentDescription", cbcNs);
+        documentDescription.setText("Document description");
+        additionalDocumentReference.addContent(documentDescription);
         rootElement.addContent(additionalDocumentReference);
 
         return document;
