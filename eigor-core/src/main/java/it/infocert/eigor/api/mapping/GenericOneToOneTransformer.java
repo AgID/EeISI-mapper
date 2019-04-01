@@ -17,9 +17,7 @@ import org.jdom2.Element;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Generic class to transform both cen objects in XML elements and viceversa,
@@ -51,9 +49,8 @@ public class GenericOneToOneTransformer extends GenericTransformer {
     public void transformCenToXml(BG0000Invoice invoice, Document document, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
         final String logPrefix = "(" + cenPath + " - " + xPath + ") ";
-        log.trace(logPrefix + "resolving");
 
-
+        log.trace("{} resolving", logPrefix);
         List<BTBG> bts = getAllBTs(cenPath, invoice, errors);
         if (bts == null) return;
 
@@ -84,12 +81,18 @@ public class GenericOneToOneTransformer extends GenericTransformer {
      */
     public void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
         final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
-        log.trace(logPrefix + "resolving");
 
+        log.trace("{} resolving", logPrefix);
         Class<? extends BTBG> btBgByName = invoiceUtils.getBtBgByName(cenPath.substring(cenPath.lastIndexOf('/')+1));
-        Constructor<?> cons = Arrays.stream(btBgByName.getConstructors())
-                .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]))
-                .findFirst().orElse(null);
+        Constructor<?> cons = null;
+        for (Constructor<?> constructor : btBgByName.getConstructors()) {
+            Class<?>[] parameterTypes = constructor.getParameterTypes();
+            if (parameterTypes!=null && parameterTypes.length>=1 && Identifier.class.equals(parameterTypes[0])) {
+                cons = constructor;
+                break;
+            }
+        }
+
         if (cons != null) {
             final Element node = getSingleNodeFromXpath(document, xPath);
 

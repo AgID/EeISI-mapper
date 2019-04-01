@@ -10,12 +10,15 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.CoreMatchers;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,8 +34,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class Cii2CenConfigurationFileTest {
 
@@ -57,6 +60,19 @@ public class Cii2CenConfigurationFileTest {
 				;
 		sut = new MyCiiToCenConverter(new JavaReflections(), conf);
 		sut.configure();
+	}
+
+	@Test
+	public void issueEisi193() throws SyntaxErrorInInvoiceFormatException {
+		InputStream sourceInvoiceStream = getClass().getResourceAsStream("/eisi-294-cii.xml");
+		assertThat(sourceInvoiceStream, notNullValue());
+
+		ConversionResult<BG0000Invoice> convert = sut.convert(sourceInvoiceStream);
+
+		LocalDate bt26Value = InvoiceUtils.evalExpression(() -> convert.getResult().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue());
+
+		assertThat(bt26Value, CoreMatchers.equalTo( new LocalDate(2015, 3, 1)));
+
 	}
 
 	@Test
