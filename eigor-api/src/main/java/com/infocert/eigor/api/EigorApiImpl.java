@@ -8,6 +8,7 @@ import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
+import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -129,9 +130,7 @@ public class EigorApiImpl implements EigorApi {
 
         ErrorCode.Location location = ErrorCode.Location.CUSTOM_VALIDATORS;
         try {
-            SchematronValidator schematronValidator = new SchematronValidator(
-                    schemaFile, false, false, location
-            );
+            SchematronValidator schematronValidator = new SchematronValidator(new FileSystemResource(schemaFile), false, false, location);
             List<IConversionIssue> issues = schematronValidator.validate(IOUtils.toByteArray(xmlToValidate));
             return new ConversionResult<>(issues, null);
         } catch (IOException e) {

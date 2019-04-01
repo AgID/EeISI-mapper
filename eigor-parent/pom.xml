@@ -446,6 +446,9 @@
                                 <goal>integration-test</goal>
                                 <goal>verify</goal>
                             </goals>
+                            <configuration>
+                                <trimStackTrace>false</trimStackTrace>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -462,6 +465,7 @@
                         <excludes>
                             <exclude>**/IT*.java</exclude>
                         </excludes>
+                        <trimStackTrace>false</trimStackTrace>
                     </configuration>
                 </plugin>
 

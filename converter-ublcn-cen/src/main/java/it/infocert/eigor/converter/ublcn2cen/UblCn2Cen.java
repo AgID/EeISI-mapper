@@ -69,7 +69,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         try {
             Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron") );
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron.auto-update-xslt"));
-            ublValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.UBLCN_IN);
+            ublValidator = new SchematronValidator(ublSchemaFile, true, schematronAutoUpdate, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -78,7 +78,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius") );
             boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius.auto-update-xslt"));
-            ciusValidator = new SchematronValidator(ciusSchemaFile.getFile(), true, ciusAutoUpdate, ErrorCode.Location.UBLCN_IN);
+            ciusValidator = new SchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
