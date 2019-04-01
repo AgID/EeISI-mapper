@@ -5,10 +5,7 @@ import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0004Seller;
-import it.infocert.eigor.model.core.model.BG0005SellerPostalAddress;
-import it.infocert.eigor.model.core.model.BG0006SellerContact;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.slf4j.Logger;
@@ -42,6 +39,22 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
         if (invoice.getBG0004Seller().isEmpty()) {
             return;
+        }
+
+        if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
+            BG0016PaymentInstructions bg0016 = invoice.getBG0016PaymentInstructions(0);
+            if (!bg0016.getBG0019DirectDebit().isEmpty()) {
+                if (!bg0016.getBG0019DirectDebit(0).getBT0090BankAssignedCreditorIdentifier().isEmpty()) {
+                    BT0090BankAssignedCreditorIdentifier bt90 = bg0016.getBG0019DirectDebit(0).getBT0090BankAssignedCreditorIdentifier(0);
+                    Element partyIdentification = new Element("PartyIdentification");
+                    party.addContent(partyIdentification);
+                    Element partyIdentificationId = new Element("ID");
+                    if (bt90.getValue() != null && bt90.getValue().getIdentifier() != null)
+                        partyIdentificationId.setText(bt90.getValue().getIdentifier());
+                    partyIdentificationId.setAttribute("schemeID", "SEPA");
+                    partyIdentification.addContent(partyIdentificationId);
+                }
+            }
         }
 
         BG0004Seller seller = invoice.getBG0004Seller(0);
@@ -104,7 +117,7 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
 
             // Italy haven't yet registered their schemas, so in this case,
             // the schemas has to be included directly in the value
-            if(identificationSchema!=null && identificationSchema.startsWith("IT:")){
+            if (identificationSchema != null && identificationSchema.startsWith("IT:")) {
 
                 StringBuilder companyIdBuffer = new StringBuilder();
                 if (identificationSchema != null) {
@@ -113,12 +126,12 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 companyIdBuffer.append(id.getIdentifier());
 
                 Element companyID = new Element("CompanyID");
-                companyID.setText( companyIdBuffer.toString() );
+                companyID.setText(companyIdBuffer.toString());
                 partyLegalEntity.addContent(companyID);
 
             }
             // For other countries, we'll keep on doing as before
-            else{
+            else {
 
                 Element companyID = new Element("CompanyID");
                 companyID.setText(id.getIdentifier());
