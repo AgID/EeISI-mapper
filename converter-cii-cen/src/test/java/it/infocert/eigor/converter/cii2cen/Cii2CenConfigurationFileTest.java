@@ -3,19 +3,23 @@ package it.infocert.eigor.converter.cii2cen;
 import com.google.common.io.ByteStreams;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.ConfigurationException;
+import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-import it.infocert.eigor.api.configuration.PropertiesBackedConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
+import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.CoreMatchers;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,32 +35,32 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class Cii2CenConfigurationFileTest {
 
 	private static final Logger log = LoggerFactory.getLogger(Cii2CenConfigurationFileTest.class);
 
 	static MyCiiToCenConverter sut;
-	List<ConversionIssue> conversionIssues;
 
 	@BeforeClass
 	public static void setUp() throws ConfigurationException {
-		EigorConfiguration conf = new PropertiesBackedConfiguration()
-				.addProperty("eigor.workdir", "file:")
-				.addProperty("eigor.converter.cii-cen.mapping.one-to-one", "converterdata/converter-cii-cen/mappings/one_to_one.properties")
-				.addProperty("eigor.converter.cii-cen.mapping.many-to-one", "converterdata/converter-cii-cen/mappings/many_to_one.properties")
-				.addProperty("eigor.converter.cii-cen.mapping.one-to-many", "converterdata/converter-cii-cen/mappings/one_to_many.properties")
-				.addProperty("eigor.converter.cii-cen.xsd", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd")
-				.addProperty("eigor.converter.cii-cen.schematron", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt")
-				.addProperty("eigor.converter.cii-cen.schematron.auto-update-xslt", "false")
-				.addProperty("eigor.converter.cii-cen.mapping.custom", "converterdata/converter-cii-cen/mappings/custom.conf")
-				.addProperty("eigor.converter.cii-cen.cius", "file:../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt")
-				.addProperty("eigor.converter.cii-cen.cius.auto-update-xslt", "false")
-				;
-		sut = new MyCiiToCenConverter(new JavaReflections(), conf);
+		sut = new MyCiiToCenConverter(new JavaReflections(), DefaultEigorConfigurationLoader.configuration());
 		sut.configure();
+	}
+
+	@Test
+	public void issueEisi193() throws SyntaxErrorInInvoiceFormatException {
+		InputStream sourceInvoiceStream = getClass().getResourceAsStream("/eisi-294-cii.xml");
+		assertThat(sourceInvoiceStream, notNullValue());
+
+		ConversionResult<BG0000Invoice> convert = sut.convert(sourceInvoiceStream);
+
+		LocalDate bt26Value = InvoiceUtils.evalExpression(() -> convert.getResult().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue());
+
+		assertThat(bt26Value, CoreMatchers.equalTo( new LocalDate(2015, 3, 1)));
+
 	}
 
 	@Test
@@ -307,14 +311,14 @@ public class Cii2CenConfigurationFileTest {
 	private List<IConversionIssue> validateXmlWithCiiSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		File schematronFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/cii/schematron-xslt/EN16931-CII-validation.xslt");
-		IXMLValidator ciiValidator = new SchematronValidator(schematronFile, true, false, ErrorCode.Location.CII_IN);
+		IXMLValidator ciiValidator = new SchematronValidator(new FileSystemResource( schematronFile ), true, false, ErrorCode.Location.CII_IN);
 		return ciiValidator.validate(bytes);
 	}
 
 	private List<IConversionIssue> validateXmlWithCiiCIUSSchematron(InputStream sourceInvoiceStream) throws IOException {
 		byte[] bytes = ByteStreams.toByteArray(sourceInvoiceStream);
 		File schematronFile = FileUtils.getFile("../converter-commons/src/main/resources/converterdata/converter-commons/cii/cius/schematron-xslt/EN16931-CIUS-IT-CIIValidation.xslt");
-		SchematronValidator ciiCIUSValidator = new SchematronValidator(schematronFile, true, false, ErrorCode.Location.CII_IN);
+		SchematronValidator ciiCIUSValidator = new SchematronValidator(new FileSystemResource( schematronFile ), true, false, ErrorCode.Location.CII_IN);
 		return ciiCIUSValidator.validate(bytes);
 	}
 
