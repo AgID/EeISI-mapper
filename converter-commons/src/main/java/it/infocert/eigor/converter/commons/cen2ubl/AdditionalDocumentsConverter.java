@@ -33,18 +33,7 @@ public class AdditionalDocumentsConverter implements CustomMapping<Document> {
                     Element additionalDocumentReference = new Element("AdditionalDocumentReference");
                     root.addContent(additionalDocumentReference);
 
-                    if (!cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element id = new Element("ID");
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        Identifier bt0018 = cenInvoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
-                        id.setText(bt0018.getIdentifier());
-                        if (bt0018.getIdentificationSchema() != null) {
-                            id.setAttribute("schemeID", bt0018.getIdentificationSchema());
-                        }
-                        documentTypeCode.setText("130");
-                        additionalDocumentReference.addContent(id);
-                        additionalDocumentReference.addContent(documentTypeCode);
-                    } else if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
+                    if (!elemBg24.getBT0122SupportingDocumentReference().isEmpty()) {
                         BT0122SupportingDocumentReference bt0122 = elemBg24.getBT0122SupportingDocumentReference(0);
                         Element id = new Element("ID");
                         id.setText(bt0122.getValue());
