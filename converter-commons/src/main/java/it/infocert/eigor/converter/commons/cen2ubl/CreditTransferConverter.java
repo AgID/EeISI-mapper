@@ -71,8 +71,21 @@ public class CreditTransferConverter implements CustomMapping<Document> {
                         BT0089MandateReferenceIdentifier bt89 = bg0016.getBG0019DirectDebit(0).getBT0089MandateReferenceIdentifier(0);
                         bg16Id.setText(bt89.getValue());
                     }
+
                     paymentMandate.addContent(bg16Id);
                     paymentMeans.addContent(paymentMandate);
+
+                    if (!bg0016.getBG0019DirectDebit(0).getBT0091DebitedAccountIdentifier().isEmpty()) {
+                        BT0091DebitedAccountIdentifier bt91 = bg0016.getBG0019DirectDebit(0).getBT0091DebitedAccountIdentifier(0);
+                        Element bg19Id = new Element("ID");
+                        bg19Id.setText(bt91.getValue());
+                        Element payerFinancialAccount = paymentMeans.getChild("PayerFinancialAccount");
+                        if (payerFinancialAccount == null) {
+                            payerFinancialAccount = new Element("PayerFinancialAccount");
+                        }
+                        payerFinancialAccount.addContent(bg19Id);
+                        paymentMandate.addContent(payerFinancialAccount);
+                    }
                 }
             }
         }
