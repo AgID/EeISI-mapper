@@ -1,11 +1,10 @@
-package it.infocert.eigor.converter.cen2peppolcn;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BT0011ProjectReference;
 import it.infocert.eigor.model.core.model.BT0018InvoicedObjectIdentifierAndSchemeIdentifier;
 import org.jdom2.Document;
 import org.jdom2.Element;
