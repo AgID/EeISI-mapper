@@ -24,14 +24,29 @@ import java.util.List;
 import static com.infocert.eigor.api.ConversionUtil.*;
 import static java.util.stream.Collectors.joining;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Tests of issues discovered and fixed during the 2nd phase of development,
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi287() throws Exception {
+
+        // when
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-287-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document dom = parseAsDom(conversionResult);
+        Node node = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID").evaluate(dom, XPathConstants.NODE);
+
+        assertNotNull( describeConvertedInvoice(conversionResult), node);
+        assertFalse( describeConvertedInvoice(conversionResult), node.hasAttributes());
+
+    }
 
     @Test
     public void issueEisi292() throws Exception {

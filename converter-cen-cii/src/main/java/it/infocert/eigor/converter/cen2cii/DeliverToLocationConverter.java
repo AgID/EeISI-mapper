@@ -57,9 +57,11 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                 Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs); //maybe GlobalID?
                 id.setText(bt0071.getIdentifier());
-                if (bt0071.getIdentificationSchema() != null) {
-                    id.setAttribute("schemeID", bt0071.getIdentificationSchema());
-                }
+
+                // according to EISI-287 <ID> element should not have any "schemeID" attribute.
+//                if (bt0071.getIdentificationSchema() != null) {
+//                    id.setAttribute("schemeID", bt0071.getIdentificationSchema());
+//                }
                 shipToTradeParty.addContent(id);
             }
 
