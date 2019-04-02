@@ -80,6 +80,15 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             }
         }
 
+        BG0004Seller bg0016 = invoice.getBG0004Seller(0);
+        if (!bg0016.getBT0028SellerTradingName().isEmpty()) {
+            BT0028SellerTradingName bt28 = bg0016.getBT0028SellerTradingName(0);
+            Element partyName = new Element("PartyName");
+            partyElm.addContent(partyName);
+            Element name = new Element("Name");
+            name.setText(bt28.getValue());
+            partyName.addContent(name);
+        }
 
         if (!seller.getBG0005SellerPostalAddress().isEmpty()) {
             BG0005SellerPostalAddress sellerPostalAddress = seller.getBG0005SellerPostalAddress(0);
