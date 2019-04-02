@@ -138,7 +138,8 @@ public class ConversionUtil {
         return new KeepErrorsNotWarnings();
     }
 
-    public static Predicate<IConversionIssue> discardAll() {
+    /** This filter will ignore any error, it corresponds to a "forced" conversion. */
+    public static Predicate<IConversionIssue> ignoreAll() {
         return new DiscardAll();
     }
 

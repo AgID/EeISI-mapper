@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import static java.lang.String.valueOf;
+
 /**
  * The Document Level Allowances Custom Converter
  */
@@ -51,27 +53,17 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
             Element specifiedTradeAllowanceCharge = new Element("SpecifiedTradeAllowanceCharge", ramNs);
 
 
-//          <xsd:element name="ChargeIndicator" type="udt:IndicatorType" minOccurs="0"/>
-//			<xsd:element name="ID" type="udt:IDType" minOccurs="0"/>
-//			<xsd:element name="SequenceNumeric" type="udt:NumericType" minOccurs="0"/>
-//			<xsd:element name="CalculationPercent" type="udt:PercentType" minOccurs="0"/>
-//			<xsd:element name="BasisAmount" type="udt:AmountType" minOccurs="0"/>
-//			<xsd:element name="BasisQuantity" type="udt:QuantityType" minOccurs="0"/>
-//			<xsd:element name="PrepaidIndicator" type="udt:IndicatorType" minOccurs="0"/>
-//			<xsd:element name="ActualAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
-//			<xsd:element name="UnitBasisAmount" type="udt:AmountType" minOccurs="0"/>
-//			<xsd:element name="ReasonCode" type="qdt:AllowanceChargeReasonCodeType" minOccurs="0"/>
-//			<xsd:element name="Reason" type="udt:TextType" minOccurs="0"/>
-//			<xsd:element name="TypeCode" type="qdt:AllowanceChargeIdentificationCodeType" minOccurs="0"/>
-//			<xsd:element name="CategoryTradeTax" type="ram:TradeTaxType" minOccurs="0" maxOccurs="unbounded"/>
-//			<xsd:element name="ActualTradeCurrencyExchange" type="ram:TradeCurrencyExchangeType" minOccurs="0"/>
-
+            // <xsd:element name="ChargeIndicator" type="udt:IndicatorType" minOccurs="0"/>
             Element chargeIndicator = new Element("ChargeIndicator", ramNs);
             Element indicator = new Element("Indicator", udtNs);
             indicator.setText("false");
             chargeIndicator.addContent(indicator);
             specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
+
+            // <xsd:element name="ID" type="udt:IDType" minOccurs="0"/>
+            // <xsd:element name="SequenceNumeric" type="udt:NumericType" minOccurs="0"/>
+            // <xsd:element name="CalculationPercent" type="udt:PercentType" minOccurs="0"/>
             if (!bg0020.getBT0094DocumentLevelAllowancePercentage().isEmpty()) {
                 Element calculationPercent = new Element("CalculationPercent", ramNs);
                 BigDecimal value = bg0020.getBT0094DocumentLevelAllowancePercentage(0).getValue();
@@ -79,6 +71,7 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 specifiedTradeAllowanceCharge.addContent(calculationPercent);
             }
 
+            // <xsd:element name="BasisAmount" type="udt:AmountType" minOccurs="0"/>
             if (!bg0020.getBT0093DocumentLevelAllowanceBaseAmount().isEmpty()) {
                 Element basisAmount = new Element("BasisAmount", ramNs);
                 BigDecimal value = bg0020.getBT0093DocumentLevelAllowanceBaseAmount(0).getValue();
@@ -86,6 +79,10 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 specifiedTradeAllowanceCharge.addContent(basisAmount);
             }
 
+            // <xsd:element name="BasisQuantity" type="udt:QuantityType" minOccurs="0"/>
+            // <xsd:element name="PrepaidIndicator" type="udt:IndicatorType" minOccurs="0"/>
+
+            // <xsd:element name="ActualAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             if (!bg0020.getBT0092DocumentLevelAllowanceAmount().isEmpty()) {
                 Element actualAmount = new Element("ActualAmount", ramNs);
                 BigDecimal value = bg0020.getBT0092DocumentLevelAllowanceAmount(0).getValue();
@@ -93,23 +90,27 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                 specifiedTradeAllowanceCharge.addContent(actualAmount);
             }
 
+            // <xsd:element name="UnitBasisAmount" type="udt:AmountType" minOccurs="0"/>
+            // <xsd:element name="ReasonCode" type="qdt:AllowanceChargeReasonCodeType" minOccurs="0"/>
             if (!bg0020.getBT0098DocumentLevelAllowanceReasonCode().isEmpty()) {
                 Element reasonCode = new Element("ReasonCode", ramNs);
-                reasonCode.setText(bg0020.getBT0098DocumentLevelAllowanceReasonCode(0).getValue().name());
+                reasonCode.setText( valueOf(bg0020.getBT0098DocumentLevelAllowanceReasonCode(0).getValue().getCode()) );
                 specifiedTradeAllowanceCharge.addContent(reasonCode);
             }
 
+            // <xsd:element name="Reason" type="udt:TextType" minOccurs="0"/>
             if (!bg0020.getBT0097DocumentLevelAllowanceReason().isEmpty()) {
                 Element reason = new Element("Reason", ramNs);
                 reason.setText(bg0020.getBT0097DocumentLevelAllowanceReason(0).getValue());
                 specifiedTradeAllowanceCharge.addContent(reason);
             }
 
+            // <xsd:element name="TypeCode" type="qdt:AllowanceChargeIdentificationCodeType" minOccurs="0"/>
+            // <xsd:element name="CategoryTradeTax" type="ram:TradeTaxType" minOccurs="0" maxOccurs="unbounded"/>
             Element categoryTradeTax = new Element("CategoryTradeTax", ramNs);
             Element typeCode = new Element("TypeCode", ramNs).setText("VAT");
             categoryTradeTax.addContent(typeCode);
             specifiedTradeAllowanceCharge.addContent(categoryTradeTax);
-
             if (!bg0020.getBT0096DocumentLevelAllowanceVatRate().isEmpty()) {
                 BigDecimal percentValue = bg0020.getBT0096DocumentLevelAllowanceVatRate(0).getValue();
 
@@ -139,6 +140,8 @@ public class DocumentLevelAllowancesConverter extends CustomConverterUtils imple
                     categoryTradeTax.addContent(rateApplicablePercent);
                 }
             }
+
+            // <xsd:element name="ActualTradeCurrencyExchange" type="ram:TradeCurrencyExchangeType" minOccurs="0"/>
 
             applicableHeaderTradeSettlement.addContent(specifiedTradeAllowanceCharge);
         }
