@@ -9,17 +9,22 @@ import org.jdom2.Element;
 import java.util.List;
 
 public class OrderReferenceConverter extends FirstLevelElementsConverter {
-    
+
     @Override
     public void customMap(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
+        final Element orderReference = new Element("OrderReference");
         if (!invoice.getBT0013PurchaseOrderReference().isEmpty()) {
             final String value = invoice.getBT0013PurchaseOrderReference(0).getValue();
-            final Element orderReference = new Element("OrderReference");
             final Element id = new Element("ID").setText(value);
-            root.addContent(orderReference.setContent(id));
+            orderReference.addContent(id);
         }
 
+        if (!invoice.getBT0014SalesOrderReference().isEmpty()) {
+            final String value = invoice.getBT0014SalesOrderReference(0).getValue();
+            final Element salesOrderID = new Element("SalesOrderID").setText(value);
+            orderReference.addContent(salesOrderID);
+        }
+        root.addContent(orderReference);
     }
-
 }
