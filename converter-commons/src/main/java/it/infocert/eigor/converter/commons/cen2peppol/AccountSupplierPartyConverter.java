@@ -64,6 +64,19 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
         endpointElm.setAttribute("schemeID", identificationSchemaStr);
         partyElm.addContent(endpointElm);
 
+        seller.getBT0029SellerIdentifierAndSchemeIdentifier().forEach(identifier -> {
+            Element partyIdentification = new Element("PartyIdentification");
+            partyElm.addContent(partyIdentification);
+            Element partyIdentificationId = new Element("ID");
+            if (identifier.getValue() != null && identifier.getValue().getIdentifier() != null) {
+                partyIdentificationId.setText(identifier.getValue().getIdentifier());
+            }
+            if (identifier.getValue() != null && identifier.getValue().getIdentificationSchema() != null) {
+                partyIdentificationId.setAttribute("schemeID", identifier.getValue().getIdentificationSchema());
+            }
+            partyIdentification.addContent(partyIdentificationId);
+        });
+
         if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
             BG0016PaymentInstructions bg0016 = invoice.getBG0016PaymentInstructions(0);
             if (!bg0016.getBG0019DirectDebit().isEmpty()) {
