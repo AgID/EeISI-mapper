@@ -1,7 +1,7 @@
 
 package com.infocert.eigor.api;
 
-import com.infocert.eigor.api.ConversionUtil.KeepAll;
+import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
@@ -33,6 +33,27 @@ import static org.junit.Assert.*;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi283() throws Exception {
+
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-283-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document targetCii = parseAsDom(conversionResult);
+        String errMsg = describeConvertedInvoice(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("(//ram:AdditionalReferencedDocument)[2]/ram:IssuerAssignedID/text()").evaluate(targetCii),
+                equalTo("EeISI.csv") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count( (//ram:AdditionalReferencedDocument)[2]/ram:IssuerAssignedID/ram:ReferenceTypeCode )").evaluate(targetCii),
+                equalTo("0") );
+
+    }
 
     @Test
     public void issueEisi284() throws Exception {
