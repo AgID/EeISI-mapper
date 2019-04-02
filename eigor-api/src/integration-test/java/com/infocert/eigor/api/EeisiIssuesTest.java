@@ -33,6 +33,27 @@ import static org.junit.Assert.*;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEisi284() throws Exception {
+
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-284-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document targetCii = parseAsDom(conversionResult);
+        String errMsg = describeConvertedInvoice(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:IssuerAssignedID/text()").evaluate(targetCii),
+                equalTo("ContractCIGID") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:TypeCode/text()").evaluate(targetCii),
+                equalTo("50") );
+
+    }
+
+    @Test
     public void issueEisi287() throws Exception {
 
         // when
