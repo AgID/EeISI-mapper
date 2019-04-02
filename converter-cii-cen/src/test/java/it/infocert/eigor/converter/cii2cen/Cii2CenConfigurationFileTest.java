@@ -11,6 +11,7 @@ import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.model.core.InvoiceUtils;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.*;
 import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
@@ -35,7 +36,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class Cii2CenConfigurationFileTest {
@@ -48,6 +49,23 @@ public class Cii2CenConfigurationFileTest {
 	public static void setUp() throws ConfigurationException {
 		sut = new MyCiiToCenConverter(new JavaReflections(), DefaultEigorConfigurationLoader.configuration());
 		sut.configure();
+	}
+
+	@Test
+	public void issueEisi288() throws SyntaxErrorInInvoiceFormatException {
+
+		InputStream sourceInvoiceStream = getClass().getResourceAsStream("/eisi-288-cii.xml");
+		assertThat(sourceInvoiceStream, notNullValue());
+
+		ConversionResult<BG0000Invoice> convert = sut.convert(sourceInvoiceStream);
+
+
+
+		Identifier bt60 = InvoiceUtils.evalExpression( () -> convert.getResult().getBG0010Payee(0).getBT0060PayeeIdentifierAndSchemeIdentifier(0).getValue() );
+		assertThat(bt60.getIdentifier(), equalTo("Payee identifier 2"));
+		assertThat(bt60.getIdentificationSchema(), equalTo("0059"));
+		assertThat(bt60.getSchemaVersion(), nullValue());
+
 	}
 
 	@Test

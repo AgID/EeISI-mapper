@@ -72,6 +72,10 @@ public class AbstractIssueTest {
                         return "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100";
                     case "ram":
                         return "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100";
+                    case "qdt":
+                        return "urn:un:unece:uncefact:data:standard:QualifiedDataType:100";
+                    case "udt":
+                        return "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100";
                 }
                 throw new UnsupportedOperationException("Unknown prefix " + prefix);
             }
