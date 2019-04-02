@@ -41,6 +41,19 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             return;
         }
 
+        invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().forEach(identifier -> {
+            Element partyIdentification = new Element("PartyIdentification");
+            party.addContent(partyIdentification);
+            Element partyIdentificationId = new Element("ID");
+            if (identifier.getValue() != null && identifier.getValue().getIdentifier() != null) {
+                partyIdentificationId.setText(identifier.getValue().getIdentifier());
+            }
+            if (identifier.getValue() != null && identifier.getValue().getIdentificationSchema() != null) {
+                partyIdentificationId.setAttribute("schemeID", identifier.getValue().getIdentificationSchema());
+            }
+            partyIdentification.addContent(partyIdentificationId);
+        });
+
         if (!invoice.getBG0016PaymentInstructions().isEmpty()) {
             BG0016PaymentInstructions bg0016 = invoice.getBG0016PaymentInstructions(0);
             if (!bg0016.getBG0019DirectDebit().isEmpty()) {
@@ -55,6 +68,16 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                     partyIdentification.addContent(partyIdentificationId);
                 }
             }
+        }
+
+        BG0004Seller bg0016 = invoice.getBG0004Seller(0);
+        if (!bg0016.getBT0028SellerTradingName().isEmpty()) {
+            BT0028SellerTradingName bt28 = bg0016.getBT0028SellerTradingName(0);
+            Element partyName = new Element("PartyName");
+            party.addContent(partyName);
+            Element name = new Element("Name");
+            name.setText(bt28.getValue());
+            partyName.addContent(name);
         }
 
         BG0004Seller seller = invoice.getBG0004Seller(0);
