@@ -653,18 +653,30 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
 
             // <xsd:element name="TypeCode" type="qdt:DocumentCodeType" minOccurs="0"/>
             Element typeCode = null;
-            if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
-                typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("916");
-            } else if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
-                final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
+            if (    invoice.hasBT0017TenderOrLotReference() &&
+                    invoice.getBT0017TenderOrLotReference(0).getValue().equals(bg0024.getBT0122SupportingDocumentReference(0).getValue()) ) {
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("50");
+            } else if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
+                typeCode = new Element("TypeCode", ramNs);
+                typeCode.setText("916");
             } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
                 final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("130");
             }
+//            if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
+//                typeCode = new Element("TypeCode", ramNs);
+//                typeCode.setText("916");
+//            } else if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
+//                final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
+//                typeCode = new Element("TypeCode", ramNs);
+//                typeCode.setText("50");
+//            } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+//                final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
+//                typeCode = new Element("TypeCode", ramNs);
+//                typeCode.setText("130");
+//            }
             if(typeCode!=null) additionalReferencedDocument.addContent(typeCode);
 
 

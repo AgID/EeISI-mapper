@@ -28,18 +28,18 @@ public class ConversionUtil {
         this.api = Preconditions.checkNotNull( api );
     }
 
-    ConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target) {
+    ImprovedConversionResult<byte[]> assertConversionWithoutErrors(String invoice, String source, String target) {
         Predicate<IConversionIssue> predicate = new KeepAll();
         return assertConversionWithoutErrors(invoice, source, target, predicate);
     }
 
-    ConversionResult<byte[]> assertConversionWithoutErrors(String invoiceStreamSource, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
+    ImprovedConversionResult<byte[]> assertConversionWithoutErrors(String invoiceStreamSource, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
         InputStream invoiceStream = invoiceAsStream(invoiceStreamSource);
 
         return assertConversionWithoutErrors(invoiceStream, source, target, errorsToKeep);
     }
 
-    ConversionResult<byte[]> assertConversionWithoutErrors(InputStream invoiceStream, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
+    ImprovedConversionResult<byte[]> assertConversionWithoutErrors(InputStream invoiceStream, String source, String target, Predicate<IConversionIssue> errorsToKeep) {
         final BG0000Invoice[] intermediateInvoice = new BG0000Invoice[1];
 
         class MyConversionCallback extends AbstractConversionCallback {
@@ -55,13 +55,14 @@ public class ConversionUtil {
         MyConversionCallback mcc = new MyConversionCallback();
 
         ConversionResult<byte[]> convert = api.convert(source, target, invoiceStream, "invoice", mcc);
+        ImprovedConversionResult<byte[]> tmp = new ImprovedConversionResult<>(intermediateInvoice[0], convert.getIssues(), convert.getResult());
 
         List<IConversionIssue> issues = convert.getIssues().stream().filter( errorsToKeep ).collect(Collectors.toList());
 
         String messageInCaseOfFailedTest = buildMsgForFailedAssertion(convert, errorsToKeep, intermediateInvoice[0]);
 
         assertTrue(messageInCaseOfFailedTest, issues.isEmpty() );
-        return convert;
+        return tmp;
     }
 
     String buildMsgForFailedAssertion(ConversionResult<byte[]> convert, Predicate<IConversionIssue> predicate, BG0000Invoice intermediateCenInvoice){
@@ -85,7 +86,7 @@ public class ConversionUtil {
             issuesDescription.append("\n\n====== Intermediate CEN Invoice: ======\n\n");
 
             if(intermediateCenInvoice!=null) {
-                issuesDescription.append(msgForIntermediateInvoice(intermediateCenInvoice));
+                issuesDescription.append(describeIntermediateInvoice(intermediateCenInvoice));
             }else{
                 issuesDescription.append("The conversion failed before producing any intermediate CEN invoice.");
             }
@@ -93,7 +94,7 @@ public class ConversionUtil {
         return issuesDescription.toString();
     }
 
-    private String msgForIntermediateInvoice(BG0000Invoice cenInvoice) {
+    public static String describeIntermediateInvoice(BG0000Invoice cenInvoice) {
         DumpVisitor v = new DumpVisitor();
         cenInvoice.accept( v );
         return v.toString();
@@ -191,6 +192,25 @@ public class ConversionUtil {
             }catch(NullPointerException npe){
                 return false;
             }
+        }
+    }
+
+    public static class ImprovedConversionResult<T> extends ConversionResult<T> {
+
+        private final BG0000Invoice cenInvoice;
+
+        public ImprovedConversionResult(BG0000Invoice cenInvoice, List<IConversionIssue> issues, T result) {
+            super(issues, result);
+            this.cenInvoice = cenInvoice;
+        }
+
+        public ImprovedConversionResult(BG0000Invoice cenInvoice, T result) {
+            super(result);
+            this.cenInvoice = cenInvoice;
+        }
+
+        public BG0000Invoice getCenInvoice() {
+            return cenInvoice;
         }
     }
 

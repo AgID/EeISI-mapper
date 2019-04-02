@@ -3,6 +3,8 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
@@ -35,9 +37,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEisi284() throws Exception {
 
-        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-284-cii.xml",
                 "cii", "cii", ignoreAll());
+
+        BG0000Invoice cenInvoice = conversionResult.getCenInvoice();
+
+        BT0017TenderOrLotReference bt17 = cenInvoice.getBT0017TenderOrLotReference(0);
+        assertThat( describeIntermediateInvoice(cenInvoice),  bt17.getValue(), equalTo("ContractCIGID") );
 
         Document targetCii = parseAsDom(conversionResult);
         String errMsg = describeConvertedInvoice(conversionResult);
