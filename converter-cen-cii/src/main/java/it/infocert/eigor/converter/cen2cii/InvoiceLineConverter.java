@@ -518,6 +518,17 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 Element chargeAmount = new Element("ChargeAmount", ramNs);
                 chargeAmount.setText(bt0146.setScale(2, RoundingMode.HALF_UP).toString());
                 netPriceProductTradePrice.addContent(chargeAmount);
+
+                if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
+                    BigDecimal bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
+                    Element basisQuantity = new Element("BasisQuantity", ramNs);
+                    if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
+                        UnitOfMeasureCodes bt0150 = bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue();
+                        basisQuantity.setAttribute("unitCode", bt0150.getCommonCode());
+                    }
+                    basisQuantity.setText(bt0149.setScale(2, RoundingMode.HALF_UP).toString());
+                    netPriceProductTradePrice.addContent(basisQuantity);
+                }
             }
 
             if (grossPriceProductTradePrice.getChild("ChargeAmount", ramNs) != null) {
