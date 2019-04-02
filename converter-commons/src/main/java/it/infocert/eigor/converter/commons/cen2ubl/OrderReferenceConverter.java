@@ -25,6 +25,9 @@ public class OrderReferenceConverter extends FirstLevelElementsConverter {
             final Element salesOrderID = new Element("SalesOrderID").setText(value);
             orderReference.addContent(salesOrderID);
         }
-        root.addContent(orderReference);
+
+        if (!invoice.getBT0013PurchaseOrderReference().isEmpty() && !invoice.getBT0014SalesOrderReference().isEmpty()) {
+            root.addContent(orderReference);
+        }
     }
 }
