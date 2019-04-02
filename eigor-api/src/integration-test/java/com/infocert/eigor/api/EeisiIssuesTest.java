@@ -46,6 +46,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         BT0017TenderOrLotReference bt17 = cenInvoice.getBT0017TenderOrLotReference(0);
         assertThat( describeIntermediateInvoice(cenInvoice),  bt17.getValue(), equalTo("ContractCIGID") );
 
+        assertThat( cenInvoice.getBG0024AdditionalSupportingDocuments(1).getBT0122SupportingDocumentReference(0).getValue(), equalTo("ContractCIGID") );
+
         Document targetCii = parseAsDom(conversionResult);
         String errMsg = describeConvertedInvoice(conversionResult);
 
@@ -57,6 +59,10 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 errMsg,
                 ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:TypeCode/text()").evaluate(targetCii),
                 equalTo("50") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:ReferenceTypeCode)").evaluate(targetCii),
+                equalTo("0") );
 
     }
 
