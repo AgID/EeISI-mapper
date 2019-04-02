@@ -484,16 +484,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
             }
 
-            if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                BigDecimal bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
-                Element basisQuantity = new Element("BasisQuantity", ramNs);
-                if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                    UnitOfMeasureCodes bt0150 = bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue();
-                    basisQuantity.setAttribute("unitCode", bt0150.getCommonCode());
-                }
-                basisQuantity.setText(bt0149.setScale(2, RoundingMode.HALF_UP).toString());
-                grossPriceProductTradePrice.addContent(basisQuantity);
-            }
+            mapBt149Bt150(bg0029, ramNs, grossPriceProductTradePrice);
 
             if (!bg0029.getBT0147ItemPriceDiscount().isEmpty()) {
                 BigDecimal bt0147 = bg0029.getBT0147ItemPriceDiscount(0).getValue();
@@ -519,16 +510,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 chargeAmount.setText(bt0146.setScale(2, RoundingMode.HALF_UP).toString());
                 netPriceProductTradePrice.addContent(chargeAmount);
 
-                if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                    BigDecimal bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
-                    Element basisQuantity = new Element("BasisQuantity", ramNs);
-                    if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
-                        UnitOfMeasureCodes bt0150 = bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue();
-                        basisQuantity.setAttribute("unitCode", bt0150.getCommonCode());
-                    }
-                    basisQuantity.setText(bt0149.setScale(2, RoundingMode.HALF_UP).toString());
-                    netPriceProductTradePrice.addContent(basisQuantity);
-                }
+                mapBt149Bt150(bg0029, ramNs, netPriceProductTradePrice);
             }
 
             if (grossPriceProductTradePrice.getChild("ChargeAmount", ramNs) != null) {
@@ -540,6 +522,19 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
             }
         }
         return specifiedLineTradeAgreement;
+    }
+
+    private void mapBt149Bt150(BG0029PriceDetails bg0029, Namespace ramNs, Element target) {
+        if (!bg0029.getBT0149ItemPriceBaseQuantity().isEmpty()) {
+            BigDecimal bt0149 = bg0029.getBT0149ItemPriceBaseQuantity(0).getValue();
+            Element basisQuantity = new Element("BasisQuantity", ramNs);
+            if (!bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode().isEmpty()) {
+                UnitOfMeasureCodes bt0150 = bg0029.getBT0150ItemPriceBaseQuantityUnitOfMeasureCode(0).getValue();
+                basisQuantity.setAttribute("unitCode", bt0150.getCommonCode());
+            }
+            basisQuantity.setText(bt0149.setScale(2, RoundingMode.HALF_UP).toString());
+            target.addContent(basisQuantity);
+        }
     }
 
 }
