@@ -43,16 +43,6 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
             Element party = findNamespaceChild(accountingSupplierParty, namespacesInScope, "Party");
 
             if (party != null) {
-                List<Element> partyIdentifications = findNamespaceChildren(party, namespacesInScope, "PartyIdentification");
-
-                for (Element elemParty : partyIdentifications) {
-
-                    Element id = findNamespaceChild(elemParty, namespacesInScope, "ID");
-                    if (id != null) {
-                        bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
-                        invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
-                    }
-                }
 
                 //BT0031-BT0032
                 List<Element> partyTaxScheme = findNamespaceChildren(party, namespacesInScope, "PartyTaxScheme");
@@ -96,13 +86,16 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         final List<Namespace> namespacesInScope = root.getNamespacesIntroduced();
         final Optional<Element> payeeParty = Optional.fromNullable(findNamespaceChild(root, namespacesInScope, "PayeeParty"));
         if (payeeParty.isPresent()) {
-            final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(payeeParty.get(), namespacesInScope, "PartyIdentification"));
-            if (partyIdentification.isPresent()) {
-                final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
-                if (idOptional.isPresent()) {
-                    mapId(invoice, idOptional.get());
-                } else
-                    log("ID");
+            final Optional<List<Element>> partyIdentificationListOptional = Optional.fromNullable(findNamespaceChildren(payeeParty.get(), namespacesInScope, "PartyIdentification"));
+            if (partyIdentificationListOptional.isPresent()) {
+                partyIdentificationListOptional.get().forEach(element -> {
+                    final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(element, namespacesInScope, "ID"));
+                    if (idOptional.isPresent()) {
+                        mapId(invoice, idOptional.get(), true);
+                    } else {
+                        log("ID");
+                    }
+                });
             } else {
                 log("PartyIdentification");
             }
@@ -113,13 +106,16 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         if (accountingSupplierParty.isPresent()) {
             final Optional<Element> party = Optional.fromNullable(findNamespaceChild(accountingSupplierParty.get(), namespacesInScope, "Party"));
             if (party.isPresent()) {
-                final Optional<Element> partyIdentification = Optional.fromNullable(findNamespaceChild(party.get(), namespacesInScope, "PartyIdentification"));
-                if (partyIdentification.isPresent()) {
-                    final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(partyIdentification.get(), namespacesInScope, "ID"));
-                    if (idOptional.isPresent()) {
-                        mapId(invoice, idOptional.get());
-                    } else
-                        log("ID");
+                final Optional<List<Element>> partyIdentificationListOptional = Optional.fromNullable(findNamespaceChildren(party.get(), namespacesInScope, "PartyIdentification"));
+                if (partyIdentificationListOptional.isPresent()) {
+                    partyIdentificationListOptional.get().forEach(element -> {
+                        final Optional<Element> idOptional = Optional.fromNullable(findNamespaceChild(element, namespacesInScope, "ID"));
+                        if (idOptional.isPresent()) {
+                            mapId(invoice, idOptional.get(), false);
+                        } else {
+                            log("ID");
+                        }
+                    });
                 } else {
                     log("PartyIdentification");
                 }
@@ -129,20 +125,31 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
         } else {
             log("AccountingSupplierParty");
         }
-
     }
 
-    private void mapId(BG0000Invoice invoice, Element id) {
+    private void mapId(BG0000Invoice invoice, Element id, boolean isPayee) {
         final Attribute sepa = id.getAttribute("schemeID");
         if (sepa != null && "sepa".equalsIgnoreCase(sepa.getValue())) {
             final Identifier identifier = new Identifier(sepa.getValue(), id.getText());
-            final BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
-            final BG0019DirectDebit bg19 = new BG0019DirectDebit();
+            BG0016PaymentInstructions bg16 = new BG0016PaymentInstructions();
+            if (invoice.getBG0016PaymentInstructions().isEmpty()) {
+                invoice.getBG0016PaymentInstructions().add(bg16);
+            } else {
+                bg16 = invoice.getBG0016PaymentInstructions(0);
+            }
+            BG0019DirectDebit bg19 = new BG0019DirectDebit();
+            if (bg16.getBG0019DirectDebit().isEmpty()) {
+                bg16.getBG0019DirectDebit().add(bg19);
+            } else {
+                bg19 = bg16.getBG0019DirectDebit(0);
+            }
             bg19.getBT0090BankAssignedCreditorIdentifier().add(new BT0090BankAssignedCreditorIdentifier(identifier));
-            bg16.getBG0019DirectDebit().add(bg19);
-            invoice.getBG0016PaymentInstructions().add(bg16);
-        } else
-            log.info("Element 'ID' has no schemeID or it is not of value 'SEPA'. SchemeID: {}", sepa != null ? sepa.getValue() : "null");
+        } else {
+            if (isPayee) return;
+            BT0029SellerIdentifierAndSchemeIdentifier bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
+            invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
+//            log.info("Element 'ID' has no schemeID or it is not of value 'SEPA'. SchemeID: {}", sepa != null ? sepa.getValue() : "null");
+        }
     }
 
 
