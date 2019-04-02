@@ -431,7 +431,8 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                     .addContent(new Element("ID", ramNs)
                             .setText( invoice.getBT0011ProjectReference(0).getValue() ))
                     .addContent(new Element("Name", ramNs)
-                            .setText( "Name of " + invoice.getBT0011ProjectReference(0).getValue() ));
+                            // according to specs: 'Use "Project reference" as default value for Name.'
+                            .setText( "Project reference" ) );
 
             applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
         }
