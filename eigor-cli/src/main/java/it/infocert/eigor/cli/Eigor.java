@@ -45,7 +45,12 @@ public class Eigor {
         System.out.println(EigorVersion.getAsString());
         log.info(EigorVersion.getAsString());
         ApplicationContext ctx = new AnnotationConfigApplicationContext(Eigor.class);
-        ctx.getBean(EigorCli.class).run(args);
+        ctx.getBean(EigorCli.class).run(new String[]{
+                "--input", "C:\\Users\\Sorint\\Documents\\Sviluppo\\eeisi\\cen_to_peppol_bis_has_bugs\\1.xml",
+                "--source", "fatturapa",
+                "--target", "peppolcn",
+                "--output", "C:\\Users\\Sorint\\Documents\\Sviluppo\\eeisi\\cen_to_peppol_bis_has_bugs\\transformed",
+                "--force"});
     }
 
     @Bean
