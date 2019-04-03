@@ -12,10 +12,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class BuyerConverterTest {
+public class AccountingCustomerPartyConverterTest {
 
     private BG0000Invoice invoice;
-    private BuyerConverter sut;
+    private AccountingCustomerPartyConverter sut;
     private Document doc;
 
     @Before
@@ -29,7 +29,7 @@ public class BuyerConverterTest {
 
         bg0007.getBT0048BuyerVatIdentifier().add(new BT0048BuyerVatIdentifier(new Identifier("BT-48")));
 
-        this.sut = new BuyerConverter();
+        this.sut = new AccountingCustomerPartyConverter();
         this.doc = new Document(new Element("Invoice"));
     }
 
