@@ -3,7 +3,7 @@ package it.infocert.eigor.converter.common.cen2peppol;
 import com.google.common.collect.Lists;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.commons.cen2peppol.InvoiceTypeCodeConverter;
+import it.infocert.eigor.converter.commons.cen2ubl.InvoiceTypeCodeConverter;
 import it.infocert.eigor.model.core.enums.Untdid1001InvoiceTypeCode;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0003InvoiceTypeCode;
@@ -34,7 +34,7 @@ public class InvoiceTypeCodeConverterTest {
     public void shouldMapDefaultTypeConverter() {
         sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.PEPPOL_OUT, null);
         Element name = doc.getRootElement().getChild("InvoiceTypeCode");
-        assertEquals("380", name.getText());
+        assertEquals("130", name.getText());
     }
 
 }

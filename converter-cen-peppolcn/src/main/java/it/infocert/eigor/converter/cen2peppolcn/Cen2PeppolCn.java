@@ -45,6 +45,7 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
 
     private XSDValidator xsdValidator;
+    private IXMLValidator cenValidator;
     private IXMLValidator ublValidator;
 
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -75,8 +76,10 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
 
         // load the UBL schematron validator.
         try {
-            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron"));
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron1"));
+            Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.schematron.auto-update-xslt"));
+            cenValidator = new SchematronValidator(new FileSystemResource(cenSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOLCN_OUT);
             ublValidator = new SchematronValidator(new FileSystemResource(ublSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOLCN_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -113,11 +116,16 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
                 log.info("Xsd validation succesful!");
             }
             errors.addAll(validationErrors);
-            List<IConversionIssue> schematronErrors = ublValidator.validate(documentByteArray);
-            if (schematronErrors.isEmpty()) {
-                log.info("Schematron validation successful!");
+            List<IConversionIssue> schematronCenErrors = cenValidator.validate(documentByteArray);
+            if (schematronCenErrors.isEmpty()) {
+                log.info("Schematron cen validation successful!");
             }
-            errors.addAll(schematronErrors);
+            errors.addAll(schematronCenErrors);
+            List<IConversionIssue> schematronUblErrors = ublValidator.validate(documentByteArray);
+            if (schematronUblErrors.isEmpty()) {
+                log.info("Schematron ubl validation successful!");
+            }
+            errors.addAll(schematronUblErrors);
 
         } catch (IllegalArgumentException e) {
             errors.add(ConversionIssue.newWarning(e, "Error during validation", ErrorCode.Location.PEPPOLCN_OUT, ErrorCode.Action.GENERIC, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
