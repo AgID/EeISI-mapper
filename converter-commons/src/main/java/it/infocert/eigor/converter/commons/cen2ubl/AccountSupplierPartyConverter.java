@@ -209,7 +209,6 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             }
         }
 
-
         if (!seller.getBG0006SellerContact().isEmpty()) {
             BG0006SellerContact sellerContact = seller.getBG0006SellerContact(0);
             Element contact = new Element("Contact");
@@ -233,8 +232,6 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 contact.addContent(electronicMail);
             }
         }
-
-
     }
 
     private void mapPartyTaxScheme(Element party, String companyIdValue, String taxSchemeIdValue) {

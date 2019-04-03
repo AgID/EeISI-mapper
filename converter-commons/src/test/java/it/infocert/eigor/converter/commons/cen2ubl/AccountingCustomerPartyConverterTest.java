@@ -12,10 +12,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class BuyerConverterTest {
+public class AccountingCustomerPartyConverterTest {
 
     private BG0000Invoice invoice;
-    private BuyerConverter sut;
+    private AccountingCustomerPartyConverter sut;
     private Document doc;
 
     @Before
@@ -29,7 +29,7 @@ public class BuyerConverterTest {
 
         bg0007.getBT0048BuyerVatIdentifier().add(new BT0048BuyerVatIdentifier(new Identifier("BT-48")));
 
-        this.sut = new BuyerConverter();
+        this.sut = new AccountingCustomerPartyConverter();
         this.doc = new Document(new Element("Invoice"));
     }
 
@@ -42,17 +42,8 @@ public class BuyerConverterTest {
         assertEquals("BT-44", name.getText());
     }
 
-    @Test
-    public void shouldMapBT0056ToRegistrationNameIgnoringBT0044() throws Exception {
-
-        enrichBG0007BuyerwithBG0009(invoice.getBG0007Buyer(0));
-
-        sut.map(invoice, doc, Lists.<IConversionIssue>newArrayList(), ErrorCode.Location.UBL_OUT, null);
-
-        Element name = doc.getRootElement().getChild("AccountingCustomerParty").getChild("Party").getChild("PartyLegalEntity").getChild("RegistrationName");
-
-        assertEquals("BT-56", name.getText());
-    }
+    // Test removed because it doesn't make sense anymore after 266 fix: BT0044 --> PartyLegalEntry/RegistrationName and BT0056 --> Contact/Name
+    // public void shouldMapBT0056ToRegistrationNameIgnoringBT0044()
 
     @Test
     public void shouldMapBT0046ConcatenatingSchemeIdAndIdentifier() {
