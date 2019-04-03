@@ -209,16 +209,9 @@ public class AccountingCustomerPartyConverter implements CustomMapping<Document>
                         partyElm.addContent(partyLegalEntity);
                     }
 
-                    Element registrationName = new Element("RegistrationName");
-                    if (!buyer.getBG0009BuyerContact().isEmpty()) {
-                        BG0009BuyerContact bg0009 = buyer.getBG0009BuyerContact(0);
-                        if (!bg0009.getBT0056BuyerContactPoint().isEmpty()) {
-                            BT0056BuyerContactPoint bt0056 = bg0009.getBT0056BuyerContactPoint(0);
-                            registrationName.setText(bt0056.getValue());
-                            partyLegalEntity.addContent(registrationName);
-                        }
-                    } else if (!buyer.getBT0044BuyerName().isEmpty()) {
+                    if (!buyer.getBT0044BuyerName().isEmpty()) {
                         BT0044BuyerName bt0044 = buyer.getBT0044BuyerName(0);
+                        Element registrationName = new Element("RegistrationName");
                         registrationName.setText(bt0044.getValue());
                         partyLegalEntity.addContent(registrationName);
                     }
@@ -230,9 +223,32 @@ public class AccountingCustomerPartyConverter implements CustomMapping<Document>
                                         .setText(bt47.getValue().getIdentifier())
                         );
                     }
+
+                    if (!buyer.getBG0009BuyerContact().isEmpty()) {
+                        BG0009BuyerContact buyerContact = buyer.getBG0009BuyerContact(0);
+                        Element contact = new Element("Contact");
+                        partyElm.addContent(contact);
+
+                        if (!buyerContact.getBT0056BuyerContactPoint().isEmpty()) {
+                            Element name = new Element("Name");
+                            name.setText(buyerContact.getBT0056BuyerContactPoint(0).getValue());
+                            contact.addContent(name);
+                        }
+
+                        if (!buyerContact.getBT0057BuyerContactTelephoneNumber().isEmpty()) {
+                            Element telephone = new Element("Telephone");
+                            telephone.setText(buyerContact.getBT0057BuyerContactTelephoneNumber(0).getValue());
+                            contact.addContent(telephone);
+                        }
+
+                        if (!buyerContact.getBT0058BuyerContactEmailAddress().isEmpty()) {
+                            Element electronicMail = new Element("ElectronicMail");
+                            electronicMail.setText(buyerContact.getBT0058BuyerContactEmailAddress(0).getValue());
+                            contact.addContent(electronicMail);
+                        }
+                    }
                 }
             }
         }
     }
-
 }
