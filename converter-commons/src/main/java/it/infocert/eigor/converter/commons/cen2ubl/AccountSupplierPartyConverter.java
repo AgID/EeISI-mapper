@@ -200,9 +200,13 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                     companyID.setAttribute("schemeID", identificationSchema);
                 }
                 partyLegalEntity.addContent(companyID);
-
             }
 
+            if (!seller.getBT0033SellerAdditionalLegalInformation().isEmpty()) {
+                Element companyLegalForm = new Element("CompanyLegalForm");
+                companyLegalForm.setText(seller.getBT0033SellerAdditionalLegalInformation(0).getValue());
+                partyLegalEntity.addContent(companyLegalForm);
+            }
         }
 
 
@@ -210,6 +214,12 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
             BG0006SellerContact sellerContact = seller.getBG0006SellerContact(0);
             Element contact = new Element("Contact");
             partyElm.addContent(contact);
+
+            if (!sellerContact.getBT0041SellerContactPoint().isEmpty()) {
+                Element name = new Element("Name");
+                name.setText(sellerContact.getBT0041SellerContactPoint(0).getValue());
+                contact.addContent(name);
+            }
 
             if (!sellerContact.getBT0042SellerContactTelephoneNumber().isEmpty()) {
                 Element telephone = new Element("Telephone");
