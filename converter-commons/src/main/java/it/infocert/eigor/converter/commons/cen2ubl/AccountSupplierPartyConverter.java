@@ -110,6 +110,12 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 postalAddress.addContent(streetName);
             }
 
+            if (!sellerPostalAddress.getBT0036SellerAddressLine2().isEmpty()) {
+                Element additionalStreetName = new Element("AdditionalStreetName");
+                additionalStreetName.setText(sellerPostalAddress.getBT0036SellerAddressLine2(0).getValue());
+                postalAddress.addContent(additionalStreetName);
+            }
+
             if (!sellerPostalAddress.getBT0037SellerCity().isEmpty()) {
                 Element cityName = new Element("CityName");
                 cityName.setText(sellerPostalAddress.getBT0037SellerCity(0).getValue());
@@ -120,6 +126,20 @@ public class AccountSupplierPartyConverter implements CustomMapping<Document> {
                 Element postalZone = new Element("PostalZone");
                 postalZone.setText(sellerPostalAddress.getBT0038SellerPostCode(0).getValue());
                 postalAddress.addContent(postalZone);
+            }
+
+            if (!sellerPostalAddress.getBT0039SellerCountrySubdivision().isEmpty()) {
+                Element countrySubentity = new Element("CountrySubentity");
+                countrySubentity.setText(sellerPostalAddress.getBT0039SellerCountrySubdivision(0).getValue());
+                postalAddress.addContent(countrySubentity);
+            }
+
+            if (!sellerPostalAddress.getBT0162SellerAddressLine3().isEmpty()) {
+                Element addressLine = new Element("AddressLine");
+                Element line = new Element("Line");
+                line.setText(sellerPostalAddress.getBT0162SellerAddressLine3(0).getValue());
+                addressLine.addContent(line);
+                postalAddress.addContent(addressLine);
             }
 
             if (!sellerPostalAddress.getBT0040SellerCountryCode().isEmpty()) {
