@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class FattPa2Cen extends AbstractToCenConverter {
 
     private final static Logger log = LoggerFactory.getLogger(FattPa2Cen.class);
-    private final static String FORMAT = "fatturapa" ;
+    private final static String FORMAT = "fatturapa";
     private final DefaultResourceLoader drl = new DefaultResourceLoader();
     private final EigorConfiguration configuration;
     private final static ConversionRegistry conversionRegistry = new ConversionRegistry(
@@ -59,10 +59,10 @@ public class FattPa2Cen extends AbstractToCenConverter {
             StringToIdentifierConverter.newConverter()
     );
 
-    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one" ;
-    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one" ;
-    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many" ;
-    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom" ;
+    private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-one";
+    private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.many-to-one";
+    private static final String ONE2MANY_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.one-to-many";
+    private static final String CUSTOM_CONVERTER_MAPPING_PATH = "eigor.converter.fatturapa-cen.mapping.custom";
 
     private XSDValidator xsdValidator;
 
@@ -121,71 +121,70 @@ public class FattPa2Cen extends AbstractToCenConverter {
         result = applyOne2ManyTransformationsBasedOnMapping(result.getResult(), document, errors);
         applyCustomMapping(result.getResult(), document, errors);
 
-
-        // fix https://gitlab.com/tgi-infocert-eigor/eigor/issues/252
-        BG0000Invoice invoice = result.getResult();
-        // bt-112
-        {
-            BigDecimal bt109 = null;
+        // Fixme: Added a try-catch statement to avoid errors while mapping these fields, an error here means step over the errors logging and cause a crash
+        // in the conversion, I think that these mapping can have their own converter class like all the other fields
+        try {
+            // fix https://gitlab.com/tgi-infocert-eigor/eigor/issues/252
+            BG0000Invoice invoice = result.getResult();
+            // bt-112
             {
-                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
-                BT0109InvoiceTotalAmountWithoutVat bt109cen = bg022cen.getBT0109InvoiceTotalAmountWithoutVat(0);
-                bt109 = bt109cen.getValue();
-                if (bt109 == null) bt109 = BigDecimal.ZERO;
-            }
-
-            BigDecimal bt110 = null;
-            {
-                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
-                BT0110InvoiceTotalVatAmount bt110cen = bg022cen.getBT0110InvoiceTotalVatAmount(0);
-                bt110 = bt110cen.getValue();
-                if (bt110 == null) bt110 = BigDecimal.ZERO;
-            }
-
-            BT0112InvoiceTotalAmountWithVat bt112cen = new BT0112InvoiceTotalAmountWithVat(bt109.add(bt110));
-            invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat().set(0, bt112cen);
-
-
-        }
-
-        // bt-113
-        if (invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().isEmpty()) {
-            invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(new BT0113PaidAmount(BigDecimal.ZERO));
-        }
-
-        // bt-115
-        {
-
-            {
-                BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
-                BigDecimal bt112 = bg022cen.getBT0112InvoiceTotalAmountWithVat(0).getValue();
-                BigDecimal bt114 = bg022cen.getBT0114RoundingAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0114RoundingAmount(0).getValue();
-                BigDecimal bt113 = bg022cen.getBT0113PaidAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0113PaidAmount(0).getValue();
-
-                BigDecimal bt115 = bt112.add(bt114).subtract(bt113);
-
-                List<BT0115AmountDueForPayment> bt115s = invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment();
-                if (bt115s.isEmpty()) {
-                    bt115s.add(new BT0115AmountDueForPayment(bt115));
-                } else {
-                    bt115s.set(0, new BT0115AmountDueForPayment(bt115));
+                BigDecimal bt109 = null;
+                {
+                    BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                    BT0109InvoiceTotalAmountWithoutVat bt109cen = bg022cen.getBT0109InvoiceTotalAmountWithoutVat(0);
+                    bt109 = bt109cen.getValue();
+                    if (bt109 == null) bt109 = BigDecimal.ZERO;
                 }
 
+                BigDecimal bt110 = null;
+                {
+                    BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                    BT0110InvoiceTotalVatAmount bt110cen = bg022cen.getBT0110InvoiceTotalVatAmount(0);
+                    bt110 = bt110cen.getValue();
+                    if (bt110 == null) bt110 = BigDecimal.ZERO;
+                }
+
+                BT0112InvoiceTotalAmountWithVat bt112cen = new BT0112InvoiceTotalAmountWithVat(bt109.add(bt110));
+                invoice.getBG0022DocumentTotals(0).getBT0112InvoiceTotalAmountWithVat().set(0, bt112cen);
             }
+
+            // bt-113
+            if (invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().isEmpty()) {
+                invoice.getBG0022DocumentTotals(0).getBT0113PaidAmount().add(new BT0113PaidAmount(BigDecimal.ZERO));
+            }
+
+            // bt-115
+            {
+                {
+                    BG0022DocumentTotals bg022cen = invoice.getBG0022DocumentTotals(0);
+                    BigDecimal bt112 = bg022cen.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+                    BigDecimal bt114 = bg022cen.getBT0114RoundingAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0114RoundingAmount(0).getValue();
+                    BigDecimal bt113 = bg022cen.getBT0113PaidAmount().isEmpty() ? BigDecimal.ZERO : bg022cen.getBT0113PaidAmount(0).getValue();
+
+                    BigDecimal bt115 = bt112.add(bt114).subtract(bt113);
+
+                    List<BT0115AmountDueForPayment> bt115s = invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment();
+                    if (bt115s.isEmpty()) {
+                        bt115s.add(new BT0115AmountDueForPayment(bt115));
+                    } else {
+                        bt115s.set(0, new BT0115AmountDueForPayment(bt115));
+                    }
+                }
+            }
+
+            // set BG-2 with BG-24 default value urn:cen.eu:en16931:2017
+            BG0002ProcessControl bg0002 = new BG0002ProcessControl();
+            bg0002.getBT0024SpecificationIdentifier().add(new BT0024SpecificationIdentifier("urn:cen.eu:en16931:2017"));
+            invoice.getBG0002ProcessControl().add(bg0002);
+
+            // when bt-115 is present, either bt-20 or bt-9
+            if (!invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment().isEmpty() &&
+                    invoice.getBT0009PaymentDueDate().isEmpty() && invoice.getBT0020PaymentTerms().isEmpty()) {
+                invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payment Terms"));
+            }
+        } catch (Exception e) {
+            log.error("Error while mapping manually some fattpa2cen's fields");
         }
-
-        // set BG-2 with BG-24 default value urn:cen.eu:en16931:2017
-        BG0002ProcessControl bg0002 = new BG0002ProcessControl();
-        bg0002.getBT0024SpecificationIdentifier().add(new BT0024SpecificationIdentifier("urn:cen.eu:en16931:2017"));
-        invoice.getBG0002ProcessControl().add(bg0002);
-
-        // when bt-115 is present, either bt-20 or bt-9
-        BT0020PaymentTerms bt20cen = null;
-        if (!invoice.getBG0022DocumentTotals(0).getBT0115AmountDueForPayment().isEmpty() &&
-                invoice.getBT0009PaymentDueDate().isEmpty() && invoice.getBT0020PaymentTerms().isEmpty()) {
-            invoice.getBT0020PaymentTerms().add(new BT0020PaymentTerms("N/A Payment Terms"));
-        }
-
 
         return result;
     }
@@ -240,11 +239,11 @@ public class FattPa2Cen extends AbstractToCenConverter {
 
     @Override
     public String getMappingRegex() {
-        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?" ;
+        return "(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?(/(BG)[0-9]{4})?/(BT)[0-9]{4}(-[0-9]{1})?";
     }
 
     @Override
     public String getName() {
-        return "converter-fattpa-cen" ;
+        return "converter-fattpa-cen";
     }
 }
