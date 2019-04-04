@@ -143,12 +143,6 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
         for (CustomMapping<Document> customMapping : customMappings) {
             customMapping.map(invoice, document, errors, ErrorCode.Location.PEPPOL_OUT, this.configuration);
         }
-
-        // PEPPOL hardcoding
-        final Element root = document.getRootElement();
-
-//        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppol.customization-id")));
-//        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppol.profile-id")));
     }
 
     @Override

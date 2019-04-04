@@ -133,8 +133,6 @@ public class Cen2Ubl extends AbstractFromCenConverter {
         for (CustomMapping<Document> customMapping : customMappings) {
             customMapping.map(invoice, document, errors, ErrorCode.Location.UBL_OUT, this.getConfiguration());
         }
-
-
     }
 
     @Override

@@ -132,12 +132,6 @@ public class Cen2UblCn extends AbstractFromCenConverter {
         for (CustomMapping<Document> customMapping : customMappings) {
             customMapping.map(invoice, document, errors, ErrorCode.Location.UBLCN_OUT, this.getConfiguration());
         }
-
-        // PEPPOL hardcoding
-        final Element root = document.getRootElement();
-
-        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ublcn.customization-id")));
-        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-ublcn.profile-id")));
     }
 
     @Override
@@ -184,7 +178,6 @@ public class Cen2UblCn extends AbstractFromCenConverter {
     public String getName() {
         return "converter-cen-ublcn";
     }
-
 
 
     private void createRootNode(Document doc) {

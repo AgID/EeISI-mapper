@@ -140,12 +140,6 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
         for (CustomMapping<Document> customMapping : customMappings) {
             customMapping.map(invoice, document, errors, ErrorCode.Location.PEPPOLCN_OUT, this.getConfiguration());
         }
-
-        // PEPPOL hardcoding
-        final Element root = document.getRootElement();
-
-//        root.addContent(0, new Element("CustomizationID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.customization-id")));
-//        root.addContent(1, new Element("ProfileID").setText(this.configuration.getMandatoryString("eigor.converter.cen-peppolcn.profile-id")));
     }
 
     @Override
@@ -192,7 +186,6 @@ public class Cen2PeppolCn extends AbstractFromCenConverter {
     public String getName() {
         return "converter-cen-peppolcn";
     }
-
 
 
     private void createRootNode(Document doc) {
