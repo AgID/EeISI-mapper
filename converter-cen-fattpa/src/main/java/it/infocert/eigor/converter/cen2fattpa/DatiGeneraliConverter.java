@@ -73,14 +73,16 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
         } else {
             FatturaElettronicaBodyType body = bodies.get(0);
             DatiGeneraliType datiGenerali = body.getDatiGenerali();
-            addDDT(invoice, datiGenerali, errors, callingLocation);
-            addCausale(invoice, datiGenerali, errors, callingLocation);
-            addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
-            addIndirizzo(invoice, fatturaElettronica, datiGenerali, errors);
-            addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
-            addRiferimentoNormativo(invoice, body, errors, callingLocation);
-            addArrotondamento(invoice, body, errors, callingLocation);
-            addDettaglioPagamento(invoice, body, errors, callingLocation);
+            if (datiGenerali != null) {
+                addDDT(invoice, datiGenerali, errors, callingLocation);
+                addCausale(invoice, datiGenerali, errors, callingLocation);
+                addFattureCollegate(invoice, datiGenerali, errors, callingLocation);
+                addIndirizzo(invoice, fatturaElettronica, datiGenerali, errors);
+                addDatiTrasporto(invoice, body, datiGenerali, errors, callingLocation);
+                addRiferimentoNormativo(invoice, body, errors, callingLocation);
+                addArrotondamento(invoice, body, errors, callingLocation);
+                addDettaglioPagamento(invoice, body, errors, callingLocation);
+            }
         }
     }
 

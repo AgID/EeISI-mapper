@@ -91,7 +91,7 @@ public class Cii2Cen extends AbstractToCenConverter {
 		// load the XSD.
 		{
 			try {
-				xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_OUT);
+				xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/cii/xsd/uncoupled/data/standard/CrossIndustryInvoice_100pD16B.xsd", ErrorCode.Location.CII_IN);
 			} catch (Exception e) {
 				throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
 			}
