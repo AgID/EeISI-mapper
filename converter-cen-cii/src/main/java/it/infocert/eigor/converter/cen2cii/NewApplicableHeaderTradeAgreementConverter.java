@@ -621,7 +621,7 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
     }
 
     private enum Source {
-        BT17, BT18, BT122
+        BT17, BT122
     }
 
     private void newAdditionalReferencedDocument(BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation, Element rootElement, Namespace ramNs, Element applicableHeaderTradeAgreement) {
@@ -672,11 +672,6 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("916");
                 source = Source.BT122;
-            } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
-                typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("130");
-                source = Source.BT18;
             }
             if(typeCode!=null) additionalReferencedDocument.addContent(typeCode);
 
@@ -715,18 +710,6 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:element name="Information" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
 
             // <xsd:element name="ReferenceTypeCode" type="qdt:ReferenceCodeType" minOccurs="0"/>
-            if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty() && source==Source.BT18) {
-                final Identifier bt0018 = InvoiceUtils.evalExpression( () -> invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue() );
-
-                String identificationSchema = bt0018.getIdentificationSchema();
-                if (identificationSchema != null) {
-                    additionalReferencedDocument
-                            .addContent(
-                                    new Element("ReferenceTypeCode", ramNs).setText(identificationSchema)
-                            );
-                }
-            }
-
             // <xsd:element name="SectionName" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
             // <xsd:element name="PreviousRevisionID" type="udt:IDType" minOccurs="0" maxOccurs="unbounded"/>
             // <xsd:element name="FormattedIssueDateTime" type="qdt:FormattedDateTimeType" minOccurs="0"/>

@@ -44,6 +44,9 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     Element uriid = findNamespaceChild(elem, namespacesInScope, "URIID");
                     Element attachmentBinaryObject = findNamespaceChild(elem, namespacesInScope, "AttachmentBinaryObject");
 
+                    // type code 130 has to be mapped into BT18, not BT122
+                    if(typeCode!=null && typeCode.getTextNormalize().equals("130")) continue;
+
                     if (issuerAssignedID != null && typeCode != null) {
                         BT0122SupportingDocumentReference bt0122 = new BT0122SupportingDocumentReference(issuerAssignedID.getText());
                         bg0024.getBT0122SupportingDocumentReference().add(bt0122);

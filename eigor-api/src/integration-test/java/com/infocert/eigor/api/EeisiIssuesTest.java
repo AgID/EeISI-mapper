@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 
 import static com.infocert.eigor.api.ConversionUtil.*;
@@ -42,6 +43,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 "/issues/issue-eisi285-cii.xml",
                 "cii", "cii", ignoreAll());
 
+        String errMsg = describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+
         // <ram:AdditionalReferencedDocument>
         //    <ram:IssuerAssignedID>BT-18 Invoice object id</ram:IssuerAssignedID><!--BT-18-->
         //    <ram:TypeCode>130</ram:TypeCode><!--BT-18 fixed value 130-->
@@ -56,9 +59,23 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         assertThat( bt18.getIdentificationSchema(), equalTo("ZZZ") );
         assertThat( bt18.getSchemaVersion(), nullValue() );
 
-        Document targetCii = parseAsDom(conversionResult);
-        String errMsg = describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+        long countBt18InBt122 = conversionResult.getCenInvoice()
+                .getBG0024AdditionalSupportingDocuments()
+                .stream()
+                .map(bg24 -> bg24.getBT0122SupportingDocumentReference())
+                .flatMap(Collection::stream)
+                .peek(bt122 -> System.out.println(bt122.getValue()))
+                .filter(bt122 -> bt122.getValue().equals("BT-18 Invoice object id"))
+                .count();
 
+        assertThat("BT-18 is not supposed to be duplicated in bt122s.", countBt18InBt122, equalTo(0L));
+
+        Document targetCii = parseAsDom(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument/ram:IssuerAssignedID[text()='BT-18 Invoice object id'])").evaluate(targetCii),
+                equalTo("1") );
         assertThat(
                 errMsg,
                 ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[3]/ram:IssuerAssignedID/text()").evaluate(targetCii),
