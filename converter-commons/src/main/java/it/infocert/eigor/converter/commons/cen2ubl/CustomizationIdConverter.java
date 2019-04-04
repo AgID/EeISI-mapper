@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
@@ -15,19 +15,16 @@ public class CustomizationIdConverter implements CustomMapping<Document> {
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
-
         final Element root = document.getRootElement();
-
         String profileID = bt24ToProfileID(eigorConfiguration, bt24(cenInvoice));
         root.addContent(new Element("CustomizationID").setText(profileID));
-
     }
 
     private String bt24ToProfileID(EigorConfiguration eigorConfiguration, String bt24) {
-        String profileID = null;
-        if(StringUtils.isEmpty(bt24)) {
+        String profileID;
+        if (StringUtils.isEmpty(bt24)) {
             profileID = eigorConfiguration.getMandatoryString("eigor.converter.cen-ubl.customization-id");
-        }else{
+        } else {
             profileID = bt24;
         }
         return profileID;
@@ -40,5 +37,4 @@ public class CustomizationIdConverter implements CustomMapping<Document> {
             return null;
         }
     }
-
 }
