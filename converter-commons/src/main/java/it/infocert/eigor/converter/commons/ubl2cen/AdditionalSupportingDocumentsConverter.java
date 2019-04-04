@@ -95,7 +95,13 @@ public class AdditionalSupportingDocumentsConverter extends CustomConverterUtils
                     }
                 }
             }
-            invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
+
+            if (bg0024.hasBT0122SupportingDocumentReference() ||
+                    bg0024.hasBT0123SupportingDocumentDescription() ||
+                    bg0024.hasBT0124ExternalDocumentLocation() ||
+                    bg0024.hasBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename()) {
+                invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
+            }
         }
         return new ConversionResult<>(errors, invoice);
     }

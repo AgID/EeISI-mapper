@@ -1,6 +1,7 @@
 package it.infocert.eigor.api;
 
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class SchematronValidatorTest {
         FileUtils.copyInputStreamToFile( getClass().getResourceAsStream("/dogs/" + schFileName), tmp.newFile(schFileName) );
         File schematron = new File( tmp.getRoot(), schFileName);
         schematronValidator = new SchematronValidator(
-                schematron, false, false, ErrorCode.Location.CII_OUT);
+                new FileSystemResource( schematron ), false, false, ErrorCode.Location.CII_OUT);
         sampleXml = IOUtils.toByteArray( getClass().getResource("/dogs/dogs.xml") );
     }
 

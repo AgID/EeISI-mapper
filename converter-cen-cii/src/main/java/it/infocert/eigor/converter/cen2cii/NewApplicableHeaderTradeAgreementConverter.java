@@ -431,7 +431,8 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                     .addContent(new Element("ID", ramNs)
                             .setText( invoice.getBT0011ProjectReference(0).getValue() ))
                     .addContent(new Element("Name", ramNs)
-                            .setText( "Name of " + invoice.getBT0011ProjectReference(0).getValue() ));
+                            // according to specs: 'Use "Project reference" as default value for Name.'
+                            .setText( "Project reference" ) );
 
             applicableHeaderTradeAgreement.addContent(specifiedProcuringProject);
         }
@@ -618,8 +619,16 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
         }
     }
 
+    private enum Source {
+        BT17, BT18, BT122
+    }
+
     private void newAdditionalReferencedDocument(BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation, Element rootElement, Namespace ramNs, Element applicableHeaderTradeAgreement) {
+
         for (BG0024AdditionalSupportingDocuments bg0024 : invoice.getBG0024AdditionalSupportingDocuments()) {
+
+            Source source = null;
+
             Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", rootElement.getNamespace("ram"));
 
             // <xsd:complexType name="ReferencedDocumentType">
@@ -630,10 +639,9 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                 Element issuerAssignedID = new Element("IssuerAssignedID", rootElement.getNamespace("ram"));
                 issuerAssignedID.setText(bt0122.getValue());
                 additionalReferencedDocument.addContent(issuerAssignedID);
+
             }else if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
-
                 final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
-
                 Element issuerAssignedID = new Element("IssuerAssignedID", ramNs);
                 issuerAssignedID.setText(bt0017.getValue());
                 additionalReferencedDocument.addContent(issuerAssignedID);
@@ -653,17 +661,20 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
 
             // <xsd:element name="TypeCode" type="qdt:DocumentCodeType" minOccurs="0"/>
             Element typeCode = null;
-            if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
-                typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("916");
-            } else if (!invoice.getBT0017TenderOrLotReference().isEmpty()) {
-                final BT0017TenderOrLotReference bt0017 = invoice.getBT0017TenderOrLotReference(0);
+            if (    invoice.hasBT0017TenderOrLotReference() &&
+                    invoice.getBT0017TenderOrLotReference(0).getValue().equals(bg0024.getBT0122SupportingDocumentReference(0).getValue()) ) {
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("50");
+                source = Source.BT17;
+            } else if (!bg0024.getBT0122SupportingDocumentReference().isEmpty()) {
+                typeCode = new Element("TypeCode", ramNs);
+                typeCode.setText("916");
+                source = Source.BT122;
             } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
                 final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("130");
+                source = Source.BT18;
             }
             if(typeCode!=null) additionalReferencedDocument.addContent(typeCode);
 
@@ -702,7 +713,7 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:element name="Information" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
 
             // <xsd:element name="ReferenceTypeCode" type="qdt:ReferenceCodeType" minOccurs="0"/>
-            if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+            if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty() && source==Source.BT18) {
                 final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
 
                 String identificationSchema = bt0018.getValue().getIdentificationSchema();

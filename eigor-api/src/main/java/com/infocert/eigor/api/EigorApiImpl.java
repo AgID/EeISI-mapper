@@ -8,17 +8,18 @@ import it.infocert.eigor.api.utils.EigorVersion;
 import it.infocert.eigor.api.xml.PlainXSDValidator;
 import it.infocert.eigor.api.xml.XSDValidator;
 import it.infocert.eigor.converter.cen2xmlcen.DumpIntermediateCenInvoiceAsCenXmlCallback;
+import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import sun.nio.ch.ChannelInputStream;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,9 +61,27 @@ public class EigorApiImpl implements EigorApi {
     public ConversionResult<byte[]> convert(final String sourceFormat, final String targetFormat, final InputStream invoice, final String invoiceName, ConversionPreferences preferences, ConversionCallback... callbacks) {
         log.debug(EigorVersion.getAsString());
 
+        String effectiveSourceFormat = sourceFormat;
+
+        byte[] bytes = null;
+        if ("ubl".equals(sourceFormat)) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                IOUtils.copy(invoice, baos);
+                bytes = baos.toByteArray();
+                String invoiceString = new String(bytes);
+                if (invoiceString.contains("<CreditNote")) {
+                    effectiveSourceFormat = "ublcn";
+                    log.warn("Source format is ubl but the content of the file is a CreditNote instead an invoice, proceeding with ublcn source format");
+                }
+            } catch (IOException e) {
+                log.warn("Can't read invoice and determinate if it is a CreditNote, proceeding with ubl source format");
+            }
+        }
+
         String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
 
-        String folderName = String.format("conversion-%s-%s-%s-%s", stringAsDate, sourceFormat, targetFormat, (int) (Math.random() * 100000));
+        String folderName = String.format("conversion-%s-%s-%s-%s", stringAsDate, effectiveSourceFormat, targetFormat, (int) (Math.random() * 100000));
         File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
         outputFolderForThisTransformation.mkdirs();
 
@@ -70,9 +89,9 @@ public class EigorApiImpl implements EigorApi {
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
         ToCenConversion toCen = checkNotNull(
-                builder.getConversionRepository().findConversionToCen(sourceFormat),
-                "Source format '%s' not supported. Available formats are %s", sourceFormat, builder.getConversionRepository().supportedToCenFormats());
-        log.debug("Converting input as '{}' to to CEN using converter '{}'.", sourceFormat, toCen.getClass().getName());
+                builder.getConversionRepository().findConversionToCen(effectiveSourceFormat),
+                "Source format '%s' not supported. Available formats are %s", effectiveSourceFormat, builder.getConversionRepository().supportedToCenFormats());
+        log.debug("Converting input as '{}' to to CEN using converter '{}'.", effectiveSourceFormat, toCen.getClass().getName());
 
         FromCenConversion fromCen = checkNotNull(
                 builder.getConversionRepository().findConversionFromCen(targetFormat),
@@ -88,16 +107,16 @@ public class EigorApiImpl implements EigorApi {
         if (callbacks != null && callbacks.length > 0) {
             fullListOfCallbacks.addAll(Arrays.asList(callbacks));
         }
-        if(preferences.validateIntermediateCen()) {
-            fullListOfCallbacks.add(new ValidateIntermediateCenModelCallback( builder.getCen2XmlCen() ));
+        if (preferences.validateIntermediateCen()) {
+            fullListOfCallbacks.add(new ValidateIntermediateCenModelCallback(builder.getCen2XmlCen()));
         }
 
         ObservableConversion conversion = new ObservableConversion(
                 builder.getRuleRepository(),
                 toCen,
                 fromCen,
-                invoice,
-                preferences.forceConversion()!=null ? preferences.forceConversion() : builder.isForceConversion(),
+                (bytes == null) ? invoice : new ByteArrayInputStream(bytes),
+                preferences.forceConversion() != null ? preferences.forceConversion() : builder.isForceConversion(),
                 invoiceName,
                 fullListOfCallbacks);
 
@@ -129,9 +148,7 @@ public class EigorApiImpl implements EigorApi {
 
         ErrorCode.Location location = ErrorCode.Location.CUSTOM_VALIDATORS;
         try {
-            SchematronValidator schematronValidator = new SchematronValidator(
-                    schemaFile, false, false, location
-            );
+            SchematronValidator schematronValidator = new SchematronValidator(new FileSystemResource(schemaFile), false, false, location);
             List<IConversionIssue> issues = schematronValidator.validate(IOUtils.toByteArray(xmlToValidate));
             return new ConversionResult<>(issues, null);
         } catch (IOException e) {

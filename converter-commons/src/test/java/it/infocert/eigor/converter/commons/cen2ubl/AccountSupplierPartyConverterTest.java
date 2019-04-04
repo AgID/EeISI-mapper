@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.common.cen2peppol;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,7 +12,6 @@ import com.google.common.collect.Lists;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.commons.cen2peppol.AccountSupplierPartyConverter;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BG0004Seller;
 

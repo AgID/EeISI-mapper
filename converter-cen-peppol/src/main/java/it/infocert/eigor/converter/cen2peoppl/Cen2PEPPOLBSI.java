@@ -16,6 +16,7 @@ import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.org.springframework.core.io.DefaultResourceLoader;
+import it.infocert.eigor.org.springframework.core.io.FileSystemResource;
 import it.infocert.eigor.org.springframework.core.io.Resource;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -32,8 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
 
-
-	private final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSI.class);
+    private final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSI.class);
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.one-to-one";
     private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.many-to-one";
@@ -78,13 +78,11 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
 
         //load the UBL schematron validator.
         try {
-
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron1"));
             Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
-            peppolCenValidator = new SchematronValidator(ublSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
-            peppolUblValidator = new SchematronValidator(cenSchemaFile.getFile(), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
-
+            peppolCenValidator = new SchematronValidator(new FileSystemResource(ublSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolUblValidator = new SchematronValidator(new FileSystemResource(cenSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
@@ -123,12 +121,12 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
             errors.addAll(validationErrors);
             List<IConversionIssue> schematronCenErrors = peppolCenValidator.validate(documentByteArray);
             if (schematronCenErrors.isEmpty()) {
-                log.info("Schematron validation successful!");
+                log.info("Schematron cen validation successful!");
             }
             errors.addAll(schematronCenErrors);
             List<IConversionIssue> schematronUblErrors = peppolUblValidator.validate(documentByteArray);
             if (schematronUblErrors.isEmpty()) {
-                log.info("Schematron validation successful!");
+                log.info("Schematron ubl validation successful!");
             }
             errors.addAll(schematronUblErrors);
 

@@ -3,10 +3,11 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -16,7 +17,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -26,8 +26,7 @@ import java.util.List;
 import static com.infocert.eigor.api.ConversionUtil.*;
 import static java.util.stream.Collectors.joining;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Tests of issues discovered and fixed during the 2nd phase of development,
@@ -36,17 +35,127 @@ import static org.junit.Assert.assertThat;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEisi286() throws Exception {
+
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-286-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document targetCii = parseAsDom(conversionResult);
+        String errMsg = describeConvertedInvoice(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SpecifiedProcuringProject/ram:ID/text()").evaluate(targetCii),
+                equalTo("ContractCUPID") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SpecifiedProcuringProject/ram:Name/text()").evaluate(targetCii),
+                equalTo("Project reference") );
+
+    }
+
+    @Test
+    public void issueEisi283() throws Exception {
+
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-283-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document targetCii = parseAsDom(conversionResult);
+        String errMsg = describeConvertedInvoice(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("(//ram:AdditionalReferencedDocument)[2]/ram:IssuerAssignedID/text()").evaluate(targetCii),
+                equalTo("EeISI.csv") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count( (//ram:AdditionalReferencedDocument)[2]/ram:IssuerAssignedID/ram:ReferenceTypeCode )").evaluate(targetCii),
+                equalTo("0") );
+
+    }
+
+    @Test
+    public void issueEisi284() throws Exception {
+
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-284-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        BG0000Invoice cenInvoice = conversionResult.getCenInvoice();
+
+        BT0017TenderOrLotReference bt17 = cenInvoice.getBT0017TenderOrLotReference(0);
+        assertThat( describeIntermediateInvoice(cenInvoice),  bt17.getValue(), equalTo("ContractCIGID") );
+
+        assertThat( cenInvoice.getBG0024AdditionalSupportingDocuments(1).getBT0122SupportingDocumentReference(0).getValue(), equalTo("ContractCIGID") );
+
+        Document targetCii = parseAsDom(conversionResult);
+        String errMsg = describeConvertedInvoice(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:IssuerAssignedID/text()").evaluate(targetCii),
+                equalTo("ContractCIGID") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:TypeCode/text()").evaluate(targetCii),
+                equalTo("50") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[2]/ram:ReferenceTypeCode)").evaluate(targetCii),
+                equalTo("0") );
+
+    }
+
+    @Test
+    public void issueEisi287() throws Exception {
+
+        // when
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-287-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document dom = parseAsDom(conversionResult);
+        Node node = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID").evaluate(dom, XPathConstants.NODE);
+
+        assertNotNull( describeConvertedInvoice(conversionResult), node);
+        assertFalse( describeConvertedInvoice(conversionResult), node.hasAttributes());
+
+    }
+
+    @Test
+    public void issueEisi292() throws Exception {
+
+        // when
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-292-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        Document dom = parseAsDom(conversionResult);
+
+        String reasonCode = ciiXpath().compile("(//*[local-name() = 'SpecifiedTradeAllowanceCharge'])[3]/*[local-name() = 'ReasonCode']/text()").evaluate(dom);
+
+        assertThat( describeConvertedInvoice(conversionResult), reasonCode, notNullValue());
+        assertThat( describeConvertedInvoice(conversionResult), reasonCode, equalTo("66") );
+
+    }
+
+
+
+    @Test
     public void issueEeisi205() throws Exception {
 
         // given
         XPathExpression xPathBt46 = ublXpath().compile("//BT-46");
 
         // when
-        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
                 "/issues/issue-eeisi205-fattpa.xml",
                 "fatturapa", "xmlcen", keepErrorsNotWarnings());
 
-        Document convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
+        ConversionResult<byte[]> conversionResult1 = conversionResult;
+        Document convertedInvoice = parseAsDom(conversionResult1);
 
         Node bt46Element = (Node) xPathBt46.evaluate(convertedInvoice, XPathConstants.NODE);
 
@@ -71,10 +180,10 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         Document convertedInvoice = null;
 
         // when
-        ConversionResult<byte[]> conversionResult = this.conversion.assertConversionWithoutErrors(
+        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi216-ubl.xml",
                 "ubl", "ubl", keepErrorsNotWarnings());
-        convertedInvoice = documentBuilder.parse( new ByteArrayInputStream( conversionResult.getResult() ) );
+        convertedInvoice = parseAsDom(conversionResult);
 
         // then
 
@@ -90,7 +199,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
     public void issueEeisi195NoDk() {
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi195-fattpa-noDK.xml",
                 "fatturapa", "peppolcn", keepErrorsNotWarnings());
 
@@ -98,7 +207,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
     public void issueEeisi191() {
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi191-cii.xml",
                 "cii", "xmlcen", keepErrorsNotWarnings());
 
@@ -106,15 +215,21 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
     public void issueEeisi188() {
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-188-xmlcen.xml",
                 "xmlcen", "ubl", keepErrorsNotWarnings());
+    }
 
+    @Test
+    public void issueEeisi248() {
+        conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-248-xmlcen_.xml",
+                "xmlcen", "ubl", keepErrorsNotWarnings());
     }
 
     @Test
     public void issueEeisi192() {
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi192-fattpa.xml",
                 "fatturapa", "ubl", keepErrorsNotWarnings());
 
@@ -123,7 +238,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi193a() {
 
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eeisi193-fattpa.xml",
                 "fatturapa", "fatturapa", keepErrorsNotWarnings());
 
@@ -132,7 +247,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi193b() {
 
-        this.conversion.assertConversionWithoutErrors(
+        conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi193b-fattpa.xml",
                 "fatturapa", "fatturapa", keepErrorsNotWarnings());
 
@@ -142,7 +257,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     public void issueEeisi7() throws Exception {
 
         // when
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+        ConversionResult<byte[]> conversion = AbstractIssueTest.conversion.assertConversionWithoutErrors(
                 "/issues/issue-eeisi7-cen.xml",
                 "xmlcen", "fatturapa");
 
@@ -166,7 +281,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         String invoiceTemplate = IOUtils.toString(new InputStreamReader( getClass().getResourceAsStream("/examples/xmlcen/eisi-28-issue.xml") ));
 
         // a conversion UBL - fatturaPA withouth errors.
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors(
+        ConversionResult<byte[]> conversion = AbstractIssueTest.conversion.assertConversionWithoutErrors(
                 IOUtils.toInputStream(invoiceTemplate, "UTF-8"), "xmlcen", "fatturapa",  new KeepAll());
 
     }
@@ -183,7 +298,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     public void issueEeisi22() throws XPathExpressionException, IOException {
 
         // a conversion UBL - fatturaPA withouth errors.
-        ConversionResult<byte[]> conversion = this.conversion.assertConversionWithoutErrors("/issues/issue-eeisi22-ubl.xml", "ubl", "fatturapa");
+        ConversionResult<byte[]> conversion = AbstractIssueTest.conversion.assertConversionWithoutErrors("/issues/issue-eeisi22-ubl.xml", "ubl", "fatturapa");
 
         // The CSV in base 64 is the 3rd attachment in this case.
         String truncatedValuesCSVInBase64 = evalXpathExpressionAsString(conversion, "//*[local-name()='Allegati'][3]/*[local-name()='Attachment']/text()");
@@ -204,7 +319,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEeisi20() throws XPathExpressionException, IOException {
 
-        this.conversion.assertConversionWithoutErrors("/issues/issue-eisi-20-cii.xml", "cii", "fatturapa");
+        conversion.assertConversionWithoutErrors("/issues/issue-eisi-20-cii.xml", "cii", "fatturapa");
 
     }
 

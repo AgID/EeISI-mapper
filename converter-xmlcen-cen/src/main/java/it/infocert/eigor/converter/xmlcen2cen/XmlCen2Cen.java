@@ -167,53 +167,57 @@ public class XmlCen2Cen extends AbstractToCenConverter {
 
         final List<Element> children = root.getChildren();
         children.forEach(child -> {
-            Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
-            if (child.getName().startsWith("BT-")) {
-                //If the element is a leaf, build it and add it to the bg
-                Optional<Constructor<?>> cons = Arrays.stream(btBgByName.getConstructors())
-                        //Ignore Identifier and FileReference, custom mappings will handle them
-                        .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]) ||
-                                FileReference.class.equals(constructor.getParameterTypes()[0]))
-                        .findFirst();
-                if (!cons.isPresent()) {
-                    try {
-                        BTBG btbg = buildBT(btBgByName, child, errors);
-                        if (btbg != null)
-                            utils.addChild(bg, btbg);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        log.error(e.getMessage(), e);
-                        errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
-                    }
-                } else {
-                    //Manage specific BTs with Identifier
-                    if (specialBT.contains(child.getName())) {
-                        BTBG bt;
+            try {
+                Class<? extends BTBG> btBgByName = utils.getBtBgByName(child.getName());
+                if (child.getName().startsWith("BT-")) {
+                    //If the element is a leaf, build it and add it to the bg
+                    Optional<Constructor<?>> cons = Arrays.stream(btBgByName.getConstructors())
+                            //Ignore Identifier and FileReference, custom mappings will handle them
+                            .filter(constructor -> Identifier.class.equals(constructor.getParameterTypes()[0]) ||
+                                    FileReference.class.equals(constructor.getParameterTypes()[0]))
+                            .findFirst();
+                    if (!cons.isPresent()) {
                         try {
-                            Attribute scheme = child.getAttribute("scheme");
-                            bt = (BTBG) cons.get().newInstance((scheme != null) ?
-                                    (new Identifier(scheme.getValue(), child.getValue())) :
-                                    (new Identifier(child.getValue())));
-                            utils.addChild(bg, bt);
-                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                            BTBG btbg = buildBT(btBgByName, child, errors);
+                            if (btbg != null)
+                                utils.addChild(bg, btbg);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
                             log.error(e.getMessage(), e);
                             errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
                         }
-                    }
-                }
-            } else {
-                //If it's not a leaf is a node, then just create the node and traverse the subtree
-                Stream.of(btBgByName.getConstructors())
-                        .findFirst()
-                        .ifPresent(c -> {
+                    } else {
+                        //Manage specific BTs with Identifier
+                        if (specialBT.contains(child.getName())) {
+                            BTBG bt;
                             try {
-                                final BTBG btbg = (BTBG) c.newInstance();
-                                utils.addChild(bg, btbg);
-                                traverseTree(child, btbg, errors);
-                            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                                Attribute scheme = child.getAttribute("scheme");
+                                bt = (BTBG) cons.get().newInstance((scheme != null) ?
+                                        (new Identifier(scheme.getValue(), child.getValue())) :
+                                        (new Identifier(child.getValue())));
+                                utils.addChild(bg, bt);
+                            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                                 log.error(e.getMessage(), e);
                                 errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
                             }
-                        });
+                        }
+                    }
+                } else {
+                    //If it's not a leaf is a node, then just create the node and traverse the subtree
+                    Stream.of(btBgByName.getConstructors())
+                            .findFirst()
+                            .ifPresent(c -> {
+                                try {
+                                    final BTBG btbg = (BTBG) c.newInstance();
+                                    utils.addChild(bg, btbg);
+                                    traverseTree(child, btbg, errors);
+                                } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                                    log.error(e.getMessage(), e);
+                                    errors.add(ConversionIssue.newError(e, e.getMessage(), callingLocation, errorAction, ErrorCode.Error.INVALID));
+                                }
+                            });
+                }
+            } catch (Exception e) {
+                log.error("It seems like the source invoice isn't a valid xmlcen");
             }
         });
     }

@@ -50,7 +50,7 @@ public class ConverterUtils {
             try {
                 Resource schemaFile = drl.getResource(schFile);
                 boolean schematronAutoUpdate = "true".equals(configuration.getMandatoryString(fullConfigKey + ".auto-update-xslt"));
-                SchematronValidator validator = new SchematronValidator(schemaFile.getFile(), true, schematronAutoUpdate, xmlcenIn);
+                SchematronValidator validator = new SchematronValidator(schemaFile, true, schematronAutoUpdate, xmlcenIn);
                 return validator;
             } catch (Exception e) {
                 throw new ConfigurationException("An error occurred while getting '" + converterName + "' schematron file from resource '" + schFile + "'.", e);
