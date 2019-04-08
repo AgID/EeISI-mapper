@@ -3,6 +3,7 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
@@ -170,16 +171,37 @@ public class EeisiIssuesTest extends AbstractIssueTest {
     @Test
     public void issueEisi287() throws Exception {
 
+        // given
+        Document sourceDom = parseAsDom("/issues/issue-eisi-287-cii.xml");
+
         // when
-        ConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
                 "/issues/issue-eisi-287-cii.xml",
                 "cii", "cii", ignoreAll());
 
-        Document dom = parseAsDom(conversionResult);
-        Node node = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID").evaluate(dom, XPathConstants.NODE);
+        Document targetDom = parseAsDom(conversionResult);
 
-        assertNotNull( describeConvertedInvoice(conversionResult), node);
-        assertFalse( describeConvertedInvoice(conversionResult), node.hasAttributes());
+        String msg = describeIntermediateInvoice(conversionResult) + "\n\n" + describeConvertedInvoice(conversionResult);
+
+        // then
+        Identifier bt71 = InvoiceUtils.evalExpression(() -> conversionResult.getCenInvoice().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
+        assertThat( bt71.getIdentifier(), equalTo("6754238987648") );
+        assertThat( bt71.getIdentificationSchema(), equalTo("0095") );
+        assertThat( bt71.getSchemaVersion(), nullValue() );
+
+
+        Node idNode = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID").evaluate(targetDom, XPathConstants.NODE);
+        assertNotNull( describeConvertedInvoice(conversionResult), idNode);
+        assertFalse( describeConvertedInvoice(conversionResult), idNode.hasAttributes());
+
+        XPathExpression idXpath = ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID/text()");
+        assertEquals( idXpath.evaluate(sourceDom), idXpath.evaluate(targetDom) );
+
+        XPathExpression globalIdXpath = ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:GlobalID/text()");
+        assertEquals(msg, globalIdXpath.evaluate(sourceDom), globalIdXpath.evaluate(targetDom) );
+
+        XPathExpression schemeIDPath = ciiXpath().compile("string( (//ram:ShipToTradeParty)[1]/ram:GlobalID/@schemeID )");
+        assertEquals(msg, schemeIDPath.evaluate(sourceDom), schemeIDPath.evaluate(targetDom) );
 
     }
 

@@ -15,6 +15,8 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 /**
  * The Deliver To Location Converter
  */
@@ -53,6 +55,23 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
                 applicableHeaderTradeDelivery.addContent(shipToTradeParty);
             }
 
+            Identifier bt71 = evalExpression(() -> bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
+            if(bt71!=null) {
+
+                if(bt71.getIdentifier()!=null) {
+                    Element id = new Element("ID", ramNs);
+                    id.setText(bt71.getIdentifier());
+                    shipToTradeParty.addContent(id);
+                }
+
+                if(bt71.getIdentifier()!=null && bt71.getIdentificationSchema()!=null) {
+                    Element globalId = new Element("GlobalID", ramNs);
+                    globalId.setText(bt71.getIdentifier());
+                    globalId.setAttribute("schemeID", bt71.getIdentificationSchema());
+                    shipToTradeParty.addContent(globalId);
+                }
+
+            }
             if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
                 Element id = new Element("ID", ramNs); //maybe GlobalID?

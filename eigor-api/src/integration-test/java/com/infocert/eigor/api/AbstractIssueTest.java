@@ -161,8 +161,14 @@ public class AbstractIssueTest {
         return new String(out.toByteArray());
     }
 
-    protected Document parseAsDom(ConversionResult<byte[]> conversionResult1) throws SAXException, IOException {
-        return documentBuilder.parse(new ByteArrayInputStream(conversionResult1.getResult()));
+    /** Try to parse the XML contained in the provided conversionResult and returns it. */
+    protected Document parseAsDom(ConversionResult<byte[]> conversionResult) throws SAXException, IOException {
+        return documentBuilder.parse(new ByteArrayInputStream(conversionResult.getResult()));
+    }
+
+    /** Try to parse the XML retrieved at the given classpath and returns it. */
+    protected Document parseAsDom(String pathInClasspath) throws SAXException, IOException {
+        return documentBuilder.parse( getClass().getResourceAsStream(pathInClasspath) );
     }
 
 }
