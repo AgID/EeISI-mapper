@@ -3,6 +3,7 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import org.apache.commons.csv.CSVFormat;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 
 import static com.infocert.eigor.api.ConversionUtil.*;
@@ -33,6 +35,63 @@ import static org.junit.Assert.*;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi285() throws Exception {
+
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi285-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        String errMsg = describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+
+        // <ram:AdditionalReferencedDocument>
+        //    <ram:IssuerAssignedID>BT-18 Invoice object id</ram:IssuerAssignedID><!--BT-18-->
+        //    <ram:TypeCode>130</ram:TypeCode><!--BT-18 fixed value 130-->
+        //    <ram:ReferenceTypeCode>ZZZ</ram:ReferenceTypeCode><!--BT-18-1-->
+        // </ram:AdditionalReferencedDocument>
+        //
+        // TypeCode == 130 => BT-18
+        // IssuerAssignedID -> BT-18.identifier
+        // ReferenceTypeCode -> BT-18.schemaIdentifier
+        Identifier bt18 = conversionResult.getCenInvoice().getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue();
+        assertThat( bt18.getIdentifier(), equalTo("BT-18 Invoice object id") );
+        assertThat( bt18.getIdentificationSchema(), equalTo("ZZZ") );
+        assertThat( bt18.getSchemaVersion(), nullValue() );
+
+        long countBt18InBt122 = conversionResult.getCenInvoice()
+                .getBG0024AdditionalSupportingDocuments()
+                .stream()
+                .map(bg24 -> bg24.getBT0122SupportingDocumentReference())
+                .flatMap(Collection::stream)
+                .peek(bt122 -> System.out.println(bt122.getValue()))
+                .filter(bt122 -> bt122.getValue().equals("BT-18 Invoice object id"))
+                .count();
+
+        assertThat("BT-18 is not supposed to be duplicated in bt122s.", countBt18InBt122, equalTo(0L));
+
+        Document targetCii = parseAsDom(conversionResult);
+
+        assertThat(
+                errMsg,
+                ciiXpath().compile("count(/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument/ram:IssuerAssignedID[text()='BT-18 Invoice object id'])").evaluate(targetCii),
+                equalTo("1") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[3]/ram:IssuerAssignedID/text()").evaluate(targetCii),
+                equalTo("BT-18 Invoice object id") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[3]/ram:ReferenceTypeCode/text()").evaluate(targetCii),
+                equalTo("ZZZ") );
+        assertThat(
+                errMsg,
+                ciiXpath().compile("/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:AdditionalReferencedDocument[3]/ram:TypeCode/text()").evaluate(targetCii),
+                equalTo("130") );
+
+    }
+
+
 
     @Test
     public void issueEisi286() throws Exception {

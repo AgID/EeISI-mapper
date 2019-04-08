@@ -307,15 +307,19 @@ public class Cii2CenConfigurationFileTest {
 
 	@Test
 	public void testShouldNotIdentifyAttachedDocumentElement() throws Exception {
-		InputStream sourceInvoiceStream = getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example8.xml");
-		Document document = getDocument(sourceInvoiceStream);
-		BG0000Invoice invoice = new BG0000Invoice();
+
+		// given
+		Document ciiInvoice = getDocument(getClass().getClassLoader().getResourceAsStream("examples/cii/CII_example8.xml"));
+		BG0000Invoice cenInvoice = new BG0000Invoice();
 		List<IConversionIssue> errors = new ArrayList<>();
 
-		AdditionalSupportingDocumentsConverter bg0024 = new AdditionalSupportingDocumentsConverter();
-		ConversionResult<BG0000Invoice> result = bg0024.toBG0024(document, invoice, errors, ErrorCode.Location.CII_IN);
+		AdditionalSupportingDocumentsConverter sut = new AdditionalSupportingDocumentsConverter();
 
-		assertTrue(result.getResult().getBG0024AdditionalSupportingDocuments(0).getBT0125AttachedDocumentAndAttachedDocumentMimeCodeAndAttachedDocumentFilename().isEmpty());
+		// when
+		ConversionResult<BG0000Invoice> result = sut.toBG0024(ciiInvoice, cenInvoice, errors, ErrorCode.Location.CII_IN);
+
+		// then
+		assertTrue("AdditionalReferencedDocument with typeCode=130 should not be mapped under BG0024.", result.getResult().getBG0024AdditionalSupportingDocuments().isEmpty());
 	}
 
 	private List<IConversionIssue> validateXmlWithCiiXsd(InputStream sourceInvoiceStream) throws IOException, SAXException {

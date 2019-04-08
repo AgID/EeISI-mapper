@@ -100,6 +100,10 @@ public class ConversionUtil {
         return v.toString();
     }
 
+    public static String describeIntermediateInvoice(ImprovedConversionResult<byte[]> conversionResult) {
+        return describeIntermediateInvoice(conversionResult.getCenInvoice());
+    }
+
     public static String describeConvertedInvoice(ConversionResult<byte[]> convert) {
         return new String(convert.getResult());
     }
