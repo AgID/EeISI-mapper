@@ -8,6 +8,7 @@ import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,17 +77,17 @@ public class InvoiceLineConverterTest {
 
 
     @Test
-    public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
+    public void invoiceQuantitiesShouldBeMapped() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0129AndBT0149();
         InvoiceLineConverter converter = new InvoiceLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
-
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("InvoiceLine");
-
         Element invoicedQuantity = invoiceLine.getChild("InvoicedQuantity");
-
-        assertTrue(invoicedQuantity.getText().equals("1.00000000"));
+        Element price = invoiceLine.getChild("Price");
+        Element baseQuantity = price.getChild("BaseQuantity");
+        Assert.assertEquals("2.00000000", invoicedQuantity.getText());
+        Assert.assertEquals("2.00", baseQuantity.getText());
     }
 
 

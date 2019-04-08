@@ -50,18 +50,7 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                     }
 
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
-
-                        BigDecimal quantity;
-                        BigDecimal bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ?
-                            BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
-
-                        if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
-                            BigDecimal bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
-                            quantity = bt129Quantity.divide(bt0149BaseQuantity, RoundingMode.HALF_UP);
-                        } else {
-                            quantity = bt129Quantity;
-                        }
-
+                        BigDecimal quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ? BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
                         Element invoicedQuantity = new Element("CreditedQuantity");
                         invoicedQuantity.setText(quantity.setScale(8, RoundingMode.HALF_UP).toString());
 
