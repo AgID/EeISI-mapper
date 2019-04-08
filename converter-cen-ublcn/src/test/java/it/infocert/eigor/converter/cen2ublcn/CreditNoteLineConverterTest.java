@@ -3,11 +3,13 @@ package it.infocert.eigor.converter.cen2ublcn;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.converter.commons.cen2ubl.CreditNoteLineConverter;
+import it.infocert.eigor.converter.commons.cen2ubl.InvoiceLineConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,19 +46,18 @@ public class CreditNoteLineConverterTest {
     }
 
     @Test
-    public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
+    public void invoiceQuantitiesShouldBeMapped() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0129AndBT0149();
         CreditNoteLineConverter converter = new CreditNoteLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
-
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");
-
         Element invoicedQuantity = invoiceLine.getChild("CreditedQuantity");
-
-        assertTrue(invoicedQuantity.getText().equals("1.00000000"));
+        Element price = invoiceLine.getChild("Price");
+        Element baseQuantity = price.getChild("BaseQuantity");
+        Assert.assertEquals("2.00000000", invoicedQuantity.getText());
+        Assert.assertEquals("2.00", baseQuantity.getText());
     }
-
 
     private BG0000Invoice makeCenInvoiceWithBT0128() {
         BG0000Invoice invoice = new BG0000Invoice();
