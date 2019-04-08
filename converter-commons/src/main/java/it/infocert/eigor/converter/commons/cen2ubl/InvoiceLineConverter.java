@@ -1,4 +1,4 @@
-package it.infocert.eigor.converter.cen2peoppl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
 import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.CustomMapping;
@@ -6,12 +6,14 @@ import it.infocert.eigor.api.EigorRuntimeException;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
@@ -27,12 +29,12 @@ import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 
 public class InvoiceLineConverter implements CustomMapping<Document> {
 
+    private static TypeConverter<String, Untdid1153ReferenceQualifierCode> untdid1153Converter = LookUpEnumConversion.newConverter(Untdid1153ReferenceQualifierCode.class);
     private static final TypeConverter<LocalDate, String> dateConverter = JavaLocalDateToStringConverter.newConverter();
 
-	@Override
-	public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation,
-			EigorConfiguration eigorConfiguration) {
-		// TODO Auto-generated method stub
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+
         Element root = document.getRootElement();
         if (root != null) {
             if (!cenInvoice.getBG0025InvoiceLine().isEmpty()) {
@@ -90,37 +92,52 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(lineExtensionAmount);
                     }
 
-                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                        Element documentReference = new Element("DocumentReference");
-                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
-                        Element documentTypeCode = new Element("DocumentTypeCode");
-                        documentTypeCode.setText("130");
-                        Element id = new Element("ID");
-                        id.setText(bt0128.getValue().getIdentifier());
-                        id.setAttribute("schemeID", bt0128.getValue().toString());
-                        documentReference.addContent(id);
-                        documentReference.addContent(documentTypeCode);
-                        invoiceLine.addContent(documentReference);
+                    if (!elemBg25.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
+                        BT0133InvoiceLineBuyerAccountingReference bt133 = elemBg25.getBT0133InvoiceLineBuyerAccountingReference().get(0);
+                        Element accountingCost = new Element("AccountingCost");
+                        accountingCost.setText(bt133.getValue());
+                        invoiceLine.addContent(accountingCost);
                     }
 
                     if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
-                        List<BG0026InvoiceLinePeriod> bg0026s
-                                = elemBg25.getBG0026InvoiceLinePeriod();
-
-
+                        List<BG0026InvoiceLinePeriod> bg0026s = elemBg25.getBG0026InvoiceLinePeriod();
                         for (BG0026InvoiceLinePeriod bg0026 : bg0026s) {
-
                             LocalDate startDate = evalExpression(() -> bg0026.getBT0134InvoiceLinePeriodStartDate(0).getValue());
                             LocalDate endDate = evalExpression(() -> bg0026.getBT0135InvoiceLinePeriodEndDate(0).getValue());
-
-                            if(startDate == null && endDate == null) continue;
-
+                            if (startDate == null && endDate == null) continue;
                             Element invoicePeriodElm = new Element("InvoicePeriod");
-
                             setDateChild(errors, callingLocation, invoicePeriodElm, startDate, "StartDate");
                             setDateChild(errors, callingLocation, invoicePeriodElm, endDate, "EndDate");
                             invoiceLine.addContent(invoicePeriodElm);
                         }
+                    }
+
+                    if (!elemBg25.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
+                        BT0132ReferencedPurchaseOrderLineReference bt132 = elemBg25.getBT0132ReferencedPurchaseOrderLineReference().get(0);
+                        Element orderLineReference = new Element("OrderLineReference");
+                        Element lineID = new Element("LineID");
+                        lineID.setText(bt132.getValue());
+                        orderLineReference.addContent(lineID);
+                        invoiceLine.addContent(orderLineReference);
+                    }
+
+                    if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+                        BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
+                        String idValue = bt0128.getValue().getIdentifier();
+                        String idValueScheme = bt0128.getValue().getIdentificationSchema() != null
+                                ? bt0128.getValue().getIdentificationSchema()
+                                : "";
+                        idValueScheme = untdid1153Converter.safeConvert(idValueScheme).orElse(Untdid1153ReferenceQualifierCode.ZZZ).name();
+                        String typeCode = "130";
+                        Element ublDocumentReferenceXml = new Element("DocumentReference");
+                        Element ublDocumentTypeCodeXml = new Element("DocumentTypeCode");
+                        ublDocumentTypeCodeXml.setText(typeCode);
+                        Element ublIdXml = new Element("ID");
+                        ublIdXml.setText(idValue);
+                        ublIdXml.setAttribute("schemeID", idValueScheme);
+                        ublDocumentReferenceXml.addContent(ublIdXml);
+                        ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
+                        invoiceLine.addContent(ublDocumentReferenceXml);
                     }
 
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
@@ -226,9 +243,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
     private void setDateChild(List<IConversionIssue> errors, ErrorCode.Location callingLocation, Element parent, LocalDate date, String tagName) {
         try {
-            if(date != null) {
+            if (date != null) {
                 Element startDateElm = new Element(tagName);
-                startDateElm.setText( dateConverter.convert(date) );
+                startDateElm.setText(dateConverter.convert(date));
                 parent.addContent(startDateElm);
             }
         } catch (IllegalArgumentException | ConversionFailedException e) {

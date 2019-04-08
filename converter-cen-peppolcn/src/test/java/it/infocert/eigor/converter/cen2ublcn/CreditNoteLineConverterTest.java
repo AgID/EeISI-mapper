@@ -1,8 +1,7 @@
 package it.infocert.eigor.converter.cen2ublcn;
 
-import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.converter.cen2peppolcn.CreditNoteLineConverter;
+import it.infocert.eigor.converter.commons.cen2ubl.CreditNoteLineConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
@@ -16,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
+
 @Ignore
 public class CreditNoteLineConverterTest {
     private Document document;
@@ -29,7 +29,7 @@ public class CreditNoteLineConverterTest {
     public void invoiceLineWithBT0128shouldHaveDocumentReferenceAndTypeCode() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0128();
         CreditNoteLineConverter converter = new CreditNoteLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");
@@ -38,7 +38,7 @@ public class CreditNoteLineConverterTest {
 
         Element id = documentReference.getChild("ID");
         assertTrue("001".equals(id.getText()));
-        assertTrue("321".equals(id.getAttribute("schemeID").getValue()));
+        assertTrue("ZZZ".equals(id.getAttribute("schemeID").getValue()));
 
         Element documentTypeCode = documentReference.getChild("DocumentTypeCode");
         assertTrue("130".equals(documentTypeCode.getText()));
@@ -48,7 +48,7 @@ public class CreditNoteLineConverterTest {
     public void invoiceLineWithBT0149shouldQuantityDividedByBaseQuantity() throws Exception {
         BG0000Invoice cenInvoice = makeCenInvoiceWithBT0129AndBT0149();
         CreditNoteLineConverter converter = new CreditNoteLineConverter();
-        converter.map(cenInvoice, document, new ArrayList<IConversionIssue>(), ErrorCode.Location.UBL_OUT, null);
+        converter.map(cenInvoice, document, new ArrayList<>(), ErrorCode.Location.UBL_OUT, null);
 
         Element rootElement = document.getRootElement();
         Element invoiceLine = rootElement.getChild("CreditNoteLine");
