@@ -81,7 +81,7 @@ public class Ubl2Cen extends AbstractToCenConverter {
         try {
             Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius"));
             boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ubl-cen.cius.auto-update-xslt"));
-            ciusValidator = new SchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.UBL_IN);
+            ciusValidator = new CiusSchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.UBL_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
