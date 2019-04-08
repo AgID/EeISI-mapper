@@ -251,13 +251,14 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
 
             if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0046 = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
-                Element id = new Element("ID", ramNs); // maybe GlobalID ?
-                id.setText(bt0046.getIdentifier());
+                Element id;
                 if (bt0046.getIdentificationSchema() != null) {
+                    id = new Element("GlobalID", ramNs);
                     id.setAttribute("schemeID", bt0046.getIdentificationSchema());
                 } else {
-                    id.setAttribute("schemeID", "");
+                    id = new Element("ID", ramNs);
                 }
+                id.setText(bt0046.getIdentifier());
                 buyerTradeParty.addContent(id);
             }
 
@@ -451,11 +452,14 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             if (!bg0004.getBT0029SellerIdentifierAndSchemeIdentifier().isEmpty()) {
                 for (BT0029SellerIdentifierAndSchemeIdentifier bt0029 : bg0004.getBT0029SellerIdentifierAndSchemeIdentifier()) {
                     Identifier identifier = bt0029.getValue();
-                    Element id = new Element("ID", ramNs);
-                    id.setText(identifier.getIdentifier());
+                    Element id;
                     if (identifier.getIdentificationSchema() != null) {
+                        id = new Element("GlobalID", ramNs);
                         id.setAttribute("schemeID", identifier.getIdentificationSchema());
+                    } else {
+                        id = new Element("ID", ramNs);
                     }
+                    id.setText(identifier.getIdentifier());
                     sellerTradeParty.addContent(id);
                 }
 

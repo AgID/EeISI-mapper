@@ -57,15 +57,9 @@ public class SellerConverter extends CustomConverterUtils implements CustomMappi
                             }
                             invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                         }
-                    }
-                    else {
+                    } else {
                         for (Element elemID : id) {
-                            schemeID = elemID.getAttribute("schemeID");
-                            if (schemeID != null) {
-                                bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(elemID.getAttributeValue("schemeID"), elemID.getText()));
-                            } else {
-                                bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(elemID.getText()));
-                            }
+                            bt0029 = new BT0029SellerIdentifierAndSchemeIdentifier(new Identifier(elemID.getText()));
                             invoice.getBG0004Seller(0).getBT0029SellerIdentifierAndSchemeIdentifier().add(bt0029);
                         }
                     }
