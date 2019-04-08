@@ -110,7 +110,7 @@ public class Cii2Cen extends AbstractToCenConverter {
         try {
             Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.cii-cen.cius") );
 			boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cii-cen.cius.auto-update-xslt"));
-			ciusValidator = new SchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.CII_IN);
+			ciusValidator = new CiusSchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.CII_IN);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }

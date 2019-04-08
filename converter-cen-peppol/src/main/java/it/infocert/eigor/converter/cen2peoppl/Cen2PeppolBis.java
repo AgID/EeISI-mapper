@@ -30,10 +30,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 //import it.infocert.eigor.converter.commons.cen2ubl.XmlNamespaceApplier;
 
-public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
+public class Cen2PeppolBis extends AbstractFromCenConverter {
 
 
-    private final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSI.class);
+    private final Logger log = LoggerFactory.getLogger(Cen2PeppolBis.class);
 
     private static final String ONE2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.one-to-one";
     private static final String MANY2ONE_MAPPING_PATH = "eigor.converter.cen-peppol.mapping.many-to-one";
@@ -81,7 +81,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron1"));
             Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
-            peppolCenValidator = new SchematronValidator(new FileSystemResource(ublSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolCenValidator = new CiusSchematronValidator(new FileSystemResource(ublSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
             peppolUblValidator = new SchematronValidator(new FileSystemResource(cenSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
@@ -90,7 +90,7 @@ public class Cen2PEPPOLBSI extends AbstractFromCenConverter {
         configurableSupport.configure();
     }
 
-    public Cen2PEPPOLBSI(IReflections reflections, EigorConfiguration configuration) {
+    public Cen2PeppolBis(IReflections reflections, EigorConfiguration configuration) {
         super(reflections, conversionRegistry, configuration, ErrorCode.Location.PEPPOL_OUT);
         this.configuration = checkNotNull(configuration);
     }

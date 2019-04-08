@@ -13,7 +13,7 @@ import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2cii.Cen2Cii;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
-import it.infocert.eigor.converter.cen2peoppl.Cen2PEPPOLBSI;
+import it.infocert.eigor.converter.cen2peoppl.Cen2PeppolBis;
 import it.infocert.eigor.converter.cen2peppolcn.Cen2PeppolCn;
 import it.infocert.eigor.converter.cen2ubl.Cen2Ubl;
 import it.infocert.eigor.converter.cen2ublcn.Cen2UblCn;
@@ -116,7 +116,7 @@ public class Eigor {
                 new Cen2UblCn(reflections, configuration),
                 new Cen2Cii(reflections, configuration),
                 new CenToXmlCenConverter(configuration),
-                new Cen2PEPPOLBSI(reflections, configuration),
+                new Cen2PeppolBis(reflections, configuration),
                 new Cen2PeppolCn(reflections, configuration)
         );
     }
