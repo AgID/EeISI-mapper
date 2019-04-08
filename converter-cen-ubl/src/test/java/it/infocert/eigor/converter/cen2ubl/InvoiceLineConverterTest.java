@@ -2,6 +2,7 @@ package it.infocert.eigor.converter.cen2ubl;
 
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.converter.commons.cen2ubl.InvoiceLineConverter;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
