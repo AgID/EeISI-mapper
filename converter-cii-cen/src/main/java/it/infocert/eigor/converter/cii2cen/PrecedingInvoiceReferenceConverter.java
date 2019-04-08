@@ -17,6 +17,9 @@ import org.jdom2.Namespace;
 
 import java.util.List;
 
+import static com.google.common.base.Optional.fromNullable;
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
+
 /**
  * The Preceding Invoice Reference Custom Converter
  */
@@ -38,7 +41,16 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                 invoiceReferenceDocuments = findNamespaceChildren(child1, namespacesInScope, "InvoiceReferencedDocument");
 
                 for(Element elem : invoiceReferenceDocuments) {
-                    bg0003 = new BG0003PrecedingInvoiceReference();
+
+                    bg0003 = fromNullable(
+                            evalExpression(() -> invoice.getBG0003PrecedingInvoiceReference(0))
+                        )
+                        .or( ()->{
+                            BG0003PrecedingInvoiceReference r = new BG0003PrecedingInvoiceReference();
+                            invoice.getBG0003PrecedingInvoiceReference().add(r);
+                            return r;
+                        });
+
                     Element issuerAssignedID = findNamespaceChild(elem, namespacesInScope, "IssuerAssignedID");
                     Element formattedIssueDateTime = findNamespaceChild(elem, namespacesInScope,"FormattedIssueDateTime");
                     Element dateTimeString = null;
@@ -69,7 +81,6 @@ public class PrecedingInvoiceReferenceConverter extends CustomConverterUtils imp
                         }
                     }
 
-                    invoice.getBG0003PrecedingInvoiceReference().add(bg0003);
                 }
             }
         }
