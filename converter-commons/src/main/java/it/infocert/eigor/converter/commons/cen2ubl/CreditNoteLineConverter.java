@@ -1,25 +1,28 @@
-    package it.infocert.eigor.converter.cen2ubl;
+package it.infocert.eigor.converter.commons.cen2ubl;
 
-    import it.infocert.eigor.api.CustomMapping;
-    import it.infocert.eigor.api.IConversionIssue;
-    import it.infocert.eigor.api.configuration.EigorConfiguration;
-    import it.infocert.eigor.api.conversion.LookUpEnumConversion;
-    import it.infocert.eigor.api.conversion.converter.TypeConverter;
-    import it.infocert.eigor.api.errors.ErrorCode;
-    import it.infocert.eigor.model.core.enums.*;
-    import it.infocert.eigor.model.core.model.*;
-    import org.jdom2.Attribute;
-    import org.jdom2.Document;
-    import org.jdom2.Element;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
+import it.infocert.eigor.api.CustomMapping;
+import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.configuration.EigorConfiguration;
+import it.infocert.eigor.api.conversion.LookUpEnumConversion;
+import it.infocert.eigor.api.conversion.converter.TypeConverter;
+import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
+import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
+import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
+import it.infocert.eigor.model.core.model.*;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    import java.math.BigDecimal;
-    import java.math.RoundingMode;
-    import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 
-public class InvoiceLineConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(InvoiceLineConverter.class);
+public class CreditNoteLineConverter implements CustomMapping<Document> {
+    private static final Logger log = LoggerFactory.getLogger(CreditNoteLineConverter.class);
 
     private static TypeConverter<String, Untdid1153ReferenceQualifierCode> untdid1153Converter = LookUpEnumConversion.newConverter(Untdid1153ReferenceQualifierCode.class);
 
@@ -38,7 +41,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
 
                 List<BG0025InvoiceLine> bg0025 = cenInvoice.getBG0025InvoiceLine();
                 for (BG0025InvoiceLine elemBg25 : bg0025) {
-                    Element invoiceLine = new Element("InvoiceLine");
+                    Element invoiceLine = new Element("CreditNoteLine");
                     if (!elemBg25.getBT0126InvoiceLineIdentifier().isEmpty()) {
                         BT0126InvoiceLineIdentifier bt0126 = elemBg25.getBT0126InvoiceLineIdentifier(0);
                         Element id = new Element("ID");
@@ -49,7 +52,8 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
 
                         BigDecimal quantity;
-                        BigDecimal bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ? BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
+                        BigDecimal bt129Quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ?
+                            BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
 
                         if (!elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity().isEmpty()) {
                             BigDecimal bt0149BaseQuantity = elemBg25.getBG0029PriceDetails(0).getBT0149ItemPriceBaseQuantity(0).getValue();
@@ -58,7 +62,7 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                             quantity = bt129Quantity;
                         }
 
-                        Element invoicedQuantity = new Element("InvoicedQuantity");
+                        Element invoicedQuantity = new Element("CreditedQuantity");
                         invoicedQuantity.setText(quantity.setScale(8, RoundingMode.HALF_UP).toString());
 
                         if (!elemBg25.getBT0130InvoicedQuantityUnitOfMeasureCode().isEmpty()) {
@@ -83,6 +87,36 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(lineExtensionAmount);
                     }
 
+                    if (!elemBg25.getBT0133InvoiceLineBuyerAccountingReference().isEmpty()) {
+                        BT0133InvoiceLineBuyerAccountingReference bt0133 = elemBg25.getBT0133InvoiceLineBuyerAccountingReference(0);
+                        Element id = new Element("AccountingCost");
+                        id.setText(bt0133.getValue());
+                        invoiceLine.addContent(id);
+                    }
+
+                    if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
+                        List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
+                        for (BG0026InvoiceLinePeriod ignored : bg0026) {
+                            Element invoicePeriod = new Element("InvoicePeriod");
+                            Element start = new Element("StartDate");
+                            start.setText(bg0026.get(0).getBT0134InvoiceLinePeriodStartDate(0).getValue().toString());
+                            Element end = new Element("EndDate");
+                            end.setText(bg0026.get(0).getBT0135InvoiceLinePeriodEndDate(0).getValue().toString());
+                            invoicePeriod.addContent(start);
+                            invoicePeriod.addContent(end);
+                            invoiceLine.addContent(invoicePeriod);
+                        }
+                    }
+
+                    if (!elemBg25.getBT0132ReferencedPurchaseOrderLineReference().isEmpty()) {
+                        BT0132ReferencedPurchaseOrderLineReference bt132 = elemBg25.getBT0132ReferencedPurchaseOrderLineReference().get(0);
+                        Element orderLineReference = new Element("OrderLineReference");
+                        Element lineID = new Element("LineID");
+                        lineID.setText(bt132.getValue());
+                        orderLineReference.addContent(lineID);
+                        invoiceLine.addContent(orderLineReference);
+                    }
+
                     if (!elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier().isEmpty()) {
                         BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier bt0128 = elemBg25.getBT0128InvoiceLineObjectIdentifierAndSchemeIdentifier(0);
                         String idValue = bt0128.getValue().getIdentifier();
@@ -101,16 +135,6 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
                         invoiceLine.addContent(ublDocumentReferenceXml);
                     }
-
-//                    if (!elemBg25.getBG0026InvoiceLinePeriod().isEmpty()) {
-//                        List<BG0026InvoiceLinePeriod> bg0026 = elemBg25.getBG0026InvoiceLinePeriod();
-//                        for (BG0026InvoiceLinePeriod ignored : bg0026) {
-//                            Element invoicePeriod = new Element("InvoicePeriod");
-//                            if(invoicePeriod!=null && !invoicePeriod.getChildren().isEmpty()) {
-//                                invoiceLine.addContent(invoicePeriod);
-//                            }
-//                        }
-//                    }
 
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
