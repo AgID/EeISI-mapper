@@ -24,16 +24,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 @Ignore
-public class Cen2PEPPOLBSITest {
-    private static final Logger log = LoggerFactory.getLogger(Cen2PEPPOLBSITest.class);
+public class Cen2PeppolBisTest {
+    private static final Logger log = LoggerFactory.getLogger(Cen2PeppolBisTest.class);
 
-    private Cen2PEPPOLBSI converter;
+    private Cen2PeppolBis converter;
     private XPathFactory xPathFactory;
 
     @Before
     public void setUp() throws ConfigurationException {
         EigorConfiguration conf = new DefaultEigorConfigurationLoader().loadConfiguration();
-        converter = new Cen2PEPPOLBSI(new JavaReflections(), conf);
+        converter = new Cen2PeppolBis(new JavaReflections(), conf);
         converter.configure();
         xPathFactory = XPathFactory.newInstance();
     }
