@@ -10,6 +10,7 @@ import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -36,6 +37,30 @@ import static org.junit.Assert.*;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi294() throws Exception {
+
+        // given
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                "/issues/issue-eisi-294-cii.xml",
+                "cii", "cii", ignoreAll());
+
+        String errMsg = describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+
+        LocalDate bt26 = InvoiceUtils.evalExpression( () -> conversionResult.getCenInvoice().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue() );
+        assertThat( errMsg, bt26, equalTo(new LocalDate(2015, 3, 1) ) );
+
+        Document sourceDom = parseAsDom("/issues/issue-eisi-294-cii.xml");
+        Document targetDom = parseAsDom(conversionResult);
+
+        XPathExpression dateTimeStringXpath = ciiXpath().compile(" string( //ram:InvoiceReferencedDocument/ram:FormattedIssueDateTime/qdt:DateTimeString/text() ) ");
+        assertEquals(errMsg, dateTimeStringXpath.evaluate(sourceDom), dateTimeStringXpath.evaluate(targetDom));
+
+        XPathExpression dateTimeStringFormatXpath = ciiXpath().compile(" string( //ram:InvoiceReferencedDocument/ram:FormattedIssueDateTime/qdt:DateTimeString/@format ) ");
+        assertEquals(errMsg, dateTimeStringFormatXpath.evaluate(sourceDom), dateTimeStringFormatXpath.evaluate(targetDom));
+
+    }
 
     @Test
     public void issueEisi285() throws Exception {
