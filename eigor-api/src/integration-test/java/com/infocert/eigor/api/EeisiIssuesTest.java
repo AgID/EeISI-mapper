@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.infocert.eigor.api.ConversionUtil.*;
 import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
@@ -37,6 +38,28 @@ import static org.junit.Assert.*;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi274_shouldMapBT132() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-274-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        XPathExpression bt132Xpath = ublXpath().compile("//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID");
+
+        // verify BT133 in source invoice
+        assertThat(msg, asStream((NodeList) bt132Xpath.evaluate(sourceDom, XPathConstants.NODESET)).map(node -> node.getTextContent() ).collect(joining(",")), equalTo( "55,32,4345" ) );
+
+        // verify BT133 in target invoice
+        assertThat(msg,  asStream((NodeList) bt132Xpath.evaluate(targetDom, XPathConstants.NODESET)).map(node -> node.getTextContent() ).collect(joining(",")), equalTo( "55,32,4345" ) );
+
+    }
 
     @Test
     public void issueEisi274_shouldMapBT133() throws Exception {
@@ -455,6 +478,14 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     private String errorMessage(ImprovedConversionResult<byte[]> conversionResult) {
         return describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+    }
+
+    static Stream<Node> asStream(NodeList nl)  {
+        Stream.Builder<Node> builder = Stream.builder();
+        for(int i=0; i<nl.getLength(); i++) {
+            builder.accept( nl.item(i) );
+        }
+        return builder.build();
     }
 
 }
