@@ -3,7 +3,6 @@ package com.infocert.eigor.api;
 
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.infocert.eigor.api.ConversionUtil.*;
+import static it.infocert.eigor.model.core.InvoiceUtils.evalExpression;
 import static java.util.stream.Collectors.joining;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -39,6 +39,33 @@ import static org.junit.Assert.*;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEisi274_shouldMapBT133() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-274-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        XPathExpression bt133Xpath = ublXpath().compile("(//cac:InvoiceLine)[1]/cbc:AccountingCost/text()");
+
+        // verify BT133 in source invoice
+        assertThat( bt133Xpath.evaluate( sourceDom ), equalTo( "5555" ) );
+
+        // verify BT133 in intermediate invoice
+        String bt133 = evalExpression(() -> conversionResult.getCenInvoice().getBG0025InvoiceLine(0).getBT0133InvoiceLineBuyerAccountingReference(0).getValue());
+        assertThat(msg, bt133, equalTo("5555") );
+
+        // verify BT133 in target invoice
+        assertThat( bt133Xpath.evaluate( targetDom ), equalTo( "5555" ) );
+
+
+    }
+
+    @Test
     public void issueEisi294() throws Exception {
 
         // given
@@ -46,9 +73,9 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 "/issues/issue-eisi-294-cii.xml",
                 "cii", "cii", ignoreAll());
 
-        String errMsg = describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+        String errMsg = errorMessage(conversionResult);
 
-        LocalDate bt26 = InvoiceUtils.evalExpression( () -> conversionResult.getCenInvoice().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue() );
+        LocalDate bt26 = evalExpression( () -> conversionResult.getCenInvoice().getBG0003PrecedingInvoiceReference(0).getBT0026PrecedingInvoiceIssueDate(0).getValue() );
         assertThat( errMsg, bt26, equalTo(new LocalDate(2015, 3, 1) ) );
 
         Document sourceDom = parseAsDom("/issues/issue-eisi-294-cii.xml");
@@ -209,7 +236,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         String msg = describeIntermediateInvoice(conversionResult) + "\n\n" + describeConvertedInvoice(conversionResult);
 
         // then
-        Identifier bt71 = InvoiceUtils.evalExpression(() -> conversionResult.getCenInvoice().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
+        Identifier bt71 = evalExpression(() -> conversionResult.getCenInvoice().getBG0013DeliveryInformation(0).getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
         assertThat( bt71.getIdentifier(), equalTo("6754238987648") );
         assertThat( bt71.getIdentificationSchema(), equalTo("0095") );
         assertThat( bt71.getSchemaVersion(), nullValue() );
@@ -426,6 +453,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
     }
 
-
+    private String errorMessage(ImprovedConversionResult<byte[]> conversionResult) {
+        return describeIntermediateInvoice(conversionResult) + "\n=======\n" + describeConvertedInvoice(conversionResult);
+    }
 
 }
