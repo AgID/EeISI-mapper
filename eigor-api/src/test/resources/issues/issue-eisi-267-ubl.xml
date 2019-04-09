@@ -90,18 +90,18 @@
 					<cbc:Line>Line seller</cbc:Line><!--BT-162-->
 				</cac:AddressLine>
                 <cac:Country>
-                    <cbc:IdentificationCode>DK</cbc:IdentificationCode><!--BT-40-->
+                    <cbc:IdentificationCode>DE</cbc:IdentificationCode><!--BT-40-->
                 </cac:Country>
             </cac:PostalAddress>
 			<cac:PartyTaxScheme>
-                <cbc:CompanyID>DK12345</cbc:CompanyID><!--BT-31-->
+                <cbc:CompanyID>DE12345</cbc:CompanyID><!--BT-31-->
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
 				
             </cac:PartyTaxScheme>
 			<cac:PartyTaxScheme><!--BT-32-->
-                <cbc:CompanyID>DKSeller tax registration identifier</cbc:CompanyID>
+                <cbc:CompanyID>DESeller tax registration identifier</cbc:CompanyID>
 				<cac:TaxScheme>
                     <cbc:ID>LOCALTAX</cbc:ID>
                 </cac:TaxScheme>
@@ -163,7 +163,10 @@
 		<cac:PartyIdentification>
 		  <cbc:ID schemeID="0180" >Payee identifier </cbc:ID><!--BT-60, BT-60-1-->
 		</cac:PartyIdentification>
-	
+		
+		<!--<cac:PartyIdentification>
+		 <cbc:ID schemeID="SEPA" >Bank account identifier referring to the seller </cbc:ID>--><!--BT-90--> <!--2 warnings -->
+	   <!-- </cac:PartyIdentification>-->
 		<cac:PartyName>
 		  <cbc:Name>Payee name</cbc:Name><!--BT-59-->
 		</cac:PartyName>

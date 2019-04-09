@@ -11,6 +11,7 @@ import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
@@ -130,16 +131,190 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(ublDocumentReferenceXml);
                     }
 
+                    if (!elemBg25.getBG0027InvoiceLineAllowances().isEmpty()) {
+                        BG0027InvoiceLineAllowances elemBg27 = elemBg25.getBG0027InvoiceLineAllowances(0);
+                        Element allowanceCharge = new Element("AllowanceCharge");
+                        Element chargeIndicator = new Element("ChargeIndicator");
+                        chargeIndicator.setText("false");
+                        allowanceCharge.addContent(chargeIndicator);
+
+                        if (!elemBg27.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
+                            int value = elemBg27.getBT0140InvoiceLineAllowanceReasonCode().get(0).getValue().getCode();
+                            Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                            allowanceChargeReasonCode.setText(value + "");
+                            allowanceCharge.addContent(allowanceChargeReasonCode);
+                        }
+
+                        if (!elemBg27.getBT0139InvoiceLineAllowanceReason().isEmpty()) {
+                            String value = elemBg27.getBT0139InvoiceLineAllowanceReason(0).getValue();
+                            Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                            allowanceChargeReason.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReason);
+                        }
+
+                        if (!elemBg27.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
+                            Identifier value = elemBg27.getBT0138InvoiceLineAllowancePercentage(0).getValue();
+                            Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                            if (value != null && value.getIdentifier() != null) {
+                                multiplierFactorNumeric.setText(value.getIdentifier());
+                            }
+                            allowanceCharge.addContent(multiplierFactorNumeric);
+                        }
+
+                        if (!elemBg27.getBT0136InvoiceLineAllowanceAmount().isEmpty()) {
+                            BigDecimal value = elemBg27.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+                            Element amount = new Element("Amount");
+                            amount.setText(value.toString());
+                            if (currencyCode != null && currencyCode.getCode() != null)
+                                amount.setAttribute("currencyID", currencyCode.getCode());
+                            allowanceCharge.addContent(amount);
+                        }
+
+                        if (!elemBg27.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
+                            Identifier value = elemBg27.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
+                            Element baseAmount = new Element("BaseAmount");
+                            if (value != null && value.getIdentifier() != null) {
+                                baseAmount.setText(value.getIdentifier());
+                            }
+                            if (currencyCode != null && currencyCode.getCode() != null) {
+                                baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                            }
+                            allowanceCharge.addContent(baseAmount);
+                        }
+
+                        invoiceLine.addContent(allowanceCharge);
+                    }
+
+                    if (!elemBg25.getBG0028InvoiceLineCharges().isEmpty()) {
+                        BG0028InvoiceLineCharges elemBg28 = elemBg25.getBG0028InvoiceLineCharges(0);
+                        Element allowanceCharge = new Element("AllowanceCharge");
+                        Element chargeIndicator = new Element("ChargeIndicator");
+                        chargeIndicator.setText("false");
+                        allowanceCharge.addContent(chargeIndicator);
+
+                        if (!elemBg28.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
+                            String value = elemBg28.getBT0145InvoiceLineChargeReasonCode().get(0).getValue().name();
+                            Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                            allowanceChargeReasonCode.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReasonCode);
+                        }
+
+                        if (!elemBg28.getBT0144InvoiceLineChargeReason().isEmpty()) {
+                            String value = elemBg28.getBT0144InvoiceLineChargeReason(0).getValue();
+                            Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                            allowanceChargeReason.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReason);
+                        }
+
+                        if (!elemBg28.getBT0143InvoiceLineChargePercentage().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0143InvoiceLineChargePercentage(0).getValue();
+                            Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                            multiplierFactorNumeric.setText(value.toString());
+                            allowanceCharge.addContent(multiplierFactorNumeric);
+                        }
+
+                        if (!elemBg28.getBT0141InvoiceLineChargeAmount().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0141InvoiceLineChargeAmount(0).getValue();
+                            Element amount = new Element("Amount");
+                            if (currencyCode != null && currencyCode.getCode() != null)
+                                amount.setAttribute("currencyID", currencyCode.getCode());
+                            amount.setText(value.toString());
+                            allowanceCharge.addContent(amount);
+                        }
+
+                        if (!elemBg28.getBT0142InvoiceLineChargeBaseAmount().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0142InvoiceLineChargeBaseAmount(0).getValue();
+                            Element baseAmount = new Element("BaseAmount");
+                            if (currencyCode != null && currencyCode.getCode() != null) {
+                                baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                            }
+                            baseAmount.setText(value.toString());
+                            allowanceCharge.addContent(baseAmount);
+                        }
+
+                        invoiceLine.addContent(allowanceCharge);
+                    }
+
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
                         for (BG0031ItemInformation elemBg31 : bg0031) {
                             Element item = new Element("Item");
+
+                            if (!elemBg31.getBT0154ItemDescription().isEmpty()) {
+                                BT0154ItemDescription bt0154 = elemBg31.getBT0154ItemDescription(0);
+                                Element description = new Element("Description");
+                                description.setText(bt0154.getValue());
+                                item.addContent(description);
+                            }
+
                             if (!elemBg31.getBT0153ItemName().isEmpty()) {
                                 BT0153ItemName bt0153 = elemBg31.getBT0153ItemName(0);
                                 Element name = new Element("Name");
                                 name.setText(bt0153.getValue());
                                 item.addContent(name);
                             }
+
+                            if (!elemBg31.getBT0156ItemBuyerSIdentifier().isEmpty()) {
+                                BT0156ItemBuyerSIdentifier bt0156 = elemBg31.getBT0156ItemBuyerSIdentifier(0);
+                                Element buyersItemIdentification = new Element("BuyersItemIdentification");
+                                Element buyersItemIdentificationId = new Element("ID");
+                                buyersItemIdentificationId.setText(bt0156.getValue());
+                                buyersItemIdentification.addContent(buyersItemIdentificationId);
+                                item.addContent(buyersItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0155ItemSellerSIdentifier().isEmpty()) {
+                                BT0155ItemSellerSIdentifier bt0155 = elemBg31.getBT0155ItemSellerSIdentifier(0);
+                                Element sellersItemIdentification = new Element("SellersItemIdentification");
+                                Element sellersItemIdentificationId = new Element("ID");
+                                sellersItemIdentificationId.setText(bt0155.getValue());
+                                sellersItemIdentification.addContent(sellersItemIdentificationId);
+                                item.addContent(sellersItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
+                                BT0157ItemStandardIdentifierAndSchemeIdentifier bt0157 = elemBg31.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0);
+                                Element standardItemIdentification = new Element("StandardItemIdentification");
+                                Element standardItemIdentificationId = new Element("ID");
+                                if (bt0157.getValue() != null && bt0157.getValue().getIdentifier() != null) {
+                                    standardItemIdentificationId.setText(bt0157.getValue().getIdentifier());
+                                }
+                                if (bt0157.getValue() != null && bt0157.getValue().getIdentificationSchema() != null) {
+                                    standardItemIdentificationId.setAttribute("schemeID", bt0157.getValue().getIdentificationSchema());
+                                }
+                                standardItemIdentification.addContent(standardItemIdentificationId);
+                                item.addContent(standardItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0159ItemCountryOfOrigin().isEmpty()) {
+                                BT0159ItemCountryOfOrigin bt0159 = elemBg31.getBT0159ItemCountryOfOrigin(0);
+                                Element originCountry = new Element("OriginCountry");
+                                Element originCountryIdentificationCode = new Element("IdentificationCode");
+                                originCountryIdentificationCode.setText(bt0159.getValue().getIso2charCode());
+                                originCountry.addContent(originCountryIdentificationCode);
+                                item.addContent(originCountry);
+                            }
+
+                            if (!elemBg31.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
+                                List<BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier> bt0158list =
+                                        elemBg31.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier();
+                                for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt0158 : bt0158list) {
+                                    Element commodityClassification = new Element("CommodityClassification");
+                                    Element commodityClassificationId = new Element("ItemClassificationCode");
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentifier() != null) {
+                                        commodityClassificationId.setText(bt0158.getValue().getIdentifier());
+                                    }
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentificationSchema() != null) {
+                                        commodityClassificationId.setAttribute("listID", bt0158.getValue().getIdentificationSchema());
+                                    }
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentificationSchema() != null) {
+                                        commodityClassificationId.setAttribute("listVersionID", bt0158.getValue().getSchemaVersion());
+                                    }
+                                    commodityClassification.addContent(commodityClassificationId);
+                                    item.addContent(commodityClassification);
+                                }
+                            }
+
                             if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
                                 List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
                                 for (BG0030LineVatInformation elemBg30 : bg0030) {
