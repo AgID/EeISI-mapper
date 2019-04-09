@@ -40,6 +40,28 @@ import static org.junit.Assert.*;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEisi274_shouldMapBG26() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-274-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        XPathExpression bg26xpath = ublXpath().compile("//cac:InvoiceLine/cac:InvoicePeriod/*[self::cbc:StartDate or self::cbc:EndDate]");
+
+        // verify BG26 in source invoice
+        assertThat(msg, asStream((NodeList) bg26xpath.evaluate(sourceDom, XPathConstants.NODESET)).map(node -> node.getTextContent() ).collect(joining(",")), equalTo( "2017-09-01,2017-09-15,2017-09-15,2017-09-15,2017-09-01,2017-09-15" ) );
+
+        // verify BG26 in target invoice
+        assertThat(msg,  asStream((NodeList) bg26xpath.evaluate(targetDom, XPathConstants.NODESET)).map(node -> node.getTextContent() ).collect(joining(",")), equalTo( "2017-09-01,2017-09-15,2017-09-15,2017-09-15,2017-09-01,2017-09-15" ) );
+
+    }
+
+    @Test
     public void issueEisi274_shouldMapBT132() throws Exception {
 
         String sourceInvoice = "/issues/issue-eisi-274-ubl.xml";
