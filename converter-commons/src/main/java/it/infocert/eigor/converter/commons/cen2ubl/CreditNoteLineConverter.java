@@ -6,6 +6,7 @@ import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.LookUpEnumConversion;
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
@@ -123,6 +124,110 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         ublDocumentReferenceXml.addContent(ublIdXml);
                         ublDocumentReferenceXml.addContent(ublDocumentTypeCodeXml);
                         invoiceLine.addContent(ublDocumentReferenceXml);
+                    }
+
+                    if (!elemBg25.getBG0027InvoiceLineAllowances().isEmpty()) {
+                        BG0027InvoiceLineAllowances elemBg27 = elemBg25.getBG0027InvoiceLineAllowances(0);
+                        Element allowanceCharge = new Element("AllowanceCharge");
+                        Element chargeIndicator = new Element("ChargeIndicator");
+                        chargeIndicator.setText("false");
+                        allowanceCharge.addContent(chargeIndicator);
+
+                        if (!elemBg27.getBT0140InvoiceLineAllowanceReasonCode().isEmpty()) {
+                            int value = elemBg27.getBT0140InvoiceLineAllowanceReasonCode().get(0).getValue().getCode();
+                            Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                            allowanceChargeReasonCode.setText(value + "");
+                            allowanceCharge.addContent(allowanceChargeReasonCode);
+                        }
+
+                        if (!elemBg27.getBT0139InvoiceLineAllowanceReason().isEmpty()) {
+                            String value = elemBg27.getBT0139InvoiceLineAllowanceReason(0).getValue();
+                            Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                            allowanceChargeReason.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReason);
+                        }
+
+                        if (!elemBg27.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
+                            Identifier value = elemBg27.getBT0138InvoiceLineAllowancePercentage(0).getValue();
+                            Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                            if (value != null && value.getIdentifier() != null) {
+                                multiplierFactorNumeric.setText(value.getIdentifier());
+                            }
+                            allowanceCharge.addContent(multiplierFactorNumeric);
+                        }
+
+                        if (!elemBg27.getBT0136InvoiceLineAllowanceAmount().isEmpty()) {
+                            BigDecimal value = elemBg27.getBT0136InvoiceLineAllowanceAmount(0).getValue();
+                            Element amount = new Element("Amount");
+                            amount.setText(value.toString());
+                            if (currencyCode != null && currencyCode.getCode() != null)
+                                amount.setAttribute("currencyID", currencyCode.getCode());
+                            allowanceCharge.addContent(amount);
+                        }
+
+                        if (!elemBg27.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
+                            Identifier value = elemBg27.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
+                            Element baseAmount = new Element("BaseAmount");
+                            if (value != null && value.getIdentifier() != null) {
+                                baseAmount.setText(value.getIdentifier());
+                            }
+                            if (currencyCode != null && currencyCode.getCode() != null) {
+                                baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                            }
+                            allowanceCharge.addContent(baseAmount);
+                        }
+
+                        invoiceLine.addContent(allowanceCharge);
+                    }
+
+                    if (!elemBg25.getBG0028InvoiceLineCharges().isEmpty()) {
+                        BG0028InvoiceLineCharges elemBg28 = elemBg25.getBG0028InvoiceLineCharges(0);
+                        Element allowanceCharge = new Element("AllowanceCharge");
+                        Element chargeIndicator = new Element("ChargeIndicator");
+                        chargeIndicator.setText("false");
+                        allowanceCharge.addContent(chargeIndicator);
+
+                        if (!elemBg28.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {
+                            String value = elemBg28.getBT0145InvoiceLineChargeReasonCode().get(0).getValue().name();
+                            Element allowanceChargeReasonCode = new Element("AllowanceChargeReasonCode");
+                            allowanceChargeReasonCode.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReasonCode);
+                        }
+
+                        if (!elemBg28.getBT0144InvoiceLineChargeReason().isEmpty()) {
+                            String value = elemBg28.getBT0144InvoiceLineChargeReason(0).getValue();
+                            Element allowanceChargeReason = new Element("AllowanceChargeReason");
+                            allowanceChargeReason.setText(value);
+                            allowanceCharge.addContent(allowanceChargeReason);
+                        }
+
+                        if (!elemBg28.getBT0143InvoiceLineChargePercentage().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0143InvoiceLineChargePercentage(0).getValue();
+                            Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
+                            multiplierFactorNumeric.setText(value.toString());
+                            allowanceCharge.addContent(multiplierFactorNumeric);
+                        }
+
+                        if (!elemBg28.getBT0141InvoiceLineChargeAmount().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0141InvoiceLineChargeAmount(0).getValue();
+                            Element amount = new Element("Amount");
+                            if (currencyCode != null && currencyCode.getCode() != null)
+                                amount.setAttribute("currencyID", currencyCode.getCode());
+                            amount.setText(value.toString());
+                            allowanceCharge.addContent(amount);
+                        }
+
+                        if (!elemBg28.getBT0142InvoiceLineChargeBaseAmount().isEmpty()) {
+                            BigDecimal value = elemBg28.getBT0142InvoiceLineChargeBaseAmount(0).getValue();
+                            Element baseAmount = new Element("BaseAmount");
+                            if (currencyCode != null && currencyCode.getCode() != null) {
+                                baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                            }
+                            baseAmount.setText(value.toString());
+                            allowanceCharge.addContent(baseAmount);
+                        }
+
+                        invoiceLine.addContent(allowanceCharge);
                     }
 
                     if (!elemBg25.getBG0031ItemInformation().isEmpty()) {
