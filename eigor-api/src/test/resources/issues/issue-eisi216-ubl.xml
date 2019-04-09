@@ -392,7 +392,7 @@
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge><!--BG-28-->
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-			<cbc:AllowanceChargeReasonCode>AAA</cbc:AllowanceChargeReasonCode><!--BT-145--> 
+			<cbc:AllowanceChargeReasonCode>ZZZ</cbc:AllowanceChargeReasonCode><!--BT-145-->
 			<cbc:AllowanceChargeReason>Packing cost</cbc:AllowanceChargeReason><!--BT-144--> 
 			<cbc:MultiplierFactorNumeric>0.105645</cbc:MultiplierFactorNumeric><!--BT-143--> 
 			<cbc:Amount currencyID="EUR">10.61</cbc:Amount><!--BT-141-->
