@@ -182,7 +182,7 @@
         <BT-102>S</BT-102>
         <BT-103>5.00</BT-103>
         <BT-104>Doc charge reason text</BT-104>
-        <BT-105>AAA</BT-105>
+        <BT-105>ZZZ</BT-105>
     </BG-21>
 
     <!-- A group of business terms providing the monetary totals for the Invoice. -->
@@ -265,7 +265,7 @@
             <BT-142>1000.00</BT-142>
             <BT-143>1</BT-143>
             <BT-144>Invoice line charge reason</BT-144>
-            <BT-145>AAA</BT-145>
+            <BT-145>ZZZ</BT-145>
         </BG-28>
 
         <BG-29>
