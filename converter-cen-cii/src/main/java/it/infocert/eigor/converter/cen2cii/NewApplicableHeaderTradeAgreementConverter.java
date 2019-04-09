@@ -733,10 +733,10 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                             new Element("IssuerAssignedID", ramNs).setText(bt0018.getIdentifier())
                     )
                     .addContent(
-                            new Element("ReferenceTypeCode", ramNs).setText(bt0018.getIdentificationSchema())
+                            new Element("TypeCode", ramNs).setText("130")
                     )
                     .addContent(
-                            new Element("TypeCode", ramNs).setText("130")
+                        new Element("ReferenceTypeCode", ramNs).setText(bt0018.getIdentificationSchema())
                     )
             ;
             applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);

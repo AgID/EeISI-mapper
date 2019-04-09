@@ -215,12 +215,9 @@ public class EeisiIssuesTest extends AbstractIssueTest {
         assertThat( bt71.getSchemaVersion(), nullValue() );
 
 
-        Node idNode = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID").evaluate(targetDom, XPathConstants.NODE);
+        Node idNode = (Node) ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:GlobalID").evaluate(targetDom, XPathConstants.NODE);
         assertNotNull( describeConvertedInvoice(conversionResult), idNode);
-        assertFalse( describeConvertedInvoice(conversionResult), idNode.hasAttributes());
-
-        XPathExpression idXpath = ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:ID/text()");
-        assertEquals( idXpath.evaluate(sourceDom), idXpath.evaluate(targetDom) );
+        assertTrue( describeConvertedInvoice(conversionResult), idNode.hasAttributes());
 
         XPathExpression globalIdXpath = ciiXpath().compile("(//ram:ShipToTradeParty)[1]/ram:GlobalID/text()");
         assertEquals(msg, globalIdXpath.evaluate(sourceDom), globalIdXpath.evaluate(targetDom) );
