@@ -182,7 +182,7 @@ public class VATBreakdownConverter extends CustomConverterUtils implements Custo
     }
 
     private Element toDateTimeStringElement(Namespace udtNs, LocalDate value) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
         String elementText = dateTimeFormatter.print(value);
         return new Element("DateTimeString", udtNs)
                 .setText(elementText)
