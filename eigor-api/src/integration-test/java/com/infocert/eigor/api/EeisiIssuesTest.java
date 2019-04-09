@@ -5,6 +5,7 @@ import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
+import it.infocert.eigor.model.core.model.BG0010Payee;
 import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -39,6 +40,26 @@ import static org.junit.Assert.*;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
+//    WIP, DO NOT DELETE PLS.
+//    @Test
+//    public void issueEisi267_shouldMapBG11() throws Exception {
+//
+//        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
+//        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+//                sourceInvoice,
+//                "ubl", "ubl", keepErrorsNotWarnings());
+//        String msg = errorMessage(conversionResult);
+//
+//        Document sourceDom = parseAsDom(sourceInvoice);
+//        Document targetDom = parseAsDom(conversionResult);
+//
+//
+//        XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[0]");
+//
+//        System.out.println(xpath.evaluate(targetDom));
+//
+//    }
+
     @Test
     public void issueEisi267_shouldMapBG10() throws Exception {
 
@@ -47,39 +68,51 @@ public class EeisiIssuesTest extends AbstractIssueTest {
                 sourceInvoice,
                 "ubl", "ubl", keepErrorsNotWarnings());
         String msg = errorMessage(conversionResult);
+        BG0000Invoice cenInvoice = conversionResult.getCenInvoice();
 
         Document sourceDom = parseAsDom(sourceInvoice);
         Document targetDom = parseAsDom(conversionResult);
 
+        BG0010Payee bg0010 = cenInvoice.getBG0010Payee(0);
 
         // verify BG10 elements
         {
-            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyIdentification/cbc:ID/text()");
+            assertThat( msg, evalExpression( ()->bg0010.getBT0060PayeeIdentifierAndSchemeIdentifier(0).getValue().getIdentifier() ), equalTo("Payee identifier ") );
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[1]/cac:PartyIdentification/cbc:ID/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "Payee identifier ", sourceDom, targetDom);
+        }
+
+        {
+            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[1]/cac:PartyIdentification/cbc:ID/@schemeID )");
             assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
         }
 
         {
-            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[0]/cac:PartyIdentification/cbc:ID/@schemeID )");
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[1]/cac:PartyName/cbc:Name/text()");
             assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
         }
 
         {
-            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyName/cbc:Name/text()");
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[1]/cac:PartyLegalEntity/cbc:CompanyID/text()");
             assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
         }
 
         {
-            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyLegalEntity/cbc:CompanyID/text()");
-            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
-        }
-
-        {
-            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[0]/cac:PartyLegalEntity/cbc:CompanyID/@schemeID )");
+            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[1]/cac:PartyLegalEntity/cbc:CompanyID/@schemeID )");
             assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
         }
 
 
+    }
 
+    private void assertSameXpathStirngEvaluation(String msg, XPathExpression xpath, String expectedSourceText, Document sourceDom, Document targetDom) throws XPathExpressionException {
+
+        String onSource = xpath.evaluate(sourceDom);
+
+        String onTarget = xpath.evaluate(targetDom);
+
+        assertThat(onSource, equalTo(expectedSourceText));
+        assertThat(msg, onSource, equalToIgnoringWhiteSpace(onTarget));
     }
 
     @Test
