@@ -129,12 +129,82 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         List<BG0031ItemInformation> bg0031 = elemBg25.getBG0031ItemInformation();
                         for (BG0031ItemInformation elemBg31 : bg0031) {
                             Element item = new Element("Item");
+
+                            if (!elemBg31.getBT0154ItemDescription().isEmpty()) {
+                                BT0154ItemDescription bt0154 = elemBg31.getBT0154ItemDescription(0);
+                                Element description = new Element("Description");
+                                description.setText(bt0154.getValue());
+                                item.addContent(description);
+                            }
+
                             if (!elemBg31.getBT0153ItemName().isEmpty()) {
                                 BT0153ItemName bt0153 = elemBg31.getBT0153ItemName(0);
                                 Element name = new Element("Name");
                                 name.setText(bt0153.getValue());
                                 item.addContent(name);
                             }
+
+                            if (!elemBg31.getBT0156ItemBuyerSIdentifier().isEmpty()) {
+                                BT0156ItemBuyerSIdentifier bt0156 = elemBg31.getBT0156ItemBuyerSIdentifier(0);
+                                Element buyersItemIdentification = new Element("BuyersItemIdentification");
+                                Element buyersItemIdentificationId = new Element("ID");
+                                buyersItemIdentificationId.setText(bt0156.getValue());
+                                buyersItemIdentification.addContent(buyersItemIdentificationId);
+                                item.addContent(buyersItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0155ItemSellerSIdentifier().isEmpty()) {
+                                BT0155ItemSellerSIdentifier bt0155 = elemBg31.getBT0155ItemSellerSIdentifier(0);
+                                Element sellersItemIdentification = new Element("SellersItemIdentification");
+                                Element sellersItemIdentificationId = new Element("ID");
+                                sellersItemIdentificationId.setText(bt0155.getValue());
+                                sellersItemIdentification.addContent(sellersItemIdentificationId);
+                                item.addContent(sellersItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0157ItemStandardIdentifierAndSchemeIdentifier().isEmpty()) {
+                                BT0157ItemStandardIdentifierAndSchemeIdentifier bt0157 = elemBg31.getBT0157ItemStandardIdentifierAndSchemeIdentifier(0);
+                                Element standardItemIdentification = new Element("StandardItemIdentification");
+                                Element standardItemIdentificationId = new Element("ID");
+                                if (bt0157.getValue() != null && bt0157.getValue().getIdentifier() != null) {
+                                    standardItemIdentificationId.setText(bt0157.getValue().getIdentifier());
+                                }
+                                if (bt0157.getValue() != null && bt0157.getValue().getIdentificationSchema() != null) {
+                                    standardItemIdentificationId.setAttribute("schemeID", bt0157.getValue().getIdentificationSchema());
+                                }
+                                standardItemIdentification.addContent(standardItemIdentificationId);
+                                item.addContent(standardItemIdentification);
+                            }
+
+                            if (!elemBg31.getBT0159ItemCountryOfOrigin().isEmpty()) {
+                                BT0159ItemCountryOfOrigin bt0159 = elemBg31.getBT0159ItemCountryOfOrigin(0);
+                                Element originCountry = new Element("OriginCountry");
+                                Element originCountryIdentificationCode = new Element("IdentificationCode");
+                                originCountryIdentificationCode.setText(bt0159.getValue().getIso2charCode());
+                                originCountry.addContent(originCountryIdentificationCode);
+                                item.addContent(originCountry);
+                            }
+
+                            if (!elemBg31.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier().isEmpty()) {
+                                List<BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier> bt0158list =
+                                        elemBg31.getBT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier();
+                                for (BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier bt0158 : bt0158list) {
+                                    Element commodityClassification = new Element("CommodityClassification");
+                                    Element commodityClassificationId = new Element("ItemClassificationCode");
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentifier() != null) {
+                                        commodityClassificationId.setText(bt0158.getValue().getIdentifier());
+                                    }
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentificationSchema() != null) {
+                                        commodityClassificationId.setAttribute("listID", bt0158.getValue().getIdentificationSchema());
+                                    }
+                                    if (bt0158.getValue() != null && bt0158.getValue().getIdentificationSchema() != null) {
+                                        commodityClassificationId.setAttribute("listVersionID", bt0158.getValue().getSchemaVersion());
+                                    }
+                                    commodityClassification.addContent(commodityClassificationId);
+                                    item.addContent(commodityClassification);
+                                }
+                            }
+
                             if (!elemBg25.getBG0030LineVatInformation().isEmpty()) {
                                 List<BG0030LineVatInformation> bg0030 = elemBg25.getBG0030LineVatInformation();
                                 for (BG0030LineVatInformation elemBg30 : bg0030) {
