@@ -40,6 +40,49 @@ import static org.junit.Assert.*;
 public class EeisiIssuesTest extends AbstractIssueTest {
 
     @Test
+    public void issueEisi267_shouldMapBG10() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+
+        // verify BG10 elements
+        {
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyIdentification/cbc:ID/text()");
+            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
+        }
+
+        {
+            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[0]/cac:PartyIdentification/cbc:ID/@schemeID )");
+            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
+        }
+
+        {
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyName/cbc:Name/text()");
+            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
+        }
+
+        {
+            XPathExpression xpath = ublXpath().compile("(//cac:PayeeParty)[0]/cac:PartyLegalEntity/cbc:CompanyID/text()");
+            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
+        }
+
+        {
+            XPathExpression xpath = ublXpath().compile("string( (//cac:PayeeParty)[0]/cac:PartyLegalEntity/cbc:CompanyID/@schemeID )");
+            assertThat(msg, xpath.evaluate(sourceDom), equalTo(xpath.evaluate(targetDom)));
+        }
+
+
+
+    }
+
+    @Test
     public void issueEisi274_shouldMapBG26() throws Exception {
 
         String sourceInvoice = "/issues/issue-eisi-274-ubl.xml";
