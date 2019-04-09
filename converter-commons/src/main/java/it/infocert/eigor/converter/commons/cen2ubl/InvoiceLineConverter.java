@@ -56,6 +56,13 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         invoiceLine.addContent(id);
                     }
 
+                    if (!elemBg25.getBT0127InvoiceLineNote().isEmpty()) {
+                        BT0127InvoiceLineNote bt0127 = elemBg25.getBT0127InvoiceLineNote(0);
+                        Element id = new Element("Note");
+                        id.setText(bt0127.getValue());
+                        invoiceLine.addContent(id);
+                    }
+
                     if (!elemBg25.getBT0129InvoicedQuantity().isEmpty()) {
                         BigDecimal quantity = elemBg25.getBT0129InvoicedQuantity().isEmpty() ? BigDecimal.ZERO : elemBg25.getBT0129InvoicedQuantity(0).getValue();
                         Element invoicedQuantity = new Element("InvoicedQuantity");
