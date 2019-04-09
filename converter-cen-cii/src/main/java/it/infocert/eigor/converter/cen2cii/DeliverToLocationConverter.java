@@ -57,31 +57,17 @@ public class DeliverToLocationConverter extends CustomConverterUtils implements 
 
             Identifier bt71 = evalExpression(() -> bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
             if(bt71!=null) {
-
                 if(bt71.getIdentifier()!=null) {
-                    Element id = new Element("ID", ramNs);
+                    Element id;
+                    if (bt71.getIdentificationSchema()!=null) {
+                        id = new Element("GlobalID", ramNs);
+                        id.setAttribute("schemeID", bt71.getIdentificationSchema());
+                    } else {
+                        id = new Element("ID", ramNs);
+                    }
                     id.setText(bt71.getIdentifier());
                     shipToTradeParty.addContent(id);
                 }
-
-                if(bt71.getIdentifier()!=null && bt71.getIdentificationSchema()!=null) {
-                    Element globalId = new Element("GlobalID", ramNs);
-                    globalId.setText(bt71.getIdentifier());
-                    globalId.setAttribute("schemeID", bt71.getIdentificationSchema());
-                    shipToTradeParty.addContent(globalId);
-                }
-
-            }
-            if (!bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier().isEmpty()) {
-                Identifier bt0071 = bg0013.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue();
-                Element id = new Element("ID", ramNs); //maybe GlobalID?
-                id.setText(bt0071.getIdentifier());
-
-                // according to EISI-287 <ID> element should not have any "schemeID" attribute.
-//                if (bt0071.getIdentificationSchema() != null) {
-//                    id.setAttribute("schemeID", bt0071.getIdentificationSchema());
-//                }
-                shipToTradeParty.addContent(id);
             }
 
             if (!bg0013.getBT0070DeliverToPartyName().isEmpty()) {
