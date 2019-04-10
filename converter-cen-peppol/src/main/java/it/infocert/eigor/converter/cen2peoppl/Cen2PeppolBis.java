@@ -72,7 +72,7 @@ public class Cen2PeppolBis extends AbstractFromCenConverter {
             try {
                 xsdValidator = new ClasspathXSDValidator("/converterdata/converter-commons/ubl/xsdstatic/UBL-Invoice-2.1.xsd", ErrorCode.Location.PEPPOL_OUT);
             } catch (Exception e) {
-                throw new ConfigurationException("An error occurred while loading XSD for UBL2CII'.", e);
+                throw new ConfigurationException("An error occurred while loading XSD'.", e);
             }
         }
 
