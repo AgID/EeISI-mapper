@@ -396,6 +396,31 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                                     baseQuantity.setAttribute(unitCode);
                                 }
                                 price.addContent(baseQuantity);
+
+                                if (!elemBg29.getBT0147ItemPriceDiscount().isEmpty() || !elemBg29.getBT0148ItemGrossPrice().isEmpty()) {
+
+                                    Element allowanceCharge = new Element("AllowanceCharge");
+
+                                    Element chargeIndicator = new Element("ChargeIndicator");
+                                    chargeIndicator.setText("false");
+                                    allowanceCharge.addContent(chargeIndicator);
+
+                                    if (!elemBg29.getBT0147ItemPriceDiscount().isEmpty()) {
+                                        Element amount = new Element("Amount");
+                                        amount.setText(elemBg29.getBT0147ItemPriceDiscount(0).getValue().toString());
+                                        amount.setAttribute("currencyID", currencyCode.getCode());
+                                        allowanceCharge.addContent(amount);
+                                    }
+
+                                    if (!elemBg29.getBT0148ItemGrossPrice().isEmpty()) {
+                                        Element baseAmount = new Element("BaseAmount");
+                                        baseAmount.setText(elemBg29.getBT0148ItemGrossPrice(0).getValue().toString());
+                                        baseAmount.setAttribute("currencyID", currencyCode.getCode());
+                                        allowanceCharge.addContent(baseAmount);
+                                    }
+
+                                    price.addContent(allowanceCharge);
+                                }
                             }
                             invoiceLine.addContent(price);
                         }
