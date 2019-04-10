@@ -4,9 +4,7 @@ package com.infocert.eigor.api;
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0010Payee;
-import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
+import it.infocert.eigor.model.core.model.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
@@ -40,25 +38,81 @@ import static org.junit.Assert.*;
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
 
-//    WIP, DO NOT DELETE PLS.
-//    @Test
-//    public void issueEisi267_shouldMapBG11() throws Exception {
-//
-//        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
-//        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
-//                sourceInvoice,
-//                "ubl", "ubl", keepErrorsNotWarnings());
-//        String msg = errorMessage(conversionResult);
-//
-//        Document sourceDom = parseAsDom(sourceInvoice);
-//        Document targetDom = parseAsDom(conversionResult);
-//
-//
-//        XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[0]");
-//
-//        System.out.println(xpath.evaluate(targetDom));
-//
-//    }
+    @Test
+    public void issueEisi267_shouldMapBG13() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        BG0013DeliveryInformation bg13 = conversionResult.getCenInvoice().getBG0013DeliveryInformation(0);
+
+        // verify some BG13 elements
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg13.getBT0072ActualDeliveryDate(0).getValue().toString() ),
+                    equalTo("2017-10-15")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:Delivery)[1]/cbc:ActualDeliveryDate/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "2017-10-15", sourceDom, targetDom);
+        }
+
+    }
+
+    @Test
+    public void issueEisi267_shouldMapBG11() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        BG0011SellerTaxRepresentativeParty bg11 = conversionResult.getCenInvoice().getBG0011SellerTaxRepresentativeParty(0);
+
+        // verify some BG11 elements
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg11.getBT0062SellerTaxRepresentativeName(0).getValue() ),
+                    equalTo("Tax representative name")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyName/cbc:Name/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "Tax representative name", sourceDom, targetDom);
+        }
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg11.getBG0012SellerTaxRepresentativePostalAddress(0).getBT0064TaxRepresentativeAddressLine1(0).getValue() ),
+                    equalTo("Street tax representative")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PostalAddress/cbc:StreetName/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "Street tax representative", sourceDom, targetDom);
+        }
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg11.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue().getIdentifier() ),
+                    equalTo("IT343563160B01")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyTaxScheme/cbc:CompanyID/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "IT343563160B01", sourceDom, targetDom);
+        }
+        {
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()");
+            assertThat( xpath.evaluate(targetDom), equalTo( "VAT" ) );
+        }
+
+    }
 
     @Test
     public void issueEisi267_shouldMapBG10() throws Exception {
@@ -111,8 +165,8 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
         String onTarget = xpath.evaluate(targetDom);
 
-        assertThat(onSource, equalTo(expectedSourceText));
-        assertThat(msg, onSource, equalToIgnoringWhiteSpace(onTarget));
+        assertThat(msg, onSource, equalTo(expectedSourceText));
+        assertThat(msg, onTarget, equalToIgnoringWhiteSpace(onSource));
     }
 
     @Test
