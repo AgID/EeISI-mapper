@@ -4,10 +4,7 @@ package com.infocert.eigor.api;
 import com.infocert.eigor.api.ConversionUtil.*;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0010Payee;
-import it.infocert.eigor.model.core.model.BG0011SellerTaxRepresentativeParty;
-import it.infocert.eigor.model.core.model.BT0017TenderOrLotReference;
+import it.infocert.eigor.model.core.model.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
@@ -40,6 +37,33 @@ import static org.junit.Assert.*;
  * called 'eeisi'.
  */
 public class EeisiIssuesTest extends AbstractIssueTest {
+
+    @Test
+    public void issueEisi267_shouldMapBG13() throws Exception {
+
+        String sourceInvoice = "/issues/issue-eisi-267-ubl.xml";
+        ImprovedConversionResult<byte[]> conversionResult = conversion.assertConversionWithoutErrors(
+                sourceInvoice,
+                "ubl", "ubl", keepErrorsNotWarnings());
+        String msg = errorMessage(conversionResult);
+
+        Document sourceDom = parseAsDom(sourceInvoice);
+        Document targetDom = parseAsDom(conversionResult);
+
+        BG0013DeliveryInformation bg13 = conversionResult.getCenInvoice().getBG0013DeliveryInformation(0);
+
+        // verify some BG13 elements
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg13.getBT0072ActualDeliveryDate(0).getValue().toString() ),
+                    equalTo("2017-10-15")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:Delivery)[1]/cbc:ActualDeliveryDate/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "2017-10-15", sourceDom, targetDom);
+        }
+
+    }
 
     @Test
     public void issueEisi267_shouldMapBG11() throws Exception {
@@ -141,7 +165,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
         String onTarget = xpath.evaluate(targetDom);
 
-        assertThat(onSource, equalTo(expectedSourceText));
+        assertThat(msg, onSource, equalTo(expectedSourceText));
         assertThat(msg, onTarget, equalToIgnoringWhiteSpace(onSource));
     }
 
