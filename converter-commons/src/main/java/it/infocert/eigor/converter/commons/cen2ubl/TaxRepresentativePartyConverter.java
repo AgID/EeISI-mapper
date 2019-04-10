@@ -36,11 +36,12 @@ public class TaxRepresentativePartyConverter implements CustomMapping<Document> 
         String bt62 = evalExpression(() -> bg11.getBT0062SellerTaxRepresentativeName(0).getValue());
         if(bt62!=null) {
 
-            new Element("PartyName")
-                    .addContent(
-                            new Element("Name")
-                                .addContent(bt62)
-                    );
+            taxRepresentativeParty.addContent(
+                new Element("PartyName")
+                        .addContent(
+                                new Element("Name")
+                                    .addContent(bt62)
+                        ));
 
         }
 
@@ -145,22 +146,25 @@ public class TaxRepresentativePartyConverter implements CustomMapping<Document> 
         Identifier bt63 = evalExpression(() -> bg11.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue());
         if(bt63!=null){
 
-            Element tag = new Element("PartyTaxScheme")
+            Element taxScheme = new Element("TaxScheme")
                     .addContent(
-                            new Element("CompanyID")
-                                    .addContent(bt63.getIdentifier())
-                                    .addContent(
-                                            new Element("TaxScheme")
-                                                    .addContent(
-                                                            new Element("ID")
-                                                                    .addContent(bt63.getIdentificationSchema())
-                                                    )
-                                    )
-
+                            new Element("ID")
+                                    .addContent("VAT")
                     );
+
+            Element companyID = new Element("CompanyID")
+                    .addContent(bt63.getIdentifier());
+
+            Element tag = new Element("PartyTaxScheme")
+                    .addContent(companyID)
+                    .addContent(taxScheme);
 
             taxRepresentativeParty.addContent(tag);
 
+        }
+
+        if(!taxRepresentativeParty.getChildren().isEmpty()) {
+            root.addContent( taxRepresentativeParty );
         }
 
 

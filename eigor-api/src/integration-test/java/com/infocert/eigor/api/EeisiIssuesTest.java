@@ -55,7 +55,7 @@ public class EeisiIssuesTest extends AbstractIssueTest {
 
         BG0011SellerTaxRepresentativeParty bg11 = conversionResult.getCenInvoice().getBG0011SellerTaxRepresentativeParty(0);
 
-        // verify BG11 elements
+        // verify some BG11 elements
         {
             assertThat(
                     msg,
@@ -64,6 +64,28 @@ public class EeisiIssuesTest extends AbstractIssueTest {
             );
             XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyName/cbc:Name/text()");
             assertSameXpathStirngEvaluation(msg, xpath, "Tax representative name", sourceDom, targetDom);
+        }
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg11.getBG0012SellerTaxRepresentativePostalAddress(0).getBT0064TaxRepresentativeAddressLine1(0).getValue() ),
+                    equalTo("Street tax representative")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PostalAddress/cbc:StreetName/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "Street tax representative", sourceDom, targetDom);
+        }
+        {
+            assertThat(
+                    msg,
+                    evalExpression(()->bg11.getBT0063SellerTaxRepresentativeVatIdentifier(0).getValue().getIdentifier() ),
+                    equalTo("IT343563160B01")
+            );
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyTaxScheme/cbc:CompanyID/text()");
+            assertSameXpathStirngEvaluation(msg, xpath, "IT343563160B01", sourceDom, targetDom);
+        }
+        {
+            XPathExpression xpath = ublXpath().compile("(//cac:TaxRepresentativeParty)[1]/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()");
+            assertThat( xpath.evaluate(targetDom), equalTo( "VAT" ) );
         }
 
     }
