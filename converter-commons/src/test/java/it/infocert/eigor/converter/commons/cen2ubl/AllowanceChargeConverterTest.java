@@ -51,7 +51,7 @@ public class AllowanceChargeConverterTest {
         assertThat(baseAmount.getText(), is("34.56"));
 
         Element multiplierFactorNumeric = allowanceCharge.getChild("MultiplierFactorNumeric");
-        assertThat(multiplierFactorNumeric.getText(), is("0.57"));
+        assertThat(multiplierFactorNumeric.getText(), is("0.5700"));
 
         Element allowanceChargeReason = allowanceCharge.getChild("AllowanceChargeReason");
         assertThat(allowanceChargeReason.getText(), is("BT-104"));
