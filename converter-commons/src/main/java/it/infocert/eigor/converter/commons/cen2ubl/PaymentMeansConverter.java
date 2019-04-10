@@ -14,13 +14,10 @@ import it.infocert.eigor.model.core.enums.Untdid4461PaymentMeansCode;
 import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class PaymentMeansConverter implements CustomMapping<Document> {
-    private static final Logger log = LoggerFactory.getLogger(PaymentMeansConverter.class);
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -68,8 +65,26 @@ public class PaymentMeansConverter implements CustomMapping<Document> {
                     paymentID.setText(bt0083.getValue());
                     paymentMeans.addContent(paymentID);
                 }
+
+                if (!bg0016.getBG0018PaymentCardInformation().isEmpty()) {
+                    BG0018PaymentCardInformation bg0018 = bg0016.getBG0018PaymentCardInformation(0);
+                    Element cardAccount = new Element("CardAccount");
+                    if (!bg0018.getBT0087PaymentCardPrimaryAccountNumber().isEmpty()) {
+                        Element primaryAccountNumberID = new Element("PrimaryAccountNumberID");
+                        primaryAccountNumberID.setText(bg0018.getBT0087PaymentCardPrimaryAccountNumber(0).getValue());
+                        cardAccount.addContent(primaryAccountNumberID);
+                    }
+                    Element networkID = new Element("NetworkID");
+                    networkID.setText("mandatory network id");
+                    cardAccount.addContent(networkID);
+                    if (!bg0018.getBT0088PaymentCardHolderName().isEmpty()) {
+                        Element holderName = new Element("HolderName");
+                        holderName.setText(bg0018.getBT0088PaymentCardHolderName(0).getValue());
+                        cardAccount.addContent(holderName);
+                    }
+                    paymentMeans.addContent(cardAccount);
+                }
             }
         }
     }
-
 }

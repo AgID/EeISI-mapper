@@ -146,16 +146,17 @@ public class PaymentTermsConverter extends CustomConverterUtils implements Custo
             specifiedTradeSettlementHeaderMonetarySummation.addContent(taxBasisTotalAmount);
 
 //          <xsd:element name="TaxTotalAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
-            // TODO: This part that depends on the bt0060 seems to me a little weird.
             Element taxTotalAmount = new Element("TaxTotalAmount", ramNs);
+            taxTotalAmount.setText(bt110TotalTaxAmount.setScale(2, RoundingMode.HALF_UP).toString());
+            taxTotalAmount.setAttribute("currencyID", bt0005OrNull);
+            specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
+
             if (bt0006OrNull != null) {
+                taxTotalAmount = new Element("TaxTotalAmount", ramNs);
                 taxTotalAmount.setText(bt111OrNull.toString());
                 taxTotalAmount.setAttribute("currencyID", bt0006OrNull);
-            }else{
-                taxTotalAmount.setText(bt110TotalTaxAmount.setScale(2, RoundingMode.HALF_UP).toString());
-                taxTotalAmount.setAttribute("currencyID", bt0005OrNull);
+                specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
             }
-            specifiedTradeSettlementHeaderMonetarySummation.addContent(taxTotalAmount);
 
 //			<xsd:element name="RoundingAmount" type="udt:AmountType" minOccurs="0" maxOccurs="unbounded"/>
             Element roundingAmount = new Element("RoundingAmount", ramNs);
