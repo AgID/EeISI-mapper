@@ -32,11 +32,11 @@ class AttachmentUtil {
         AllegatiType allegato;
         if (allegati.isEmpty()) {
             allegato = new AllegatiType();
-            allegato.setNomeAttachment("not-mapped-values");
+            allegato.setNomeAttachment("not-mapped-values.txt");
             allegato.setFormatoAttachment("txt");
             allegati.add(allegato);
         } else {
-            allegato = allegati.stream().filter(allegato1 -> "not-mapped-values".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
+            allegato = allegati.stream().filter(allegato1 -> "not-mapped-values.txt".equals(allegato1.getNomeAttachment())).findFirst().orElse(null);
             content = new String(allegato.getAttachment());
         }
         final String updated = "".equalsIgnoreCase(content) ? input : content + System.lineSeparator() + input;
