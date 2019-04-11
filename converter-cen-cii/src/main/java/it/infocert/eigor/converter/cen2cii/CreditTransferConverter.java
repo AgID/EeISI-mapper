@@ -100,10 +100,13 @@ public class CreditTransferConverter extends CustomConverterUtils implements Cus
 
                 if (!bg0010.getBT0060PayeeIdentifierAndSchemeIdentifier().isEmpty()) {
                     Identifier bt0060 = bg0010.getBT0060PayeeIdentifierAndSchemeIdentifier(0).getValue();
-                    Element id = new Element("ID", ramNs); //maybe GlobalID?
                     String schema = bt0060.getIdentificationSchema();
+                    Element id;
                     if (schema != null) {
+                        id = new Element("GlobalID", ramNs);
                         id.setAttribute("schemeID", schema);
+                    } else {
+                        id = new Element("ID", ramNs);
                     }
                     id.setText(bt0060.getIdentifier());
                     payeeTradeParty.addContent(id);

@@ -39,6 +39,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
         TypeConverter<BigDecimal, String> bdStrConverter = BigDecimalToStringConverter.newConverter("#0.00");
+        TypeConverter<BigDecimal, String> percentageConverter = BigDecimalToStringConverter.newConverter("#0.0000");
 
         Iso4217CurrenciesFundsCodes currencyCode = null;
         if (!cenInvoice.getBT0005InvoiceCurrencyCode().isEmpty()) {
@@ -74,7 +75,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     BT0094DocumentLevelAllowancePercentage bt0094 = bg0020.getBT0094DocumentLevelAllowancePercentage(0);
                     Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
                     try {
-                        multiplierFactorNumeric.setText(bdStrConverter.convert(bt0094.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
+                        multiplierFactorNumeric.setText(percentageConverter.convert(bt0094.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
                         allowanceCharge.addContent(multiplierFactorNumeric);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(
@@ -209,7 +210,7 @@ public class AllowanceChargeConverter implements CustomMapping<Document> {
                     BT0101DocumentLevelChargePercentage bt0101 = bg0021.getBT0101DocumentLevelChargePercentage(0);
                     Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
                     try {
-                        multiplierFactorNumeric.setText(bdStrConverter.convert(bt0101.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
+                        multiplierFactorNumeric.setText(percentageConverter.convert(bt0101.getValue().divide(BigDecimal.valueOf(100), BigDecimal.ROUND_HALF_UP)));
                         allowanceCharge.addContent(multiplierFactorNumeric);
                     } catch (ConversionFailedException e) {
                         errors.add(ConversionIssue.newError(

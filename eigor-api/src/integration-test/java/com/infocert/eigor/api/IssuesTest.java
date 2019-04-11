@@ -126,7 +126,7 @@ public class IssuesTest extends AbstractIssueTest {
         Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "text/csv", evaluateAttachmentMimeCode);
 
         assertTrue(evaluateAttachmentFileName != null && !evaluateAttachmentFileName.trim().isEmpty());
-        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values", evaluateAttachmentFileName);
+        Assert.assertEquals(conversion.buildMsgForFailedAssertion(convert, new KeepAll(), null), "not-mapped-values.txt", evaluateAttachmentFileName);
     }
 
     @Test

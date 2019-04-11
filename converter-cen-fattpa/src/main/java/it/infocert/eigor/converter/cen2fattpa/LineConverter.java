@@ -627,36 +627,8 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                         ));
                     }
 
-
-                    // FIXME PrezzoTotale is defined as (BT-146*BT-129/BT-149)-SUM(BT-136)+SUM(BT-141)
-
                     final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.abs().divide(baseQuantity.abs(), RoundingMode.HALF_UP));
-
-                    //.subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
-
-                    // FIXME  but only matches provided excel calculation like so
-
-//                    final BigDecimal prezzoTotale = itemNetPrice.multiply(quantity.divide(baseQuantity, RoundingMode.HALF_UP));
-//
                     dettaglioLinee.setPrezzoTotale(prezzoTotale.setScale(8, RoundingMode.HALF_UP));
-
-
-//                    if (!invoice.getBG0023VatBreakdown().isEmpty()) {
-//                        BG0023VatBreakdown bg0023VatBreakdown = invoice.getBG0023VatBreakdown(1);
-//                        if (!bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount().isEmpty()) {
-//                            BigDecimal bt0116 = bg0023VatBreakdown.getBT0116VatCategoryTaxableAmount(0).getValue();
-//                            BigDecimal total = itemNetPrice.multiply(
-//                                    quantity.divide(baseQuantity, RoundingMode.HALF_UP))
-//                                    .subtract(getSumOfAllowancesForLine(invoiceLine)).add(getSumOfChargesForLine(invoiceLine));
-//
-//                            BigDecimal roundingDifference = bt0116.subtract(total);
-//                        }
-//                    }
-
-//                    if (!invoiceLine.getBT0131InvoiceLineNetAmount().isEmpty()) {
-//                        final BigDecimal value = invoiceLine.getBT0131InvoiceLineNetAmount(0).getValue();
-//                        dettaglioLinee.setPrezzoTotale(value.setScale(2, RoundingMode.HALF_UP));
-//                    }
 
                     if (!priceDetails.getBT0147ItemPriceDiscount().isEmpty()) {
                         final BigDecimal itemPriceDiscount = priceDetails.getBT0147ItemPriceDiscount(0).getValue();
@@ -881,6 +853,12 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                             }
                         }
 
+                        BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
+                        if (!lineVatInformation.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
+                            Untdid5305DutyTaxFeeCategories category = lineVatInformation.getBT0151InvoicedItemVatCategoryCode(0).getValue();
+                            mapTaxCategory(lineaSconto, category);
+                        }
+
                         datiBeniServizi.getDettaglioLinee().add(lineaSconto);
                     }
                 }
@@ -912,6 +890,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                                 mapTaxCategory(lineaMaggiorazione, category);
                             }
                         }
+
+                        BG0030LineVatInformation lineVatInformation = invoiceLine.getBG0030LineVatInformation(0);
+                        if (!lineVatInformation.getBT0151InvoicedItemVatCategoryCode().isEmpty()) {
+                            Untdid5305DutyTaxFeeCategories category = lineVatInformation.getBT0151InvoicedItemVatCategoryCode(0).getValue();
+                            mapTaxCategory(lineaMaggiorazione, category);
+                        }
+
                         datiBeniServizi.getDettaglioLinee().add(lineaMaggiorazione);
                     }
                 }

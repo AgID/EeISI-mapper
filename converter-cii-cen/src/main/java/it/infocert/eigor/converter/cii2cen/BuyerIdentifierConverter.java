@@ -10,6 +10,7 @@ import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 import it.infocert.eigor.model.core.model.BT0046BuyerIdentifierAndSchemeIdentifier;
 import it.infocert.eigor.model.core.model.BT0048BuyerVatIdentifier;
+import java.util.ArrayList;
 import java.util.List;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -48,8 +49,8 @@ public class BuyerIdentifierConverter extends CustomConverterUtils implements Cu
                             bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(globalID.getText()));
                         }
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
-                    }
-                    else if (id != null){
+
+                    } else if (id != null){
                         bt0046 = new BT0046BuyerIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
                         invoice.getBG0007Buyer(0).getBT0046BuyerIdentifierAndSchemeIdentifier().add(bt0046);
                     }

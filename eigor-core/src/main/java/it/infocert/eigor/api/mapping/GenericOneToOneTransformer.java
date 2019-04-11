@@ -34,7 +34,7 @@ public class GenericOneToOneTransformer extends GenericTransformer {
         this.xPath = xPath;
         this.cenPath = cenPath;
         this.callingLocation = callingLocation;
-        log = LoggerFactory.getLogger(GenericOneToOneTransformer.class);
+        log = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
@@ -48,7 +48,7 @@ public class GenericOneToOneTransformer extends GenericTransformer {
 
     public void transformCenToXml(BG0000Invoice invoice, Document document, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
 
-        final String logPrefix = "(" + cenPath + " - " + xPath + ") ";
+        final String logPrefix = "(" + cenPath + " => " + xPath + ") ";
 
         log.trace("{} resolving", logPrefix);
         List<BTBG> bts = getAllBTs(cenPath, invoice, errors);
@@ -80,9 +80,9 @@ public class GenericOneToOneTransformer extends GenericTransformer {
      * @throws SyntaxErrorInInvoiceFormatException
      */
     public void transformXmlToCen(Document document, BG0000Invoice invoice, final List<IConversionIssue> errors) throws SyntaxErrorInInvoiceFormatException {
-        final String logPrefix = "(" + xPath + " - " + cenPath + ") ";
+        final String logPrefix = "(" + xPath + " => " + cenPath + ") :";
 
-        log.trace("{} resolving", logPrefix);
+        log.trace("{} resolving BT class constructor.", logPrefix);
         Class<? extends BTBG> btBgByName = invoiceUtils.getBtBgByName(cenPath.substring(cenPath.lastIndexOf('/')+1));
         Constructor<?> cons = null;
         for (Constructor<?> constructor : btBgByName.getConstructors()) {

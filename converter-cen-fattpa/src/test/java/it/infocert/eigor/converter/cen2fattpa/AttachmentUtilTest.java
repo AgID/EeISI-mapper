@@ -25,7 +25,7 @@ public class AttachmentUtilTest {
         fatturaElettronicaBody = new FatturaElettronicaBodyType();
         final AllegatiType allegato = new AllegatiType();
         allegato.setFormatoAttachment("txt");
-        allegato.setNomeAttachment("not-mapped-values");
+        allegato.setNomeAttachment("not-mapped-values.txt");
         allegato.setAttachment(startingText.getBytes(StandardCharsets.UTF_8));
         fatturaElettronicaBody.getAllegati().add(allegato);
     }

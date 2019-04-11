@@ -44,7 +44,7 @@ public class PayeeIdentifierConverter extends CustomConverterUtils implements Cu
                         }
                         invoice.getBG0010Payee(0).getBT0060PayeeIdentifierAndSchemeIdentifier().add(bt0060);
                     } else if (id != null) {
-                        BT0060PayeeIdentifierAndSchemeIdentifier bt0060 = new BT0060PayeeIdentifierAndSchemeIdentifier(new Identifier(id.getAttributeValue("schemeID"), id.getText()));
+                        BT0060PayeeIdentifierAndSchemeIdentifier bt0060 = new BT0060PayeeIdentifierAndSchemeIdentifier(new Identifier(id.getText()));
                         invoice.getBG0010Payee(0).getBT0060PayeeIdentifierAndSchemeIdentifier().add(bt0060);
                     }
                 }

@@ -28,6 +28,7 @@ public class SchematronValidator implements IXMLValidator {
     private final ErrorCode.Location callingLocation;
     private ISchematronResource schematronResource;
     private static final Logger log = LoggerFactory.getLogger(SchematronValidator.class);
+    private ErrorCode.Action defaultAction = ErrorCode.Action.SCH_VALIDATION;
 
     public SchematronValidator(Resource schemaResource, boolean isXSLT, boolean xsltFileUpdate, ErrorCode.Location callingLocation) {
         this.callingLocation = callingLocation;
@@ -37,7 +38,7 @@ public class SchematronValidator implements IXMLValidator {
         File asFile = null;
         try {
             asFile = schemaResource.getFile();
-        }catch(Exception e){
+        } catch (Exception e) {
             canBeReadAsFile = false;
         }
 
@@ -47,7 +48,7 @@ public class SchematronValidator implements IXMLValidator {
             checkArgument(schemaResource != null, "Provide a Schematron file.");
 
             if (isXSLT) {
-                if (asFile!=null && xsltFileUpdate) {
+                if (asFile != null && xsltFileUpdate) {
                     // we check if relative path ../schematron contains newer .sch files
                     SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
                             asFile.getParent(),
@@ -59,17 +60,17 @@ public class SchematronValidator implements IXMLValidator {
                 }
                 checkArgument(schemaResource.exists(), "Schematron XSLT file '%s' (resolved to absolute path '%s') does not exist.", schemaResource.getURI(), canBeReadAsFile ? asFile.getAbsolutePath() : "N/A");
 
-                if(canBeReadAsFile) {
+                if (canBeReadAsFile) {
                     schematronResource = SchematronResourceXSLT.fromFile(asFile);
-                }else{
-                    schematronResource = SchematronResourceXSLT.fromClassPath( ((ClassPathResource) schemaResource).getPath() );
+                } else {
+                    schematronResource = SchematronResourceXSLT.fromClassPath(((ClassPathResource) schemaResource).getPath());
                 }
             } else {
                 checkArgument(schemaResource.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaResource.getURI(), canBeReadAsFile ? asFile.getAbsolutePath() : "N/A");
-                if(asFile!=null) {
+                if (asFile != null) {
                     schematronResource = SchematronResourceSCH.fromFile(asFile);
-                }else{
-                    schematronResource = SchematronResourceSCH.fromClassPath( ((ClassPathResource) schemaResource).getPath() );
+                } else {
+                    schematronResource = SchematronResourceSCH.fromClassPath(((ClassPathResource) schemaResource).getPath());
                 }
 
             }
@@ -85,41 +86,6 @@ public class SchematronValidator implements IXMLValidator {
         }
     }
 
-    //    public SchematronValidator(File schemaFile, boolean isXSLT, boolean xsltFileUpdate, ErrorCode.Location callingLocation) {
-//        this.callingLocation = callingLocation;
-//
-//        long delta = System.currentTimeMillis();
-//        try {
-//            checkArgument(schemaFile != null, "Provide a Schematron file.");
-//
-//            if (isXSLT) {
-//                if (xsltFileUpdate) {
-//                    // we check if relative path ../schematron contains newer .sch files
-//                    SchematronXSLTFileUpdater xsltFileUpdater = new SchematronXSLTFileUpdater(
-//                            schemaFile.getParent(),
-//                            schemaFile.getAbsoluteFile().getParentFile().getParent() + "/schematron"
-//                    );
-//
-//                    int count = xsltFileUpdater.updateXSLTfromSch();
-//                    log.info(count + " XSLT files were updated.");
-//                }
-//                checkArgument(schemaFile.exists(), "Schematron XSLT file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
-//                schematronResource = SchematronResourceXSLT.fromFile(schemaFile);
-//            } else {
-//                checkArgument(schemaFile.exists(), "Schematron file '%s' (resolved to absolute path '%s') does not exist.", schemaFile.getPath(), schemaFile.getAbsolutePath());
-//                schematronResource = SchematronResourceSCH.fromFile(schemaFile);
-//            }
-//            if (!schematronResource.isValidSchematron())
-//                throw new IllegalArgumentException(
-//                        String.format("Invalid %s Schematron file '%s' (resolved to absolute path '%s').", isXSLT ? "XSLT" : "SCH", schemaFile, schemaFile.getAbsolutePath())
-//                );
-//        } finally {
-//            delta = System.currentTimeMillis() - delta;
-//            log.info(MarkerFactory.getMarker("PERFORMANCE"), "Loaded '{}' in {}ms.", schemaFile.getAbsolutePath(), delta);
-//        }
-//
-//    }
-
     @Override
     public List<IConversionIssue> validate(byte[] xml) {
         List<IConversionIssue> errors = new ArrayList<>();
@@ -131,7 +97,7 @@ public class SchematronValidator implements IXMLValidator {
         } catch (Exception e) {
             errors.add(ConversionIssue.newWarning(e, "Error during Schematron Validation.",
                     callingLocation,
-                    ErrorCode.Action.SCH_VALIDATION,
+                    defaultAction,
                     ErrorCode.Error.INVALID,
                     Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
             return errors;
@@ -148,7 +114,7 @@ public class SchematronValidator implements IXMLValidator {
             } catch (Exception e) {
                 errors.add(ConversionIssue.newWarning(e, "Error during Schematron result registration.",
                         callingLocation,
-                        ErrorCode.Action.SCH_VALIDATION,
+                        defaultAction,
                         ErrorCode.Error.INVALID,
                         Pair.of(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())));
                 return errors;
@@ -156,7 +122,7 @@ public class SchematronValidator implements IXMLValidator {
         } else {
             final String message = "Schematron parsing failed. File: " + schematronResource.getID();
             log.error(message);
-            errors.add(ConversionIssue.newError(new EigorRuntimeException(message, callingLocation, ErrorCode.Action.SCH_VALIDATION, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, schematronResource.getID()))));
+            errors.add(ConversionIssue.newError(new EigorRuntimeException(message, callingLocation, defaultAction, ErrorCode.Error.INVALID, Pair.of(ErrorMessage.OFFENDINGITEM_PARAM, schematronResource.getID()))));
         }
 
 
@@ -177,7 +143,7 @@ public class SchematronValidator implements IXMLValidator {
                                         offendingElement)
                                 )
                                 .location(callingLocation)
-                                .action(ErrorCode.Action.SCH_VALIDATION)
+                                .action(defaultAction)
                                 .error(ErrorCode.Error.INVALID)
                                 .build(),
                         cause
@@ -191,5 +157,9 @@ public class SchematronValidator implements IXMLValidator {
             }
         }
         return errors;
+    }
+
+    public void setDefaultAction(ErrorCode.Action defaultAction) {
+        this.defaultAction = defaultAction;
     }
 }

@@ -3,6 +3,7 @@ package it.infocert.eigor.converter.cen2cii;
 import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.FileReference;
 import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.model.*;
@@ -251,13 +252,14 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
 
             if (!bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier().isEmpty()) {
                 Identifier bt0046 = bg0007.getBT0046BuyerIdentifierAndSchemeIdentifier(0).getValue();
-                Element id = new Element("ID", ramNs); // maybe GlobalID ?
-                id.setText(bt0046.getIdentifier());
+                Element id;
                 if (bt0046.getIdentificationSchema() != null) {
+                    id = new Element("GlobalID", ramNs);
                     id.setAttribute("schemeID", bt0046.getIdentificationSchema());
                 } else {
-                    id.setAttribute("schemeID", "");
+                    id = new Element("ID", ramNs);
                 }
+                id.setText(bt0046.getIdentifier());
                 buyerTradeParty.addContent(id);
             }
 
@@ -451,11 +453,14 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             if (!bg0004.getBT0029SellerIdentifierAndSchemeIdentifier().isEmpty()) {
                 for (BT0029SellerIdentifierAndSchemeIdentifier bt0029 : bg0004.getBT0029SellerIdentifierAndSchemeIdentifier()) {
                     Identifier identifier = bt0029.getValue();
-                    Element id = new Element("ID", ramNs);
-                    id.setText(identifier.getIdentifier());
+                    Element id;
                     if (identifier.getIdentificationSchema() != null) {
+                        id = new Element("GlobalID", ramNs);
                         id.setAttribute("schemeID", identifier.getIdentificationSchema());
+                    } else {
+                        id = new Element("ID", ramNs);
                     }
+                    id.setText(identifier.getIdentifier());
                     sellerTradeParty.addContent(id);
                 }
 
@@ -620,16 +625,17 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
     }
 
     private enum Source {
-        BT17, BT18, BT122
+        BT17, BT122
     }
 
     private void newAdditionalReferencedDocument(BG0000Invoice invoice, List<IConversionIssue> errors, ErrorCode.Location callingLocation, Element rootElement, Namespace ramNs, Element applicableHeaderTradeAgreement) {
 
+
         for (BG0024AdditionalSupportingDocuments bg0024 : invoice.getBG0024AdditionalSupportingDocuments()) {
 
+            Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", rootElement.getNamespace("ram"));
             Source source = null;
 
-            Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", rootElement.getNamespace("ram"));
 
             // <xsd:complexType name="ReferencedDocumentType">
 
@@ -670,11 +676,6 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
                 typeCode = new Element("TypeCode", ramNs);
                 typeCode.setText("916");
                 source = Source.BT122;
-            } else if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
-                final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
-                typeCode = new Element("TypeCode", ramNs);
-                typeCode.setText("130");
-                source = Source.BT18;
             }
             if(typeCode!=null) additionalReferencedDocument.addContent(typeCode);
 
@@ -713,17 +714,6 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:element name="Information" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
 
             // <xsd:element name="ReferenceTypeCode" type="qdt:ReferenceCodeType" minOccurs="0"/>
-            if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty() && source==Source.BT18) {
-                final BT0018InvoicedObjectIdentifierAndSchemeIdentifier bt0018 = invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0);
-
-                String identificationSchema = bt0018.getValue().getIdentificationSchema();
-                if (identificationSchema != null) {
-                    Element referenceTypeCode = new Element("ReferenceTypeCode", ramNs);
-                    referenceTypeCode.setText(identificationSchema);
-                    additionalReferencedDocument.addContent(referenceTypeCode);
-                }
-            }
-
             // <xsd:element name="SectionName" type="udt:TextType" minOccurs="0" maxOccurs="unbounded"/>
             // <xsd:element name="PreviousRevisionID" type="udt:IDType" minOccurs="0" maxOccurs="unbounded"/>
             // <xsd:element name="FormattedIssueDateTime" type="qdt:FormattedDateTimeType" minOccurs="0"/>
@@ -731,6 +721,24 @@ public class NewApplicableHeaderTradeAgreementConverter extends CustomConverterU
             // <xsd:element name="IssuerTradeParty" type="ram:TradePartyType" minOccurs="0"/>
             // <xsd:element name="AttachedSpecifiedBinaryFile" type="ram:SpecifiedBinaryFileType" minOccurs="0" maxOccurs="unbounded"/>
 
+            applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
+        }
+
+        // BT-18 special case
+        if (!invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier().isEmpty()) {
+            Element additionalReferencedDocument = new Element("AdditionalReferencedDocument", rootElement.getNamespace("ram"));
+            final Identifier bt0018 = InvoiceUtils.evalExpression( () -> invoice.getBT0018InvoicedObjectIdentifierAndSchemeIdentifier(0).getValue() );
+            additionalReferencedDocument
+                    .addContent(
+                            new Element("IssuerAssignedID", ramNs).setText(bt0018.getIdentifier())
+                    )
+                    .addContent(
+                            new Element("TypeCode", ramNs).setText("130")
+                    )
+                    .addContent(
+                        new Element("ReferenceTypeCode", ramNs).setText(bt0018.getIdentificationSchema())
+                    )
+            ;
             applicableHeaderTradeAgreement.addContent(additionalReferencedDocument);
         }
     }
