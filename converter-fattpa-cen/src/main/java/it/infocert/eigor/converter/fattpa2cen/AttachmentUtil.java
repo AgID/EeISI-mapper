@@ -27,7 +27,7 @@ public class AttachmentUtil {
 
     private final static Logger log = LoggerFactory.getLogger(AttachmentUtil.class);
 
-    private final static String NOT_MAPPED_FILENAME = "not-mapped-values";
+    private final static String NOT_MAPPED_FILENAME = "not-mapped-values.txt";
 
     private final File workdir;
 

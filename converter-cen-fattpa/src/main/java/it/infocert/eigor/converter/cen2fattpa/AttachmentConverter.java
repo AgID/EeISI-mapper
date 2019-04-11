@@ -69,7 +69,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
 
 
     private final InvoiceUtils invoiceUtils = new InvoiceUtils(new JavaReflections());
-    private final String attachmentName = "not-mapped-values";
+    private final String attachmentName = "not-mapped-values.txt";
 
     @Override
     public void map(BG0000Invoice invoice, FatturaElettronicaType fatturaElettronica, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
@@ -131,7 +131,7 @@ public class AttachmentConverter implements CustomMapping<FatturaElettronicaType
                 allegato.setAttachment(attachment.getBytes());
                 allegati.add(allegato);
             } else {
-                AllegatiType unmapped = allegati.stream() .filter(allegato -> "not-mapped-values".equals(allegato.getNomeAttachment())).findFirst().orElse(null);
+                AllegatiType unmapped = allegati.stream() .filter(allegato -> "not-mapped-values.txt".equals(allegato.getNomeAttachment())).findFirst().orElse(null);
                 unmapped.setAttachment(attachment.getBytes());
             }
         }
