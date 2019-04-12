@@ -29,27 +29,45 @@ public class DeliveryConverter implements CustomMapping<Document> {
         BG0013DeliveryInformation bg13 = evalExpression(() -> invoice.getBG0013DeliveryInformation(0));
         BG0015DeliverToAddress bg15 = evalExpression(() -> bg13.getBG0015DeliverToAddress(0));
 
-        if(bg13 == null) return;
+        if (bg13 == null) return;
 
         Element deliveryTag = new Element("Delivery");
 
         // <cbc:ActualDeliveryDate>2017-10-15</cbc:ActualDeliveryDate><!--BT-72-->
         LocalDate bt72 = evalExpression(() -> bg13.getBT0072ActualDeliveryDate(0).getValue());
-        if(bt72!=null) {
+        if (bt72 != null) {
             deliveryTag.addContent(
-                new Element("ActualDeliveryDate")
-                        .addContent(bt72.toString())
+                    new Element("ActualDeliveryDate")
+                            .addContent(bt72.toString())
             );
         }
 
         // <cac:DeliveryLocation> ... </cac:DeliveryLocation>
         Element deliveryLocationTag = mapDeliveryLocationOrNull(bg13, bg15);
-        if(deliveryLocationTag!=null) {
+        if (deliveryLocationTag != null) {
             deliveryTag.addContent(deliveryLocationTag);
         }
 
-        if(!deliveryTag.getChildren().isEmpty()) {
-            root.addContent( deliveryTag );
+        // <cac:DeliveryParty>
+        //     <cac:PartyName>
+        //         <cbc:Name>Delivery party name</cbc:Name><!--BT-70-->
+        //     </cac:PartyName>
+        // </cac:DeliveryParty>
+        {
+            String bt70 = evalExpression(() -> bg13.getBT0070DeliverToPartyName(0).getValue());
+            if (bt70 != null) {
+                deliveryTag.addContent(
+                        new Element("DeliveryParty")
+                                .addContent(new Element("PartyName")
+                                        .addContent(new Element("Name").addContent(bt70)
+                                        )
+                                )
+                );
+            }
+        }
+
+        if (!deliveryTag.getChildren().isEmpty()) {
+            root.addContent(deliveryTag);
         }
 
     }
@@ -76,9 +94,9 @@ public class DeliveryConverter implements CustomMapping<Document> {
 
         // <cbc:ID schemeID="0090">6754238987648</cbc:ID><!--BT-71, BT-71-1-->
         Identifier bt71 = evalExpression(() -> bg13.getBT0071DeliverToLocationIdentifierAndSchemeIdentifier(0).getValue());
-        if(bt71!=null) {
+        if (bt71 != null) {
             Element id = new Element("ID").addContent(bt71.getIdentifier());
-            if(bt71.getIdentificationSchema()!=null) {
+            if (bt71.getIdentificationSchema() != null) {
                 id.setAttribute("schemeID", bt71.getIdentificationSchema());
             }
             deliveryLocationTag.addContent(id);
@@ -123,7 +141,7 @@ public class DeliveryConverter implements CustomMapping<Document> {
 
         // <cbc:PostalZone>34100</cbc:PostalZone><!--BT-78-->
         {
-            String bt78 = evalExpression(() -> bg15.getBT0078DeliverToPostCode(0).getValue() );
+            String bt78 = evalExpression(() -> bg15.getBT0078DeliverToPostCode(0).getValue());
             if (bt78 != null) {
                 addressTag.addContent(
                         new Element("PostalZone")
@@ -134,7 +152,7 @@ public class DeliveryConverter implements CustomMapping<Document> {
 
         // <cbc:CountrySubentity>TN</cbc:CountrySubentity><!--BT-79-->
         {
-            String bt79 = evalExpression(() -> bg15.getBT0079DeliverToCountrySubdivision(0).getValue() );
+            String bt79 = evalExpression(() -> bg15.getBT0079DeliverToCountrySubdivision(0).getValue());
             if (bt79 != null) {
                 addressTag.addContent(
                         new Element("CountrySubentity")
@@ -147,11 +165,11 @@ public class DeliveryConverter implements CustomMapping<Document> {
         //     <cbc:Line>Delivery Line</cbc:Line><!--BT-165-->
         // </cac:AddressLine>
         {
-            String bt165 = evalExpression(() -> bg15.getBT0165DeliverToAddressLine3 (0).getValue() );
+            String bt165 = evalExpression(() -> bg15.getBT0165DeliverToAddressLine3(0).getValue());
             if (bt165 != null) {
                 addressTag.addContent(
                         new Element("AddressLine")
-                                .addContent( new Element("Line").addContent(bt165) )
+                                .addContent(new Element("Line").addContent(bt165))
                 );
             }
         }
@@ -165,14 +183,14 @@ public class DeliveryConverter implements CustomMapping<Document> {
             if (bt80 != null) {
                 addressTag.addContent(
                         new Element("Country")
-                                .addContent( new Element("IdentificationCode").addContent(bt80.getIso2charCode()) )
+                                .addContent(new Element("IdentificationCode").addContent(bt80.getIso2charCode()))
                 );
             }
         }
 
-        if(!addressTag.getChildren().isEmpty()) {
-            deliveryLocationTag.addContent( addressTag );
-        }else{
+        if (!addressTag.getChildren().isEmpty()) {
+            deliveryLocationTag.addContent(addressTag);
+        } else {
             deliveryLocationTag = null;
         }
 
