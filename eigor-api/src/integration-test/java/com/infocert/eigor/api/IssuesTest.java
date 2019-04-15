@@ -573,4 +573,36 @@ public class IssuesTest extends AbstractIssueTest {
         String joinedTargetFormats = String.join(", ", supportedTargetFormatList);
         assertEquals(joinedTargetFormats, "cii, fatturapa, peppolbis, peppolcn, ubl, ublcn, xmlcen");
     }
+
+    @Test
+    public void issue229CenToPeppolbis() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-229-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolbis", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
+
+    @Test
+    public void issue229CenToPeppolcn() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-229-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
+
+    @Test
+    public void issue229CenToUbl() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-229-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ubl", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
+
+    @Test
+    public void issue229CenToUblcn() throws Exception {
+        InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-229-xmlcen.xml");
+        ConversionResult<byte[]> convert = api.convert("xmlcen", "ublcn", inputFatturaCenXml);
+        String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
+        assertEquals("456", evaluate);
+    }
 }
