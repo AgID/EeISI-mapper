@@ -13,9 +13,6 @@ import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.converter.cen2fattpa.Cen2FattPA;
 import it.infocert.eigor.converter.cii2cen.Cii2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
-import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
-import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
-import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -121,10 +118,6 @@ public class LowLevelAPIUsage {
         cardinalityRules.load(checkNotNull( getClass().getResourceAsStream("/cardinality.properties") ));
         Properties cardinalityRules2 = new Properties();
         cardinalityRules2.load(checkNotNull( getClass().getResourceAsStream("/rules.properties") ));
-        RuleRepository ruleRepository = new CompositeRuleRepository(
-                new CardinalityRulesRepository(cardinalityRules),
-                new IntegrityRulesRepository(cardinalityRules2)
-        );
 
         // prepare the set of conversions to be supported by the api
         ConversionRepository conversionRepository =
@@ -145,7 +138,6 @@ public class LowLevelAPIUsage {
         // this is, finally, the actual conversion
         InputStream invoice = new ByteArrayInputStream( "<invoice>xml</invoice>".getBytes() );
         BinaryConversionResult outcome = new ObservableConversion(
-                ruleRepository,
                 toCen,
                 fromCen,
                 invoice,
@@ -260,16 +252,6 @@ public class LowLevelAPIUsage {
                     .copyFrom("/converterdata/" + pathSegment);
         }
 
-        // set up the rule repository
-        Properties cardinalityRules = new Properties();
-        cardinalityRules.load(checkNotNull( getClass().getResourceAsStream("/cardinality.properties") ));
-        Properties cardinalityRules2 = new Properties();
-        cardinalityRules2.load(checkNotNull( getClass().getResourceAsStream("/rules.properties") ));
-        final RuleRepository ruleRepository = new CompositeRuleRepository(
-                new CardinalityRulesRepository(cardinalityRules),
-                new IntegrityRulesRepository(cardinalityRules2)
-        );
-
         // prepare the set of conversions to be supported by the api
         ConversionRepository conversionRepository =
                 new ConversionRepository.Builder()
@@ -302,7 +284,6 @@ public class LowLevelAPIUsage {
                         assertThat( "Could not be null.", invoiceStream, notNullValue() );
 
                         BinaryConversionResult outcome = new ObservableConversion(
-                                ruleRepository,
                                 toCen,
                                 fromCen,
                                 invoiceStream,

@@ -39,16 +39,6 @@ class ConsoleOutputConversionCallback extends AbstractConversionCallback {
         out.println("CEN rules validation completed successfully.");
     }
 
-    @Override public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
-        if (ctx.getRuleReport().hasFailures()) {
-            if (ctx.isForceConversion()) {
-                out.println("CEN rules validation has encountered errors but will continue anyway.");
-            } else {
-                out.println("CEN rules validation has encountered errors and will abort.");
-            }
-        }
-    }
-
     @Override public void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception {
         out.println("Conversion from CEN completed successfully.");
     }

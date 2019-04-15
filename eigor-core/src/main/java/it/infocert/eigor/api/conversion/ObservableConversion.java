@@ -1,11 +1,7 @@
 package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.api.*;
-import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.model.core.rules.RuleOutcome;
-import it.infocert.eigor.rules.RuleOutcomeAsConversionIssueAdapter;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +12,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,7 +41,6 @@ public class ObservableConversion extends AbstractObservable {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * @param ruleRepository
      * @param toCenConversion
      * @param fromCenConversion
      * @param invoiceInSourceFormat
@@ -54,9 +48,8 @@ public class ObservableConversion extends AbstractObservable {
      * @param invoiceFileName
      * @param callbacks
      */
-    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, ConversionCallback... callbacks) {
+    public ObservableConversion(ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, ConversionCallback... callbacks) {
         this(
-                ruleRepository,
                 toCenConversion,
                 fromCenConversion,
                 invoiceInSourceFormat,
@@ -66,7 +59,6 @@ public class ObservableConversion extends AbstractObservable {
     }
 
     /**
-     * @param ruleRepository
      * @param toCenConversion
      * @param fromCenConversion
      * @param invoiceInSourceFormat
@@ -74,8 +66,8 @@ public class ObservableConversion extends AbstractObservable {
      * @param invoiceFileName
      * @param callbacks
      */
-    public ObservableConversion(RuleRepository ruleRepository, ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, List<ConversionCallback> callbacks) {
-        super(checkNotNull(callbacks), ruleRepository);
+    public ObservableConversion(ToCenConversion toCenConversion, FromCenConversion fromCenConversion, InputStream invoiceInSourceFormat, boolean forceConversion, String invoiceFileName, List<ConversionCallback> callbacks) {
+        super(checkNotNull(callbacks));
         this.toCen = checkNotNull(toCenConversion);
         this.fromCen = checkNotNull(fromCenConversion);
 
@@ -108,9 +100,6 @@ public class ObservableConversion extends AbstractObservable {
         ctx.setInvoiceInSourceFormat(invoiceInSourceFormat);
         ctx.setInvoiceFileName(invoiceFileName);
         ctx.setTargetInvoiceExtension(fromCen.extension());
-
-        // The rule report
-        InMemoryRuleReport ruleReport;
 
         List<IConversionIssue> issues = new ArrayList<>();
 
@@ -145,20 +134,7 @@ public class ObservableConversion extends AbstractObservable {
                 }
 
                 cenInvoice = toCenResult.getResult();
-                ruleReport = new InMemoryRuleReport();
-                applyRulesToCenObject(cenInvoice, ruleReport);
-                ctx.setRuleReport(ruleReport);
-                if (!ruleReport.hasFailures()) {
-                    fireOnSuccessfullyVerifiedCenRules(ctx);
-                } else {
 
-                    for (Map.Entry<RuleOutcome, Rule> errorsAndFailure : ruleReport.getErrorsAndFailures()) {
-                        issues.add(new RuleOutcomeAsConversionIssueAdapter(errorsAndFailure.getKey()));
-                    }
-                    errorsHappended = true;
-                    fireOnFailedVerifyingCenRules(ctx);
-
-                }
 
                 if (!forceConversion && errorsHappended)
                     keepOnGoing = false;

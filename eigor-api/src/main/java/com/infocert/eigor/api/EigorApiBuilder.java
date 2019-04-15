@@ -1,9 +1,7 @@
 package com.infocert.eigor.api;
 
 import it.infocert.eigor.api.ConversionRepository;
-import it.infocert.eigor.api.DefaultRuleRepository;
 import it.infocert.eigor.api.Named;
-import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
@@ -24,9 +22,6 @@ import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
 import it.infocert.eigor.converter.xmlcen2cen.XmlCen2Cen;
-import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
-import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
-import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +42,6 @@ public class EigorApiBuilder {
     private final EigorConfiguration configuration;
     private final ConversionRepository conversionRepository;
     private File outputFolderFile;
-    private RuleRepository ruleRepository;
     private boolean copy = false;
     private boolean forceConversion = false;
     private final CenToXmlCenConverter cen2XmlCen;
@@ -84,10 +78,6 @@ public class EigorApiBuilder {
 
         Properties cardinalityRules = new Properties();
         Properties cardinalityRules2 = new Properties();
-        ruleRepository = new CompositeRuleRepository(
-                new CardinalityRulesRepository(cardinalityRules),
-                new IntegrityRulesRepository(cardinalityRules2)
-        );
 
     }
 
@@ -97,9 +87,6 @@ public class EigorApiBuilder {
      */
     public EigorApi build() throws ConfigurationException {
         log.info(EigorVersion.getAsDetailedString());
-
-        // set up the rule repository
-        RuleRepository ruleRepository = DefaultRuleRepository.newInstance();
 
         // "clone" the resources needed for each converter in a local file system
         File dest = new File(configuration.getMandatoryString("eigor.workdir") + "/converterdata");
@@ -150,9 +137,7 @@ public class EigorApiBuilder {
         return conversionRepository;
     }
 
-    RuleRepository getRuleRepository() {
-        return ruleRepository;
-    }
+
 
     /**
      * Each time Eigor converts an invoice, it also output a set of files that contains worth information

@@ -3,8 +3,6 @@ package it.infocert.eigor.api.conversion;
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.RuleReport;
-import it.infocert.eigor.api.utils.RuleReports;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,16 +65,6 @@ public class DebugConversionCallback extends AbstractConversionCallback {
     }
 
     @Override
-    public void onSuccessfullyVerifiedCenRules(ConversionContext ctx) throws Exception {
-        writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
-    }
-
-    @Override
-    public void onFailedVerifyingCenRules(ConversionContext ctx) throws Exception {
-        writeRuleReportToFile(ctx.getRuleReport(), outputFolderFile);
-    }
-
-    @Override
     public void onSuccessfullFromCenTransformation(ConversionContext ctx) throws Exception {
         writeFromCenErrorsToFile(ctx.getFromCenResult(), outputFolderFile);
         String targetExtension = ctx.getTargetInvoiceExtension();
@@ -135,15 +123,6 @@ public class DebugConversionCallback extends AbstractConversionCallback {
         List<IConversionIssue> errors = conversionResult.getIssues();
         File fromCenErrors = new File(outputFolderFile, "fromcen-errors.csv");
         FileUtils.writeStringToFile(fromCenErrors, toCsv(errors), ENCODING);
-    }
-
-    private void writeRuleReportToFile(RuleReport ruleReport, File outputFolderFile) throws IOException {
-        File outreport = new File(outputFolderFile, "rule-report.csv");
-        FileUtils.writeStringToFile(outreport, dump(ruleReport), ENCODING);
-    }
-
-    public String dump(RuleReport ruleReport) {
-        return RuleReports.dump(ruleReport);
     }
 
     private void writeTargetInvoice(byte[] targetInvoice, File outputFolderFile, String targetInvoiceExtension) throws IOException {

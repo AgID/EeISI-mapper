@@ -2,8 +2,6 @@ package it.infocert.eigor.api.conversion;
 
 import it.infocert.eigor.api.BinaryConversionResult;
 import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.RuleReport;
-import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
 
 /**
@@ -12,7 +10,6 @@ import it.infocert.eigor.model.core.model.BG0000Invoice;
 public class ConversionContext {
 
     private ConversionResult<BG0000Invoice> toCenResult;
-    private InMemoryRuleReport ruleReport;
     private BinaryConversionResult fromCenResult;
     private byte[] invoiceInSourceFormat;
     private boolean forceConversion;
@@ -29,18 +26,6 @@ public class ConversionContext {
 
     void setToCenResult(ConversionResult<BG0000Invoice> toCenResult) {
         this.toCenResult = toCenResult;
-    }
-
-    /**
-     * If CEN rule verification has already taken place, this returns the related report,
-     * {@literal null} otherwise.
-     */
-    public RuleReport getRuleReport() {
-        return ruleReport;
-    }
-
-    void setRuleReport(InMemoryRuleReport ruleReport) {
-        this.ruleReport = ruleReport;
     }
 
     /**
