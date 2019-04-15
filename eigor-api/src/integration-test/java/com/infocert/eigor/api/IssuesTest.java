@@ -629,6 +629,25 @@ public class IssuesTest extends AbstractIssueTest {
         assertEquals("DE", evaluate);
         // end BG-11
 
+        // start BG-10
+        assertTrue(invoice.contains("<cac:PayeeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Payee name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("Payee identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0098", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/text()");
+        assertEquals("Payee legal registration identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/@schemeID");
+        assertEquals("0099", evaluate);
+        // end BG-10
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
@@ -687,6 +706,25 @@ public class IssuesTest extends AbstractIssueTest {
                 "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
         assertEquals("DE", evaluate);
         // end BG-11
+
+        // start BG-10
+        assertTrue(invoice.contains("<cac:PayeeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Payee name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("Payee identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0098", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/text()");
+        assertEquals("Payee legal registration identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/@schemeID");
+        assertEquals("0099", evaluate);
+        // end BG-10
 
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
@@ -747,6 +785,25 @@ public class IssuesTest extends AbstractIssueTest {
         assertEquals("DE", evaluate);
         // end BG-11
 
+        // start BG-10
+        assertTrue(invoice.contains("<cac:PayeeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Payee name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("Payee identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0098", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/text()");
+        assertEquals("Payee legal registration identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/@schemeID");
+        assertEquals("0099", evaluate);
+        // end BG-10
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
@@ -805,6 +862,25 @@ public class IssuesTest extends AbstractIssueTest {
                 "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
         assertEquals("DE", evaluate);
         // end BG-11
+
+        // start BG-10
+        assertTrue(invoice.contains("<cac:PayeeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Payee name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("Payee identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyIdentification']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0098", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/text()");
+        assertEquals("Payee legal registration identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PayeeParty']//*[local-name()='PartyLegalEntity']" +
+                "//*[local-name()='CompanyID']/@schemeID");
+        assertEquals("0099", evaluate);
+        // end BG-10
 
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
