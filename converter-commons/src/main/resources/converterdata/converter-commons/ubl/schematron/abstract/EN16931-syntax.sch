@@ -1,21 +1,26 @@
 <!--
+
     Copyright (C) 2016-2018 Oriol Bausà, Andreas Pelekies, Philip Helger
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
+
             http://www.apache.org/licenses/LICENSE-2.0
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
 -->
 <!-- Schematron rules generated automatically by Validex Generator Midran ltd -->
 <!-- Abstract rules for syntax -->
 <!-- Timestamp: 2016-12-01 22:31:03 +0100 -->
 <pattern xmlns="http://purl.oclc.org/dsdl/schematron" abstract="true" id="syntax">
   <rule context="$Accounting_supplier_party">
-    <assert test="$UBL-SR-42" flag="fatal" id="UBL-SR-42">[UBL-SR-43]-Party tax scheme shall occur maximum twice in accounting supplier party</assert>
+    <assert test="$UBL-SR-42" flag="fatal" id="UBL-SR-42">[UBL-SR-42]-Party tax scheme shall occur maximum twice in accounting supplier party</assert>
   </rule>
   <rule context="$Additional_supporting_documents">
     <assert test="$UBL-SR-33" flag="warning" id="UBL-SR-33">[UBL-SR-33]-Supporting document description shall occur maximum once</assert>
@@ -39,6 +44,7 @@
   </rule>
   <rule context="$Invoice">
     <assert test="$UBL-CR-001" flag="warning" id="UBL-CR-001">[UBL-CR-001]-A UBL invoice should not include extensions</assert>
+    <assert test="$UBL-CR-002" flag="warning" id="UBL-CR-002">[UBL-CR-002]-A UBL invoice should not include the UBLVersionID</assert>
     <assert test="$UBL-CR-003" flag="warning" id="UBL-CR-003">[UBL-CR-003]-A UBL invoice should not include the ProfileExecutionID </assert>
     <assert test="$UBL-CR-004" flag="warning" id="UBL-CR-004">[UBL-CR-004]-A UBL invoice should not include the CopyIndicator </assert>
     <assert test="$UBL-CR-005" flag="warning" id="UBL-CR-005">[UBL-CR-005]-A UBL invoice should not include the UUID </assert>
@@ -722,6 +728,9 @@
     <assert test="$UBL-SR-39" flag="warning" id="UBL-SR-39">[UBL-SR-39]-Project reference shall occur maximum once.</assert>
     <assert test="$UBL-SR-40" flag="warning" id="UBL-SR-40">[UBL-SR-40]-Buyer trade name shall occur maximum once</assert>
     <assert test="$UBL-SR-41" flag="warning" id="UBL-SR-41">[UBL-SR-41]-Bank assigned creditor identifier shall occur maximum once</assert>
+    <assert test="$UBL-SR-44" flag="warning" id="UBL-SR-44">[UBL-SR-44]-Payment ID shall occur maximum once</assert>
+    <assert test="$UBL-SR-45" flag="warning" id="UBL-SR-45">[UBL-SR-45]-Due Date shall occur maximum once</assert>    
+    <assert test="$UBL-SR-46" flag="warning" id="UBL-SR-46">[UBL-SR-46]-Payment means text shall occur maximum once</assert>
   </rule>
   <rule context="$Invoice_line">
     <assert test="$UBL-SR-34" flag="warning" id="UBL-SR-34">[UBL-SR-34]-Invoice line note shall occur maximum once</assert>
