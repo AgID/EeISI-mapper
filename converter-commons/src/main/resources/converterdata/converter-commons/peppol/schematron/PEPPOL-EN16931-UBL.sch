@@ -54,6 +54,7 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
 	</pattern>
 	<!--
     Transaction rules
+
     R00X - Document level
     R01X - Accounting customer
     R02X - Accounting supplier
@@ -188,7 +189,7 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
         invoice. "Dersom selger er aksjeselskap, allmennaksjeselskap eller filial av utenlandsk
         selskap skal også ordet «Foretaksregisteret» fremgå av salgsdokumentet, jf.
         foretaksregisterloven § 10-2."</assert>
-			<assert id="NO-R-001" test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$')
+			<assert id="NO-R-001" test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$') 
           and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')" flag="fatal">For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a valid Norwegian organization number (nine numbers) followed by the letters MVA.</assert>
 		</rule>
 	</pattern>
@@ -203,7 +204,7 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
                             or
                              ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID))
                                and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))
-
+                         
                         )" flag="fatal">For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty</assert>
 			<assert id="DK-R-014" test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID))
                                and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID) != '0184'))
@@ -211,7 +212,7 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
 			<assert id="DK-R-015" test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT')
                         and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10)
 								 and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK')
-								 and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN'))
+								 and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN'))                         
                         )" flag="fatal">For Danish Suppliers, if specified, AccountingSupplierParty/PartyTaxScheme/CompanyID (DK VAT number) must start with DK followed by 8 digits</assert>
 			<assert id="DK-R-016" test="not((boolean(/ubl-creditnote:CreditNote))
                         and (number(cac:LegalMonetaryTotal/cbc:PayableAmount/text()) &lt; 0)

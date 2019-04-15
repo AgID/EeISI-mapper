@@ -157,7 +157,7 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
                 their invoice. "Dersom selger er aksjeselskap, allmennaksjeselskap eller filial av
                 utenlandsk selskap skal også ordet «Foretaksregisteret» fremgå av salgsdokumentet,
                 jf. foretaksregisterloven § 10-2."</assert>
-			<assert id="NO-R-001" test="ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO' and matches(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID,3) , '^[0-9]{9}MVA$')
+			<assert id="NO-R-001" test="ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO' and matches(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID,3) , '^[0-9]{9}MVA$') 
                 and u:mod11(substring(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/ram:ID, 3, 9)) or not(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO')" flag="fatal">For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a valid Norwegian organization number (nine numbers) followed by the letters MVA.</assert>
 		</rule>
 	</pattern>
@@ -192,9 +192,9 @@ This schematron uses business terms defined the CEN/EN16931-1 and is reproduced 
 		</rule>
 		<rule context="rsm:CrossIndustryInvoice[$supplierCountry = 'DK']/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration">
 			<assert id="DK-R-015" test="not(( (ram:ID/@schemeID = 'VA' or ram:ID/@schemeID = 'VAT') and (substring(ram:ID/text(), 1, 2) = 'DK'))
-                    and not( (string-length(ram:ID/text()) = 10)
+                    and not( (string-length(ram:ID/text()) = 10)             		         
                and (string(number(substring(ram:ID/text(), 3, 8))) != 'NaN')
-             	            )
+             	            )					    
                         )" flag="fatal">For Danish Suppliers SellerTradeParty/SpecifiedTaxRegistration/ID must be specified  with DK followed by 8 digits (eg. DK12345678) if used.</assert>
 		</rule>
 		<rule context="rsm:CrossIndustryInvoice[$supplierCountry = 'DK']/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem">

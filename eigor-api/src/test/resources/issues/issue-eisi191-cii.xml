@@ -409,7 +409,7 @@
                 <ram:TypeCode>VAT</ram:TypeCode><!--BT-118- fixed value-->
 				<ram:BasisAmount>0.00</ram:BasisAmount><!--BT-116-->
                 <ram:CategoryCode>S</ram:CategoryCode><!--BT-118-->
-				<ram:DueDateTypeCode>5</ram:DueDateTypeCode><!--BT-8- mapping with UNTDID 2475-->
+<!--				<ram:DueDateTypeCode>5</ram:DueDateTypeCode>&lt;!&ndash;BT-8- mapping with UNTDID 2475&ndash;&gt;-->
                 <ram:RateApplicablePercent>25.00</ram:RateApplicablePercent><!--BT-119-->
             </ram:ApplicableTradeTax>
 			<!--Exempt-->
