@@ -583,6 +583,8 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
+        assertEquals("2018-11-30", evaluate);
     }
 
     @Test
@@ -594,6 +596,8 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
+        assertEquals("2018-11-30", evaluate);
     }
 
     @Test
@@ -605,6 +609,8 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
+        assertEquals("2018-11-30", evaluate);
     }
 
     @Test
@@ -616,5 +622,7 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
+        assertEquals("2018-11-30", evaluate);
     }
 }
