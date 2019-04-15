@@ -195,9 +195,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 if (basisAmount != null) {
                                     try {
                                         final String text = basisAmount.getText();
-                                        final Attribute currencyID = basisAmount.getAttribute("currencyID");
-                                        final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
-                                        BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
+
+
+                                        BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount( new BigDecimal(text) );
                                         bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                                     } catch (NumberFormatException e) {
                                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
@@ -214,9 +214,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                                 if (calculationPercent != null) {
                                     try {
                                         final String text = calculationPercent.getText();
-                                        final Attribute currencyID = calculationPercent.getAttribute("currencyID");
-                                        final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
-                                        BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
+
+                                        BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage( new BigDecimal(text) );
                                         bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                                     } catch (NumberFormatException e) {
                                         EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()

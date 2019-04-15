@@ -308,11 +308,11 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
 
                     Element baseAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BaseAmount");
                     if (baseAmount != null) {
-                        final String text = baseAmount.getText();
+                        final String amountAsText = baseAmount.getText();
                         try {
                             final Attribute currencyID = baseAmount.getAttribute("currencyID");
-                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), text) : new Identifier(text);
-                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
+
+                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount( new BigDecimal(amountAsText) );
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
@@ -321,7 +321,7 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                                     .action(ErrorCode.Action.HARDCODED_MAP)
                                     .error(ErrorCode.Error.ILLEGAL_VALUE)
                                     .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                    .addParam(ErrorMessage.OFFENDINGITEM_PARAM, text)
+                                    .addParam(ErrorMessage.OFFENDINGITEM_PARAM, amountAsText)
                                     .build());
                             errors.add(ConversionIssue.newError(ere));
                         }
@@ -333,8 +333,8 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                         try {
                             final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
                             BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText()).multiply(BigDecimal.valueOf(100));
-                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), value.toString()) : new Identifier(value.toString());
-                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
+
+                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage( value );
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
