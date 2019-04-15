@@ -831,7 +831,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$')           and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')" />
+      <xsl:when test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$')            and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')" />
       <xsl:otherwise>
         <svrl:failed-assert test="cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO' and matches(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID,3), '^[0-9]{9}MVA$') and u:mod11(substring(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/cbc:CompanyID, 3, 9)) or not(cac:PartyTaxScheme[normalize-space(cac:TaxScheme/cbc:ID) = 'VAT']/substring(cbc:CompanyID, 1, 2)='NO')">
           <xsl:attribute name="id">NO-R-001</xsl:attribute>
@@ -889,7 +889,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                             or                              ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                          )" />
+      <xsl:when test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                             or                              ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID))                                and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = ''))                                                   )" />
       <xsl:otherwise>
         <svrl:failed-assert test="not(((boolean(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) or ((boolean(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID)) and (normalize-space(cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID) = '')) )">
           <xsl:attribute name="id">DK-R-013</xsl:attribute>
@@ -919,7 +919,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT')                         and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10)          and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK')          and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN'))                         )" />
+      <xsl:when test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT')                         and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10)          and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK')          and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN'))                                                  )" />
       <xsl:otherwise>
         <svrl:failed-assert test="not((normalize-space(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID/text()) = 'VAT') and not ((string-length(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text()) = 10) and (substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 1, 2) = 'DK') and (string(number(substring(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID/text(), 3, 8))) != 'NaN')) )">
           <xsl:attribute name="id">DK-R-015</xsl:attribute>
