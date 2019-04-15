@@ -575,12 +575,13 @@ public class IssuesTest extends AbstractIssueTest {
     }
 
     @Test
-    public void issue229CenToPeppolbis() throws Exception {
+    public void cenToPeppolbisMapping() throws Exception {
         InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-generic-check-not-mapped-fields-xmlcen.xml");
         ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolbis", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
         String invoice = new String(convert.getResult());
+
         // start BG-13
         assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
@@ -595,17 +596,51 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
         assertEquals("2018-12-04", evaluate);
         // end BG-13
+
+        // start BG-11
+        assertTrue(invoice.contains("<cac:TaxRepresentativeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Tax representative name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyTaxScheme']//*[local-name()='CompanyID']/text()");
+        assertEquals("DE3949053", evaluate);
+        assertTrue(invoice.contains("<cac:PostalAddress"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='StreetName']/text()");
+        assertEquals("Tax representative address line 1", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AdditionalStreetName']/text()");
+        assertEquals("Tax representative address line 2", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AddressLine']//*[local-name()='Line']/text()");
+        assertEquals("Tax representative address line 3", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CityName']/text()");
+        assertEquals("Tax representative city", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='PostalZone']/text()");
+        assertEquals("23455", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CountrySubentity']/text()");
+        assertEquals("Tax representative country subdivision", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
+        assertEquals("DE", evaluate);
+        // end BG-11
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
 
     @Test
-    public void issue229CenToPeppolcn() throws Exception {
+    public void cenToPeppolcnMapping() throws Exception {
         InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-generic-check-not-mapped-fields-xmlcen.xml");
         ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
         String invoice = new String(convert.getResult());
+
         // start BG-13
         assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
@@ -620,17 +655,51 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
         assertEquals("2018-12-04", evaluate);
         // end BG-13
+
+        // start BG-11
+        assertTrue(invoice.contains("<cac:TaxRepresentativeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Tax representative name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyTaxScheme']//*[local-name()='CompanyID']/text()");
+        assertEquals("DE3949053", evaluate);
+        assertTrue(invoice.contains("<cac:PostalAddress"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='StreetName']/text()");
+        assertEquals("Tax representative address line 1", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AdditionalStreetName']/text()");
+        assertEquals("Tax representative address line 2", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AddressLine']//*[local-name()='Line']/text()");
+        assertEquals("Tax representative address line 3", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CityName']/text()");
+        assertEquals("Tax representative city", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='PostalZone']/text()");
+        assertEquals("23455", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CountrySubentity']/text()");
+        assertEquals("Tax representative country subdivision", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
+        assertEquals("DE", evaluate);
+        // end BG-11
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
 
     @Test
-    public void issue229CenToUbl() throws Exception {
+    public void cenToUblMapping() throws Exception {
         InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-generic-check-not-mapped-fields-xmlcen.xml");
         ConversionResult<byte[]> convert = api.convert("xmlcen", "ubl", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
         String invoice = new String(convert.getResult());
+
         // start BG-13
         assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
@@ -645,17 +714,51 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
         assertEquals("2018-12-04", evaluate);
         // end BG-13
+
+        // start BG-11
+        assertTrue(invoice.contains("<cac:TaxRepresentativeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Tax representative name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyTaxScheme']//*[local-name()='CompanyID']/text()");
+        assertEquals("DE3949053", evaluate);
+        assertTrue(invoice.contains("<cac:PostalAddress"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='StreetName']/text()");
+        assertEquals("Tax representative address line 1", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AdditionalStreetName']/text()");
+        assertEquals("Tax representative address line 2", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AddressLine']//*[local-name()='Line']/text()");
+        assertEquals("Tax representative address line 3", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CityName']/text()");
+        assertEquals("Tax representative city", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='PostalZone']/text()");
+        assertEquals("23455", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CountrySubentity']/text()");
+        assertEquals("Tax representative country subdivision", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
+        assertEquals("DE", evaluate);
+        // end BG-11
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
 
     @Test
-    public void issue229CenToUblcn() throws Exception {
+    public void cenToUblcnMapping() throws Exception {
         InputStream inputFatturaCenXml = invoiceAsStream("/issues/issue-generic-check-not-mapped-fields-xmlcen.xml");
         ConversionResult<byte[]> convert = api.convert("xmlcen", "ublcn", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
         String invoice = new String(convert.getResult());
+
         // start BG-13
         assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
@@ -670,6 +773,39 @@ public class IssuesTest extends AbstractIssueTest {
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
         assertEquals("2018-12-04", evaluate);
         // end BG-13
+
+        // start BG-11
+        assertTrue(invoice.contains("<cac:TaxRepresentativeParty"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
+        assertEquals("Tax representative name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PartyTaxScheme']//*[local-name()='CompanyID']/text()");
+        assertEquals("DE3949053", evaluate);
+        assertTrue(invoice.contains("<cac:PostalAddress"));
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='StreetName']/text()");
+        assertEquals("Tax representative address line 1", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AdditionalStreetName']/text()");
+        assertEquals("Tax representative address line 2", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='AddressLine']//*[local-name()='Line']/text()");
+        assertEquals("Tax representative address line 3", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CityName']/text()");
+        assertEquals("Tax representative city", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='PostalZone']/text()");
+        assertEquals("23455", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='CountrySubentity']/text()");
+        assertEquals("Tax representative country subdivision", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='TaxRepresentativeParty']" +
+                "//*[local-name()='PostalAddress']//*[local-name()='Country']//*[local-name()='IdentificationCode']/text()");
+        assertEquals("DE", evaluate);
+        // end BG-11
+
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
