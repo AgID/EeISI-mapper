@@ -496,13 +496,13 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
                 if (!invoiceLine.getBG0027InvoiceLineAllowances().isEmpty()) {
                     for (BG0027InvoiceLineAllowances invoiceLineAllowances : invoiceLine.getBG0027InvoiceLineAllowances()) {
 
-                        final Optional<Identifier> baseAmountOpt = Optional.fromNullable(invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty() ? null : invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue());
-                        final Optional<Identifier> percentageOpt = Optional.fromNullable(invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().isEmpty() ? null : invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage(0).getValue());
+                        final Optional<BigDecimal> baseAmountOpt = Optional.fromNullable(invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty() ? null : invoiceLineAllowances.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue());
+                        final Optional<BigDecimal> percentageOpt = Optional.fromNullable(invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage().isEmpty() ? null : invoiceLineAllowances.getBT0138InvoiceLineAllowancePercentage(0).getValue());
 
                         BigDecimal discountValue = BigDecimal.ZERO;
                         BigDecimal allowanceAmount = invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount().isEmpty() ? BigDecimal.ZERO : invoiceLineAllowances.getBT0136InvoiceLineAllowanceAmount(0).getValue();
-                        BigDecimal baseAmount = baseAmountOpt.isPresent() ? new BigDecimal(baseAmountOpt.get().getIdentifier().contains(":") ? baseAmountOpt.get().getIdentifier().split(":")[1] : baseAmountOpt.get().getIdentifier()) : BigDecimal.ZERO;
-                        BigDecimal percentage = percentageOpt.isPresent() ? new BigDecimal(percentageOpt.get().getIdentifier()) : BigDecimal.ZERO;
+                        BigDecimal baseAmount = baseAmountOpt.or(BigDecimal.ZERO);
+                        BigDecimal percentage = percentageOpt.or(BigDecimal.ZERO);
                         String reason = invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason().isEmpty() ? "Sconto Linea" : invoiceLineAllowances.getBT0139InvoiceLineAllowanceReason(0).getValue();
 
                         String code = invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode().isEmpty() ? "" : String.format(" BT-0140: %d", invoiceLineAllowances.getBT0140InvoiceLineAllowanceReasonCode(0).getValue().getCode());
@@ -532,14 +532,14 @@ public class LineConverter implements CustomMapping<FatturaElettronicaType> {
 //                            dettaglioLinee.getScontoMaggiorazione().add(scontoMaggiorazione);
                         }
 
-                        List<Identifier> data = new ArrayList<>();
+                        List<BigDecimal> data = new ArrayList<>();
                         if (baseAmountOpt.isPresent()) data.add(baseAmountOpt.get());
                         if (percentageOpt.isPresent()) data.add(percentageOpt.get());
 
-                        for (Identifier id : data) {
+                        for (BigDecimal id : data) {
                             final AltriDatiGestionaliType datum = new AltriDatiGestionaliType();
-                            datum.setTipoDato(id.getSchemaVersion());
-                            datum.setTipoDato(id.getIdentifier());
+                            // datum.setTipoDato(id.getSchemaVersion());
+                            datum.setTipoDato(id.toString());
                             dettaglioLinee.getAltriDatiGestionali().add(datum);
                         }
 

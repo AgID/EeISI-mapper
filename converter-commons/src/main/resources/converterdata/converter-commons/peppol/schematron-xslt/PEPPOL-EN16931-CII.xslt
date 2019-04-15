@@ -758,7 +758,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO' and matches(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID,3) , '^[0-9]{9}MVA$')                 and u:mod11(substring(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/ram:ID, 3, 9)) or not(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO')" />
+      <xsl:when test="ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO' and matches(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID,3) , '^[0-9]{9}MVA$')                  and u:mod11(substring(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/ram:ID, 3, 9)) or not(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO')" />
       <xsl:otherwise>
         <svrl:failed-assert test="ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO' and matches(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID,3) , '^[0-9]{9}MVA$') and u:mod11(substring(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/ram:ID, 3, 9)) or not(ram:SpecifiedTaxRegistration[ram:ID/@schemeID = 'VAT']/substring(ram:ID, 1, 2)='NO')">
           <xsl:attribute name="id">NO-R-001</xsl:attribute>
@@ -882,7 +882,7 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(( (ram:ID/@schemeID = 'VA' or ram:ID/@schemeID = 'VAT') and (substring(ram:ID/text(), 1, 2) = 'DK'))                     and not( (string-length(ram:ID/text()) = 10)                and (string(number(substring(ram:ID/text(), 3, 8))) != 'NaN')                           )                         )" />
+      <xsl:when test="not(( (ram:ID/@schemeID = 'VA' or ram:ID/@schemeID = 'VAT') and (substring(ram:ID/text(), 1, 2) = 'DK'))                     and not( (string-length(ram:ID/text()) = 10)                                        and (string(number(substring(ram:ID/text(), 3, 8))) != 'NaN')                           )                                  )" />
       <xsl:otherwise>
         <svrl:failed-assert test="not(( (ram:ID/@schemeID = 'VA' or ram:ID/@schemeID = 'VAT') and (substring(ram:ID/text(), 1, 2) = 'DK')) and not( (string-length(ram:ID/text()) = 10) and (string(number(substring(ram:ID/text(), 3, 8))) != 'NaN') ) )">
           <xsl:attribute name="id">DK-R-015</xsl:attribute>

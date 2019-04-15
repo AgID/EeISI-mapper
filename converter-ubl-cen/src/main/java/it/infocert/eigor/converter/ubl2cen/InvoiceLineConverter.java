@@ -278,9 +278,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element baseAmount = findNamespaceChild(elemInvAll, namespacesInScope, "BaseAmount");
                     if (baseAmount != null) {
                         try {
-                            final Attribute currencyID = baseAmount.getAttribute("currencyID");
-                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), baseAmount.getText()) : new Identifier(baseAmount.getText());
-                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(identifier);
+
+
+                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount( new BigDecimal(baseAmount.getText()) );
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
@@ -297,8 +297,8 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         try {
                             final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
                             BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText()).multiply(BigDecimal.valueOf(100));
-                            final Identifier identifier = currencyID != null ? new Identifier(currencyID.getValue(), value.toString()) : new Identifier(value.toString());
-                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(identifier);
+
+                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage( value );
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
