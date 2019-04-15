@@ -4,6 +4,7 @@ import com.infocert.eigor.api.ConversionUtil.KeepAll;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import org.apache.commons.io.IOUtils;
+import org.assertj.core.util.Lists;
 import org.codehaus.plexus.util.Base64;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -15,6 +16,8 @@ import javax.xml.transform.TransformerException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 import static org.junit.Assert.*;
@@ -549,5 +552,25 @@ public class IssuesTest extends AbstractIssueTest {
         assertTrue(invoice.contains("<cbc:Note"));
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Note']/text()");
         assertEquals("#test1#test2", evaluate);
+    }
+
+    @Test
+    public void issue241CheckSupportedSourceFormats() throws Exception {
+        Set<String> supportedSourceFormats = api.supportedSourceFormats();
+        assertNotNull(supportedSourceFormats);
+        List<String> supportedSourceFormatList = Lists.newArrayList(supportedSourceFormats);
+        supportedSourceFormatList.sort(String::compareToIgnoreCase);
+        String joinedSourceFormats = String.join(", ", supportedSourceFormatList);
+        assertEquals(joinedSourceFormats, "cii, csvcen, fatturapa, ubl, ublcn, xmlcen");
+    }
+
+    @Test
+    public void issue241CheckSupportedTargetFormats() throws Exception {
+        Set<String> supportedTargetFormats = api.supportedTargetFormats();
+        assertNotNull(supportedTargetFormats);
+        List<String> supportedTargetFormatList = Lists.newArrayList(supportedTargetFormats);
+        supportedTargetFormatList.sort(String::compareToIgnoreCase);
+        String joinedTargetFormats = String.join(", ", supportedTargetFormatList);
+        assertEquals(joinedTargetFormats, "cii, fatturapa, peppolbis, peppolcn, ubl, ublcn, xmlcen");
     }
 }
