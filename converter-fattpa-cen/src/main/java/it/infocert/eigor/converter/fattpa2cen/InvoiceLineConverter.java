@@ -293,7 +293,9 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                         bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
                                     }
                                     if (percentuale != null) {
-                                        BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(new Identifier(percentuale.getText()));
+                                        BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(
+                                                new BigDecimal( percentuale.getText() )
+                                        );
                                         bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
                                     }
                                     bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code95));

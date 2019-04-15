@@ -260,7 +260,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 specifiedTradeAllowanceCharge.addContent(chargeIndicator);
 
                 if (!bg0027.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                    BigDecimal bt0138 = new BigDecimal(bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue().getIdentifier());
+                    BigDecimal bt0138 = bg0027.getBT0138InvoiceLineAllowancePercentage(0).getValue();
                     Element calculationPercent = new Element("CalculationPercent", ramNs);
                     try {
                         calculationPercent.setText(bt0138.setScale(2, RoundingMode.HALF_UP).toString());
@@ -277,7 +277,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                 }
 
                 if (!bg0027.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
-                    BigDecimal bt0137 = new BigDecimal(bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue().getIdentifier());
+                    BigDecimal bt0137 = bg0027.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
                     Element basisAmount = new Element("BasisAmount", ramNs);
                     try {
                         basisAmount.setText(bt0137.setScale(2, RoundingMode.HALF_UP).toString());

@@ -11,7 +11,6 @@ import it.infocert.eigor.api.conversion.converter.JavaLocalDateToStringConverter
 import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
-import it.infocert.eigor.model.core.datatypes.Identifier;
 import it.infocert.eigor.model.core.enums.Iso4217CurrenciesFundsCodes;
 import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
 import it.infocert.eigor.model.core.enums.Untdid1153ReferenceQualifierCode;
@@ -160,10 +159,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
 
                         if (!elemBg27.getBT0138InvoiceLineAllowancePercentage().isEmpty()) {
-                            Identifier value = elemBg27.getBT0138InvoiceLineAllowancePercentage(0).getValue();
+                            BigDecimal value = elemBg27.getBT0138InvoiceLineAllowancePercentage(0).getValue();
                             Element multiplierFactorNumeric = new Element("MultiplierFactorNumeric");
-                            if (value != null && value.getIdentifier() != null) {
-                                multiplierFactorNumeric.setText(value.getIdentifier());
+                            if (value != null) {
+                                multiplierFactorNumeric.setText(value.toString());
                             }
                             allowanceCharge.addContent(multiplierFactorNumeric);
                         }
@@ -178,10 +177,10 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                         }
 
                         if (!elemBg27.getBT0137InvoiceLineAllowanceBaseAmount().isEmpty()) {
-                            Identifier value = elemBg27.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
+                            BigDecimal value = elemBg27.getBT0137InvoiceLineAllowanceBaseAmount(0).getValue();
                             Element baseAmount = new Element("BaseAmount");
-                            if (value != null && value.getIdentifier() != null) {
-                                baseAmount.setText(value.getIdentifier());
+                            if (value != null) {
+                                baseAmount.setText(value.toString());
                             }
                             if (currencyCode != null && currencyCode.getCode() != null) {
                                 baseAmount.setAttribute("currencyID", currencyCode.getCode());
