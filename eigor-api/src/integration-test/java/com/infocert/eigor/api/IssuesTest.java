@@ -580,9 +580,21 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolbis", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
+        String invoice = new String(convert.getResult());
+        // start BG-13
+        assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("deliver location identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0045", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
+        assertEquals("2018-12-04", evaluate);
+        // end BG-13
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
@@ -593,9 +605,21 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> convert = api.convert("xmlcen", "peppolcn", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
+        String invoice = new String(convert.getResult());
+        // start BG-13
+        assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("deliver location identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0045", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
+        assertEquals("2018-12-04", evaluate);
+        // end BG-13
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
@@ -606,9 +630,21 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> convert = api.convert("xmlcen", "ubl", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='ProjectReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
+        String invoice = new String(convert.getResult());
+        // start BG-13
+        assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("deliver location identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0045", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
+        assertEquals("2018-12-04", evaluate);
+        // end BG-13
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='Invoice']//*[local-name()='DueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
@@ -619,9 +655,21 @@ public class IssuesTest extends AbstractIssueTest {
         ConversionResult<byte[]> convert = api.convert("xmlcen", "ublcn", inputFatturaCenXml);
         String evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='AdditionalDocumentReference']//*[local-name()='ID']/text()");
         assertEquals("456", evaluate);
+        String invoice = new String(convert.getResult());
+        // start BG-13
+        assertTrue(invoice.contains("<cac:Delivery"));
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryParty']" +
                 "//*[local-name()='PartyName']//*[local-name()='Name']/text()");
         assertEquals("Deliver to party name", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/text()");
+        assertEquals("deliver location identifier", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='DeliveryLocation']" +
+                "//*[local-name()='ID']/@schemeID");
+        assertEquals("0045", evaluate);
+        evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='Delivery']//*[local-name()='ActualDeliveryDate']/text()");
+        assertEquals("2018-12-04", evaluate);
+        // end BG-13
         evaluate = evalXpathExpressionAsString(convert, "//*[local-name()='CreditNote']//*[local-name()='PaymentMeans']//*[local-name()='PaymentDueDate']/text()");
         assertEquals("2018-11-30", evaluate);
     }
