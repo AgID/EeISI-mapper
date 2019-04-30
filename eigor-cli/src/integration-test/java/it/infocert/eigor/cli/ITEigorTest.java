@@ -83,10 +83,9 @@ public class ITEigorTest {
         });
         // then
         List<File> files = asList(outputDir.listFiles());
-        assertThat("converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(8));
+        assertThat("converted invoice, cen invoice, rule report, log expected, got: " + files, files, hasSize(7));
         assertThat(files + " found", findFirstFileByNameOrNull(outputDir, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputDir, "invoice-target.xml"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputDir, "rule-report.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputDir, "invoice-transformation.log"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputDir, "invoice-source.xml"), notNullValue());
     }

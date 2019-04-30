@@ -1,9 +1,8 @@
 package it.infocert.eigor.cli;
 
-import com.google.common.io.Resources;
 import it.infocert.eigor.api.FromCenConversionRepository;
-import it.infocert.eigor.api.RuleRepository;
 import it.infocert.eigor.api.ToCenConversionRepository;
+import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.impl.FromCenListBakedRepository;
@@ -24,18 +23,11 @@ import it.infocert.eigor.converter.fattpa2cen.FattPa2Cen;
 import it.infocert.eigor.converter.ubl2cen.Ubl2Cen;
 import it.infocert.eigor.converter.ublcn2cen.UblCn2Cen;
 import it.infocert.eigor.converter.xmlcen2cen.XmlCen2Cen;
-import it.infocert.eigor.rules.repositories.CardinalityRulesRepository;
-import it.infocert.eigor.rules.repositories.CompositeRuleRepository;
-import it.infocert.eigor.rules.repositories.IntegrityRulesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
 
 public class Eigor {
 
@@ -59,46 +51,8 @@ public class Eigor {
     }
 
     @Bean
-    RuleRepository ruleRepository(IReflections reflections) {
-        return () -> {
-            throw new IllegalArgumentException("Not implemented yet.");
-        };
-    }
-
-    @Bean
-    RuleRepository compositeRepository(RuleRepository cardinalityRepository, RuleRepository integrityRepository) {
-        return new CompositeRuleRepository(cardinalityRepository, integrityRepository);
-    }
-
-    @Bean
-    RuleRepository cardinalityRepository() {
-        Properties properties = new Properties();
-        URL resource = Resources.getResource("cardinality.properties");
-        try {
-            properties.load(resource.openStream());
-        } catch (IOException e) {
-            log.error("Resource '{}' not found.", resource, e.getMessage(), e);
-        }
-//        return new CardinalityRulesRepository(properties); //DISABLED
-        return new CardinalityRulesRepository(new Properties());
-    }
-
-    @Bean
-    RuleRepository integrityRepository() {
-        Properties properties = new Properties();
-        URL resource = Resources.getResource("rules.properties");
-        try {
-            properties.load(resource.openStream());
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-//        return new IntegrityRulesRepository(properties); //DISABLED
-        return new IntegrityRulesRepository(new Properties());
-    }
-
-    @Bean(initMethod = "configure")
-    ToCenConversionRepository toCenConversionRepository(IReflections reflections, EigorConfiguration configuration) {
-        return new ToCenListBakedRepository(
+    ToCenConversionRepository toCenConversionRepository(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+        ToCenListBakedRepository toCenListBakedRepository = new ToCenListBakedRepository(
                 new Ubl2Cen(reflections, configuration),
                 new UblCn2Cen(reflections, configuration),
                 new CsvCen2Cen(reflections),
@@ -106,11 +60,13 @@ public class Eigor {
                 new Cii2Cen(reflections, configuration),
                 new XmlCen2Cen(reflections, configuration)
         );
+        toCenListBakedRepository.configure();
+        return toCenListBakedRepository;
     }
 
-    @Bean(initMethod = "configure")
-    FromCenConversionRepository fromCenConversionRepository(IReflections reflections, EigorConfiguration configuration) {
-        return new FromCenListBakedRepository(
+    @Bean
+    FromCenConversionRepository fromCenConversionRepository(IReflections reflections, EigorConfiguration configuration) throws ConfigurationException {
+        FromCenListBakedRepository fromCenListBakedRepository = new FromCenListBakedRepository(
                 new Cen2FattPA(reflections, configuration),
                 new Cen2Ubl(reflections, configuration),
                 new Cen2UblCn(reflections, configuration),
@@ -119,6 +75,8 @@ public class Eigor {
                 new Cen2PeppolBis(reflections, configuration),
                 new Cen2PeppolCn(reflections, configuration)
         );
+        fromCenListBakedRepository.configure();
+        return fromCenListBakedRepository;
     }
 
     @Bean

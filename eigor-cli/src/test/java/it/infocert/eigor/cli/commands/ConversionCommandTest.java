@@ -109,8 +109,6 @@ public class ConversionCommandTest {
         assertThat(asList(outputFolderFile.list()), hasItem("invoice-source.xml"));
         assertThat(asList(outputFolderFile.list()), hasItem("invoice-target.xml"));
         assertThat(asList(outputFolderFile.list()), hasItem("invoice-cen.csv"));
-        assertThat(asList(outputFolderFile.list()), hasItem("rule-report.csv"));
-//        assertThat(asList(outputFolderFile.list()), hasItem("invoice-transformation.log"));
     }
 
     @Test
@@ -137,8 +135,6 @@ public class ConversionCommandTest {
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.xml"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
-//        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "fromcen-errors.csv"), notNullValue());
     }
 
@@ -170,8 +166,8 @@ public class ConversionCommandTest {
     @Test
     public void toCenConversionShouldCreateCsvAndAllFilesIfConversionResultHasErrorsButForceIsTrue() {
         Path outputFolder = FileSystems.getDefault().getPath(outputFolderFile.getAbsolutePath());
+
         // given
-//        given(fromCen.extension()).willReturn(".xml");
         ConversionCommand sut = new ConversionCommand.ConversionCommandBuilder()
                 .setTargetFormat(targetFormat)
                 .setSourceFormat(sourceFormat)
@@ -185,15 +181,15 @@ public class ConversionCommandTest {
                 .build();
         PrintStream err = new PrintStream(new ByteArrayOutputStream());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
+
         // when
         sut.execute(out, err);
+
         // then a fromcen-errors.csv should be created for the issues along with the other files
         List<File> files = asList(outputFolderFile.listFiles());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "tocen-errors.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-source.xml"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-cen.csv"), notNullValue());
         assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-target.xml"), notNullValue());
-        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "rule-report.csv"), notNullValue());
-//        assertThat(files + " found", findFirstFileByNameOrNull(outputFolderFile, "invoice-transformation.log"), notNullValue());
     }
 }

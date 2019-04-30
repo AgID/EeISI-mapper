@@ -7,15 +7,10 @@ import it.infocert.eigor.api.impl.*;
 import it.infocert.eigor.api.utils.IReflections;
 import it.infocert.eigor.api.utils.JavaReflections;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.model.core.rules.RuleOutcome;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.function.Consumer;
 
 
 public class ApiTest {
@@ -24,7 +19,6 @@ public class ApiTest {
 
         // services
         IReflections reflections = new JavaReflections();
-        RuleRepository ruleRepository = new ReflectionBasedRepository( new Reflections("it.infocert.eigor.model") );
         PropertiesBackedConfiguration configuration = new PropertiesBackedConfiguration();
 
         ToCenConversionRepository conversionRepository = new ToCenListBakedRepository(
@@ -42,17 +36,9 @@ public class ApiTest {
         // preconditions
         ToCenConversion toCen = conversionRepository.findConversionToCen(soureFormat);
         FromCenConversion fromCen = fromCenConversionRepository.findConversionFromCen(targetFormat);
-        final RuleReport ruleReport = new InMemoryRuleReport();
 
         // business logic
         final BG0000Invoice cenInvoice = toCen.convert(invoiceInSourceFormat).getResult();
-        List<Rule> rules = ruleRepository.rules();
-
-        rules.stream().forEach(rule -> {
-            RuleOutcome ruleOutcome = rule.isCompliant(cenInvoice);
-            ruleReport.store(ruleOutcome, rule);
-        });
-
         byte[] converted = fromCen.convert(cenInvoice).getResult();
 
     }

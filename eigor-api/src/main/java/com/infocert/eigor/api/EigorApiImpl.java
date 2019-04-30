@@ -14,12 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-import sun.nio.ch.ChannelInputStream;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -112,7 +110,6 @@ public class EigorApiImpl implements EigorApi {
         }
 
         ObservableConversion conversion = new ObservableConversion(
-                builder.getRuleRepository(),
                 toCen,
                 fromCen,
                 (bytes == null) ? invoice : new ByteArrayInputStream(bytes),
@@ -211,8 +208,7 @@ public class EigorApiImpl implements EigorApi {
                 invoice,
                 toCen,
                 "invoice",
-                Lists.newArrayList(callback),
-                builder.getRuleRepository()
+                Lists.newArrayList(callback)
         );
     }
 }

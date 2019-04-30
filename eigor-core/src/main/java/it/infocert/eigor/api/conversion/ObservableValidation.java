@@ -1,17 +1,8 @@
 package it.infocert.eigor.api.conversion;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.IConversionIssue;
-import it.infocert.eigor.api.RuleRepository;
-import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
-import it.infocert.eigor.api.ToCenConversion;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.errors.ErrorCode;
-import it.infocert.eigor.api.impl.InMemoryRuleReport;
 import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.rules.Rule;
-import it.infocert.eigor.model.core.rules.RuleOutcome;
-import it.infocert.eigor.rules.RuleOutcomeAsConversionIssueAdapter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -19,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -31,13 +21,13 @@ public class ObservableValidation extends AbstractObservable {
     private final ToCenConversion toCen;
     private final String invoiceFileName;
     private Predicate<IConversionIssue> isSyntaxIssue = i -> {
-        if(Objects.nonNull(i.getErrorMessage()) && Objects.nonNull(i.getErrorMessage().getErrorCode())) {
+        if (Objects.nonNull(i.getErrorMessage()) && Objects.nonNull(i.getErrorMessage().getErrorCode())) {
             return ErrorCode.Action.XSD_VALIDATION.equals(i.getErrorMessage().getErrorCode().getAction());
         }
         return false;
     };
     private Predicate<IConversionIssue> isSemanticIssue = i -> {
-        if(Objects.nonNull(i.getErrorMessage()) && Objects.nonNull(i.getErrorMessage().getErrorCode())) {
+        if (Objects.nonNull(i.getErrorMessage()) && Objects.nonNull(i.getErrorMessage().getErrorCode())) {
             return ErrorCode.Action.SCH_VALIDATION.equals(i.getErrorMessage().getErrorCode().getAction());
         }
         return false;
@@ -45,8 +35,10 @@ public class ObservableValidation extends AbstractObservable {
 
     private Predicate<IConversionIssue> isAnyIssue = i -> true;
 
-    public ObservableValidation(InputStream invoiceInSourceFormat, ToCenConversion toCen, String invoiceFileName, List<ConversionCallback> listeners, RuleRepository ruleRepository) {
-        super(checkNotNull(listeners), ruleRepository);
+    public ObservableValidation(
+            InputStream invoiceInSourceFormat,
+            ToCenConversion toCen, String invoiceFileName, List<ConversionCallback> listeners) {
+        super(checkNotNull(listeners));
         checkNotNull(invoiceInSourceFormat, "The binary version of the invoice is mandatory.");
         try {
             this.invoiceInSourceFormat = IOUtils.toByteArray(invoiceInSourceFormat);
@@ -95,22 +87,9 @@ public class ObservableValidation extends AbstractObservable {
                         .forEach(issues::add);
 
                 // 2nd step CEN verification
-                if(runCenVerification) {
+                if (runCenVerification) {
                     fireOnStartingVerifyingCenRules(ctx);
                     final BG0000Invoice invoice = toCenResult.getResult();
-                    final InMemoryRuleReport ruleReport = new InMemoryRuleReport();
-                    applyRulesToCenObject(invoice, ruleReport);
-                    ctx.setRuleReport(ruleReport);
-                    if (!ruleReport.hasFailures()) {
-                        fireOnSuccessfullyVerifiedCenRules(ctx);
-                    } else {
-
-                        for (Map.Entry<RuleOutcome, Rule> errorsAndFailure : ruleReport.getErrorsAndFailures()) {
-                            issues.add(new RuleOutcomeAsConversionIssueAdapter(errorsAndFailure.getKey()));
-                        }
-
-                        fireOnFailedVerifyingCenRules(ctx);
-                    }
                 }
             }
         } catch (SyntaxErrorInInvoiceFormatException e) {
