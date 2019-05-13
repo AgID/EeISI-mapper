@@ -219,8 +219,6 @@ public class Ubl2Cen extends AbstractToCenConverter {
                 StringToUnitOfMeasureConverter.newConverter(),
                 LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
 
-                LookUpEnumConversion.newConverter(VatExemptionReasonsCodes.class),
-
                 Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
                 Iso31661CountryCodesToStringConverter.newConverter(),
                 StringToUntdid4461PaymentMeansCode.newConverter(),

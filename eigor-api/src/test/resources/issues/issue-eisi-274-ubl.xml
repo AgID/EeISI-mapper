@@ -71,7 +71,7 @@
 	<!--SELLER-->
 	<cac:AccountingSupplierParty><!--BG-4-->
         <cac:Party>
-			<cbc:EndpointID schemeID="mail">Seller electronic address</cbc:EndpointID><!--BT-34, BT-34-1-->
+			<cbc:EndpointID schemeID="EM">Seller electronic address</cbc:EndpointID><!--BT-34, BT-34-1-->
 			<cac:PartyIdentification><cbc:ID schemeID="0100">Seller identifier 1</cbc:ID><!--BT-29, BT-29-1-->
 			</cac:PartyIdentification>
 			<cac:PartyIdentification><cbc:ID schemeID="0010">Seller identifier 3</cbc:ID><!--BT-29, BT-29-1-->
@@ -262,7 +262,7 @@
 	<!--DOCUMENT allowance-->
 	<cac:AllowanceCharge> <!--BG-20-->
 		<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-		<cbc:AllowanceChargeReasonCode>75</cbc:AllowanceChargeReasonCode> <!--BT-98-->
+		<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode> <!--BT-98-->
 		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason> <!--BT-97-->
 		<cbc:MultiplierFactorNumeric>0.0756</cbc:MultiplierFactorNumeric><!--BT-94--> <!--remember it is a multiplier -->
 		<cbc:Amount currencyID="EUR">116.67</cbc:Amount><!--BT-92-->
@@ -330,7 +330,7 @@
             <cac:TaxCategory>
                 <cbc:ID>E</cbc:ID><!--BT-118-->
                 <cbc:Percent>0</cbc:Percent><!--BT-119-->
-				<cbc:TaxExemptionReasonCode>E1</cbc:TaxExemptionReasonCode><!--BT-121-->
+				<cbc:TaxExemptionReasonCode>vatex-eu-143-1g</cbc:TaxExemptionReasonCode><!--BT-121-->
 				<cbc:TaxExemptionReason>Art15</cbc:TaxExemptionReason><!--BT-120-->
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
@@ -343,7 +343,7 @@
             <cac:TaxCategory>
                 <cbc:ID>G</cbc:ID><!--BT-118-->
                 <cbc:Percent>0</cbc:Percent><!--BT-119-->
-				<cbc:TaxExemptionReasonCode>G1</cbc:TaxExemptionReasonCode><!--BT-121-->
+				<cbc:TaxExemptionReasonCode>vatex-eu-143-1g</cbc:TaxExemptionReasonCode><!--BT-121-->
             	<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -386,7 +386,7 @@
 		<!--LINE allowance-->
 		<cac:AllowanceCharge><!--BG-27-->
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode><!--BT-140--> 
+			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode><!--BT-140-->
 			<cbc:AllowanceChargeReason>Sales discount</cbc:AllowanceChargeReason> <!--BT-139--> 
 			<cbc:MultiplierFactorNumeric>0.105645</cbc:MultiplierFactorNumeric><!--BT-138--> 
 			<cbc:Amount currencyID="EUR">10.61</cbc:Amount>
@@ -395,7 +395,7 @@
 		<!--CHARGE allowance-->
 		<cac:AllowanceCharge><!--BG-28-->
 			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-			<cbc:AllowanceChargeReasonCode>ZZZ</cbc:AllowanceChargeReasonCode><!--BT-145-->
+			<cbc:AllowanceChargeReasonCode>AAA</cbc:AllowanceChargeReasonCode><!--BT-145-->
 			<cbc:AllowanceChargeReason>Packing cost</cbc:AllowanceChargeReason><!--BT-144--> 
 			<cbc:MultiplierFactorNumeric>0.105645</cbc:MultiplierFactorNumeric><!--BT-143--> 
 			<cbc:Amount currencyID="EUR">10.61</cbc:Amount><!--BT-141-->
@@ -476,7 +476,7 @@
 		<!--LINE allowance-->
 		<cac:AllowanceCharge>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode> 
+			<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode>
 			<cbc:AllowanceChargeReason>Service discount exempt</cbc:AllowanceChargeReason> 
 			<cbc:MultiplierFactorNumeric>0.10</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="EUR">10</cbc:Amount>

@@ -419,7 +419,7 @@
 				<ram:ExemptionReason>exemption reason text in VAT breakdwon</ram:ExemptionReason><!--BT-120-->
                 <ram:BasisAmount>100.00</ram:BasisAmount><!--BT-116-->
                 <ram:CategoryCode>E</ram:CategoryCode><!--BT-118-->
-				<ram:ExemptionReasonCode>E1</ram:ExemptionReasonCode><!--BT-121-->
+				<ram:ExemptionReasonCode>vatex-eu-143-1g</ram:ExemptionReasonCode><!--BT-121-->
 				<ram:TaxPointDate><!-- not at invoice level-->
 					<udt:DateString format="102">20150530</udt:DateString><!--BT-7- even if it is different from other BG-23 it considers it ok a rule should be added to schematron as in the core BT-7 is at invoice level-->
 				</ram:TaxPointDate>

@@ -49,11 +49,12 @@ public class UblCn2Cen extends AbstractToCenConverter {
     private IXMLValidator ciusValidator;
 
     public UblCn2Cen(IReflections reflections, EigorConfiguration configuration) {
-        super(reflections, conversionRegistry,  configuration, ErrorCode.Location.UBLCN_IN);
+        super(reflections, conversionRegistry, configuration, ErrorCode.Location.UBLCN_IN);
         this.configuration = checkNotNull(configuration);
     }
 
-    @Override public void configure() throws ConfigurationException {
+    @Override
+    public void configure() throws ConfigurationException {
         super.configure();
 
         // load the XSD.
@@ -67,7 +68,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
 
         // load the UBL schematron validator.
         try {
-            Resource ublSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron") );
+            Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.schematron.auto-update-xslt"));
             ublValidator = new SchematronValidator(ublSchemaFile, true, schematronAutoUpdate, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
@@ -76,7 +77,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
 
         // load the CIUS schematron validator.
         try {
-            Resource ciusSchemaFile = drl.getResource( this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius") );
+            Resource ciusSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius"));
             boolean ciusAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.ublcn-cen.cius.auto-update-xslt"));
             ciusValidator = new CiusSchematronValidator(ciusSchemaFile, true, ciusAutoUpdate, ErrorCode.Location.UBLCN_IN);
         } catch (Exception e) {
@@ -109,8 +110,8 @@ public class UblCn2Cen extends AbstractToCenConverter {
             clonedInputStream = new ByteArrayInputStream(bytes);
 
             List<IConversionIssue> validationErrors = xsdValidator.validate(bytes);
-            if(validationErrors.isEmpty()){
-            	log.info("Xsd validation successful!");
+            if (validationErrors.isEmpty()) {
+                log.info("Xsd validation successful!");
             }
 
             List<IConversionIssue> schematronErrors = ublValidator.validate(bytes);
@@ -123,7 +124,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
                 log.info("CIUS Schematron validation successful!");
             }
 
-			errors.addAll(validationErrors);
+            errors.addAll(validationErrors);
             errors.addAll(schematronErrors);
             errors.addAll(ciusErrors);
 
@@ -169,7 +170,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
 
     @Override
     public boolean support(String format) {
-        if(format == null){
+        if (format == null) {
             log.error("NULL FORMAT");
             return false;
         }
@@ -211,7 +212,7 @@ public class UblCn2Cen extends AbstractToCenConverter {
         return "converter-ublcn-cen";
     }
 
-    private static ConversionRegistry initConversionStrategy(){
+    private static ConversionRegistry initConversionStrategy() {
         return new ConversionRegistry(
 
                 // enums
@@ -229,8 +230,6 @@ public class UblCn2Cen extends AbstractToCenConverter {
 
                 StringToUnitOfMeasureConverter.newConverter(),
                 LookUpEnumConversion.newConverter(UnitOfMeasureCodes.class),
-
-                LookUpEnumConversion.newConverter(VatExemptionReasonsCodes.class),
 
                 Iso4217CurrenciesFundsCodesToStringConverter.newConverter(),
                 Iso31661CountryCodesToStringConverter.newConverter(),

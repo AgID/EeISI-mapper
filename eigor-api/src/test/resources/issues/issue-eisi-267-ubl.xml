@@ -71,7 +71,7 @@
 	<!--SELLER-->
 	<cac:AccountingSupplierParty><!--BG-4-->
         <cac:Party>
-			<cbc:EndpointID schemeID="mail">Seller electronic address</cbc:EndpointID><!--BT-34, BT-34-1-->
+			<cbc:EndpointID schemeID="EM">Seller electronic address</cbc:EndpointID><!--BT-34, BT-34-1-->
 			<cac:PartyIdentification><cbc:ID schemeID="0100">Seller identifier 1</cbc:ID><!--BT-29, BT-29-1-->
 			</cac:PartyIdentification>
 			<cac:PartyIdentification><cbc:ID schemeID="0010">Seller identifier 3</cbc:ID><!--BT-29, BT-29-1-->
@@ -262,7 +262,7 @@
 	<!--DOCUMENT allowance-->
 	<cac:AllowanceCharge> <!--BG-20-->
 		<cbc:ChargeIndicator>false</cbc:ChargeIndicator> 
-		<cbc:AllowanceChargeReasonCode>75</cbc:AllowanceChargeReasonCode> <!--BT-98-->
+		<cbc:AllowanceChargeReasonCode>65</cbc:AllowanceChargeReasonCode> <!--BT-98-->
 		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason> <!--BT-97-->
 		<cbc:MultiplierFactorNumeric>0.0756</cbc:MultiplierFactorNumeric><!--BT-94--> <!--remember it is a multiplier -->
 		<cbc:Amount currencyID="EUR">116.67</cbc:Amount><!--BT-92-->
@@ -330,7 +330,7 @@
             <cac:TaxCategory>
                 <cbc:ID>E</cbc:ID><!--BT-118-->
                 <cbc:Percent>0</cbc:Percent><!--BT-119-->
-				<cbc:TaxExemptionReasonCode>E1</cbc:TaxExemptionReasonCode><!--BT-121-->
+				<cbc:TaxExemptionReasonCode>vatex-eu-143-1g</cbc:TaxExemptionReasonCode><!--BT-121-->
 				<cbc:TaxExemptionReason>Art15</cbc:TaxExemptionReason><!--BT-120-->
 				<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
@@ -343,7 +343,7 @@
             <cac:TaxCategory>
                 <cbc:ID>G</cbc:ID><!--BT-118-->
                 <cbc:Percent>0</cbc:Percent><!--BT-119-->
-				<cbc:TaxExemptionReasonCode>G1</cbc:TaxExemptionReasonCode><!--BT-121-->
+				<cbc:TaxExemptionReasonCode>vatex-eu-143-1g</cbc:TaxExemptionReasonCode><!--BT-121-->
             	<cac:TaxScheme>
                     <cbc:ID>VAT</cbc:ID>
                 </cac:TaxScheme>
@@ -376,7 +376,7 @@
 		   <cbc:EndDate>2017-09-15</cbc:EndDate><!--BT-135-->
 		</cac:InvoicePeriod>
 		<cac:OrderLineReference>
-			<cbc:LineID>55</cbc:LineID><!--BT-132-->
+			<cbc:LineID>65</cbc:LineID><!--BT-132-->
 		</cac:OrderLineReference>
         <cac:DocumentReference>
 		<cbc:ID schemeID="ABN">43456AV</cbc:ID><!--BT-128, BT-128-1-->

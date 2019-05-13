@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (C) 2016-2018 Oriol Bausà, Andreas Pelekies, Philip Helger
+    Copyright (C) 2016-2019 Oriol Bausà, Andreas Pelekies, Philip Helger
+    and contributors.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -364,7 +365,8 @@
 	<param name="CII-SR-306" value="not(ram:PurchaseConditionsReferencedDocument)"/>
 	<param name="CII-SR-307" value="not(ram:SpecifiedProcuringProject/ram:Description)"/>
 	<param name="CII-SR-448" value="not(ram:UltimateCustomerOrderReferencedDocument)"/>
-
+	<param name="CII-SR-450" value="(not(ram:BuyerTradeParty/ram:ID) and ram:BuyerTradeParty/ram:GlobalID) or (ram:BuyerTradeParty/ram:ID and not(ram:BuyerTradeParty/ram:GlobalID)) or (not(ram:BuyerTradeParty/ram:ID) and not(ram:BuyerTradeParty/ram:GlobalID))"/>
+	
 	<!-- ApplicableHeaderTradeDelivery -->
 	<param name="CII-SR-308" value="not(ram:RelatedSupplyChainConsignment)"/>
 	<param name="CII-SR-309" value="not(ram:ShipToTradeParty/ram:RoleCode)"/>
@@ -399,6 +401,8 @@
 	<param name="CII-SR-336" value="not(ram:ConsumptionReportReferencedDocument)"/>
 	<param name="CII-SR-337" value="not(ram:PreviousDeliverySupplyChainEvent)"/>
 	<param name="CII-SR-338" value="not(ram:PackingListReferencedDocument)"/>
+	<param name="CII-SR-449" value="(not(ram:ShipToTradeParty/ram:ID) and ram:ShipToTradeParty/ram:GlobalID) or (ram:ShipToTradeParty/ram:ID and not(ram:ShipToTradeParty/ram:GlobalID)) or (not(ram:ShipToTradeParty/ram:ID) and not(ram:ShipToTradeParty/ram:GlobalID))"/>
+	
 	<!--  ApplicableHeaderTradeSettlement -->
 	<param name="CII-SR-339" value="not(ram:DuePayableAmount)"/>
 	<param name="CII-SR-340" value="not(ram:CreditorReferenceTypeCode)"/>
@@ -427,6 +431,7 @@
 	<param name="CII-SR-362" value="not(ram:PayeeTradeParty/ram:SpecifiedTaxRegistration)"/>
 	<param name="CII-SR-363" value="not(ram:PayeeTradeParty/ram:EndPointURIUniversalCommunication)"/>
 	<param name="CII-SR-364" value="not(ram:PayeeTradeParty/ram:LogoAssociatedSpecifiedBinaryFile)"/>
+	<param name="CII-SR-451" value="(not(ram:PayeeTradeParty/ram:ID) and ram:PayeeTradeParty/ram:GlobalID) or (ram:PayeeTradeParty/ram:ID and not(ram:PayeeTradeParty/ram:GlobalID)) or (not(ram:PayeeTradeParty/ram:ID) and not(ram:PayeeTradeParty/ram:GlobalID))"/>
 	
 	<param name="CII-SR-365" value="not(ram:PayerTradeParty)"/>
 	<param name="CII-SR-366" value="not(ram:TaxApplicableTradeCurrencyExchange)"/>
@@ -519,11 +524,15 @@
     <param name="CII-DT-002" value="not(@schemeAgencyName)"/>
     <param name="CII-DT-003" value="not(@schemeDataURI)"/>
     <param name="CII-DT-004" value="not(@schemeURI)"/>
-	<param name="CII-DT-097" value="not(@schemeVersionID)"/>
     <!-- ID Type without attributes -->
     <param name="CII-DT-005" value="not(@schemeID)"/>
     <param name="CII-DT-006" value="not(@schemeAgencyID)"/>
     <param name="CII-DT-007" value="not(@schemeVersionID)"/>
+	<!-- CategoryCode without attributes -->	
+	<param name="CII-DT-045" value="not(@listID)"/>
+	<param name="CII-DT-046" value="not(@listAgencyID)"/>
+	<param name="CII-DT-047" value="not(@listVersionID)"/>
+	<param name="CII-DT-048" value="not(@listURI)"/>
     <!-- TypeCode -->
     <param name="CII-DT-008" value="not(@name)"/>
     <param name="CII-DT-009" value="not(@listURI)"/>
@@ -567,10 +576,6 @@
 	<param name="CII-DT-042" value="not(ram:UnitBasisAmount)"/>
 	<param name="CII-DT-043" value="not(ram:LineTotalBasisAmount)"/>
 	<param name="CII-DT-044" value="not(ram:AllowanceChargeBasisAmount)"/>
-	<param name="CII-DT-045" value="not(ram:CategoryCode/@listID)"/>
-	<param name="CII-DT-046" value="not(ram:CategoryCode/@listAgencyID)"/>
-	<param name="CII-DT-047" value="not(ram:CategoryCode/@listVersionID)"/>
-	<param name="CII-DT-048" value="not(ram:CategoryCode/@listURI)"/>
 	<param name="CII-DT-049" value="not(ram:CurrencyCode)"/>
 	<param name="CII-DT-050" value="not(ram:Jurisdiction)"/>
 	<param name="CII-DT-051" value="not(ram:CustomsDutyIndicator)"/>
@@ -636,10 +641,11 @@
         self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:SellerAssignedID]"/>
   <param name="TypeCodeType " value="//ram:TypeCode"/>
   <param name="TypeCodeTypeNoAttributes " value="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:TypeCode"/>
+  <param name="CategoryCodeNoAttributes " value="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode"/>
   <param name="SpecifiedTradeProduct " value="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct"/>
   <param name="ReferencedDocumentType " value="//ram:*[ends-with(name(), 'ReferencedDocument')]"/>
   <param name="SpecifiedLineTradeAgreement " value="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeAgreement"/>
-	<param name="AmountType " value="//ram:*[ends-with(name(), 'Amount') and not (self::ram:TaxTotalAmount)]"/>
+  <param name="AmountType " value="//ram:*[ends-with(name(), 'Amount') and not (self::ram:TaxTotalAmount)]"/>
   <param name="QuantityType " value="//ram:*[ends-with(name(), 'Quantity')]"/>
   <param name="SpecifiedLineTradeDelivery " value="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeDelivery"/>
   <param name="SpecifiedLineTradeSettlement " value="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement"/>
