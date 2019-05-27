@@ -1,37 +1,44 @@
 package it.infocert.eigor.model.core.enums;
 
+import javax.xml.bind.annotation.XmlEnumValue;
+
 public enum VatExemptionReasonsCodes {
 
-    // 1: Sign
-    // 2: ID
-    // 3: ShortDescription
-    // 4: LongDescription
+    // 1: Code
+    // 2: Value
     #foreach( $row in $rows )
+
         /**
-         * ${row.Code}
-         * <p>${row.data.Description}</p>
-         * <p>${row.data.Explanation}</p>
-         * <p>${row.data.ApplicationGuideline}</p>
+         * ${row.data.Code}
+         * <p>${row.data.Value}</p>
          */
-        ${row.data.Code}("${row.data.Description}", "${row.data.Explanation}", "${row.data.ApplicationGuideline}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+        ${row.data.Code}("${row.data.Value}")#if($meta.count.lastIndex==$row.meta.index);#else,#end
+
     #end
 
-    private String description;
-    private String explanation;
-    private String applicationGuideline;
+    private String value;
 
-    VatExemptionReasonsCodes(String description, String explanation, String applicationGuideline) {
-        this.description = description;
-        this.explanation = explanation;
-        this.applicationGuideline = applicationGuideline;
+    VatExemptionReasonsCodes(String value) {
+        this.value = value;
+    }
+
+    public String value() {
+        return value;
+    }
+
+    public static VatExemptionReasonsCodes fromValue(String v) {
+        for (VatExemptionReasonsCodes c: VatExemptionReasonsCodes.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
     @Override
     public String toString() {
         return "VatExemptionReasonsCodes{" +
-                "description='" + description + '\'' +
-                "| explanation='" + explanation + '\'' +
-                "| applicationGuideline='" + applicationGuideline + '\'' +
+                "value='" + value + '\'' +
                 '}';
     }
 }

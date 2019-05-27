@@ -17,12 +17,13 @@ public class Untdid5305DutyTaxFeeCategoriesToNaturaType implements TypeConverter
     @Override
     public NaturaType convert(Untdid5305DutyTaxFeeCategories code) {
         switch (code) {
-            case Z:
-                return N_3; //TODO assert in which case this must be N_3 or N_7 (see code list mapping)
             case E:
                 return N_4;
             case G:
-                return N_2;
+            case K:
+                return N_3;
+            case AE:
+                return N_6;
             case O:
                 return N_2;
             default:

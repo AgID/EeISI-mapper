@@ -1,6 +1,7 @@
 <!--
 
-    Copyright (C) 2016-2018 Oriol Bausà, Andreas Pelekies, Philip Helger
+    Copyright (C) 2016-2019 Oriol Bausà, Andreas Pelekies, Philip Helger
+    and contributors.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -65,6 +66,7 @@
   <param name="UBL-SR-44" value="(count(cac:PaymentMeans/cbc:PaymentID) &lt;=1)"/>
   <param name="UBL-SR-45" value="(count(cac:PaymentMeans/cbc:PaymentDueDate) &lt;=1)"/>
   <param name="UBL-SR-46" value="(count(cac:PaymentMeans/cbc:PaymentMeansCode/@name) &lt;=1)"/>
+  <param name="UBL-SR-47" value="(count(cac:PaymentMeans) &gt; 1 and (cac:PaymentMeans[1]/cbc:PaymentMeansCode = cac:PaymentMeans[2]/cbc:PaymentMeansCode )) or (count(cac:PaymentMeans) &lt;= 1)"/>
   <param name="UBL-DT-01" value="string-length(substring-after(.,'.'))&lt;=2"/>
   <param name="UBL-DT-06" value="(@mimeCode)"/>
   <param name="UBL-DT-07" value="(@filename)"/>
@@ -731,6 +733,24 @@
   <param name="UBL-CR-645" value="not(cac:InvoiceLine/cac:DeliveryTerms)"/>
   <param name="UBL-CR-646" value="not(cac:InvoiceLine/cac:SubInvoiceLine)"/>
   <param name="UBL-CR-647" value="not(cac:InvoiceLine/cac:ItemPriceExtension)"/>
+  <param name="UBL-CR-648" value="not(cbc:CustomizationID/@schemeID)"/>
+  <param name="UBL-CR-649" value="not(cbc:ProfileID/@schemeID)"/>
+  <param name="UBL-CR-650" value="not(cbc:ID/@schemeID)"/>
+  <param name="UBL-CR-651" value="not(cbc:SalesOrderID/@schemeID)"/>
+  <param name="UBL-CR-652" value="not(//cac:PartyTaxScheme/cbc:CompanyID/@schemeID)"/>
+  <param name="UBL-CR-653" value="not(cac:PaymentMeans/cbc:PaymentID/@schemeID)"/>
+  <param name="UBL-CR-654" value="not(cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID/@schemeID)"/>
+  <param name="UBL-CR-655" value="not(cac:PaymentMeans/cac:PayeeFinancialAccount/cac:FinancialInstitutionBranch/cbc:ID/@schemeID)"/>  
+  <param name="UBL-CR-656" value="not(cbc:InvoiceTypeCode/@listID)"/>
+  <param name="UBL-CR-657" value="not(cbc:DocumentCurrencyCode/@listID)"/>
+  <param name="UBL-CR-658" value="not(cbc:TaxCurrencyCode/@listID)"/>
+  <param name="UBL-CR-659" value="not(cac:AdditionalDocumentReference/cbc:DocumentTypeCode/@listID)"/>
+  <param name="UBL-CR-660" value="not(//cac:Country/cbc:IdentificationCode/@listID)"/>
+  <param name="UBL-CR-661" value="not(cac:PaymentMeans/cbc:PaymentMeansCode/@listID)"/>
+  <param name="UBL-CR-662" value="not(//cbc:AllowanceChargeReasonCode/@listID)"/>
+  <param name="UBL-CR-663" value="not(//@unitCodeListID)"/>
+  <param name="UBL-CR-664" value="not(//cac:FinancialInstitution)"/>
+  
   <param name="Invoice_line" value="cac:InvoiceLine"/>
   <param name="Preceding_Invoice" value="cac:BillingReference"/>
   <param name="Payee" value="cac:PayeeParty"/>

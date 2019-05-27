@@ -150,7 +150,7 @@
         <BT-95>S</BT-95>
         <BT-96>5.00</BT-96>
         <BT-97>Doc allowance reason text</BT-97>
-        <BT-98>55</BT-98>
+        <BT-98>65</BT-98>
     </BG-20>
     
     <BG-21>
@@ -188,7 +188,7 @@
         <BT-118>E</BT-118>
         <BT-119>0</BT-119>
         <BT-120>Exemtion reason text</BT-120>
-        <BT-121>Exemption reason code</BT-121>
+        <BT-121>vatex-eu-143-1g</BT-121>
     </BG-23>
     <BG-24>
         <BT-122>Supporting document ref</BT-122>
@@ -215,7 +215,7 @@
             <BT-137>1000.00</BT-137>
             <BT-138>1</BT-138>
             <BT-139>Invoice line allowance reason</BT-139>
-            <BT-140>55</BT-140>
+            <BT-140>65</BT-140>
         </BG-27>
        
         <BG-28>

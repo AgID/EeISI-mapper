@@ -190,7 +190,7 @@ public class CreditNoteLineConverter implements CustomMapping<Document> {
                         BG0028InvoiceLineCharges elemBg28 = elemBg25.getBG0028InvoiceLineCharges(0);
                         Element allowanceCharge = new Element("AllowanceCharge");
                         Element chargeIndicator = new Element("ChargeIndicator");
-                        chargeIndicator.setText("false");
+                        chargeIndicator.setText("true");
                         allowanceCharge.addContent(chargeIndicator);
 
                         if (!elemBg28.getBT0145InvoiceLineChargeReasonCode().isEmpty()) {

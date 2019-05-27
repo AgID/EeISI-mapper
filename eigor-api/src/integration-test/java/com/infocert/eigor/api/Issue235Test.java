@@ -68,6 +68,4 @@ public class Issue235Test {
     public void test() {
         conversion.assertConversionWithoutErrors( "/issues/235/" + ublInvoice.getName(), "ubl", "fatturapa" );
     }
-
-
 }

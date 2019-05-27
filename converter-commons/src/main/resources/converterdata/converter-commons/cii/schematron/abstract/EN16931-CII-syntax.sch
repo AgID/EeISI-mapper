@@ -1,6 +1,7 @@
 <!--
 
-    Copyright (C) 2016-2018 Oriol Bausà, Andreas Pelekies, Philip Helger
+    Copyright (C) 2016-2019 Oriol Bausà, Andreas Pelekies, Philip Helger
+    and contributors.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -378,7 +379,7 @@
 		<assert test="$CII-SR-306" flag="warning" id="CII-SR-306">[CII-SR-306] - PurchaseConditionsReferencedDocument should not be present</assert>
 		<assert test="$CII-SR-307" flag="warning" id="CII-SR-307">[CII-SR-307] - Description should not be present</assert>
 		<assert test="$CII-SR-448" flag="warning" id="CII-SR-448">[CII-SR-448] - UltimateCustomerOrderReferencedDocument should not be present</assert>
-		
+		<assert test="$CII-SR-450" flag="warning" id="CII-SR-450">[CII-SR-450] - Only one  buyer identifier should be present (either the ID or the Global ID)</assert>
 		
 	</rule>
 	<rule context="$ApplicableHeaderTradeDelivery ">
@@ -417,7 +418,7 @@
 		<assert test="$CII-SR-336" flag="warning" id="CII-SR-336">[CII-SR-336] - ConsumptionReportReferencedDocument should not be present</assert>
 		<assert test="$CII-SR-337" flag="warning" id="CII-SR-337">[CII-SR-337] - PreviousDeliverySupplyChainEvent should not be present</assert>
 		<assert test="$CII-SR-338" flag="warning" id="CII-SR-338">[CII-SR-338] - PackingListReferencedDocument should not be present</assert>
-		
+		<assert test="$CII-SR-449" flag="warning" id="CII-SR-449">[CII-SR-449] - Only one delivery to location identifier should be present (either the ID or the Global ID)</assert>
 	</rule>
 	<rule context="$ApplicableHeaderTradeSettlement ">
 		<assert test="$CII-SR-339" flag="warning" id="CII-SR-339">[CII-SR-339] - DuePayableAmount should not be present</assert>
@@ -447,6 +448,7 @@
 		<assert test="$CII-SR-362" flag="warning" id="CII-SR-362">[CII-SR-362] - SpecifiedTaxRegistration should not be present</assert>
 		<assert test="$CII-SR-363" flag="warning" id="CII-SR-363">[CII-SR-363] - EndPointURIUniversalCommunication should not be present</assert>
 		<assert test="$CII-SR-364" flag="warning" id="CII-SR-364">[CII-SR-364] - LogoAssociatedSpecifiedBinaryFile should not be present</assert>
+		<assert test="$CII-SR-451" flag="warning" id="CII-SR-451">[CII-SR-451] - Only one payee identifier should be present (either the ID or the Global ID)</assert>
 		
 		<assert test="$CII-SR-365" flag="warning" id="CII-SR-365">[CII-SR-365] - PayerTradeParty should not be present</assert>
 		<assert test="$CII-SR-366" flag="warning" id="CII-SR-366">[CII-SR-366] - TaxApplicableTradeCurrencyExchange should not be present</assert>
@@ -546,12 +548,11 @@
         <assert test="$CII-DT-002" flag="fatal" id="CII-DT-002">[CII-DT-002] - schemeAgencyName should not be present</assert>
         <assert test="$CII-DT-003" flag="fatal" id="CII-DT-003">[CII-DT-003] - schemeDataURI should not be present</assert>
         <assert test="$CII-DT-004" flag="fatal" id="CII-DT-004">[CII-DT-004] - schemeURI should not be present</assert>
-    	<assert test="$CII-DT-097" flag="fatal" id="CII-DT-097">[CII-DT-097] - schemeVersionID should not be present</assert>
     </rule>
 	<rule context="$IDTypeNoAttributes ">
         <assert test="$CII-DT-005" flag="fatal" id="CII-DT-005">[CII-DT-005] - schemeID should not be present</assert>
         <assert test="$CII-DT-006" flag="fatal" id="CII-DT-006">[CII-DT-006] - schemeAgencyID should not be present</assert>
-        <assert test="$CII-DT-007" flag="fatal" id="CII-DT-007">[CII-DT-007] - schemeVersionID should not be present</assert>
+		<assert test="$CII-DT-007" flag="fatal" id="CII-DT-007">[CII-DT-007] - schemeVersionID should not be present</assert>
     </rule>
     <rule context="$TypeCodeType ">
         <assert test="$CII-DT-008" flag="fatal" id="CII-DT-008">[CII-DT-008] - name should not be present</assert>
@@ -562,6 +563,12 @@
         <assert test="$CII-DT-011" flag="fatal" id="CII-DT-011">[CII-DT-011] - listAgencyID should not be present</assert>
         <assert test="$CII-DT-012" flag="fatal" id="CII-DT-012">[CII-DT-012] - listVersionID should not be present</assert>
     </rule>
+	<rule context="$CategoryCodeNoAttributes ">
+		<assert test="$CII-DT-045" flag="warning" id="CII-DT-045">[CII-DT-045] - @listID should not be present</assert>
+		<assert test="$CII-DT-046" flag="warning" id="CII-DT-046">[CII-DT-046] - @listAgencyID should not be present</assert>
+		<assert test="$CII-DT-047" flag="warning" id="CII-DT-047">[CII-DT-047] - @listVersionID should not be present</assert>
+		<assert test="$CII-DT-048" flag="warning" id="CII-DT-048">[CII-DT-048] - @listURI should not be present</assert>
+	</rule>
     <rule context="$ReferencedDocumentType ">
         <assert test="$CII-DT-015" flag="fatal" id="CII-DT-015">[CII-DT-015] - URIID should not be present</assert>
         <assert test="$CII-DT-016" flag="fatal" id="CII-DT-016">[CII-DT-016] - StatusCode should not be present</assert>
@@ -599,10 +606,6 @@
         <assert test="$CII-DT-042" flag="warning" id="CII-DT-042">[CII-DT-042] - UnitBasisAmount should not be present</assert>
         <assert test="$CII-DT-043" flag="warning" id="CII-DT-043">[CII-DT-043] - LineTotalBasisAmount should not be present</assert>
         <assert test="$CII-DT-044" flag="warning" id="CII-DT-044">[CII-DT-044] - AllowanceChargeBasisAmount should not be present</assert>
-        <assert test="$CII-DT-045" flag="warning" id="CII-DT-045">[CII-DT-045] - @listID should not be present</assert>
-        <assert test="$CII-DT-046" flag="warning" id="CII-DT-046">[CII-DT-046] - @listAgencyID should not be present</assert>
-        <assert test="$CII-DT-047" flag="warning" id="CII-DT-047">[CII-DT-047] - @listVersionID should not be present</assert>
-        <assert test="$CII-DT-048" flag="warning" id="CII-DT-048">[CII-DT-048] - @listURI should not be present</assert>
         <assert test="$CII-DT-049" flag="warning" id="CII-DT-049">[CII-DT-049] - CurrencyCode should not be present</assert>
         <assert test="$CII-DT-050" flag="warning" id="CII-DT-050">[CII-DT-050] - Jurisdiction should not be present</assert>
         <assert test="$CII-DT-051" flag="warning" id="CII-DT-051">[CII-DT-051] - CustomsDutyIndicator should not be present</assert>

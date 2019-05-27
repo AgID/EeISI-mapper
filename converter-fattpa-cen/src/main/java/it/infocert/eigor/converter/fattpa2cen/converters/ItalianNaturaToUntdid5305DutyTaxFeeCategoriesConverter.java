@@ -5,7 +5,7 @@ import it.infocert.eigor.api.conversion.converter.TypeConverter;
 import it.infocert.eigor.fattpa.commons.models.NaturaType;
 import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 
-public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends FromStringTypeConverter<Untdid5305DutyTaxFeeCategories>{
+public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends FromStringTypeConverter<Untdid5305DutyTaxFeeCategories> {
 
     private ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter() {
     }
@@ -16,12 +16,18 @@ public class ItalianNaturaToUntdid5305DutyTaxFeeCategoriesConverter extends From
         NaturaType natura1 = getNatura(natura);
         if (natura1 != null) {
             switch (natura1) {
+                case N_1:
+                case N_2:
+                case N_5:
+                    return Untdid5305DutyTaxFeeCategories.O;
                 case N_3:
                     return Untdid5305DutyTaxFeeCategories.G;
                 case N_4:
                     return Untdid5305DutyTaxFeeCategories.E;
                 case N_6:
                     return Untdid5305DutyTaxFeeCategories.AE;
+                case N_7:
+                    return Untdid5305DutyTaxFeeCategories.K;
                 default:
                     return Untdid5305DutyTaxFeeCategories.S;
             }
