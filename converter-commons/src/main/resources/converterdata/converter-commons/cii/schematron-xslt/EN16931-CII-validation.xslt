@@ -165,6 +165,7 @@
       <svrl:ns-prefix-in-attribute-values prefix="udt" uri="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" />
       <svrl:ns-prefix-in-attribute-values prefix="qdt" uri="urn:un:unece:uncefact:data:standard:QualifiedDataType:100" />
       <svrl:ns-prefix-in-attribute-values prefix="ram" uri="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" />
+      <svrl:ns-prefix-in-attribute-values prefix="xs" uri="http://www.w3.org/2001/XMLSchema" />
       <svrl:active-pattern>
         <xsl:attribute name="document">
           <xsl:value-of select="document-uri(/)" />
@@ -173,7 +174,7 @@
         <xsl:attribute name="name">EN16931-CII-Model</xsl:attribute>
         <xsl:apply-templates />
       </svrl:active-pattern>
-      <xsl:apply-templates mode="M9" select="/" />
+      <xsl:apply-templates mode="M10" select="/" />
       <svrl:active-pattern>
         <xsl:attribute name="document">
           <xsl:value-of select="document-uri(/)" />
@@ -182,7 +183,7 @@
         <xsl:attribute name="name">EN16931-CII-Syntax</xsl:attribute>
         <xsl:apply-templates />
       </svrl:active-pattern>
-      <xsl:apply-templates mode="M10" select="/" />
+      <xsl:apply-templates mode="M11" select="/" />
       <svrl:active-pattern>
         <xsl:attribute name="document">
           <xsl:value-of select="document-uri(/)" />
@@ -191,7 +192,7 @@
         <xsl:attribute name="name">EN16931-Codes</xsl:attribute>
         <xsl:apply-templates />
       </svrl:active-pattern>
-      <xsl:apply-templates mode="M11" select="/" />
+      <xsl:apply-templates mode="M12" select="/" />
     </svrl:schematron-output>
   </xsl:template>
 
@@ -202,7 +203,7 @@
 
 
 	<!--RULE -->
-<xsl:template match="//ram:AdditionalReferencedDocument" mode="M9" priority="1058">
+<xsl:template match="//ram:AdditionalReferencedDocument" mode="M10" priority="1058">
     <svrl:fired-rule context="//ram:AdditionalReferencedDocument" />
 
 		<!--ASSERT -->
@@ -219,11 +220,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableTradeSettlementFinancialCard" mode="M9" priority="1057">
+<xsl:template match="//ram:ApplicableTradeSettlementFinancialCard" mode="M10" priority="1057">
     <svrl:fired-rule context="//ram:ApplicableTradeSettlementFinancialCard" />
 
 		<!--ASSERT -->
@@ -240,11 +241,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeSettlementPaymentMeans[ram:TypeCode='30' or ram:TypeCode='58']/ram:PayerPartyDebtorFinancialAccount" mode="M9" priority="1056">
+<xsl:template match="//ram:SpecifiedTradeSettlementPaymentMeans[ram:TypeCode='30' or ram:TypeCode='58']/ram:PayerPartyDebtorFinancialAccount" mode="M10" priority="1056">
     <svrl:fired-rule context="//ram:SpecifiedTradeSettlementPaymentMeans[ram:TypeCode='30' or ram:TypeCode='58']/ram:PayerPartyDebtorFinancialAccount" />
 
 		<!--ASSERT -->
@@ -276,11 +277,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" mode="M9" priority="1055">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" mode="M10" priority="1055">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" />
 
 		<!--ASSERT -->
@@ -297,11 +298,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]" mode="M9" priority="1054">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]" mode="M10" priority="1054">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]" />
 
 		<!--ASSERT -->
@@ -408,11 +409,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]" mode="M9" priority="1053">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]" mode="M10" priority="1053">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]" />
 
 		<!--ASSERT -->
@@ -519,11 +520,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M9" priority="1052">
+<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M10" priority="1052">
     <svrl:fired-rule context="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" />
 
 		<!--ASSERT -->
@@ -825,11 +826,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice" mode="M9" priority="1051">
+<xsl:template match="/rsm:CrossIndustryInvoice" mode="M10" priority="1051">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice" />
 
 		<!--ASSERT -->
@@ -1191,11 +1192,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:IncludedSupplyChainTradeLineItem" mode="M9" priority="1050">
+<xsl:template match="//ram:IncludedSupplyChainTradeLineItem" mode="M10" priority="1050">
     <svrl:fired-rule context="//ram:IncludedSupplyChainTradeLineItem" />
 
 		<!--ASSERT -->
@@ -1392,11 +1393,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]" mode="M9" priority="1049">
+<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]" mode="M10" priority="1049">
     <svrl:fired-rule context="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]" />
 
 		<!--ASSERT -->
@@ -1488,11 +1489,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]" mode="M9" priority="1048">
+<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]" mode="M10" priority="1048">
     <svrl:fired-rule context="//ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]" />
 
 		<!--ASSERT -->
@@ -1584,11 +1585,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod" mode="M9" priority="1047">
+<xsl:template match="//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod" mode="M10" priority="1047">
     <svrl:fired-rule context="//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod" />
 
 		<!--ASSERT -->
@@ -1620,11 +1621,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod" mode="M9" priority="1046">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod" mode="M10" priority="1046">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod" />
 
 		<!--ASSERT -->
@@ -1656,11 +1657,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableProductCharacteristic" mode="M9" priority="1045">
+<xsl:template match="//ram:ApplicableProductCharacteristic" mode="M10" priority="1045">
     <svrl:fired-rule context="//ram:ApplicableProductCharacteristic" />
 
 		<!--ASSERT -->
@@ -1677,11 +1678,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:PayeeTradeParty" mode="M9" priority="1044">
+<xsl:template match="//ram:PayeeTradeParty" mode="M10" priority="1044">
     <svrl:fired-rule context="//ram:PayeeTradeParty" />
 
 		<!--ASSERT -->
@@ -1698,11 +1699,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeSettlementPaymentMeans" mode="M9" priority="1043">
+<xsl:template match="//ram:SpecifiedTradeSettlementPaymentMeans" mode="M10" priority="1043">
     <svrl:fired-rule context="//ram:SpecifiedTradeSettlementPaymentMeans" />
 
 		<!--ASSERT -->
@@ -1734,11 +1735,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument" mode="M9" priority="1042">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument" mode="M10" priority="1042">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceReferencedDocument" />
 
 		<!--ASSERT -->
@@ -1755,11 +1756,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SellerTradeParty" mode="M9" priority="1041">
+<xsl:template match="//ram:SellerTradeParty" mode="M10" priority="1041">
     <svrl:fired-rule context="//ram:SellerTradeParty" />
 
 		<!--ASSERT -->
@@ -1776,11 +1777,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SellerTaxRepresentativeTradeParty" mode="M9" priority="1040">
+<xsl:template match="//ram:SellerTaxRepresentativeTradeParty" mode="M10" priority="1040">
     <svrl:fired-rule context="//ram:SellerTaxRepresentativeTradeParty" />
 
 		<!--ASSERT -->
@@ -1842,11 +1843,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M9" priority="1039">
+<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M10" priority="1039">
     <svrl:fired-rule context="//ram:SpecifiedTradeSettlementHeaderMonetarySummation" />
 
 		<!--ASSERT -->
@@ -1863,11 +1864,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode]" mode="M9" priority="1038">
+<xsl:template match="//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode]" mode="M10" priority="1038">
     <svrl:fired-rule context="//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode]" />
 
 		<!--ASSERT -->
@@ -1884,11 +1885,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']" mode="M9" priority="1037">
+<xsl:template match="//ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']" mode="M10" priority="1037">
     <svrl:fired-rule context="//ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']" />
 
 		<!--ASSERT -->
@@ -1905,11 +1906,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1036">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1036">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'AE'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -1956,11 +1957,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1035">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1035">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -1992,11 +1993,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1034">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1034">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2028,11 +2029,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1033">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1033">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'AE'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2064,11 +2065,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1032">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1032">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2115,11 +2116,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1031">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1031">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2151,11 +2152,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1030">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1030">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2187,11 +2188,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1029">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1029">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'L'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2223,11 +2224,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1028">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1028">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2274,11 +2275,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1027">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1027">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2310,11 +2311,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1026">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1026">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2346,11 +2347,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1025">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1025">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'M'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2382,11 +2383,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1024">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1024">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'E'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2433,11 +2434,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1023">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1023">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2469,11 +2470,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1022">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1022">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2505,11 +2506,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1021">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1021">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'E'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2541,11 +2542,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1020">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1020">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'G'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2592,11 +2593,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1019">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1019">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2628,11 +2629,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1018">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1018">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2664,11 +2665,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1017">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1017">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'G'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2700,11 +2701,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.= 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1016">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.= 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1016">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.= 'K'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2781,11 +2782,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1015">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1015">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2817,11 +2818,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1014">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1014">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2853,11 +2854,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1013">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1013">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'K'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -2889,11 +2890,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1012">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1012">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3000,11 +3001,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1011">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1011">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3036,11 +3037,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1010">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1010">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3072,11 +3073,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1009">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1009">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'O'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3108,11 +3109,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.='S']" mode="M9" priority="1008">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.='S']" mode="M10" priority="1008">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[.='S']" />
 
 		<!--ASSERT -->
@@ -3159,11 +3160,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1007">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1007">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3195,11 +3196,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1006">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1006">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3231,11 +3232,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1005">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1005">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'S'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3267,11 +3268,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'Z']" mode="M9" priority="1004">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'Z']" mode="M10" priority="1004">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode[. = 'Z']" />
 
 		<!--ASSERT -->
@@ -3318,11 +3319,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1003">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1003">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=false()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3354,11 +3355,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1002">
+<xsl:template match="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1002">
     <svrl:fired-rule context="//ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator=true()]/ram:CategoryTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3390,11 +3391,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M9" priority="1001">
+<xsl:template match="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" mode="M10" priority="1001">
     <svrl:fired-rule context="//rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax[ram:CategoryCode = 'Z'][upper-case(ram:TypeCode) = 'VAT']" />
 
 		<!--ASSERT -->
@@ -3426,11 +3427,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax" mode="M9" priority="1000">
+<xsl:template match="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax" mode="M10" priority="1000">
     <svrl:fired-rule context="//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax" />
 
 		<!--ASSERT -->
@@ -3552,18 +3553,18 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M9" select="*" />
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
-  <xsl:template match="text()" mode="M9" priority="-1" />
-  <xsl:template match="@*|node()" mode="M9" priority="-2">
-    <xsl:apply-templates mode="M9" select="*" />
+  <xsl:template match="text()" mode="M10" priority="-1" />
+  <xsl:template match="@*|node()" mode="M10" priority="-2">
+    <xsl:apply-templates mode="M10" select="*" />
   </xsl:template>
 
 <!--PATTERN EN16931-CII-Syntax-->
 
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocumentContext" mode="M10" priority="1025">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocumentContext" mode="M11" priority="1025">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocumentContext" />
 
 		<!--ASSERT -->
@@ -3715,11 +3716,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument" mode="M10" priority="1024">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument" mode="M11" priority="1024">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument" />
 
 		<!--ASSERT -->
@@ -4006,11 +4007,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IncludedNote" mode="M10" priority="1023">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IncludedNote" mode="M11" priority="1023">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IncludedNote" />
 
 		<!--ASSERT -->
@@ -4027,11 +4028,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem" mode="M10" priority="1022">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem" mode="M11" priority="1022">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem" />
 
 		<!--ASSERT -->
@@ -4198,11 +4199,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct" mode="M10" priority="1021">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct" mode="M11" priority="1021">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct" />
 
 		<!--ASSERT -->
@@ -5044,11 +5045,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic" mode="M10" priority="1020">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic" mode="M11" priority="1020">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:ApplicableProductCharacteristic" />
 
 		<!--ASSERT -->
@@ -5080,11 +5081,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeAgreement" mode="M10" priority="1019">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeAgreement" mode="M11" priority="1019">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeAgreement" />
 
 		<!--ASSERT -->
@@ -5866,11 +5867,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeDelivery" mode="M10" priority="1018">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeDelivery" mode="M11" priority="1018">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeDelivery" />
 
 		<!--ASSERT -->
@@ -6277,11 +6278,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement" mode="M10" priority="1017">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement" mode="M11" priority="1017">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement" />
 
 		<!--ASSERT -->
@@ -6913,11 +6914,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement" mode="M10" priority="1016">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement" mode="M11" priority="1016">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement" />
 
 		<!--ASSERT -->
@@ -8239,11 +8240,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" mode="M10" priority="1015">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" mode="M11" priority="1015">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeDelivery" />
 
 		<!--ASSERT -->
@@ -8725,11 +8726,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement" mode="M10" priority="1014">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement" mode="M11" priority="1014">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement" />
 
 		<!--ASSERT -->
@@ -10021,11 +10022,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M10" priority="1013">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation" mode="M11" priority="1013">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation" />
 
 		<!--ASSERT -->
@@ -10177,11 +10178,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice" mode="M10" priority="1012">
+<xsl:template match="/rsm:CrossIndustryInvoice" mode="M11" priority="1012">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice" />
 
 		<!--ASSERT -->
@@ -10228,11 +10229,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//*[ends-with(name(), 'DocumentContextParameter')]" mode="M10" priority="1011">
+<xsl:template match="//*[ends-with(name(), 'DocumentContextParameter')]" mode="M11" priority="1011">
     <svrl:fired-rule context="//*[ends-with(name(), 'DocumentContextParameter')]" />
 
 		<!--ASSERT -->
@@ -10264,11 +10265,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:*[ends-with(name(), 'ID')]" mode="M10" priority="1010">
+<xsl:template match="//ram:*[ends-with(name(), 'ID')]" mode="M11" priority="1010">
     <svrl:fired-rule context="//ram:*[ends-with(name(), 'ID')]" />
 
 		<!--ASSERT -->
@@ -10330,11 +10331,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/*[self::rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID or         self::rsm:ExchangedDocument/ram:ID or self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:AssociatedDocumentLineDocument/ram:LineID or         self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:SellerAssignedID]" mode="M10" priority="1009">
+<xsl:template match="/rsm:CrossIndustryInvoice/*[self::rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID or         self::rsm:ExchangedDocument/ram:ID or self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:AssociatedDocumentLineDocument/ram:LineID or         self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:SellerAssignedID]" mode="M11" priority="1009">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/*[self::rsm:ExchangedDocumentContext/ram:GuidelineSpecifiedDocumentContextParameter/ram:ID or         self::rsm:ExchangedDocument/ram:ID or self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:AssociatedDocumentLineDocument/ram:LineID or         self::rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedTradeProduct/ram:SellerAssignedID]" />
 
 		<!--ASSERT -->
@@ -10381,11 +10382,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:TypeCode" mode="M10" priority="1008">
+<xsl:template match="//ram:TypeCode" mode="M11" priority="1008">
     <svrl:fired-rule context="//ram:TypeCode" />
 
 		<!--ASSERT -->
@@ -10417,11 +10418,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:TypeCode" mode="M10" priority="1007">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:TypeCode" mode="M11" priority="1007">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:TypeCode" />
 
 		<!--ASSERT -->
@@ -10468,11 +10469,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode" mode="M10" priority="1006">
+<xsl:template match="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode" mode="M11" priority="1006">
     <svrl:fired-rule context="/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:IncludedSupplyChainTradeLineItem/ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:CategoryCode" />
 
 		<!--ASSERT -->
@@ -10534,11 +10535,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:*[ends-with(name(), 'ReferencedDocument')]" mode="M10" priority="1005">
+<xsl:template match="//ram:*[ends-with(name(), 'ReferencedDocument')]" mode="M11" priority="1005">
     <svrl:fired-rule context="//ram:*[ends-with(name(), 'ReferencedDocument')]" />
 
 		<!--ASSERT -->
@@ -10780,11 +10781,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:*[ends-with(name(), 'Amount') and not (self::ram:TaxTotalAmount)]" mode="M10" priority="1004">
+<xsl:template match="//ram:*[ends-with(name(), 'Amount') and not (self::ram:TaxTotalAmount)]" mode="M11" priority="1004">
     <svrl:fired-rule context="//ram:*[ends-with(name(), 'Amount') and not (self::ram:TaxTotalAmount)]" />
 
 		<!--ASSERT -->
@@ -10816,11 +10817,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:*[ends-with(name(), 'Quantity')]" mode="M10" priority="1003">
+<xsl:template match="//ram:*[ends-with(name(), 'Quantity')]" mode="M11" priority="1003">
     <svrl:fired-rule context="//ram:*[ends-with(name(), 'Quantity')]" />
 
 		<!--ASSERT -->
@@ -10882,11 +10883,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:*[ends-with(name(), 'TradeTax')]" mode="M10" priority="1002">
+<xsl:template match="//ram:*[ends-with(name(), 'TradeTax')]" mode="M11" priority="1002">
     <svrl:fired-rule context="//ram:*[ends-with(name(), 'TradeTax')]" />
 
 		<!--ASSERT -->
@@ -11308,11 +11309,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:BillingSpecifiedPeriod" mode="M10" priority="1001">
+<xsl:template match="//ram:BillingSpecifiedPeriod" mode="M11" priority="1001">
     <svrl:fired-rule context="//ram:BillingSpecifiedPeriod" />
 
 		<!--ASSERT -->
@@ -11524,11 +11525,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:PostalTradeAddress" mode="M10" priority="1000">
+<xsl:template match="//ram:PostalTradeAddress" mode="M11" priority="1000">
     <svrl:fired-rule context="//ram:PostalTradeAddress" />
 
 		<!--ASSERT -->
@@ -11740,18 +11741,18 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M10" select="*" />
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
-  <xsl:template match="text()" mode="M10" priority="-1" />
-  <xsl:template match="@*|node()" mode="M10" priority="-2">
-    <xsl:apply-templates mode="M10" select="*" />
+  <xsl:template match="text()" mode="M11" priority="-1" />
+  <xsl:template match="@*|node()" mode="M11" priority="-2">
+    <xsl:apply-templates mode="M11" select="*" />
   </xsl:template>
 
 <!--PATTERN EN16931-Codes-->
 
 
 	<!--RULE -->
-<xsl:template match="rsm:ExchangedDocument/ram:TypeCode" mode="M11" priority="1021">
+<xsl:template match="rsm:ExchangedDocument/ram:TypeCode" mode="M12" priority="1021">
     <svrl:fired-rule context="rsm:ExchangedDocument/ram:TypeCode" />
 
 		<!--ASSERT -->
@@ -11768,11 +11769,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="@currencyID" mode="M11" priority="1020">
+<xsl:template match="@currencyID" mode="M12" priority="1020">
     <svrl:fired-rule context="@currencyID" />
 
 		<!--ASSERT -->
@@ -11789,11 +11790,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:InvoiceCurrencyCode" mode="M11" priority="1019">
+<xsl:template match="ram:InvoiceCurrencyCode" mode="M12" priority="1019">
     <svrl:fired-rule context="ram:InvoiceCurrencyCode" />
 
 		<!--ASSERT -->
@@ -11810,11 +11811,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:TaxCurrencyCode" mode="M11" priority="1018">
+<xsl:template match="ram:TaxCurrencyCode" mode="M12" priority="1018">
     <svrl:fired-rule context="ram:TaxCurrencyCode" />
 
 		<!--ASSERT -->
@@ -11831,11 +11832,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:DueDateTypeCode" mode="M11" priority="1017">
+<xsl:template match="ram:DueDateTypeCode" mode="M12" priority="1017">
     <svrl:fired-rule context="ram:DueDateTypeCode" />
 
 		<!--ASSERT -->
@@ -11852,11 +11853,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:ReferenceTypeCode" mode="M11" priority="1016">
+<xsl:template match="ram:ReferenceTypeCode" mode="M12" priority="1016">
     <svrl:fired-rule context="ram:ReferenceTypeCode" />
 
 		<!--ASSERT -->
@@ -11873,11 +11874,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:SubjectCode" mode="M11" priority="1015">
+<xsl:template match="ram:SubjectCode" mode="M12" priority="1015">
     <svrl:fired-rule context="ram:SubjectCode" />
 
 		<!--ASSERT -->
@@ -11894,11 +11895,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="//ram:GlobalID/@schemeID[not(ancestor::ram:SpecifiedTradeProduct)]" mode="M11" priority="1014">
+<xsl:template match="//ram:GlobalID/@schemeID[not(ancestor::ram:SpecifiedTradeProduct)]" mode="M12" priority="1014">
     <svrl:fired-rule context="//ram:GlobalID/@schemeID[not(ancestor::ram:SpecifiedTradeProduct)]" />
 
 		<!--ASSERT -->
@@ -11915,11 +11916,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:ID/@schemeID[not(ancestor::ram:SpecifiedTaxRegistration)]" mode="M11" priority="1013">
+<xsl:template match="ram:ID/@schemeID[not(ancestor::ram:SpecifiedTaxRegistration)]" mode="M12" priority="1013">
     <svrl:fired-rule context="ram:ID/@schemeID[not(ancestor::ram:SpecifiedTaxRegistration)]" />
 
 		<!--ASSERT -->
@@ -11936,11 +11937,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:ClassCode/@listID" mode="M11" priority="1012">
+<xsl:template match="ram:ClassCode/@listID" mode="M12" priority="1012">
     <svrl:fired-rule context="ram:ClassCode/@listID" />
 
 		<!--ASSERT -->
@@ -11957,11 +11958,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:CountryID" mode="M11" priority="1011">
+<xsl:template match="ram:CountryID" mode="M12" priority="1011">
     <svrl:fired-rule context="ram:CountryID" />
 
 		<!--ASSERT -->
@@ -11978,11 +11979,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:OriginTradeCountry/ram:ID" mode="M11" priority="1010">
+<xsl:template match="ram:OriginTradeCountry/ram:ID" mode="M12" priority="1010">
     <svrl:fired-rule context="ram:OriginTradeCountry/ram:ID" />
 
 		<!--ASSERT -->
@@ -11999,11 +12000,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode" mode="M11" priority="1009">
+<xsl:template match="ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode" mode="M12" priority="1009">
     <svrl:fired-rule context="ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode" />
 
 		<!--ASSERT -->
@@ -12020,11 +12021,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:CategoryTradeTax/ram:CategoryCode" mode="M11" priority="1008">
+<xsl:template match="ram:CategoryTradeTax/ram:CategoryCode" mode="M12" priority="1008">
     <svrl:fired-rule context="ram:CategoryTradeTax/ram:CategoryCode" />
 
 		<!--ASSERT -->
@@ -12041,11 +12042,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:ApplicableTradeTax/ram:CategoryCode" mode="M11" priority="1007">
+<xsl:template match="ram:ApplicableTradeTax/ram:CategoryCode" mode="M12" priority="1007">
     <svrl:fired-rule context="ram:ApplicableTradeTax/ram:CategoryCode" />
 
 		<!--ASSERT -->
@@ -12062,11 +12063,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]/ram:ReasonCode" mode="M11" priority="1006">
+<xsl:template match="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]/ram:ReasonCode" mode="M12" priority="1006">
     <svrl:fired-rule context="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = false()]/ram:ReasonCode" />
 
 		<!--ASSERT -->
@@ -12083,11 +12084,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]/ram:ReasonCode" mode="M11" priority="1005">
+<xsl:template match="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]/ram:ReasonCode" mode="M12" priority="1005">
     <svrl:fired-rule context="ram:SpecifiedTradeAllowanceCharge[ram:ChargeIndicator/udt:Indicator = true()]/ram:ReasonCode" />
 
 		<!--ASSERT -->
@@ -12104,11 +12105,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:SpecifiedTradeProduct/ram:GlobalID/@schemeID" mode="M11" priority="1004">
+<xsl:template match="ram:SpecifiedTradeProduct/ram:GlobalID/@schemeID" mode="M12" priority="1004">
     <svrl:fired-rule context="ram:SpecifiedTradeProduct/ram:GlobalID/@schemeID" />
 
 		<!--ASSERT -->
@@ -12126,11 +12127,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:ExemptionReasonCode" mode="M11" priority="1003">
+<xsl:template match="ram:ExemptionReasonCode" mode="M12" priority="1003">
     <svrl:fired-rule context="ram:ExemptionReasonCode" />
 
 		<!--ASSERT -->
@@ -12147,11 +12148,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="@unitCode" mode="M11" priority="1002">
+<xsl:template match="@unitCode" mode="M12" priority="1002">
     <svrl:fired-rule context="@unitCode" />
 
 		<!--ASSERT -->
@@ -12168,11 +12169,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="@mimeCode" mode="M11" priority="1001">
+<xsl:template match="@mimeCode" mode="M12" priority="1001">
     <svrl:fired-rule context="@mimeCode" />
 
 		<!--ASSERT -->
@@ -12189,11 +12190,11 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="ram:URIUniversalCommunication/ram:URIID[@schemeID]" mode="M11" priority="1000">
+<xsl:template match="ram:URIUniversalCommunication/ram:URIID[@schemeID]" mode="M12" priority="1000">
     <svrl:fired-rule context="ram:URIUniversalCommunication/ram:URIID[@schemeID]" />
 
 		<!--ASSERT -->
@@ -12210,10 +12211,10 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M11" select="*" />
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
-  <xsl:template match="text()" mode="M11" priority="-1" />
-  <xsl:template match="@*|node()" mode="M11" priority="-2">
-    <xsl:apply-templates mode="M11" select="*" />
+  <xsl:template match="text()" mode="M12" priority="-1" />
+  <xsl:template match="@*|node()" mode="M12" priority="-2">
+    <xsl:apply-templates mode="M12" select="*" />
   </xsl:template>
 </xsl:stylesheet>

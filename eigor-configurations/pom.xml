@@ -6,6 +6,7 @@
         <artifactId>eigor</artifactId>
         <groupId>it.infocert.eigor</groupId>
         <version>4.3.4-SNAPSHOT</version>
+        <relativePath>../eigor-parent</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

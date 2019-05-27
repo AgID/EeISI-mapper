@@ -5,11 +5,9 @@ import com.infocert.eigor.api.EigorApi;
 import com.infocert.eigor.api.EigorApiBuilder;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.HelpCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
-import it.infocert.eigor.cli.util.XxeChecker;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.logging.Level;
 
 import static java.nio.file.StandardOpenOption.READ;
 
@@ -49,6 +46,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
     private final EigorConfiguration configuration;
     private EigorApi api;
     private final static Logger log = LoggerFactory.getLogger(JoptsimpleBasecCommandLineInterpreter.class);
+
     public JoptsimpleBasecCommandLineInterpreter() {
         this.configuration = DefaultEigorConfigurationLoader.configuration();
     }
@@ -92,12 +90,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
             }
 
 
-
-
-
-
             inputInvoice = FileSystems.getDefault().getPath((String) options.valueOf(INPUT));
-
 
 
             if (Files.notExists(inputInvoice)) {
@@ -170,13 +163,6 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         } catch (IOException e) {
             return new ReportFailuereCommand(e.getMessage());
         }
-
-
-       if(!XxeChecker.parser(inputInvoice)){
-
-            return new ReportFailuereCommand("Input invoice XXE.");
-        }
-
 
         return new ConversionCommand.ConversionCommandBuilder()
                 .setSourceFormat(source)
