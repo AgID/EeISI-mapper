@@ -30,6 +30,13 @@ public class ConversionIssue implements IConversionIssue {
     }
 
     /**
+     * Create a new {@link it.infocert.eigor.api.ConversionIssue issue}.
+     */
+    public static ConversionIssue newError(String message) {
+        return new ConversionIssue(message, new Exception(), true);
+    }
+
+    /**
      * Create a new {@link it.infocert.eigor.api.ConversionIssue issue} about an error caused by the given exception.
      */
     public static ConversionIssue newError(EigorRuntimeException e) {

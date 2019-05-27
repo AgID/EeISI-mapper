@@ -73,7 +73,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(invoice);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
             if ("ubl".equals(sourceFormat)) {
                 if (invoiceString.contains("<CreditNote")) {
@@ -134,7 +134,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(invoice);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
         } catch (IOException e) {
             log.warn("Can't read invoice");
@@ -148,7 +148,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(invoice);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
         } catch (IOException e) {
             log.warn("Can't read invoice");
@@ -162,7 +162,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(invoice);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
         } catch (IOException e) {
             log.warn("Can't read invoice");
@@ -176,7 +176,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(xmlToValidate);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
         } catch (IOException e) {
             log.warn("Can't read invoice");
@@ -201,7 +201,7 @@ public class EigorApiImpl implements EigorApi {
         try {
             invoiceString = getStringFromInputStream(xmlToValidate);
             if (!XxeChecker.parser(invoiceString)) {
-                log.error("Input invoice XXE.");
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
             }
         } catch (IOException e) {
             log.warn("Can't read invoice");
