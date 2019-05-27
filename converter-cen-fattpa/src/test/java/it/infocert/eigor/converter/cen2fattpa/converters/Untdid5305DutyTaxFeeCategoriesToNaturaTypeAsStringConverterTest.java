@@ -12,6 +12,6 @@ public class Untdid5305DutyTaxFeeCategoriesToNaturaTypeAsStringConverterTest {
     @Test
     public void convert() {
         assertEquals( null, sut.convert(Untdid5305DutyTaxFeeCategories.A) );
-        assertEquals( "N3", sut.convert(Untdid5305DutyTaxFeeCategories.Z) );
+        assertEquals( "N3", sut.convert(Untdid5305DutyTaxFeeCategories.K) );
     }
 }

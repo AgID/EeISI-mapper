@@ -20,15 +20,15 @@ public class ItalianNaturaToVatExemptionReasonsCodesConverter extends FromString
                 case N_1:
                 case N_2:
                 case N_5:
-                    return VatExemptionReasonsCodes.vatex_eu_g;
-                case N_3:
-                    return VatExemptionReasonsCodes.vatex_eu_g;
+                    return VatExemptionReasonsCodes.vatex_eu_o;
+//                case N_3:
+//                    return VatExemptionReasonsCodes.vatex_eu_g;
                 case N_4:
-                    return VatExemptionReasonsCodes.vatex_eu_g;
+                    return VatExemptionReasonsCodes.vatex_eu_151_1b;
                 case N_6:
-                    return VatExemptionReasonsCodes.vatex_eu_g;
+                    return VatExemptionReasonsCodes.vatex_eu_ae;
                 case N_7:
-                    return VatExemptionReasonsCodes.vatex_eu_g;
+                    return VatExemptionReasonsCodes.vatex_eu_ic;
                 default:
                     return VatExemptionReasonsCodes.vatex_eu_g;
             }
