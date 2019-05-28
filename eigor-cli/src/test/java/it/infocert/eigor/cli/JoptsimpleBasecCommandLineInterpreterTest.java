@@ -2,14 +2,18 @@ package it.infocert.eigor.cli;
 
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -61,7 +65,9 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     @Test
     public void shouldAcceptForceParameter() {
         JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter();
-        // when
+
+
+
         ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[]{
                 "--input", plainFattPa.getAbsolutePath(),
                 "--source", "fatturapa",
@@ -75,13 +81,19 @@ public class JoptsimpleBasecCommandLineInterpreterTest {
     @Test
     public void shouldNotForceConversionByDefault() {
         JoptsimpleBasecCommandLineInterpreter sut = new JoptsimpleBasecCommandLineInterpreter();
+
+
         // when
-        ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[]{
-                "--input", plainFattPa.getAbsolutePath(),
-                "--source", "fatturapa",
-                "--target", "ubl",
-                "--output", outputDir.getAbsolutePath()});
+
+            ConversionCommand cliCommand = (ConversionCommand) sut.parseCommandLine(new String[]{
+                    "--input", plainFattPa.getAbsolutePath(),
+                    "--source", "fatturapa",
+                    "--target", "ubl",
+                    "--output", outputDir.getAbsolutePath()});
+            assertThat(cliCommand.isForceConversion(), is(false));
+
+
         // then
-        assertThat(cliCommand.isForceConversion(), is(false));
+
     }
 }

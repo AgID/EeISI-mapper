@@ -230,7 +230,7 @@
 	<!--DOCUMENT allowance-->
 	<cac:AllowanceCharge>
 		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-		<cbc:AllowanceChargeReasonCode>75</cbc:AllowanceChargeReasonCode>
+		<cbc:AllowanceChargeReasonCode>66</cbc:AllowanceChargeReasonCode>
 		<cbc:AllowanceChargeReason>Promotion discount</cbc:AllowanceChargeReason>
 		<cbc:MultiplierFactorNumeric>0.0756</cbc:MultiplierFactorNumeric>
 		<cbc:Amount currencyID="EUR">116.67</cbc:Amount>

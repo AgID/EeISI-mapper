@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SEMANTIC-INVOICE xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="urn:cen.eu:en16931:2017 semanticCEN0.0.2.xsd">
+<SEMANTIC-INVOICE
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="">
     <!--Test_EeISI_300 -->
     <BT-1>Test_EeISI_320</BT-1>
     <BT-2>2018-11-12</BT-2>
@@ -46,21 +46,21 @@
         <BT-27>Seller name</BT-27>
         <BT-28>Seller trading name</BT-28>
         <BT-29 scheme="">IT:EORI:1111111111111</BT-29>
-		<BT-29 scheme="">IT:ALBO:ING:111111</BT-29>
-		<BT-30 scheme="">IT:REA:RM:12a</BT-30>
-		<BT-31>IT07945211006</BT-31>
-		<BT-32>IT07945211006</BT-32>
+        <BT-29 scheme="">IT:ALBO:ING:111111</BT-29>
+        <BT-30 scheme="">IT:REA:RM:12a</BT-30>
+        <BT-31>IT07945211006</BT-31>
+        <BT-32>IT07945211006</BT-32>
         <BT-33>Seller additional legal information</BT-33>
-        <BT-34 scheme="SMTP">Seller electronic address</BT-34>
+        <BT-34 scheme="EM">Seller electronic address</BT-34>
         <BG-5>
-			<BT-35>Street seller</BT-35>
-			<BT-36>Additional street seller</BT-36>
-			<BT-162>Line seller</BT-162>
-			<BT-37>City seller</BT-37>
-			<BT-38>20124</BT-38>
-			<BT-39>MI</BT-39>
-			<BT-40>IT</BT-40>
-		</BG-5>
+            <BT-35>Street seller</BT-35>
+            <BT-36>Additional street seller</BT-36>
+            <BT-162>Line seller</BT-162>
+            <BT-37>City seller</BT-37>
+            <BT-38>20124</BT-38>
+            <BT-39>MI</BT-39>
+            <BT-40>IT</BT-40>
+        </BG-5>
         <BG-6>
             <BT-41>Seller contact point</BT-41>
             <BT-42>0039345654455</BT-42>
@@ -70,19 +70,19 @@
     <BG-7>
         <BT-44>Buyer name</BT-44>
         <BT-45>Buyer trading name</BT-45>
-		<BT-46 scheme="">IT:CF:IT07945211006</BT-46>
-		<BT-47 scheme="">IT:EORI:1111111111111</BT-47>
-		<BT-48>IT809163160B01</BT-48>
-		<BT-49 scheme="9921">999999</BT-49>
-	<BG-8>
-		<BT-50>Street customer</BT-50>
-		<BT-51>Additional street customer</BT-51>
-		<BT-163>Line customer</BT-163>
-		<BT-52>City customer</BT-52>
-		<BT-53>34100</BT-53>
-		<BT-54>TN</BT-54>
-		<BT-55>IT</BT-55>
-	</BG-8>
+        <BT-46 scheme="">IT:CF:IT07945211006</BT-46>
+        <BT-47 scheme="">IT:EORI:1111111111111</BT-47>
+        <BT-48>IT809163160B01</BT-48>
+        <BT-49 scheme="9921">999999</BT-49>
+        <BG-8>
+            <BT-50>Street customer</BT-50>
+            <BT-51>Additional street customer</BT-51>
+            <BT-163>Line customer</BT-163>
+            <BT-52>City customer</BT-52>
+            <BT-53>34100</BT-53>
+            <BT-54>TN</BT-54>
+            <BT-55>IT</BT-55>
+        </BG-8>
         <BG-9>
             <BT-56>Buyer contact point</BT-56>
             <BT-57>0039022948584</BT-57>
@@ -117,7 +117,7 @@
         </BG-14>
         <BG-15>
             <BT-75>Deliver to address line 1</BT-75>
-            <BT-76>Deliver to address  line 2</BT-76>
+            <BT-76>Deliver to address line 2</BT-76>
             <BT-165>Deliver to address line 3</BT-165>
             <BT-77>Deliver to city</BT-77>
             <BT-78>98765</BT-78>
@@ -134,7 +134,7 @@
             <BT-85>Payment account name</BT-85>
             <BT-86>BSCTCH22</BT-86>
         </BG-17>
-        
+
         <BG-18>
             <BT-87>1234</BT-87>
             <BT-88>Payment card holder name</BT-88>
@@ -152,9 +152,9 @@
         <BT-95>S</BT-95>
         <BT-96>5.00</BT-96>
         <BT-97>Doc allowance reason text</BT-97>
-        <BT-98>55</BT-98>
+        <BT-98>65</BT-98>
     </BG-20>
-    
+
     <BG-21>
         <BT-99>10.00</BT-99>
         <BT-100>1000.00</BT-100>
@@ -164,7 +164,7 @@
         <BT-104>Doc charge reason text</BT-104>
         <BT-105>ZZZ</BT-105>
     </BG-21>
-    
+
     <BG-22>
         <BT-106>2000.00</BT-106>
         <BT-107>10.00</BT-107>
@@ -182,7 +182,7 @@
         <BT-117>50</BT-117>
         <BT-118>S</BT-118>
         <BT-119>5.00</BT-119>
-       
+
     </BG-23>
     <BG-23>
         <BT-116>1000</BT-116>
@@ -190,7 +190,7 @@
         <BT-118>E</BT-118>
         <BT-119>0</BT-119>
         <BT-120>Exemtion reason text</BT-120>
-        <BT-121>Exemption reason code</BT-121>
+        <BT-121>vatex-eu-143-1g</BT-121>
     </BG-23>
     <BG-24>
         <BT-122>Supporting document ref</BT-122>
@@ -198,7 +198,7 @@
         <BT-124>External document location</BT-124>
         <BT-125 mime="application/pdf" filename="filename0">ZGVmYXVsdA==</BT-125>
     </BG-24>
-   
+
     <BG-25>
         <BT-126>1a</BT-126>
         <BT-127>Invoice line note</BT-127>
@@ -217,9 +217,9 @@
             <BT-137>1000</BT-137>
             <BT-138>1</BT-138>
             <BT-139>Invoice line allowance reason</BT-139>
-            <BT-140>55</BT-140>
+            <BT-140>65</BT-140>
         </BG-27>
-       
+
         <BG-28>
             <BT-141>10</BT-141>
             <BT-142>1000</BT-142>
@@ -227,7 +227,7 @@
             <BT-144>Invoice line charge reason</BT-144>
             <BT-145>ZZZ</BT-145>
         </BG-28>
-        
+
         <BG-29>
             <BT-146>10</BT-146>
             <BT-147>1</BT-147>
@@ -245,7 +245,7 @@
             <BT-155>Item seller's identifier</BT-155>
             <BT-156>Item buyer's identifier</BT-156>
             <BT-157 scheme="0012">Item standar identifier</BT-157>
-			<BT-158 scheme="ZZZ" version="version0">Item classification identifier0</BT-158>
+            <BT-158 scheme="ZZZ" version="version0">Item classification identifier0</BT-158>
             <BT-159>IT</BT-159>
             <BG-32>
                 <BT-160>Color</BT-160>
@@ -264,7 +264,7 @@
         <BT-131>1000</BT-131>
         <BG-29>
             <BT-146>10</BT-146>
-            
+
         </BG-29>
         <BG-30>
             <BT-151>E</BT-151>
@@ -272,7 +272,7 @@
         </BG-30>
         <BG-31>
             <BT-153>Item name 2</BT-153>
-           
+
         </BG-31>
     </BG-25>
 </SEMANTIC-INVOICE>

@@ -14,8 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import utils.XxeChecker;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,6 +45,10 @@ public class EigorApiImpl implements EigorApi {
     private final static String FULL_DATE = "yyyy-MM-dd-HH-dd-ss-SSS";
     private final EigorApiBuilder builder;
 
+    private String getStringFromInputStream(InputStream inputStream) throws IOException {
+        return new String(IOUtils.toByteArray(inputStream));
+    }
+
     EigorApiImpl(EigorApiBuilder eigorApiBuilder) {
         this.builder = eigorApiBuilder;
     }
@@ -61,20 +69,20 @@ public class EigorApiImpl implements EigorApi {
 
         String effectiveSourceFormat = sourceFormat;
 
-        byte[] bytes = null;
-        if ("ubl".equals(sourceFormat)) {
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                IOUtils.copy(invoice, baos);
-                bytes = baos.toByteArray();
-                String invoiceString = new String(bytes);
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(invoice);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+            if ("ubl".equals(sourceFormat)) {
                 if (invoiceString.contains("<CreditNote")) {
                     effectiveSourceFormat = "ublcn";
                     log.warn("Source format is ubl but the content of the file is a CreditNote instead an invoice, proceeding with ublcn source format");
                 }
-            } catch (IOException e) {
-                log.warn("Can't read invoice and determinate if it is a CreditNote, proceeding with ubl source format");
             }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
         }
 
         String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
@@ -112,33 +120,67 @@ public class EigorApiImpl implements EigorApi {
         ObservableConversion conversion = new ObservableConversion(
                 toCen,
                 fromCen,
-                (bytes == null) ? invoice : new ByteArrayInputStream(bytes),
+                (invoiceString == null) ? invoice : new ByteArrayInputStream(invoiceString.getBytes()),
                 preferences.forceConversion() != null ? preferences.forceConversion() : builder.isForceConversion(),
                 invoiceName,
                 fullListOfCallbacks);
 
         return conversion.conversion();
-
     }
 
     @Override
     public ConversionResult<Void> validateSyntax(final String sourceFormat, final InputStream invoice) {
-        return setupObservable(sourceFormat, invoice).validateSyntax();
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(invoice);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
+        }
+        return setupObservable(sourceFormat, (invoiceString == null) ? invoice : new ByteArrayInputStream(invoiceString.getBytes())).validateSyntax();
     }
 
     @Override
     public ConversionResult<Void> validateSemantic(final String sourceFormat, final InputStream invoice) {
-        return setupObservable(sourceFormat, invoice).validateSemantics();
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(invoice);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
+        }
+        return setupObservable(sourceFormat, (invoiceString == null) ? invoice : new ByteArrayInputStream(invoiceString.getBytes())).validateSemantics();
     }
 
     @Override
     public ConversionResult<Void> validate(final String sourceFormat, final InputStream invoice) {
-        return setupObservable(sourceFormat, invoice).validate();
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(invoice);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
+        }
+        return setupObservable(sourceFormat, (invoiceString == null) ? invoice : new ByteArrayInputStream(invoiceString.getBytes())).validate();
     }
 
     @Override
     public ConversionResult<Void> customSchSchematronValidation(@NotNull File schemaFile, @NotNull InputStream xmlToValidate) throws EigorException {
-
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(xmlToValidate);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
+        }
         checkNotNull(schemaFile, "Please provide a not null schematron file.");
         checkArgument(schemaFile != null && schemaFile.isFile() && schemaFile.canRead(), "File '%s' must be a readable file, is not.", schemaFile.getAbsolutePath());
         checkNotNull(xmlToValidate);
@@ -155,7 +197,15 @@ public class EigorApiImpl implements EigorApi {
 
     @Override
     public ConversionResult<Void> customXsdValidation(@NotNull File schemaFile, @NotNull InputStream xmlToValidate) throws EigorException {
-
+        String invoiceString = null;
+        try {
+            invoiceString = getStringFromInputStream(xmlToValidate);
+            if (!XxeChecker.parser(invoiceString)) {
+                return new ConversionResult<>(Lists.newArrayList(ConversionIssue.newError("Input invoice XXE")), null);
+            }
+        } catch (IOException e) {
+            log.warn("Can't read invoice");
+        }
         checkNotNull(schemaFile, "Please provide a not null xsd file.");
         checkArgument(schemaFile != null && schemaFile.isFile() && schemaFile.canRead(), "File '%s' must be a readable file, is not.", schemaFile.getAbsolutePath());
         checkNotNull(xmlToValidate);

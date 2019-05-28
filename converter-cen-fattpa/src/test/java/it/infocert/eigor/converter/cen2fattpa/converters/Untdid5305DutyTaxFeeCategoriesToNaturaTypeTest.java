@@ -32,11 +32,11 @@ public class Untdid5305DutyTaxFeeCategoriesToNaturaTypeTest {
                 { B, null },
                 { C, null },
                 { E, N_4 },
-                { G, N_2 },
+                { G, N_3 },
                 { H, null },
                 { O, N_2 },
                 { S, null },
-                { Z, N_3 },
+                { Z, null },
 
         });
     }

@@ -5,12 +5,13 @@ import com.infocert.eigor.api.EigorApi;
 import com.infocert.eigor.api.EigorApiBuilder;
 import it.infocert.eigor.api.configuration.DefaultEigorConfigurationLoader;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
-
 import it.infocert.eigor.cli.commands.ConversionCommand;
 import it.infocert.eigor.cli.commands.HelpCommand;
 import it.infocert.eigor.cli.commands.ReportFailuereCommand;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
     public static final String INTERMEDIATE_VALIDATION = "intermediate-validation";
     private final EigorConfiguration configuration;
     private EigorApi api;
+    private final static Logger log = LoggerFactory.getLogger(JoptsimpleBasecCommandLineInterpreter.class);
 
     public JoptsimpleBasecCommandLineInterpreter() {
         this.configuration = DefaultEigorConfigurationLoader.configuration();
@@ -82,14 +84,20 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
         boolean forceConversion;
         {
 
+
             if (!options.has(INPUT)) {
                 return new ReportFailuereCommand("Input file missing, please specify the path of the invoice to trasform with the --input parameter.");
             }
 
+
             inputInvoice = FileSystems.getDefault().getPath((String) options.valueOf(INPUT));
+
+
             if (Files.notExists(inputInvoice)) {
                 return new ReportFailuereCommand("Input invoice '%s' does not exist.", inputInvoice);
             }
+
+
         }
 
         // output: path to output folder
@@ -104,6 +112,7 @@ public class JoptsimpleBasecCommandLineInterpreter implements CommandLineInterpr
                 return new ReportFailuereCommand("Output folder '%s' does not exist.", outputFolder);
             }
         }
+
 
         // force flag: force conversion to continue even if there are errors
         {
