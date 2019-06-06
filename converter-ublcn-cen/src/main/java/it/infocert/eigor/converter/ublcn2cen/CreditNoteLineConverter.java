@@ -332,7 +332,7 @@ public class CreditNoteLineConverter extends CustomConverterUtils implements Cus
                         final String text = multiplierFactorNumeric.getText();
                         try {
                             final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
-                            BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText()).multiply(BigDecimal.valueOf(100));
+                            BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText());
 
                             BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage( value );
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);

@@ -1,67 +1,14 @@
 package it.infocert.eigor.converter.ubl2cen;
 
-import it.infocert.eigor.api.ConversionIssue;
-import it.infocert.eigor.api.ConversionResult;
-import it.infocert.eigor.api.CustomConverterUtils;
-import it.infocert.eigor.api.CustomMapping;
-import it.infocert.eigor.api.EigorRuntimeException;
-import it.infocert.eigor.api.IConversionIssue;
+import it.infocert.eigor.api.*;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.conversion.ConversionFailedException;
 import it.infocert.eigor.api.conversion.converter.StringToJavaLocalDateConverter;
 import it.infocert.eigor.api.errors.ErrorCode;
 import it.infocert.eigor.api.errors.ErrorMessage;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.enums.Iso31661CountryCodes;
-import it.infocert.eigor.model.core.enums.UnitOfMeasureCodes;
-import it.infocert.eigor.model.core.enums.Untdid5189ChargeAllowanceDescriptionCodes;
-import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
-import it.infocert.eigor.model.core.enums.Untdid7161SpecialServicesCodes;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0025InvoiceLine;
-import it.infocert.eigor.model.core.model.BG0026InvoiceLinePeriod;
-import it.infocert.eigor.model.core.model.BG0027InvoiceLineAllowances;
-import it.infocert.eigor.model.core.model.BG0028InvoiceLineCharges;
-import it.infocert.eigor.model.core.model.BG0029PriceDetails;
-import it.infocert.eigor.model.core.model.BG0030LineVatInformation;
-import it.infocert.eigor.model.core.model.BG0031ItemInformation;
-import it.infocert.eigor.model.core.model.BG0032ItemAttributes;
-import it.infocert.eigor.model.core.model.BT0126InvoiceLineIdentifier;
-import it.infocert.eigor.model.core.model.BT0127InvoiceLineNote;
-import it.infocert.eigor.model.core.model.BT0128InvoiceLineObjectIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0129InvoicedQuantity;
-import it.infocert.eigor.model.core.model.BT0130InvoicedQuantityUnitOfMeasureCode;
-import it.infocert.eigor.model.core.model.BT0131InvoiceLineNetAmount;
-import it.infocert.eigor.model.core.model.BT0132ReferencedPurchaseOrderLineReference;
-import it.infocert.eigor.model.core.model.BT0133InvoiceLineBuyerAccountingReference;
-import it.infocert.eigor.model.core.model.BT0134InvoiceLinePeriodStartDate;
-import it.infocert.eigor.model.core.model.BT0135InvoiceLinePeriodEndDate;
-import it.infocert.eigor.model.core.model.BT0136InvoiceLineAllowanceAmount;
-import it.infocert.eigor.model.core.model.BT0137InvoiceLineAllowanceBaseAmount;
-import it.infocert.eigor.model.core.model.BT0138InvoiceLineAllowancePercentage;
-import it.infocert.eigor.model.core.model.BT0139InvoiceLineAllowanceReason;
-import it.infocert.eigor.model.core.model.BT0140InvoiceLineAllowanceReasonCode;
-import it.infocert.eigor.model.core.model.BT0141InvoiceLineChargeAmount;
-import it.infocert.eigor.model.core.model.BT0142InvoiceLineChargeBaseAmount;
-import it.infocert.eigor.model.core.model.BT0143InvoiceLineChargePercentage;
-import it.infocert.eigor.model.core.model.BT0144InvoiceLineChargeReason;
-import it.infocert.eigor.model.core.model.BT0145InvoiceLineChargeReasonCode;
-import it.infocert.eigor.model.core.model.BT0146ItemNetPrice;
-import it.infocert.eigor.model.core.model.BT0147ItemPriceDiscount;
-import it.infocert.eigor.model.core.model.BT0148ItemGrossPrice;
-import it.infocert.eigor.model.core.model.BT0149ItemPriceBaseQuantity;
-import it.infocert.eigor.model.core.model.BT0150ItemPriceBaseQuantityUnitOfMeasureCode;
-import it.infocert.eigor.model.core.model.BT0151InvoicedItemVatCategoryCode;
-import it.infocert.eigor.model.core.model.BT0152InvoicedItemVatRate;
-import it.infocert.eigor.model.core.model.BT0153ItemName;
-import it.infocert.eigor.model.core.model.BT0154ItemDescription;
-import it.infocert.eigor.model.core.model.BT0155ItemSellerSIdentifier;
-import it.infocert.eigor.model.core.model.BT0156ItemBuyerSIdentifier;
-import it.infocert.eigor.model.core.model.BT0157ItemStandardIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0158ItemClassificationIdentifierAndSchemeIdentifierAndSchemeVersionIdentifier;
-import it.infocert.eigor.model.core.model.BT0159ItemCountryOfOrigin;
-import it.infocert.eigor.model.core.model.BT0160ItemAttributeName;
-import it.infocert.eigor.model.core.model.BT0161ItemAttributeValue;
+import it.infocert.eigor.model.core.enums.*;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -280,7 +227,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                         try {
 
 
-                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount( new BigDecimal(baseAmount.getText()) );
+                            BT0137InvoiceLineAllowanceBaseAmount bt0137 = new BT0137InvoiceLineAllowanceBaseAmount(new BigDecimal(baseAmount.getText()));
                             bg0027.getBT0137InvoiceLineAllowanceBaseAmount().add(bt0137);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
@@ -296,9 +243,9 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     if (multiplierFactorNumeric != null) {
                         try {
                             final Attribute currencyID = multiplierFactorNumeric.getAttribute("currencyID");
-                            BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText()).multiply(BigDecimal.valueOf(100));
+                            BigDecimal value = new BigDecimal(multiplierFactorNumeric.getText());
 
-                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage( value );
+                            BT0138InvoiceLineAllowancePercentage bt0138 = new BT0138InvoiceLineAllowancePercentage(value);
                             bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
@@ -369,7 +316,7 @@ public class InvoiceLineConverter extends CustomConverterUtils implements Custom
                     Element multiplierFactorNumeric = findNamespaceChild(elemInvAll, namespacesInScope, "MultiplierFactorNumeric");
                     if (multiplierFactorNumeric != null) {
                         try {
-                            BT0143InvoiceLineChargePercentage bt0143 = new BT0143InvoiceLineChargePercentage(new BigDecimal(multiplierFactorNumeric.getText()).multiply(BigDecimal.valueOf(100)));
+                            BT0143InvoiceLineChargePercentage bt0143 = new BT0143InvoiceLineChargePercentage(new BigDecimal(multiplierFactorNumeric.getText()));
                             bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143);
                         } catch (NumberFormatException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
