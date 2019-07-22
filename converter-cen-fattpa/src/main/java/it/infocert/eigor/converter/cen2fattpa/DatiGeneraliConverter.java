@@ -391,15 +391,22 @@ public class DatiGeneraliConverter implements CustomMapping<FatturaElettronicaTy
 
                     if (!postCodes.isEmpty()) {
                         final String postCode = postCodes.get(0).getValue();
-                        if (postCode.length() > 5) {
-                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0078: " + postCode);
-                            indirizzoResa.setCAP("99999");
-                            log.warn("DeliverToPostCode was not compliant with FatturaPA specification. " +
-                                    "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
-                        } else {
+                        if (Iso31661CountryCodes.IT.equals(countryCode)) {
                             indirizzoResa.setCAP(postCode);
+                        } else {
+                            if (postCode.length() != 5) {
+                                indirizzoResa.setCAP("99999");
+                                attachmentUtil.addToUnmappedValuesAttachment(body, "BT0078: " + postCode);
+                                log.warn("DeliverToPostCode was not compliant with FatturaPA specification. " +
+                                        "PostalCode has been replaced with placeholder. See not-mapped-values.txt in attachment for the original values");
+                            } else {
+                                indirizzoResa.setCAP(postCode);
+                            }
                         }
                     } else {
+                        if (!Iso31661CountryCodes.IT.equals(countryCode)) {
+                            indirizzoResa.setCAP("99999");
+                        }
                         log.warn("No [BT-78] DeliverToPostCode was found in current [BG-5] DeliverToAddress");
                     }
 
