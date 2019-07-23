@@ -119,7 +119,7 @@
 	<!--IT BUYER-->
     <cac:AccountingCustomerParty>
         <cac:Party>
-			<cbc:EndpointID schemeID="IT:IPA">999999</cbc:EndpointID>
+			<cbc:EndpointID schemeID="0201">999999</cbc:EndpointID>
 			<cac:PartyIdentification><cbc:ID>IT:CF:IT07945211006</cbc:ID>
 			</cac:PartyIdentification>
 			<cac:PartyName><cbc:Name>The buyer trading name</cbc:Name>

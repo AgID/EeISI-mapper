@@ -81,7 +81,7 @@
                 </ram:PostalTradeAddress>
 
                 <ram:URIUniversalCommunication>
-                    <ram:URIID schemeID="IT:IPA">WS0000</ram:URIID>
+                    <ram:URIID schemeID="0201">WS0000</ram:URIID>
                 </ram:URIUniversalCommunication>
                 <ram:SpecifiedTaxRegistration>
                     <ram:ID schemeID="VAT">IE02483810392</ram:ID>

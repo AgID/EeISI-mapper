@@ -38,7 +38,7 @@ public class AccountSupplierPartyConverterTest {
 		 Element name = doc.getRootElement().getChild("AccountingSupplierParty").getChild("Party").getChild("EndpointID");
 		 String schemeId = name.getAttribute("schemeID").getValue();
 		 assertEquals("NA", name.getText());
-		 assertEquals("9921", schemeId);
+		 assertEquals("0201", schemeId);
 		 
 	}
 

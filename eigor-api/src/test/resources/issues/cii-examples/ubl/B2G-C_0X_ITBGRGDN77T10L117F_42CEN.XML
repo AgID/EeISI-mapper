@@ -49,7 +49,7 @@
     </cac:AccountingSupplierParty>
      <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="IT:IPA">WSKSAM</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0201">WSKSAM</cbc:EndpointID>
             <cac:PostalAddress>
                 <cbc:StreetName>Via Liszt 21</cbc:StreetName>
                 <cbc:CityName>ROMA</cbc:CityName>

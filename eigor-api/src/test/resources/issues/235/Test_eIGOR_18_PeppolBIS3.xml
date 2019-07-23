@@ -42,7 +42,7 @@
     <!--BUYER-->
     <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="9921">999999</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0201">999999</cbc:EndpointID>
             <cac:PartyName>
                 <cbc:Name>Buyer name</cbc:Name>
             </cac:PartyName>

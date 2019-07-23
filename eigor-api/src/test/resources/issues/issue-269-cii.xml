@@ -87,7 +87,7 @@
 				</ram:PostalTradeAddress>
 
 				<ram:URIUniversalCommunication>
-					<ram:URIID schemeID="IT:IPA">WSKSAM</ram:URIID>
+					<ram:URIID schemeID="0201">WSKSAM</ram:URIID>
 				</ram:URIUniversalCommunication>
 				<ram:SpecifiedTaxRegistration>
 					<ram:ID schemeID="VA">IT97735020584</ram:ID>

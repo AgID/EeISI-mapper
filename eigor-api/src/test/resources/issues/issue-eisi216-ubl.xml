@@ -122,7 +122,7 @@
 	<!--IT BUYER-->
     <cac:AccountingCustomerParty><!--BG-7-->
         <cac:Party>
-			<cbc:EndpointID schemeID="9921">999999</cbc:EndpointID><!--BT-49, BT-49-1  9921 stands for IT:IPA-->
+			<cbc:EndpointID schemeID="0201">999999</cbc:EndpointID><!--BT-49, BT-49-1  0201 stands for 0201-->
 			<cac:PartyIdentification><cbc:ID>IT:CF:IT07945211006</cbc:ID><!--BT-46, BT-46-1-->
 			</cac:PartyIdentification>
 			<cac:PartyName><cbc:Name>The buyer trading name</cbc:Name><!--BT-45-->
