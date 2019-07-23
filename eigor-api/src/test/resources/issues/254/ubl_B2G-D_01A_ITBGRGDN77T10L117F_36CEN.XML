@@ -42,7 +42,7 @@
 	<!--BUYER-->
      <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="IT:IPA">WS0000</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0201">WS0000</cbc:EndpointID>
             <cac:PostalAddress>
                 <cbc:StreetName>PIAZZA LEONARDO SCIASCIA, 111</cbc:StreetName>
                 <cbc:CityName>CESENA</cbc:CityName>

@@ -272,8 +272,8 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                         sb.append(s).append(IConstants.WHITESPACE);
                     }
                     String addressIt = sb.toString().trim();
-                        addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
-                        sede.setIndirizzo(addressIt);
+                    addressIt = addressIt.isEmpty() ? "undefined" : addressIt;
+                    sede.setIndirizzo(addressIt);
 
                     if (!sellerCity.isEmpty()) {
                         String city = sellerCity.get(0).getValue();
@@ -380,22 +380,27 @@ public class CedentePrestatoreConverter implements CustomMapping<FatturaElettron
                 final BG0005SellerPostalAddress address = buyer.getBG0005SellerPostalAddress(0);
                 final List<BT0038SellerPostCode> postCodes = address.getBT0038SellerPostCode();
                 final List<BT0040SellerCountryCode> countryCodes = address.getBT0040SellerCountryCode();
-                if (!postCodes.isEmpty() && !countryCodes.isEmpty()) {
-                    final String postCode = postCodes.get(0).getValue();
+                if (!countryCodes.isEmpty()) {
                     final Iso31661CountryCodes countryCode = countryCodes.get(0).getValue();
                     final IndirizzoType sede = Optional.fromNullable(cedentePrestatore.getSede()).or(new IndirizzoType());
                     cedentePrestatore.setSede(sede);
-                    if (Iso31661CountryCodes.IT.equals(countryCode)) {
-                        sede.setCAP(postCode);
-                    } else {
-                        if (postCode.length() > 5) {
-                            sede.setCAP("99999");
-                            attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
-                        } else {
+                    if (!postCodes.isEmpty()) {
+                        final String postCode = postCodes.get(0).getValue();
+                        if (Iso31661CountryCodes.IT.equals(countryCode)) {
                             sede.setCAP(postCode);
+                        } else {
+                            if (postCode.length() != 5) {
+                                sede.setCAP("99999");
+                                attachmentUtil.addToUnmappedValuesAttachment(body, "BT0038: " + postCode);
+                            } else {
+                                sede.setCAP(postCode);
+                            }
+                        }
+                    } else {
+                        if (!Iso31661CountryCodes.IT.equals(countryCode)) {
+                            sede.setCAP("99999");
                         }
                     }
-
                 }
             }
         }

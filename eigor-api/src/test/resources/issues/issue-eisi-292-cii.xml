@@ -255,7 +255,7 @@
 					<ram:CountrySubDivisionName>BZ</ram:CountrySubDivisionName><!--BT-54-->
 				</ram:PostalTradeAddress>
 				<ram:URIUniversalCommunication>
-                    <ram:URIID schemeID="9921">ABC123</ram:URIID><!--BT-49, 49-1  9921 stands for IT:IPA-->
+                    <ram:URIID schemeID="0201">ABC123</ram:URIID><!--BT-49, 49-1  0201 stands for 0201-->
                 </ram:URIUniversalCommunication>
                 <ram:SpecifiedTaxRegistration>
                     <ram:ID schemeID="VA">IT97735020584</ram:ID><!--BT-48-->

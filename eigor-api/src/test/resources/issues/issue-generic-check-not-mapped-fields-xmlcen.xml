@@ -68,7 +68,7 @@
         <BT-46 scheme="0190">Buyer identifier</BT-46>
         <BT-47 scheme="0089">Buyer legal registration identifier</BT-47>
         <BT-48>IE394838894</BT-48>
-        <BT-49 scheme="IT:IPA">012345</BT-49>
+        <BT-49 scheme="0201">012345</BT-49>
         <BG-8>
             <BT-50>Buyer address line 1</BT-50>
             <BT-51>Buyer address line 2</BT-51>

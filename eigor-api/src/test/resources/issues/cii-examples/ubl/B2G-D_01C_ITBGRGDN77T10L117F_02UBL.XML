@@ -42,7 +42,7 @@
 	<!--BUYER-->
      <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="IT:IPA">WSFBQQ</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0201">WSFBQQ</cbc:EndpointID>
             <cac:PostalAddress>
                 <cbc:StreetName>Via Liszt 21</cbc:StreetName>
                 <cbc:CityName>ROMA</cbc:CityName>
