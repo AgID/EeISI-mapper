@@ -235,15 +235,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(ram:URIID)        and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '9921'] )" />
+      <xsl:when test="exists(ram:URIID)        and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '0201'] )" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(ram:URIID) and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '9921'] )">
+        <svrl:failed-assert test="exists(ram:URIID) and (ram:URIID[normalize-space(@schemeID) = 'IT:CODDEST'] or ram:URIID[normalize-space(@schemeID) = 'IT:PEC'] or ram:URIID[normalize-space(@schemeID) = '0201'] )">
           <xsl:attribute name="id">BR-IT-190</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
+          <svrl:text> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (0201) or IT:CODDEST
     </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
@@ -267,15 +267,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '9921'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" />
+      <xsl:when test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '0201'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '9921'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))">
+        <svrl:failed-assert test="$customerCountry!='IT' or not(ram:URIID[normalize-space(@schemeID) = '0201'] ) or (matches(normalize-space(ram:URIID),'^[A-Z0-9]{6}$'))">
           <xsl:attribute name="id">BR-IT-200-2</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema (9921) then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+          <svrl:text> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema (0201) then BT-49 shall be a IPA code and maximum length shall be 6 chars
     </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>

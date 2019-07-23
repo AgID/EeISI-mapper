@@ -49,7 +49,7 @@
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="IT:IPA">991O8A</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0201">991O8A</cbc:EndpointID>
             <cac:PostalAddress>
                 <cbc:StreetName>PIAZZA LEONARDO SCIASCIA, 111</cbc:StreetName>
                 <cbc:CityName>CESENA</cbc:CityName>

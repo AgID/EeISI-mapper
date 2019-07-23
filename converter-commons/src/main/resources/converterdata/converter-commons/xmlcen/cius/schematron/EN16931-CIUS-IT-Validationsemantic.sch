@@ -12,7 +12,7 @@ CEN bears no liability from the use of the content and implementation of this sc
 <!--
 Change Log 2019-01-14
 
-1. updated the rules BR-IT-190 and BR-IT-200 as there will only be schemeID 9921 corresponding to IT:IPA
+1. updated the rules BR-IT-190 and BR-IT-200 as there will only be schemeID 0201 corresponding to IT:IPA
    IT:IPA, IT:PEC, IT:CODDEST will be registered under ISO 6523 as requested by CEF in mid december 2018 (no changes to these rules)
    Rules impacted BR-IT-190 - BR-IT-200-2
 
@@ -751,9 +751,9 @@ Change Log 2019-01-14
         EeISI Rule 
         (ITA): L'elemento BT-49 Buyer electronic address deve contenere la PEC del destinatario della fattura, 
         oppure l’indice IPA oppure il codice destinatario. 
-        Di conseguenza per l'elemento BT-49-1 Buyer electronic address identification scheme identifier sono previsti i valori IT:PEC, IT:IPA (9921) oppure IT:CODDEST  
+        Di conseguenza per l'elemento BT-49-1 Buyer electronic address identification scheme identifier sono previsti i valori IT:PEC, IT:IPA (0201) oppure IT:CODDEST
         (ENG): BT-49 shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. 
-        BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST
+        BT-49-1=IT:PEC or IT:IPA (0201) or IT:CODDEST
         
         BT-49:  	/Invoice/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID
         /CreditNote/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID
@@ -764,9 +764,9 @@ Change Log 2019-01-14
       <assert test=  "$customerCountry!='IT' or ( 
         (.[normalize-space(@scheme) = 'IT:CODDEST'] 
         or .[normalize-space(@scheme) = 'IT:PEC'] 
-        or .[normalize-space(@scheme) = '9921'] ))" 
+        or .[normalize-space(@scheme) = '0201'] ))"
         id="BR-IT-190" 
-        flag="fatal"> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (9921) or IT:CODDEST 
+        flag="fatal"> [BR-IT-190] BT-49 BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) shall contain a legal mail address (PEC) or IndicePA/CodiceDestinatario. BT-49-1=IT:PEC or IT:IPA (0201) or IT:CODDEST
       </assert>      
       
       <!--  
@@ -782,13 +782,13 @@ Change Log 2019-01-14
         (ITA): Se il valore dell’elemento BT-55 Buyer country code è ”IT”, 
         se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:PEC", 
         la lunghezza dell'elemento BT-49 Buyer electronic address deve essere compresa fra 7 e 256 caratteri. 
-        Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "9921" (IT:IPA), 
+        Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "0201" (IT:IPA),
         la lunghezza dell'elemento BT-49 Buyer electronic address deve essere di 6 caratteri. 
         Altrimenti, se l'elemento BT-49-1 Buyer electronic address identification scheme identifier contiene il valore "IT:CODDEST", 
         la lunghezza dell'elemento BT-49 Buyer electronic address deve essere di 7 caratteri    
         (ENG): If BT-55 = "IT", 
         if BT-49-1= IT:PEC schema then BT-49  minimum length shall be 7 maximum length shall be 256 chars
-        else if BT-49-1 = IT:IPA (9921) schema then BT-49 length shall be 6 chars
+        else if BT-49-1 = IT:IPA (0201) schema then BT-49 length shall be 6 chars
         else if BT-49-1 = IT:CODDEST schema then BT-49 length shall be 7 chars
         
         BT-49:    /Invoice/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID
@@ -801,10 +801,10 @@ Change Log 2019-01-14
         id="BR-IT-200-1" 
         flag="fatal"> [BR-IT-200-1] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) -If BT-49-1=IT:PEC schema then BT-49 shall be a PEC (email) address and  length shall be between 7 and 256 character 
       </assert>
-      <assert test=  "$customerCountry!='IT' or  not(.[normalize-space(@scheme) = '9921']) 
+      <assert test=  "$customerCountry!='IT' or  not(.[normalize-space(@scheme) = '0201'])
         or ( matches(normalize-space(.),'^[A-Z0-9]{6}$') )" 
         id="BR-IT-200-2" 
-        flag="fatal"> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema 9921 then BT-49 shall be a IPA code and maximum length shall be 6 chars 
+        flag="fatal"> [BR-IT-200-2] BT-49, BT-49-1 (Buyer electronic address - Buyer electronic address identification scheme identifier) =IT:IPA schema 0201 then BT-49 shall be a IPA code and maximum length shall be 6 chars
       </assert> 
       <assert test=  "$customerCountry!='IT' or  not(.[normalize-space(@scheme) = 'IT:CODDEST']) 
         or ( matches(normalize-space(.),'^[A-Z0-9]{7}$') )" 

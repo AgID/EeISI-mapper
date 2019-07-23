@@ -19,7 +19,7 @@ import java.util.List;
 public class BuyerConverter implements CustomMapping<Document> {
 
     private static final String pec = "IT:PEC";
-    private static final String ipa = "9921";
+    private static final String ipa = "0201";
     private static final String cf = "IT:CF";
     private static final String eori = "IT:EORI";
 
