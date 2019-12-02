@@ -5,6 +5,7 @@ import it.infocert.eigor.api.SyntaxErrorInInvoiceFormatException;
 import it.infocert.eigor.api.configuration.ConfigurationException;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.utils.JavaReflections;
+import it.infocert.eigor.model.core.enums.Untdid5305DutyTaxFeeCategories;
 import it.infocert.eigor.model.core.model.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static it.infocert.eigor.test.Utils.invoiceAsStream;
 
@@ -82,6 +84,36 @@ public class IssuesTest {
             Assert.assertEquals("02313821007", bt032);
 
         }
+
+
+    }
+    @Test
+    public void issue323() throws SyntaxErrorInInvoiceFormatException, ConfigurationException {
+
+
+        InputStream sourceInvoiceStream = invoiceAsStream("/issues/issue-323-fattpa.xml");
+
+        FattPa2Cen f2c = new FattPa2Cen(new JavaReflections(), configuration);
+        f2c.configure();
+
+        ConversionResult<BG0000Invoice> result = f2c.convert(sourceInvoiceStream);
+
+
+
+
+
+
+        {
+            BG0000Invoice cen = result.getResult();
+            Untdid5305DutyTaxFeeCategories expected = Untdid5305DutyTaxFeeCategories.AE;
+            Untdid5305DutyTaxFeeCategories bt00118 = cen.getBG0023VatBreakdown().get(0).getBT0118VatCategoryCode().get(0).getValue();
+            Assert.assertEquals(expected, bt00118);
+            String bt00121 = cen.getBG0023VatBreakdown().get(0).getBT0121VatExemptionReasonCode().get(0).getValue();
+            Assert.assertEquals("vatex-eu-ae", bt00121);
+
+        }
+
+
 
 
     }
