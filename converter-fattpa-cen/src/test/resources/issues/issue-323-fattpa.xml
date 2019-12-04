@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet  type="text/xsl" href="fatturaordinaria_v1.2.1.xsl"?>
+<p:FatturaElettronica xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" versione="FPR12">
+	<FatturaElettronicaHeader>
+		<DatiTrasmissione>
+			<IdTrasmittente>
+				<IdPaese>IT</IdPaese>
+				<IdCodice>08245660017</IdCodice>
+			</IdTrasmittente>
+			<ProgressivoInvio>1780</ProgressivoInvio>
+			<FormatoTrasmissione>FPR12</FormatoTrasmissione>
+			<CodiceDestinatario>XXXXXXX</CodiceDestinatario>
+		</DatiTrasmissione>
+		<CedentePrestatore>
+			<DatiAnagrafici>
+				<IdFiscaleIVA>
+					<IdPaese>IT</IdPaese>
+					<IdCodice>01067440329</IdCodice>
+				</IdFiscaleIVA>
+				<CodiceFiscale>01067440329</CodiceFiscale>
+				<Anagrafica>
+					<Denominazione>EUROSERVIS S.R.L.</Denominazione>
+				</Anagrafica>
+				<RegimeFiscale>RF01</RegimeFiscale>
+			</DatiAnagrafici>
+			<Sede>
+				<Indirizzo>Via Cicerone 4</Indirizzo>
+				<CAP>34133</CAP>
+				<Comune>TRIESTE</Comune>
+				<Provincia>TS</Provincia>
+				<Nazione>IT</Nazione>
+			</Sede>
+			<Contatti>
+				<Telefono>040762712</Telefono>
+				<Email>info@euroservis.eu</Email>
+			</Contatti>
+		</CedentePrestatore>
+		<CessionarioCommittente>
+			<DatiAnagrafici>
+				<IdFiscaleIVA>
+					<IdPaese>HR</IdPaese>
+					<IdCodice>19041331729</IdCodice>
+				</IdFiscaleIVA>
+				<Anagrafica>
+					<Denominazione>GRAD LABIN</Denominazione>
+				</Anagrafica>
+			</DatiAnagrafici>
+			<Sede>
+				<Indirizzo>TITOV TRG 11</Indirizzo>
+				<CAP>00000</CAP>
+				<Comune>LABIN</Comune>
+				<Provincia>EE</Provincia>
+				<Nazione>HR</Nazione>
+			</Sede>
+		</CessionarioCommittente>
+	</FatturaElettronicaHeader>
+	<FatturaElettronicaBody>
+		<DatiGenerali>
+			<DatiGeneraliDocumento>
+				<TipoDocumento>TD01</TipoDocumento>
+				<Divisa>EUR</Divisa>
+				<Data>2019-07-31</Data>
+				<Numero>48</Numero>
+				<DatiBollo>
+					<BolloVirtuale>SI</BolloVirtuale>
+					<ImportoBollo>2.00</ImportoBollo>
+				</DatiBollo>
+				<ImportoTotaleDocumento>5120.00</ImportoTotaleDocumento>
+				<Causale>Ft UE GRAD LABIN</Causale>
+			</DatiGeneraliDocumento>
+		</DatiGenerali>
+		<DatiBeniServizi>
+			<DettaglioLinee>
+				<NumeroLinea>1</NumeroLinea>
+				<Descrizione>Rif. Contratto 910-01/17-01/13 - nr. reg. 2144/01-01-18-7 del 12/10/2018 / Ref. Contract 910-01/17-01/13 - reg. nr. 2144/01-01-18-7 dated 12/10/2018.
+Servizio di assistenza tecnica per il supporto amministrativo e finanziario del progetto &quot;MINE TOUR&quot;, Programma Interreg V-A Slovenia-Croazia 2014-2020. Periodo attività dal 01/02/2019 al 31/07/2019.
+Technical assistance for the administrative and financial management of the project &quot;MINE TOUR&quot;, Cooperation Programme INTERREG V-A Slovenia - Croatia 2014-2020. Activity period from 01st February 2019 to 31st July 2019.</Descrizione>
+				<DataInizioPeriodo>2019-07-31</DataInizioPeriodo>
+				<DataFinePeriodo>2019-07-31</DataFinePeriodo>
+				<PrezzoUnitario>5120.00000000</PrezzoUnitario>
+				<PrezzoTotale>5120.00000000</PrezzoTotale>
+				<AliquotaIVA>0.00</AliquotaIVA>
+				<Natura>N6</Natura>
+			</DettaglioLinee>
+			<DatiRiepilogo>
+				<AliquotaIVA>0.00</AliquotaIVA>
+				<Natura>N6</Natura>
+				<ImponibileImporto>5120.00</ImponibileImporto>
+				<Imposta>0.00</Imposta>
+				<RiferimentoNormativo>ESCLUSO ART. 7 TER DPR 633/72 - OPERAZIONI RILEVANTI INTRASTAT</RiferimentoNormativo>
+			</DatiRiepilogo>
+		</DatiBeniServizi>
+		<DatiPagamento>
+			<CondizioniPagamento>TP02</CondizioniPagamento>
+			<DettaglioPagamento>
+				<ModalitaPagamento>MP05</ModalitaPagamento>
+				<DataRiferimentoTerminiPagamento>2019-07-31</DataRiferimentoTerminiPagamento>
+				<GiorniTerminiPagamento>30</GiorniTerminiPagamento>
+				<DataScadenzaPagamento>2019-08-30</DataScadenzaPagamento>
+				<ImportoPagamento>5120.00</ImportoPagamento>
+				<IstitutoFinanziario>BANCA MONTE DEI PASCHI DI SIEN</IstitutoFinanziario>
+				<IBAN>IT80S0103036490000001242001</IBAN>
+				<ABI>01030</ABI>
+				<CAB>36490</CAB>
+				<BIC>PASCITMMXXX</BIC>
+			</DettaglioPagamento>
+		</DatiPagamento>
+	</FatturaElettronicaBody>
+</p:FatturaElettronica>
+
