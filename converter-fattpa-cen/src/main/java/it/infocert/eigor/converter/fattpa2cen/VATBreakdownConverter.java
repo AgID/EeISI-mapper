@@ -108,7 +108,9 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                        if (VatExemptionReasonsCodes.vatex_eu_o.equals(vatExemptionReasonCode) ||
                                 VatExemptionReasonsCodes.vatex_eu_151_1b.equals(vatExemptionReasonCode)  ||
                                 VatExemptionReasonsCodes.vatex_eu_ae.equals(vatExemptionReasonCode) ||
-                                VatExemptionReasonsCodes.vatex_eu_ic.equals(vatExemptionReasonCode)){
+                                VatExemptionReasonsCodes.vatex_eu_ic.equals(vatExemptionReasonCode) ||
+                               VatExemptionReasonsCodes.vatex_eu_g.equals(vatExemptionReasonCode)){
+
                             bt0121 = new BT0121VatExemptionReasonCode(vatExemptionReasonCode.value());
                             bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                         }
