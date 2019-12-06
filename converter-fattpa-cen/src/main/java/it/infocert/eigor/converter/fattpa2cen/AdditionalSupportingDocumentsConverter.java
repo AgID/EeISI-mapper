@@ -82,6 +82,110 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
 
                     EigorConfiguration eigorConfiguration = new DefaultEigorConfigurationLoader().loadConfiguration();
                     AttachmentUtil attachmentUtil = new AttachmentUtil(new File(eigorConfiguration.getMandatoryString("eigor.workdir")));
+
+                    Element datiTrasmissione = fatturaElettronicaHeader.getChild("DatiTrasmissione");
+
+                    if (datiTrasmissione != null) {
+
+                        Element idTrasmittente = datiTrasmissione.getChild("IdTrasmittente");
+                        try {
+                            if (idTrasmittente != null) {
+                                Element idPaese = idTrasmittente.getChild("IdPaese");
+                                if (idPaese != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), idPaese.getText());
+                                }
+                                Element idCodice = idTrasmittente.getChild("IdCodice");
+                                if (idCodice != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), idCodice.getText());
+                                }
+                            }
+                        } catch (IllegalArgumentException | IOException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, idTrasmittente.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+
+                        }
+                        Element progressivoInvio = datiTrasmissione.getChild("ProgressivoInvio");
+                        try {
+                            if (progressivoInvio != null) {
+
+                                attachmentUtil.appendToFileInBase64(new File(filePath), progressivoInvio.getText());
+                            }
+
+
+                        } catch (IllegalArgumentException | IOException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, progressivoInvio.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+
+                        }
+                        Element formatoTrasmissione = datiTrasmissione.getChild("FormatoTrasmissione");
+                        try {
+                            if (formatoTrasmissione != null) {
+
+                                attachmentUtil.appendToFileInBase64(new File(filePath), formatoTrasmissione.getText());
+                            }
+
+
+                        } catch (IllegalArgumentException | IOException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, formatoTrasmissione.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+
+                        }
+
+
+                        Element contattiTrasmittente = datiTrasmissione.getChild("ContattiTrasmittente");
+                        try {
+                            if (contattiTrasmittente != null) {
+                                Element telefono = contattiTrasmittente.getChild("Telefono");
+                                if (telefono != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), telefono.getText());
+                                }
+                                Element email = contattiTrasmittente.getChild("Email");
+                                if (email != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), email.getText());
+                                }
+                            }
+                        } catch (IllegalArgumentException | IOException e) {
+                            EigorRuntimeException ere = new EigorRuntimeException(
+                                    e,
+                                    ErrorMessage.builder()
+                                            .message(e.getMessage())
+                                            .location(ErrorCode.Location.FATTPA_IN)
+                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, contattiTrasmittente.toString())
+                                            .build());
+                            errors.add(ConversionIssue.newError(ere));
+
+                        }
+                    }
                     Element terzoIntermediarioOSoggettoEmittente = fatturaElettronicaHeader.getChild("TerzoIntermediarioOSoggettoEmittente");
                     if (terzoIntermediarioOSoggettoEmittente != null) {
                         try {
@@ -150,16 +254,174 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
+                    //       <DatiGenerali>
+                    //      <DatiGeneraliDocumento>
+                    //      <DatiRitenuta><!--to be defined, not anymore on BG-21 but on BG-25-->
+                    //			<TipoRitenuta>RT01</TipoRitenuta>
+                    //			<ImportoRitenuta>200.00</ImportoRitenuta><!-- optional to BT-113 with text on BT-20-->
+                    //			<AliquotaRitenuta>20.00</AliquotaRitenuta>
+                    //			<CausalePagamento>A</CausalePagamento>
+                    //		</DatiRitenuta>
                     Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
                     if (datiGenerali != null) {
-                        Element datiContratto = datiGenerali.getChild("DatiContratto");
-                        if (datiContratto != null) {
+                        Element datiGeneraliDocumento = datiGenerali.getChild("DatiGeneraliDocumento");
+                        if (datiGeneraliDocumento != null) {
+                            Element datiRitenuta = datiGeneraliDocumento.getChild("DatiRitenuta");
+                            //          <TipoRitenuta>RT01</TipoRitenuta>
+                            //			<ImportoRitenuta>200.00</ImportoRitenuta><!-- optional to BT-113 with text on BT-20-->
+                            //			<AliquotaRitenuta>20.00</AliquotaRitenuta>
+                            //			<CausalePagamento>A</CausalePagamento>
+                            if (datiRitenuta != null) {
+                                Element tipoRitenuta = datiRitenuta.getChild("TipoRitenuta");
+                                if (tipoRitenuta != null) {
+                                    try {
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), tipoRitenuta.getText());
+                                    } catch (IllegalArgumentException | IOException e) {
+                                        EigorRuntimeException ere = new EigorRuntimeException(
+                                                e,
+                                                ErrorMessage.builder()
+                                                        .message(e.getMessage())
+                                                        .location(ErrorCode.Location.FATTPA_IN)
+                                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, tipoRitenuta.toString())
+                                                        .build());
+                                        errors.add(ConversionIssue.newError(ere));
+                                    }
+                                }
+                                Element importoRitenuta = datiRitenuta.getChild("ImportoRitenuta");
+                                if (importoRitenuta != null) {
+                                    try {
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), importoRitenuta.getText());
+                                    } catch (IllegalArgumentException | IOException e) {
+                                        EigorRuntimeException ere = new EigorRuntimeException(
+                                                e,
+                                                ErrorMessage.builder()
+                                                        .message(e.getMessage())
+                                                        .location(ErrorCode.Location.FATTPA_IN)
+                                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, importoRitenuta.toString())
+                                                        .build());
+                                        errors.add(ConversionIssue.newError(ere));
+                                    }
+                                }
+                                Element aliquotaRitenuta = datiRitenuta.getChild("AliquotaRitenuta");
+                                if (aliquotaRitenuta != null) {
+                                    try {
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), aliquotaRitenuta.getText());
+                                    } catch (IllegalArgumentException | IOException e) {
+                                        EigorRuntimeException ere = new EigorRuntimeException(
+                                                e,
+                                                ErrorMessage.builder()
+                                                        .message(e.getMessage())
+                                                        .location(ErrorCode.Location.FATTPA_IN)
+                                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, aliquotaRitenuta.toString())
+                                                        .build());
+                                        errors.add(ConversionIssue.newError(ere));
+                                    }
+                                }
+                                Element causalePagamento = datiRitenuta.getChild("CausalePagamento");
+                                if (causalePagamento != null) {
+                                    try {
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), causalePagamento.getText());
+                                    } catch (IllegalArgumentException | IOException e) {
+                                        EigorRuntimeException ere = new EigorRuntimeException(
+                                                e,
+                                                ErrorMessage.builder()
+                                                        .message(e.getMessage())
+                                                        .location(ErrorCode.Location.FATTPA_IN)
+                                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, causalePagamento.toString())
+                                                        .build());
+                                        errors.add(ConversionIssue.newError(ere));
+                                    }
+                                }
+                            }
+                            //Aggiungere 2.1.1.7.6 Ritenuta
+                            //FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/DatiCassaPrevidenziale/Ritenuta
+                            Element datiCassaPrevidenziale = datiGeneraliDocumento.getChild("DatiCassaPrevidenziale");
+                            if (datiCassaPrevidenziale != null) {
+                                Element ritenuta = datiCassaPrevidenziale.getChild("Ritenuta");
+                                if (ritenuta != null) {
+                                    try {
+                                        attachmentUtil.appendToFileInBase64(new File(filePath), ritenuta.getText());
+                                    } catch (IllegalArgumentException | IOException e) {
+                                        EigorRuntimeException ere = new EigorRuntimeException(
+                                                e,
+                                                ErrorMessage.builder()
+                                                        .message(e.getMessage())
+                                                        .location(ErrorCode.Location.FATTPA_IN)
+                                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, ritenuta.toString())
+                                                        .build());
+                                        errors.add(ConversionIssue.newError(ere));
+                                    }
+                                }
+                            }
+                        }//datiGeneraliDocumento
+
+                    }//if dati_generali
+
+
+                    //   }//if dati_generali
+
+                    //2.2.1.13	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Ritenuta
+
+                    //2.2.1.13 Ritenuta concatenate with 2.2.1.1 NumeroLinea
+                    //2.2.1.1	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/NumeroLinea
+
+
+                    if (fatturaElettronicaBody != null) {
+                        Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
+                        if (datiBeniServizi != null) {
+                            Element ritenuta = fatturaElettronicaBody.getChild("Ritenuta");
+                            if (ritenuta != null) {
+                                Element dettaglioLinee = ritenuta.getChild("DettaglioLinee");
+                                if (dettaglioLinee != null) {
+                                    Element numeroLinea = dettaglioLinee.getChild("NumeroLinea");
+                                    if (numeroLinea != null) {
+                                        try {
+                                            attachmentUtil.appendToFileInBase64(new File(filePath), ritenuta.getText() + numeroLinea.getText());
+                                        } catch (IllegalArgumentException | IOException e) {
+                                            EigorRuntimeException ere = new EigorRuntimeException(
+                                                    e,
+                                                    ErrorMessage.builder()
+                                                            .message(e.getMessage())
+                                                            .location(ErrorCode.Location.FATTPA_IN)
+                                                            .action(ErrorCode.Action.HARDCODED_MAP)
+                                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, ritenuta.toString())
+                                                            .build());
+                                            errors.add(ConversionIssue.newError(ere));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //
+                    //Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+                    if (datiGenerali != null) {
+                        Element datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
+                        if (datiOrdineAcquisto != null) {
                             try {
-                                Element codiceCUP = datiContratto.getChild("CodiceCUP");
+                                Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
                                 if (codiceCUP != null) {
                                     attachmentUtil.appendToFileInBase64(new File(filePath), codiceCUP.getText());
                                 }
-                                Element codiceCIG = datiContratto.getChild("CodiceCIG");
+                                Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
                                 if (codiceCIG != null) {
                                     attachmentUtil.appendToFileInBase64(new File(filePath), codiceCIG.getText());
                                 }
@@ -172,73 +434,108 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                                 .error(ErrorCode.Error.ILLEGAL_VALUE)
                                                 .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiContratto.toString())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
                                                 .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
-                    }
-                    Element datiVeicoli = fatturaElettronicaBody.getChild("DatiVeicoli");
-                    if (datiVeicoli != null) {
-                        try {
-                            Element data = datiVeicoli.getChild("Data");
-                            if (data != null) {
-                                attachmentUtil.appendToFileInBase64(new File(filePath), data.getText());
+                        Element datiRitenuta = datiGenerali.getChild("DatiRitenuta");
+                        if (datiRitenuta != null) {
+                            try {
+
+
+                                Element importoRitenuta = datiRitenuta.getChild("ImportoRitenuta");
+                                if (importoRitenuta != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), importoRitenuta.getText());
+                                }
+
+
+                            } catch (IllegalArgumentException | IOException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(
+                                        e,
+                                        ErrorMessage.builder()
+                                                .message(e.getMessage())
+                                                .location(ErrorCode.Location.FATTPA_IN)
+                                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiRitenuta.toString())
+                                                .build());
+                                errors.add(ConversionIssue.newError(ere));
                             }
-                            Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
-                            if (totalePercorso != null) {
-                                attachmentUtil.appendToFileInBase64(new File(filePath), totalePercorso.getText());
-                            }
-                        } catch (IllegalArgumentException | IOException e) {
-                            EigorRuntimeException ere = new EigorRuntimeException(
-                                    e,
-                                    ErrorMessage.builder()
-                                            .message(e.getMessage())
-                                            .location(ErrorCode.Location.FATTPA_IN)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiVeicoli.toString())
-                                            .build());
-                            errors.add(ConversionIssue.newError(ere));
                         }
-                    }
-                    Element datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
-                    if (datiOrdineAcquisto != null) {
-                        try {
-                            Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
-                            if (codiceCommessaConvenzione != null) {
-                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCommessaConvenzione.getText());
+
+                        Element datiVeicoli = fatturaElettronicaBody.getChild("DatiVeicoli");
+                        if (datiVeicoli != null) {
+                            try {
+                                Element data = datiVeicoli.getChild("Data");
+                                if (data != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), data.getText());
+                                }
+                                Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
+                                if (totalePercorso != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), totalePercorso.getText());
+                                }
+                            } catch (IllegalArgumentException | IOException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(
+                                        e,
+                                        ErrorMessage.builder()
+                                                .message(e.getMessage())
+                                                .location(ErrorCode.Location.FATTPA_IN)
+                                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiVeicoli.toString())
+                                                .build());
+                                errors.add(ConversionIssue.newError(ere));
                             }
-                            Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
-                            if (codiceCUP != null) {
-                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCUP.getText());
-                            }
-                            Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
-                            if (codiceCIG != null) {
-                                attachmentUtil.appendToFileInBase64(new File(filePath), codiceCIG.getText());
-                            }
-                        } catch (IllegalArgumentException | IOException e) {
-                            EigorRuntimeException ere = new EigorRuntimeException(
-                                    e,
-                                    ErrorMessage.builder()
-                                            .message(e.getMessage())
-                                            .location(ErrorCode.Location.FATTPA_IN)
-                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
-                                            .build());
-                            errors.add(ConversionIssue.newError(ere));
                         }
+
+                        datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
+                        if (datiOrdineAcquisto != null) {
+                            try {
+                                Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
+                                if (codiceCommessaConvenzione != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceCommessaConvenzione.getText());
+                                }
+                                Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
+                                if (codiceCUP != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceCUP.getText());
+                                }
+                                Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
+                                if (codiceCIG != null) {
+                                    attachmentUtil.appendToFileInBase64(new File(filePath), codiceCIG.getText());
+                                }
+                            } catch (IllegalArgumentException | IOException e) {
+                                EigorRuntimeException ere = new EigorRuntimeException(
+                                        e,
+                                        ErrorMessage.builder()
+                                                .message(e.getMessage())
+                                                .location(ErrorCode.Location.FATTPA_IN)
+                                                .action(ErrorCode.Action.HARDCODED_MAP)
+                                                .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                                .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
+                                                .build());
+                                errors.add(ConversionIssue.newError(ere));
+                            }
+                        }
+                        invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
                     }
-                    invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
                 }
             }
-        }
 
-        return new ConversionResult<>(errors, invoice);
-    }
+        }
+                    return new ConversionResult<>(errors, invoice);
+                }
+
+
+
+
+
+
+
+
 
     @Override
     public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
