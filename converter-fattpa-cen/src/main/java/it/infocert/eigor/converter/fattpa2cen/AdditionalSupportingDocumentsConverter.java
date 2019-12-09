@@ -37,7 +37,6 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
         Element rootElement = document.getRootElement();
         Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
 
-
         if (fatturaElettronicaBody != null) {
             List<Element> allegati = fatturaElettronicaBody.getChildren();
             for (Element allegato : allegati) {
@@ -76,10 +75,7 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                             errors.add(ConversionIssue.newError(ere));
                         }
                     }
-
                     invoice.getBG0024AdditionalSupportingDocuments().add(bg0024);
-
-
                 }
             }
         }
