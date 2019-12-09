@@ -86,7 +86,6 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 try {
                     if (progressivoInvio != null) {
 
-
                         aUtil.addValuesToAttachment(invoice, "ProgressivoInvio: " + progressivoInvio.getText(), errors);
 
                     }
