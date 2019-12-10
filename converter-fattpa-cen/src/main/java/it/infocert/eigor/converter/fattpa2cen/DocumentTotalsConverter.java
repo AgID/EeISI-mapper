@@ -59,12 +59,12 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     if (idTrasmittente != null) {
                         Element idPaese = idTrasmittente.getChild("IdPaese");
                         if (idPaese != null) {
-                            aUtil.addValuesToAttachment(invoice, "IdPaese: " + idPaese.getText(), errors);
+                            aUtil.addValuesToAttachment(invoice, "1.1.1.1 IdPaese: " + idPaese.getText(), errors);
 
                         }
                         Element idCodice = idTrasmittente.getChild("IdCodice");
                         if (idCodice != null) {
-                            aUtil.addValuesToAttachment(invoice, "IdCodice: " + idCodice.getText(), errors);
+                            aUtil.addValuesToAttachment(invoice, "1.1.1.2 IdCodice: " + idCodice.getText(), errors);
 
                         }
                     }
@@ -86,7 +86,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 try {
                     if (progressivoInvio != null) {
 
-                        aUtil.addValuesToAttachment(invoice, "ProgressivoInvio: " + progressivoInvio.getText(), errors);
+                        aUtil.addValuesToAttachment(invoice, "1.1.2 ProgressivoInvio: " + progressivoInvio.getText(), errors);
 
                     }
 
@@ -108,7 +108,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 Element formatoTrasmissione = datiTrasmissione.getChild("FormatoTrasmissione");
                 try {
                     if (formatoTrasmissione != null) {
-                        aUtil.addValuesToAttachment(invoice, "FormatoTrasmissione: " + formatoTrasmissione.getText(), errors);
+                        aUtil.addValuesToAttachment(invoice, "1.1.3 FormatoTrasmissione: " + formatoTrasmissione.getText(), errors);
 
                     }
 
@@ -134,12 +134,12 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     if (contattiTrasmittente != null) {
                         Element telefono = contattiTrasmittente.getChild("Telefono");
                         if (telefono != null) {
-                            aUtil.addValuesToAttachment(invoice, "Telefono: " + telefono.getText(), errors);
+                            aUtil.addValuesToAttachment(invoice, "1.1.5.1 Telefono: " + telefono.getText(), errors);
 
                         }
                         Element email = contattiTrasmittente.getChild("Email");
                         if (email != null) {
-                            aUtil.addValuesToAttachment(invoice, "Email: " + email.getText(), errors);
+                            aUtil.addValuesToAttachment(invoice, "1.1.5.2 Email: " + email.getText(), errors);
 
                         }
                     }
@@ -164,37 +164,49 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     Element datiAnagrafici = terzoIntermediarioOSoggettoEmittente.getChild("DatiAnagrafici");
                     if (datiAnagrafici != null) {
                         Element idFiscaleIVA = datiAnagrafici.getChild("IdFiscaleIVA");
+
                         if (idFiscaleIVA != null) {
+
                             Element idPaese = idFiscaleIVA.getChild("IdPaese");
                             if (idPaese != null) {
-                                aUtil.addValuesToAttachment(invoice, "IdPaese: " + idPaese.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "1.5.1.1.1 IdPaese: " + idPaese.getText(), errors);
 
                             }
                             Element idCodice = idFiscaleIVA.getChild("IdCodice");
                             if (idCodice != null) {
-                                aUtil.addValuesToAttachment(invoice, "IdCodice: " + idCodice.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "1.5.1.1.2 IdCodice: " + idCodice.getText(), errors);
 
                             }
                         }
                         Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
                         if (codiceFiscale != null) {
-                            aUtil.addValuesToAttachment(invoice, "CodiceFiscale: " + codiceFiscale.getText(), errors);
+                            aUtil.addValuesToAttachment(invoice, "1.5.1.2 CodiceFiscale: " + codiceFiscale.getText(), errors);
 
                             Element anagrafica = datiAnagrafici.getChild("Anagrafica");
                             if (anagrafica != null) {
                                 Element denominazione = anagrafica.getChild("Denominazione");
                                 if (denominazione != null) {
-                                    aUtil.addValuesToAttachment(invoice, "Denominazione: " + denominazione.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "1.5.1.3.1 Denominazione: " + denominazione.getText(), errors);
+
+                                }
+                                Element nome = anagrafica.getChild("Nome");
+                                if (nome != null) {
+                                    aUtil.addValuesToAttachment(invoice, "1.5.1.3.2 Nome: " + nome.getText(), errors);
+
+                                }
+                                Element cognome = anagrafica.getChild("Cognome");
+                                if (cognome != null) {
+                                    aUtil.addValuesToAttachment(invoice, "1.5.1.3.3 Cognome: " + cognome.getText(), errors);
 
                                 }
                                 Element titolo = anagrafica.getChild("Titolo");
                                 if (titolo != null) {
-                                    aUtil.addValuesToAttachment(invoice, "Titolo: " + titolo.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "1.5.1.3.4 Titolo: " + titolo.getText(), errors);
 
                                 }
                                 Element codEORI = anagrafica.getChild("CodEORI");
                                 if (codEORI != null) {
-                                    aUtil.addValuesToAttachment(invoice, "CodEORI: " + codEORI.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "1.5.1.3.5 CodEORI: " + codEORI.getText(), errors);
 
                                 }
                             }
@@ -233,7 +245,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element importoRitenuta = datiRitenuta.getChild("ImportoRitenuta");
                         if (importoRitenuta != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "ImportoRitenuta: " + importoRitenuta.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.5.2 ImportoRitenuta: " + importoRitenuta.getText(), errors);
                             } catch (IllegalArgumentException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -256,11 +268,11 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         try {
                             Element data = datiVeicoli.getChild("Data");
                             if (data != null) {
-                                aUtil.addValuesToAttachment(invoice, "Data: " + data.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.3.1 Data: " + data.getText(), errors);
                             }
                             Element totalePercorso = datiVeicoli.getChild("TotalePercorso");
                             if (totalePercorso != null) {
-                                aUtil.addValuesToAttachment(invoice, "TotalePercorso: " + totalePercorso.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.3.2 TotalePercorso: " + totalePercorso.getText(), errors);
                             }
                         } catch (IllegalArgumentException e) {
                             EigorRuntimeException ere = new EigorRuntimeException(
@@ -284,7 +296,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
                         if (soggettoEmittente != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "SoggettoEmittente: " + soggettoEmittente.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "1.6 SoggettoEmittente: " + soggettoEmittente.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -315,7 +327,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element tipoRitenuta = datiRitenuta.getChild("TipoRitenuta");
                         if (tipoRitenuta != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "TipoRitenuta: " + tipoRitenuta.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.5.1 TipoRitenuta: " + tipoRitenuta.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -333,7 +345,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element importoRitenuta = datiRitenuta.getChild("ImportoRitenuta");
                         if (importoRitenuta != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "ImportoRitenuta: " + importoRitenuta.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.5.2 ImportoRitenuta: " + importoRitenuta.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -351,7 +363,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element aliquotaRitenuta = datiRitenuta.getChild("AliquotaRitenuta");
                         if (aliquotaRitenuta != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "AliquotaRitenuta: " + aliquotaRitenuta.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.5.3 AliquotaRitenuta: " + aliquotaRitenuta.getText(), errors);
                             } catch (IllegalArgumentException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -369,7 +381,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element causalePagamento = datiRitenuta.getChild("CausalePagamento");
                         if (causalePagamento != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "CausalePagamento: " + causalePagamento.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.5.4 CausalePagamento: " + causalePagamento.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -392,7 +404,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         Element ritenuta = datiCassaPrevidenziale.getChild("Ritenuta");
                         if (ritenuta != null) {
                             try {
-                                aUtil.addValuesToAttachment(invoice, "Ritenuta: " + ritenuta.getText(), errors);
+                                aUtil.addValuesToAttachment(invoice, "2.1.1.7.6 Ritenuta: " + ritenuta.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -428,7 +440,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                     Element numeroLinea = dettaglioLinee.getChild("NumeroLinea");
                                     if (numeroLinea != null) {
                                         try {
-                                            aUtil.addValuesToAttachment(invoice, "Ritenuta: " + ritenuta.getText() + " NumeroLinea: " + numeroLinea.getText(), errors);
+                                            aUtil.addValuesToAttachment(invoice, "2.2.1.13 Ritenuta: " + ritenuta.getText() + " 2.2.1.1 NumeroLinea: " + numeroLinea.getText(), errors);
                                         } catch (IllegalArgumentException  e) {
                                             EigorRuntimeException ere = new EigorRuntimeException(
                                                     e,
@@ -456,15 +468,15 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             try {
                                 Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
                                 if (codiceCommessaConvenzione != null) {
-                                    aUtil.addValuesToAttachment(invoice, "CodiceCommessaConvenzione: " + codiceCommessaConvenzione.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "2.1.2.5 CodiceCommessaConvenzione: " + codiceCommessaConvenzione.getText(), errors);
                                 }
                                 Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
                                 if (codiceCUP != null) {
-                                    aUtil.addValuesToAttachment(invoice, "CodiceCUP: " + codiceCUP.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "2.1.2.6 CodiceCUP: " + codiceCUP.getText(), errors);
                                 }
                                 Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
                                 if (codiceCIG != null) {
-                                    aUtil.addValuesToAttachment(invoice, "CodiceCIG: " + codiceCIG.getText(), errors);
+                                    aUtil.addValuesToAttachment(invoice, "2.1.2.7 CodiceCIG: " + codiceCIG.getText(), errors);
                                 }
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
