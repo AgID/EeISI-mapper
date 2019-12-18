@@ -98,6 +98,25 @@ public class IssuesTest {
 
 
     }
+
+    @Test
+    public void issue325() throws SyntaxErrorInInvoiceFormatException, ConfigurationException {
+
+
+        InputStream sourceInvoiceStream = invoiceAsStream("/issues/issue-325-fattpa.xml");
+
+        FattPa2Cen f2c = new FattPa2Cen(new JavaReflections(), configuration);
+        f2c.configure();
+
+        ConversionResult<BG0000Invoice> result = f2c.convert(sourceInvoiceStream);
+
+        {
+            BG0000Invoice cen = result.getResult();
+            BG0022DocumentTotals docTotals = cen.getBG0022DocumentTotals(0);
+            BT0110InvoiceTotalVatAmount bt110 = docTotals.getBT0110InvoiceTotalVatAmount(0);
+            Assert.assertEquals("0.05", bt110.getValue().toString());
+        }
+    }
     @Test
     public void issue323() throws SyntaxErrorInInvoiceFormatException, ConfigurationException {
 

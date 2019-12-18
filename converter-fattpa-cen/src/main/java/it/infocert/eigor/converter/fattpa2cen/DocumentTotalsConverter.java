@@ -39,9 +39,10 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
             Preconditions.checkArgument(eigorConfiguration != null, "Please provide a not null configuration.");
             aUtil = new AttachmentUtil(new File(eigorConfiguration.getMandatoryString("eigor.workdir")));
         }
-
+        addInvoiceTotalAmountVat(invoice, document, errors, callingLocation);
         addInvoiceTotalAmountWithVatDefault(invoice, document, errors, callingLocation);
         addAdditionalSupportingDocument(invoice, document, errors, callingLocation);
+
     }
 
 
@@ -291,39 +292,39 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 }
             }
         }
-                    //SoggettoEmittente
-                    if(fatturaElettronicaHeader!=null){
-                        Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
-                        if (soggettoEmittente != null) {
-                            try {
-                                aUtil.addValuesToAttachment(invoice, "1.6 SoggettoEmittente: " + soggettoEmittente.getText(), errors);
-                            } catch (IllegalArgumentException  e) {
-                                EigorRuntimeException ere = new EigorRuntimeException(
-                                        e,
-                                        ErrorMessage.builder()
-                                                .message(e.getMessage())
-                                                .location(ErrorCode.Location.FATTPA_IN)
-                                                .action(ErrorCode.Action.HARDCODED_MAP)
-                                                .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                                .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, soggettoEmittente.toString())
-                                                .build());
-                                errors.add(ConversionIssue.newError(ere));
-                            }
-                        }
-                    }
+        //SoggettoEmittente
+        if(fatturaElettronicaHeader!=null){
+            Element soggettoEmittente = fatturaElettronicaHeader.getChild("SoggettoEmittente");
+            if (soggettoEmittente != null) {
+                try {
+                    aUtil.addValuesToAttachment(invoice, "1.6 SoggettoEmittente: " + soggettoEmittente.getText(), errors);
+                } catch (IllegalArgumentException  e) {
+                    EigorRuntimeException ere = new EigorRuntimeException(
+                            e,
+                            ErrorMessage.builder()
+                                    .message(e.getMessage())
+                                    .location(ErrorCode.Location.FATTPA_IN)
+                                    .action(ErrorCode.Action.HARDCODED_MAP)
+                                    .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                    .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                    .addParam(ErrorMessage.OFFENDINGITEM_PARAM, soggettoEmittente.toString())
+                                    .build());
+                    errors.add(ConversionIssue.newError(ere));
+                }
+            }
+        }
 
-                    //          <TipoRitenuta>RT01</TipoRitenuta>
-                    //			<ImportoRitenuta>200.00</ImportoRitenuta><!-- optional to BT-113 with text on BT-20-->
-                    //			<AliquotaRitenuta>20.00</AliquotaRitenuta>
-                    //			<CausalePagamento>A</CausalePagamento>
-                if(fatturaElettronicaBody!=null) {
-                    Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
-                    if (datiGenerali != null) {
-                        Element datiGeneraliDocumento = datiGenerali.getChild("DatiGeneraliDocumento");
-                        if (datiGeneraliDocumento != null) {
-                            Element datiRitenuta = datiGeneraliDocumento.getChild("DatiRitenuta");
-                            if (datiRitenuta != null) {
+        //          <TipoRitenuta>RT01</TipoRitenuta>
+        //			<ImportoRitenuta>200.00</ImportoRitenuta><!-- optional to BT-113 with text on BT-20-->
+        //			<AliquotaRitenuta>20.00</AliquotaRitenuta>
+        //			<CausalePagamento>A</CausalePagamento>
+        if(fatturaElettronicaBody!=null) {
+            Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+            if (datiGenerali != null) {
+                Element datiGeneraliDocumento = datiGenerali.getChild("DatiGeneraliDocumento");
+                if (datiGeneraliDocumento != null) {
+                    Element datiRitenuta = datiGeneraliDocumento.getChild("DatiRitenuta");
+                    if (datiRitenuta != null) {
                         Element tipoRitenuta = datiRitenuta.getChild("TipoRitenuta");
                         if (tipoRitenuta != null) {
                             try {
@@ -423,61 +424,24 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                 }//datiGeneraliDocumento
 
             }//if dati_generali
-                    //2.2.1.13	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Ritenuta
+            //2.2.1.13	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/Ritenuta
 
-                    //2.2.1.13 Ritenuta concatenate with 2.2.1.1 NumeroLinea
-                    //2.2.1.1	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/NumeroLinea
-
-
-                        Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
-                        if (datiBeniServizi != null) {
-
-                                Element dettaglioLinee = datiBeniServizi.getChild("DettaglioLinee");
-                            if (dettaglioLinee != null) {
-                                Element ritenuta = dettaglioLinee.getChild("Ritenuta");
-                                if (ritenuta != null) {
-
-                                    Element numeroLinea = dettaglioLinee.getChild("NumeroLinea");
-                                    if (numeroLinea != null) {
-                                        try {
-                                            aUtil.addValuesToAttachment(invoice, "2.2.1.13 Ritenuta: " + ritenuta.getText() + " 2.2.1.1 NumeroLinea: " + numeroLinea.getText(), errors);
-                                        } catch (IllegalArgumentException  e) {
-                                            EigorRuntimeException ere = new EigorRuntimeException(
-                                                    e,
-                                                    ErrorMessage.builder()
-                                                            .message(e.getMessage())
-                                                            .location(ErrorCode.Location.FATTPA_IN)
-                                                            .action(ErrorCode.Action.HARDCODED_MAP)
-                                                            .error(ErrorCode.Error.ILLEGAL_VALUE)
-                                                            .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                            .addParam(ErrorMessage.OFFENDINGITEM_PARAM, ritenuta.toString()+numeroLinea.toString())
-                                                            .build());
-                                            errors.add(ConversionIssue.newError(ere));
-                                        }
-                                    }
-                                }
-                            }
-
-                    }//IF datibeniservizi
-
-                    if (datiGenerali != null) {
-                        Element datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
-                        if (datiOrdineAcquisto != null) {
+            //2.2.1.13 Ritenuta concatenate with 2.2.1.1 NumeroLinea
+            //2.2.1.1	FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee/NumeroLinea
 
 
+            Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
+            if (datiBeniServizi != null) {
+
+                Element dettaglioLinee = datiBeniServizi.getChild("DettaglioLinee");
+                if (dettaglioLinee != null) {
+                    Element ritenuta = dettaglioLinee.getChild("Ritenuta");
+                    if (ritenuta != null) {
+
+                        Element numeroLinea = dettaglioLinee.getChild("NumeroLinea");
+                        if (numeroLinea != null) {
                             try {
-                                Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
-                                if (codiceCommessaConvenzione != null) {
-                                    aUtil.addValuesToAttachment(invoice, "2.1.2.5 CodiceCommessaConvenzione: " + codiceCommessaConvenzione.getText(), errors);
-                                }
-                                Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
-                                if (codiceCUP != null) {
-                                    aUtil.addValuesToAttachment(invoice, "2.1.2.6 CodiceCUP: " + codiceCUP.getText(), errors);
-                                }
-                                Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
-                                if (codiceCIG != null) {
-                                    aUtil.addValuesToAttachment(invoice, "2.1.2.7 CodiceCIG: " + codiceCIG.getText(), errors);
-                                }
+                                aUtil.addValuesToAttachment(invoice, "2.2.1.13 Ritenuta: " + ritenuta.getText() + " 2.2.1.1 NumeroLinea: " + numeroLinea.getText(), errors);
                             } catch (IllegalArgumentException  e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(
                                         e,
@@ -487,14 +451,102 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                                                 .action(ErrorCode.Action.HARDCODED_MAP)
                                                 .error(ErrorCode.Error.ILLEGAL_VALUE)
                                                 .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
-                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
+                                                .addParam(ErrorMessage.OFFENDINGITEM_PARAM, ritenuta.toString()+numeroLinea.toString())
                                                 .build());
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
                     }
+                }
+
+            }//IF datibeniservizi
+
+            if (datiGenerali != null) {
+                Element datiOrdineAcquisto = datiGenerali.getChild("DatiOrdineAcquisto");
+                if (datiOrdineAcquisto != null) {
+
+
+                    try {
+                        Element codiceCommessaConvenzione = datiOrdineAcquisto.getChild("CodiceCommessaConvenzione");
+                        if (codiceCommessaConvenzione != null) {
+                            aUtil.addValuesToAttachment(invoice, "2.1.2.5 CodiceCommessaConvenzione: " + codiceCommessaConvenzione.getText(), errors);
+                        }
+                        Element codiceCUP = datiOrdineAcquisto.getChild("CodiceCUP");
+                        if (codiceCUP != null) {
+                            aUtil.addValuesToAttachment(invoice, "2.1.2.6 CodiceCUP: " + codiceCUP.getText(), errors);
+                        }
+                        Element codiceCIG = datiOrdineAcquisto.getChild("CodiceCIG");
+                        if (codiceCIG != null) {
+                            aUtil.addValuesToAttachment(invoice, "2.1.2.7 CodiceCIG: " + codiceCIG.getText(), errors);
+                        }
+                    } catch (IllegalArgumentException  e) {
+                        EigorRuntimeException ere = new EigorRuntimeException(
+                                e,
+                                ErrorMessage.builder()
+                                        .message(e.getMessage())
+                                        .location(ErrorCode.Location.FATTPA_IN)
+                                        .action(ErrorCode.Action.HARDCODED_MAP)
+                                        .error(ErrorCode.Error.ILLEGAL_VALUE)
+                                        .addParam(ErrorMessage.SOURCEMSG_PARAM, e.getMessage())
+                                        .addParam(ErrorMessage.OFFENDINGITEM_PARAM, datiOrdineAcquisto.toString())
+                                        .build());
+                        errors.add(ConversionIssue.newError(ere));
+                    }
+                }
+            }
         }// if fatturaelettronicabody
     }
+    private void addInvoiceTotalAmountVat(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
+
+        Element rootElement = document.getRootElement();
+        Element fatturaElettronicaBody = rootElement.getChild("FatturaElettronicaBody");
+
+
+        if (fatturaElettronicaBody != null) {
+            BG0022DocumentTotals totals;
+            if (invoice.getBG0022DocumentTotals().isEmpty()) {
+                totals = new BG0022DocumentTotals();
+                invoice.getBG0022DocumentTotals().add(totals);
+            } else {
+                totals = invoice.getBG0022DocumentTotals(0);
+            }
+
+            final Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
+            if (datiBeniServizi != null) {
+
+                //Fix 325
+                BigDecimal totaleImposta = BigDecimal.ZERO;
+                BT0110InvoiceTotalVatAmount invoiceTotalVatAmount = null;
+                List<Element> datiRiepilogoList = datiBeniServizi.getChildren("DatiRiepilogo");
+                for (Element datoRiepilogo : datiRiepilogoList) {
+
+
+                    if (datoRiepilogo != null) {
+                        Element imposta = datoRiepilogo.getChild("Imposta");
+
+
+                        BigDecimal impostaD = new BigDecimal(imposta.getValue());
+                        totaleImposta=totaleImposta.add(new BigDecimal(imposta.getValue()));
+                    }
+                }
+                //END Fix 325
+
+
+
+
+                    List<BT0110InvoiceTotalVatAmount> invoiceTotalVatAmountList = totals.getBT0110InvoiceTotalVatAmount();
+
+
+                    totals.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(totaleImposta));
+              //      invoice.getBG0022DocumentTotals().add(totals);
+
+                }
+            }
+        }
+
+
+
+
     private void addInvoiceTotalAmountWithVatDefault(BG0000Invoice invoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation) {
 
         Element rootElement = document.getRootElement();
@@ -511,7 +563,12 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
             } else {
                 totals = invoice.getBG0022DocumentTotals(0);
             }
+
+
+
             Element datiGenerali = fatturaElettronicaBody.getChild("DatiGenerali");
+
+
             final List<BT0112InvoiceTotalAmountWithVat> amountsWithVat = totals.getBT0112InvoiceTotalAmountWithVat();
             if (datiGenerali != null) {
                 List<Element> datiGeneraliDocumenti = datiGenerali.getChildren();
@@ -521,8 +578,12 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                         if (importoTotaleDocumento == null) {
                             final Element datiBeniServizi = fatturaElettronicaBody.getChild("DatiBeniServizi");
                             if (datiBeniServizi != null) {
+
+
+
                                 final Element datiRiepilogo = datiBeniServizi.getChild("DatiRiepilogo");
                                 if (datiRiepilogo != null) {
+
                                     final Optional<Element> imponibileImporto = Optional.fromNullable(datiRiepilogo.getChild("ImponibileImporto"));
                                     final Optional<Element> imposta = Optional.fromNullable(datiRiepilogo.getChild("Imposta"));
                                     final Function<Element, BigDecimal> function = new Function<Element, BigDecimal>() {
@@ -534,6 +595,14 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
                                     final BigDecimal imponibileD = imponibileImporto.transform(function).or(BigDecimal.ZERO);
                                     final BigDecimal impostaD = imposta.transform(function).or(BigDecimal.ZERO);
+
+
+
+
+
+
+
+
                                     amountsWithVat.add(new BT0112InvoiceTotalAmountWithVat(imponibileD.add(impostaD)));
                                 }
                             }
@@ -541,6 +610,8 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                             log.error("ImportoTotaleDocumento [BT-112] isn't present but ImponibileImporto [BT-109] and Imposta [BT-110] (used to calculate the default value)" +
                                     "are missing too.");
                         }
+
+
 
                         Element datiBollo = datiGeneraliDocumento.getChild("DatiBollo");
                         if (datiBollo != null) {
@@ -695,6 +766,7 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
                     final Element importoPagamento = dettaglioPagamento.getChild("ImportoPagamento");
                     if (!totals.getBT0112InvoiceTotalAmountWithVat().isEmpty()) {
                         final BigDecimal amountWithVat = totals.getBT0112InvoiceTotalAmountWithVat(0).getValue();
+
                         if (importoPagamento != null) {
                             String text = importoPagamento.getText();
                             try {
