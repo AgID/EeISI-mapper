@@ -282,40 +282,44 @@ public class InvoiceLineConverter implements CustomMapping<Document> {
                                 bg0025.getBG0026InvoiceLinePeriod().add(bg0026);
                             }
 
-                            Element scontoMaggiorazione = dettaglioLinee.getChild("ScontoMaggiorazione");
-                            if (scontoMaggiorazione != null) {
-                                Element tipo = scontoMaggiorazione.getChild("Tipo");
-                                if ("SC".equals(tipo.getText())) {
-                                    Element percentuale = scontoMaggiorazione.getChild("Percentuale");
-                                    Element importo = scontoMaggiorazione.getChild("Importo");
-                                    if (importo != null) {
-                                        BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
-                                        bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                            List<Element> scontoMaggiorazioneList = dettaglioLinee.getChildren("ScontoMaggiorazione");
+
+                            if (scontoMaggiorazioneList != null) {
+                                for (Element scontoMaggiorazione : scontoMaggiorazioneList) {
+                                    Element tipo = scontoMaggiorazione.getChild("Tipo");
+                                    if ("SC".equals(tipo.getText())) {
+                                        Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                        Element importo = scontoMaggiorazione.getChild("Importo");
+                                        if (importo != null) {
+                                            BT0136InvoiceLineAllowanceAmount bt0136InvoiceLineAllowanceAmount = new BT0136InvoiceLineAllowanceAmount(new BigDecimal(importo.getText()));
+                                            bg0027.getBT0136InvoiceLineAllowanceAmount().add(bt0136InvoiceLineAllowanceAmount);
+                                        }
+                                        if (percentuale != null) {
+                                            BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(
+                                                    new BigDecimal( percentuale.getText() )
+                                            );
+                                            bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
+                                        }
+                                        bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code95));
+                                        bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
                                     }
-                                    if (percentuale != null) {
-                                        BT0138InvoiceLineAllowancePercentage bt0138InvoiceLineAllowancePercentage = new BT0138InvoiceLineAllowancePercentage(
-                                                new BigDecimal( percentuale.getText() )
-                                        );
-                                        bg0027.getBT0138InvoiceLineAllowancePercentage().add(bt0138InvoiceLineAllowancePercentage);
+
+                                    if ("MG".equals(tipo.getText())) {
+                                        Element percentuale = scontoMaggiorazione.getChild("Percentuale");
+                                        Element importo = scontoMaggiorazione.getChild("Importo");
+                                        if (importo != null) {
+                                            BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
+                                            bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
+                                        }
+                                        if (percentuale != null) {
+                                            BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
+                                            bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
+                                        }
+                                        bg0028.getBT0145InvoiceLineChargeReasonCode().add(new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.ABK));
+                                        bg0025.getBG0028InvoiceLineCharges().add(bg0028);
                                     }
-                                    bg0027.getBT0140InvoiceLineAllowanceReasonCode().add(new BT0140InvoiceLineAllowanceReasonCode(Untdid5189ChargeAllowanceDescriptionCodes.Code95));
-                                    bg0025.getBG0027InvoiceLineAllowances().add(bg0027);
                                 }
 
-                                if ("MG".equals(tipo.getText())) {
-                                    Element percentuale = scontoMaggiorazione.getChild("Percentuale");
-                                    Element importo = scontoMaggiorazione.getChild("Importo");
-                                    if (importo != null) {
-                                        BT0141InvoiceLineChargeAmount bt0141InvoiceLineChargeAmount = new BT0141InvoiceLineChargeAmount(new BigDecimal(importo.getText()));
-                                        bg0028.getBT0141InvoiceLineChargeAmount().add(bt0141InvoiceLineChargeAmount);
-                                    }
-                                    if (percentuale != null) {
-                                        BT0143InvoiceLineChargePercentage bt0143InvoiceLineChargePercentage = new BT0143InvoiceLineChargePercentage(new BigDecimal(percentuale.getText()));
-                                        bg0028.getBT0143InvoiceLineChargePercentage().add(bt0143InvoiceLineChargePercentage);
-                                    }
-                                    bg0028.getBT0145InvoiceLineChargeReasonCode().add(new BT0145InvoiceLineChargeReasonCode(Untdid7161SpecialServicesCodes.ABK));
-                                    bg0025.getBG0028InvoiceLineCharges().add(bg0028);
-                                }
                             }
 
                             BG0029PriceDetails bg0029 = new BG0029PriceDetails();
