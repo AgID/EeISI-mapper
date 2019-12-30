@@ -67,6 +67,7 @@ public class BuyerConverter implements CustomMapping<Document> {
 
                             String nome;
                             String cognome;
+                            String denominazione;
 
                             Element nomeXml = anagrafica.getChild("Nome");
                             nome = nomeXml==null ? "" : nomeXml.getText();
@@ -74,7 +75,10 @@ public class BuyerConverter implements CustomMapping<Document> {
                             Element cognomeXml = anagrafica.getChild("Cognome");
                             cognome = cognomeXml==null ? "" : cognomeXml.getText();
 
-                            String bt44value = String.join(" ", nome, cognome).trim();
+                            Element denominazioneXml = anagrafica.getChild("Denominazione");
+                            denominazione = denominazioneXml==null ? "" : denominazioneXml.getText();
+
+                            String bt44value = String.join(" ", denominazione, nome, cognome).trim();
                             if(bt44value.isEmpty()) bt44value = "N/A";
 
 

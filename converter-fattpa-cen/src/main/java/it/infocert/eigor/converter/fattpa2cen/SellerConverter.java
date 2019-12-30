@@ -5,11 +5,9 @@ import it.infocert.eigor.api.CustomMapping;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.configuration.EigorConfiguration;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.model.core.InvoiceUtils;
 import it.infocert.eigor.model.core.datatypes.Identifier;
-import it.infocert.eigor.model.core.model.BG0000Invoice;
-import it.infocert.eigor.model.core.model.BG0004Seller;
-import it.infocert.eigor.model.core.model.BT0029SellerIdentifierAndSchemeIdentifier;
-import it.infocert.eigor.model.core.model.BT0030SellerLegalRegistrationIdentifierAndSchemeIdentifier;
+import it.infocert.eigor.model.core.model.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -54,8 +52,36 @@ public class SellerConverter implements CustomMapping<Document> {
 
                     Element codiceFiscale = datiAnagrafici.getChild("CodiceFiscale");
                     Element anagrafica = datiAnagrafici.getChild("Anagrafica");
+
+
                     Element codEORI = null;
                     if (anagrafica != null) {
+                        BT0027SellerName bt27 = InvoiceUtils.evalExpression(() -> invoice.getBG0004Seller(0).getBT0027SellerName(0));
+                        if(bt27 == null) {
+
+                            String nome;
+                            String cognome;
+                            String denominazione;
+
+                            Element nomeXml = anagrafica.getChild("Nome");
+                            nome = nomeXml==null ? "" : nomeXml.getText();
+
+                            Element cognomeXml = anagrafica.getChild("Cognome");
+                            cognome = cognomeXml==null ? "" : cognomeXml.getText();
+
+                            Element denominazioneXml = anagrafica.getChild("Denominazione");
+                            denominazione = denominazioneXml==null ? "" : denominazioneXml.getText();
+
+                            String bt27value = String.join(" ", denominazione, nome, cognome).trim();
+                            if(bt27value.isEmpty()) bt27value = "N/A";
+
+
+                            invoice.getBG0004Seller(0).getBT0027SellerName().add( new BT0027SellerName(bt27value) );
+
+                        }
+
+
+
                         codEORI = anagrafica.getChild("CodEORI");
                     }
                     Element alboProfessionale = datiAnagrafici.getChild("AlboProfessionale");
