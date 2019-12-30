@@ -534,15 +534,15 @@ public class DocumentTotalsConverter implements CustomMapping<Document> {
 
 
 
-                    List<BT0110InvoiceTotalVatAmount> invoiceTotalVatAmountList = totals.getBT0110InvoiceTotalVatAmount();
+                List<BT0110InvoiceTotalVatAmount> invoiceTotalVatAmountList = totals.getBT0110InvoiceTotalVatAmount();
 
 
-                    totals.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(totaleImposta));
-              //      invoice.getBG0022DocumentTotals().add(totals);
+                totals.getBT0110InvoiceTotalVatAmount().add(new BT0110InvoiceTotalVatAmount(totaleImposta));
+                //      invoice.getBG0022DocumentTotals().add(totals);
 
-                }
             }
         }
+    }
 
 
 

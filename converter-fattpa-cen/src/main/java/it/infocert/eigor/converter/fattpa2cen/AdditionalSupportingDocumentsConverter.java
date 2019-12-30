@@ -79,40 +79,33 @@ public class AdditionalSupportingDocumentsConverter implements CustomMapping<Doc
                 }
             }
         }
-            return new ConversionResult<>(errors, invoice);
-        }
+        return new ConversionResult<>(errors, invoice);
+    }
 
 
+    @Override
+    public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
+        toBG0024(document, cenInvoice, errors);
+    }
 
-
-
-
-
-
-
-        @Override
-        public void map(BG0000Invoice cenInvoice, Document document, List<IConversionIssue> errors, ErrorCode.Location callingLocation, EigorConfiguration eigorConfiguration) {
-            toBG0024(document, cenInvoice, errors);
-        }
-
-        private String getFullMimeNameFromShortFormat(String shortFormat) {
-            if (shortFormat == null) return "text/csv";
-            switch (shortFormat.toLowerCase()) {
-                case "pdf":
-                    return "application/pdf";
-                case "ods":
-                    return "application/vnd.oasis.opendocument.spreadsheet";
-                case "xlsx":
-                    return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                case "png":
-                    return "image/png";
-                case "jpeg":
-                    return "image/jpeg";
-                case "csv":
-                    return "text/csv";
-                default:
-                    log.warn("MimeType " + shortFormat + " not supported [pdf, ods, xlsx, png, jpeg, csv], replaced by default value: \"text/csv\"");
-                    return "text/csv";
-            }
+    private String getFullMimeNameFromShortFormat(String shortFormat) {
+        if (shortFormat == null) return "text/csv";
+        switch (shortFormat.toLowerCase()) {
+            case "pdf":
+                return "application/pdf";
+            case "ods":
+                return "application/vnd.oasis.opendocument.spreadsheet";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case "png":
+                return "image/png";
+            case "jpeg":
+                return "image/jpeg";
+            case "csv":
+                return "text/csv";
+            default:
+                log.warn("MimeType " + shortFormat + " not supported [pdf, ods, xlsx, png, jpeg, csv], replaced by default value: \"text/csv\"");
+                return "text/csv";
         }
     }
+}
