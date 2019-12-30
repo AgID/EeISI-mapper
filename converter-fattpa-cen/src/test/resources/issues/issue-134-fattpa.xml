@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:FatturaElettronica versione="FPA12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+  <FatturaElettronicaHeader>
+  <!--Transmission data -->
+    <DatiTrasmissione>
+      <IdTrasmittente>
+        <IdPaese>IT</IdPaese><!-- to BG-24-->
+        <IdCodice>97735020584</IdCodice><!-- to BG-24-->
+      </IdTrasmittente>
+      <ProgressivoInvio>00001</ProgressivoInvio><!-- to BG-24-->
+      <FormatoTrasmissione>FPA12</FormatoTrasmissione><!-- to BG-24-->
+      <CodiceDestinatario>99YJBO</CodiceDestinatario><!-- to BT-49-->
+	  <ContattiTrasmittente>
+		<Telefono>02122495030</Telefono><!--not mapped-->
+		<Email>trasmittente@gmail.com</Email><!--not mapped-->
+	  </ContattiTrasmittente>
+	  <!--Only for B2B, please not that in this case CodiceDestinatario shall be 0000000-->
+	  <!--PECDestinatario>destinatario@pec.it</PECDestinatario--><!-- to BT-49-->
+    </DatiTrasmissione>
+	<!--Seller -->
+    <CedentePrestatore><!--to BG-4-->
+      <DatiAnagrafici>
+        <IdFiscaleIVA>
+          <IdPaese>IT</IdPaese><!--to BT-31-->
+          <IdCodice>07945211006</IdCodice><!--to BT-31-->
+        </IdFiscaleIVA>
+		<CodiceFiscale>BGRGDN77T10L117F</CodiceFiscale><!--to BT-32-->
+        <Anagrafica>
+		<!-- In case of legal entity-->
+          <Denominazione>ALPHA SRL</Denominazione><!--to BT-27, BT-41-->
+		  <!--In case of natural person-->
+		  <!--Nome>Mario</Nome--><!--to BT-27, BT-41-->
+		  <!--Cognome>Rossi</Cognome--><!--to BT-27, BT-41-->
+		  <Titolo>Super</Titolo><!--not mapped-->
+		  <CodEORI>0123456789012</CodEORI><!--to BT-29 as IT:EORI:xxxx-->
+        </Anagrafica>
+		<AlboProfessionale>Ordine Commercialisti</AlboProfessionale><!--to BT-29 as IT:ALBO:AlboProfessionalexxx:NumeroIscrizioneAlboxxxx-->
+		<ProvinciaAlbo>MI</ProvinciaAlbo><!--not mapped-->
+		<NumeroIscrizioneAlbo>43DDD</NumeroIscrizioneAlbo><!--to BT-29 as IT:ALBO:AlboProfessionalexxx:NumeroIscrizioneAlboxxx-->
+		<DataIscrizioneAlbo>1991-06-18</DataIscrizioneAlbo><!--not mapped-->
+        <RegimeFiscale>RF01</RegimeFiscale><!--not mapped directly but through the mapping table VAT category code-natura-regimefiscale -->
+      </DatiAnagrafici>
+	  <!--Seller address -->
+      <Sede><!--BG-5-->
+        <Indirizzo>VIALE ROMA</Indirizzo><!--to BT-35-->
+		<NumeroCivico>543</NumeroCivico><!--to BT-36-->
+        <CAP>07100</CAP><!--to BT-38-->
+        <Comune>SASSARI</Comune><!--to BT-37-->
+        <Provincia>SS</Provincia><!--to BT-39-->
+        <Nazione>IT</Nazione><!--to BT-40-->
+      </Sede>
+	  <StabileOrganizzazione><!--not mapped-->
+			<Indirizzo>VIA MILANO</Indirizzo><!--not mapped-->
+			<NumeroCivico>22</NumeroCivico><!--not mapped-->
+			<CAP>24100</CAP><!--not mapped-->
+			<Comune>Seriate</Comune><!--not mapped-->
+			<Provincia>BG</Provincia><!--not mapped-->
+			<Nazione>IT</Nazione><!--not mapped-->
+	  </StabileOrganizzazione>
+	  <IscrizioneREA><!--to BT-30-->
+		<Ufficio>BG</Ufficio><!--to BT-30 as IT:REA:Ufficio:NumeroREA:xxxx-->
+		<NumeroREA>2344tf566</NumeroREA><!--to BT-30 as IT:REA:Ufficioxx:NumeroREA:xxxx-->
+		<CapitaleSociale>150000.00</CapitaleSociale><!--to BT-33 as "CapitaleSociale"&value-->
+		<SocioUnico>SM</SocioUnico><!--to BT-33 as "SocioUnico"&value-->
+		<StatoLiquidazione>LN</StatoLiquidazione><!--to BT-33 as "StatoLiquidazione"&value-->
+	  </IscrizioneREA>
+	  <Contatti><!--to BG-6-->
+		<Telefono>035204938</Telefono><!--to BT-42-->
+		<Fax>0354859485</Fax><!--not mapped-->
+		<Email>cedente@gmail.com</Email><!--to BT-43-->
+	  </Contatti>
+	  <RiferimentoAmministrazione>ABCF45667</RiferimentoAmministrazione><!--to BT-19-->
+    </CedentePrestatore>
+	<!--Seller tax representative-->
+	<RappresentanteFiscale><!--to BG-11-->
+		<DatiAnagrafici>
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese><!--to BT-63-->
+			  <IdCodice>07945211006</IdCodice><!--to BT-63-->
+			</IdFiscaleIVA>
+			<CodiceFiscale>BGRGDN77T10L117F</CodiceFiscale><!--not mapped-->
+			 <Anagrafica>
+			<!-- In case of legal entity-->
+			  <Denominazione>ALPHA Rappresentante fiscale</Denominazione><!--to BT-62-->
+			  <!--In case of natural person-->
+			  <!--Nome>Paolo</Nome--><!--to BT-62-->
+			  <!--Cognome>Rossi</Cognome--><!--to BT-62-->
+			  <Titolo>Super rap</Titolo><!--not mapped-->
+			  <CodEORI>1123456789012</CodEORI><!--not mapped-->
+			</Anagrafica>
+		</DatiAnagrafici>
+	</RappresentanteFiscale>
+	<!--Buyer -->
+    <CessionarioCommittente><!--to BG-7-->
+      <DatiAnagrafici>
+		<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese><!--to BT-48-->
+			  <IdCodice>07945211006</IdCodice><!--to BT-48-->
+			</IdFiscaleIVA>
+        <CodiceFiscale>BGRGDN77T10L117F</CodiceFiscale><!--to BT-46-->
+        <Anagrafica>
+		<!-- In case of legal entity-->
+          <!--Denominazione>AMMINISTRAZIONE BETA</Denominazione--><!--to BT-44, BT-56-->
+		  <!--In case of natural person-->
+			  <Nome>Mario</Nome><!--to BT-44, BT-56-->
+			  <Cognome>Verdi</Cognome><!--to BT-44, BT-56-->
+			  <Titolo>Super com</Titolo><!--not mapped-->
+			  <CodEORI>2123456789012</CodEORI><!--to BT-47 as IT:EORI:xxxx-->
+        </Anagrafica>
+      </DatiAnagrafici>
+	  <!--Buyer address -->
+      <Sede><!--to BG-8-->
+        <Indirizzo>VIA TORINO</Indirizzo><!--to BT-50-->
+		<NumeroCivico>38 B</NumeroCivico><!--to BT-51-->
+        <CAP>00145</CAP><!--to BT-53-->
+        <Comune>ROMA</Comune><!--to BT-52-->
+        <Provincia>RM</Provincia><!--to BT-54-->
+        <Nazione>IT</Nazione><!--to BT-55-->
+      </Sede>
+	   <StabileOrganizzazione><!--not mapped-->
+			<Indirizzo>VIA Bergamo</Indirizzo><!--not mapped-->
+			<NumeroCivico>22</NumeroCivico><!--not mapped-->
+			<CAP>24100</CAP><!--not mapped-->
+			<Comune>Milano</Comune><!--not mapped-->
+			<Provincia>MI</Provincia><!--not mapped-->
+			<Nazione>IT</Nazione><!--not mapped-->
+	  </StabileOrganizzazione>
+	  <!--Buyer tax representative-->
+	<RappresentanteFiscale><!--not mapped-->
+		
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese><!--not mapped-->
+			  <IdCodice>07945211006</IdCodice><!--not mapped-->
+			</IdFiscaleIVA>
+			
+			<!-- In case of legal entity-->
+			  <Denominazione>BETA Rappresentante fiscale</Denominazione><!--not mapped-->
+			  <!--In case of natural person-->
+			  <!--Nome>Paolo</Nome--><!--not mapped-->
+			  <!--Cognome>Verdi</Cognome--><!--not mapped-->
+			
+		
+	</RappresentanteFiscale>
+    </CessionarioCommittente>
+	<TerzoIntermediarioOSoggettoEmittente><!-- to BG-24-->
+		<DatiAnagrafici>
+			<IdFiscaleIVA>
+			  <IdPaese>IT</IdPaese><!-- to BG-24-->
+			  <IdCodice>97735020584</IdCodice><!-- to BG-24-->
+			</IdFiscaleIVA>
+			<CodiceFiscale>BGRGDN77T10L117F</CodiceFiscale><!-- to BG-24-->
+			 <Anagrafica>
+			<!-- In case of legal entity-->
+			  <Denominazione>GAMMA intermediario</Denominazione><!-- to BG-24-->
+			  <!--In case of natural person-->
+			  <!--Nome>Mario</Nome--><!-- to BG-24-->
+			  <!--Cognome>Bianchi</Cognome--><!-- to BG-24-->
+			  <Titolo>Super</Titolo><!-- to BG-24-->
+			  <CodEORI>3123456789012</CodEORI><!-- to BG-24-->
+			</Anagrafica>
+		</DatiAnagrafici>
+	</TerzoIntermediarioOSoggettoEmittente>
+	<SoggettoEmittente>TZ</SoggettoEmittente><!-- to BG-24-->
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody>
+  <!--Invoice general data -->
+    <DatiGenerali>
+      <DatiGeneraliDocumento>
+        <TipoDocumento>TD01</TipoDocumento><!--to BT-3-->
+        <Divisa>EUR</Divisa><!--to BT-5-->
+        <Data>2017-01-18</Data><!--to BT-2-->
+        <Numero>Test EeISI 31</Numero><!--to BT-1-->
+		<DatiRitenuta><!--to be defined, not anymore on BG-21 but on BG-25-->
+			<TipoRitenuta>RT01</TipoRitenuta>
+			<ImportoRitenuta>200.00</ImportoRitenuta><!-- optional to BT-113 with text on BT-20-->
+			<AliquotaRitenuta>20.00</AliquotaRitenuta>
+			<CausalePagamento>A</CausalePagamento>
+		</DatiRitenuta>
+		<DatiBollo><!--to be defined, still on BG-21 but with new code-->
+			<BolloVirtuale>SI</BolloVirtuale>
+			<ImportoBollo>2.00</ImportoBollo>
+		</DatiBollo>
+		
+		<DatiCassaPrevidenziale><!--to be defined, not anymore on BG-21 but on BG-25-->
+			<TipoCassa>TC01</TipoCassa>
+			<AlCassa>4.00</AlCassa>
+			<ImportoContributoCassa>40.00</ImportoContributoCassa>
+			<ImponibileCassa>1000.00</ImponibileCassa>
+			<AliquotaIVA>0.00</AliquotaIVA>
+			<Ritenuta>SI</Ritenuta>
+			<Natura>N4</Natura>
+			<RiferimentoAmministrazione>FGFJ234</RiferimentoAmministrazione>
+		</DatiCassaPrevidenziale> 
+		<ScontoMaggiorazione><!--to BG-20, vat rate 0%-->
+			<Tipo>SC</Tipo><!--to BG-20 , vat rate 0%-->
+			<Percentuale>10.00</Percentuale><!--to BT-94-->
+			<Importo>100.00</Importo><!--to BT-92-->
+		</ScontoMaggiorazione>
+		<ScontoMaggiorazione><!--to BG-21, vat rate 0%-->
+			<Tipo>MG</Tipo><!--to BG-21, vat rate 0%-->
+			<Percentuale>10.00</Percentuale><!--to BT-101-->
+			<Importo>100.00</Importo><!--to BT-99-->
+		</ScontoMaggiorazione>
+		
+		<!-- not mandatory in FattPA but needed in CEN or to be calculated-->
+		<ImportoTotaleDocumento>1260.00</ImportoTotaleDocumento><!--to BT-112-->
+		<Arrotondamento>0.00</Arrotondamento><!--to BT-114-->
+		
+		<Causale>Causale 1 per la fattura</Causale><!--to BT-22-->
+		<Causale>Causale 2 per la fattura</Causale><!--to BT-22-->
+		<Art73>SI</Art73><!--to BT-22 concatenate-->
+       </DatiGeneraliDocumento>
+	   <DatiOrdineAcquisto>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--to BT-126-->
+			<IdDocumento>123</IdDocumento><!--to BT-13-->
+			<Data>2017-01-14</Data><!--not mapped-->
+			<NumItem>34A</NumItem><!--to BT-132-->
+			<CodiceCommessaConvenzione>jkl34</CodiceCommessaConvenzione><!--to BG-24-->
+			<CodiceCUP>1122</CodiceCUP><!--to BG-24-->
+			<CodiceCIG>aabb</CodiceCIG><!--to BG-24-->
+		</DatiOrdineAcquisto>
+		<DatiContratto>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--not mapped-->
+			<IdDocumento>123</IdDocumento><!--to BT-12-->
+			<Data>2017-01-13</Data><!--not mapped-->
+			<NumItem>34b</NumItem><!--not mapped-->
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione><!--not mapped-->
+			<CodiceCUP>11d22</CodiceCUP><!--to BT-11-->
+			<CodiceCIG>aadbb</CodiceCIG><!--to BT-17-->
+		</DatiContratto>
+		<DatiConvenzione><!--not mapped-->
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--not mapped-->
+			<IdDocumento>123</IdDocumento><!--not mapped-->
+			<Data>2017-01-12</Data><!--not mapped-->
+			<NumItem>34c</NumItem><!--not mapped-->
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione><!--not mapped-->
+			<CodiceCUP>11dsd22</CodiceCUP><!--not mapped-->
+			<CodiceCIG>aadssdbb</CodiceCIG><!--not mapped-->
+		</DatiConvenzione>
+		<DatiRicezione>
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--not mapped-->
+			<IdDocumento>123</IdDocumento><!--to BT-15-->
+			<Data>2017-01-11</Data><!--not mapped-->
+			<NumItem>34d</NumItem><!--not mapped-->
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione><!--not mapped-->
+			<CodiceCUP>11dcvcsd22</CodiceCUP><!--not mapped-->
+			<CodiceCIG>aacvcdssdbb</CodiceCIG><!--not mapped-->
+		</DatiRicezione>
+		<DatiFattureCollegate><!--to BG-3-->
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--not mapped-->
+			<IdDocumento>123</IdDocumento><!--to BT-25-->
+			<Data>2017-01-10</Data><!--to BT-26-->
+			<NumItem>34e</NumItem><!--not mapped-->
+			<CodiceCommessaConvenzione>jkdl34</CodiceCommessaConvenzione><!--not mapped-->
+			<CodiceCUP>11dcbbvcsd22</CodiceCUP><!--not mapped-->
+			<CodiceCIG>aacbbvcdssdbb</CodiceCIG><!--not mapped-->
+		</DatiFattureCollegate>
+		<DatiSAL><!--not mapped-->
+			<RiferimentoFase>3</RiferimentoFase><!--not mapped-->
+		</DatiSAL>
+		<DatiDDT>
+			<NumeroDDT>12345</NumeroDDT><!--to BT-16-->
+			<DataDDT>2017-01-08</DataDDT><!--to BT-16 concat-->
+			<RiferimentoNumeroLinea>1</RiferimentoNumeroLinea><!--not mapped-->
+		</DatiDDT>
+		<DatiTrasporto><!--not mapped-->
+			<DatiAnagraficiVettore><!--not mapped-->
+				<IdFiscaleIVA>
+				  <IdPaese>IT</IdPaese><!--not mapped-->
+				  <IdCodice>412343447890</IdCodice><!--not mapped-->
+				</IdFiscaleIVA>
+				<CodiceFiscale>41234567890</CodiceFiscale><!--not mapped-->
+				 <Anagrafica>
+				<!-- In case of legal entity-->
+				  <Denominazione>Vettore</Denominazione><!--to BT-70-->
+				  <!--In case of natural person-->
+				  <!--Nome>Mario</Nome--><!--not mapped-->
+				  <!--Cognome>Rosa</Cognome--><!--not mapped-->
+				  <Titolo>Super vett</Titolo><!--not mapped-->
+				  <CodEORI>4123456789012</CodEORI><!--not mapped-->
+				</Anagrafica>
+			
+			<NumeroLicenzaGuida>kjiA1234idoj</NumeroLicenzaGuida><!--not mapped-->
+			</DatiAnagraficiVettore>
+			<MezzoTrasporto>Furgone</MezzoTrasporto><!--not mapped-->
+			<CausaleTrasporto>causale del trasporto</CausaleTrasporto><!--to BT-160, BT-161-->
+			<NumeroColli>4</NumeroColli><!--not mapped-->
+			<Descrizione>Casse legno 1 mq</Descrizione><!--not mapped-->
+			<UnitaMisuraPeso>quintale</UnitaMisuraPeso><!--not mapped-->
+			<PesoLordo>15.00</PesoLordo><!--not mapped-->
+			<PesoNetto>13.35</PesoNetto><!--not mapped-->
+			<DataOraRitiro>2017-01-08T06:00:00</DataOraRitiro><!--not mapped-->
+			<DataInizioTrasporto>2017-01-09</DataInizioTrasporto><!--to BT-72-->
+			<TipoResa>CPT</TipoResa><!--not mapped-->
+			<IndirizzoResa><!--to BG-15-->
+				<Indirizzo>VIA Paglia</Indirizzo><!--to BT-75-->
+				<NumeroCivico>16</NumeroCivico><!--to BT-76-->
+				<CAP>24065</CAP><!--to BT-78-->
+				<Comune>Castro</Comune><!--to BT-77-->
+				<Provincia>BG</Provincia><!--to BT-79-->
+				<Nazione>IT</Nazione><!--to BT-80-->
+			</IndirizzoResa>
+			<DataOraConsegna>2017-01-10T10:00:00</DataOraConsegna><!--to BT-72-->
+		</DatiTrasporto>
+		<FatturaPrincipale><!--to BG-3-->
+			<NumeroFatturaPrincipale>12345</NumeroFatturaPrincipale><!--to BT-25-->
+			<DataFatturaPrincipale>2017-01-10</DataFatturaPrincipale><!--to BT-26-->
+		</FatturaPrincipale>
+    </DatiGenerali>
+    <DatiBeniServizi>
+      <DettaglioLinee><!--to BG-25-->
+        <NumeroLinea>1</NumeroLinea><!--to BT-126-->
+		<CodiceArticolo>
+			<CodiceTipo>CPV</CodiceTipo><!--to BT-128-1 or BT-157-1 or BT-158-1-->
+			<CodiceValore>klji12</CodiceValore><!--to BT-128 or BT-155 or BT-157 or BT-158-->
+		
+		</CodiceArticolo>
+        <Descrizione>DESCRIZIONE DELLA LINEA 1</Descrizione><!--to BT-153 or if TipoCessionePrestazione SC/PR/AB then to BT-139 or if TipoCessionePrestazione AC then BT-144-->
+		<Quantita>2.00</Quantita><!--to BT-129-->
+		<UnitaMisura>C62</UnitaMisura><!--to BT-130 if not included the default is C62-->
+		<DataInizioPeriodo>2017-01-18</DataInizioPeriodo><!--to BT-134-->
+		<DataFinePeriodo>2017-01-18</DataFinePeriodo><!--to BT-135-->
+        <PrezzoUnitario>500.00</PrezzoUnitario><!--to BT-146-->
+		<ScontoMaggiorazione>
+			<Tipo>SC</Tipo><!--to BG-27-->
+			<Percentuale>2.00</Percentuale><!--to BT-138-->
+			<Importo>10.00</Importo><!--to BT-136-->
+		</ScontoMaggiorazione>
+		<ScontoMaggiorazione>
+			<Tipo>MG</Tipo><!--to BG-28-->
+			<Percentuale>2.00</Percentuale><!--to BT-143-->
+			<Importo>10.00</Importo><!--to BT-141-->
+		</ScontoMaggiorazione>
+        <PrezzoTotale>1000.00</PrezzoTotale><!--to BT-131 or if allowance BT-92 or charge BT-99-->
+        <AliquotaIVA>22.00</AliquotaIVA><!--to BT-152 or if allowance BT-96 or charge BT-103-->
+		<Ritenuta>SI</Ritenuta><!-- to be redefined-->
+		<RiferimentoAmministrazione>rifamm123</RiferimentoAmministrazione><!--to BT-133-->
+		<AltriDatiGestionali><!--to BG-32-->
+			<TipoDato>colore</TipoDato><!--to BT-160-->
+			<RiferimentoTesto>bianco</RiferimentoTesto><!--to BT-161-->		
+		</AltriDatiGestionali>
+      </DettaglioLinee>
+	  
+	  <DettaglioLinee><!--to BG-25-->
+        <NumeroLinea>2</NumeroLinea><!--to BT-126-->
+		<CodiceArticolo>
+			<CodiceTipo>TARIC</CodiceTipo><!--to BT-128-1 or BT-157-1 or BT-158-1-->
+			<CodiceValore>klji12</CodiceValore><!--to BT-128 or BT-155 or BT-157 or BT-158-->
+		
+		</CodiceArticolo>
+        <Descrizione>DESCRIZIONE DELLA LINEA 2</Descrizione><!--to BT-153 or if TipoCessionePrestazione SC/PR/AB then to BT-139 or if TipoCessionePrestazione AC then BT-144-->
+		<Quantita>10.00</Quantita><!--to BT-129-->
+		<UnitaMisura>pippo</UnitaMisura><!--to BT-130 if not included the default is C62-->
+		<DataInizioPeriodo>2017-01-18</DataInizioPeriodo><!--to BT-134-->
+		<DataFinePeriodo>2017-01-18</DataFinePeriodo><!--to BT-135-->
+        <PrezzoUnitario>1.00</PrezzoUnitario><!--to BT-146-->
+		
+        <PrezzoTotale>10.00</PrezzoTotale><!--to BT-131 or if allowance BT-92 or charge BT-99-->
+        <AliquotaIVA>0.00</AliquotaIVA><!--to BT-152 or if allowance BT-96 or charge BT-103-->
+		<Natura>N3</Natura><!--to BT-151 to be redefined according to mapping VAT category code-Natura-RegimeFiscale-->
+		<AltriDatiGestionali><!--to BG-32-->
+			<TipoDato>materiale</TipoDato><!--to BT-160-->
+			<RiferimentoTesto>carta</RiferimentoTesto><!--to BT-161-->
+		</AltriDatiGestionali>
+      </DettaglioLinee>
+	  <DettaglioLinee><!--to BG-25-->
+        <NumeroLinea>3</NumeroLinea><!--to BT-126-->
+		<TipoCessionePrestazione>SC</TipoCessionePrestazione><!--to BG-20-->
+        <Descrizione>DESCRIZIONE DELLA LINEA di sconto</Descrizione><!--to BT-139-->
+		<PrezzoUnitario>-10.00</PrezzoUnitario><!--to BT-146-->
+		<PrezzoTotale>-10.00</PrezzoTotale><!--to BT-92-->
+        <AliquotaIVA>0.00</AliquotaIVA><!--to BT-96-->
+		<Natura>N3</Natura><!--to BT-151 to be redefined according to mapping VAT category code-Natura-RegimeFiscale-->
+	  </DettaglioLinee>
+	  
+	   <DettaglioLinee><!--to BG-25-->
+        <NumeroLinea>4</NumeroLinea><!--to BT-126-->
+		<TipoCessionePrestazione>AC</TipoCessionePrestazione><!--to BG-20-->
+        <Descrizione>DESCRIZIONE DELLA LINEA spesa accessoria</Descrizione><!--to BT-144-->
+		<PrezzoUnitario>10.00</PrezzoUnitario><!--to BT-146-->
+		<PrezzoTotale>10.00</PrezzoTotale><!--to BT-99-->
+        <AliquotaIVA>22.00</AliquotaIVA><!--to BT-103-->
+		
+	  </DettaglioLinee>
+	   <DettaglioLinee><!--to BG-25-->
+        <NumeroLinea>5</NumeroLinea><!--to BT-126-->
+		<TipoCessionePrestazione>SC</TipoCessionePrestazione><!--to BG-20-->
+        <Descrizione>DESCRIZIONE DELLA LINEA sconto con iva</Descrizione><!--to BT-139-->
+		<PrezzoUnitario>-10.00</PrezzoUnitario><!--to BT-146-->
+		<PrezzoTotale>-10.00</PrezzoTotale><!--to BT-92-->
+        <AliquotaIVA>22.00</AliquotaIVA><!--to BT-96-->
+		
+	  </DettaglioLinee> 
+      <DatiRiepilogo><!--to BG-23-->
+        <AliquotaIVA>22.00</AliquotaIVA><!--to BT-119-->
+		<SpeseAccessorie>10.00</SpeseAccessorie><!--not mapped-->
+		<Arrotondamento>0.00</Arrotondamento><!--to BT-25-->
+		<ImponibileImporto>1000.00</ImponibileImporto><!--to BT-116-->
+        <Imposta>220.00</Imposta><!--to BT-117-->
+		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
+       </DatiRiepilogo>
+	  
+	   <DatiRiepilogo><!--to BG-23-->
+        <AliquotaIVA>0.00</AliquotaIVA><!--to BT-119-->
+		<Natura>N3</Natura><!--to BT-118, BT-121-->
+		<Arrotondamento>0.00</Arrotondamento><!--to BT-25-->
+		<ImponibileImporto>0.00</ImponibileImporto><!--to BT-116-->
+        <Imposta>0.00</Imposta><!--to BT-117-->
+		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
+		<RiferimentoNormativo>art 584T</RiferimentoNormativo><!--to BT-120-->
+       </DatiRiepilogo>
+	    
+	   <DatiRiepilogo><!--to BG-23-->
+        <AliquotaIVA>0.00</AliquotaIVA><!--to BT-119-->
+		<Natura>N4</Natura><!--to BT-118, BT-121-->
+		<Arrotondamento>0.00</Arrotondamento><!--to BT-25-->
+		<ImponibileImporto>40.00</ImponibileImporto><!--to BT-116-->
+        <Imposta>0.00</Imposta><!--to BT-117-->
+		<EsigibilitaIVA>I</EsigibilitaIVA><!--to BT-8-->
+		
+       </DatiRiepilogo>
+    </DatiBeniServizi>
+	<DatiVeicoli><!--to BG-24-->
+		<Data>1990-01-01</Data><!--to BG-24-->
+		<TotalePercorso>4800</TotalePercorso><!--to BG-24-->
+	</DatiVeicoli>
+	 <DatiPagamento><!--to BG-16-->
+		  <CondizioniPagamento>TP01</CondizioniPagamento><!--to BT-20-->
+		  <DettaglioPagamento>
+				<Beneficiario>Nome del beneficiario</Beneficiario><!--to BT-59-->
+				<ModalitaPagamento>MP05</ModalitaPagamento><!--to BT-81-->
+				<DataRiferimentoTerminiPagamento>2017-01-18</DataRiferimentoTerminiPagamento><!--to BT-20-->
+				<GiorniTerminiPagamento>30</GiorniTerminiPagamento><!--to BT-20-->
+				<DataScadenzaPagamento>2017-02-18</DataScadenzaPagamento><!--to BT-9-->
+				<ImportoPagamento>1060.00</ImportoPagamento><!--to BT-115-->
+				<CodUfficioPostale>Bergamo23</CodUfficioPostale><!--not mapped-->
+				<CognomeQuietanzante>Rossi</CognomeQuietanzante><!--not mapped-->
+				<NomeQuietanzante>Paolo</NomeQuietanzante><!--not mapped-->
+				<CFQuietanzante>RSSPLO70E25E540H</CFQuietanzante><!--not mapped-->
+				<TitoloQuietanzante>Rossi</TitoloQuietanzante><!--not mapped-->
+				<IstitutoFinanziario>UBI</IstitutoFinanziario><!--not mapped-->
+				<IBAN>IT02L1234512345123456789012</IBAN><!--to BT-84-->
+				<ABI>12345</ABI><!--not mapped-->
+				<CAB>12345</CAB><!--not mapped-->
+				<BIC>BLOPIT22XXX</BIC><!--to BT-86-->
+				<ScontoPagamentoAnticipato>10.00</ScontoPagamentoAnticipato><!--to BT-20-->
+				<DataLimitePagamentoAnticipato>2017-02-01</DataLimitePagamentoAnticipato><!--to BT-20-->
+				<PenalitaPagamentiRitardati>10.00</PenalitaPagamentiRitardati><!--to BT-20-->
+				<DataDecorrenzaPenale>2017-03-15</DataDecorrenzaPenale><!--to BT-20-->
+				<CodicePagamento>codpag123</CodicePagamento><!--to BT-83-->
+			
+		  </DettaglioPagamento>
+    </DatiPagamento>
+	<Allegati><!--to BG-24-->
+		<NomeAttachment>Allegato 1</NomeAttachment><!--to BT-122-->
+		<AlgoritmoCompressione>zip</AlgoritmoCompressione><!--not mapped-->
+		<FormatoAttachment>csv</FormatoAttachment><!--to BT-125-1-->
+		<DescrizioneAttachment>Descrizione allegato uno</DescrizioneAttachment><!--to BT-123-->
+		<Attachment>ZUlHT1IgYXR0YWNobWVudCB0ZXN0</Attachment><!--to BT-125-->
+	</Allegati>
+	<Allegati><!--to BG-24-->
+		<NomeAttachment>Allegato 2</NomeAttachment><!--to BT-122-->
+		<FormatoAttachment>csv</FormatoAttachment><!--to BT-125-1-->
+		<DescrizioneAttachment>Descrizione allegato due</DescrizioneAttachment><!--to BT-123-->
+		<Attachment>ZUlHT1IgYXR0YWNobWVudCB0ZXN0</Attachment><!--to BT-125-->
+	</Allegati>
+ </FatturaElettronicaBody>
+</p:FatturaElettronica>

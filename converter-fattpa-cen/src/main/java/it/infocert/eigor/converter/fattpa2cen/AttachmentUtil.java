@@ -78,7 +78,7 @@ public class AttachmentUtil {
 
             FileReference fileReference = bt0125.getValue();
             try {
-                appendToFileInBase64(new File(fileReference.getFilePath()), input);
+                appendToFileInBase64(new File(fileReference.getFilePath().replace("\\null", "")), input);
             } catch (IOException e) {
                 EigorRuntimeException ere = new EigorRuntimeException(
                         e,

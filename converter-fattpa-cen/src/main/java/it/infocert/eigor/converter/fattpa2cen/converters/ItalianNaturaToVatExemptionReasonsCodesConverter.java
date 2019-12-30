@@ -32,6 +32,7 @@ public class ItalianNaturaToVatExemptionReasonsCodesConverter extends FromString
                 default:
                     return VatExemptionReasonsCodes.vatex_eu_g;
             }
+
         }
         return null;
     }

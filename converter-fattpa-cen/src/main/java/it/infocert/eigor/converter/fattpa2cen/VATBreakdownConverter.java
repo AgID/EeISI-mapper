@@ -39,7 +39,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                 List<Element> datiRiepiloghi = datiBeniServizi.getChildren();
                 invoice.getBT0008ValueAddedTaxPointDateCode().add(new BT0008ValueAddedTaxPointDateCode(
                         Untdid2005DateTimePeriodQualifiers.Code3));
-
+                BigDecimal totaleImposta=new BigDecimal(0.0);
                 for (Element datiRiepilogo : datiRiepiloghi) {
                     if (datiRiepilogo.getName().equals("DatiRiepilogo")) {
                         bg0023 = new BG0023VatBreakdown();
@@ -47,6 +47,7 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         if (imponibileImporto != null) {
                             try {
                                 BT0116VatCategoryTaxableAmount vatCategoryTaxableAmount = new BT0116VatCategoryTaxableAmount(new BigDecimal(imponibileImporto.getText()));
+
                                 bg0023.getBT0116VatCategoryTaxableAmount().add(vatCategoryTaxableAmount);
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder()
@@ -60,10 +61,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                                 errors.add(ConversionIssue.newError(ere));
                             }
                         }
+
                         Element imposta = datiRiepilogo.getChild("Imposta");
                         if (imposta != null) {
                             try {
                                 BT0117VatCategoryTaxAmount vatCategoryTaxAmount = new BT0117VatCategoryTaxAmount(new BigDecimal(imposta.getText()));
+
                                 bg0023.getBT0117VatCategoryTaxAmount().add(vatCategoryTaxAmount);
                             } catch (NumberFormatException e) {
                                 EigorRuntimeException ere = new EigorRuntimeException(e, ErrorMessage.builder().message(e.getMessage())
@@ -105,8 +108,12 @@ public class VATBreakdownConverter implements CustomMapping<Document> {
                         bg0023.getBT0118VatCategoryCode().add(bt0118);
 
                         // BR-E-10
-                        if (VatExemptionReasonsCodes.vatex_eu_148_e.equals(vatExemptionReasonCode) ||
-                                VatExemptionReasonsCodes.vatex_eu_g.equals(vatExemptionReasonCode)) {
+                       if (VatExemptionReasonsCodes.vatex_eu_o.equals(vatExemptionReasonCode) ||
+                                VatExemptionReasonsCodes.vatex_eu_151_1b.equals(vatExemptionReasonCode)  ||
+                                VatExemptionReasonsCodes.vatex_eu_ae.equals(vatExemptionReasonCode) ||
+                                VatExemptionReasonsCodes.vatex_eu_ic.equals(vatExemptionReasonCode) ||
+                               VatExemptionReasonsCodes.vatex_eu_g.equals(vatExemptionReasonCode)){
+
                             bt0121 = new BT0121VatExemptionReasonCode(vatExemptionReasonCode.value());
                             bg0023.getBT0121VatExemptionReasonCode().add(bt0121);
                         }
